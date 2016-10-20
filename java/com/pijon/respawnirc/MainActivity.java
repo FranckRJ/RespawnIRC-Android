@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,17 +18,33 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
+    private final int maxNumberOfMessagesShowed = 40;
+    private final int initialNumberOfMessagesShowed = 10;
+
     SharedPreferences sharedPref = null;
     TextView jvcMsg = null;
     EditText urlEdit = null;
     EditText messageEdit = null;
+    /*TODO: Sauvegarder l'url dans les sharedpreference.*/
     String urlToFetch = "http://www.jeuxvideo.com/forums/1-24777-4280756-1-0-1-0-o-blablacraft-o.htm";
     String latestListOfInputInAString = null;
     Timer timerForFetchUrl = new Timer();
+    List<String> allCurrentMessagesShowed = new ArrayList<>();
+    boolean firstTimeGetMessages = true;
+    long lastIdOfMessage = 0;
+
+    /*TODO: Refléchir à déplacer cette classe dans JVCParser ?*/
+    static class PageInfos {
+        List<JVCParser.MessageInfos> listOfMessages;
+        String lastPageLink;
+        String listOfInputInAString;
+    }
 
     public void changeCurrentTopicLink(View buttonView) {
         /*TODO: convertir les liens en bons liens (rajouter www. etc etc).*/
@@ -130,29 +147,62 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class ShowJVCLastMessage extends AsyncTask<String, Void, String> {
+    private class ShowJVCLastMessage extends AsyncTask<String, Void, PageInfos> {
         @Override
-        protected String doInBackground(String... params) {
+        protected PageInfos doInBackground(String... params) {
             if (params.length > 1) {
-                return WebManager.sendRequest(params[0], "GET", "", params[1]);
+                PageInfos newPageInfos = null;
+                String pageContent = WebManager.sendRequest(params[0], "GET", "", params[1]);
+
+                if (pageContent != null) {
+                    newPageInfos = new PageInfos();
+                    newPageInfos.lastPageLink = JVCParser.getLastPageOfTopic(pageContent);
+                    newPageInfos.listOfMessages = JVCParser.getMessagesOfThisPage(pageContent);
+                    newPageInfos.listOfInputInAString = JVCParser.getListOfInputInAString(pageContent);
+                }
+
+                return newPageInfos;
             } else {
                 return null;
             }
         }
 
-        /*TODO: faire le parsing dans doInBackground.*/
+        /*TODO: changer la manière dont sont affiché les messages.
+        * TODO: au lieu d'aller à la dernière page, passer à la page suivante ?*/
         @Override
-        protected void onPostExecute(String pageContent) {
-            super.onPostExecute(pageContent);
-            if(pageContent != null) {
-                String newUrl = JVCParser.getLastPageOfTopic(pageContent);
-                latestListOfInputInAString = JVCParser.getListOfInputInAString(pageContent);
-                if(newUrl.isEmpty()) {
-                    jvcMsg.setText(Html.fromHtml(JVCParser.getLastsMessagesOfThisPage(pageContent, 10)));
-                } else {
-                    urlToFetch = newUrl;
+        protected void onPostExecute(PageInfos infoOfCurrentPage) {
+            super.onPostExecute(infoOfCurrentPage);
+
+            if (infoOfCurrentPage != null) {
+                latestListOfInputInAString = infoOfCurrentPage.listOfInputInAString;
+
+                if (infoOfCurrentPage.lastPageLink.isEmpty() || !firstTimeGetMessages) {
+                    for (JVCParser.MessageInfos thisMessageInfo : infoOfCurrentPage.listOfMessages) {
+                        if (thisMessageInfo.id > lastIdOfMessage) {
+                            allCurrentMessagesShowed.add(JVCParser.createStringMessageFromInfos(thisMessageInfo));
+                            lastIdOfMessage = thisMessageInfo.id;
+                        }
+                    }
+
+                    if (firstTimeGetMessages) {
+                        while (allCurrentMessagesShowed.size() > initialNumberOfMessagesShowed) {
+                            allCurrentMessagesShowed.remove(0);
+                        }
+                    }
+
+                    while (allCurrentMessagesShowed.size() > maxNumberOfMessagesShowed) {
+                        allCurrentMessagesShowed.remove(0);
+                    }
+
+                    jvcMsg.setText(Html.fromHtml(TextUtils.join("", allCurrentMessagesShowed)));
+                    firstTimeGetMessages = false;
+                }
+
+                if (!infoOfCurrentPage.lastPageLink.isEmpty()) {
+                    urlToFetch = infoOfCurrentPage.lastPageLink;
                 }
             }
+
             timerForFetchUrl.schedule(new LaunchShowJVCLastMessage(), 2000);
         }
     }

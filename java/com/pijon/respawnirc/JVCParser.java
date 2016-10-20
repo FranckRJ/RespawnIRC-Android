@@ -13,6 +13,13 @@ final class JVCParser {
     private static final Pattern pageLinkPattern = Pattern.compile("<span><a href=\"([^\"]*)\" class=\"lien-jv\">([0-9]*)</a></span>");
     private static final Pattern topicFormPattern = Pattern.compile("(<form role=\"form\" class=\"form-post-topic[^\"]*\" method=\"post\" action=\"\".*?>.*?</form>)", Pattern.DOTALL);
     private static final Pattern inputFormPattern = Pattern.compile("<input ([^=]*)=\"([^\"]*)\" ([^=]*)=\"([^\"]*)\" ([^=]*)=\"([^\"]*)\"/>");
+    private static final Pattern messageIDPattern = Pattern.compile("<div class=\"bloc-message-forum \" data-id=\"([^\"]*)\">");
+
+    static class MessageInfos {
+        String pseudo;
+        String message;
+        int id;
+    }
 
     private JVCParser() {
         //rien
@@ -76,6 +83,10 @@ final class JVCParser {
         return lastPage;
     }
 
+    static String createStringMessageFromInfos(MessageInfos thisMessageInfo) {
+        return "<p>&lt;" + thisMessageInfo.pseudo + "&gt; " + thisMessageInfo.message + "</p>";
+    }
+
     /*TODO: A refaire en plus propre et plus complet.*/
     private static String parseMessageToPrettyMessage(String thisMessage) {
         return thisMessage.replaceAll("\n", "")
@@ -87,39 +98,32 @@ final class JVCParser {
                 .replaceAll("<img src=\"//image.jeuxvideo.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-def=\"SMILEYS\" data-code=\"([^\"]*)\" title=\"[^\"]*\" />", "$2");
     }
 
-    private static String parseEntireMessageToShowableMessage(String thisEntireMessage) {
-        StringBuilder finalString = new StringBuilder();
+    private static MessageInfos createMessageInfoFromEntireMessage(String thisEntireMessage) {
+        MessageInfos newMessageInfo = new MessageInfos();
         Matcher pseudoInfosMatcher = pseudoInfosPattern.matcher(thisEntireMessage);
         Matcher messageMatcher = messagePattern.matcher(thisEntireMessage);
+        Matcher messageIDMatcher = messageIDPattern.matcher(thisEntireMessage);
 
-        if (pseudoInfosMatcher.find() && messageMatcher.find()) {
-            finalString.append("<p>&lt;")
-                    .append(pseudoInfosMatcher.group(2))
-                    .append("&gt; ")
-                    .append(parseMessageToPrettyMessage(messageMatcher.group(1)))
-                    .append("</p>");
+        if (pseudoInfosMatcher.find() && messageMatcher.find() && messageIDMatcher.find()) {
+            newMessageInfo.pseudo = pseudoInfosMatcher.group(2);
+            newMessageInfo.message = parseMessageToPrettyMessage(messageMatcher.group(1));
+            newMessageInfo.id = Integer.parseInt(messageIDMatcher.group(1));
         }
 
-        return finalString.toString();
+        return newMessageInfo;
     }
 
-    static String getLastsMessagesOfThisPage(String sourcePage, int numberOfMessages) {
-        StringBuilder finalString = new StringBuilder();
-        List<String> listOfEntireMessage = new ArrayList<>();
+    /*TODO: Les messages des pseudos supprimés ne sont pas récupérés.*/
+    static List<MessageInfos> getMessagesOfThisPage(String sourcePage) {
+        List<MessageInfos> listOfParsedMessage = new ArrayList<>();
         Matcher entireMessageMatcher = entireMessagePattern.matcher(sourcePage);
 
         while (entireMessageMatcher.find()) {
-            listOfEntireMessage.add(entireMessageMatcher.group(1));
+            String thisMessage = entireMessageMatcher.group(1);
+
+            listOfParsedMessage.add(createMessageInfoFromEntireMessage(thisMessage));
         }
 
-        while (listOfEntireMessage.size() > numberOfMessages) {
-            listOfEntireMessage.remove(0);
-        }
-
-        for (String thisMessage : listOfEntireMessage) {
-            finalString.append(parseEntireMessageToShowableMessage(thisMessage));
-        }
-
-        return finalString.toString();
+        return listOfParsedMessage;
     }
 }
