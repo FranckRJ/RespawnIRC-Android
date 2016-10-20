@@ -25,6 +25,9 @@ class WebManager {
             urlToPage = new URL(linkToPage);
             urlConnection = (HttpURLConnection) urlToPage.openConnection();
 
+            urlConnection.setConnectTimeout(5000);
+            urlConnection.setReadTimeout(10000);
+
             urlConnection.setRequestMethod(requestMethod);
             urlConnection.setRequestProperty("User-Agent", "RespawnIRC");
             urlConnection.setRequestProperty("Connection", "Keep-Alive");
