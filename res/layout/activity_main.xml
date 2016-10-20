@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.pijon.respawnirc.MainActivity">
+
+    <include
+        android:id="@+id/toolbar_main"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="@drawable/shadow_top"
+        android:layout_below="@id/toolbar_main"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar_main"
+        android:layout_above="@+id/sendmessage_layout_main">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <EditText
+                    android:id="@+id/topiclink_text_main"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="20"
+                    android:inputType="text"
+                    android:hint="@string/topiclinkPlaceHolder"/>
+                <Button
+                    android:id="@+id/topiclink_button_main"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="80"
+                    android:text="@string/go"
+                    android:onClick="changeCurrentTopicLink"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/jvcmessage_view_main"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nothingPlaceHolder"/>
+        </LinearLayout>
+    </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="@drawable/shadow_bottom"
+        android:layout_above="@+id/sendmessage_layout_main"/>
+    <LinearLayout
+        android:id="@+id/sendmessage_layout_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:background="#eee">
+        <EditText
+            android:id="@+id/sendmessage_text_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="30"
+            android:inputType="text"
+            android:hint="@string/messagePlaceHolder"/>
+        <Button
+            android:id="@+id/sendmessage_button_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="70"
+            android:text="@string/messagePost"
+            android:onClick="sendMessageToTopic"/>
+    </LinearLayout>
+
+</RelativeLayout>
