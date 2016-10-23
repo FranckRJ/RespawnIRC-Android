@@ -14,4 +14,5 @@
     <string name="errorCookiesMissingConnect">Vous n\'êtes pas connecté sur JVC.</string>
     <string name="prefCookiesList">pref.cookiesList</string>
     <string name="error">Erreur</string>
+    <string name="prefUrlToFetch">pref.urlToFetch</string>
 </resources>

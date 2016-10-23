@@ -32,9 +32,10 @@ public class MainActivity extends AppCompatActivity {
     EditText urlEdit = null;
     EditText messageEdit = null;
     /*TODO: Sauvegarder l'url dans les sharedpreference.*/
-    String urlToFetch = "http://www.jeuxvideo.com/forums/1-24777-4280756-1-0-1-0-o-blablacraft-o.htm";
-    String latestListOfInputInAString = null;
+    String urlToFetch;
     Timer timerForFetchUrl = new Timer();
+    /*TODO: Sauvegarder la liste des messages et les autres infos dans un bundle.*/
+    String latestListOfInputInAString = null;
     List<String> allCurrentMessagesShowed = new ArrayList<>();
     boolean firstTimeGetMessages = true;
     long lastIdOfMessage = 0;
@@ -47,8 +48,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void changeCurrentTopicLink(View buttonView) {
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
+
         /*TODO: convertir les liens en bons liens (rajouter www. etc etc).*/
         urlToFetch = urlEdit.getText().toString();
+
+        sharedPrefEdit.putString(getString(R.string.prefUrlToFetch), urlToFetch);
+        sharedPrefEdit.apply();
     }
 
     public void sendMessageToTopic(View buttonView) {
@@ -98,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
         jvcMsg = (TextView) findViewById(R.id.jvcmessage_view_main);
         urlEdit = (EditText) findViewById(R.id.topiclink_text_main);
         messageEdit = (EditText) findViewById(R.id.sendmessage_text_main);
+
+        urlToFetch = sharedPref.getString(getString(R.string.prefUrlToFetch), "");
 
         urlEdit.setText(urlToFetch);
     }
