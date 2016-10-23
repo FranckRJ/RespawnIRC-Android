@@ -50,6 +50,10 @@
                 android:id="@+id/jvcmessage_view_main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="8dp"
+                android:autoLink="web"
                 android:text="@string/nothingPlaceHolder"/>
         </LinearLayout>
     </ScrollView>

@@ -83,18 +83,23 @@ final class JVCParser {
     }
 
     static String createStringMessageFromInfos(MessageInfos thisMessageInfo) {
-        return "<p>&lt;" + thisMessageInfo.pseudo + "&gt; " + thisMessageInfo.message + "</p>";
+        return "<p>&lt;<font color=\"#80002A\">" + thisMessageInfo.pseudo + "</font>&gt;" + thisMessageInfo.message + "</p>";
     }
 
     /*TODO: A refaire en plus propre et plus complet.*/
     private static String parseMessageToPrettyMessage(String thisMessage) {
-        return thisMessage.replaceAll("\n", "")
-                .replaceAll("</p> *<p>", "<br /><br />")
-                .replaceAll("</p>", "")
-                .replaceAll("<p>", "")
+        thisMessage = thisMessage.replaceAll("\n", "")
                 .replaceAll("</div>", "")
                 .replaceAll("<div[^>]*>", "")
-                .replaceAll("<img src=\"//image.jeuxvideo.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-def=\"SMILEYS\" data-code=\"([^\"]*)\" title=\"[^\"]*\" />", "$2");
+                .replaceAll("<img src=\"//image.jeuxvideo.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-def=\"SMILEYS\" data-code=\"([^\"]*)\" title=\"[^\"]*\" />", "$2")
+                .replaceAll("<img class=\"img-stickers\" src=\"(http://jv.stkr.fr/p/([^\"]*))\"/>", "<a href=\"$1\">$1</a>")
+                .replaceAll("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe .*? src=\"http(s)?://www.youtube.com/embed/([^\"]*)\"[^>]*></iframe></div></div>", "<a href=\"http://youtu.be/$2\">http://youtu.be/$2</a>")
+                .replaceAll("<a href=\"([^\"]*)\"( title=\"[^\"]*\")?>.*?</a>", "<a href=\"$1\">$1</a>")
+                .replaceAll("<span class=\"JvCare [^\"]*\" rel=\"nofollow\" target=\"_blank\">([^<]*)</span>", "<a href=\"$1\">$1</a>")
+                .replaceAll("<span class=\"JvCare [^\"]*\"[^i]*itle=\"([^\"]*)\">[^<]*<i></i><span>[^<]*</span>[^<]*</span>", "<a href=\"$1\">$1</a>")
+                .replaceAll("<a href=\"([^\"]*)\" data-def=\"NOELSHACK\" target=\"_blank\"><img class=\"img-shack\" .*? src=\"//([^\"]*)\" [^>]*></a>", "<a href=\"$1\">$1</a>");
+
+        return thisMessage;
     }
 
     private static MessageInfos createMessageInfoFromEntireMessage(String thisEntireMessage) {
