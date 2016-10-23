@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -31,18 +30,16 @@ public class MainActivity extends AppCompatActivity {
     TextView jvcMsg = null;
     EditText urlEdit = null;
     EditText messageEdit = null;
-    /*TODO: Sauvegarder l'url dans les sharedpreference.*/
-    String urlToFetch;
+    String urlToFetch = "";
     Timer timerForFetchUrl = new Timer();
-    /*TODO: Sauvegarder la liste des messages et les autres infos dans un bundle.*/
     String latestListOfInputInAString = null;
-    List<String> allCurrentMessagesShowed = new ArrayList<>();
+    ArrayList<String> allCurrentMessagesShowed = new ArrayList<>();
     boolean firstTimeGetMessages = true;
     long lastIdOfMessage = 0;
 
     /*TODO: Refléchir à déplacer cette classe dans JVCParser ?*/
     static class PageInfos {
-        List<JVCParser.MessageInfos> listOfMessages;
+        ArrayList<JVCParser.MessageInfos> listOfMessages;
         String lastPageLink;
         String listOfInputInAString;
     }
@@ -82,6 +79,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void updateJVCMsgTextView() {
+        jvcMsg.setText(Html.fromHtml(TextUtils.join("", allCurrentMessagesShowed)));
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -100,15 +101,35 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(myToolbar);
 
-        sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-
         jvcMsg = (TextView) findViewById(R.id.jvcmessage_view_main);
         urlEdit = (EditText) findViewById(R.id.topiclink_text_main);
         messageEdit = (EditText) findViewById(R.id.sendmessage_text_main);
 
+        if (savedInstanceState != null) {
+            latestListOfInputInAString = savedInstanceState.getString(getString(R.string.saveLatestListOfInputInAString), null);
+            allCurrentMessagesShowed = savedInstanceState.getStringArrayList(getString(R.string.saveAllCurrentMessagesShowed));
+            firstTimeGetMessages = savedInstanceState.getBoolean(getString(R.string.saveFirstTimeGetMessages), true);
+            lastIdOfMessage = savedInstanceState.getLong(getString(R.string.saveLastIfOfMessage), 0);
+
+            if (!allCurrentMessagesShowed.isEmpty()) {
+                updateJVCMsgTextView();
+            }
+        }
+
+        sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
         urlToFetch = sharedPref.getString(getString(R.string.prefUrlToFetch), "");
 
         urlEdit.setText(urlToFetch);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(getString(R.string.saveLatestListOfInputInAString), latestListOfInputInAString);
+        outState.putStringArrayList(getString(R.string.saveAllCurrentMessagesShowed), allCurrentMessagesShowed);
+        outState.putBoolean(getString(R.string.saveFirstTimeGetMessages), firstTimeGetMessages);
+        outState.putLong(getString(R.string.saveLastIfOfMessage), lastIdOfMessage);
     }
 
     @Override
@@ -203,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
                         allCurrentMessagesShowed.remove(0);
                     }
 
-                    jvcMsg.setText(Html.fromHtml(TextUtils.join("", allCurrentMessagesShowed)));
+                    updateJVCMsgTextView();
                     firstTimeGetMessages = false;
                 }
 

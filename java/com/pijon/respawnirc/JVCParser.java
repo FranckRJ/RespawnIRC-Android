@@ -1,7 +1,6 @@
 package com.pijon.respawnirc;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -114,8 +113,8 @@ final class JVCParser {
     }
 
     /*TODO: Les messages des pseudos supprimés ne sont pas récupérés.*/
-    static List<MessageInfos> getMessagesOfThisPage(String sourcePage) {
-        List<MessageInfos> listOfParsedMessage = new ArrayList<>();
+    static ArrayList<MessageInfos> getMessagesOfThisPage(String sourcePage) {
+        ArrayList<MessageInfos> listOfParsedMessage = new ArrayList<>();
         Matcher entireMessageMatcher = entireMessagePattern.matcher(sourcePage);
 
         while (entireMessageMatcher.find()) {
