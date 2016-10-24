@@ -16,6 +16,7 @@ import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.Toast;
 
+/*TODO: Récupérer le pseudo automatiquement.*/
 public class ConnectActivity extends AppCompatActivity {
     WebView jvcWebView = null;
     EditText pseudoText = null;

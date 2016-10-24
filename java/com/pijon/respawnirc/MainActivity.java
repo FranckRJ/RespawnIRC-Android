@@ -44,12 +44,43 @@ public class MainActivity extends AppCompatActivity {
         String listOfInputInAString;
     }
 
+    public void resetTopicInfos() {
+        allCurrentMessagesShowed.clear();
+        firstTimeGetMessages = true;
+        latestListOfInputInAString = null;
+        lastIdOfMessage = 0;
+
+        jvcMsg.setText(getString(R.string.nothingPlaceHolder));
+    }
+
     public void changeCurrentTopicLink(View buttonView) {
+        String newUrl;
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
 
-        /*TODO: convertir les liens en bons liens (rajouter www. etc etc).*/
-        urlToFetch = urlEdit.getText().toString();
+        newUrl = urlEdit.getText().toString();
+        urlToFetch = newUrl;
+
+        if (newUrl.startsWith("https://")) {
+            newUrl = newUrl.replaceFirst("https://", "http://");
+        }
+
+        if (!newUrl.startsWith("http://")) {
+            newUrl = "http://" + newUrl;
+        }
+
+        if (newUrl.startsWith("http://m.jeuxvideo.com/")) {
+            newUrl = newUrl.replaceFirst("http://m.jeuxvideo.com/", "http://www.jeuxvideo.com/");
+        } else if (newUrl.startsWith("http://jeuxvideo.com/")) {
+            newUrl = newUrl.replaceFirst("http://jeuxvideo.com/", "http://www.jeuxvideo.com/");
+        }
+
+        if (!newUrl.equals(urlToFetch)) {
+            urlToFetch = newUrl;
+            urlEdit.setText(urlToFetch);
+        }
+
+        resetTopicInfos();
 
         sharedPrefEdit.putString(getString(R.string.prefUrlToFetch), urlToFetch);
         sharedPrefEdit.apply();
@@ -165,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /*TODO: Gérer les erreurs d'envoies (en analysant la réponse dans onPostExecute).*/
+    /*TODO: si le lien du topic comporte une faute dans le titre, la récupération des messages fonctionnera (car redirect) mais pas l'envoie.*/
     private class PostJVCMessage extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
@@ -173,6 +204,18 @@ public class MainActivity extends AppCompatActivity {
                 return WebManager.sendRequest(params[0], "POST", "message_topic=" + params[1] + params[2] + "&form_alias_rang=1", params[3]);
             } else {
                 return null;
+            }
+        }
+
+        /*TODO: Mieux gérer (afficher) les erreurs d'envoies (en analysant la réponse dans onPostExecute).*/
+        @Override
+        protected void onPostExecute(String pageResult) {
+            super.onPostExecute(pageResult);
+
+            if (pageResult != null) {
+                if (!pageResult.isEmpty()) {
+                    Toast.makeText(MainActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
@@ -206,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
             if (infoOfCurrentPage != null) {
                 latestListOfInputInAString = infoOfCurrentPage.listOfInputInAString;
 
-                if (infoOfCurrentPage.lastPageLink.isEmpty() || !firstTimeGetMessages) {
+                if (!infoOfCurrentPage.listOfMessages.isEmpty() && (infoOfCurrentPage.lastPageLink.isEmpty() || !firstTimeGetMessages)) {
                     for (JVCParser.MessageInfos thisMessageInfo : infoOfCurrentPage.listOfMessages) {
                         if (thisMessageInfo.id > lastIdOfMessage) {
                             allCurrentMessagesShowed.add(JVCParser.createStringMessageFromInfos(thisMessageInfo));

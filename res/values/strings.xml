@@ -13,7 +13,7 @@
     <string name="errorPseudoMissingConnect">Veuillez insérer le pseudo avec lequel vous vous êtes connecté dans le champ en haut.</string>
     <string name="errorCookiesMissingConnect">Vous n\'êtes pas connecté sur JVC.</string>
     <string name="prefCookiesList">pref.cookiesList</string>
-    <string name="error">Erreur</string>
+    <string name="error">Erreur.</string>
     <string name="prefUrlToFetch">pref.urlToFetch</string>
     <string name="saveLatestListOfInputInAString">save.latestListOfInputInAString</string>
     <string name="saveAllCurrentMessagesShowed">save.allCurrentMessagesShowed</string>
