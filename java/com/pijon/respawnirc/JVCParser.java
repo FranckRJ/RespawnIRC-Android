@@ -15,11 +15,13 @@ final class JVCParser {
     private static final Pattern pageLinkPattern = Pattern.compile("<span><a href=\"([^\"]*)\" class=\"lien-jv\">([0-9]*)</a></span>");
     private static final Pattern topicFormPattern = Pattern.compile("(<form role=\"form\" class=\"form-post-topic[^\"]*\" method=\"post\" action=\"\".*?>.*?</form>)", Pattern.DOTALL);
     private static final Pattern inputFormPattern = Pattern.compile("<input ([^=]*)=\"([^\"]*)\" ([^=]*)=\"([^\"]*)\" ([^=]*)=\"([^\"]*)\"/>");
+    private static final Pattern dateMessagePattern = Pattern.compile("<div class=\"bloc-date-msg\">([^<]*<span class=\"JvCare [^ ]* lien-jv\" target=\"_blank\">)?[^a-zA-Z0-9]*([^ ]* [^ ]* [^ ]* [^ ]* ([0-9:]*))");
     private static final Pattern messageIDPattern = Pattern.compile("<div class=\"bloc-message-forum \" data-id=\"([^\"]*)\">");
 
     static class MessageInfos implements Parcelable {
         String pseudo;
-        String message;
+        String messageNotParsed;
+        String dateTime;
         long id;
 
         @Override
@@ -30,7 +32,8 @@ final class JVCParser {
         @Override
         public void writeToParcel(Parcel out, int flags) {
             out.writeString(pseudo);
-            out.writeString(message);
+            out.writeString(messageNotParsed);
+            out.writeString(dateTime);
             out.writeLong(id);
         }
 
@@ -52,7 +55,8 @@ final class JVCParser {
 
         private MessageInfos(Parcel in) {
             pseudo = in.readString();
-            message = in.readString();
+            messageNotParsed = in.readString();
+            dateTime = in.readString();
             id = in.readLong();
         }
 
@@ -120,8 +124,12 @@ final class JVCParser {
         return lastPage;
     }
 
-    static String createStringMessageFromInfos(MessageInfos thisMessageInfo) {
-        return "&lt;<font color=\"#80002A\">" + thisMessageInfo.pseudo + "</font>&gt;<br /><br />" + thisMessageInfo.message;
+    static String createMessageFirstLineFromInfos(MessageInfos thisMessageInfo) {
+        return "[" + thisMessageInfo.dateTime + "] &lt;<font color=\"#80002A\">" + thisMessageInfo.pseudo + "</font>&gt;";
+    }
+
+    static String createMessageSecondLineFromInfos(MessageInfos thisMessageInfo) {
+        return parseMessageToPrettyMessage(thisMessageInfo.messageNotParsed);
     }
 
     /*TODO: A refaire en plus propre et plus complet.*/
@@ -152,22 +160,29 @@ final class JVCParser {
         return thisMessage;
     }
 
+    /*TODO: Possiblement passé "Pseudo supprimé" en ressource (string.xml).*/
     private static MessageInfos createMessageInfoFromEntireMessage(String thisEntireMessage) {
         MessageInfos newMessageInfo = new MessageInfos();
         Matcher pseudoInfosMatcher = pseudoInfosPattern.matcher(thisEntireMessage);
         Matcher messageMatcher = messagePattern.matcher(thisEntireMessage);
+        Matcher dateMessageMatcher = dateMessagePattern.matcher(thisEntireMessage);
         Matcher messageIDMatcher = messageIDPattern.matcher(thisEntireMessage);
 
-        if (pseudoInfosMatcher.find() && messageMatcher.find() && messageIDMatcher.find()) {
+        if (pseudoInfosMatcher.find()) {
             newMessageInfo.pseudo = pseudoInfosMatcher.group(2);
-            newMessageInfo.message = parseMessageToPrettyMessage(messageMatcher.group(1));
+        } else {
+            newMessageInfo.pseudo = "Pseudo supprimé";
+        }
+
+        if (messageMatcher.find() && messageIDMatcher.find() && dateMessageMatcher.find()) {
+            newMessageInfo.messageNotParsed = messageMatcher.group(1);
+            newMessageInfo.dateTime = dateMessageMatcher.group(3);
             newMessageInfo.id = Long.parseLong(messageIDMatcher.group(1));
         }
 
         return newMessageInfo;
     }
 
-    /*TODO: Les messages des pseudos supprimés ne sont pas récupérés.*/
     static ArrayList<MessageInfos> getMessagesOfThisPage(String sourcePage) {
         ArrayList<MessageInfos> listOfParsedMessage = new ArrayList<>();
         Matcher entireMessageMatcher = entireMessagePattern.matcher(sourcePage);

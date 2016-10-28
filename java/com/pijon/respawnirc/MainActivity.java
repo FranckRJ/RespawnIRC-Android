@@ -134,14 +134,14 @@ public class MainActivity extends AppCompatActivity {
         adapterForMessages = new JVCMessagesAdapter(MainActivity.this);
 
         if (savedInstanceState != null) {
-            ArrayList<String> allCurrentMessagesShowed = savedInstanceState.getStringArrayList(getString(R.string.saveAllCurrentMessagesShowed));
+            ArrayList<JVCParser.MessageInfos> allCurrentMessagesShowed = savedInstanceState.getParcelableArrayList(getString(R.string.saveAllCurrentMessagesShowed));
             latestListOfInputInAString = savedInstanceState.getString(getString(R.string.saveLatestListOfInputInAString), null);
             firstTimeGetMessages = savedInstanceState.getBoolean(getString(R.string.saveFirstTimeGetMessages), true);
             lastIdOfMessage = savedInstanceState.getLong(getString(R.string.saveLastIfOfMessage), 0);
 
             if (allCurrentMessagesShowed != null) {
-                for (String thisMessage : allCurrentMessagesShowed) {
-                    adapterForMessages.addItem(thisMessage);
+                for (JVCParser.MessageInfos thisMessageInfo : allCurrentMessagesShowed) {
+                    adapterForMessages.addItem(thisMessageInfo);
                 }
             }
 
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(getString(R.string.saveLatestListOfInputInAString), latestListOfInputInAString);
-        outState.putStringArrayList(getString(R.string.saveAllCurrentMessagesShowed), adapterForMessages.getAllItems());
+        outState.putParcelableArrayList(getString(R.string.saveAllCurrentMessagesShowed), adapterForMessages.getAllItems());
         outState.putBoolean(getString(R.string.saveFirstTimeGetMessages), firstTimeGetMessages);
         outState.putLong(getString(R.string.saveLastIfOfMessage), lastIdOfMessage);
     }
@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
                 if (!infoOfCurrentPage.listOfMessages.isEmpty() && (infoOfCurrentPage.lastPageLink.isEmpty() || !firstTimeGetMessages)) {
                     for (JVCParser.MessageInfos thisMessageInfo : infoOfCurrentPage.listOfMessages) {
                         if (thisMessageInfo.id > lastIdOfMessage) {
-                            adapterForMessages.addItem(JVCParser.createStringMessageFromInfos(thisMessageInfo));
+                            adapterForMessages.addItem(thisMessageInfo);
                             lastIdOfMessage = thisMessageInfo.id;
                         }
                     }

@@ -13,11 +13,15 @@ import java.util.ArrayList;
 
 //http://stackoverflow.com/questions/16427360/add-menu-on-every-listview-item
 
-/*TODO: Désactiver l'highlight quand on clique sur un élément. (désactivé par défaut quand un lien est présent)
-* TODO: Remplacer les String comme donnée par des JVCParser.MessageInfos*/
+/*TODO: Désactiver l'highlight quand on clique sur un élément. (désactivé par défaut quand un lien est présent)*/
 class JVCMessagesAdapter extends BaseAdapter {
-    private ArrayList<String> listOfMessages = new ArrayList<>();
+    private ArrayList<JVCParser.MessageInfos> listOfMessages = new ArrayList<>();
     private LayoutInflater serviceInflater;
+
+    class ViewHolder {
+        TextView firstLine;
+        TextView secondLine;
+    }
 
     JVCMessagesAdapter(Activity parentActivity) {
         serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -31,7 +35,7 @@ class JVCMessagesAdapter extends BaseAdapter {
         listOfMessages.remove(0);
     }
 
-    void addItem(final String item) {
+    void addItem(final JVCParser.MessageInfos item) {
         listOfMessages.add(item);
     }
 
@@ -39,7 +43,7 @@ class JVCMessagesAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    ArrayList<String> getAllItems() {
+    ArrayList<JVCParser.MessageInfos> getAllItems() {
         return listOfMessages;
     }
 
@@ -49,7 +53,7 @@ class JVCMessagesAdapter extends BaseAdapter {
     }
 
     @Override
-    public String getItem(int position) {
+    public JVCParser.MessageInfos getItem(int position) {
         return listOfMessages.get(position);
     }
 
@@ -60,15 +64,18 @@ class JVCMessagesAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        TextView holder;
+        ViewHolder holder;
         if (convertView == null) {
+            holder = new ViewHolder();
             convertView = serviceInflater.inflate(R.layout.jvcmessages_row, null);
-            holder = (TextView)convertView.findViewById(R.id.item_jvcmessages_text_row);
+            holder.firstLine = (TextView) convertView.findViewById(R.id.item_one_jvcmessages_text_row);
+            holder.secondLine = (TextView) convertView.findViewById(R.id.item_two_jvcmessages_text_row);
             convertView.setTag(holder);
         } else {
-            holder = (TextView) convertView.getTag();
+            holder = (ViewHolder) convertView.getTag();
         }
-        holder.setText(Html.fromHtml(getItem(position)));
+        holder.firstLine.setText(Html.fromHtml(JVCParser.createMessageFirstLineFromInfos(getItem(position))));
+        holder.secondLine.setText(Html.fromHtml(JVCParser.createMessageSecondLineFromInfos(getItem(position))));
         return convertView;
     }
 
