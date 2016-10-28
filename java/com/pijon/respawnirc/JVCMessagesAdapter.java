@@ -13,6 +13,8 @@ import java.util.ArrayList;
 
 //http://stackoverflow.com/questions/16427360/add-menu-on-every-listview-item
 
+/*TODO: Désactiver l'highlight quand on clique sur un élément. (désactivé par défaut quand un lien est présent)
+* TODO: Remplacer les String comme donnée par des JVCParser.MessageInfos*/
 class JVCMessagesAdapter extends BaseAdapter {
     private ArrayList<String> listOfMessages = new ArrayList<>();
     private LayoutInflater serviceInflater;

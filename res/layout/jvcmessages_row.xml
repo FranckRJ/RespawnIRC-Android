@@ -8,6 +8,7 @@
     <TextView
         android:id="@+id/item_jvcmessages_text_row"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:autoLink="web"/>
 
 </LinearLayout>
