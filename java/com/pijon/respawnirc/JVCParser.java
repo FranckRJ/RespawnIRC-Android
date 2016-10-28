@@ -83,7 +83,7 @@ final class JVCParser {
     }
 
     static String createStringMessageFromInfos(MessageInfos thisMessageInfo) {
-        return "<p>&lt;<font color=\"#80002A\">" + thisMessageInfo.pseudo + "</font>&gt;" + thisMessageInfo.message + "</p>";
+        return "<p>&lt;<font color=\"#80002A\">" + thisMessageInfo.pseudo + "</font>&gt;</p><p>" + thisMessageInfo.message + "</p>";
     }
 
     /*TODO: A refaire en plus propre et plus complet.*/

@@ -7,14 +7,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.net.URLEncoder;
@@ -26,14 +24,14 @@ public class MainActivity extends AppCompatActivity {
     private final int maxNumberOfMessagesShowed = 40;
     private final int initialNumberOfMessagesShowed = 10;
 
+    JVCMessagesAdapter adapterForMessages = null;
     SharedPreferences sharedPref = null;
-    TextView jvcMsg = null;
+    ListView jvcMsgList = null;
     EditText urlEdit = null;
     EditText messageEdit = null;
     String urlToFetch = "";
     Timer timerForFetchUrl = new Timer();
     String latestListOfInputInAString = null;
-    ArrayList<String> allCurrentMessagesShowed = new ArrayList<>();
     boolean firstTimeGetMessages = true;
     long lastIdOfMessage = 0;
 
@@ -45,12 +43,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void resetTopicInfos() {
-        allCurrentMessagesShowed.clear();
         firstTimeGetMessages = true;
         latestListOfInputInAString = null;
         lastIdOfMessage = 0;
 
-        jvcMsg.setText(getString(R.string.nothingPlaceHolder));
+        adapterForMessages.removeAllItems();
+        adapterForMessages.updateAllItems();
     }
 
     public void changeCurrentTopicLink(View buttonView) {
@@ -110,10 +108,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void updateJVCMsgTextView() {
-        jvcMsg.setText(Html.fromHtml(TextUtils.join("", allCurrentMessagesShowed)));
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -124,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /*TODO: http://stackoverflow.com/questions/5312592/how-can-i-get-my-listview-to-scroll pour pouvoir scroll le lien du topic ?*/
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,19 +127,25 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(myToolbar);
 
-        jvcMsg = (TextView) findViewById(R.id.jvcmessage_view_main);
+        jvcMsgList = (ListView) findViewById(R.id.jvcmessage_view_main);
         urlEdit = (EditText) findViewById(R.id.topiclink_text_main);
         messageEdit = (EditText) findViewById(R.id.sendmessage_text_main);
 
+        adapterForMessages = new JVCMessagesAdapter(MainActivity.this);
+
         if (savedInstanceState != null) {
+            ArrayList<String> allCurrentMessagesShowed = savedInstanceState.getStringArrayList(getString(R.string.saveAllCurrentMessagesShowed));
             latestListOfInputInAString = savedInstanceState.getString(getString(R.string.saveLatestListOfInputInAString), null);
-            allCurrentMessagesShowed = savedInstanceState.getStringArrayList(getString(R.string.saveAllCurrentMessagesShowed));
             firstTimeGetMessages = savedInstanceState.getBoolean(getString(R.string.saveFirstTimeGetMessages), true);
             lastIdOfMessage = savedInstanceState.getLong(getString(R.string.saveLastIfOfMessage), 0);
 
-            if (!allCurrentMessagesShowed.isEmpty()) {
-                updateJVCMsgTextView();
+            if (allCurrentMessagesShowed != null) {
+                for (String thisMessage : allCurrentMessagesShowed) {
+                    adapterForMessages.addItem(thisMessage);
+                }
             }
+
+            adapterForMessages.updateAllItems();
         }
 
         sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
@@ -152,13 +153,14 @@ public class MainActivity extends AppCompatActivity {
         urlToFetch = sharedPref.getString(getString(R.string.prefUrlToFetch), "");
 
         urlEdit.setText(urlToFetch);
+        jvcMsgList.setAdapter(adapterForMessages);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(getString(R.string.saveLatestListOfInputInAString), latestListOfInputInAString);
-        outState.putStringArrayList(getString(R.string.saveAllCurrentMessagesShowed), allCurrentMessagesShowed);
+        outState.putStringArrayList(getString(R.string.saveAllCurrentMessagesShowed), adapterForMessages.getAllItems());
         outState.putBoolean(getString(R.string.saveFirstTimeGetMessages), firstTimeGetMessages);
         outState.putLong(getString(R.string.saveLastIfOfMessage), lastIdOfMessage);
     }
@@ -252,22 +254,22 @@ public class MainActivity extends AppCompatActivity {
                 if (!infoOfCurrentPage.listOfMessages.isEmpty() && (infoOfCurrentPage.lastPageLink.isEmpty() || !firstTimeGetMessages)) {
                     for (JVCParser.MessageInfos thisMessageInfo : infoOfCurrentPage.listOfMessages) {
                         if (thisMessageInfo.id > lastIdOfMessage) {
-                            allCurrentMessagesShowed.add(JVCParser.createStringMessageFromInfos(thisMessageInfo));
+                            adapterForMessages.addItem(JVCParser.createStringMessageFromInfos(thisMessageInfo));
                             lastIdOfMessage = thisMessageInfo.id;
                         }
                     }
 
                     if (firstTimeGetMessages) {
-                        while (allCurrentMessagesShowed.size() > initialNumberOfMessagesShowed) {
-                            allCurrentMessagesShowed.remove(0);
+                        while (adapterForMessages.getCount() > initialNumberOfMessagesShowed) {
+                            adapterForMessages.removeFirstItem();
                         }
                     }
 
-                    while (allCurrentMessagesShowed.size() > maxNumberOfMessagesShowed) {
-                        allCurrentMessagesShowed.remove(0);
+                    while (adapterForMessages.getCount() > maxNumberOfMessagesShowed) {
+                        adapterForMessages.removeFirstItem();
                     }
 
-                    updateJVCMsgTextView();
+                    adapterForMessages.updateAllItems();
                     firstTimeGetMessages = false;
                 }
 
