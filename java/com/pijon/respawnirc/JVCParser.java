@@ -186,6 +186,24 @@ final class JVCParser {
         return lastPage;
     }
 
+    static String getNextPageOfTopic(String pageSource) {
+        int currentPageNumber = 0;
+        Matcher currentPageMatcher = currentPagePattern.matcher(pageSource);
+        Matcher pageLinkMatcher = pageLinkPattern.matcher(pageSource);
+
+        if (currentPageMatcher.find()) {
+            currentPageNumber = Integer.parseInt(currentPageMatcher.group(1));
+        }
+
+        while (pageLinkMatcher.find()) {
+            if (Integer.parseInt(pageLinkMatcher.group(2)) == (currentPageNumber + 1)) {
+                return "http://www.jeuxvideo.com" + pageLinkMatcher.group(1);
+            }
+        }
+
+        return "";
+    }
+
     static String createMessageFirstLineFromInfos(MessageInfos thisMessageInfo) {
         return "[" + thisMessageInfo.dateTime + "] &lt;<font color=\"#80002A\">" + thisMessageInfo.pseudo + "</font>&gt;";
     }

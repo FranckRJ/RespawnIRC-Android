@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.PopupMenu;
@@ -21,10 +22,9 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-/*TODO: Lors de la récupération des messages, passer à la page suivante et non à la dernière page
-* TODO: Ajouter la possibilité d'afficher tous les messages depuis le dernier lu
+/*TODO: Ajouter la possibilité d'afficher tous les messages depuis le dernier lu
+* TODO: Sauvegarder le pseudo de l'utilisateur et faire des trucs avec (genre le colorer etc).
 * TODO: Ajouter une activité pour les paramètres
-* TODO: Gérer les scroll auto (pour l'affichage des messages et pour l'envoie lors des citations).
 * TODO: Set focus sur la zone d'écriture des messages après citation ?
 * TODO: Gérer le cas d'un changement de topic lors de la récupération des messages
 * TODO: Récupérer les messages automatiquement après un post/changement de topic
@@ -37,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences sharedPref = null;
     ListView jvcMsgList = null;
     EditText urlEdit = null;
-    EditText messageEdit = null;
+    EditText messageSendEdit = null;
+    Button messageSendButton = null;
     String urlToFetch = "";
     Timer timerForFetchUrl = new Timer();
     String latestListOfInputInAString = null;
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     static class PageInfos {
         ArrayList<JVCParser.MessageInfos> listOfMessages;
         String lastPageLink;
+        String nextPageLink;
         String listOfInputInAString;
         JVCParser.AjaxInfos ajaxInfosOfThisPage;
     }
@@ -123,13 +125,12 @@ public class MainActivity extends AppCompatActivity {
         if (latestListOfInputInAString != null) {
             String messageToSend;
             try {
-                messageToSend = URLEncoder.encode(messageEdit.getText().toString(), "UTF-8");
+                messageToSend = URLEncoder.encode(messageSendEdit.getText().toString(), "UTF-8");
             } catch (Exception e) {
                 messageToSend = "";
                 e.printStackTrace();
             }
             new PostJVCMessage().execute(urlToFetch, messageToSend, latestListOfInputInAString, sharedPref.getString(getString(R.string.prefCookiesList), ""));
-            messageEdit.setText("");
         } else {
             Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show();
         }
@@ -161,7 +162,8 @@ public class MainActivity extends AppCompatActivity {
 
         jvcMsgList = (ListView) findViewById(R.id.jvcmessage_view_main);
         urlEdit = (EditText) findViewById(R.id.topiclink_text_main);
-        messageEdit = (EditText) findViewById(R.id.sendmessage_text_main);
+        messageSendEdit = (EditText) findViewById(R.id.sendmessage_text_main);
+        messageSendButton = (Button) findViewById(R.id.sendmessage_button_main);
 
         adapterForMessages = new JVCMessagesAdapter(MainActivity.this);
 
@@ -238,6 +240,11 @@ public class MainActivity extends AppCompatActivity {
     /*TODO: si le lien du topic comporte une faute dans le titre, la récupération des messages fonctionnera (car redirect) mais pas l'envoie.*/
     private class PostJVCMessage extends AsyncTask<String, Void, String> {
         @Override
+        protected void onPreExecute() {
+            messageSendButton.setEnabled(false);
+        }
+
+        @Override
         protected String doInBackground(String... params) {
             if (params.length > 3) {
                 return WebManager.sendRequest(params[0], "POST", "message_topic=" + params[1] + params[2] + "&form_alias_rang=1", params[3]);
@@ -250,12 +257,16 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String pageResult) {
             super.onPostExecute(pageResult);
+            messageSendButton.setEnabled(true);
 
             if (pageResult != null) {
                 if (!pageResult.isEmpty()) {
                     Toast.makeText(MainActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
+                    return;
                 }
             }
+
+            messageSendEdit.setText("");
         }
     }
 
@@ -277,14 +288,18 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(messageQuoted);
 
             if (messageQuoted != null) {
-                String currentMessage = messageEdit.getText().toString();
+                String currentMessage = messageSendEdit.getText().toString();
 
-                if (!currentMessage.isEmpty()) {
-                    currentMessage += "\n\n";
+                if (!currentMessage.isEmpty() && !currentMessage.endsWith("\n\n")) {
+                    if (!currentMessage.endsWith("\n")) {
+                        currentMessage += "\n";
+                    }
+                    currentMessage += "\n";
                 }
                 currentMessage += latestMessageQuotedInfo + "\n>" + messageQuoted + "\n\n";
 
-                messageEdit.setText(currentMessage);
+                messageSendEdit.setText(currentMessage);
+                messageSendEdit.setSelection(currentMessage.length());
                 latestMessageQuotedInfo = null;
             } else {
                 Toast.makeText(MainActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
@@ -302,6 +317,7 @@ public class MainActivity extends AppCompatActivity {
                 if (pageContent != null) {
                     newPageInfos = new PageInfos();
                     newPageInfos.lastPageLink = JVCParser.getLastPageOfTopic(pageContent);
+                    newPageInfos.nextPageLink = JVCParser.getNextPageOfTopic(pageContent);
                     newPageInfos.listOfMessages = JVCParser.getMessagesOfThisPage(pageContent);
                     newPageInfos.listOfInputInAString = JVCParser.getListOfInputInAString(pageContent);
                     newPageInfos.ajaxInfosOfThisPage = JVCParser.getAllAjaxInfos(pageContent);
@@ -313,8 +329,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        /*TODO: changer la manière dont sont affiché les messages.
-        * TODO: au lieu d'aller à la dernière page, passer à la page suivante ?*/
         @Override
         protected void onPostExecute(PageInfos infoOfCurrentPage) {
             super.onPostExecute(infoOfCurrentPage);
@@ -324,6 +338,14 @@ public class MainActivity extends AppCompatActivity {
                 latestAjaxInfos = infoOfCurrentPage.ajaxInfosOfThisPage;
 
                 if (!infoOfCurrentPage.listOfMessages.isEmpty() && (infoOfCurrentPage.lastPageLink.isEmpty() || !firstTimeGetMessages)) {
+
+                    boolean scrolledAtTheEnd = true;
+
+                    if (jvcMsgList.getChildCount() > 0) {
+                        scrolledAtTheEnd = (jvcMsgList.getLastVisiblePosition() == jvcMsgList.getCount() - 1) &&
+                                (jvcMsgList.getChildAt(jvcMsgList.getChildCount() - 1).getBottom() <= jvcMsgList.getHeight());
+                    }
+
                     for (JVCParser.MessageInfos thisMessageInfo : infoOfCurrentPage.listOfMessages) {
                         if (thisMessageInfo.id > lastIdOfMessage) {
                             adapterForMessages.addItem(thisMessageInfo);
@@ -342,11 +364,20 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     adapterForMessages.updateAllItems();
+
+                    if (scrolledAtTheEnd && jvcMsgList.getCount() > 0) {
+                        jvcMsgList.setSelection(jvcMsgList.getCount() - 1);
+                    }
+
                     firstTimeGetMessages = false;
                 }
 
                 if (!infoOfCurrentPage.lastPageLink.isEmpty()) {
-                    urlToFetch = infoOfCurrentPage.lastPageLink;
+                    if (firstTimeGetMessages) {
+                        urlToFetch = infoOfCurrentPage.lastPageLink;
+                    } else {
+                        urlToFetch = infoOfCurrentPage.nextPageLink;
+                    }
                 }
             }
 
