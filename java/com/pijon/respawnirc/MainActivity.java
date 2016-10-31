@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import java.net.URLEncoder;
@@ -20,6 +21,14 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/*TODO: Lors de la récupération des messages, passer à la page suivante et non à la dernière page
+* TODO: Ajouter la possibilité d'afficher tous les messages depuis le dernier lu
+* TODO: Ajouter une activité pour les paramètres
+* TODO: Gérer les scroll auto (pour l'affichage des messages et pour l'envoie lors des citations).
+* TODO: Set focus sur la zone d'écriture des messages après citation ?
+* TODO: Gérer le cas d'un changement de topic lors de la récupération des messages
+* TODO: Récupérer les messages automatiquement après un post/changement de topic
+* TODO: Convertir l'activité en fragment*/
 public class MainActivity extends AppCompatActivity {
     private final int maxNumberOfMessagesShowed = 40;
     private final int initialNumberOfMessagesShowed = 10;
@@ -32,14 +41,37 @@ public class MainActivity extends AppCompatActivity {
     String urlToFetch = "";
     Timer timerForFetchUrl = new Timer();
     String latestListOfInputInAString = null;
+    JVCParser.AjaxInfos latestAjaxInfos = new JVCParser.AjaxInfos();
+    String latestMessageQuotedInfo = null;
     boolean firstTimeGetMessages = true;
     long lastIdOfMessage = 0;
+
+    PopupMenu.OnMenuItemClickListener listenerForItemClicked = new PopupMenu.OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.menu_quote_message:
+                    if (latestAjaxInfos.list != null && latestMessageQuotedInfo == null) {
+                        String idOfMessage = Long.toString(adapterForMessages.getItem(adapterForMessages.getCurrentItemSelected()).id);
+                        latestMessageQuotedInfo = JVCParser.buildMessageQuotedInfoFromThis(adapterForMessages.getItem(adapterForMessages.getCurrentItemSelected()));
+
+                        new QuoteJVCMessage().execute(idOfMessage, latestAjaxInfos.list, sharedPref.getString(getString(R.string.prefCookiesList), ""));
+                    } else {
+                        Toast.makeText(MainActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
+                    }
+
+                    return true;
+            }
+            return false;
+        }
+    };
 
     /*TODO: Refléchir à déplacer cette classe dans JVCParser ?*/
     static class PageInfos {
         ArrayList<JVCParser.MessageInfos> listOfMessages;
         String lastPageLink;
         String listOfInputInAString;
+        JVCParser.AjaxInfos ajaxInfosOfThisPage;
     }
 
     public void resetTopicInfos() {
@@ -136,6 +168,8 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             ArrayList<JVCParser.MessageInfos> allCurrentMessagesShowed = savedInstanceState.getParcelableArrayList(getString(R.string.saveAllCurrentMessagesShowed));
             latestListOfInputInAString = savedInstanceState.getString(getString(R.string.saveLatestListOfInputInAString), null);
+            latestAjaxInfos.list = savedInstanceState.getString(getString(R.string.saveLatestAjaxInfoList), null);
+            latestAjaxInfos.mod = savedInstanceState.getString(getString(R.string.saveLatestAjaxInfoMod), null);
             firstTimeGetMessages = savedInstanceState.getBoolean(getString(R.string.saveFirstTimeGetMessages), true);
             lastIdOfMessage = savedInstanceState.getLong(getString(R.string.saveLastIfOfMessage), 0);
 
@@ -153,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
         urlToFetch = sharedPref.getString(getString(R.string.prefUrlToFetch), "");
 
         urlEdit.setText(urlToFetch);
+        adapterForMessages.setActionWhenItemMenuClicked(listenerForItemClicked);
         jvcMsgList.setAdapter(adapterForMessages);
     }
 
@@ -160,6 +195,8 @@ public class MainActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(getString(R.string.saveLatestListOfInputInAString), latestListOfInputInAString);
+        outState.putString(getString(R.string.saveLatestAjaxInfoList), latestAjaxInfos.list);
+        outState.putString(getString(R.string.saveLatestAjaxInfoMod), latestAjaxInfos.mod);
         outState.putParcelableArrayList(getString(R.string.saveAllCurrentMessagesShowed), adapterForMessages.getAllItems());
         outState.putBoolean(getString(R.string.saveFirstTimeGetMessages), firstTimeGetMessages);
         outState.putLong(getString(R.string.saveLastIfOfMessage), lastIdOfMessage);
@@ -222,6 +259,39 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private class QuoteJVCMessage extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            if (params.length > 2) {
+                String pageContent = WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_citation.php", "POST", "id_message=" + params[0] + "&" + params[1], params[2]);
+
+                if (pageContent != null) {
+                    return JVCParser.getMessageQuoted(pageContent);
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String messageQuoted) {
+            super.onPostExecute(messageQuoted);
+
+            if (messageQuoted != null) {
+                String currentMessage = messageEdit.getText().toString();
+
+                if (!currentMessage.isEmpty()) {
+                    currentMessage += "\n\n";
+                }
+                currentMessage += latestMessageQuotedInfo + "\n>" + messageQuoted + "\n\n";
+
+                messageEdit.setText(currentMessage);
+                latestMessageQuotedInfo = null;
+            } else {
+                Toast.makeText(MainActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     private class ShowJVCLastMessage extends AsyncTask<String, Void, PageInfos> {
         @Override
         protected PageInfos doInBackground(String... params) {
@@ -234,6 +304,7 @@ public class MainActivity extends AppCompatActivity {
                     newPageInfos.lastPageLink = JVCParser.getLastPageOfTopic(pageContent);
                     newPageInfos.listOfMessages = JVCParser.getMessagesOfThisPage(pageContent);
                     newPageInfos.listOfInputInAString = JVCParser.getListOfInputInAString(pageContent);
+                    newPageInfos.ajaxInfosOfThisPage = JVCParser.getAllAjaxInfos(pageContent);
                 }
 
                 return newPageInfos;
@@ -250,6 +321,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (infoOfCurrentPage != null) {
                 latestListOfInputInAString = infoOfCurrentPage.listOfInputInAString;
+                latestAjaxInfos = infoOfCurrentPage.ajaxInfosOfThisPage;
 
                 if (!infoOfCurrentPage.listOfMessages.isEmpty() && (infoOfCurrentPage.lastPageLink.isEmpty() || !firstTimeGetMessages)) {
                     for (JVCParser.MessageInfos thisMessageInfo : infoOfCurrentPage.listOfMessages) {

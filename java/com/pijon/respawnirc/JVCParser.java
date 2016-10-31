@@ -8,6 +8,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 final class JVCParser {
+    private static final Pattern ajaxTimestampPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_timestamp_liste_messages\" id=\"ajax_timestamp_liste_messages\" value=\"([^\"]*)\" />");
+    private static final Pattern ajaxHashPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_hash_liste_messages\" id=\"ajax_hash_liste_messages\" value=\"([^\"]*)\" />");
+    private static final Pattern ajaxModTimestampPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_timestamp_moderation_forum\" id=\"ajax_timestamp_moderation_forum\" value=\"([^\"]*)\" />");
+    private static final Pattern ajaxModHashPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_hash_moderation_forum\" id=\"ajax_hash_moderation_forum\" value=\"([^\"]*)\" />");
+    private static final Pattern messageQuotePattern = Pattern.compile("\"txt\":\"(.*)\"", Pattern.DOTALL);
     private static final Pattern entireMessagePattern = Pattern.compile("(<div class=\"bloc-message-forum \".*?)(<span id=\"post_[^\"]*\" class=\"bloc-message-forum-anchor\">|<div class=\"bloc-outils-plus-modo bloc-outils-bottom\">|<div class=\"bloc-pagi-default\">)", Pattern.DOTALL);
     private static final Pattern pseudoInfosPattern = Pattern.compile("<span class=\"JvCare [^ ]* bloc-pseudo-msg text-([^\"]*)\" target=\"_blank\">[^a-zA-Z0-9_\\[\\]-]*([a-zA-Z0-9_\\[\\]-]*)[^<]*</span>");
     private static final Pattern messagePattern = Pattern.compile("<div class=\"bloc-contenu\"><div class=\"txt-msg  text-[^-]*-forum \">((.*?)(?=<div class=\"info-edition-msg\">)|(.*?)(?=<div class=\"signature-msg)|(.*))", Pattern.DOTALL);
@@ -17,6 +22,11 @@ final class JVCParser {
     private static final Pattern inputFormPattern = Pattern.compile("<input ([^=]*)=\"([^\"]*)\" ([^=]*)=\"([^\"]*)\" ([^=]*)=\"([^\"]*)\"/>");
     private static final Pattern dateMessagePattern = Pattern.compile("<div class=\"bloc-date-msg\">([^<]*<span class=\"JvCare [^ ]* lien-jv\" target=\"_blank\">)?[^a-zA-Z0-9]*([^ ]* [^ ]* [^ ]* [^ ]* ([0-9:]*))");
     private static final Pattern messageIDPattern = Pattern.compile("<div class=\"bloc-message-forum \" data-id=\"([^\"]*)\">");
+
+    static class AjaxInfos {
+        String list = null;
+        String mod = null;
+    }
 
     static class MessageInfos implements Parcelable {
         String pseudo;
@@ -64,6 +74,58 @@ final class JVCParser {
 
     private JVCParser() {
         //rien
+    }
+
+    static String buildMessageQuotedInfoFromThis(MessageInfos thisMessageInfo) {
+        return ">[" + thisMessageInfo.dateTime + "] <" + thisMessageInfo.pseudo + ">";
+    }
+
+    private static String parsingAjaxMessages(String ajaxMessage) {
+        ajaxMessage = ajaxMessage.replace("\n", "")
+                .replace("\\r", "")
+                .replace("\\\"", "\"")
+                .replace("\\/", "/")
+                .replace("\\\\", "\\")
+                .replace("\\n", "\n");
+
+        /*TODO: Gérer les caractères spéciaux (unicode).*/
+
+        ajaxMessage = ajaxMessage.replace("&amp;", "&")
+                .replace("&quot;", "\"")
+                .replace("&#039;", "\'")
+                .replace("&lt;", "<")
+                .replace("&gt;", ">");
+
+        return ajaxMessage;
+    }
+
+    static String getMessageQuoted(String pageSource) {
+        Matcher messageQuoteMatcher = messageQuotePattern.matcher(pageSource);
+
+        if (messageQuoteMatcher.find()) {
+            return parsingAjaxMessages(messageQuoteMatcher.group(1)).replace("\n", "\n>");
+        }
+
+        return "";
+    }
+
+    static AjaxInfos getAllAjaxInfos(String pageSource) {
+        AjaxInfos newAjaxInfos = new AjaxInfos();
+
+        Matcher ajaxTimestampMatcher = ajaxTimestampPattern.matcher(pageSource);
+        Matcher ajaxHashMatcher = ajaxHashPattern.matcher(pageSource);
+        Matcher ajaxModTimestampMatcher = ajaxModTimestampPattern.matcher(pageSource);
+        Matcher ajaxModHashMatcher = ajaxModHashPattern.matcher(pageSource);
+
+        if(ajaxTimestampMatcher.find() && ajaxHashMatcher.find()) {
+            newAjaxInfos.list = "ajax_timestamp=" + ajaxTimestampMatcher.group(1) + "&ajax_hash=" + ajaxHashMatcher.group(1);
+        }
+
+        if(ajaxModTimestampMatcher.find() && ajaxModHashMatcher.find()) {
+            newAjaxInfos.mod = "ajax_timestamp=" + ajaxModTimestampMatcher.group(1) + "&ajax_hash=" + ajaxModHashMatcher.group(1);
+        }
+
+        return newAjaxInfos;
     }
 
     static String getListOfInputInAString(String pageSource) {

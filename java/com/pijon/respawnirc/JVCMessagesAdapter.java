@@ -4,27 +4,56 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-//http://stackoverflow.com/questions/16427360/add-menu-on-every-listview-item
-
-/*TODO: Désactiver l'highlight quand on clique sur un élément. (désactivé par défaut quand un lien est présent)*/
+/*TODO: Menu différent pour messages de l'utilisateur.*/
+/*TODO: Désactiver l'highlight quand on clique sur un élément. (désactivé par défaut quand un lien est présent) (fixé depuis l'ajout des boutons ?)*/
 class JVCMessagesAdapter extends BaseAdapter {
     private ArrayList<JVCParser.MessageInfos> listOfMessages = new ArrayList<>();
     private LayoutInflater serviceInflater;
+    private Activity parentActivity = null;
+    private int currentItemSelected = -1;
+    private PopupMenu.OnMenuItemClickListener actionWhenItemMenuClicked = null;
 
-    class ViewHolder {
+    private View.OnClickListener menuButtonClicked = new View.OnClickListener() {
+        @Override
+        public void onClick(View buttonView) {
+            PopupMenu popup = new PopupMenu(parentActivity, buttonView);
+            MenuInflater inflater = popup.getMenuInflater();
+
+            currentItemSelected = (int) buttonView.getTag();
+            popup.setOnMenuItemClickListener(actionWhenItemMenuClicked);
+            inflater.inflate(R.menu.menu_message_others, popup.getMenu());
+            popup.show();
+        }
+    };
+
+    private class ViewHolder {
         TextView firstLine;
         TextView secondLine;
+        Button showMenuButton;
     }
 
-    JVCMessagesAdapter(Activity parentActivity) {
+    JVCMessagesAdapter(Activity newParentActivity) {
+        parentActivity = newParentActivity;
         serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    int getCurrentItemSelected() {
+        return currentItemSelected;
+    }
+
+    void setActionWhenItemMenuClicked(PopupMenu.OnMenuItemClickListener newAction) {
+        actionWhenItemMenuClicked = newAction;
     }
 
     void removeAllItems() {
@@ -67,13 +96,18 @@ class JVCMessagesAdapter extends BaseAdapter {
         ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
+
             convertView = serviceInflater.inflate(R.layout.jvcmessages_row, null);
             holder.firstLine = (TextView) convertView.findViewById(R.id.item_one_jvcmessages_text_row);
             holder.secondLine = (TextView) convertView.findViewById(R.id.item_two_jvcmessages_text_row);
+            holder.showMenuButton = (Button) convertView.findViewById(R.id.menu_overflow_row);
+
+            holder.showMenuButton.setOnClickListener(menuButtonClicked);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+        holder.showMenuButton.setTag(position);
         holder.firstLine.setText(Html.fromHtml(JVCParser.createMessageFirstLineFromInfos(getItem(position))));
         holder.secondLine.setText(Html.fromHtml(JVCParser.createMessageSecondLineFromInfos(getItem(position))));
         return convertView;
