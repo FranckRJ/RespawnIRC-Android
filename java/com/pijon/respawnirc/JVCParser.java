@@ -204,8 +204,14 @@ final class JVCParser {
         return "";
     }
 
-    static String createMessageFirstLineFromInfos(MessageInfos thisMessageInfo) {
-        return "[" + thisMessageInfo.dateTime + "] &lt;<font color=\"#80002A\">" + thisMessageInfo.pseudo + "</font>&gt;";
+    /*TODO: Améliorer ça, le rendre plus propre, et gérer plus de cas (pseudo admin/modo).*/
+    static String createMessageFirstLineFromInfos(MessageInfos thisMessageInfo, String pseudoOfUser) {
+        if (thisMessageInfo.pseudo.toLowerCase().equals(pseudoOfUser.toLowerCase())) {
+            return "[" + thisMessageInfo.dateTime + "] &lt;<font color=\"#3399ff\">" + thisMessageInfo.pseudo + "</font>&gt;";
+        }
+        else {
+            return "[" + thisMessageInfo.dateTime + "] &lt;<font color=\"#80002A\">" + thisMessageInfo.pseudo + "</font>&gt;";
+        }
     }
 
     static String createMessageSecondLineFromInfos(MessageInfos thisMessageInfo) {

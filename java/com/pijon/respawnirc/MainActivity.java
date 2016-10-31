@@ -23,7 +23,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /*TODO: Ajouter la possibilité d'afficher tous les messages depuis le dernier lu
-* TODO: Sauvegarder le pseudo de l'utilisateur et faire des trucs avec (genre le colorer etc).
 * TODO: Ajouter une activité pour les paramètres
 * TODO: Set focus sur la zone d'écriture des messages après citation ?
 * TODO: Gérer le cas d'un changement de topic lors de la récupération des messages
@@ -33,21 +32,23 @@ public class MainActivity extends AppCompatActivity {
     private final int maxNumberOfMessagesShowed = 40;
     private final int initialNumberOfMessagesShowed = 10;
 
-    JVCMessagesAdapter adapterForMessages = null;
-    SharedPreferences sharedPref = null;
-    ListView jvcMsgList = null;
-    EditText urlEdit = null;
-    EditText messageSendEdit = null;
-    Button messageSendButton = null;
-    String urlToFetch = "";
-    Timer timerForFetchUrl = new Timer();
-    String latestListOfInputInAString = null;
-    JVCParser.AjaxInfos latestAjaxInfos = new JVCParser.AjaxInfos();
-    String latestMessageQuotedInfo = null;
-    boolean firstTimeGetMessages = true;
-    long lastIdOfMessage = 0;
+    private JVCMessagesAdapter adapterForMessages = null;
+    private SharedPreferences sharedPref = null;
+    private ListView jvcMsgList = null;
+    private EditText urlEdit = null;
+    private EditText messageSendEdit = null;
+    private Button messageSendButton = null;
+    private String urlToFetch = "";
+    private Timer timerForFetchUrl = new Timer();
+    private String latestListOfInputInAString = null;
+    private JVCParser.AjaxInfos latestAjaxInfos = new JVCParser.AjaxInfos();
+    private String latestMessageQuotedInfo = null;
+    private String pseudoOfUser = "";
+    private String cookieListInAString = "";
+    private boolean firstTimeGetMessages = true;
+    private long lastIdOfMessage = 0;
 
-    PopupMenu.OnMenuItemClickListener listenerForItemClicked = new PopupMenu.OnMenuItemClickListener() {
+    private PopupMenu.OnMenuItemClickListener listenerForItemClicked = new PopupMenu.OnMenuItemClickListener() {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                         String idOfMessage = Long.toString(adapterForMessages.getItem(adapterForMessages.getCurrentItemSelected()).id);
                         latestMessageQuotedInfo = JVCParser.buildMessageQuotedInfoFromThis(adapterForMessages.getItem(adapterForMessages.getCurrentItemSelected()));
 
-                        new QuoteJVCMessage().execute(idOfMessage, latestAjaxInfos.list, sharedPref.getString(getString(R.string.prefCookiesList), ""));
+                        new QuoteJVCMessage().execute(idOfMessage, latestAjaxInfos.list, cookieListInAString);
                     } else {
                         Toast.makeText(MainActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
                     }
@@ -122,17 +123,21 @@ public class MainActivity extends AppCompatActivity {
         InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         View focusedView;
 
-        if (latestListOfInputInAString != null) {
-            String messageToSend;
-            try {
-                messageToSend = URLEncoder.encode(messageSendEdit.getText().toString(), "UTF-8");
-            } catch (Exception e) {
-                messageToSend = "";
-                e.printStackTrace();
+        if (!pseudoOfUser.isEmpty()) {
+            if (latestListOfInputInAString != null) {
+                String messageToSend;
+                try {
+                    messageToSend = URLEncoder.encode(messageSendEdit.getText().toString(), "UTF-8");
+                } catch (Exception e) {
+                    messageToSend = "";
+                    e.printStackTrace();
+                }
+                new PostJVCMessage().execute(urlToFetch, messageToSend, latestListOfInputInAString, cookieListInAString);
+            } else {
+                Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show();
             }
-            new PostJVCMessage().execute(urlToFetch, messageToSend, latestListOfInputInAString, sharedPref.getString(getString(R.string.prefCookiesList), ""));
         } else {
-            Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.errorConnectedNeededBeforePost, Toast.LENGTH_LONG).show();
         }
 
         focusedView = getCurrentFocus();
@@ -166,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
         messageSendButton = (Button) findViewById(R.id.sendmessage_button_main);
 
         adapterForMessages = new JVCMessagesAdapter(MainActivity.this);
+        adapterForMessages.setActionWhenItemMenuClicked(listenerForItemClicked);
 
         if (savedInstanceState != null) {
             ArrayList<JVCParser.MessageInfos> allCurrentMessagesShowed = savedInstanceState.getParcelableArrayList(getString(R.string.saveAllCurrentMessagesShowed));
@@ -173,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
             latestAjaxInfos.list = savedInstanceState.getString(getString(R.string.saveLatestAjaxInfoList), null);
             latestAjaxInfos.mod = savedInstanceState.getString(getString(R.string.saveLatestAjaxInfoMod), null);
             firstTimeGetMessages = savedInstanceState.getBoolean(getString(R.string.saveFirstTimeGetMessages), true);
-            lastIdOfMessage = savedInstanceState.getLong(getString(R.string.saveLastIfOfMessage), 0);
+            lastIdOfMessage = savedInstanceState.getLong(getString(R.string.saveLastIdOfMessage), 0);
 
             if (allCurrentMessagesShowed != null) {
                 for (JVCParser.MessageInfos thisMessageInfo : allCurrentMessagesShowed) {
@@ -189,7 +195,6 @@ public class MainActivity extends AppCompatActivity {
         urlToFetch = sharedPref.getString(getString(R.string.prefUrlToFetch), "");
 
         urlEdit.setText(urlToFetch);
-        adapterForMessages.setActionWhenItemMenuClicked(listenerForItemClicked);
         jvcMsgList.setAdapter(adapterForMessages);
     }
 
@@ -201,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
         outState.putString(getString(R.string.saveLatestAjaxInfoMod), latestAjaxInfos.mod);
         outState.putParcelableArrayList(getString(R.string.saveAllCurrentMessagesShowed), adapterForMessages.getAllItems());
         outState.putBoolean(getString(R.string.saveFirstTimeGetMessages), firstTimeGetMessages);
-        outState.putLong(getString(R.string.saveLastIfOfMessage), lastIdOfMessage);
+        outState.putLong(getString(R.string.saveLastIdOfMessage), lastIdOfMessage);
     }
 
     @Override
@@ -214,6 +219,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        cookieListInAString = sharedPref.getString(getString(R.string.prefCookiesList), "");
+        pseudoOfUser = sharedPref.getString(getString(R.string.prefPseudoUser), "");
+        adapterForMessages.setCurrentPseudoOfUser(pseudoOfUser);
         new LaunchShowJVCLastMessage().run();
     }
 
@@ -231,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    new ShowJVCLastMessage().execute(urlToFetch, sharedPref.getString(getString(R.string.prefCookiesList), ""));
+                    new ShowJVCLastMessage().execute(urlToFetch, cookieListInAString);
                 }
             });
         }

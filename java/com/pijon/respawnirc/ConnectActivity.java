@@ -18,8 +18,8 @@ import android.widget.Toast;
 
 /*TODO: Récupérer le pseudo automatiquement.*/
 public class ConnectActivity extends AppCompatActivity {
-    WebView jvcWebView = null;
-    EditText pseudoText = null;
+    private WebView jvcWebView = null;
+    private EditText pseudoText = null;
 
     public void saveCookies(View buttonView) {
         if (!pseudoText.getText().toString().isEmpty()) {
@@ -52,6 +52,7 @@ public class ConnectActivity extends AppCompatActivity {
                 SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
 
                 sharedPrefEdit.putString(getString(R.string.prefCookiesList), "dlrowolleh=" + helloCookieValue + ";coniunctio=" + connectCookieValue);
+                sharedPrefEdit.putString(getString(R.string.prefPseudoUser), pseudoText.getText().toString());
                 sharedPrefEdit.apply();
 
                 super.onBackPressed();

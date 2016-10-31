@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-/*TODO: Menu différent pour messages de l'utilisateur.*/
 /*TODO: Désactiver l'highlight quand on clique sur un élément. (désactivé par défaut quand un lien est présent) (fixé depuis l'ajout des boutons ?)*/
 class JVCMessagesAdapter extends BaseAdapter {
     private ArrayList<JVCParser.MessageInfos> listOfMessages = new ArrayList<>();
@@ -23,6 +22,7 @@ class JVCMessagesAdapter extends BaseAdapter {
     private Activity parentActivity = null;
     private int currentItemSelected = -1;
     private PopupMenu.OnMenuItemClickListener actionWhenItemMenuClicked = null;
+    private String currentPseudoOfUser = "";
 
     private View.OnClickListener menuButtonClicked = new View.OnClickListener() {
         @Override
@@ -32,7 +32,13 @@ class JVCMessagesAdapter extends BaseAdapter {
 
             currentItemSelected = (int) buttonView.getTag();
             popup.setOnMenuItemClickListener(actionWhenItemMenuClicked);
-            inflater.inflate(R.menu.menu_message_others, popup.getMenu());
+
+            if (getItem(currentItemSelected).pseudo.toLowerCase().equals(currentPseudoOfUser.toLowerCase())) {
+                inflater.inflate(R.menu.menu_message_user, popup.getMenu());
+            } else {
+                inflater.inflate(R.menu.menu_message_others, popup.getMenu());
+            }
+
             popup.show();
         }
     };
@@ -54,6 +60,10 @@ class JVCMessagesAdapter extends BaseAdapter {
 
     void setActionWhenItemMenuClicked(PopupMenu.OnMenuItemClickListener newAction) {
         actionWhenItemMenuClicked = newAction;
+    }
+
+    void setCurrentPseudoOfUser(String newPseudoOfUser) {
+        currentPseudoOfUser = newPseudoOfUser;
     }
 
     void removeAllItems() {
@@ -108,7 +118,7 @@ class JVCMessagesAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         holder.showMenuButton.setTag(position);
-        holder.firstLine.setText(Html.fromHtml(JVCParser.createMessageFirstLineFromInfos(getItem(position))));
+        holder.firstLine.setText(Html.fromHtml(JVCParser.createMessageFirstLineFromInfos(getItem(position), currentPseudoOfUser)));
         holder.secondLine.setText(Html.fromHtml(JVCParser.createMessageSecondLineFromInfos(getItem(position))));
         return convertView;
     }

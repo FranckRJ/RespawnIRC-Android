@@ -18,9 +18,12 @@
     <string name="saveLatestListOfInputInAString">save.latestListOfInputInAString</string>
     <string name="saveAllCurrentMessagesShowed">save.allCurrentMessagesShowed</string>
     <string name="saveFirstTimeGetMessages">save.firstTimeGetMessages</string>
-    <string name="saveLastIfOfMessage">save.lastIfOfMessage</string>
+    <string name="saveLastIdOfMessage">save.lastIdOfMessage</string>
     <string name="vertical_ellipsis">|</string>
     <string name="quoteMessage">Citer</string>
     <string name="saveLatestAjaxInfoList">save.latestAjaxInfoList</string>
     <string name="saveLatestAjaxInfoMod">save.latestAjaxInfoMod</string>
+    <string name="prefPseudoUser">pref.pseudoUser</string>
+    <string name="errorConnectedNeededBeforePost">Erreur, veuillez vous connecter avant d\'envoyer un message.</string>
+    <string name="editMessage">Editer</string>
 </resources>

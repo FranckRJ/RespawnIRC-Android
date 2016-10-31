@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_quote_message"
+        android:title="@string/quoteMessage"/>
+    <item android:id="@+id/menu_edit_message"
+        android:enabled="false"
+        android:title="@string/editMessage"/>
+</menu>
