@@ -230,17 +230,17 @@ final class JVCParser {
     private static String parseMessageToPrettyMessage(String thisMessage) {
         thisMessage = thisMessage.replace("\n", "")
                 .replace("\r", "")
+                .replaceAll("<ul[^>]*>", "")
+                .replace("</ul>", "</p>")
+                .replaceAll("<ol[^>]*>", "")
+                .replace("</ol>", "</p>")
+                .replace("<li>", "<br> • ")
+                .replace("</li>", "")
                 .replaceAll("</p> *<p>", "<br /><br />")
                 .replace("<p>", "")
                 .replace("</p>", "")
                 .replace("</div>", "")
                 .replaceAll("<div[^>]*>", "")
-                .replaceAll("<ul[^>]*>", "")
-                .replace("</ul>", "")
-                .replaceAll("<ol[^>]*>", "")
-                .replace("</ol>", "")
-                .replace("<li>", "")
-                .replace("</li>", "")
                 .replaceAll("<img src=\"//image.jeuxvideo.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-def=\"SMILEYS\" data-code=\"([^\"]*)\" title=\"[^\"]*\" />", "$2")
                 .replaceAll("<img class=\"img-stickers\" src=\"(http://jv.stkr.fr/p/([^\"]*))\"/>", "<a href=\"$1\">$1</a>")
                 .replaceAll("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe .*? src=\"http(s)?://www.youtube.com/embed/([^\"]*)\"[^>]*></iframe></div></div>", "<a href=\"http://youtu.be/$2\">http://youtu.be/$2</a>")
@@ -248,6 +248,14 @@ final class JVCParser {
                 .replaceAll("<span class=\"JvCare [^\"]*\" rel=\"nofollow\" target=\"_blank\">([^<]*)</span>", "<a href=\"$1\">$1</a>")
                 .replaceAll("<span class=\"JvCare [^\"]*\"[^i]*itle=\"([^\"]*)\">[^<]*<i></i><span>[^<]*</span>[^<]*</span>", "<a href=\"$1\">$1</a>")
                 .replaceAll("<a href=\"([^\"]*)\" data-def=\"NOELSHACK\" target=\"_blank\"><img class=\"img-shack\" .*? src=\"//([^\"]*)\" [^>]*></a>", "<a href=\"$1\">$1</a>");
+
+        while (thisMessage.startsWith("<br>")) {
+            thisMessage = thisMessage.substring(4);
+        }
+
+        while (thisMessage.endsWith("<br>")) {
+            thisMessage = thisMessage.substring(0, thisMessage.length() - 4);
+        }
 
         thisMessage = thisMessage.trim();
 
