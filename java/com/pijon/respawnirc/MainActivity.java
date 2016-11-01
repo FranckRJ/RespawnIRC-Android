@@ -25,8 +25,6 @@ import java.util.TimerTask;
 /*TODO: Ajouter la possibilité d'afficher tous les messages depuis le dernier lu
 * TODO: Ajouter une activité pour les paramètres
 * TODO: Set focus sur la zone d'écriture des messages après citation ?
-* TODO: Gérer le cas d'un changement de topic lors de la récupération des messages
-* TODO: Récupérer les messages automatiquement après un post/changement de topic
 * TODO: Convertir l'activité en fragment*/
 public class MainActivity extends AppCompatActivity {
     private final int maxNumberOfMessagesShowed = 40;
@@ -47,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private String cookieListInAString = "";
     private boolean firstTimeGetMessages = true;
     private long lastIdOfMessage = 0;
+    private AsyncTask<String, Void, PageInfos> currentAsyncTaskForGetMessage = null;
+    private boolean messagesNeedToBeGet = false;
 
     private PopupMenu.OnMenuItemClickListener listenerForItemClicked = new PopupMenu.OnMenuItemClickListener() {
         @Override
@@ -84,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
 
         adapterForMessages.removeAllItems();
         adapterForMessages.updateAllItems();
+        stopCurrentShowJVCLastMessage();
+        launchNewShowJVCLastMessage(0);
     }
 
     public void changeCurrentTopicLink(View buttonView) {
@@ -113,10 +115,10 @@ public class MainActivity extends AppCompatActivity {
             urlEdit.setText(urlToFetch);
         }
 
-        resetTopicInfos();
-
         sharedPrefEdit.putString(getString(R.string.prefUrlToFetch), urlToFetch);
         sharedPrefEdit.apply();
+
+        resetTopicInfos();
     }
 
     public void sendMessageToTopic(View buttonView) {
@@ -219,18 +221,43 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        messagesNeedToBeGet = true;
         cookieListInAString = sharedPref.getString(getString(R.string.prefCookiesList), "");
         pseudoOfUser = sharedPref.getString(getString(R.string.prefPseudoUser), "");
         adapterForMessages.setCurrentPseudoOfUser(pseudoOfUser);
-        new LaunchShowJVCLastMessage().run();
+        launchNewShowJVCLastMessage(0);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        timerForFetchUrl.cancel();
-        timerForFetchUrl.purge();
-        timerForFetchUrl = new Timer();
+        messagesNeedToBeGet = false;
+        stopCurrentShowJVCLastMessage();
+    }
+
+    public void launchNewShowJVCLastMessage(int timerBeforeLaunch) {
+        if (currentAsyncTaskForGetMessage == null) {
+            currentAsyncTaskForGetMessage = new ShowJVCLastMessage();
+            timerForFetchUrl.schedule(new LaunchShowJVCLastMessage(), timerBeforeLaunch);
+        }
+    }
+
+    public void stopCurrentShowJVCLastMessage() {
+        if (currentAsyncTaskForGetMessage != null) {
+            currentAsyncTaskForGetMessage.cancel(false);
+            currentAsyncTaskForGetMessage = null;
+        }
+    }
+
+    public void launchEarlyNewShowJVCLastMessageIfNeeded() {
+        if (currentAsyncTaskForGetMessage != null) {
+            if (!currentAsyncTaskForGetMessage.getStatus().equals(AsyncTask.Status.RUNNING)) {
+                stopCurrentShowJVCLastMessage();
+                launchNewShowJVCLastMessage(0);
+            }
+        } else {
+            launchNewShowJVCLastMessage(0);
+        }
     }
 
     private class LaunchShowJVCLastMessage extends TimerTask {
@@ -239,7 +266,11 @@ public class MainActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    new ShowJVCLastMessage().execute(urlToFetch, cookieListInAString);
+                    if (currentAsyncTaskForGetMessage != null) {
+                        if (currentAsyncTaskForGetMessage.getStatus().equals(AsyncTask.Status.PENDING)) {
+                            currentAsyncTaskForGetMessage.execute(urlToFetch, cookieListInAString);
+                        }
+                    }
                 }
             });
         }
@@ -275,6 +306,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             messageSendEdit.setText("");
+            launchEarlyNewShowJVCLastMessageIfNeeded();
         }
     }
 
@@ -389,7 +421,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            timerForFetchUrl.schedule(new LaunchShowJVCLastMessage(), 2000);
+            currentAsyncTaskForGetMessage = null;
+
+            if (messagesNeedToBeGet) {
+                launchNewShowJVCLastMessage(2000);
+            }
         }
     }
 }
