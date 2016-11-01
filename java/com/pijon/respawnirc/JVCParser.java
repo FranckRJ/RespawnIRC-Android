@@ -22,6 +22,7 @@ final class JVCParser {
     private static final Pattern inputFormPattern = Pattern.compile("<input ([^=]*)=\"([^\"]*)\" ([^=]*)=\"([^\"]*)\" ([^=]*)=\"([^\"]*)\"/>");
     private static final Pattern dateMessagePattern = Pattern.compile("<div class=\"bloc-date-msg\">([^<]*<span class=\"JvCare [^ ]* lien-jv\" target=\"_blank\">)?[^a-zA-Z0-9]*([^ ]* [^ ]* [^ ]* [^ ]* ([0-9:]*))");
     private static final Pattern messageIDPattern = Pattern.compile("<div class=\"bloc-message-forum \" data-id=\"([^\"]*)\">");
+    private static final Pattern unicodeInTextPattern = Pattern.compile("\\\\u([a-zA-Z0-9]{4})");
 
     static class AjaxInfos {
         String list = null;
@@ -81,6 +82,8 @@ final class JVCParser {
     }
 
     private static String parsingAjaxMessages(String ajaxMessage) {
+        Matcher unicodeInTextMatcher;
+
         ajaxMessage = ajaxMessage.replace("\n", "")
                 .replace("\\r", "")
                 .replace("\\\"", "\"")
@@ -88,7 +91,12 @@ final class JVCParser {
                 .replace("\\\\", "\\")
                 .replace("\\n", "\n");
 
-        /*TODO: Gérer les caractères spéciaux (unicode).*/
+        unicodeInTextMatcher = unicodeInTextPattern.matcher(ajaxMessage);
+        while (unicodeInTextMatcher.find()) {
+            ajaxMessage = ajaxMessage.substring(0, unicodeInTextMatcher.start()) + Character.toString((char) Integer.parseInt(unicodeInTextMatcher.group(1).trim(), 16)) + ajaxMessage.substring(unicodeInTextMatcher.end());
+
+            unicodeInTextMatcher = unicodeInTextPattern.matcher(ajaxMessage);
+        }
 
         ajaxMessage = ajaxMessage.replace("&amp;", "&")
                 .replace("&quot;", "\"")
@@ -220,19 +228,19 @@ final class JVCParser {
 
     /*TODO: A refaire en plus propre et plus complet.*/
     private static String parseMessageToPrettyMessage(String thisMessage) {
-        thisMessage = thisMessage.replaceAll("\n", "")
-                .replaceAll("\r", "")
+        thisMessage = thisMessage.replace("\n", "")
+                .replace("\r", "")
                 .replaceAll("</p> *<p>", "<br /><br />")
-                .replaceAll("<p>", "")
-                .replaceAll("</p>", "")
-                .replaceAll("</div>", "")
+                .replace("<p>", "")
+                .replace("</p>", "")
+                .replace("</div>", "")
                 .replaceAll("<div[^>]*>", "")
                 .replaceAll("<ul[^>]*>", "")
-                .replaceAll("</ul>", "")
+                .replace("</ul>", "")
                 .replaceAll("<ol[^>]*>", "")
-                .replaceAll("</ol>", "")
-                .replaceAll("<li>", "")
-                .replaceAll("</li>", "")
+                .replace("</ol>", "")
+                .replace("<li>", "")
+                .replace("</li>", "")
                 .replaceAll("<img src=\"//image.jeuxvideo.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-def=\"SMILEYS\" data-code=\"([^\"]*)\" title=\"[^\"]*\" />", "$2")
                 .replaceAll("<img class=\"img-stickers\" src=\"(http://jv.stkr.fr/p/([^\"]*))\"/>", "<a href=\"$1\">$1</a>")
                 .replaceAll("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe .*? src=\"http(s)?://www.youtube.com/embed/([^\"]*)\"[^>]*></iframe></div></div>", "<a href=\"http://youtu.be/$2\">http://youtu.be/$2</a>")
