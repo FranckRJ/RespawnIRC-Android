@@ -25,6 +25,7 @@ import java.util.TimerTask;
 /*TODO: Ajouter la possibilité d'afficher tous les messages depuis le dernier lu
 * TODO: Ajouter une activité pour les paramètres
 * TODO: Set focus sur la zone d'écriture des messages après citation ?
+* TODO: géré la redirection de lien (changement de nom de topic, suppression de page, etc)
 * TODO: Convertir l'activité en fragment*/
 public class MainActivity extends AppCompatActivity {
     private final int maxNumberOfMessagesShowed = 40;
@@ -276,7 +277,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /*TODO: si le lien du topic comporte une faute dans le titre, la récupération des messages fonctionnera (car redirect) mais pas l'envoie.*/
     private class PostJVCMessage extends AsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
@@ -292,7 +292,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        /*TODO: Mieux gérer (afficher) les erreurs d'envoies (en analysant la réponse dans onPostExecute).*/
         @Override
         protected void onPostExecute(String pageResult) {
             super.onPostExecute(pageResult);
@@ -300,7 +299,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (pageResult != null) {
                 if (!pageResult.isEmpty()) {
-                    Toast.makeText(MainActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, JVCParser.getErrorMessage(pageResult), Toast.LENGTH_LONG).show();
                     return;
                 }
             }

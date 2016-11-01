@@ -25,6 +25,7 @@ class WebManager {
             urlToPage = new URL(linkToPage);
             urlConnection = (HttpURLConnection) urlToPage.openConnection();
 
+            urlConnection.setInstanceFollowRedirects(false);
             urlConnection.setConnectTimeout(5000);
             urlConnection.setReadTimeout(10000);
 

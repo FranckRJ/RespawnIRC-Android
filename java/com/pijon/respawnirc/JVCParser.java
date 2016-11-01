@@ -23,6 +23,7 @@ final class JVCParser {
     private static final Pattern dateMessagePattern = Pattern.compile("<div class=\"bloc-date-msg\">([^<]*<span class=\"JvCare [^ ]* lien-jv\" target=\"_blank\">)?[^a-zA-Z0-9]*([^ ]* [^ ]* [^ ]* [^ ]* ([0-9:]*))");
     private static final Pattern messageIDPattern = Pattern.compile("<div class=\"bloc-message-forum \" data-id=\"([^\"]*)\">");
     private static final Pattern unicodeInTextPattern = Pattern.compile("\\\\u([a-zA-Z0-9]{4})");
+    private static final Pattern errorPattern = Pattern.compile("<div class=\"alert-row\">([^<]*)</div>");
 
     static class AjaxInfos {
         String list = null;
@@ -75,6 +76,16 @@ final class JVCParser {
 
     private JVCParser() {
         //rien
+    }
+
+    static String getErrorMessage(String pageSource) {
+        Matcher errorMatcher = errorPattern.matcher(pageSource);
+
+        if (errorMatcher.find()) {
+            return "Erreur : " + errorMatcher.group(1);
+        } else {
+            return "Erreur : le message n'a pas été envoyé.";
+        }
     }
 
     static String buildMessageQuotedInfoFromThis(MessageInfos thisMessageInfo) {
@@ -262,7 +273,7 @@ final class JVCParser {
         return thisMessage;
     }
 
-    /*TODO: Possiblement passé "Pseudo supprimé" en ressource (string.xml).*/
+    /*TODO: Possiblement passer "Pseudo supprimé" en ressource (string.xml).*/
     private static MessageInfos createMessageInfoFromEntireMessage(String thisEntireMessage) {
         MessageInfos newMessageInfo = new MessageInfos();
         Matcher pseudoInfosMatcher = pseudoInfosPattern.matcher(thisEntireMessage);
