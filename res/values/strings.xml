@@ -26,4 +26,6 @@
     <string name="prefPseudoUser">pref.pseudoUser</string>
     <string name="errorConnectedNeededBeforePost">Erreur, veuillez vous connecter avant d\'envoyer un message.</string>
     <string name="editMessage">Editer</string>
+    <string name="hideSpoilMessage">Cacher les spoil</string>
+    <string name="showSpoilMessage">Afficher les spoil</string>
 </resources>

@@ -56,14 +56,22 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.menu_quote_message:
                     if (latestAjaxInfos.list != null && latestMessageQuotedInfo == null) {
-                        String idOfMessage = Long.toString(adapterForMessages.getItem(adapterForMessages.getCurrentItemSelected()).id);
-                        latestMessageQuotedInfo = JVCParser.buildMessageQuotedInfoFromThis(adapterForMessages.getItem(adapterForMessages.getCurrentItemSelected()));
+                        String idOfMessage = Long.toString(adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected()).id);
+                        latestMessageQuotedInfo = JVCParser.buildMessageQuotedInfoFromThis(adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected()));
 
                         new QuoteJVCMessage().execute(idOfMessage, latestAjaxInfos.list, cookieListInAString);
                     } else {
                         Toast.makeText(MainActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
                     }
 
+                    return true;
+                case R.id.menu_show_spoil_message:
+                    adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected()).showSpoil = true;
+                    adapterForMessages.updateAllItems();
+                    return true;
+                case R.id.menu_hide_spoil_message:
+                    adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected()).showSpoil = false;
+                    adapterForMessages.updateAllItems();
                     return true;
             }
             return false;

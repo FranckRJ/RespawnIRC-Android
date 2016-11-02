@@ -38,7 +38,9 @@ final class JVCParser {
         String pseudo;
         String messageNotParsed;
         String dateTime;
-        long id;
+        boolean containSpoil = false;
+        boolean showSpoil = false;
+        long id = 0;
 
         @Override
         public int describeContents() {
@@ -50,6 +52,8 @@ final class JVCParser {
             out.writeString(pseudo);
             out.writeString(messageNotParsed);
             out.writeString(dateTime);
+            out.writeInt(containSpoil ? 1 : 0);
+            out.writeInt(showSpoil ? 1 : 0);
             out.writeLong(id);
         }
 
@@ -73,6 +77,8 @@ final class JVCParser {
             pseudo = in.readString();
             messageNotParsed = in.readString();
             dateTime = in.readString();
+            containSpoil = (in.readInt() == 1);
+            showSpoil = (in.readInt() == 1);
             id = in.readLong();
         }
 
@@ -238,15 +244,21 @@ final class JVCParser {
     }
 
     static String createMessageSecondLineFromInfos(MessageInfos thisMessageInfo) {
-        return parseMessageToPrettyMessage(thisMessageInfo.messageNotParsed);
+        return parseMessageToPrettyMessage(thisMessageInfo.messageNotParsed, thisMessageInfo.showSpoil);
     }
 
     /*TODO: A refaire en plus propre et plus complet.*/
-    private static String parseMessageToPrettyMessage(String thisMessage) {
+    private static String parseMessageToPrettyMessage(String thisMessage, boolean showSpoil) {
         thisMessage = parseThisMessageWithThisPattern(thisMessage, codeBlockPattern, 1, "<p><font face=\"monospace\">", "</font></p>", true, null);
         thisMessage = parseThisMessageWithThisPattern(thisMessage, codeLinePattern, 1, "<font face=\"monospace\">", "</font>", false, null);
-        thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilLinePattern, 1, "", "", false, "█");
-        thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilBlockPattern, 1, "<p>", "</p>", false, "█");
+
+        if (!showSpoil) {
+            thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilLinePattern, 1, "", "", false, "█");
+            thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilBlockPattern, 1, "<p>", "</p>", false, "█");
+        } else {
+            thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilLinePattern, 1, "<font color=\"#000000\">", "</font>", false, null);
+            thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilBlockPattern, 1, "<p><font color=\"#000000\">", "</font></p>", false, null);
+        }
 
         thisMessage = thisMessage.replace("\n", "")
                 .replace("\r", "")
@@ -293,7 +305,7 @@ final class JVCParser {
                 messageContent = messageContent.replace("\n", "<br />");
             }
             if (replaceForAllChar != null) {
-                messageContent = messageContent.replaceAll("(?s).", replaceForAllChar);
+                messageContent = messageContent.replaceAll("<.+?>", " ").replaceAll("(?s).", replaceForAllChar);
             }
 
             newMessage += messageContent + stringAfter + messageToParse.substring(matcherToUse.end());
@@ -322,6 +334,7 @@ final class JVCParser {
         if (messageMatcher.find() && messageIDMatcher.find() && dateMessageMatcher.find()) {
             newMessageInfo.messageNotParsed = messageMatcher.group(1);
             newMessageInfo.dateTime = dateMessageMatcher.group(3);
+            newMessageInfo.containSpoil = newMessageInfo.messageNotParsed.contains("<span class=\"contenu-spoil\">");
             newMessageInfo.id = Long.parseLong(messageIDMatcher.group(1));
         }
 

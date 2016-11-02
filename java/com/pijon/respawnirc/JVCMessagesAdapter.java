@@ -20,7 +20,7 @@ class JVCMessagesAdapter extends BaseAdapter {
     private ArrayList<JVCParser.MessageInfos> listOfMessages = new ArrayList<>();
     private LayoutInflater serviceInflater;
     private Activity parentActivity = null;
-    private int currentItemSelected = -1;
+    private int currentItemIDSelected = -1;
     private PopupMenu.OnMenuItemClickListener actionWhenItemMenuClicked = null;
     private String currentPseudoOfUser = "";
 
@@ -29,14 +29,24 @@ class JVCMessagesAdapter extends BaseAdapter {
         public void onClick(View buttonView) {
             PopupMenu popup = new PopupMenu(parentActivity, buttonView);
             MenuInflater inflater = popup.getMenuInflater();
+            JVCParser.MessageInfos itemSelected;
 
-            currentItemSelected = (int) buttonView.getTag();
+            currentItemIDSelected = (int) buttonView.getTag();
+            itemSelected = getItem(currentItemIDSelected);
             popup.setOnMenuItemClickListener(actionWhenItemMenuClicked);
 
-            if (getItem(currentItemSelected).pseudo.toLowerCase().equals(currentPseudoOfUser.toLowerCase())) {
+            if (itemSelected.pseudo.toLowerCase().equals(currentPseudoOfUser.toLowerCase())) {
                 inflater.inflate(R.menu.menu_message_user, popup.getMenu());
             } else {
                 inflater.inflate(R.menu.menu_message_others, popup.getMenu());
+            }
+
+            if (itemSelected.containSpoil) {
+                if (itemSelected.showSpoil) {
+                    inflater.inflate(R.menu.menu_message_hide_spoil, popup.getMenu());
+                } else {
+                    inflater.inflate(R.menu.menu_message_show_spoil, popup.getMenu());
+                }
             }
 
             popup.show();
@@ -54,8 +64,8 @@ class JVCMessagesAdapter extends BaseAdapter {
         serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    int getCurrentItemSelected() {
-        return currentItemSelected;
+    int getCurrentItemIDSelected() {
+        return currentItemIDSelected;
     }
 
     void setActionWhenItemMenuClicked(PopupMenu.OnMenuItemClickListener newAction) {
