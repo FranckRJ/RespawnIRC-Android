@@ -26,6 +26,7 @@ import java.util.TimerTask;
 * TODO: Ajouter une activité pour les paramètres
 * TODO: Set focus sur la zone d'écriture des messages après citation ?
 * TODO: géré la redirection de lien (changement de nom de topic, suppression de page, etc)
+* TODO: Récupérer les deux dernières page si la dernière page contient moins de X messages (et au 1er chargement aussi ?)
 * TODO: Convertir l'activité en fragment*/
 public class MainActivity extends AppCompatActivity {
     private final int maxNumberOfMessagesShowed = 40;
@@ -423,7 +424,7 @@ public class MainActivity extends AppCompatActivity {
             currentAsyncTaskForGetMessage = null;
 
             if (messagesNeedToBeGet) {
-                launchNewShowJVCLastMessage(2000);
+                launchNewShowJVCLastMessage(5000);
             }
         }
     }

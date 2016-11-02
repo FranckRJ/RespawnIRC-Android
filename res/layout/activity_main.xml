@@ -11,43 +11,45 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"/>
+
+    <LinearLayout
+        android:id="@+id/topiclink_layout_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar_main"
+        android:orientation="horizontal"
+        android:background="#eee">
+        <EditText
+            android:id="@+id/topiclink_text_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="20"
+            android:inputType="text"
+            android:hint="@string/topiclinkPlaceHolder"/>
+        <Button
+            android:id="@+id/topiclink_button_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="80"
+            android:text="@string/go"
+            android:onClick="changeCurrentTopicLink"/>
+    </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="4dp"
         android:background="@drawable/shadow_top"
         android:layout_below="@id/toolbar_main"/>
 
-    <LinearLayout
+    <ListView
+        android:id="@+id/jvcmessage_view_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar_main"
-        android:layout_above="@+id/sendmessage_layout_main"
-        android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <EditText
-                android:id="@+id/topiclink_text_main"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="20"
-                android:inputType="text"
-                android:hint="@string/topiclinkPlaceHolder"/>
-            <Button
-                android:id="@+id/topiclink_button_main"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="80"
-                android:text="@string/go"
-                android:onClick="changeCurrentTopicLink"/>
-        </LinearLayout>
-
-        <ListView
-            android:id="@+id/jvcmessage_view_main"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+        android:layout_below="@id/topiclink_layout_main"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="@drawable/shadow_top"
+        android:layout_below="@id/topiclink_layout_main"/>
 
     <View
         android:layout_width="match_parent"
