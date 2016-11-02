@@ -44,6 +44,7 @@
         android:id="@+id/jvcmessage_view_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/sendmessage_layout_main"
         android:layout_below="@id/topiclink_layout_main"/>
     <View
         android:layout_width="match_parent"

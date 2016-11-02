@@ -24,6 +24,10 @@ final class JVCParser {
     private static final Pattern messageIDPattern = Pattern.compile("<div class=\"bloc-message-forum \" data-id=\"([^\"]*)\">");
     private static final Pattern unicodeInTextPattern = Pattern.compile("\\\\u([a-zA-Z0-9]{4})");
     private static final Pattern errorPattern = Pattern.compile("<div class=\"alert-row\">([^<]*)</div>");
+    private static final Pattern codeBlockPattern = Pattern.compile("<pre class=\"pre-jv\"><code class=\"code-jv\">([^<]*)</code></pre>");
+    private static final Pattern codeLinePattern = Pattern.compile("<code class=\"code-jv\">(.*?)</code>", Pattern.DOTALL);
+    private static final Pattern spoilLinePattern = Pattern.compile("<span class=\"bloc-spoil-jv en-ligne\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
+    private static final Pattern spoilBlockPattern = Pattern.compile("<span class=\"bloc-spoil-jv\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
 
     static class AjaxInfos {
         String list = null;
@@ -239,17 +243,19 @@ final class JVCParser {
 
     /*TODO: A refaire en plus propre et plus complet.*/
     private static String parseMessageToPrettyMessage(String thisMessage) {
+        thisMessage = parseThisMessageWithThisPattern(thisMessage, codeBlockPattern, 1, "<p><font face=\"monospace\">", "</font></p>", true, null);
+        thisMessage = parseThisMessageWithThisPattern(thisMessage, codeLinePattern, 1, "<font face=\"monospace\">", "</font>", false, null);
+        thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilLinePattern, 1, "", "", false, "█");
+        thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilBlockPattern, 1, "<p>", "</p>", false, "█");
+
         thisMessage = thisMessage.replace("\n", "")
                 .replace("\r", "")
                 .replaceAll("<ul[^>]*>", "")
                 .replace("</ul>", "</p>")
                 .replaceAll("<ol[^>]*>", "")
                 .replace("</ol>", "</p>")
-                .replace("<li>", "<br> • ")
+                .replace("<li>", "<br /> • ")
                 .replace("</li>", "")
-                .replaceAll("</p> *<p>", "<br /><br />")
-                .replace("<p>", "")
-                .replace("</p>", "")
                 .replace("</div>", "")
                 .replaceAll("<div[^>]*>", "")
                 .replaceAll("<img src=\"//image.jeuxvideo.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-def=\"SMILEYS\" data-code=\"([^\"]*)\" title=\"[^\"]*\" />", "$2")
@@ -258,19 +264,45 @@ final class JVCParser {
                 .replaceAll("<a href=\"([^\"]*)\"( title=\"[^\"]*\")?>.*?</a>", "<a href=\"$1\">$1</a>")
                 .replaceAll("<span class=\"JvCare [^\"]*\" rel=\"nofollow\" target=\"_blank\">([^<]*)</span>", "<a href=\"$1\">$1</a>")
                 .replaceAll("<span class=\"JvCare [^\"]*\"[^i]*itle=\"([^\"]*)\">[^<]*<i></i><span>[^<]*</span>[^<]*</span>", "<a href=\"$1\">$1</a>")
-                .replaceAll("<a href=\"([^\"]*)\" data-def=\"NOELSHACK\" target=\"_blank\"><img class=\"img-shack\" .*? src=\"//([^\"]*)\" [^>]*></a>", "<a href=\"$1\">$1</a>");
-
-        while (thisMessage.startsWith("<br>")) {
-            thisMessage = thisMessage.substring(4);
-        }
-
-        while (thisMessage.endsWith("<br>")) {
-            thisMessage = thisMessage.substring(0, thisMessage.length() - 4);
-        }
+                .replaceAll("<a href=\"([^\"]*)\" data-def=\"NOELSHACK\" target=\"_blank\"><img class=\"img-shack\" .*? src=\"//([^\"]*)\" [^>]*></a>", "<a href=\"$1\">$1</a>")
+                .replaceAll("</p> *<p>", "<br /><br />")
+                .replace("<p>", "")
+                .replace("</p>", "");
 
         thisMessage = thisMessage.trim();
 
+        while (thisMessage.startsWith("<br />")) {
+            thisMessage = thisMessage.substring(4);
+        }
+
+        while (thisMessage.endsWith("<br />")) {
+            thisMessage = thisMessage.substring(0, thisMessage.length() - 4);
+        }
+
         return thisMessage;
+    }
+
+    private static String parseThisMessageWithThisPattern(String messageToParse, Pattern patternToUse, int groupToUse, String stringBefore, String stringAfter, boolean replaceNByBr, String replaceForAllChar) {
+        Matcher matcherToUse = patternToUse.matcher(messageToParse);
+
+        while (matcherToUse.find()) {
+            String newMessage = messageToParse.substring(0, matcherToUse.start()) + stringBefore;
+            String messageContent = matcherToUse.group(groupToUse);
+
+            if (replaceNByBr) {
+                messageContent = messageContent.replace("\n", "<br />");
+            }
+            if (replaceForAllChar != null) {
+                messageContent = messageContent.replaceAll("(?s).", replaceForAllChar);
+            }
+
+            newMessage += messageContent + stringAfter + messageToParse.substring(matcherToUse.end());
+
+            messageToParse = newMessage;
+            matcherToUse = patternToUse.matcher(messageToParse);
+        }
+
+        return messageToParse;
     }
 
     /*TODO: Possiblement passer "Pseudo supprimé" en ressource (string.xml).*/
