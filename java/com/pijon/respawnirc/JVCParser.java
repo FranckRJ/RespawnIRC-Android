@@ -249,15 +249,15 @@ final class JVCParser {
 
     /*TODO: A refaire en plus propre et plus complet.*/
     private static String parseMessageToPrettyMessage(String thisMessage, boolean showSpoil) {
-        thisMessage = parseThisMessageWithThisPattern(thisMessage, codeBlockPattern, 1, "<p><font face=\"monospace\">", "</font></p>", true, null);
-        thisMessage = parseThisMessageWithThisPattern(thisMessage, codeLinePattern, 1, "<font face=\"monospace\">", "</font>", false, null);
+        thisMessage = parseThisMessageWithThisPattern(thisMessage, codeBlockPattern, 1, "<p><font face=\"monospace\">", "</font></p>", true, true, null);
+        thisMessage = parseThisMessageWithThisPattern(thisMessage, codeLinePattern, 1, "<font face=\"monospace\">", "</font>", false, true, null);
 
         if (!showSpoil) {
-            thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilLinePattern, 1, "", "", false, "█");
-            thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilBlockPattern, 1, "<p>", "</p>", false, "█");
+            thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilLinePattern, 1, "", "", false, false, "█");
+            thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilBlockPattern, 1, "<p>", "</p>", false, false, "█");
         } else {
-            thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilLinePattern, 1, "<font color=\"#000000\">", "</font>", false, null);
-            thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilBlockPattern, 1, "<p><font color=\"#000000\">", "</font></p>", false, null);
+            thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilLinePattern, 1, "<font color=\"#000000\">", "</font>", false, false, null);
+            thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilBlockPattern, 1, "<p><font color=\"#000000\">", "</font></p>", false, false, null);
         }
 
         thisMessage = thisMessage.replace("\n", "")
@@ -294,7 +294,7 @@ final class JVCParser {
         return thisMessage;
     }
 
-    private static String parseThisMessageWithThisPattern(String messageToParse, Pattern patternToUse, int groupToUse, String stringBefore, String stringAfter, boolean replaceNByBr, String replaceForAllChar) {
+    private static String parseThisMessageWithThisPattern(String messageToParse, Pattern patternToUse, int groupToUse, String stringBefore, String stringAfter, boolean replaceNByBr, boolean forceShowSpace, String replaceForAllChar) {
         Matcher matcherToUse = patternToUse.matcher(messageToParse);
 
         while (matcherToUse.find()) {
@@ -303,6 +303,9 @@ final class JVCParser {
 
             if (replaceNByBr) {
                 messageContent = messageContent.replace("\n", "<br />");
+            }
+            if (forceShowSpace) {
+                messageContent = messageContent.replace(" ", " "); //remplace les espaces par des alt+255
             }
             if (replaceForAllChar != null) {
                 messageContent = messageContent.replaceAll("<.+?>", " ").replaceAll("(?s).", replaceForAllChar);
