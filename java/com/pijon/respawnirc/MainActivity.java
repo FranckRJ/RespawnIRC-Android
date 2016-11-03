@@ -19,47 +19,39 @@ import android.widget.Toast;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /*TODO: Ajouter la possibilité d'afficher tous les messages depuis le dernier lu
 * TODO: Ajouter une activité pour les paramètres
 * TODO: Set focus sur la zone d'écriture des messages après citation ?
 * TODO: géré la redirection de lien (changement de nom de topic, suppression de page, etc)
 * TODO: Récupérer les deux dernières page si la dernière page contient moins de X messages (et au 1er chargement aussi ?)
+* TODO: http://stackoverflow.com/questions/5312592/how-can-i-get-my-listview-to-scroll pour pouvoir scroll le lien du topic ?
 * TODO: Convertir l'activité en fragment*/
 public class MainActivity extends AppCompatActivity {
     private final int maxNumberOfMessagesShowed = 40;
     private final int initialNumberOfMessagesShowed = 10;
 
     private JVCMessagesAdapter adapterForMessages = null;
+    private JVCMessageGetter getterForMessages = null;
     private SharedPreferences sharedPref = null;
     private ListView jvcMsgList = null;
     private EditText urlEdit = null;
     private EditText messageSendEdit = null;
     private Button messageSendButton = null;
-    private String urlToFetch = "";
-    private Timer timerForFetchUrl = new Timer();
-    private String latestListOfInputInAString = null;
-    private JVCParser.AjaxInfos latestAjaxInfos = new JVCParser.AjaxInfos();
     private String latestMessageQuotedInfo = null;
     private String pseudoOfUser = "";
     private String cookieListInAString = "";
-    private boolean firstTimeGetMessages = true;
-    private long lastIdOfMessage = 0;
-    private AsyncTask<String, Void, PageInfos> currentAsyncTaskForGetMessage = null;
-    private boolean messagesNeedToBeGet = false;
 
     private PopupMenu.OnMenuItemClickListener listenerForItemClicked = new PopupMenu.OnMenuItemClickListener() {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.menu_quote_message:
-                    if (latestAjaxInfos.list != null && latestMessageQuotedInfo == null) {
+                    if (getterForMessages.getLatestAjaxInfos().list != null && latestMessageQuotedInfo == null) {
                         String idOfMessage = Long.toString(adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected()).id);
                         latestMessageQuotedInfo = JVCParser.buildMessageQuotedInfoFromThis(adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected()));
 
-                        new QuoteJVCMessage().execute(idOfMessage, latestAjaxInfos.list, cookieListInAString);
+                        new QuoteJVCMessage().execute(idOfMessage, getterForMessages.getLatestAjaxInfos().list, cookieListInAString);
                     } else {
                         Toast.makeText(MainActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
                     }
@@ -78,25 +70,40 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    /*TODO: Refléchir à déplacer cette classe dans JVCParser ?*/
-    static class PageInfos {
-        ArrayList<JVCParser.MessageInfos> listOfMessages;
-        String lastPageLink;
-        String nextPageLink;
-        String listOfInputInAString;
-        JVCParser.AjaxInfos ajaxInfosOfThisPage;
-    }
+    private JVCMessageGetter.NewMessagesListener listenerForNewMessages = new JVCMessageGetter.NewMessagesListener() {
+        @Override
+        public void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages) {
+            if (!listOfNewMessages.isEmpty()) {
+                boolean scrolledAtTheEnd = true;
+                boolean firstTimeGetMessages = adapterForMessages.getAllItems().isEmpty();
 
-    public void resetTopicInfos() {
-        firstTimeGetMessages = true;
-        latestListOfInputInAString = null;
-        lastIdOfMessage = 0;
+                if (jvcMsgList.getChildCount() > 0) {
+                    scrolledAtTheEnd = (jvcMsgList.getLastVisiblePosition() == jvcMsgList.getCount() - 1) &&
+                            (jvcMsgList.getChildAt(jvcMsgList.getChildCount() - 1).getBottom() <= jvcMsgList.getHeight());
+                }
 
-        adapterForMessages.removeAllItems();
-        adapterForMessages.updateAllItems();
-        stopCurrentShowJVCLastMessage();
-        launchNewShowJVCLastMessage(0);
-    }
+                for (JVCParser.MessageInfos thisMessageInfo : listOfNewMessages) {
+                        adapterForMessages.addItem(thisMessageInfo);
+                }
+
+                if (firstTimeGetMessages) {
+                    while (adapterForMessages.getCount() > initialNumberOfMessagesShowed) {
+                        adapterForMessages.removeFirstItem();
+                    }
+                }
+
+                while (adapterForMessages.getCount() > maxNumberOfMessagesShowed) {
+                    adapterForMessages.removeFirstItem();
+                }
+
+                adapterForMessages.updateAllItems();
+
+                if (scrolledAtTheEnd && jvcMsgList.getCount() > 0) {
+                    jvcMsgList.setSelection(jvcMsgList.getCount() - 1);
+                }
+            }
+        }
+    };
 
     public void changeCurrentTopicLink(View buttonView) {
         String newUrl;
@@ -104,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
 
         newUrl = urlEdit.getText().toString();
-        urlToFetch = newUrl;
 
         if (newUrl.startsWith("https://")) {
             newUrl = newUrl.replaceFirst("https://", "http://");
@@ -120,15 +126,18 @@ public class MainActivity extends AppCompatActivity {
             newUrl = newUrl.replaceFirst("http://jeuxvideo.com/", "http://www.jeuxvideo.com/");
         }
 
-        if (!newUrl.equals(urlToFetch)) {
-            urlToFetch = newUrl;
-            urlEdit.setText(urlToFetch);
+        if (!newUrl.equals(urlEdit.getText().toString())) {
+            urlEdit.setText(newUrl);
         }
 
-        sharedPrefEdit.putString(getString(R.string.prefUrlToFetch), urlToFetch);
+        sharedPrefEdit.putString(getString(R.string.prefUrlToFetch), newUrl);
         sharedPrefEdit.apply();
 
-        resetTopicInfos();
+        adapterForMessages.removeAllItems();
+        adapterForMessages.updateAllItems();
+        getterForMessages.setNewTopic(newUrl);
+        getterForMessages.stopGetMessages();
+        getterForMessages.startGetMessages(0);
     }
 
     public void sendMessageToTopic(View buttonView) {
@@ -136,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         View focusedView;
 
         if (!pseudoOfUser.isEmpty()) {
-            if (latestListOfInputInAString != null) {
+            if (getterForMessages.getLatestListOfInputInAString() != null) {
                 String messageToSend;
                 try {
                     messageToSend = URLEncoder.encode(messageSendEdit.getText().toString(), "UTF-8");
@@ -144,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                     messageToSend = "";
                     e.printStackTrace();
                 }
-                new PostJVCMessage().execute(urlToFetch, messageToSend, latestListOfInputInAString, cookieListInAString);
+                new PostJVCMessage().execute(getterForMessages.getUrlForTopic(), messageToSend, getterForMessages.getLatestListOfInputInAString(), cookieListInAString);
             } else {
                 Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show();
             }
@@ -168,7 +177,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /*TODO: http://stackoverflow.com/questions/5312592/how-can-i-get-my-listview-to-scroll pour pouvoir scroll le lien du topic ?*/
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -182,16 +190,14 @@ public class MainActivity extends AppCompatActivity {
         messageSendEdit = (EditText) findViewById(R.id.sendmessage_text_main);
         messageSendButton = (Button) findViewById(R.id.sendmessage_button_main);
 
+        getterForMessages = new JVCMessageGetter(MainActivity.this);
         adapterForMessages = new JVCMessagesAdapter(MainActivity.this);
+        getterForMessages.setListenerForNewMessages(listenerForNewMessages);
         adapterForMessages.setActionWhenItemMenuClicked(listenerForItemClicked);
 
         if (savedInstanceState != null) {
             ArrayList<JVCParser.MessageInfos> allCurrentMessagesShowed = savedInstanceState.getParcelableArrayList(getString(R.string.saveAllCurrentMessagesShowed));
-            latestListOfInputInAString = savedInstanceState.getString(getString(R.string.saveLatestListOfInputInAString), null);
-            latestAjaxInfos.list = savedInstanceState.getString(getString(R.string.saveLatestAjaxInfoList), null);
-            latestAjaxInfos.mod = savedInstanceState.getString(getString(R.string.saveLatestAjaxInfoMod), null);
-            firstTimeGetMessages = savedInstanceState.getBoolean(getString(R.string.saveFirstTimeGetMessages), true);
-            lastIdOfMessage = savedInstanceState.getLong(getString(R.string.saveLastIdOfMessage), 0);
+            getterForMessages.loadFromBundle(savedInstanceState);
 
             if (allCurrentMessagesShowed != null) {
                 for (JVCParser.MessageInfos thisMessageInfo : allCurrentMessagesShowed) {
@@ -204,21 +210,17 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
-        urlToFetch = sharedPref.getString(getString(R.string.prefUrlToFetch), "");
+        getterForMessages.setNewTopic(sharedPref.getString(getString(R.string.prefUrlToFetch), ""));
 
-        urlEdit.setText(urlToFetch);
+        urlEdit.setText(getterForMessages.getUrlForTopic());
         jvcMsgList.setAdapter(adapterForMessages);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(getString(R.string.saveLatestListOfInputInAString), latestListOfInputInAString);
-        outState.putString(getString(R.string.saveLatestAjaxInfoList), latestAjaxInfos.list);
-        outState.putString(getString(R.string.saveLatestAjaxInfoMod), latestAjaxInfos.mod);
         outState.putParcelableArrayList(getString(R.string.saveAllCurrentMessagesShowed), adapterForMessages.getAllItems());
-        outState.putBoolean(getString(R.string.saveFirstTimeGetMessages), firstTimeGetMessages);
-        outState.putLong(getString(R.string.saveLastIdOfMessage), lastIdOfMessage);
+        getterForMessages.saveToBundle(outState);
     }
 
     @Override
@@ -231,59 +233,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        messagesNeedToBeGet = true;
         cookieListInAString = sharedPref.getString(getString(R.string.prefCookiesList), "");
         pseudoOfUser = sharedPref.getString(getString(R.string.prefPseudoUser), "");
         adapterForMessages.setCurrentPseudoOfUser(pseudoOfUser);
-        launchNewShowJVCLastMessage(0);
+        getterForMessages.setCookieListInAString(cookieListInAString);
+        getterForMessages.startGetMessages(0);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        messagesNeedToBeGet = false;
-        stopCurrentShowJVCLastMessage();
-    }
-
-    public void launchNewShowJVCLastMessage(int timerBeforeLaunch) {
-        if (currentAsyncTaskForGetMessage == null) {
-            currentAsyncTaskForGetMessage = new ShowJVCLastMessage();
-            timerForFetchUrl.schedule(new LaunchShowJVCLastMessage(), timerBeforeLaunch);
-        }
-    }
-
-    public void stopCurrentShowJVCLastMessage() {
-        if (currentAsyncTaskForGetMessage != null) {
-            currentAsyncTaskForGetMessage.cancel(false);
-            currentAsyncTaskForGetMessage = null;
-        }
-    }
-
-    public void launchEarlyNewShowJVCLastMessageIfNeeded() {
-        if (currentAsyncTaskForGetMessage != null) {
-            if (!currentAsyncTaskForGetMessage.getStatus().equals(AsyncTask.Status.RUNNING)) {
-                stopCurrentShowJVCLastMessage();
-                launchNewShowJVCLastMessage(0);
-            }
-        } else {
-            launchNewShowJVCLastMessage(0);
-        }
-    }
-
-    private class LaunchShowJVCLastMessage extends TimerTask {
-        @Override
-        public void run() {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (currentAsyncTaskForGetMessage != null) {
-                        if (currentAsyncTaskForGetMessage.getStatus().equals(AsyncTask.Status.PENDING)) {
-                            currentAsyncTaskForGetMessage.execute(urlToFetch, cookieListInAString);
-                        }
-                    }
-                }
-            });
-        }
+        getterForMessages.stopGetMessages();
     }
 
     private class PostJVCMessage extends AsyncTask<String, Void, String> {
@@ -314,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             messageSendEdit.setText("");
-            launchEarlyNewShowJVCLastMessageIfNeeded();
+            getterForMessages.startEarlyGetMessagesIfNeeded();
         }
     }
 
@@ -351,88 +311,6 @@ public class MainActivity extends AppCompatActivity {
                 latestMessageQuotedInfo = null;
             } else {
                 Toast.makeText(MainActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private class ShowJVCLastMessage extends AsyncTask<String, Void, PageInfos> {
-        @Override
-        protected PageInfos doInBackground(String... params) {
-            if (params.length > 1) {
-                PageInfos newPageInfos = null;
-                String pageContent = WebManager.sendRequest(params[0], "GET", "", params[1]);
-
-                if (pageContent != null) {
-                    newPageInfos = new PageInfos();
-                    newPageInfos.lastPageLink = JVCParser.getLastPageOfTopic(pageContent);
-                    newPageInfos.nextPageLink = JVCParser.getNextPageOfTopic(pageContent);
-                    newPageInfos.listOfMessages = JVCParser.getMessagesOfThisPage(pageContent);
-                    newPageInfos.listOfInputInAString = JVCParser.getListOfInputInAString(pageContent);
-                    newPageInfos.ajaxInfosOfThisPage = JVCParser.getAllAjaxInfos(pageContent);
-                }
-
-                return newPageInfos;
-            } else {
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(PageInfos infoOfCurrentPage) {
-            super.onPostExecute(infoOfCurrentPage);
-
-            if (infoOfCurrentPage != null) {
-                latestListOfInputInAString = infoOfCurrentPage.listOfInputInAString;
-                latestAjaxInfos = infoOfCurrentPage.ajaxInfosOfThisPage;
-
-                if (!infoOfCurrentPage.listOfMessages.isEmpty() && (infoOfCurrentPage.lastPageLink.isEmpty() || !firstTimeGetMessages)) {
-
-                    boolean scrolledAtTheEnd = true;
-
-                    if (jvcMsgList.getChildCount() > 0) {
-                        scrolledAtTheEnd = (jvcMsgList.getLastVisiblePosition() == jvcMsgList.getCount() - 1) &&
-                                (jvcMsgList.getChildAt(jvcMsgList.getChildCount() - 1).getBottom() <= jvcMsgList.getHeight());
-                    }
-
-                    for (JVCParser.MessageInfos thisMessageInfo : infoOfCurrentPage.listOfMessages) {
-                        if (thisMessageInfo.id > lastIdOfMessage) {
-                            adapterForMessages.addItem(thisMessageInfo);
-                            lastIdOfMessage = thisMessageInfo.id;
-                        }
-                    }
-
-                    if (firstTimeGetMessages) {
-                        while (adapterForMessages.getCount() > initialNumberOfMessagesShowed) {
-                            adapterForMessages.removeFirstItem();
-                        }
-                    }
-
-                    while (adapterForMessages.getCount() > maxNumberOfMessagesShowed) {
-                        adapterForMessages.removeFirstItem();
-                    }
-
-                    adapterForMessages.updateAllItems();
-
-                    if (scrolledAtTheEnd && jvcMsgList.getCount() > 0) {
-                        jvcMsgList.setSelection(jvcMsgList.getCount() - 1);
-                    }
-
-                    firstTimeGetMessages = false;
-                }
-
-                if (!infoOfCurrentPage.lastPageLink.isEmpty()) {
-                    if (firstTimeGetMessages) {
-                        urlToFetch = infoOfCurrentPage.lastPageLink;
-                    } else {
-                        urlToFetch = infoOfCurrentPage.nextPageLink;
-                    }
-                }
-            }
-
-            currentAsyncTaskForGetMessage = null;
-
-            if (messagesNeedToBeGet) {
-                launchNewShowJVCLastMessage(5000);
             }
         }
     }
