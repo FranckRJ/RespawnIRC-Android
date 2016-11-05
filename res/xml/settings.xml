@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/settingsGeneralTitle">
+        <EditTextPreference
+            android:key="@string/settingsRefreshTopicTime"
+            android:title="@string/refreshTopicTimeTitle"
+            android:defaultValue="@string/refreshTopicTimeDefault"
+            android:numeric="integer"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/settingsShowMessagesTitle">
+        <EditTextPreference
+            android:key="@string/settingsMaxNumberOfMessages"
+            android:title="@string/maxNumberOfMessagesTitle"
+            android:defaultValue="@string/maxNumberOfMessagesDefault"
+            android:numeric="integer"/>
+        <EditTextPreference
+            android:key="@string/settingsInitialNumberOfMessages"
+            android:title="@string/initialNumberOfMessagesTitle"
+            android:defaultValue="@string/initialNumberOfMessagesDefault"
+            android:numeric="integer"/>
+    </PreferenceCategory>
+</PreferenceScreen>

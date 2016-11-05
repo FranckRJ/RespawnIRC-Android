@@ -25,6 +25,10 @@
             android:label="@string/connectToJVC"
             android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/preference">
+        </activity>
     </application>
 
 </manifest>

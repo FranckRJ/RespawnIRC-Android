@@ -28,4 +28,16 @@
     <string name="editMessage">Editer</string>
     <string name="hideSpoilMessage">Cacher les spoil</string>
     <string name="showSpoilMessage">Afficher les spoil</string>
+    <string name="preference">Préférences</string>
+    <string name="settingsShowMessagesTitle">Nombre de messages affichés</string>
+    <string name="settingsMaxNumberOfMessages">settings.maxNumberOfMessages</string>
+    <string name="maxNumberOfMessagesTitle">Au maximum</string>
+    <string name="settingsInitialNumberOfMessages">settings.initialNumberOfMessages</string>
+    <string name="initialNumberOfMessagesTitle">Au premier chargement</string>
+    <string name="maxNumberOfMessagesDefault">40</string>
+    <string name="initialNumberOfMessagesDefault">10</string>
+    <string name="settingsGeneralTitle">Général</string>
+    <string name="settingsRefreshTopicTime">settings.refreshTopicTime</string>
+    <string name="refreshTopicTimeTitle">Temps avant màj des messages</string>
+    <string name="refreshTopicTimeDefault">10000</string>
 </resources>

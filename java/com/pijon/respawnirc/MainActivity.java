@@ -28,9 +28,8 @@ import java.util.ArrayList;
 * TODO: http://stackoverflow.com/questions/5312592/how-can-i-get-my-listview-to-scroll pour pouvoir scroll le lien du topic ?
 * TODO: Convertir l'activité en fragment*/
 public class MainActivity extends AppCompatActivity {
-    private final int maxNumberOfMessagesShowed = 40;
-    private final int initialNumberOfMessagesShowed = 10;
-
+    private int maxNumberOfMessagesShowed = 40;
+    private int initialNumberOfMessagesShowed = 10;
     private JVCMessagesAdapter adapterForMessages = null;
     private JVCMessageGetter getterForMessages = null;
     private SharedPreferences sharedPref = null;
@@ -135,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
         adapterForMessages.removeAllItems();
         adapterForMessages.updateAllItems();
-        getterForMessages.setNewTopic(newUrl);
+        getterForMessages.setNewTopic(newUrl, true);
         getterForMessages.stopGetMessages();
         getterForMessages.startGetMessages(0);
     }
@@ -172,6 +171,9 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_connectToJVC_main:
                 startActivity(new Intent(MainActivity.this, ConnectActivity.class));
+                return true;
+            case R.id.action_settings_main:
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -210,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
-        getterForMessages.setNewTopic(sharedPref.getString(getString(R.string.prefUrlToFetch), ""));
+        getterForMessages.setNewTopic(sharedPref.getString(getString(R.string.prefUrlToFetch), ""), false);
 
         urlEdit.setText(getterForMessages.getUrlForTopic());
         jvcMsgList.setAdapter(adapterForMessages);
@@ -233,8 +235,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        maxNumberOfMessagesShowed = Integer.parseInt(sharedPref.getString(getString(R.string.settingsMaxNumberOfMessages), getString(R.string.maxNumberOfMessagesDefault)));
+        initialNumberOfMessagesShowed = Integer.parseInt(sharedPref.getString(getString(R.string.settingsInitialNumberOfMessages), getString(R.string.initialNumberOfMessagesDefault)));
         cookieListInAString = sharedPref.getString(getString(R.string.prefCookiesList), "");
         pseudoOfUser = sharedPref.getString(getString(R.string.prefPseudoUser), "");
+        getterForMessages.setTimeBetweenRefreshTopic(Integer.parseInt(sharedPref.getString(getString(R.string.settingsRefreshTopicTime), getString(R.string.refreshTopicTimeDefault))));
         adapterForMessages.setCurrentPseudoOfUser(pseudoOfUser);
         getterForMessages.setCookieListInAString(cookieListInAString);
         getterForMessages.startGetMessages(0);

@@ -9,6 +9,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 class JVCMessageGetter {
+    private int timeBetweenRefreshTopic = 10000;
     private String urlForTopic = "";
     private Timer timerForFetchUrl = new Timer();
     private String latestListOfInputInAString = null;
@@ -49,6 +50,10 @@ class JVCMessageGetter {
         return latestAjaxInfos;
     }
 
+    void setTimeBetweenRefreshTopic(int newTimeBetweenRefreshTopic) {
+        timeBetweenRefreshTopic = newTimeBetweenRefreshTopic;
+    }
+
     void setCookieListInAString(String newCookieListInAString) {
         cookieListInAString = newCookieListInAString;
     }
@@ -57,10 +62,12 @@ class JVCMessageGetter {
         listenerForNewMessages = thisListener;
     }
 
-    void setNewTopic(String newUrlForTopic) {
-        firstTimeGetMessages = true;
-        latestListOfInputInAString = null;
-        lastIdOfMessage = 0;
+    void setNewTopic(String newUrlForTopic, boolean reallyNewTopic) {
+        if (reallyNewTopic) {
+            firstTimeGetMessages = true;
+            latestListOfInputInAString = null;
+            lastIdOfMessage = 0;
+        }
         urlForTopic = newUrlForTopic;
     }
 
@@ -181,7 +188,7 @@ class JVCMessageGetter {
             currentAsyncTaskForGetMessage = null;
 
             if (messagesNeedToBeGet) {
-                startGetMessages(5000);
+                startGetMessages(timeBetweenRefreshTopic);
             }
         }
     }
