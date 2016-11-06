@@ -68,7 +68,7 @@ class JVCMessageGetter {
             latestListOfInputInAString = null;
             lastIdOfMessage = 0;
         }
-        urlForTopic = newUrlForTopic;
+        urlForTopic = JVCParser.getFirstPageForThisLink(newUrlForTopic);
     }
 
     void loadFromBundle(Bundle savedInstanceState) {
@@ -155,40 +155,46 @@ class JVCMessageGetter {
         @Override
         protected void onPostExecute(PageInfos infoOfCurrentPage) {
             super.onPostExecute(infoOfCurrentPage);
+            boolean needToGetNewMessagesEarly = false;
             ArrayList<JVCParser.MessageInfos> listOfNewMessages = new ArrayList<>();
 
-            if (infoOfCurrentPage != null) {
-                latestListOfInputInAString = infoOfCurrentPage.listOfInputInAString;
-                latestAjaxInfos = infoOfCurrentPage.ajaxInfosOfThisPage;
-
-                if (!infoOfCurrentPage.listOfMessages.isEmpty() && (infoOfCurrentPage.lastPageLink.isEmpty() || !firstTimeGetMessages)) {
-                    for (JVCParser.MessageInfos thisMessageInfo : infoOfCurrentPage.listOfMessages) {
-                        if (thisMessageInfo.id > lastIdOfMessage) {
-                            listOfNewMessages.add(thisMessageInfo);
-                            lastIdOfMessage = thisMessageInfo.id;
-                        }
-                    }
-
-                    firstTimeGetMessages = false;
-                }
-
-                if (listenerForNewMessages != null) {
-                    listenerForNewMessages.getNewMessages(listOfNewMessages);
-                }
-
-                if (!infoOfCurrentPage.lastPageLink.isEmpty()) {
-                    if (firstTimeGetMessages) {
-                        urlForTopic = infoOfCurrentPage.lastPageLink;
-                    } else {
-                        urlForTopic = infoOfCurrentPage.nextPageLink;
-                    }
-                }
-            }
-
-            currentAsyncTaskForGetMessage = null;
-
             if (messagesNeedToBeGet) {
-                startGetMessages(timeBetweenRefreshTopic);
+                if (infoOfCurrentPage != null) {
+                    latestListOfInputInAString = infoOfCurrentPage.listOfInputInAString;
+                    latestAjaxInfos = infoOfCurrentPage.ajaxInfosOfThisPage;
+
+                    if (!infoOfCurrentPage.listOfMessages.isEmpty() && (infoOfCurrentPage.lastPageLink.isEmpty() || !firstTimeGetMessages)) {
+                        for (JVCParser.MessageInfos thisMessageInfo : infoOfCurrentPage.listOfMessages) {
+                            if (thisMessageInfo.id > lastIdOfMessage) {
+                                listOfNewMessages.add(thisMessageInfo);
+                                lastIdOfMessage = thisMessageInfo.id;
+                            }
+                        }
+
+                        firstTimeGetMessages = false;
+                    }
+
+                    if (listenerForNewMessages != null) {
+                        listenerForNewMessages.getNewMessages(listOfNewMessages);
+                    }
+
+                    if (!infoOfCurrentPage.lastPageLink.isEmpty()) {
+                        if (firstTimeGetMessages) {
+                            urlForTopic = infoOfCurrentPage.lastPageLink;
+                        } else {
+                            urlForTopic = infoOfCurrentPage.nextPageLink;
+                        }
+                        needToGetNewMessagesEarly = true;
+                    }
+                }
+
+                currentAsyncTaskForGetMessage = null;
+
+                if (needToGetNewMessagesEarly) {
+                    startEarlyGetMessagesIfNeeded();
+                } else {
+                    startGetMessages(timeBetweenRefreshTopic);
+                }
             }
         }
     }

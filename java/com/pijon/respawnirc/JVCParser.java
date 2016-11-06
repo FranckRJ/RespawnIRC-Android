@@ -29,6 +29,7 @@ final class JVCParser {
     private static final Pattern spoilLinePattern = Pattern.compile("<span class=\"bloc-spoil-jv en-ligne\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
     private static final Pattern spoilBlockPattern = Pattern.compile("<span class=\"bloc-spoil-jv\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
     private static final Pattern stickerPattern = Pattern.compile("<img class=\"img-stickers\" src=\"(http://jv.stkr.fr/p/([^\"]*))\"/>");
+    private static final Pattern pageLinkNumberPattern = Pattern.compile("(http://www.jeuxvideo.com/forums/[^-]*-[^-]*-[^-]*-)([^-]*)(-[^-]*-[^-]*-[^-]*-[^.]*.htm)");
 
     interface StringModifier {
         String changeString(String baseString);
@@ -128,6 +129,17 @@ final class JVCParser {
         //rien
     }
 
+    static String getFirstPageForThisLink(String topicLink) {
+        Matcher pageLinkNumberMatcher = pageLinkNumberPattern.matcher(topicLink);
+
+        if (pageLinkNumberMatcher.find()) {
+            return pageLinkNumberMatcher.group(1) + "1" + pageLinkNumberMatcher.group(3);
+        }
+        else {
+            return "";
+        }
+    }
+
     static String getErrorMessage(String pageSource) {
         Matcher errorMatcher = errorPattern.matcher(pageSource);
 
@@ -186,11 +198,11 @@ final class JVCParser {
         Matcher ajaxModTimestampMatcher = ajaxModTimestampPattern.matcher(pageSource);
         Matcher ajaxModHashMatcher = ajaxModHashPattern.matcher(pageSource);
 
-        if(ajaxTimestampMatcher.find() && ajaxHashMatcher.find()) {
+        if (ajaxTimestampMatcher.find() && ajaxHashMatcher.find()) {
             newAjaxInfos.list = "ajax_timestamp=" + ajaxTimestampMatcher.group(1) + "&ajax_hash=" + ajaxHashMatcher.group(1);
         }
 
-        if(ajaxModTimestampMatcher.find() && ajaxModHashMatcher.find()) {
+        if (ajaxModTimestampMatcher.find() && ajaxModHashMatcher.find()) {
             newAjaxInfos.mod = "ajax_timestamp=" + ajaxModTimestampMatcher.group(1) + "&ajax_hash=" + ajaxModHashMatcher.group(1);
         }
 
