@@ -105,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void changeCurrentTopicLink(View buttonView) {
         String newUrl;
+        View focusedView;
+        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
 
@@ -136,6 +138,11 @@ public class MainActivity extends AppCompatActivity {
         getterForMessages.setNewTopic(newUrl, true);
         getterForMessages.stopGetMessages();
         getterForMessages.startGetMessages(0);
+
+        focusedView = getCurrentFocus();
+        if (focusedView != null) {
+            inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 
     public void sendMessageToTopic(View buttonView) {
