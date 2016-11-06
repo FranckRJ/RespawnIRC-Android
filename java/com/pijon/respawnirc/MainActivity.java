@@ -21,7 +21,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /*TODO: Ajouter la possibilité d'afficher tous les messages depuis le dernier lu
-* TODO: Ajouter une activité pour les paramètres
 * TODO: Set focus sur la zone d'écriture des messages après citation ?
 * TODO: géré la redirection de lien (changement de nom de topic, suppression de page, etc)
 * TODO: Récupérer les deux dernières page si la dernière page contient moins de X messages (et au 1er chargement aussi ?)
