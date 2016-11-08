@@ -315,12 +315,12 @@ final class JVCParser {
 
         thisMessage = thisMessage.replace("\n", "")
                 .replace("\r", "")
-                .replaceAll("<ul[^>]*>", "")
+                .replaceAll("<ul[^>]*>", "<p>")
                 .replace("</ul>", "</p>")
-                .replaceAll("<ol[^>]*>", "")
+                .replaceAll("<ol[^>]*>", "<p>")
                 .replace("</ol>", "</p>")
-                .replace("<li>", "<br /> • ")
-                .replace("</li>", "")
+                .replace("<li>", " • ")
+                .replace("</li>", "<br />")
                 .replace("</div>", "")
                 .replaceAll("<div[^>]*>", "")
                 .replaceAll("<img src=\"//image.jeuxvideo.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-def=\"SMILEYS\" data-code=\"([^\"]*)\" title=\"[^\"]*\" />", "<img src=\"smiley_$1\"/>")
@@ -329,18 +329,20 @@ final class JVCParser {
                 .replaceAll("<span class=\"JvCare [^\"]*\" rel=\"nofollow\" target=\"_blank\">([^<]*)</span>", "<a href=\"$1\">$1</a>")
                 .replaceAll("<span class=\"JvCare [^\"]*\"[^i]*itle=\"([^\"]*)\">[^<]*<i></i><span>[^<]*</span>[^<]*</span>", "<a href=\"$1\">$1</a>")
                 .replaceAll("<a href=\"([^\"]*)\" data-def=\"NOELSHACK\" target=\"_blank\"><img class=\"img-shack\" .*? src=\"//([^\"]*)\" [^>]*></a>", "<a href=\"$1\">$1</a>")
-                .replaceAll("</p> *<p>", "<br /><br />")
-                .replace("<p>", "")
-                .replace("</p>", "");
+                .replaceAll("(<br /> *){0,2}</p> *<p>( *<br />){0,2}", "<br /><br />")
+                .replaceAll("<br /> *<(/)?p> *<br />", "<br /><br />")
+                .replaceAll("(<br /> *){1,2}<(/)?p>", "<br /><br />")
+                .replaceAll("<(/)?p>(<br /> *){1,2}", "<br /><br />")
+                .replaceAll("<(/)?p>", "<br /><br />");
 
         thisMessage = thisMessage.trim();
 
         while (thisMessage.startsWith("<br />")) {
-            thisMessage = thisMessage.substring(4);
+            thisMessage = thisMessage.substring(6);
         }
 
         while (thisMessage.endsWith("<br />")) {
-            thisMessage = thisMessage.substring(0, thisMessage.length() - 4);
+            thisMessage = thisMessage.substring(0, thisMessage.length() - 6);
         }
 
         return thisMessage;
