@@ -35,38 +35,33 @@ final class JVCParser {
         String changeString(String baseString);
     }
 
-    private static class ConvertNToBr implements StringModifier {
+    private static class ConvertStringToString implements StringModifier {
+        private String stringToRemplace;
+        private String stringNew;
+
+        ConvertStringToString(String newStringToRemplace, String newStringNew) {
+            stringToRemplace = newStringToRemplace;
+            stringNew = newStringNew;
+        }
+
         @Override
         public String changeString(String baseString) {
-            return baseString.replace("\n", "<br />");
+            return baseString.replace(stringToRemplace, stringNew);
         }
     }
 
-    private static class ForceShowSpace implements StringModifier {
-        @Override
-        public String changeString(String baseString) {
-            return baseString.replace(" ", " "); //remplace les espaces par des alt+255
-        }
-    }
+    private static class ConvertRegexpToString implements StringModifier {
+        private String regexpToRemplace;
+        private String stringNew;
 
-    private static class ConvertTagToSpace implements StringModifier {
-        @Override
-        public String changeString(String baseString) {
-            return baseString.replaceAll("<.+?>", " ");
+        ConvertRegexpToString(String newRegexpToRemplace, String newStringNew) {
+            regexpToRemplace = newRegexpToRemplace;
+            stringNew = newStringNew;
         }
-    }
 
-    private static class ConvertAllToFullChar implements StringModifier {
         @Override
         public String changeString(String baseString) {
-            return baseString.replaceAll("(?s).", "█");
-        }
-    }
-
-    private static class ConvertHyphenToUnderscore implements StringModifier {
-        @Override
-        public String changeString(String baseString) {
-            return baseString.replace("-", "_");
+            return baseString.replaceAll(regexpToRemplace, stringNew);
         }
     }
 
@@ -314,13 +309,13 @@ final class JVCParser {
 
     /*TODO: A refaire en plus propre et plus complet.*/
     private static String parseMessageToPrettyMessage(String thisMessage, boolean showSpoil) {
-        thisMessage = parseThisMessageWithThisPattern(thisMessage, codeBlockPattern, 1, "<p><font face=\"monospace\">", "</font></p>", new ConvertNToBr(), new ForceShowSpace());
-        thisMessage = parseThisMessageWithThisPattern(thisMessage, codeLinePattern, 1, "<font face=\"monospace\">", "</font>", new ForceShowSpace(), null);
-        thisMessage = parseThisMessageWithThisPattern(thisMessage, stickerPattern, 2, "<img src=\"sticker_", ".png\"/>", new ConvertHyphenToUnderscore(), null);
+        thisMessage = parseThisMessageWithThisPattern(thisMessage, codeBlockPattern, 1, "<p><font face=\"monospace\">", "</font></p>", new ConvertStringToString("\n", "<br />"), new ConvertStringToString(" ", " ")); //remplace les espaces par des alt+255
+        thisMessage = parseThisMessageWithThisPattern(thisMessage, codeLinePattern, 1, "<font face=\"monospace\">", "</font>", new ConvertStringToString(" ", " "), null); //remplace les espaces par des alt+255
+        thisMessage = parseThisMessageWithThisPattern(thisMessage, stickerPattern, 2, "<img src=\"sticker_", ".png\"/>", new ConvertStringToString("-", "_"), null);
 
         if (!showSpoil) {
-            thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilLinePattern, 1, "", "", new ConvertTagToSpace(), new ConvertAllToFullChar());
-            thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilBlockPattern, 1, "<p>", "</p>", new ConvertTagToSpace(), new ConvertAllToFullChar());
+            thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilLinePattern, 1, "", "", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
+            thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilBlockPattern, 1, "<p>", "</p>", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
         } else {
             thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilLinePattern, 1, "<font color=\"#000000\">", "</font>", null, null);
             thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilBlockPattern, 1, "<p><font color=\"#000000\">", "</font></p>", null, null);
