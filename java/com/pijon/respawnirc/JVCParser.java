@@ -29,7 +29,7 @@ final class JVCParser {
     private static final Pattern spoilLinePattern = Pattern.compile("<span class=\"bloc-spoil-jv en-ligne\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
     private static final Pattern spoilBlockPattern = Pattern.compile("<span class=\"bloc-spoil-jv\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
     private static final Pattern stickerPattern = Pattern.compile("<img class=\"img-stickers\" src=\"(http://jv.stkr.fr/p/([^\"]*))\"/>");
-    private static final Pattern pageLinkNumberPattern = Pattern.compile("(http://www.jeuxvideo.com/forums/[^-]*-[^-]*-[^-]*-)([^-]*)(-[^-]*-[^-]*-[^-]*-[^.]*.htm)");
+    private static final Pattern pageLinkNumberPattern = Pattern.compile("(http://www.jeuxvideo.com/forums/[^-]*-([^-]*)-([^-]*)-)([^-]*)(-[^-]*-[^-]*-[^-]*-[^.]*.htm)");
 
     interface StringModifier {
         String changeString(String baseString);
@@ -129,11 +129,24 @@ final class JVCParser {
         //rien
     }
 
+    static boolean checkIfTopicAreSame(String firstTopicLink, String secondTopicLink) {
+        Matcher firstPageLinkNumberMatcher = pageLinkNumberPattern.matcher(firstTopicLink);
+        Matcher secondPageLinkNumberMatcher = pageLinkNumberPattern.matcher(secondTopicLink);
+
+        if (firstPageLinkNumberMatcher.find() && secondPageLinkNumberMatcher.find()) {
+            boolean forumAreEquals = firstPageLinkNumberMatcher.group(2).equals(secondPageLinkNumberMatcher.group(2));
+            boolean topicsAreEquals = firstPageLinkNumberMatcher.group(3).equals(secondPageLinkNumberMatcher.group(3));
+            return forumAreEquals && topicsAreEquals;
+        } else {
+            return false;
+        }
+    }
+
     static String getFirstPageForThisLink(String topicLink) {
         Matcher pageLinkNumberMatcher = pageLinkNumberPattern.matcher(topicLink);
 
         if (pageLinkNumberMatcher.find()) {
-            return pageLinkNumberMatcher.group(1) + "1" + pageLinkNumberMatcher.group(3);
+            return pageLinkNumberMatcher.group(1) + "1" + pageLinkNumberMatcher.group(5);
         }
         else {
             return "";
@@ -322,6 +335,7 @@ final class JVCParser {
                 .replace("<li>", " • ")
                 .replace("</li>", "<br />")
                 .replace("</div>", "")
+                .replace("<blockquote class=\"blockquote-jv\">", "<blockquote>")
                 .replaceAll("<div[^>]*>", "")
                 .replaceAll("<img src=\"//image.jeuxvideo.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-def=\"SMILEYS\" data-code=\"([^\"]*)\" title=\"[^\"]*\" />", "<img src=\"smiley_$1\"/>")
                 .replaceAll("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe .*? src=\"http(s)?://www.youtube.com/embed/([^\"]*)\"[^>]*></iframe></div></div>", "<a href=\"http://youtu.be/$2\">http://youtu.be/$2</a>")
@@ -333,7 +347,8 @@ final class JVCParser {
                 .replaceAll("<br /> *<(/)?p> *<br />", "<br /><br />")
                 .replaceAll("(<br /> *){1,2}<(/)?p>", "<br /><br />")
                 .replaceAll("<(/)?p>(<br /> *){1,2}", "<br /><br />")
-                .replaceAll("<(/)?p>", "<br /><br />");
+                .replaceAll("<(/)?p>", "<br /><br />")
+                .replaceAll("(<br /> *)*(<(/)?blockquote>)( *<br />)*", "$2");
 
         thisMessage = thisMessage.trim();
 

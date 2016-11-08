@@ -50,6 +50,10 @@ class JVCMessageGetter {
         return latestAjaxInfos;
     }
 
+    long getLastIdOfMessage() {
+        return lastIdOfMessage;
+    }
+
     void setTimeBetweenRefreshTopic(int newTimeBetweenRefreshTopic) {
         timeBetweenRefreshTopic = newTimeBetweenRefreshTopic;
     }
@@ -69,6 +73,13 @@ class JVCMessageGetter {
             lastIdOfMessage = 0;
         }
         urlForTopic = JVCParser.getFirstPageForThisLink(newUrlForTopic);
+    }
+
+    void setOldTopic(String oldUrlForTopic, long oldLastIdOfMessage) {
+        firstTimeGetMessages = false;
+        latestListOfInputInAString = null;
+        lastIdOfMessage = oldLastIdOfMessage - 1;
+        urlForTopic = oldUrlForTopic;
     }
 
     void loadFromBundle(Bundle savedInstanceState) {

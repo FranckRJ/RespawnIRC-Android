@@ -40,4 +40,7 @@
     <string name="settingsRefreshTopicTime">settings.refreshTopicTime</string>
     <string name="refreshTopicTimeTitle">Temps avant màj des messages</string>
     <string name="refreshTopicTimeDefault">10000</string>
+    <string name="prefOldUrlForTopic">pref.oldUrlForTopic</string>
+    <string name="prefOldLastIdOfMessage">pref.oldLastIdOfMessage</string>
+    <string name="loadTopicFromOldInfos">Poursuivre la lecture</string>
 </resources>

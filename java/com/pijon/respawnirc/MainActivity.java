@@ -20,8 +20,7 @@ import android.widget.Toast;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-/*TODO: Ajouter la possibilité d'afficher tous les messages depuis le dernier lu
-* TODO: Set focus sur la zone d'écriture des messages après citation ?
+/*TODO: Set focus sur la zone d'écriture des messages après citation ?
 * TODO: géré la redirection de lien (changement de nom de topic, suppression de page, etc)
 * TODO: Récupérer les deux dernières page si la dernière page contient moins de X messages (et au 1er chargement aussi ?)
 * TODO: http://stackoverflow.com/questions/5312592/how-can-i-get-my-listview-to-scroll pour pouvoir scroll le lien du topic ?
@@ -39,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     private String latestMessageQuotedInfo = null;
     private String pseudoOfUser = "";
     private String cookieListInAString = "";
+    private String oldUrlForTopic = "";
+    private long oldLastIdOfMessage = 0;
 
     private PopupMenu.OnMenuItemClickListener listenerForItemClicked = new PopupMenu.OnMenuItemClickListener() {
         @Override
@@ -107,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
         String newUrl;
         View focusedView;
         InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
 
         newUrl = urlEdit.getText().toString();
@@ -133,11 +133,11 @@ public class MainActivity extends AppCompatActivity {
         sharedPrefEdit.putString(getString(R.string.prefUrlToFetch), newUrl);
         sharedPrefEdit.apply();
 
+        getterForMessages.stopGetMessages();
         adapterForMessages.removeAllItems();
         adapterForMessages.updateAllItems();
         getterForMessages.setNewTopic(newUrl, true);
-        getterForMessages.stopGetMessages();
-        getterForMessages.startGetMessages(0);
+        getterForMessages.startEarlyGetMessagesIfNeeded();
 
         focusedView = getCurrentFocus();
         if (focusedView != null) {
@@ -172,11 +172,36 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void loadFromOldTopicInfos() {
+        getterForMessages.stopGetMessages();
+        adapterForMessages.removeAllItems();
+        adapterForMessages.updateAllItems();
+        getterForMessages.setOldTopic(oldUrlForTopic, oldLastIdOfMessage);
+        getterForMessages.startEarlyGetMessagesIfNeeded();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.action_load_from_old_topic_info_main).setEnabled(JVCParser.checkIfTopicAreSame(getterForMessages.getUrlForTopic(), oldUrlForTopic));
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_connectToJVC_main:
                 startActivity(new Intent(MainActivity.this, ConnectActivity.class));
+                return true;
+            case R.id.action_load_from_old_topic_info_main:
+                loadFromOldTopicInfos();
                 return true;
             case R.id.action_settings_main:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
@@ -198,6 +223,8 @@ public class MainActivity extends AppCompatActivity {
         messageSendEdit = (EditText) findViewById(R.id.sendmessage_text_main);
         messageSendButton = (Button) findViewById(R.id.sendmessage_button_main);
 
+        sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
         getterForMessages = new JVCMessageGetter(MainActivity.this);
         adapterForMessages = new JVCMessagesAdapter(MainActivity.this);
         getterForMessages.setListenerForNewMessages(listenerForNewMessages);
@@ -214,9 +241,10 @@ public class MainActivity extends AppCompatActivity {
             }
 
             adapterForMessages.updateAllItems();
+        } else {
+            oldUrlForTopic = sharedPref.getString(getString(R.string.prefOldUrlForTopic), "");
+            oldLastIdOfMessage = sharedPref.getLong(getString(R.string.prefOldLastIdOfMessage), 0);
         }
-
-        sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
         getterForMessages.setNewTopic(sharedPref.getString(getString(R.string.prefUrlToFetch), ""), false);
 
@@ -232,13 +260,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         maxNumberOfMessagesShowed = Integer.parseInt(sharedPref.getString(getString(R.string.settingsMaxNumberOfMessages), getString(R.string.maxNumberOfMessagesDefault)));
@@ -248,13 +269,17 @@ public class MainActivity extends AppCompatActivity {
         getterForMessages.setTimeBetweenRefreshTopic(Integer.parseInt(sharedPref.getString(getString(R.string.settingsRefreshTopicTime), getString(R.string.refreshTopicTimeDefault))));
         adapterForMessages.setCurrentPseudoOfUser(pseudoOfUser);
         getterForMessages.setCookieListInAString(cookieListInAString);
-        getterForMessages.startGetMessages(0);
+        getterForMessages.startEarlyGetMessagesIfNeeded();
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
         getterForMessages.stopGetMessages();
+        sharedPrefEdit.putString(getString(R.string.prefOldUrlForTopic), getterForMessages.getUrlForTopic());
+        sharedPrefEdit.putLong(getString(R.string.prefOldLastIdOfMessage), getterForMessages.getLastIdOfMessage());
+        sharedPrefEdit.apply();
     }
 
     private class PostJVCMessage extends AsyncTask<String, Void, String> {
