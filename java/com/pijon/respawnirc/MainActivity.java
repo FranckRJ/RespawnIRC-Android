@@ -233,6 +233,8 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             ArrayList<JVCParser.MessageInfos> allCurrentMessagesShowed = savedInstanceState.getParcelableArrayList(getString(R.string.saveAllCurrentMessagesShowed));
             getterForMessages.loadFromBundle(savedInstanceState);
+            oldUrlForTopic = savedInstanceState.getString(getString(R.string.saveOldUrlForTopic), "");
+            oldLastIdOfMessage = savedInstanceState.getLong(getString(R.string.saveOldLastIdOfMessage), 0);
 
             if (allCurrentMessagesShowed != null) {
                 for (JVCParser.MessageInfos thisMessageInfo : allCurrentMessagesShowed) {
@@ -257,6 +259,8 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(getString(R.string.saveAllCurrentMessagesShowed), adapterForMessages.getAllItems());
         getterForMessages.saveToBundle(outState);
+        outState.putString(getString(R.string.saveOldUrlForTopic), oldUrlForTopic);
+        outState.putLong(getString(R.string.saveOldLastIdOfMessage), oldLastIdOfMessage);
     }
 
     @Override

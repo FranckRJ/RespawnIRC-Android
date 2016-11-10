@@ -43,4 +43,6 @@
     <string name="prefOldUrlForTopic">pref.oldUrlForTopic</string>
     <string name="prefOldLastIdOfMessage">pref.oldLastIdOfMessage</string>
     <string name="loadTopicFromOldInfos">Poursuivre la lecture</string>
+    <string name="saveOldUrlForTopic">save.OldUrlForTopic</string>
+    <string name="saveOldLastIdOfMessage">save.OldLastIdOfMessage</string>
 </resources>
