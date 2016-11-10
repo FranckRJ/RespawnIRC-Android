@@ -30,6 +30,7 @@ final class JVCParser {
     private static final Pattern spoilBlockPattern = Pattern.compile("<span class=\"bloc-spoil-jv\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
     private static final Pattern stickerPattern = Pattern.compile("<img class=\"img-stickers\" src=\"(http://jv.stkr.fr/p/([^\"]*))\"/>");
     private static final Pattern pageLinkNumberPattern = Pattern.compile("(http://www.jeuxvideo.com/forums/[^-]*-([^-]*)-([^-]*)-)([^-]*)(-[^-]*-[^-]*-[^-]*-[^.]*.htm)");
+    private static final Pattern jvCarePattern = Pattern.compile("<span class=\"JvCare [^\"]*\">([^<]*)</span>");
 
     interface StringModifier {
         String changeString(String baseString);
@@ -62,6 +63,16 @@ final class JVCParser {
         @Override
         public String changeString(String baseString) {
             return baseString.replaceAll(regexpToRemplace, stringNew);
+        }
+    }
+
+    private static class MakeLinkIfPossible implements StringModifier {
+        @Override
+        public String changeString(String baseString) {
+            if ((baseString.startsWith("http://") || baseString.startsWith("https://")) && !baseString.contains(" ")) {
+                baseString = "<a href=\"" + baseString + "\">" + baseString + "</a>";
+            }
+            return baseString;
         }
     }
 
@@ -329,15 +340,15 @@ final class JVCParser {
                 .replace("</ol>", "</p>")
                 .replace("<li>", " • ")
                 .replace("</li>", "<br />")
-                .replace("</div>", "")
-                .replace("<blockquote class=\"blockquote-jv\">", "<blockquote>")
-                .replaceAll("<div[^>]*>", "")
                 .replaceAll("<img src=\"//image.jeuxvideo.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-def=\"SMILEYS\" data-code=\"([^\"]*)\" title=\"[^\"]*\" />", "<img src=\"smiley_$1\"/>")
                 .replaceAll("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe .*? src=\"http(s)?://www.youtube.com/embed/([^\"]*)\"[^>]*></iframe></div></div>", "<a href=\"http://youtu.be/$2\">http://youtu.be/$2</a>")
                 .replaceAll("<a href=\"([^\"]*)\"( title=\"[^\"]*\")?>.*?</a>", "<a href=\"$1\">$1</a>")
-                .replaceAll("<span class=\"JvCare [^\"]*\" rel=\"nofollow\" target=\"_blank\">([^<]*)</span>", "<a href=\"$1\">$1</a>")
+                .replaceAll("<span class=\"JvCare [^\"]*\" rel=\"nofollow[^\"]*\" target=\"_blank\">([^<]*)</span>", "<a href=\"$1\">$1</a>")
                 .replaceAll("<span class=\"JvCare [^\"]*\"[^i]*itle=\"([^\"]*)\">[^<]*<i></i><span>[^<]*</span>[^<]*</span>", "<a href=\"$1\">$1</a>")
                 .replaceAll("<a href=\"([^\"]*)\" data-def=\"NOELSHACK\" target=\"_blank\"><img class=\"img-shack\" .*? src=\"//([^\"]*)\" [^>]*></a>", "<a href=\"$1\">$1</a>")
+                .replace("<blockquote class=\"blockquote-jv\">", "<blockquote>")
+                .replaceAll("<div[^>]*>", "")
+                .replace("</div>", "")
                 .replaceAll("(<br /> *){0,2}</p> *<p>( *<br />){0,2}", "<br /><br />")
                 .replaceAll("<br /> *<(/)?p> *<br />", "<br /><br />")
                 .replaceAll("(<br /> *){1,2}<(/)?p>", "<br /><br />")
@@ -345,14 +356,18 @@ final class JVCParser {
                 .replaceAll("<(/)?p>", "<br /><br />")
                 .replaceAll("(<br /> *)*(<(/)?blockquote>)( *<br />)*", "$2");
 
+        thisMessage = parseThisMessageWithThisPattern(thisMessage, jvCarePattern, 1, "", "", new MakeLinkIfPossible(), null);
+
         thisMessage = thisMessage.trim();
 
         while (thisMessage.startsWith("<br />")) {
             thisMessage = thisMessage.substring(6);
+            thisMessage = thisMessage.trim();
         }
 
         while (thisMessage.endsWith("<br />")) {
             thisMessage = thisMessage.substring(0, thisMessage.length() - 6);
+            thisMessage = thisMessage.trim();
         }
 
         return thisMessage;
