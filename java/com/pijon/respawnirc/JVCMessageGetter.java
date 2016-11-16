@@ -21,6 +21,7 @@ class JVCMessageGetter {
     private Activity parentActivity = null;
     private String cookieListInAString = "";
     private NewMessagesListener listenerForNewMessages = null;
+    private ParcelableLongSparseStringArray listOfEditInfos = new ParcelableLongSparseStringArray();
 
     static class PageInfos {
         ArrayList<JVCParser.MessageInfos> listOfMessages;
@@ -71,6 +72,7 @@ class JVCMessageGetter {
             firstTimeGetMessages = true;
             latestListOfInputInAString = null;
             lastIdOfMessage = 0;
+            listOfEditInfos.clear();
         }
         urlForTopic = JVCParser.getFirstPageForThisLink(newUrlForTopic);
     }
@@ -79,6 +81,7 @@ class JVCMessageGetter {
         firstTimeGetMessages = false;
         latestListOfInputInAString = null;
         lastIdOfMessage = oldLastIdOfMessage - 1;
+        listOfEditInfos.clear();
         urlForTopic = oldUrlForTopic;
     }
 
@@ -88,6 +91,7 @@ class JVCMessageGetter {
         latestAjaxInfos.mod = savedInstanceState.getString(parentActivity.getString(R.string.saveLatestAjaxInfoMod), null);
         firstTimeGetMessages = savedInstanceState.getBoolean(parentActivity.getString(R.string.saveFirstTimeGetMessages), true);
         lastIdOfMessage = savedInstanceState.getLong(parentActivity.getString(R.string.saveLastIdOfMessage), 0);
+        listOfEditInfos = savedInstanceState.getParcelable(parentActivity.getString(R.string.saveListOfEditInfos));
     }
 
     void saveToBundle(Bundle savedInstanceState) {
@@ -96,9 +100,10 @@ class JVCMessageGetter {
         savedInstanceState.putString(parentActivity.getString(R.string.saveLatestAjaxInfoMod), latestAjaxInfos.mod);
         savedInstanceState.putBoolean(parentActivity.getString(R.string.saveFirstTimeGetMessages), firstTimeGetMessages);
         savedInstanceState.putLong(parentActivity.getString(R.string.saveLastIdOfMessage), lastIdOfMessage);
+        savedInstanceState.putParcelable(parentActivity.getString(R.string.saveListOfEditInfos), listOfEditInfos);
     }
 
-    void startGetMessages(int timerBeforeStart) {
+    private void startGetMessages(int timerBeforeStart) {
         messagesNeedToBeGet = true;
         if (currentAsyncTaskForGetMessage == null) {
             currentAsyncTaskForGetMessage = new GetJVCLastMessage();
@@ -176,10 +181,26 @@ class JVCMessageGetter {
 
                     if (!infoOfCurrentPage.listOfMessages.isEmpty() && (infoOfCurrentPage.lastPageLink.isEmpty() || !firstTimeGetMessages)) {
                         for (JVCParser.MessageInfos thisMessageInfo : infoOfCurrentPage.listOfMessages) {
-                            if (thisMessageInfo.id > lastIdOfMessage) {
-                                listOfNewMessages.add(thisMessageInfo);
-                                lastIdOfMessage = thisMessageInfo.id;
+                            String lastEditInfosForThisMessage = listOfEditInfos.get(thisMessageInfo.id);
+
+                            if (lastEditInfosForThisMessage == null) {
+                                lastEditInfosForThisMessage = thisMessageInfo.lastTimeEdit;
                             }
+
+                            if (thisMessageInfo.id > lastIdOfMessage || !lastEditInfosForThisMessage.equals(thisMessageInfo.lastTimeEdit)) {
+                                if (!lastEditInfosForThisMessage.equals(thisMessageInfo.lastTimeEdit)) {
+                                    thisMessageInfo.isAnEdit = true;
+                                } else {
+                                    thisMessageInfo.isAnEdit = false;
+                                    lastIdOfMessage = thisMessageInfo.id;
+                                }
+                                listOfNewMessages.add(thisMessageInfo);
+                                listOfEditInfos.put(thisMessageInfo.id, thisMessageInfo.lastTimeEdit);
+                            }
+                        }
+
+                        while (listOfEditInfos.size() > 20) {
+                            listOfEditInfos.removeAt(0);
                         }
 
                         firstTimeGetMessages = false;

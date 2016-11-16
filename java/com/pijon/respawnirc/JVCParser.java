@@ -31,6 +31,7 @@ final class JVCParser {
     private static final Pattern stickerPattern = Pattern.compile("<img class=\"img-stickers\" src=\"(http://jv.stkr.fr/p/([^\"]*))\"/>");
     private static final Pattern pageLinkNumberPattern = Pattern.compile("(http://www.jeuxvideo.com/forums/[^-]*-([^-]*)-([^-]*)-)([^-]*)(-[^-]*-[^-]*-[^-]*-[^.]*.htm)");
     private static final Pattern jvCarePattern = Pattern.compile("<span class=\"JvCare [^\"]*\">([^<]*)</span>");
+    private static final Pattern lastEditMessagePattern = Pattern.compile("<div class=\"info-edition-msg\">Message édité le ([^ ]* [^ ]* [^ ]* [^ ]* [0-9:]*) par <span");
 
     interface StringModifier {
         String changeString(String baseString);
@@ -85,8 +86,10 @@ final class JVCParser {
         String pseudo;
         String messageNotParsed;
         String dateTime;
+        String lastTimeEdit;
         boolean containSpoil = false;
         boolean showSpoil = false;
+        boolean isAnEdit = false;
         long id = 0;
 
         @Override
@@ -99,8 +102,10 @@ final class JVCParser {
             out.writeString(pseudo);
             out.writeString(messageNotParsed);
             out.writeString(dateTime);
+            out.writeString(lastTimeEdit);
             out.writeInt(containSpoil ? 1 : 0);
             out.writeInt(showSpoil ? 1 : 0);
+            out.writeInt(isAnEdit ? 1 : 0);
             out.writeLong(id);
         }
 
@@ -124,11 +129,12 @@ final class JVCParser {
             pseudo = in.readString();
             messageNotParsed = in.readString();
             dateTime = in.readString();
+            lastTimeEdit = in.readString();
             containSpoil = (in.readInt() == 1);
             showSpoil = (in.readInt() == 1);
+            isAnEdit = (in.readInt() == 1);
             id = in.readLong();
         }
-
     }
 
     private JVCParser() {
@@ -306,12 +312,22 @@ final class JVCParser {
 
     /*TODO: Améliorer ça, le rendre plus propre, et gérer plus de cas (pseudo admin/modo).*/
     static String createMessageFirstLineFromInfos(MessageInfos thisMessageInfo, String pseudoOfUser) {
+        StringBuilder newFirstLine = new StringBuilder();
+
+        if (thisMessageInfo.isAnEdit) {
+            newFirstLine.append("[<font color=\"#008000\">").append(thisMessageInfo.dateTime).append("</font>]");
+        } else {
+            newFirstLine.append("[").append(thisMessageInfo.dateTime).append("]");
+        }
+
         if (thisMessageInfo.pseudo.toLowerCase().equals(pseudoOfUser.toLowerCase())) {
-            return "[" + thisMessageInfo.dateTime + "] &lt;<font color=\"#3399ff\">" + thisMessageInfo.pseudo + "</font>&gt;";
+            newFirstLine.append(" &lt;<font color=\"#3399ff\">").append(thisMessageInfo.pseudo).append("</font>&gt;");
         }
         else {
-            return "[" + thisMessageInfo.dateTime + "] &lt;<font color=\"#80002A\">" + thisMessageInfo.pseudo + "</font>&gt;";
+            newFirstLine.append(" &lt;<font color=\"#80002A\">").append(thisMessageInfo.pseudo).append("</font>&gt;");
         }
+
+        return newFirstLine.toString();
     }
 
     static String createMessageSecondLineFromInfos(MessageInfos thisMessageInfo) {
@@ -402,12 +418,19 @@ final class JVCParser {
         Matcher pseudoInfosMatcher = pseudoInfosPattern.matcher(thisEntireMessage);
         Matcher messageMatcher = messagePattern.matcher(thisEntireMessage);
         Matcher dateMessageMatcher = dateMessagePattern.matcher(thisEntireMessage);
+        Matcher lastEditMessageMatcher = lastEditMessagePattern.matcher(thisEntireMessage);
         Matcher messageIDMatcher = messageIDPattern.matcher(thisEntireMessage);
 
         if (pseudoInfosMatcher.find()) {
             newMessageInfo.pseudo = pseudoInfosMatcher.group(2);
         } else {
             newMessageInfo.pseudo = "Pseudo supprimé";
+        }
+
+        if (lastEditMessageMatcher.find()) {
+            newMessageInfo.lastTimeEdit = lastEditMessageMatcher.group(1);
+        } else {
+            newMessageInfo.lastTimeEdit = "";
         }
 
         if (messageMatcher.find() && messageIDMatcher.find() && dateMessageMatcher.find()) {

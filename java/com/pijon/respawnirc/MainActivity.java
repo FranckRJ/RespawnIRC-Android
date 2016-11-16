@@ -82,7 +82,11 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 for (JVCParser.MessageInfos thisMessageInfo : listOfNewMessages) {
+                    if (!thisMessageInfo.isAnEdit) {
                         adapterForMessages.addItem(thisMessageInfo);
+                    } else {
+                        adapterForMessages.updateThisItem(thisMessageInfo);
+                    }
                 }
 
                 if (firstTimeGetMessages) {
