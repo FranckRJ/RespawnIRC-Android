@@ -17,7 +17,6 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /*TODO: Désactiver l'highlight quand on clique sur un élément. (désactivé par défaut quand un lien est présent) (fixé depuis l'ajout des boutons ?)*/
 class JVCMessagesAdapter extends BaseAdapter {

@@ -32,6 +32,7 @@ final class JVCParser {
     private static final Pattern pageLinkNumberPattern = Pattern.compile("(http://www.jeuxvideo.com/forums/[^-]*-([^-]*)-([^-]*)-)([^-]*)(-[^-]*-[^-]*-[^-]*-[^.]*.htm)");
     private static final Pattern jvCarePattern = Pattern.compile("<span class=\"JvCare [^\"]*\">([^<]*)</span>");
     private static final Pattern lastEditMessagePattern = Pattern.compile("<div class=\"info-edition-msg\">Message édité le ([^ ]* [^ ]* [^ ]* [^ ]* [0-9:]*) par <span");
+    private static final Pattern messageEditInfoPattern = Pattern.compile("<textarea tabindex=\"3\" class=\"area-editor\" name=\"text_commentaire\" id=\"text_commentaire\" placeholder=\"[^\"]*\">([^<]*)</textarea>");
 
     interface StringModifier {
         String changeString(String baseString);
@@ -175,11 +176,21 @@ final class JVCParser {
         }
     }
 
+    static String getMessageEdit(String pageSource) {
+        Matcher messageEditInfoMatcher = messageEditInfoPattern.matcher(pageSource);
+
+        if (messageEditInfoMatcher.find()) {
+            return messageEditInfoMatcher.group(1);
+        } else {
+            return "";
+        }
+    }
+
     static String buildMessageQuotedInfoFromThis(MessageInfos thisMessageInfo) {
         return ">[" + thisMessageInfo.dateTime + "] <" + thisMessageInfo.pseudo + ">";
     }
 
-    private static String parsingAjaxMessages(String ajaxMessage) {
+    static String parsingAjaxMessages(String ajaxMessage) {
         Matcher unicodeInTextMatcher;
 
         ajaxMessage = ajaxMessage.replace("\n", "")

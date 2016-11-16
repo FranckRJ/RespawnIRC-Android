@@ -17,7 +17,6 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /*TODO: Set focus sur la zone d'écriture des messages après citation ?
@@ -30,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private int initialNumberOfMessagesShowed = 10;
     private JVCMessagesAdapter adapterForMessages = null;
     private JVCMessageGetter getterForMessages = null;
+    private JVCMessageSender senderForMessages = null;
     private SharedPreferences sharedPref = null;
     private ListView jvcMsgList = null;
     private EditText urlEdit = null;
@@ -51,6 +51,17 @@ public class MainActivity extends AppCompatActivity {
                         latestMessageQuotedInfo = JVCParser.buildMessageQuotedInfoFromThis(adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected()));
 
                         new QuoteJVCMessage().execute(idOfMessage, getterForMessages.getLatestAjaxInfos().list, cookieListInAString);
+                    } else {
+                        Toast.makeText(MainActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
+                    }
+
+                    return true;
+                case R.id.menu_edit_message:
+                    if (messageSendButton.isEnabled() && getterForMessages.getLatestAjaxInfos().list != null) {
+                        String idOfMessage = Long.toString(adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected()).id);
+                        messageSendButton.setEnabled(false);
+                        messageSendButton.setText(R.string.messageEdit);
+                        senderForMessages.getInfosForEditMessage(idOfMessage, getterForMessages.getLatestAjaxInfos().list, cookieListInAString);
                     } else {
                         Toast.makeText(MainActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
                     }
@@ -108,6 +119,35 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    private JVCMessageSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageSender.NewMessageWantEditListener() {
+        @Override
+        public void initializeEditMode(String newMessageToEdit) {
+            messageSendButton.setEnabled(true);
+
+            if (newMessageToEdit.isEmpty()) {
+                messageSendButton.setText(R.string.messagePost);
+                Toast.makeText(MainActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
+            } else {
+                messageSendEdit.setText(newMessageToEdit);
+            }
+        }
+    };
+
+    private JVCMessageSender.NewMessagePostedListener listenerForNewMessagePosted = new JVCMessageSender.NewMessagePostedListener() {
+        @Override
+        public void lastMessageIsSended(String withThisError) {
+            messageSendButton.setEnabled(true);
+            messageSendButton.setText(R.string.messagePost);
+
+            if (withThisError != null) {
+                Toast.makeText(MainActivity.this, withThisError, Toast.LENGTH_LONG).show();
+            } else {
+                messageSendEdit.setText("");
+                getterForMessages.startEarlyGetMessagesIfNeeded();
+            }
+        }
+    };
+
     public void changeCurrentTopicLink(View buttonView) {
         String newUrl;
         View focusedView;
@@ -150,29 +190,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendMessageToTopic(View buttonView) {
-        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        View focusedView;
+        if (messageSendButton.isEnabled()) {
+            InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            View focusedView;
 
-        if (!pseudoOfUser.isEmpty()) {
-            if (getterForMessages.getLatestListOfInputInAString() != null) {
-                String messageToSend;
-                try {
-                    messageToSend = URLEncoder.encode(messageSendEdit.getText().toString(), "UTF-8");
-                } catch (Exception e) {
-                    messageToSend = "";
-                    e.printStackTrace();
+            if (!pseudoOfUser.isEmpty()) {
+                if (!senderForMessages.getIsInEdit()) {
+                    if (getterForMessages.getLatestListOfInputInAString() != null) {
+                        messageSendButton.setEnabled(false);
+                        senderForMessages.sendThisMessage(messageSendEdit.getText().toString(), getterForMessages.getUrlForTopic(), getterForMessages.getLatestListOfInputInAString(), cookieListInAString);
+                    } else {
+                        Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    messageSendButton.setEnabled(false);
+                    senderForMessages.sendEditMessage(messageSendEdit.getText().toString(), cookieListInAString);
                 }
-                new PostJVCMessage().execute(getterForMessages.getUrlForTopic(), messageToSend, getterForMessages.getLatestListOfInputInAString(), cookieListInAString);
             } else {
-                Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.errorConnectedNeededBeforePost, Toast.LENGTH_LONG).show();
+            }
+
+            focusedView = getCurrentFocus();
+            if (focusedView != null) {
+                inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
             }
         } else {
-            Toast.makeText(this, R.string.errorConnectedNeededBeforePost, Toast.LENGTH_LONG).show();
-        }
-
-        focusedView = getCurrentFocus();
-        if (focusedView != null) {
-            inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            Toast.makeText(MainActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -230,15 +273,23 @@ public class MainActivity extends AppCompatActivity {
         sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
         getterForMessages = new JVCMessageGetter(MainActivity.this);
+        senderForMessages = new JVCMessageSender(MainActivity.this);
         adapterForMessages = new JVCMessagesAdapter(MainActivity.this);
         getterForMessages.setListenerForNewMessages(listenerForNewMessages);
+        senderForMessages.setListenerForNewMessageWantEdit(listenerForNewMessageWantEdit);
+        senderForMessages.setListenerForNewMessagePosted(listenerForNewMessagePosted);
         adapterForMessages.setActionWhenItemMenuClicked(listenerForItemClicked);
 
         if (savedInstanceState != null) {
             ArrayList<JVCParser.MessageInfos> allCurrentMessagesShowed = savedInstanceState.getParcelableArrayList(getString(R.string.saveAllCurrentMessagesShowed));
             getterForMessages.loadFromBundle(savedInstanceState);
+            senderForMessages.loadFromBundle(savedInstanceState);
             oldUrlForTopic = savedInstanceState.getString(getString(R.string.saveOldUrlForTopic), "");
             oldLastIdOfMessage = savedInstanceState.getLong(getString(R.string.saveOldLastIdOfMessage), 0);
+
+            if (senderForMessages.getIsInEdit()) {
+                messageSendButton.setText(R.string.messageEdit);
+            }
 
             if (allCurrentMessagesShowed != null) {
                 for (JVCParser.MessageInfos thisMessageInfo : allCurrentMessagesShowed) {
@@ -256,6 +307,7 @@ public class MainActivity extends AppCompatActivity {
 
         urlEdit.setText(getterForMessages.getUrlForTopic());
         jvcMsgList.setAdapter(adapterForMessages);
+        messageSendEdit.requestFocus();
     }
 
     @Override
@@ -263,6 +315,7 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(getString(R.string.saveAllCurrentMessagesShowed), adapterForMessages.getAllItems());
         getterForMessages.saveToBundle(outState);
+        senderForMessages.saveToBundle(outState);
         outState.putString(getString(R.string.saveOldUrlForTopic), oldUrlForTopic);
         outState.putLong(getString(R.string.saveOldLastIdOfMessage), oldLastIdOfMessage);
     }
@@ -288,38 +341,6 @@ public class MainActivity extends AppCompatActivity {
         sharedPrefEdit.putString(getString(R.string.prefOldUrlForTopic), getterForMessages.getUrlForTopic());
         sharedPrefEdit.putLong(getString(R.string.prefOldLastIdOfMessage), getterForMessages.getLastIdOfMessage());
         sharedPrefEdit.apply();
-    }
-
-    private class PostJVCMessage extends AsyncTask<String, Void, String> {
-        @Override
-        protected void onPreExecute() {
-            messageSendButton.setEnabled(false);
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            if (params.length > 3) {
-                return WebManager.sendRequest(params[0], "POST", "message_topic=" + params[1] + params[2] + "&form_alias_rang=1", params[3]);
-            } else {
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String pageResult) {
-            super.onPostExecute(pageResult);
-            messageSendButton.setEnabled(true);
-
-            if (pageResult != null) {
-                if (!pageResult.isEmpty()) {
-                    Toast.makeText(MainActivity.this, JVCParser.getErrorMessage(pageResult), Toast.LENGTH_LONG).show();
-                    return;
-                }
-            }
-
-            messageSendEdit.setText("");
-            getterForMessages.startEarlyGetMessagesIfNeeded();
-        }
     }
 
     private class QuoteJVCMessage extends AsyncTask<String, Void, String> {

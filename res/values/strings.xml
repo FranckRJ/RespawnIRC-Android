@@ -46,4 +46,8 @@
     <string name="saveOldUrlForTopic">save.OldUrlForTopic</string>
     <string name="saveOldLastIdOfMessage">save.OldLastIdOfMessage</string>
     <string name="saveListOfEditInfos">save.listOfEditInfos</string>
+    <string name="messageEdit">Editer</string>
+    <string name="saveOldAjaxListInfos">save.oldAjaxListInfos</string>
+    <string name="saveIsInEdit">save.isInEdit</string>
+    <string name="saveLastInfosForEdit">save.lastInfosForEdit</string>
 </resources>

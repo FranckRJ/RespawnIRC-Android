@@ -5,7 +5,6 @@ import android.os.Parcelable;
 import android.support.v4.util.LongSparseArray;
 
 class ParcelableLongSparseStringArray extends LongSparseArray<String> implements Parcelable {
-
     @Override
     public int describeContents() {
         return 0;
