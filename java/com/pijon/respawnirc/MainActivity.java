@@ -1,4 +1,4 @@
-package com.pijon.respawnirc;
+package com.franckrj.respawnirc;
 
 import android.content.Context;
 import android.content.Intent;

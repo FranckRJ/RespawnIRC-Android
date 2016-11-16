@@ -1,4 +1,4 @@
-package com.pijon.respawnirc;
+package com.franckrj.respawnirc;
 
 import android.os.Parcel;
 import android.os.Parcelable;

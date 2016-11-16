@@ -1,4 +1,4 @@
-package com.pijon.respawnirc;
+package com.franckrj.respawnirc;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

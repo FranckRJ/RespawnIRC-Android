@@ -9,7 +9,7 @@
     <string name="connectToJVC">Se connecter à JVC</string>
     <string name="pseudoForConnect">Votre pseudo</string>
     <string name="endConnect">Terminer</string>
-    <string name="preference_file_key">com.pijon.respawnirc.PREFERENCE_FILE_KEY</string>
+    <string name="preference_file_key">com.franckrj.respawnirc.PREFERENCE_FILE_KEY</string>
     <string name="errorPseudoMissingConnect">Veuillez insérer le pseudo avec lequel vous vous êtes connecté dans le champ en haut.</string>
     <string name="errorCookiesMissingConnect">Vous n\'êtes pas connecté sur JVC.</string>
     <string name="prefCookiesList">pref.cookiesList</string>

@@ -1,4 +1,4 @@
-package com.pijon.respawnirc;
+package com.franckrj.respawnirc;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;

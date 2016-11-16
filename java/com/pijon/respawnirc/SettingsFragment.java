@@ -1,4 +1,4 @@
-package com.pijon.respawnirc;
+package com.franckrj.respawnirc;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
