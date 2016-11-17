@@ -12,7 +12,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -77,7 +77,7 @@ class JVCMessagesAdapter extends BaseAdapter {
     private class ViewHolder {
         TextView firstLine;
         TextView secondLine;
-        Button showMenuButton;
+        ImageButton showMenuButton;
     }
 
     JVCMessagesAdapter(Activity newParentActivity) {
@@ -150,7 +150,7 @@ class JVCMessagesAdapter extends BaseAdapter {
             convertView = serviceInflater.inflate(R.layout.jvcmessages_row, null);
             holder.firstLine = (TextView) convertView.findViewById(R.id.item_one_jvcmessages_text_row);
             holder.secondLine = (TextView) convertView.findViewById(R.id.item_two_jvcmessages_text_row);
-            holder.showMenuButton = (Button) convertView.findViewById(R.id.menu_overflow_row);
+            holder.showMenuButton = (ImageButton) convertView.findViewById(R.id.menu_overflow_row);
 
             holder.showMenuButton.setOnClickListener(menuButtonClicked);
             convertView.setTag(holder);

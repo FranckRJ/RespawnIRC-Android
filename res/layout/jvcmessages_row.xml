@@ -19,21 +19,21 @@
             android:layout_toLeftOf="@+id/menu_overflow_row"
             android:layout_marginTop="8dp"
             android:autoLink="web"/>
-        <Button
+        <ImageButton
             android:id="@+id/menu_overflow_row"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
-            android:text="@string/vertical_ellipsis"/>
+            android:src="@drawable/ic_action_navigation_more_vert"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/overflow_menu_desc" />
     </RelativeLayout>
 
     <TextView
         android:id="@+id/item_two_jvcmessages_text_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-4dp"
+        android:layout_marginTop="2dp"
         android:layout_marginBottom="4dp"
         android:autoLink="web"/>
 

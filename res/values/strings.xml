@@ -19,7 +19,7 @@
     <string name="saveAllCurrentMessagesShowed">save.allCurrentMessagesShowed</string>
     <string name="saveFirstTimeGetMessages">save.firstTimeGetMessages</string>
     <string name="saveLastIdOfMessage">save.lastIdOfMessage</string>
-    <string name="vertical_ellipsis">|</string>
+    <string name="overflow_menu_desc">Menu déroulant</string>
     <string name="quoteMessage">Citer</string>
     <string name="saveLatestAjaxInfoList">save.latestAjaxInfoList</string>
     <string name="saveLatestAjaxInfoMod">save.latestAjaxInfoMod</string>
