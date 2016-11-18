@@ -1,12 +1,18 @@
 package com.franckrj.respawnirc;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.CookieManager;
@@ -20,6 +26,23 @@ import android.widget.Toast;
 public class ConnectActivity extends AppCompatActivity {
     private WebView jvcWebView = null;
     private EditText pseudoText = null;
+    private HelpConnectDialogFragment helpDialogFragment = null;
+
+    static public class HelpConnectDialogFragment extends DialogFragment {
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            super.onCreateDialog(savedInstanceState);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(R.string.help).setMessage(R.string.help_dialog_connect)
+                    .setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    });
+            return builder.create();
+        }
+    }
 
     public void saveCookies(View buttonView) {
         if (!pseudoText.getText().toString().isEmpty()) {
@@ -68,10 +91,20 @@ public class ConnectActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_connect, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 super.onBackPressed();
+                return true;
+            case R.id.action_showhelp_connect:
+                helpDialogFragment.show(getFragmentManager(), "HelpConnectDialogFragment");
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -93,6 +126,8 @@ public class ConnectActivity extends AppCompatActivity {
 
         jvcWebView = (WebView) findViewById(R.id.webview_connect);
         pseudoText = (EditText) findViewById(R.id.pseudo_text_connect);
+
+        helpDialogFragment = new HelpConnectDialogFragment();
 
         CookieManager.getInstance().removeAllCookie();
 

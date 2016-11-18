@@ -50,4 +50,7 @@
     <string name="saveOldAjaxListInfos">save.oldAjaxListInfos</string>
     <string name="saveIsInEdit">save.isInEdit</string>
     <string name="saveLastInfosForEdit">save.lastInfosForEdit</string>
+    <string name="help">Aide</string>
+    <string name="ok">OK</string>
+    <string name="help_dialog_connect">• Pour commencer, veuillez entrer votre pseudo dans le champ présent tout en haut.\n• Ensuite, veuillez vous connecter sur JVC avec ce même pseudo.\n• Enfin, cliquez sur le bouton \"Terminer\" tout en haut à droite.</string>
 </resources>

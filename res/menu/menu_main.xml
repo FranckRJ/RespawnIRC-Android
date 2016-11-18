@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/action_connectToJVC_main"
+    <item
+        android:id="@+id/action_connectToJVC_main"
         android:title="@string/connectToJVC"/>
-    <item android:id="@+id/action_load_from_old_topic_info_main"
+    <item
+        android:id="@+id/action_load_from_old_topic_info_main"
         android:title="@string/loadTopicFromOldInfos"/>
-    <item android:id="@+id/action_settings_main"
+    <item
+        android:id="@+id/action_settings_main"
         android:title="@string/preference"/>
 </menu>
