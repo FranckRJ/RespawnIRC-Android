@@ -335,7 +335,7 @@ final class JVCParser {
             newFirstLine.append(" &lt;<font color=\"#3399ff\">").append(thisMessageInfo.pseudo).append("</font>&gt;");
         }
         else {
-            newFirstLine.append(" &lt;<font color=\"#80002A\">").append(thisMessageInfo.pseudo).append("</font>&gt;");
+            newFirstLine.append(" &lt;<font color=\"#000025\">").append(thisMessageInfo.pseudo).append("</font>&gt;");
         }
 
         return newFirstLine.toString();
