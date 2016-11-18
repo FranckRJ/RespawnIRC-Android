@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:src="@drawable/ic_action_navigation_more_vert"
+            android:src="@drawable/ic_action_navigation_more"
             android:background="@android:color/transparent"
             android:contentDescription="@string/overflow_menu_desc" />
     </RelativeLayout>
