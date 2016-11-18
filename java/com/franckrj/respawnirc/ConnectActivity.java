@@ -36,6 +36,7 @@ public class ConnectActivity extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle(R.string.help).setMessage(R.string.help_dialog_connect)
                     .setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
                         public void onClick(DialogInterface dialog, int id) {
                             dialog.dismiss();
                         }

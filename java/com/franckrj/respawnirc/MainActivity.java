@@ -1,10 +1,16 @@
 package com.franckrj.respawnirc;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -308,6 +314,14 @@ public class MainActivity extends AppCompatActivity {
         urlEdit.setText(getterForMessages.getUrlForTopic());
         jvcMsgList.setAdapter(adapterForMessages);
         messageSendEdit.requestFocus();
+
+        if (sharedPref.getBoolean(getString(R.string.prefIsFirstLaunch), true)) {
+            SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
+            HelpFirstLaunchDialogFragment firstLaunchDialogFragment = new HelpFirstLaunchDialogFragment();
+            firstLaunchDialogFragment.show(getFragmentManager(), "HelpFirstLaunchDialogFragment");
+            sharedPrefEdit.putBoolean(getString(R.string.prefIsFirstLaunch), false);
+            sharedPrefEdit.apply();
+        }
     }
 
     @Override
@@ -377,6 +391,29 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(MainActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    static public class HelpFirstLaunchDialogFragment extends DialogFragment {
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            super.onCreateDialog(savedInstanceState);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(R.string.welcome).setMessage(R.string.help_firstlaunch)
+                    .setNegativeButton(R.string.later, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    }).setPositiveButton(R.string.connectToJVC, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int i) {
+                            dialog.dismiss();
+                            startActivity(new Intent(getActivity(), ConnectActivity.class));
+                        }
+                    });
+            return builder.create();
         }
     }
 }
