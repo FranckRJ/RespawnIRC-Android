@@ -104,10 +104,12 @@ class JVCMessageGetter {
     }
 
     private void startGetMessages(int timerBeforeStart) {
-        messagesNeedToBeGet = true;
-        if (currentAsyncTaskForGetMessage == null) {
-            currentAsyncTaskForGetMessage = new GetJVCLastMessage();
-            timerForFetchUrl.schedule(new LaunchGetJVCLastMessage(), timerBeforeStart);
+        if (!urlForTopic.isEmpty()) {
+            messagesNeedToBeGet = true;
+            if (currentAsyncTaskForGetMessage == null) {
+                currentAsyncTaskForGetMessage = new GetJVCLastMessage();
+                timerForFetchUrl.schedule(new LaunchGetJVCLastMessage(), timerBeforeStart);
+            }
         }
     }
 

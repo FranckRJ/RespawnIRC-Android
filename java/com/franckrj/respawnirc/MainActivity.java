@@ -162,22 +162,24 @@ public class MainActivity extends AppCompatActivity {
 
         newUrl = urlEdit.getText().toString();
 
-        if (newUrl.startsWith("https://")) {
-            newUrl = newUrl.replaceFirst("https://", "http://");
-        }
+        if (!newUrl.isEmpty()) {
+            if (newUrl.startsWith("https://")) {
+                newUrl = newUrl.replaceFirst("https://", "http://");
+            }
 
-        if (!newUrl.startsWith("http://")) {
-            newUrl = "http://" + newUrl;
-        }
+            if (!newUrl.startsWith("http://")) {
+                newUrl = "http://" + newUrl;
+            }
 
-        if (newUrl.startsWith("http://m.jeuxvideo.com/")) {
-            newUrl = newUrl.replaceFirst("http://m.jeuxvideo.com/", "http://www.jeuxvideo.com/");
-        } else if (newUrl.startsWith("http://jeuxvideo.com/")) {
-            newUrl = newUrl.replaceFirst("http://jeuxvideo.com/", "http://www.jeuxvideo.com/");
-        }
+            if (newUrl.startsWith("http://m.jeuxvideo.com/")) {
+                newUrl = newUrl.replaceFirst("http://m.jeuxvideo.com/", "http://www.jeuxvideo.com/");
+            } else if (newUrl.startsWith("http://jeuxvideo.com/")) {
+                newUrl = newUrl.replaceFirst("http://jeuxvideo.com/", "http://www.jeuxvideo.com/");
+            }
 
-        if (!newUrl.equals(urlEdit.getText().toString())) {
-            urlEdit.setText(newUrl);
+            if (!newUrl.equals(urlEdit.getText().toString())) {
+                urlEdit.setText(newUrl);
+            }
         }
 
         sharedPrefEdit.putString(getString(R.string.prefUrlToFetch), newUrl);
@@ -344,10 +346,7 @@ public class MainActivity extends AppCompatActivity {
         getterForMessages.setTimeBetweenRefreshTopic(Integer.parseInt(sharedPref.getString(getString(R.string.settingsRefreshTopicTime), getString(R.string.refreshTopicTimeDefault))));
         adapterForMessages.setCurrentPseudoOfUser(pseudoOfUser);
         getterForMessages.setCookieListInAString(cookieListInAString);
-
-        if (!getterForMessages.getUrlForTopic().isEmpty()) {
-            getterForMessages.startEarlyGetMessagesIfNeeded();
-        }
+        getterForMessages.startEarlyGetMessagesIfNeeded();
     }
 
     @Override
