@@ -9,6 +9,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 class JVCMessageGetter {
+    final static int STATE_LOADING = 0;
+    final static int STATE_NOT_LOADING = 1;
+
     private int timeBetweenRefreshTopic = 10000;
     private String urlForTopic = "";
     private Timer timerForFetchUrl = new Timer();
@@ -21,6 +24,7 @@ class JVCMessageGetter {
     private Activity parentActivity = null;
     private String cookieListInAString = "";
     private NewMessagesListener listenerForNewMessages = null;
+    private NewGetterStateListener listenerForNewGetterState = null;
     private ParcelableLongSparseStringArray listOfEditInfos = new ParcelableLongSparseStringArray();
 
     static class PageInfos {
@@ -33,6 +37,10 @@ class JVCMessageGetter {
 
     interface NewMessagesListener {
         void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages);
+    }
+
+    interface NewGetterStateListener {
+        void newStateSetted(int newState);
     }
 
     JVCMessageGetter(Activity newParentActivity) {
@@ -65,6 +73,10 @@ class JVCMessageGetter {
 
     void setListenerForNewMessages(NewMessagesListener thisListener) {
         listenerForNewMessages = thisListener;
+    }
+
+    void setListenerForNewGetterState(NewGetterStateListener thisListener) {
+        listenerForNewGetterState = thisListener;
     }
 
     void setNewTopic(String newUrlForTopic, boolean reallyNewTopic) {
@@ -119,6 +131,10 @@ class JVCMessageGetter {
             currentAsyncTaskForGetMessage.cancel(false);
             currentAsyncTaskForGetMessage = null;
         }
+
+        if (listenerForNewGetterState != null) {
+            listenerForNewGetterState.newStateSetted(STATE_NOT_LOADING);
+        }
     }
 
     void startEarlyGetMessagesIfNeeded() {
@@ -150,6 +166,13 @@ class JVCMessageGetter {
 
     private class GetJVCLastMessage extends AsyncTask<String, Void, PageInfos> {
         @Override
+        protected void onPreExecute() {
+            if (listenerForNewGetterState != null) {
+                listenerForNewGetterState.newStateSetted(STATE_LOADING);
+            }
+        }
+
+        @Override
         protected PageInfos doInBackground(String... params) {
             if (params.length > 1) {
                 PageInfos newPageInfos = null;
@@ -175,6 +198,10 @@ class JVCMessageGetter {
             super.onPostExecute(infoOfCurrentPage);
             boolean needToGetNewMessagesEarly = false;
             ArrayList<JVCParser.MessageInfos> listOfNewMessages = new ArrayList<>();
+
+            if (listenerForNewGetterState != null) {
+                listenerForNewGetterState.newStateSetted(STATE_NOT_LOADING);
+            }
 
             if (messagesNeedToBeGet) {
                 if (infoOfCurrentPage != null) {

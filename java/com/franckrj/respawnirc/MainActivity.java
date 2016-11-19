@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private String cookieListInAString = "";
     private String oldUrlForTopic = "";
     private long oldLastIdOfMessage = 0;
+    private View loadingLayout = null;
 
     private PopupMenu.OnMenuItemClickListener listenerForItemClicked = new PopupMenu.OnMenuItemClickListener() {
         @Override
@@ -93,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
                 boolean scrolledAtTheEnd = true;
                 boolean firstTimeGetMessages = adapterForMessages.getAllItems().isEmpty();
 
+                loadingLayout.setVisibility(View.GONE);
+
                 if (jvcMsgList.getChildCount() > 0) {
                     scrolledAtTheEnd = (jvcMsgList.getLastVisiblePosition() == jvcMsgList.getCount() - 1) &&
                             (jvcMsgList.getChildAt(jvcMsgList.getChildCount() - 1).getBottom() <= jvcMsgList.getHeight());
@@ -120,6 +123,19 @@ public class MainActivity extends AppCompatActivity {
 
                 if (scrolledAtTheEnd && jvcMsgList.getCount() > 0) {
                     jvcMsgList.setSelection(jvcMsgList.getCount() - 1);
+                }
+            }
+        }
+    };
+
+    private JVCMessageGetter.NewGetterStateListener listenerForNewGetterState = new JVCMessageGetter.NewGetterStateListener() {
+        @Override
+        public void newStateSetted(int newState) {
+            if (adapterForMessages.getCount() == 0) {
+                if (newState == JVCMessageGetter.STATE_LOADING) {
+                    loadingLayout.setVisibility(View.VISIBLE);
+                } else if (newState == JVCMessageGetter.STATE_NOT_LOADING) {
+                    loadingLayout.setVisibility(View.GONE);
                 }
             }
         }
@@ -277,6 +293,7 @@ public class MainActivity extends AppCompatActivity {
         urlEdit = (EditText) findViewById(R.id.topiclink_text_main);
         messageSendEdit = (EditText) findViewById(R.id.sendmessage_text_main);
         messageSendButton = (Button) findViewById(R.id.sendmessage_button_main);
+        loadingLayout = findViewById(R.id.layout_loading_main);
 
         sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
@@ -284,6 +301,7 @@ public class MainActivity extends AppCompatActivity {
         senderForMessages = new JVCMessageSender(MainActivity.this);
         adapterForMessages = new JVCMessagesAdapter(MainActivity.this);
         getterForMessages.setListenerForNewMessages(listenerForNewMessages);
+        getterForMessages.setListenerForNewGetterState(listenerForNewGetterState);
         senderForMessages.setListenerForNewMessageWantEdit(listenerForNewMessageWantEdit);
         senderForMessages.setListenerForNewMessagePosted(listenerForNewMessagePosted);
         adapterForMessages.setActionWhenItemMenuClicked(listenerForItemClicked);
@@ -313,6 +331,7 @@ public class MainActivity extends AppCompatActivity {
 
         getterForMessages.setNewTopic(sharedPref.getString(getString(R.string.prefUrlToFetch), ""), false);
 
+        loadingLayout.setVisibility(View.GONE);
         urlEdit.setText(getterForMessages.getUrlForTopic());
         jvcMsgList.setAdapter(adapterForMessages);
         messageSendEdit.requestFocus();
