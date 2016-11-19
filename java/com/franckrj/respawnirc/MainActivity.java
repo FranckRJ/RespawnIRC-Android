@@ -344,7 +344,10 @@ public class MainActivity extends AppCompatActivity {
         getterForMessages.setTimeBetweenRefreshTopic(Integer.parseInt(sharedPref.getString(getString(R.string.settingsRefreshTopicTime), getString(R.string.refreshTopicTimeDefault))));
         adapterForMessages.setCurrentPseudoOfUser(pseudoOfUser);
         getterForMessages.setCookieListInAString(cookieListInAString);
-        getterForMessages.startEarlyGetMessagesIfNeeded();
+
+        if (!getterForMessages.getUrlForTopic().isEmpty()) {
+            getterForMessages.startEarlyGetMessagesIfNeeded();
+        }
     }
 
     @Override
