@@ -4,17 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.franckrj.respawnirc.MainActivity">
+    tools:context="com.franckrj.respawnirc.ShowTopicIRCActivity">
 
     <include
-        android:id="@+id/toolbar_main"
+        android:id="@+id/toolbar_showtopicirc"
         layout="@layout/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"/>
 
     <RelativeLayout
-        android:id="@+id/layout_loading_main"
+        android:id="@+id/layout_loading_showtopicirc"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center">
@@ -25,14 +25,14 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/topiclink_layout_main"
+        android:id="@+id/topiclink_layout_showtopicirc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar_main"
+        android:layout_below="@+id/toolbar_showtopicirc"
         android:orientation="horizontal"
         android:background="#eee">
         <EditText
-            android:id="@+id/topiclink_text_main"
+            android:id="@+id/topiclink_text_showtopicirc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="20"
@@ -40,7 +40,7 @@
             android:selectAllOnFocus="true"
             android:hint="@string/topiclinkPlaceHolder"/>
         <Button
-            android:id="@+id/topiclink_button_main"
+            android:id="@+id/topiclink_button_showtopicirc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="80"
@@ -51,34 +51,34 @@
         android:layout_width="match_parent"
         android:layout_height="4dp"
         android:background="@drawable/shadow_top"
-        android:layout_below="@id/toolbar_main"/>
+        android:layout_below="@id/toolbar_showtopicirc"/>
 
     <ListView
-        android:id="@+id/jvcmessage_view_main"
+        android:id="@+id/jvcmessage_view_showtopicirc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/sendmessage_layout_main"
-        android:layout_below="@id/topiclink_layout_main"/>
+        android:layout_above="@+id/sendmessage_layout_showtopicirc"
+        android:layout_below="@id/topiclink_layout_showtopicirc"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="4dp"
         android:background="@drawable/shadow_top"
-        android:layout_below="@id/topiclink_layout_main"/>
+        android:layout_below="@id/topiclink_layout_showtopicirc"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="4dp"
         android:background="@drawable/shadow_bottom"
-        android:layout_above="@+id/sendmessage_layout_main"/>
+        android:layout_above="@+id/sendmessage_layout_showtopicirc"/>
     <LinearLayout
-        android:id="@+id/sendmessage_layout_main"
+        android:id="@+id/sendmessage_layout_showtopicirc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
         android:background="#eee">
         <EditText
-            android:id="@+id/sendmessage_text_main"
+            android:id="@+id/sendmessage_text_showtopicirc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="30"
@@ -86,7 +86,7 @@
             android:maxLines="3"
             android:hint="@string/messagePlaceHolder"/>
         <Button
-            android:id="@+id/sendmessage_button_main"
+            android:id="@+id/sendmessage_button_showtopicirc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="70"
