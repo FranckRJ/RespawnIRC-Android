@@ -28,23 +28,6 @@ public class ConnectActivity extends AppCompatActivity {
     private EditText pseudoText = null;
     private HelpConnectDialogFragment helpDialogFragment = null;
 
-    static public class HelpConnectDialogFragment extends DialogFragment {
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            super.onCreateDialog(savedInstanceState);
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle(R.string.help).setMessage(R.string.help_dialog_connect)
-                    .setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.dismiss();
-                        }
-                    });
-            return builder.create();
-        }
-    }
-
     public void saveCookies(View buttonView) {
         if (!pseudoText.getText().toString().isEmpty()) {
             String allCookiesInstring = CookieManager.getInstance().getCookie("http://www.jeuxvideo.com/");
@@ -92,26 +75,6 @@ public class ConnectActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.menu_connect, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                super.onBackPressed();
-                return true;
-            case R.id.action_showhelp_connect:
-                helpDialogFragment.show(getFragmentManager(), "HelpConnectDialogFragment");
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect);
@@ -141,5 +104,42 @@ public class ConnectActivity extends AppCompatActivity {
         jvcWebView.clearHistory();
 
         jvcWebView.loadUrl("http://www.jeuxvideo.com/login");
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_connect, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                super.onBackPressed();
+                return true;
+            case R.id.action_showhelp_connect:
+                helpDialogFragment.show(getFragmentManager(), "HelpConnectDialogFragment");
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    static public class HelpConnectDialogFragment extends DialogFragment {
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            super.onCreateDialog(savedInstanceState);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(R.string.help).setMessage(R.string.help_dialog_connect)
+                    .setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    });
+            return builder.create();
+        }
     }
 }

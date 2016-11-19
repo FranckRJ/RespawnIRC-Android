@@ -34,110 +34,6 @@ final class JVCParser {
     private static final Pattern lastEditMessagePattern = Pattern.compile("<div class=\"info-edition-msg\">Message édité le ([^ ]* [^ ]* [^ ]* [^ ]* [0-9:]*) par <span");
     private static final Pattern messageEditInfoPattern = Pattern.compile("<textarea tabindex=\"3\" class=\"area-editor\" name=\"text_commentaire\" id=\"text_commentaire\" placeholder=\"[^\"]*\">([^<]*)</textarea>");
 
-    interface StringModifier {
-        String changeString(String baseString);
-    }
-
-    private static class ConvertStringToString implements StringModifier {
-        private String stringToRemplace;
-        private String stringNew;
-
-        ConvertStringToString(String newStringToRemplace, String newStringNew) {
-            stringToRemplace = newStringToRemplace;
-            stringNew = newStringNew;
-        }
-
-        @Override
-        public String changeString(String baseString) {
-            return baseString.replace(stringToRemplace, stringNew);
-        }
-    }
-
-    private static class ConvertRegexpToString implements StringModifier {
-        private String regexpToRemplace;
-        private String stringNew;
-
-        ConvertRegexpToString(String newRegexpToRemplace, String newStringNew) {
-            regexpToRemplace = newRegexpToRemplace;
-            stringNew = newStringNew;
-        }
-
-        @Override
-        public String changeString(String baseString) {
-            return baseString.replaceAll(regexpToRemplace, stringNew);
-        }
-    }
-
-    private static class MakeLinkIfPossible implements StringModifier {
-        @Override
-        public String changeString(String baseString) {
-            if ((baseString.startsWith("http://") || baseString.startsWith("https://")) && !baseString.contains(" ")) {
-                baseString = "<a href=\"" + baseString + "\">" + baseString + "</a>";
-            }
-            return baseString;
-        }
-    }
-
-    static class AjaxInfos {
-        String list = null;
-        String mod = null;
-    }
-
-    static class MessageInfos implements Parcelable {
-        String pseudo;
-        String messageNotParsed;
-        String dateTime;
-        String lastTimeEdit;
-        boolean containSpoil = false;
-        boolean showSpoil = false;
-        boolean isAnEdit = false;
-        long id = 0;
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel out, int flags) {
-            out.writeString(pseudo);
-            out.writeString(messageNotParsed);
-            out.writeString(dateTime);
-            out.writeString(lastTimeEdit);
-            out.writeInt(containSpoil ? 1 : 0);
-            out.writeInt(showSpoil ? 1 : 0);
-            out.writeInt(isAnEdit ? 1 : 0);
-            out.writeLong(id);
-        }
-
-        public static final Parcelable.Creator<MessageInfos> CREATOR = new Parcelable.Creator<MessageInfos>() {
-            @Override
-            public MessageInfos createFromParcel(Parcel in) {
-                return new MessageInfos(in);
-            }
-
-            @Override
-            public MessageInfos[] newArray(int size) {
-                return new MessageInfos[size];
-            }
-        };
-
-        MessageInfos() {
-            //rien
-        }
-
-        private MessageInfos(Parcel in) {
-            pseudo = in.readString();
-            messageNotParsed = in.readString();
-            dateTime = in.readString();
-            lastTimeEdit = in.readString();
-            containSpoil = (in.readInt() == 1);
-            showSpoil = (in.readInt() == 1);
-            isAnEdit = (in.readInt() == 1);
-            id = in.readLong();
-        }
-    }
-
     private JVCParser() {
         //rien
     }
@@ -465,5 +361,109 @@ final class JVCParser {
         }
 
         return listOfParsedMessage;
+    }
+
+    static class MessageInfos implements Parcelable {
+        String pseudo;
+        String messageNotParsed;
+        String dateTime;
+        String lastTimeEdit;
+        boolean containSpoil = false;
+        boolean showSpoil = false;
+        boolean isAnEdit = false;
+        long id = 0;
+
+        public static final Parcelable.Creator<MessageInfos> CREATOR = new Parcelable.Creator<MessageInfos>() {
+            @Override
+            public MessageInfos createFromParcel(Parcel in) {
+                return new MessageInfos(in);
+            }
+
+            @Override
+            public MessageInfos[] newArray(int size) {
+                return new MessageInfos[size];
+            }
+        };
+
+        MessageInfos() {
+            //rien
+        }
+
+        private MessageInfos(Parcel in) {
+            pseudo = in.readString();
+            messageNotParsed = in.readString();
+            dateTime = in.readString();
+            lastTimeEdit = in.readString();
+            containSpoil = (in.readInt() == 1);
+            showSpoil = (in.readInt() == 1);
+            isAnEdit = (in.readInt() == 1);
+            id = in.readLong();
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            out.writeString(pseudo);
+            out.writeString(messageNotParsed);
+            out.writeString(dateTime);
+            out.writeString(lastTimeEdit);
+            out.writeInt(containSpoil ? 1 : 0);
+            out.writeInt(showSpoil ? 1 : 0);
+            out.writeInt(isAnEdit ? 1 : 0);
+            out.writeLong(id);
+        }
+    }
+
+    private static class ConvertStringToString implements StringModifier {
+        private String stringToRemplace;
+        private String stringNew;
+
+        ConvertStringToString(String newStringToRemplace, String newStringNew) {
+            stringToRemplace = newStringToRemplace;
+            stringNew = newStringNew;
+        }
+
+        @Override
+        public String changeString(String baseString) {
+            return baseString.replace(stringToRemplace, stringNew);
+        }
+    }
+
+    private static class ConvertRegexpToString implements StringModifier {
+        private String regexpToRemplace;
+        private String stringNew;
+
+        ConvertRegexpToString(String newRegexpToRemplace, String newStringNew) {
+            regexpToRemplace = newRegexpToRemplace;
+            stringNew = newStringNew;
+        }
+
+        @Override
+        public String changeString(String baseString) {
+            return baseString.replaceAll(regexpToRemplace, stringNew);
+        }
+    }
+
+    private static class MakeLinkIfPossible implements StringModifier {
+        @Override
+        public String changeString(String baseString) {
+            if ((baseString.startsWith("http://") || baseString.startsWith("https://")) && !baseString.contains(" ")) {
+                baseString = "<a href=\"" + baseString + "\">" + baseString + "</a>";
+            }
+            return baseString;
+        }
+    }
+
+    static class AjaxInfos {
+        String list = null;
+        String mod = null;
+    }
+
+    interface StringModifier {
+        String changeString(String baseString);
     }
 }

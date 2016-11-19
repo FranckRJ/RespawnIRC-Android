@@ -74,12 +74,6 @@ class JVCMessagesAdapter extends BaseAdapter {
         }
     };
 
-    private class ViewHolder {
-        TextView firstLine;
-        TextView secondLine;
-        ImageButton showMenuButton;
-    }
-
     JVCMessagesAdapter(Activity newParentActivity) {
         parentActivity = newParentActivity;
         serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -87,6 +81,10 @@ class JVCMessagesAdapter extends BaseAdapter {
 
     int getCurrentItemIDSelected() {
         return currentItemIDSelected;
+    }
+
+    ArrayList<JVCParser.MessageInfos> getAllItems() {
+        return listOfMessages;
     }
 
     void setActionWhenItemMenuClicked(PopupMenu.OnMenuItemClickListener newAction) {
@@ -120,10 +118,6 @@ class JVCMessagesAdapter extends BaseAdapter {
 
     void updateAllItems() {
         notifyDataSetChanged();
-    }
-
-    ArrayList<JVCParser.MessageInfos> getAllItems() {
-        return listOfMessages;
     }
 
     @Override
@@ -163,4 +157,9 @@ class JVCMessagesAdapter extends BaseAdapter {
         return convertView;
     }
 
+    private class ViewHolder {
+        TextView firstLine;
+        TextView secondLine;
+        ImageButton showMenuButton;
+    }
 }

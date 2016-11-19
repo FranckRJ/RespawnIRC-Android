@@ -14,14 +14,6 @@ class JVCMessageSender {
     private NewMessageWantEditListener listenerForNewMessageWantEdit = null;
     private NewMessagePostedListener listenerForNewMessagePosted = null;
 
-    interface NewMessageWantEditListener {
-        void initializeEditMode(String newMessageToEdit);
-    }
-
-    interface NewMessagePostedListener {
-        void lastMessageIsSended(String withThisError);
-    }
-
     JVCMessageSender(Activity newParentActivity) {
         parentActivity = newParentActivity;
     }
@@ -144,5 +136,13 @@ class JVCMessageSender {
                 listenerForNewMessagePosted.lastMessageIsSended(errorWhenSending);
             }
         }
+    }
+
+    interface NewMessageWantEditListener {
+        void initializeEditMode(String newMessageToEdit);
+    }
+
+    interface NewMessagePostedListener {
+        void lastMessageIsSended(String withThisError);
     }
 }

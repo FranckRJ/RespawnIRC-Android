@@ -27,22 +27,6 @@ class JVCMessageGetter {
     private NewGetterStateListener listenerForNewGetterState = null;
     private ParcelableLongSparseStringArray listOfEditInfos = new ParcelableLongSparseStringArray();
 
-    static class PageInfos {
-        ArrayList<JVCParser.MessageInfos> listOfMessages;
-        String lastPageLink;
-        String nextPageLink;
-        String listOfInputInAString;
-        JVCParser.AjaxInfos ajaxInfosOfThisPage;
-    }
-
-    interface NewMessagesListener {
-        void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages);
-    }
-
-    interface NewGetterStateListener {
-        void newStateSetted(int newState);
-    }
-
     JVCMessageGetter(Activity newParentActivity) {
         parentActivity = newParentActivity;
     }
@@ -258,5 +242,21 @@ class JVCMessageGetter {
                 }
             }
         }
+    }
+
+    static class PageInfos {
+        ArrayList<JVCParser.MessageInfos> listOfMessages;
+        String lastPageLink;
+        String nextPageLink;
+        String listOfInputInAString;
+        JVCParser.AjaxInfos ajaxInfosOfThisPage;
+    }
+
+    interface NewMessagesListener {
+        void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages);
+    }
+
+    interface NewGetterStateListener {
+        void newStateSetted(int newState);
     }
 }

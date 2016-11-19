@@ -1,6 +1,5 @@
 package com.franckrj.respawnirc;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -252,36 +251,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        menu.findItem(R.id.action_load_from_old_topic_info_main).setEnabled(JVCParser.checkIfTopicAreSame(getterForMessages.getUrlForTopic(), oldUrlForTopic));
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_connectToJVC_main:
-                startActivity(new Intent(MainActivity.this, ConnectActivity.class));
-                return true;
-            case R.id.action_load_from_old_topic_info_main:
-                loadFromOldTopicInfos();
-                return true;
-            case R.id.action_settings_main:
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -346,16 +315,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(getString(R.string.saveAllCurrentMessagesShowed), adapterForMessages.getAllItems());
-        getterForMessages.saveToBundle(outState);
-        senderForMessages.saveToBundle(outState);
-        outState.putString(getString(R.string.saveOldUrlForTopic), oldUrlForTopic);
-        outState.putLong(getString(R.string.saveOldLastIdOfMessage), oldLastIdOfMessage);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         maxNumberOfMessagesShowed = Integer.parseInt(sharedPref.getString(getString(R.string.settingsMaxNumberOfMessages), getString(R.string.maxNumberOfMessagesDefault)));
@@ -376,6 +335,46 @@ public class MainActivity extends AppCompatActivity {
         sharedPrefEdit.putString(getString(R.string.prefOldUrlForTopic), getterForMessages.getUrlForTopic());
         sharedPrefEdit.putLong(getString(R.string.prefOldLastIdOfMessage), getterForMessages.getLastIdOfMessage());
         sharedPrefEdit.apply();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(getString(R.string.saveAllCurrentMessagesShowed), adapterForMessages.getAllItems());
+        getterForMessages.saveToBundle(outState);
+        senderForMessages.saveToBundle(outState);
+        outState.putString(getString(R.string.saveOldUrlForTopic), oldUrlForTopic);
+        outState.putLong(getString(R.string.saveOldLastIdOfMessage), oldLastIdOfMessage);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.action_load_from_old_topic_info_main).setEnabled(JVCParser.checkIfTopicAreSame(getterForMessages.getUrlForTopic(), oldUrlForTopic));
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_connectToJVC_main:
+                startActivity(new Intent(MainActivity.this, ConnectActivity.class));
+                return true;
+            case R.id.action_load_from_old_topic_info_main:
+                loadFromOldTopicInfos();
+                return true;
+            case R.id.action_settings_main:
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private class QuoteJVCMessage extends AsyncTask<String, Void, String> {
