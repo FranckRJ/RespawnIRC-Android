@@ -13,6 +13,8 @@ class JVCMessageSender {
     private String lastInfosForEdit = null;
     private NewMessageWantEditListener listenerForNewMessageWantEdit = null;
     private NewMessagePostedListener listenerForNewMessagePosted = null;
+    private AsyncTask<String, Void, String> currentAsyncTaskForSendMessage = null;
+    private AsyncTask<String, Void, String> currentAsyncTaskForGetEditInfos = null;
 
     JVCMessageSender(Activity newParentActivity) {
         parentActivity = newParentActivity;
@@ -46,23 +48,46 @@ class JVCMessageSender {
         sendThisMessage(messageEditedToSend, "http://www.jeuxvideo.com/forums/ajax_edit_message.php", lastInfosForEdit, cookieListInAString);
     }
 
-    void sendThisMessage(String messageToSend, String urlToSend, String latestListOfInput, String cookieListInAString) {
-        try {
-            messageToSend = URLEncoder.encode(messageToSend, "UTF-8");
-        } catch (Exception e) {
-            messageToSend = "";
-            e.printStackTrace();
+    void stopAllCurrentTask() {
+        if (currentAsyncTaskForSendMessage != null) {
+            currentAsyncTaskForSendMessage.cancel(false);
+            currentAsyncTaskForSendMessage = null;
         }
-
-        new PostJVCMessage().execute(urlToSend, messageToSend, latestListOfInput + "&form_alias_rang=1", cookieListInAString);
+        if (currentAsyncTaskForGetEditInfos != null) {
+            currentAsyncTaskForGetEditInfos.cancel(false);
+            currentAsyncTaskForGetEditInfos = null;
+        }
     }
 
-    void getInfosForEditMessage(String idOfMessage, String oldAjaxListInfos, String cookieListInAString) {
-        isInEdit = true;
-        ajaxListInfos = oldAjaxListInfos;
-        lastInfosForEdit = "&id_message=" + idOfMessage + "&";
+    boolean sendThisMessage(String messageToSend, String urlToSend, String latestListOfInput, String cookieListInAString) {
+        if (currentAsyncTaskForSendMessage == null) {
+            try {
+                messageToSend = URLEncoder.encode(messageToSend, "UTF-8");
+            } catch (Exception e) {
+                messageToSend = "";
+                e.printStackTrace();
+            }
 
-        new GetEditJVCMessageInfos().execute(idOfMessage, oldAjaxListInfos, cookieListInAString);
+            currentAsyncTaskForSendMessage = new PostJVCMessage();
+            currentAsyncTaskForSendMessage.execute(urlToSend, messageToSend, latestListOfInput + "&form_alias_rang=1", cookieListInAString);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    boolean getInfosForEditMessage(String idOfMessage, String oldAjaxListInfos, String cookieListInAString) {
+        if (currentAsyncTaskForGetEditInfos == null) {
+            isInEdit = true;
+            ajaxListInfos = oldAjaxListInfos;
+            lastInfosForEdit = "&id_message=" + idOfMessage + "&";
+
+            currentAsyncTaskForGetEditInfos = new GetEditJVCMessageInfos();
+            currentAsyncTaskForGetEditInfos.execute(idOfMessage, oldAjaxListInfos, cookieListInAString);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private class GetEditJVCMessageInfos extends AsyncTask<String, Void, String> {
@@ -98,6 +123,8 @@ class JVCMessageSender {
             if (listenerForNewMessageWantEdit != null) {
                 listenerForNewMessageWantEdit.initializeEditMode(newMessageEdit);
             }
+
+            currentAsyncTaskForGetEditInfos = null;
         }
     }
 
@@ -135,6 +162,8 @@ class JVCMessageSender {
             if (listenerForNewMessagePosted != null) {
                 listenerForNewMessagePosted.lastMessageIsSended(errorWhenSending);
             }
+
+            currentAsyncTaskForSendMessage = null;
         }
     }
 

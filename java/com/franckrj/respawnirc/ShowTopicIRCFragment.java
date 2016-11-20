@@ -47,29 +47,34 @@ public class ShowTopicIRCFragment extends Fragment {
     private String oldUrlForTopic = "";
     private long oldLastIdOfMessage = 0;
     private View loadingLayout = null;
+    private AsyncTask<String, Void, String> currentTaskQuoteMessage = null;
 
     private final PopupMenu.OnMenuItemClickListener listenerForItemClicked = new PopupMenu.OnMenuItemClickListener() {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.menu_quote_message:
-                    if (getterForMessages.getLatestAjaxInfos().list != null && latestMessageQuotedInfo == null) {
+                    if (getterForMessages.getLatestAjaxInfos().list != null && latestMessageQuotedInfo == null && currentTaskQuoteMessage == null) {
                         String idOfMessage = Long.toString(adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected()).id);
                         latestMessageQuotedInfo = JVCParser.buildMessageQuotedInfoFromThis(adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected()));
 
-                        new QuoteJVCMessage().execute(idOfMessage, getterForMessages.getLatestAjaxInfos().list, cookieListInAString);
+                        currentTaskQuoteMessage = new QuoteJVCMessage();
+                        currentTaskQuoteMessage.execute(idOfMessage, getterForMessages.getLatestAjaxInfos().list, cookieListInAString);
                     } else {
                         Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
                     }
 
                     return true;
                 case R.id.menu_edit_message:
+                    boolean infoForEditAreGetted = false;
                     if (messageSendButton.isEnabled() && getterForMessages.getLatestAjaxInfos().list != null) {
                         String idOfMessage = Long.toString(adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected()).id);
                         messageSendButton.setEnabled(false);
                         messageSendButton.setText(R.string.messageEdit);
-                        senderForMessages.getInfosForEditMessage(idOfMessage, getterForMessages.getLatestAjaxInfos().list, cookieListInAString);
-                    } else {
+                        infoForEditAreGetted = senderForMessages.getInfosForEditMessage(idOfMessage, getterForMessages.getLatestAjaxInfos().list, cookieListInAString);
+                    }
+
+                    if (!infoForEditAreGetted) {
                         Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
                     }
 
@@ -225,10 +230,13 @@ public class ShowTopicIRCFragment extends Fragment {
 
                 if (!pseudoOfUser.isEmpty()) {
                     if (!senderForMessages.getIsInEdit()) {
+                        boolean messageIsSended = false;
                         if (getterForMessages.getLatestListOfInputInAString() != null) {
                             messageSendButton.setEnabled(false);
-                            senderForMessages.sendThisMessage(messageSendEdit.getText().toString(), getterForMessages.getUrlForTopic(), getterForMessages.getLatestListOfInputInAString(), cookieListInAString);
-                        } else {
+                            messageIsSended = senderForMessages.sendThisMessage(messageSendEdit.getText().toString(), getterForMessages.getUrlForTopic(), getterForMessages.getLatestListOfInputInAString(), cookieListInAString);
+                        }
+
+                        if (!messageIsSended) {
                             Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
                         }
                     } else {
@@ -255,6 +263,13 @@ public class ShowTopicIRCFragment extends Fragment {
         adapterForMessages.updateAllItems();
         getterForMessages.setOldTopic(oldUrlForTopic, oldLastIdOfMessage);
         getterForMessages.startEarlyGetMessagesIfNeeded();
+    }
+
+    public void stopAllCurrentTask() {
+        if (currentTaskQuoteMessage != null) {
+            currentTaskQuoteMessage.cancel(false);
+            currentTaskQuoteMessage = null;
+        }
     }
 
     @Override
@@ -353,6 +368,8 @@ public class ShowTopicIRCFragment extends Fragment {
         super.onPause();
         SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
         getterForMessages.stopGetMessages();
+        senderForMessages.stopAllCurrentTask();
+        stopAllCurrentTask();
         sharedPrefEdit.putString(getString(R.string.prefOldUrlForTopic), getterForMessages.getUrlForTopic());
         sharedPrefEdit.putLong(getString(R.string.prefOldLastIdOfMessage), getterForMessages.getLastIdOfMessage());
         sharedPrefEdit.apply();
@@ -430,6 +447,8 @@ public class ShowTopicIRCFragment extends Fragment {
             } else {
                 Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
             }
+
+            currentTaskQuoteMessage = null;
         }
     }
 
