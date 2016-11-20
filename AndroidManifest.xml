@@ -18,15 +18,11 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:noHistory="true">
+            android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".ShowTopicIRCActivity"
-            android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
         <activity
             android:name=".ConnectActivity"

@@ -21,7 +21,9 @@ public class SettingsActivity extends AppCompatActivity {
             myActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        getFragmentManager().beginTransaction().replace(R.id.content_frame_settings, new SettingsFragment()).commit();
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction().replace(R.id.content_frame_settings, new SettingsFragment()).commit();
+        }
     }
 
     @Override

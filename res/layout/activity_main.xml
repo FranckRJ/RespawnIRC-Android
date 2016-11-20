@@ -4,18 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.franckrj.respawnirc.SettingsActivity">
+    tools:context="com.franckrj.respawnirc.MainActivity">
 
     <include
-        android:id="@+id/toolbar_settings"
+        android:id="@+id/toolbar_main"
         layout="@layout/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"/>
 
     <FrameLayout
-        android:id="@+id/content_frame_settings"
-        android:layout_below="@+id/toolbar_settings"
+        android:id="@+id/content_frame_main"
+        android:layout_below="@+id/toolbar_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -23,6 +23,6 @@
         android:layout_width="match_parent"
         android:layout_height="4dp"
         android:background="@drawable/shadow_top"
-        android:layout_below="@+id/toolbar_settings"/>
+        android:layout_below="@+id/toolbar_main"/>
 
 </RelativeLayout>

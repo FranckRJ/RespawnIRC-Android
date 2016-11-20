@@ -1,23 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.franckrj.respawnirc.ShowTopicIRCActivity">
-
-    <include
-        android:id="@+id/toolbar_showtopicirc"
-        layout="@layout/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"/>
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/topiclink_layout_showtopicirc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar_showtopicirc"
+        android:layout_alignParentTop="true"
         android:orientation="horizontal"
         android:background="#eee">
         <EditText
@@ -33,14 +24,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="80"
-            android:text="@string/go"
-            android:onClick="changeCurrentTopicLink"/>
+            android:text="@string/go"/>
     </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:background="@drawable/shadow_top"
-        android:layout_below="@id/toolbar_showtopicirc"/>
 
     <ListView
         android:id="@+id/jvcmessage_view_showtopicirc"
@@ -90,8 +75,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="70"
-            android:text="@string/messagePost"
-            android:onClick="sendMessageToTopic"/>
+            android:text="@string/messagePost"/>
     </LinearLayout>
 
 </RelativeLayout>

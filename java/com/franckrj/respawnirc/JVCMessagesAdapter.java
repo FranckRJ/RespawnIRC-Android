@@ -141,7 +141,7 @@ class JVCMessagesAdapter extends BaseAdapter {
         if (convertView == null) {
             holder = new ViewHolder();
 
-            convertView = serviceInflater.inflate(R.layout.jvcmessages_row, null);
+            convertView = serviceInflater.inflate(R.layout.jvcmessages_row, parent, false);
             holder.firstLine = (TextView) convertView.findViewById(R.id.item_one_jvcmessages_text_row);
             holder.secondLine = (TextView) convertView.findViewById(R.id.item_two_jvcmessages_text_row);
             holder.showMenuButton = (ImageButton) convertView.findViewById(R.id.menu_overflow_row);

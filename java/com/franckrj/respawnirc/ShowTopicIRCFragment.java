@@ -3,6 +3,7 @@ package com.franckrj.respawnirc;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,11 +11,12 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,9 +29,8 @@ import java.util.ArrayList;
 /*TODO: Set focus sur la zone d'écriture des messages après citation ?
 * TODO: géré la redirection de lien (changement de nom de topic, suppression de page, etc)
 * TODO: Récupérer les deux dernières page si la dernière page contient moins de X messages (et au 1er chargement aussi ?)
-* TODO: http://stackoverflow.com/questions/5312592/how-can-i-get-my-listview-to-scroll pour pouvoir scroll le lien du topic ?
-* TODO: Convertir l'activité en fragment*/
-public class ShowTopicIRCActivity extends AppCompatActivity {
+* TODO: http://stackoverflow.com/questions/5312592/how-can-i-get-my-listview-to-scroll pour pouvoir scroll le lien du topic ?*/
+public class ShowTopicIRCFragment extends Fragment {
     private int maxNumberOfMessagesShowed = 40;
     private int initialNumberOfMessagesShowed = 10;
     private JVCMessagesAdapter adapterForMessages = null;
@@ -58,7 +59,7 @@ public class ShowTopicIRCActivity extends AppCompatActivity {
 
                         new QuoteJVCMessage().execute(idOfMessage, getterForMessages.getLatestAjaxInfos().list, cookieListInAString);
                     } else {
-                        Toast.makeText(ShowTopicIRCActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
                     }
 
                     return true;
@@ -69,7 +70,7 @@ public class ShowTopicIRCActivity extends AppCompatActivity {
                         messageSendButton.setText(R.string.messageEdit);
                         senderForMessages.getInfosForEditMessage(idOfMessage, getterForMessages.getLatestAjaxInfos().list, cookieListInAString);
                     } else {
-                        Toast.makeText(ShowTopicIRCActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
                     }
 
                     return true;
@@ -147,7 +148,7 @@ public class ShowTopicIRCActivity extends AppCompatActivity {
 
             if (newMessageToEdit.isEmpty()) {
                 messageSendButton.setText(R.string.messagePost);
-                Toast.makeText(ShowTopicIRCActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
             } else {
                 messageSendEdit.setText(newMessageToEdit);
             }
@@ -161,7 +162,7 @@ public class ShowTopicIRCActivity extends AppCompatActivity {
             messageSendButton.setText(R.string.messagePost);
 
             if (withThisError != null) {
-                Toast.makeText(ShowTopicIRCActivity.this, withThisError, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), withThisError, Toast.LENGTH_LONG).show();
             } else {
                 messageSendEdit.setText("");
                 getterForMessages.startEarlyGetMessagesIfNeeded();
@@ -169,78 +170,84 @@ public class ShowTopicIRCActivity extends AppCompatActivity {
         }
     };
 
-    public void changeCurrentTopicLink(View buttonView) {
-        String newUrl;
-        View focusedView;
-        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
-
-        newUrl = urlEdit.getText().toString();
-
-        if (!newUrl.isEmpty()) {
-            if (newUrl.startsWith("https://")) {
-                newUrl = newUrl.replaceFirst("https://", "http://");
-            }
-
-            if (!newUrl.startsWith("http://")) {
-                newUrl = "http://" + newUrl;
-            }
-
-            if (newUrl.startsWith("http://m.jeuxvideo.com/")) {
-                newUrl = newUrl.replaceFirst("http://m.jeuxvideo.com/", "http://www.jeuxvideo.com/");
-            } else if (newUrl.startsWith("http://jeuxvideo.com/")) {
-                newUrl = newUrl.replaceFirst("http://jeuxvideo.com/", "http://www.jeuxvideo.com/");
-            }
-
-            if (!newUrl.equals(urlEdit.getText().toString())) {
-                urlEdit.setText(newUrl);
-            }
-        }
-
-        sharedPrefEdit.putString(getString(R.string.prefUrlToFetch), newUrl);
-        sharedPrefEdit.apply();
-
-        getterForMessages.stopGetMessages();
-        adapterForMessages.removeAllItems();
-        adapterForMessages.updateAllItems();
-        getterForMessages.setNewTopic(newUrl, true);
-        getterForMessages.startEarlyGetMessagesIfNeeded();
-
-        focusedView = getCurrentFocus();
-        if (focusedView != null) {
-            inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    }
-
-    public void sendMessageToTopic(View buttonView) {
-        if (messageSendButton.isEnabled()) {
-            InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+    private final Button.OnClickListener changeCurrentTopicLinkListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View buttonView) {
+            String newUrl;
             View focusedView;
+            InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
 
-            if (!pseudoOfUser.isEmpty()) {
-                if (!senderForMessages.getIsInEdit()) {
-                    if (getterForMessages.getLatestListOfInputInAString() != null) {
-                        messageSendButton.setEnabled(false);
-                        senderForMessages.sendThisMessage(messageSendEdit.getText().toString(), getterForMessages.getUrlForTopic(), getterForMessages.getLatestListOfInputInAString(), cookieListInAString);
-                    } else {
-                        Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    messageSendButton.setEnabled(false);
-                    senderForMessages.sendEditMessage(messageSendEdit.getText().toString(), cookieListInAString);
+            newUrl = urlEdit.getText().toString();
+
+            if (!newUrl.isEmpty()) {
+                if (newUrl.startsWith("https://")) {
+                    newUrl = newUrl.replaceFirst("https://", "http://");
                 }
-            } else {
-                Toast.makeText(this, R.string.errorConnectedNeededBeforePost, Toast.LENGTH_LONG).show();
+
+                if (!newUrl.startsWith("http://")) {
+                    newUrl = "http://" + newUrl;
+                }
+
+                if (newUrl.startsWith("http://m.jeuxvideo.com/")) {
+                    newUrl = newUrl.replaceFirst("http://m.jeuxvideo.com/", "http://www.jeuxvideo.com/");
+                } else if (newUrl.startsWith("http://jeuxvideo.com/")) {
+                    newUrl = newUrl.replaceFirst("http://jeuxvideo.com/", "http://www.jeuxvideo.com/");
+                }
+
+                if (!newUrl.equals(urlEdit.getText().toString())) {
+                    urlEdit.setText(newUrl);
+                }
             }
 
-            focusedView = getCurrentFocus();
+            sharedPrefEdit.putString(getString(R.string.prefUrlToFetch), newUrl);
+            sharedPrefEdit.apply();
+
+            getterForMessages.stopGetMessages();
+            adapterForMessages.removeAllItems();
+            adapterForMessages.updateAllItems();
+            getterForMessages.setNewTopic(newUrl, true);
+            getterForMessages.startEarlyGetMessagesIfNeeded();
+
+            focusedView = getActivity().getCurrentFocus();
             if (focusedView != null) {
                 inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
             }
-        } else {
-            Toast.makeText(ShowTopicIRCActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
         }
-    }
+    };
+
+    private final Button.OnClickListener sendMessageToTopicListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View buttonView) {
+            if (messageSendButton.isEnabled()) {
+                InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                View focusedView;
+
+                if (!pseudoOfUser.isEmpty()) {
+                    if (!senderForMessages.getIsInEdit()) {
+                        if (getterForMessages.getLatestListOfInputInAString() != null) {
+                            messageSendButton.setEnabled(false);
+                            senderForMessages.sendThisMessage(messageSendEdit.getText().toString(), getterForMessages.getUrlForTopic(), getterForMessages.getLatestListOfInputInAString(), cookieListInAString);
+                        } else {
+                            Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        messageSendButton.setEnabled(false);
+                        senderForMessages.sendEditMessage(messageSendEdit.getText().toString(), cookieListInAString);
+                    }
+                } else {
+                    Toast.makeText(getActivity(), R.string.errorConnectedNeededBeforePost, Toast.LENGTH_LONG).show();
+                }
+
+                focusedView = getActivity().getCurrentFocus();
+                if (focusedView != null) {
+                    inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                }
+            } else {
+                Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
     public void loadFromOldTopicInfos() {
         getterForMessages.stopGetMessages();
@@ -253,22 +260,36 @@ public class ShowTopicIRCActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_showtopicirc);
+        setHasOptionsMenu(true);
+    }
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_showtopicirc);
-        setSupportActionBar(myToolbar);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        View mainView = inflater.inflate(R.layout.fragment_showtopicirc, container, false);
 
-        jvcMsgList = (ListView) findViewById(R.id.jvcmessage_view_showtopicirc);
-        urlEdit = (EditText) findViewById(R.id.topiclink_text_showtopicirc);
-        messageSendEdit = (EditText) findViewById(R.id.sendmessage_text_showtopicirc);
-        messageSendButton = (Button) findViewById(R.id.sendmessage_button_showtopicirc);
-        loadingLayout = findViewById(R.id.layout_loading_showtopicirc);
+        Button topicLinkButton = (Button) mainView.findViewById(R.id.topiclink_button_showtopicirc);
 
-        sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        jvcMsgList = (ListView) mainView.findViewById(R.id.jvcmessage_view_showtopicirc);
+        urlEdit = (EditText) mainView.findViewById(R.id.topiclink_text_showtopicirc);
+        messageSendEdit = (EditText) mainView.findViewById(R.id.sendmessage_text_showtopicirc);
+        messageSendButton = (Button) mainView.findViewById(R.id.sendmessage_button_showtopicirc);
+        loadingLayout = mainView.findViewById(R.id.layout_loading_showtopicirc);
 
-        getterForMessages = new JVCMessageGetter(ShowTopicIRCActivity.this);
-        senderForMessages = new JVCMessageSender(ShowTopicIRCActivity.this);
-        adapterForMessages = new JVCMessagesAdapter(ShowTopicIRCActivity.this);
+        topicLinkButton.setOnClickListener(changeCurrentTopicLinkListener);
+        messageSendButton.setOnClickListener(sendMessageToTopicListener);
+
+        return mainView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+        getterForMessages = new JVCMessageGetter(getActivity());
+        senderForMessages = new JVCMessageSender(getActivity());
+        adapterForMessages = new JVCMessagesAdapter(getActivity());
         getterForMessages.setListenerForNewMessages(listenerForNewMessages);
         getterForMessages.setListenerForNewGetterState(listenerForNewGetterState);
         senderForMessages.setListenerForNewMessageWantEdit(listenerForNewMessageWantEdit);
@@ -348,30 +369,28 @@ public class ShowTopicIRCActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.menu_showtopicirc, menu);
-        return true;
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_showtopicirc, menu);
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.action_load_from_old_topic_info_showtopicirc).setEnabled(JVCParser.checkIfTopicAreSame(getterForMessages.getUrlForTopic(), oldUrlForTopic));
-        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_connectToJVC_showtopicirc:
-                startActivity(new Intent(ShowTopicIRCActivity.this, ConnectActivity.class));
+                startActivity(new Intent(getActivity(), ConnectActivity.class));
                 return true;
             case R.id.action_load_from_old_topic_info_showtopicirc:
                 loadFromOldTopicInfos();
                 return true;
             case R.id.action_settings_showtopicirc:
-                startActivity(new Intent(ShowTopicIRCActivity.this, SettingsActivity.class));
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -409,7 +428,7 @@ public class ShowTopicIRCActivity extends AppCompatActivity {
                 messageSendEdit.setSelection(currentMessage.length());
                 latestMessageQuotedInfo = null;
             } else {
-                Toast.makeText(ShowTopicIRCActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
             }
         }
     }
