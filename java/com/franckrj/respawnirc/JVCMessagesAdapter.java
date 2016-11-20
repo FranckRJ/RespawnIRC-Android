@@ -27,7 +27,7 @@ class JVCMessagesAdapter extends BaseAdapter {
     private PopupMenu.OnMenuItemClickListener actionWhenItemMenuClicked = null;
     private String currentPseudoOfUser = "";
 
-    private Html.ImageGetter jvcImageGetter = new Html.ImageGetter() {
+    private final Html.ImageGetter jvcImageGetter = new Html.ImageGetter() {
         @Override
         public Drawable getDrawable(String source) {
             Resources res = parentActivity.getResources();
@@ -45,7 +45,7 @@ class JVCMessagesAdapter extends BaseAdapter {
         }
     };
 
-    private View.OnClickListener menuButtonClicked = new View.OnClickListener() {
+    private final View.OnClickListener menuButtonClicked = new View.OnClickListener() {
         @Override
         public void onClick(View buttonView) {
             PopupMenu popup = new PopupMenu(parentActivity, buttonView);

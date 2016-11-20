@@ -419,8 +419,8 @@ final class JVCParser {
     }
 
     private static class ConvertStringToString implements StringModifier {
-        private String stringToRemplace;
-        private String stringNew;
+        private final String stringToRemplace;
+        private final String stringNew;
 
         ConvertStringToString(String newStringToRemplace, String newStringNew) {
             stringToRemplace = newStringToRemplace;
@@ -434,8 +434,8 @@ final class JVCParser {
     }
 
     private static class ConvertRegexpToString implements StringModifier {
-        private String regexpToRemplace;
-        private String stringNew;
+        private final String regexpToRemplace;
+        private final String stringNew;
 
         ConvertRegexpToString(String newRegexpToRemplace, String newStringNew) {
             regexpToRemplace = newRegexpToRemplace;

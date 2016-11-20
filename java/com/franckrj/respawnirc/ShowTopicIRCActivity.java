@@ -47,7 +47,7 @@ public class ShowTopicIRCActivity extends AppCompatActivity {
     private long oldLastIdOfMessage = 0;
     private View loadingLayout = null;
 
-    private PopupMenu.OnMenuItemClickListener listenerForItemClicked = new PopupMenu.OnMenuItemClickListener() {
+    private final PopupMenu.OnMenuItemClickListener listenerForItemClicked = new PopupMenu.OnMenuItemClickListener() {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
@@ -86,7 +86,7 @@ public class ShowTopicIRCActivity extends AppCompatActivity {
         }
     };
 
-    private JVCMessageGetter.NewMessagesListener listenerForNewMessages = new JVCMessageGetter.NewMessagesListener() {
+    private final JVCMessageGetter.NewMessagesListener listenerForNewMessages = new JVCMessageGetter.NewMessagesListener() {
         @Override
         public void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages) {
             if (!listOfNewMessages.isEmpty()) {
@@ -127,7 +127,7 @@ public class ShowTopicIRCActivity extends AppCompatActivity {
         }
     };
 
-    private JVCMessageGetter.NewGetterStateListener listenerForNewGetterState = new JVCMessageGetter.NewGetterStateListener() {
+    private final JVCMessageGetter.NewGetterStateListener listenerForNewGetterState = new JVCMessageGetter.NewGetterStateListener() {
         @Override
         public void newStateSetted(int newState) {
             if (adapterForMessages.getCount() == 0) {
@@ -140,7 +140,7 @@ public class ShowTopicIRCActivity extends AppCompatActivity {
         }
     };
 
-    private JVCMessageSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageSender.NewMessageWantEditListener() {
+    private final JVCMessageSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageSender.NewMessageWantEditListener() {
         @Override
         public void initializeEditMode(String newMessageToEdit) {
             messageSendButton.setEnabled(true);
@@ -154,7 +154,7 @@ public class ShowTopicIRCActivity extends AppCompatActivity {
         }
     };
 
-    private JVCMessageSender.NewMessagePostedListener listenerForNewMessagePosted = new JVCMessageSender.NewMessagePostedListener() {
+    private final JVCMessageSender.NewMessagePostedListener listenerForNewMessagePosted = new JVCMessageSender.NewMessagePostedListener() {
         @Override
         public void lastMessageIsSended(String withThisError) {
             messageSendButton.setEnabled(true);

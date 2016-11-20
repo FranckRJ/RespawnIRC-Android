@@ -15,7 +15,9 @@
             android:id="@+id/item_one_jvcmessages_text_row"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
+            android:layout_toStartOf="@+id/menu_overflow_row"
             android:layout_toLeftOf="@+id/menu_overflow_row"
             android:layout_marginTop="8dp"
             android:autoLink="web"/>
@@ -23,6 +25,7 @@
             android:id="@+id/menu_overflow_row"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:src="@drawable/ic_action_navigation_more"
             android:background="@android:color/transparent"
