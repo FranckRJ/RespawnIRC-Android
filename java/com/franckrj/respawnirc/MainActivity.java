@@ -3,6 +3,7 @@ package com.franckrj.respawnirc;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -82,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         listForDrawer.setAdapter(new ArrayAdapter<>(this, R.layout.draweritem_row, getResources().getStringArray(R.array.itemChoiceDrawerList)));
         listForDrawer.setOnItemClickListener(itemInDrawerClickedListener);
         layoutForDrawer.addDrawerListener(toggleForDrawer);
+        layoutForDrawer.setDrawerShadow(R.drawable.shadow_drawer, GravityCompat.START);
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction().replace(R.id.content_frame_main, new ShowTopicIRCFragment()).commit();
