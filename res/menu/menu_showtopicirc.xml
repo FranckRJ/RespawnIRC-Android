@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/action_connectToJVC_showtopicirc"
-        android:title="@string/connectToJVC"/>
-    <item
         android:id="@+id/action_load_from_old_topic_info_showtopicirc"
         android:title="@string/loadTopicFromOldInfos"/>
     <item
-        android:id="@+id/action_settings_showtopicirc"
-        android:title="@string/preference"/>
+        android:id="@+id/action_switch_to_forum_mode_showtopicirc"
+        android:title="@string/switchToForumMode"
+        android:enabled="false"/>
 </menu>

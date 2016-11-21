@@ -83,8 +83,8 @@ public class ConnectActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
 
         ActionBar myActionBar = getSupportActionBar();
-
-        if(myActionBar != null) {
+        if (myActionBar != null) {
+            myActionBar.setHomeButtonEnabled(true);
             myActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
@@ -122,8 +122,9 @@ public class ConnectActivity extends AppCompatActivity {
             case R.id.action_showhelp_connect:
                 helpDialogFragment.show(getFragmentManager(), "HelpConnectDialogFragment");
                 return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     static public class HelpConnectDialogFragment extends DialogFragment {

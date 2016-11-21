@@ -16,8 +16,8 @@ public class SettingsActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
 
         ActionBar myActionBar = getSupportActionBar();
-
         if (myActionBar != null) {
+            myActionBar.setHomeButtonEnabled(true);
             myActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
@@ -32,7 +32,8 @@ public class SettingsActivity extends AppCompatActivity {
             case android.R.id.home:
                 super.onBackPressed();
                 return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 }

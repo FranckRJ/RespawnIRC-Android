@@ -87,8 +87,9 @@ public class ShowTopicIRCFragment extends Fragment {
                     adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected()).showSpoil = false;
                     adapterForMessages.updateAllItems();
                     return true;
+                default:
+                    return false;
             }
-            return false;
         }
     };
 
@@ -400,17 +401,12 @@ public class ShowTopicIRCFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_connectToJVC_showtopicirc:
-                startActivity(new Intent(getActivity(), ConnectActivity.class));
-                return true;
             case R.id.action_load_from_old_topic_info_showtopicirc:
                 loadFromOldTopicInfos();
                 return true;
-            case R.id.action_settings_showtopicirc:
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
-                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     private class QuoteJVCMessage extends AsyncTask<String, Void, String> {

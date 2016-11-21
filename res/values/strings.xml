@@ -57,4 +57,13 @@
     <string name="later">Plus tard</string>>
     <string name="help_firstlaunch">Bienvenue sur RespawnIRC !\n\nPour commencer il est conseillé de se connecter à JVC, mais vous pouvez très bien le faire plus tard.</string>
     <string name="prefIsFirstLaunch">pref.isFirstLaunch</string>
+    <string name="openDrawerContentDescRes">Ouverture du menu latéral</string>
+    <string name="closeDrawerContentDescRes">Fermeture du menu latéral</string>
+    <string name="switchToForumMode">Passer en mode forum</string>
+
+    <string-array name="itemChoiceDrawerList">
+        <item>@string/app_name</item>
+        <item>@string/connectToJVC</item>
+        <item>@string/preference</item>
+    </string-array>
 </resources>
