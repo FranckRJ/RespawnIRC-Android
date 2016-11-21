@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
@@ -40,7 +41,7 @@ public class ShowTopicIRCFragment extends Fragment {
     private ListView jvcMsgList = null;
     private EditText urlEdit = null;
     private EditText messageSendEdit = null;
-    private Button messageSendButton = null;
+    private ImageButton messageSendButton = null;
     private String latestMessageQuotedInfo = null;
     private String pseudoOfUser = "";
     private String cookieListInAString = "";
@@ -70,7 +71,7 @@ public class ShowTopicIRCFragment extends Fragment {
                     if (messageSendButton.isEnabled() && getterForMessages.getLatestAjaxInfos().list != null) {
                         String idOfMessage = Long.toString(adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected()).id);
                         messageSendButton.setEnabled(false);
-                        messageSendButton.setText(R.string.messageEdit);
+                        messageSendButton.setImageResource(R.drawable.ic_action_content_edit);
                         infoForEditAreGetted = senderForMessages.getInfosForEditMessage(idOfMessage, getterForMessages.getLatestAjaxInfos().list, cookieListInAString);
                     }
 
@@ -153,7 +154,7 @@ public class ShowTopicIRCFragment extends Fragment {
             messageSendButton.setEnabled(true);
 
             if (newMessageToEdit.isEmpty()) {
-                messageSendButton.setText(R.string.messagePost);
+                messageSendButton.setImageResource(R.drawable.ic_action_content_send);
                 Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
             } else {
                 messageSendEdit.setText(newMessageToEdit);
@@ -165,7 +166,7 @@ public class ShowTopicIRCFragment extends Fragment {
         @Override
         public void lastMessageIsSended(String withThisError) {
             messageSendButton.setEnabled(true);
-            messageSendButton.setText(R.string.messagePost);
+            messageSendButton.setImageResource(R.drawable.ic_action_content_send);
 
             if (withThisError != null) {
                 Toast.makeText(getActivity(), withThisError, Toast.LENGTH_LONG).show();
@@ -289,7 +290,7 @@ public class ShowTopicIRCFragment extends Fragment {
         jvcMsgList = (ListView) mainView.findViewById(R.id.jvcmessage_view_showtopicirc);
         urlEdit = (EditText) mainView.findViewById(R.id.topiclink_text_showtopicirc);
         messageSendEdit = (EditText) mainView.findViewById(R.id.sendmessage_text_showtopicirc);
-        messageSendButton = (Button) mainView.findViewById(R.id.sendmessage_button_showtopicirc);
+        messageSendButton = (ImageButton) mainView.findViewById(R.id.sendmessage_button_showtopicirc);
         loadingLayout = mainView.findViewById(R.id.layout_loading_showtopicirc);
 
         topicLinkButton.setOnClickListener(changeCurrentTopicLinkListener);
@@ -320,7 +321,7 @@ public class ShowTopicIRCFragment extends Fragment {
             oldLastIdOfMessage = savedInstanceState.getLong(getString(R.string.saveOldLastIdOfMessage), 0);
 
             if (senderForMessages.getIsInEdit()) {
-                messageSendButton.setText(R.string.messageEdit);
+                messageSendButton.setImageResource(R.drawable.ic_action_content_edit);
             }
 
             if (allCurrentMessagesShowed != null) {

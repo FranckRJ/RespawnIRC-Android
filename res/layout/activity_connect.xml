@@ -23,15 +23,14 @@
         android:orientation="horizontal">
             <EditText
                 android:id="@+id/pseudo_text_connect"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="30"
+                android:layout_weight="1"
                 android:hint="@string/pseudoForConnect"/>
 
             <Button
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="70"
                 android:text="@string/endConnect"
                 android:onClick="saveCookies"/>
     </LinearLayout>
