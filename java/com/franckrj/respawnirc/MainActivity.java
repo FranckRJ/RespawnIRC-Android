@@ -1,6 +1,8 @@
 package com.franckrj.respawnirc;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements AbsShowTopicFragm
     private ListView listForDrawer = null;
     private ActionBarDrawerToggle toggleForDrawer = null;
     private int lastNewActivitySelected = -1;
+    private SharedPreferences sharedPref = null;
 
     private ListView.OnItemClickListener itemInDrawerClickedListener = new ListView.OnItemClickListener() {
         @Override
@@ -51,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements AbsShowTopicFragm
             myActionBar.setHomeButtonEnabled(true);
             myActionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
         layoutForDrawer = (DrawerLayout) findViewById(R.id.layout_drawer_main);
         listForDrawer = (ListView) findViewById(R.id.view_left_drawer_main);
@@ -90,7 +95,12 @@ public class MainActivity extends AppCompatActivity implements AbsShowTopicFragm
         layoutForDrawer.setDrawerShadow(R.drawable.shadow_drawer, GravityCompat.START);
 
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction().replace(R.id.content_frame_main, new ShowTopicIRCFragment()).commit();
+            int currentTopicMode = sharedPref.getInt(getString(R.string.prefCurrentTopicMode), AbsShowTopicFragment.MODE_IRC);
+            if (currentTopicMode == AbsShowTopicFragment.MODE_IRC) {
+                getFragmentManager().beginTransaction().replace(R.id.content_frame_main, new ShowTopicIRCFragment()).commit();
+            } else if (currentTopicMode == AbsShowTopicFragment.MODE_FORUM) {
+                getFragmentManager().beginTransaction().replace(R.id.content_frame_main, new ShowTopicForumFragment()).commit();
+            }
         }
     }
 
@@ -126,10 +136,20 @@ public class MainActivity extends AppCompatActivity implements AbsShowTopicFragm
 
     @Override
     public void newModeRequested(int newMode) {
+        SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
+        boolean errorMode = false;
+
         if (newMode == AbsShowTopicFragment.MODE_IRC) {
             getFragmentManager().beginTransaction().replace(R.id.content_frame_main, new ShowTopicIRCFragment()).commit();
         } else if (newMode == AbsShowTopicFragment.MODE_FORUM) {
             getFragmentManager().beginTransaction().replace(R.id.content_frame_main, new ShowTopicForumFragment()).commit();
+        } else {
+            errorMode = true;
+        }
+
+        if (!errorMode) {
+            sharedPrefEdit.putInt(getString(R.string.prefCurrentTopicMode), newMode);
+            sharedPrefEdit.apply();
         }
     }
 }

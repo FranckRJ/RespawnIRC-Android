@@ -62,6 +62,7 @@
     <string name="switchToForumMode">Passer en mode forum</string>
     <string name="switchToIrcMode">Passer en mode IRC</string>
     <string name="refresh">Rafraichir</string>
+    <string name="prefCurrentTopicMode">pref.currentTopicMode</string>
 
     <string-array name="itemChoiceDrawerList">
         <item>@string/app_name</item>
