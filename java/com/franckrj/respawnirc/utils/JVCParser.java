@@ -2,8 +2,10 @@ package com.franckrj.respawnirc.utils;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -360,10 +362,12 @@ public final class JVCParser {
             listOfParsedMessage.add(createMessageInfoFromEntireMessage(thisMessage));
         }
 
+        Collections.sort(listOfParsedMessage);
+
         return listOfParsedMessage;
     }
 
-    public static class MessageInfos implements Parcelable {
+    public static class MessageInfos implements Parcelable, Comparable<MessageInfos> {
         public String pseudo;
         public String messageNotParsed;
         public String dateTime;
@@ -415,6 +419,17 @@ public final class JVCParser {
             out.writeInt(showSpoil ? 1 : 0);
             out.writeInt(isAnEdit ? 1 : 0);
             out.writeLong(id);
+        }
+
+        @Override
+        public int compareTo(@NonNull MessageInfos messageInfos) {
+            if (id - messageInfos.id < 0) {
+                return -1;
+            } else if (id - messageInfos.id > 0) {
+                return 1;
+            } else {
+                return 0;
+            }
         }
     }
 
