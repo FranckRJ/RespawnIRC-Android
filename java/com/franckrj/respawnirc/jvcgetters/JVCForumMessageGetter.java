@@ -5,6 +5,8 @@ import android.app.Activity;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.WebManager;
 
+import java.util.ArrayList;
+
 public class JVCForumMessageGetter extends AbsJVCMessageGetter {
     public JVCForumMessageGetter(Activity newParentActivity) {
         super(newParentActivity);
@@ -73,6 +75,10 @@ public class JVCForumMessageGetter extends AbsJVCMessageGetter {
 
                 if (listenerForNewMessages != null) {
                     listenerForNewMessages.getNewMessages(infoOfCurrentPage.listOfMessages);
+                }
+            } else {
+                if (listenerForNewMessages != null) {
+                    listenerForNewMessages.getNewMessages(new ArrayList<JVCParser.MessageInfos>());
                 }
             }
 

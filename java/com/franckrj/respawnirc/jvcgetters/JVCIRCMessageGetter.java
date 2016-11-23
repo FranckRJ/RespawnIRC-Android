@@ -185,6 +185,10 @@ public class JVCIRCMessageGetter extends AbsJVCMessageGetter {
                         }
                         needToGetNewMessagesEarly = true;
                     }
+                } else {
+                    if (listenerForNewMessages != null) {
+                        listenerForNewMessages.getNewMessages(new ArrayList<JVCParser.MessageInfos>());
+                    }
                 }
 
                 currentAsyncTaskForGetMessage = null;

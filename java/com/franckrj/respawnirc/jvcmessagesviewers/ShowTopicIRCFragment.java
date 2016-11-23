@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.jvcgetters.JVCIRCMessageGetter;
@@ -66,6 +67,8 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
                 if (scrolledAtTheEnd && jvcMsgList.getCount() > 0) {
                     jvcMsgList.setSelection(jvcMsgList.getCount() - 1);
                 }
+            } else if (adapterForMessages.getAllItems().isEmpty()) {
+                Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
             }
         }
     };
