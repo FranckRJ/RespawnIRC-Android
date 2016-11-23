@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_reload_topic_showtopicforum"
-        android:title="@string/refresh"/>
+        android:title="@string/refresh"
+        android:icon="@drawable/ic_action_navigation_refresh"
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_switch_to_IRC_mode_showtopicforum"
         android:title="@string/switchToIrcMode"/>
