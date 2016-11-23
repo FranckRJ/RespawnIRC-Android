@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc;
+package com.franckrj.respawnirc.jvcmessagesviewers;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,10 +16,13 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.utils.JVCParser;
+
 import java.util.ArrayList;
 
 /*TODO: Désactiver l'highlight quand on clique sur un élément. (désactivé par défaut quand un lien est présent) (fixé depuis l'ajout des boutons ?)*/
-class JVCMessagesAdapter extends BaseAdapter {
+public class JVCMessagesAdapter extends BaseAdapter {
     private ArrayList<JVCParser.MessageInfos> listOfMessages = new ArrayList<>();
     private LayoutInflater serviceInflater;
     private Activity parentActivity = null;
@@ -74,40 +77,40 @@ class JVCMessagesAdapter extends BaseAdapter {
         }
     };
 
-    JVCMessagesAdapter(Activity newParentActivity) {
+    public JVCMessagesAdapter(Activity newParentActivity) {
         parentActivity = newParentActivity;
         serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    int getCurrentItemIDSelected() {
+    public int getCurrentItemIDSelected() {
         return currentItemIDSelected;
     }
 
-    ArrayList<JVCParser.MessageInfos> getAllItems() {
+    public ArrayList<JVCParser.MessageInfos> getAllItems() {
         return listOfMessages;
     }
 
-    void setActionWhenItemMenuClicked(PopupMenu.OnMenuItemClickListener newAction) {
+    public void setActionWhenItemMenuClicked(PopupMenu.OnMenuItemClickListener newAction) {
         actionWhenItemMenuClicked = newAction;
     }
 
-    void setCurrentPseudoOfUser(String newPseudoOfUser) {
+    public void setCurrentPseudoOfUser(String newPseudoOfUser) {
         currentPseudoOfUser = newPseudoOfUser;
     }
 
-    void removeAllItems() {
+    public void removeAllItems() {
         listOfMessages.clear();
     }
 
-    void removeFirstItem() {
+    public void removeFirstItem() {
         listOfMessages.remove(0);
     }
 
-    void addItem(JVCParser.MessageInfos item) {
+    public void addItem(JVCParser.MessageInfos item) {
         listOfMessages.add(item);
     }
 
-    void updateThisItem(JVCParser.MessageInfos item) {
+    public void updateThisItem(JVCParser.MessageInfos item) {
         for (int i = 0; i < listOfMessages.size(); ++i) {
             if (listOfMessages.get(i).id == item.id) {
                 listOfMessages.set(i, item);
@@ -116,7 +119,7 @@ class JVCMessagesAdapter extends BaseAdapter {
         }
     }
 
-    void updateAllItems() {
+    public void updateAllItems() {
         notifyDataSetChanged();
     }
 

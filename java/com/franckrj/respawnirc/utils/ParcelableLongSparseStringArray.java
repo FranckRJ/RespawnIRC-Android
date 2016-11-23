@@ -1,10 +1,10 @@
-package com.franckrj.respawnirc;
+package com.franckrj.respawnirc.utils;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.util.LongSparseArray;
 
-class ParcelableLongSparseStringArray extends LongSparseArray<String> implements Parcelable {
+public class ParcelableLongSparseStringArray extends LongSparseArray<String> implements Parcelable {
     public static final Parcelable.Creator<ParcelableLongSparseStringArray> CREATOR = new Parcelable.Creator<ParcelableLongSparseStringArray>() {
         @Override
         public ParcelableLongSparseStringArray createFromParcel(Parcel in) {
@@ -17,7 +17,7 @@ class ParcelableLongSparseStringArray extends LongSparseArray<String> implements
         }
     };
 
-    ParcelableLongSparseStringArray() {
+    public ParcelableLongSparseStringArray() {
         //rien
     }
 

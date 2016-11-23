@@ -60,6 +60,8 @@
     <string name="openDrawerContentDescRes">Ouverture du menu latéral</string>
     <string name="closeDrawerContentDescRes">Fermeture du menu latéral</string>
     <string name="switchToForumMode">Passer en mode forum</string>
+    <string name="switchToIrcMode">Passer en mode IRC</string>
+    <string name="refresh">Rafraichir</string>
 
     <string-array name="itemChoiceDrawerList">
         <item>@string/app_name</item>

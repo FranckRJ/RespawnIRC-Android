@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/topiclink_layout_showtopicforum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal"
+        android:background="#eee">
+        <EditText
+            android:id="@+id/topiclink_text_showtopicforum"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="text"
+            android:selectAllOnFocus="true"
+            android:hint="@string/topiclinkPlaceHolder"/>
+        <Button
+            android:id="@+id/topiclink_button_showtopicforum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/go"/>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/jvcmessage_view_showtopicforum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/sendmessage_layout_showtopicforum"
+        android:layout_below="@id/topiclink_layout_showtopicforum"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="@drawable/shadow_top"
+        android:layout_below="@id/topiclink_layout_showtopicforum"/>
+
+    <RelativeLayout
+        android:id="@+id/layout_loading_showtopicforum"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="@drawable/shadow_bottom"
+        android:layout_above="@+id/sendmessage_layout_showtopicforum"/>
+    <LinearLayout
+        android:id="@+id/sendmessage_layout_showtopicforum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:background="#eee">
+        <EditText
+            android:id="@+id/sendmessage_text_showtopicforum"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="textMultiLine"
+            android:maxLines="3"
+            android:hint="@string/messagePlaceHolder"/>
+        <ImageButton
+            android:id="@+id/sendmessage_button_showtopicforum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_action_content_send"
+            android:background="@android:color/transparent"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:contentDescription="@string/messagePost" />
+    </LinearLayout>
+
+</RelativeLayout>

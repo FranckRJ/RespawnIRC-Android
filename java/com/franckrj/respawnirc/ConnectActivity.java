@@ -127,7 +127,7 @@ public class ConnectActivity extends AppCompatActivity {
         }
     }
 
-    static public class HelpConnectDialogFragment extends DialogFragment {
+    public static class HelpConnectDialogFragment extends DialogFragment {
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {

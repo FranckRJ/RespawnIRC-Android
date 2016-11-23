@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc;
+package com.franckrj.respawnirc.utils;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-final class JVCParser {
+public final class JVCParser {
     private static final Pattern ajaxTimestampPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_timestamp_liste_messages\" id=\"ajax_timestamp_liste_messages\" value=\"([^\"]*)\" />");
     private static final Pattern ajaxHashPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_hash_liste_messages\" id=\"ajax_hash_liste_messages\" value=\"([^\"]*)\" />");
     private static final Pattern ajaxModTimestampPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_timestamp_moderation_forum\" id=\"ajax_timestamp_moderation_forum\" value=\"([^\"]*)\" />");
@@ -38,7 +38,7 @@ final class JVCParser {
         //rien
     }
 
-    static boolean checkIfTopicAreSame(String firstTopicLink, String secondTopicLink) {
+    public static boolean checkIfTopicAreSame(String firstTopicLink, String secondTopicLink) {
         Matcher firstPageLinkNumberMatcher = pageLinkNumberPattern.matcher(firstTopicLink);
         Matcher secondPageLinkNumberMatcher = pageLinkNumberPattern.matcher(secondTopicLink);
 
@@ -51,7 +51,7 @@ final class JVCParser {
         }
     }
 
-    static String getFirstPageForThisLink(String topicLink) {
+    public static String getFirstPageForThisLink(String topicLink) {
         Matcher pageLinkNumberMatcher = pageLinkNumberPattern.matcher(topicLink);
 
         if (pageLinkNumberMatcher.find()) {
@@ -62,7 +62,7 @@ final class JVCParser {
         }
     }
 
-    static String getErrorMessage(String pageSource) {
+    public static String getErrorMessage(String pageSource) {
         Matcher errorMatcher = errorPattern.matcher(pageSource);
 
         if (errorMatcher.find()) {
@@ -72,7 +72,7 @@ final class JVCParser {
         }
     }
 
-    static String getMessageEdit(String pageSource) {
+    public static String getMessageEdit(String pageSource) {
         Matcher messageEditInfoMatcher = messageEditInfoPattern.matcher(pageSource);
 
         if (messageEditInfoMatcher.find()) {
@@ -82,11 +82,11 @@ final class JVCParser {
         }
     }
 
-    static String buildMessageQuotedInfoFromThis(MessageInfos thisMessageInfo) {
+    public static String buildMessageQuotedInfoFromThis(MessageInfos thisMessageInfo) {
         return ">[" + thisMessageInfo.dateTime + "] <" + thisMessageInfo.pseudo + ">";
     }
 
-    static String parsingAjaxMessages(String ajaxMessage) {
+    public static String parsingAjaxMessages(String ajaxMessage) {
         Matcher unicodeInTextMatcher;
 
         ajaxMessage = ajaxMessage.replace("\n", "")
@@ -112,7 +112,7 @@ final class JVCParser {
         return ajaxMessage;
     }
 
-    static String getMessageQuoted(String pageSource) {
+    public static String getMessageQuoted(String pageSource) {
         Matcher messageQuoteMatcher = messageQuotePattern.matcher(pageSource);
 
         if (messageQuoteMatcher.find()) {
@@ -122,7 +122,7 @@ final class JVCParser {
         return "";
     }
 
-    static AjaxInfos getAllAjaxInfos(String pageSource) {
+    public static AjaxInfos getAllAjaxInfos(String pageSource) {
         AjaxInfos newAjaxInfos = new AjaxInfos();
 
         Matcher ajaxTimestampMatcher = ajaxTimestampPattern.matcher(pageSource);
@@ -141,7 +141,7 @@ final class JVCParser {
         return newAjaxInfos;
     }
 
-    static String getListOfInputInAString(String pageSource) {
+    public static String getListOfInputInAString(String pageSource) {
         StringBuilder allInputInAString = new StringBuilder();
         Matcher topicFormMatcher = topicFormPattern.matcher(pageSource);
 
@@ -179,7 +179,7 @@ final class JVCParser {
         return allInputInAString.toString();
     }
 
-    static String getLastPageOfTopic(String pageSource) {
+    public static String getLastPageOfTopic(String pageSource) {
         int currentPageNumber = 0;
         String lastPage = "";
         Matcher currentPageMatcher = currentPagePattern.matcher(pageSource);
@@ -199,7 +199,7 @@ final class JVCParser {
         return lastPage;
     }
 
-    static String getNextPageOfTopic(String pageSource) {
+    public static String getNextPageOfTopic(String pageSource) {
         int currentPageNumber = 0;
         Matcher currentPageMatcher = currentPagePattern.matcher(pageSource);
         Matcher pageLinkMatcher = pageLinkPattern.matcher(pageSource);
@@ -218,7 +218,7 @@ final class JVCParser {
     }
 
     /*TODO: Améliorer ça, le rendre plus propre, et gérer plus de cas (pseudo admin/modo).*/
-    static String createMessageFirstLineFromInfos(MessageInfos thisMessageInfo, String pseudoOfUser) {
+    public static String createMessageFirstLineFromInfos(MessageInfos thisMessageInfo, String pseudoOfUser) {
         StringBuilder newFirstLine = new StringBuilder();
 
         if (thisMessageInfo.isAnEdit) {
@@ -237,12 +237,12 @@ final class JVCParser {
         return newFirstLine.toString();
     }
 
-    static String createMessageSecondLineFromInfos(MessageInfos thisMessageInfo) {
+    public static String createMessageSecondLineFromInfos(MessageInfos thisMessageInfo) {
         return parseMessageToPrettyMessage(thisMessageInfo.messageNotParsed, thisMessageInfo.showSpoil);
     }
 
     /*TODO: A refaire en plus propre et plus complet.*/
-    private static String parseMessageToPrettyMessage(String thisMessage, boolean showSpoil) {
+    public static String parseMessageToPrettyMessage(String thisMessage, boolean showSpoil) {
         thisMessage = parseThisMessageWithThisPattern(thisMessage, codeBlockPattern, 1, "<p><font face=\"monospace\">", "</font></p>", new ConvertStringToString("\n", "<br />"), new ConvertStringToString(" ", " ")); //remplace les espaces par des alt+255
         thisMessage = parseThisMessageWithThisPattern(thisMessage, codeLinePattern, 1, "<font face=\"monospace\">", "</font>", new ConvertStringToString(" ", " "), null); //remplace les espaces par des alt+255
         thisMessage = parseThisMessageWithThisPattern(thisMessage, stickerPattern, 2, "<img src=\"sticker_", ".png\"/>", new ConvertStringToString("-", "_"), null);
@@ -296,7 +296,7 @@ final class JVCParser {
         return thisMessage;
     }
 
-    private static String parseThisMessageWithThisPattern(String messageToParse, Pattern patternToUse, int groupToUse, String stringBefore, String stringAfter, StringModifier firstModifier, StringModifier secondModifier) {
+    public static String parseThisMessageWithThisPattern(String messageToParse, Pattern patternToUse, int groupToUse, String stringBefore, String stringAfter, StringModifier firstModifier, StringModifier secondModifier) {
         Matcher matcherToUse = patternToUse.matcher(messageToParse);
 
         while (matcherToUse.find()) {
@@ -320,7 +320,7 @@ final class JVCParser {
     }
 
     /*TODO: Possiblement passer "Pseudo supprimé" en ressource (string.xml).*/
-    private static MessageInfos createMessageInfoFromEntireMessage(String thisEntireMessage) {
+    public static MessageInfos createMessageInfoFromEntireMessage(String thisEntireMessage) {
         MessageInfos newMessageInfo = new MessageInfos();
         Matcher pseudoInfosMatcher = pseudoInfosPattern.matcher(thisEntireMessage);
         Matcher messageMatcher = messagePattern.matcher(thisEntireMessage);
@@ -350,7 +350,7 @@ final class JVCParser {
         return newMessageInfo;
     }
 
-    static ArrayList<MessageInfos> getMessagesOfThisPage(String sourcePage) {
+    public static ArrayList<MessageInfos> getMessagesOfThisPage(String sourcePage) {
         ArrayList<MessageInfos> listOfParsedMessage = new ArrayList<>();
         Matcher entireMessageMatcher = entireMessagePattern.matcher(sourcePage);
 
@@ -363,15 +363,15 @@ final class JVCParser {
         return listOfParsedMessage;
     }
 
-    static class MessageInfos implements Parcelable {
-        String pseudo;
-        String messageNotParsed;
-        String dateTime;
-        String lastTimeEdit;
-        boolean containSpoil = false;
-        boolean showSpoil = false;
-        boolean isAnEdit = false;
-        long id = 0;
+    public static class MessageInfos implements Parcelable {
+        public String pseudo;
+        public String messageNotParsed;
+        public String dateTime;
+        public String lastTimeEdit;
+        public boolean containSpoil = false;
+        public boolean showSpoil = false;
+        public boolean isAnEdit = false;
+        public long id = 0;
 
         public static final Parcelable.Creator<MessageInfos> CREATOR = new Parcelable.Creator<MessageInfos>() {
             @Override
@@ -385,7 +385,7 @@ final class JVCParser {
             }
         };
 
-        MessageInfos() {
+        public MessageInfos() {
             //rien
         }
 
@@ -458,12 +458,12 @@ final class JVCParser {
         }
     }
 
-    static class AjaxInfos {
-        String list = null;
-        String mod = null;
+    public static class AjaxInfos {
+        public String list = null;
+        public String mod = null;
     }
 
-    interface StringModifier {
+    private interface StringModifier {
         String changeString(String baseString);
     }
 }

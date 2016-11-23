@@ -1,69 +1,34 @@
-package com.franckrj.respawnirc;
+package com.franckrj.respawnirc.jvcgetters;
 
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.ParcelableLongSparseStringArray;
+import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.utils.WebManager;
+
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-class JVCMessageGetter {
-    final static int STATE_LOADING = 0;
-    final static int STATE_NOT_LOADING = 1;
-
+public class JVCIRCMessageGetter extends AbsJVCMessageGetter {
     private int timeBetweenRefreshTopic = 10000;
-    private String urlForTopic = "";
     private Timer timerForFetchUrl = new Timer();
-    private String latestListOfInputInAString = null;
-    private JVCParser.AjaxInfos latestAjaxInfos = new JVCParser.AjaxInfos();
     private boolean firstTimeGetMessages = true;
-    private long lastIdOfMessage = 0;
-    private AsyncTask<String, Void, PageInfos> currentAsyncTaskForGetMessage = null;
     private boolean messagesNeedToBeGet = false;
-    private Activity parentActivity = null;
-    private String cookieListInAString = "";
-    private NewMessagesListener listenerForNewMessages = null;
-    private NewGetterStateListener listenerForNewGetterState = null;
     private ParcelableLongSparseStringArray listOfEditInfos = new ParcelableLongSparseStringArray();
 
-    JVCMessageGetter(Activity newParentActivity) {
-        parentActivity = newParentActivity;
+    public JVCIRCMessageGetter(Activity newParentActivity) {
+        super(newParentActivity);
     }
 
-    String getUrlForTopic() {
-        return urlForTopic;
-    }
-
-    String getLatestListOfInputInAString() {
-        return latestListOfInputInAString;
-    }
-
-    JVCParser.AjaxInfos getLatestAjaxInfos() {
-        return latestAjaxInfos;
-    }
-
-    long getLastIdOfMessage() {
-        return lastIdOfMessage;
-    }
-
-    void setTimeBetweenRefreshTopic(int newTimeBetweenRefreshTopic) {
+    public void setTimeBetweenRefreshTopic(int newTimeBetweenRefreshTopic) {
         timeBetweenRefreshTopic = newTimeBetweenRefreshTopic;
     }
 
-    void setCookieListInAString(String newCookieListInAString) {
-        cookieListInAString = newCookieListInAString;
-    }
-
-    void setListenerForNewMessages(NewMessagesListener thisListener) {
-        listenerForNewMessages = thisListener;
-    }
-
-    void setListenerForNewGetterState(NewGetterStateListener thisListener) {
-        listenerForNewGetterState = thisListener;
-    }
-
-    void setNewTopic(String newUrlForTopic, boolean reallyNewTopic) {
+    public void setNewTopic(String newUrlForTopic, boolean reallyNewTopic) {
         if (reallyNewTopic) {
             firstTimeGetMessages = true;
             latestListOfInputInAString = null;
@@ -73,7 +38,7 @@ class JVCMessageGetter {
         urlForTopic = JVCParser.getFirstPageForThisLink(newUrlForTopic);
     }
 
-    void setOldTopic(String oldUrlForTopic, long oldLastIdOfMessage) {
+    public void setOldTopic(String oldUrlForTopic, long oldLastIdOfMessage) {
         firstTimeGetMessages = false;
         latestListOfInputInAString = null;
         lastIdOfMessage = oldLastIdOfMessage - 1;
@@ -81,55 +46,46 @@ class JVCMessageGetter {
         urlForTopic = oldUrlForTopic;
     }
 
-    void loadFromBundle(Bundle savedInstanceState) {
-        latestListOfInputInAString = savedInstanceState.getString(parentActivity.getString(R.string.saveLatestListOfInputInAString), null);
-        latestAjaxInfos.list = savedInstanceState.getString(parentActivity.getString(R.string.saveLatestAjaxInfoList), null);
-        latestAjaxInfos.mod = savedInstanceState.getString(parentActivity.getString(R.string.saveLatestAjaxInfoMod), null);
-        firstTimeGetMessages = savedInstanceState.getBoolean(parentActivity.getString(R.string.saveFirstTimeGetMessages), true);
-        lastIdOfMessage = savedInstanceState.getLong(parentActivity.getString(R.string.saveLastIdOfMessage), 0);
-        listOfEditInfos = savedInstanceState.getParcelable(parentActivity.getString(R.string.saveListOfEditInfos));
-    }
-
-    void saveToBundle(Bundle savedInstanceState) {
-        savedInstanceState.putString(parentActivity.getString(R.string.saveLatestListOfInputInAString), latestListOfInputInAString);
-        savedInstanceState.putString(parentActivity.getString(R.string.saveLatestAjaxInfoList), latestAjaxInfos.list);
-        savedInstanceState.putString(parentActivity.getString(R.string.saveLatestAjaxInfoMod), latestAjaxInfos.mod);
-        savedInstanceState.putBoolean(parentActivity.getString(R.string.saveFirstTimeGetMessages), firstTimeGetMessages);
-        savedInstanceState.putLong(parentActivity.getString(R.string.saveLastIdOfMessage), lastIdOfMessage);
-        savedInstanceState.putParcelable(parentActivity.getString(R.string.saveListOfEditInfos), listOfEditInfos);
-    }
-
-    private void startGetMessages(int timerBeforeStart) {
+    public void startGetMessages(int timerBeforeStart) {
         if (!urlForTopic.isEmpty()) {
             messagesNeedToBeGet = true;
             if (currentAsyncTaskForGetMessage == null) {
-                currentAsyncTaskForGetMessage = new GetJVCLastMessage();
+                currentAsyncTaskForGetMessage = new GetJVCIRCLastMessage();
                 timerForFetchUrl.schedule(new LaunchGetJVCLastMessage(), timerBeforeStart);
             }
         }
     }
 
-    void stopGetMessages() {
-        messagesNeedToBeGet = false;
-        if (currentAsyncTaskForGetMessage != null) {
-            currentAsyncTaskForGetMessage.cancel(false);
-            currentAsyncTaskForGetMessage = null;
-        }
-
-        if (listenerForNewGetterState != null) {
-            listenerForNewGetterState.newStateSetted(STATE_NOT_LOADING);
-        }
-    }
-
-    void startEarlyGetMessagesIfNeeded() {
+    @Override
+    public void reloadTopic() {
         if (currentAsyncTaskForGetMessage != null) {
             if (!currentAsyncTaskForGetMessage.getStatus().equals(AsyncTask.Status.RUNNING)) {
-                stopGetMessages();
+                stopAllCurrentTask();
                 startGetMessages(0);
             }
         } else {
             startGetMessages(0);
         }
+    }
+
+    @Override
+    public void stopAllCurrentTask() {
+        super.stopAllCurrentTask();
+        messagesNeedToBeGet = false;
+    }
+
+    @Override
+    public void loadFromBundle(Bundle savedInstanceState) {
+        super.loadFromBundle(savedInstanceState);
+        firstTimeGetMessages = savedInstanceState.getBoolean(parentActivity.getString(R.string.saveFirstTimeGetMessages), true);
+        listOfEditInfos = savedInstanceState.getParcelable(parentActivity.getString(R.string.saveListOfEditInfos));
+    }
+
+    @Override
+    public void saveToBundle(Bundle savedInstanceState) {
+        super.saveToBundle(savedInstanceState);
+        savedInstanceState.putBoolean(parentActivity.getString(R.string.saveFirstTimeGetMessages), firstTimeGetMessages);
+        savedInstanceState.putParcelable(parentActivity.getString(R.string.saveListOfEditInfos), listOfEditInfos);
     }
 
     private class LaunchGetJVCLastMessage extends TimerTask {
@@ -148,7 +104,7 @@ class JVCMessageGetter {
         }
     }
 
-    private class GetJVCLastMessage extends AsyncTask<String, Void, PageInfos> {
+    private class GetJVCIRCLastMessage extends AbsGetJVCLastMessage {
         @Override
         protected void onPreExecute() {
             if (listenerForNewGetterState != null) {
@@ -236,27 +192,11 @@ class JVCMessageGetter {
                 currentAsyncTaskForGetMessage = null;
 
                 if (needToGetNewMessagesEarly) {
-                    startEarlyGetMessagesIfNeeded();
+                    reloadTopic();
                 } else {
                     startGetMessages(timeBetweenRefreshTopic);
                 }
             }
         }
-    }
-
-    static class PageInfos {
-        ArrayList<JVCParser.MessageInfos> listOfMessages;
-        String lastPageLink;
-        String nextPageLink;
-        String listOfInputInAString;
-        JVCParser.AjaxInfos ajaxInfosOfThisPage;
-    }
-
-    interface NewMessagesListener {
-        void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages);
-    }
-
-    interface NewGetterStateListener {
-        void newStateSetted(int newState);
     }
 }

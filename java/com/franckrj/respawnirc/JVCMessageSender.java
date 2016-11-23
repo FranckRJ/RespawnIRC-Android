@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.WebManager;
+
 import java.net.URLEncoder;
 
-class JVCMessageSender {
+public class JVCMessageSender {
     private Activity parentActivity = null;
     private String ajaxListInfos = null;
     private boolean isInEdit = false;
@@ -16,39 +19,39 @@ class JVCMessageSender {
     private AsyncTask<String, Void, String> currentAsyncTaskForSendMessage = null;
     private AsyncTask<String, Void, String> currentAsyncTaskForGetEditInfos = null;
 
-    JVCMessageSender(Activity newParentActivity) {
+    public JVCMessageSender(Activity newParentActivity) {
         parentActivity = newParentActivity;
     }
 
-    boolean getIsInEdit() {
+    public boolean getIsInEdit() {
         return isInEdit;
     }
 
-    void setListenerForNewMessageWantEdit(NewMessageWantEditListener newListener) {
+    public void setListenerForNewMessageWantEdit(NewMessageWantEditListener newListener) {
         listenerForNewMessageWantEdit = newListener;
     }
-    
-    void setListenerForNewMessagePosted(NewMessagePostedListener newListener) {
+
+    public void setListenerForNewMessagePosted(NewMessagePostedListener newListener) {
         listenerForNewMessagePosted = newListener;
     }
 
-    void loadFromBundle(Bundle savedInstanceState) {
+    public void loadFromBundle(Bundle savedInstanceState) {
         ajaxListInfos = savedInstanceState.getString(parentActivity.getString(R.string.saveOldAjaxListInfos), null);
         isInEdit = savedInstanceState.getBoolean(parentActivity.getString(R.string.saveIsInEdit), false);
         lastInfosForEdit = savedInstanceState.getString(parentActivity.getString(R.string.saveLastInfosForEdit), null);
     }
 
-    void saveToBundle(Bundle savedInstanceState) {
+    public void saveToBundle(Bundle savedInstanceState) {
         savedInstanceState.putString(parentActivity.getString(R.string.saveOldAjaxListInfos), ajaxListInfos);
         savedInstanceState.putBoolean(parentActivity.getString(R.string.saveIsInEdit), isInEdit);
         savedInstanceState.putString(parentActivity.getString(R.string.saveLastInfosForEdit), lastInfosForEdit);
     }
 
-    void sendEditMessage(String messageEditedToSend, String cookieListInAString) {
+    public void sendEditMessage(String messageEditedToSend, String cookieListInAString) {
         sendThisMessage(messageEditedToSend, "http://www.jeuxvideo.com/forums/ajax_edit_message.php", lastInfosForEdit, cookieListInAString);
     }
 
-    void stopAllCurrentTask() {
+    public void stopAllCurrentTask() {
         if (currentAsyncTaskForSendMessage != null) {
             currentAsyncTaskForSendMessage.cancel(false);
             currentAsyncTaskForSendMessage = null;
@@ -59,7 +62,7 @@ class JVCMessageSender {
         }
     }
 
-    boolean sendThisMessage(String messageToSend, String urlToSend, String latestListOfInput, String cookieListInAString) {
+    public boolean sendThisMessage(String messageToSend, String urlToSend, String latestListOfInput, String cookieListInAString) {
         if (currentAsyncTaskForSendMessage == null) {
             try {
                 messageToSend = URLEncoder.encode(messageToSend, "UTF-8");
@@ -76,7 +79,7 @@ class JVCMessageSender {
         }
     }
 
-    boolean getInfosForEditMessage(String idOfMessage, String oldAjaxListInfos, String cookieListInAString) {
+    public boolean getInfosForEditMessage(String idOfMessage, String oldAjaxListInfos, String cookieListInAString) {
         if (currentAsyncTaskForGetEditInfos == null) {
             isInEdit = true;
             ajaxListInfos = oldAjaxListInfos;
@@ -167,11 +170,11 @@ class JVCMessageSender {
         }
     }
 
-    interface NewMessageWantEditListener {
+    public interface NewMessageWantEditListener {
         void initializeEditMode(String newMessageToEdit);
     }
 
-    interface NewMessagePostedListener {
+    public interface NewMessagePostedListener {
         void lastMessageIsSended(String withThisError);
     }
 }

@@ -15,7 +15,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class MainActivity extends AppCompatActivity {
+import com.franckrj.respawnirc.jvcmessagesviewers.AbsShowTopicFragment;
+import com.franckrj.respawnirc.jvcmessagesviewers.ShowTopicForumFragment;
+import com.franckrj.respawnirc.jvcmessagesviewers.ShowTopicIRCFragment;
+
+public class MainActivity extends AppCompatActivity implements AbsShowTopicFragment.NewModeNeededListener {
     private final int LIST_DRAWER_POS_HOME = 0;
     private final int LIST_DRAWER_POS_CONNECT = 1;
     private final int LIST_DRAWER_POS_SETTING = 2;
@@ -117,6 +121,15 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void newModeRequested(int newMode) {
+        if (newMode == AbsShowTopicFragment.MODE_IRC) {
+            getFragmentManager().beginTransaction().replace(R.id.content_frame_main, new ShowTopicIRCFragment()).commit();
+        } else if (newMode == AbsShowTopicFragment.MODE_FORUM) {
+            getFragmentManager().beginTransaction().replace(R.id.content_frame_main, new ShowTopicForumFragment()).commit();
         }
     }
 }

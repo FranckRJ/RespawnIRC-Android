@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc;
+package com.franckrj.respawnirc.utils;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -7,8 +7,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-class WebManager {
-    static String sendRequest(String linkToPage, String requestMethod, String requestParameters, String cookiesInAString) {
+public class WebManager {
+    public static String sendRequest(String linkToPage, String requestMethod, String requestParameters, String cookiesInAString) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
