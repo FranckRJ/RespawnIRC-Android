@@ -63,6 +63,7 @@
     <string name="switchToIrcMode">Passer en mode IRC</string>
     <string name="refresh">Rafraichir</string>
     <string name="prefCurrentTopicMode">pref.currentTopicMode</string>
+    <string name="saveUrlToFetch">save.urlToFetch</string>
 
     <string-array name="itemChoiceDrawerList">
         <item>@string/app_name</item>

@@ -47,6 +47,7 @@ public abstract class AbsShowTopicFragment extends Fragment {
     protected ImageButton messageSendButton = null;
     protected String pseudoOfUser = "";
     protected String cookieListInAString = "";
+    protected JVCParser.Settings currentSettings = new JVCParser.Settings();
     protected NewModeNeededListener listenerForNewModeNeeded = null;
     protected View loadingLayout = null;
 
@@ -218,6 +219,11 @@ public abstract class AbsShowTopicFragment extends Fragment {
         }
     }
 
+    protected void reloadSettings() {
+        pseudoOfUser = sharedPref.getString(getString(R.string.prefPseudoUser), "");
+        currentSettings.pseudoOfUser = pseudoOfUser;
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -249,8 +255,10 @@ public abstract class AbsShowTopicFragment extends Fragment {
         sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
         initializeGetterForMessages();
+        initializeSettings();
+        reloadSettings();
         senderForMessages = new JVCMessageSender(getActivity());
-        adapterForMessages = new JVCMessagesAdapter(getActivity());
+        adapterForMessages = new JVCMessagesAdapter(getActivity(), currentSettings);
         absGetterForMessages.setListenerForNewGetterState(listenerForNewGetterState);
         senderForMessages.setListenerForNewMessageWantEdit(listenerForNewMessageWantEdit);
         adapterForMessages.setActionWhenItemMenuClicked(listenerForItemClicked);
@@ -291,8 +299,7 @@ public abstract class AbsShowTopicFragment extends Fragment {
     public void onResume() {
         super.onResume();
         cookieListInAString = sharedPref.getString(getString(R.string.prefCookiesList), "");
-        pseudoOfUser = sharedPref.getString(getString(R.string.prefPseudoUser), "");
-        adapterForMessages.setCurrentPseudoOfUser(pseudoOfUser);
+        reloadSettings();
         absGetterForMessages.setCookieListInAString(cookieListInAString);
     }
 
@@ -383,4 +390,5 @@ public abstract class AbsShowTopicFragment extends Fragment {
     }
 
     protected abstract void initializeGetterForMessages();
+    protected abstract void initializeSettings();
 }

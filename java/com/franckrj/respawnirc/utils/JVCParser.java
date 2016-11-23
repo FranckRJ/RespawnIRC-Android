@@ -220,23 +220,31 @@ public final class JVCParser {
     }
 
     /*TODO: Améliorer ça, le rendre plus propre, et gérer plus de cas (pseudo admin/modo).*/
-    public static String createMessageFirstLineFromInfos(MessageInfos thisMessageInfo, String pseudoOfUser) {
-        StringBuilder newFirstLine = new StringBuilder();
+    public static String createMessageFirstLineFromInfos(MessageInfos thisMessageInfo, Settings settings) {
+        String newFirstLine = settings.firstLineFormat;
+
+        newFirstLine = newFirstLine.replaceAll("<%DATE_TIME%>", thisMessageInfo.dateTime);
+        newFirstLine = newFirstLine.replaceAll("<%DATE_FULL%>", thisMessageInfo.wholeDate);
+        newFirstLine = newFirstLine.replaceAll("<%PSEUDO_PSEUDO%>", thisMessageInfo.pseudo);
 
         if (thisMessageInfo.isAnEdit) {
-            newFirstLine.append("[<font color=\"#008000\">").append(thisMessageInfo.dateTime).append("</font>]");
+            newFirstLine = newFirstLine.replaceAll("<%DATE_COLOR_START%>", "<font color=\"#008000\">");
+            newFirstLine = newFirstLine.replaceAll("<%DATE_COLOR_END%>", "</font>");
         } else {
-            newFirstLine.append("[").append(thisMessageInfo.dateTime).append("]");
+            newFirstLine = newFirstLine.replaceAll("<%DATE_COLOR_START%>", "");
+            newFirstLine = newFirstLine.replaceAll("<%DATE_COLOR_END%>", "");
         }
 
-        if (thisMessageInfo.pseudo.toLowerCase().equals(pseudoOfUser.toLowerCase())) {
-            newFirstLine.append(" &lt;<font color=\"#3399ff\">").append(thisMessageInfo.pseudo).append("</font>&gt;");
+        if (thisMessageInfo.pseudo.toLowerCase().equals(settings.pseudoOfUser.toLowerCase())) {
+            newFirstLine = newFirstLine.replaceAll("<%PSEUDO_COLOR_START%>", "<font color=\"#3399ff\">");
+            newFirstLine = newFirstLine.replaceAll("<%PSEUDO_COLOR_END%>", "</font>");
         }
         else {
-            newFirstLine.append(" &lt;<font color=\"#000025\">").append(thisMessageInfo.pseudo).append("</font>&gt;");
+            newFirstLine = newFirstLine.replaceAll("<%PSEUDO_COLOR_START%>", "<font color=\"#000025\">");
+            newFirstLine = newFirstLine.replaceAll("<%PSEUDO_COLOR_END%>", "</font>");
         }
 
-        return newFirstLine.toString();
+        return newFirstLine;
     }
 
     public static String createMessageSecondLineFromInfos(MessageInfos thisMessageInfo) {
@@ -345,6 +353,7 @@ public final class JVCParser {
         if (messageMatcher.find() && messageIDMatcher.find() && dateMessageMatcher.find()) {
             newMessageInfo.messageNotParsed = messageMatcher.group(1);
             newMessageInfo.dateTime = dateMessageMatcher.group(3);
+            newMessageInfo.wholeDate = dateMessageMatcher.group(2);
             newMessageInfo.containSpoil = newMessageInfo.messageNotParsed.contains("<span class=\"contenu-spoil\">");
             newMessageInfo.id = Long.parseLong(messageIDMatcher.group(1));
         }
@@ -371,6 +380,7 @@ public final class JVCParser {
         public String pseudo;
         public String messageNotParsed;
         public String dateTime;
+        public String wholeDate;
         public String lastTimeEdit;
         public boolean containSpoil = false;
         public boolean showSpoil = false;
@@ -397,6 +407,7 @@ public final class JVCParser {
             pseudo = in.readString();
             messageNotParsed = in.readString();
             dateTime = in.readString();
+            wholeDate = in.readString();
             lastTimeEdit = in.readString();
             containSpoil = (in.readInt() == 1);
             showSpoil = (in.readInt() == 1);
@@ -414,6 +425,7 @@ public final class JVCParser {
             out.writeString(pseudo);
             out.writeString(messageNotParsed);
             out.writeString(dateTime);
+            out.writeString(wholeDate);
             out.writeString(lastTimeEdit);
             out.writeInt(containSpoil ? 1 : 0);
             out.writeInt(showSpoil ? 1 : 0);
@@ -476,6 +488,11 @@ public final class JVCParser {
     public static class AjaxInfos {
         public String list = null;
         public String mod = null;
+    }
+
+    public static class Settings {
+        public String pseudoOfUser = "";
+        public String firstLineFormat;
     }
 
     private interface StringModifier {

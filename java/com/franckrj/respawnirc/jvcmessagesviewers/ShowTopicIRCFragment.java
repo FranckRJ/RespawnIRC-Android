@@ -78,7 +78,7 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
             getterForMessages.stopAllCurrentTask();
             adapterForMessages.removeAllItems();
             adapterForMessages.updateAllItems();
-            getterForMessages.setNewTopic(newUrl, true);
+            getterForMessages.setNewTopic(newUrl);
             getterForMessages.reloadTopic();
         }
     };
@@ -95,6 +95,11 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
     protected void initializeGetterForMessages() {
         getterForMessages = new JVCIRCMessageGetter(getActivity());
         absGetterForMessages = getterForMessages;
+    }
+
+    @Override
+    protected void initializeSettings() {
+        currentSettings.firstLineFormat = "[<%DATE_COLOR_START%><%DATE_TIME%><%DATE_COLOR_END%>] &lt;<%PSEUDO_COLOR_START%><%PSEUDO_PSEUDO%><%PSEUDO_COLOR_END%>&gt;";
     }
 
     @Override
@@ -130,7 +135,9 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
             oldLastIdOfMessage = sharedPref.getLong(getString(R.string.prefOldLastIdOfMessage), 0);
         }
 
-        getterForMessages.setNewTopic(sharedPref.getString(getString(R.string.prefUrlToFetch), ""), false);
+        if (adapterForMessages.getAllItems().isEmpty()) {
+            getterForMessages.setNewTopic(sharedPref.getString(getString(R.string.prefUrlToFetch), ""));
+        }
         urlEdit.setText(getterForMessages.getUrlForTopic());
     }
 

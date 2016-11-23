@@ -28,7 +28,7 @@ public class JVCMessagesAdapter extends BaseAdapter {
     private Activity parentActivity = null;
     private int currentItemIDSelected = -1;
     private PopupMenu.OnMenuItemClickListener actionWhenItemMenuClicked = null;
-    private String currentPseudoOfUser = "";
+    private JVCParser.Settings currentSettings = null;
 
     private final Html.ImageGetter jvcImageGetter = new Html.ImageGetter() {
         @Override
@@ -59,7 +59,7 @@ public class JVCMessagesAdapter extends BaseAdapter {
             itemSelected = getItem(currentItemIDSelected);
             popup.setOnMenuItemClickListener(actionWhenItemMenuClicked);
 
-            if (itemSelected.pseudo.toLowerCase().equals(currentPseudoOfUser.toLowerCase())) {
+            if (itemSelected.pseudo.toLowerCase().equals(currentSettings.pseudoOfUser.toLowerCase())) {
                 inflater.inflate(R.menu.menu_message_user, popup.getMenu());
             } else {
                 inflater.inflate(R.menu.menu_message_others, popup.getMenu());
@@ -77,8 +77,9 @@ public class JVCMessagesAdapter extends BaseAdapter {
         }
     };
 
-    public JVCMessagesAdapter(Activity newParentActivity) {
+    public JVCMessagesAdapter(Activity newParentActivity, JVCParser.Settings newSettings) {
         parentActivity = newParentActivity;
+        currentSettings = newSettings;
         serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -92,10 +93,6 @@ public class JVCMessagesAdapter extends BaseAdapter {
 
     public void setActionWhenItemMenuClicked(PopupMenu.OnMenuItemClickListener newAction) {
         actionWhenItemMenuClicked = newAction;
-    }
-
-    public void setCurrentPseudoOfUser(String newPseudoOfUser) {
-        currentPseudoOfUser = newPseudoOfUser;
     }
 
     public void removeAllItems() {
@@ -155,7 +152,7 @@ public class JVCMessagesAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         holder.showMenuButton.setTag(position);
-        holder.firstLine.setText(Html.fromHtml(JVCParser.createMessageFirstLineFromInfos(getItem(position), currentPseudoOfUser), jvcImageGetter, null));
+        holder.firstLine.setText(Html.fromHtml(JVCParser.createMessageFirstLineFromInfos(getItem(position), currentSettings), jvcImageGetter, null));
         holder.secondLine.setText(Html.fromHtml(JVCParser.createMessageSecondLineFromInfos(getItem(position)), jvcImageGetter, null));
         return convertView;
     }

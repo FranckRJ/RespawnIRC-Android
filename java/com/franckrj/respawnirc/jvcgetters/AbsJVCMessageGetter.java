@@ -67,6 +67,7 @@ public abstract class AbsJVCMessageGetter {
     }
 
     public void loadFromBundle(Bundle savedInstanceState) {
+        urlForTopic = savedInstanceState.getString(parentActivity.getString(R.string.saveUrlToFetch), "");
         latestListOfInputInAString = savedInstanceState.getString(parentActivity.getString(R.string.saveLatestListOfInputInAString), null);
         latestAjaxInfos.list = savedInstanceState.getString(parentActivity.getString(R.string.saveLatestAjaxInfoList), null);
         latestAjaxInfos.mod = savedInstanceState.getString(parentActivity.getString(R.string.saveLatestAjaxInfoMod), null);
@@ -74,6 +75,7 @@ public abstract class AbsJVCMessageGetter {
     }
 
     public void saveToBundle(Bundle savedInstanceState) {
+        savedInstanceState.putString(parentActivity.getString(R.string.saveUrlToFetch), urlForTopic);
         savedInstanceState.putString(parentActivity.getString(R.string.saveLatestListOfInputInAString), latestListOfInputInAString);
         savedInstanceState.putString(parentActivity.getString(R.string.saveLatestAjaxInfoList), latestAjaxInfos.list);
         savedInstanceState.putString(parentActivity.getString(R.string.saveLatestAjaxInfoMod), latestAjaxInfos.mod);

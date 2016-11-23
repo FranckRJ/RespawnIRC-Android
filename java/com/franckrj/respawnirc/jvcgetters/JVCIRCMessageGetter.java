@@ -28,13 +28,11 @@ public class JVCIRCMessageGetter extends AbsJVCMessageGetter {
         timeBetweenRefreshTopic = newTimeBetweenRefreshTopic;
     }
 
-    public void setNewTopic(String newUrlForTopic, boolean reallyNewTopic) {
-        if (reallyNewTopic) {
-            firstTimeGetMessages = true;
-            latestListOfInputInAString = null;
-            lastIdOfMessage = 0;
-            listOfEditInfos.clear();
-        }
+    public void setNewTopic(String newUrlForTopic) {
+        firstTimeGetMessages = true;
+        latestListOfInputInAString = null;
+        lastIdOfMessage = 0;
+        listOfEditInfos.clear();
         urlForTopic = JVCParser.getFirstPageForThisLink(newUrlForTopic);
     }
 
