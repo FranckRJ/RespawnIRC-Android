@@ -1,5 +1,6 @@
 package com.franckrj.respawnirc.jvcmessagesviewers;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -94,7 +95,11 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
     };
 
     private void goToThisNewPage(String newPageUrl, boolean updateLastPage) {
+        SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
         String currentPageNumber = JVCParser.getPageNumberForThisLink(newPageUrl);
+
+        sharedPrefEdit.putString(getString(R.string.prefUrlToFetch), newPageUrl);
+        sharedPrefEdit.apply();
 
         if (!currentPageNumber.isEmpty()) {
             currentPage = Integer.parseInt(currentPageNumber);
