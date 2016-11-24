@@ -19,7 +19,7 @@
             android:layout_alignParentLeft="true"
             android:layout_toStartOf="@+id/menu_overflow_row"
             android:layout_toLeftOf="@+id/menu_overflow_row"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:autoLink="web"/>
         <ImageButton
             android:id="@+id/menu_overflow_row"
@@ -36,7 +36,6 @@
         android:id="@+id/item_two_jvcmessages_text_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
         android:layout_marginBottom="4dp"
         android:autoLink="web"/>
 

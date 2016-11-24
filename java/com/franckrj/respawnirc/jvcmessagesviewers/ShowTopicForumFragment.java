@@ -149,7 +149,7 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
 
     @Override
     protected void initializeSettings() {
-        currentSettings.firstLineFormat = "<%PSEUDO_COLOR_START%><%PSEUDO_PSEUDO%><%PSEUDO_COLOR_END%> le <%DATE_COLOR_START%><%DATE_FULL%><%DATE_COLOR_END%>";
+        currentSettings.firstLineFormat = "<%PSEUDO_COLOR_START%><%PSEUDO_PSEUDO%><%PSEUDO_COLOR_END%><br><small>Le <%DATE_COLOR_START%><%DATE_FULL%><%DATE_COLOR_END%></small>";
     }
 
     @Override
