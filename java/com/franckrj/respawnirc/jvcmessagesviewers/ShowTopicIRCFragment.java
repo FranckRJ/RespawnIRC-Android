@@ -141,7 +141,7 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
         if (adapterForMessages.getAllItems().isEmpty()) {
             getterForMessages.setNewTopic(sharedPref.getString(getString(R.string.prefUrlToFetch), ""));
         }
-        urlEdit.setText(getterForMessages.getUrlForTopic());
+        urlEdit.setText(sharedPref.getString(getString(R.string.prefUrlToFetch), ""));
     }
 
     @Override
