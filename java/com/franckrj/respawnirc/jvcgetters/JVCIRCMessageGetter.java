@@ -146,35 +146,37 @@ public class JVCIRCMessageGetter extends AbsJVCMessageGetter {
                     latestListOfInputInAString = infoOfCurrentPage.listOfInputInAString;
                     latestAjaxInfos = infoOfCurrentPage.ajaxInfosOfThisPage;
 
-                    if (!infoOfCurrentPage.listOfMessages.isEmpty() && (infoOfCurrentPage.lastPageLink.isEmpty() || !firstTimeGetMessages)) {
-                        for (JVCParser.MessageInfos thisMessageInfo : infoOfCurrentPage.listOfMessages) {
-                            String lastEditInfosForThisMessage = listOfEditInfos.get(thisMessageInfo.id);
+                    if (infoOfCurrentPage.lastPageLink.isEmpty() || !firstTimeGetMessages) {
+                        if (!infoOfCurrentPage.listOfMessages.isEmpty()) {
+                            for (JVCParser.MessageInfos thisMessageInfo : infoOfCurrentPage.listOfMessages) {
+                                String lastEditInfosForThisMessage = listOfEditInfos.get(thisMessageInfo.id);
 
-                            if (lastEditInfosForThisMessage == null) {
-                                lastEditInfosForThisMessage = thisMessageInfo.lastTimeEdit;
-                            }
-
-                            if (thisMessageInfo.id > lastIdOfMessage || !lastEditInfosForThisMessage.equals(thisMessageInfo.lastTimeEdit)) {
-                                if (!lastEditInfosForThisMessage.equals(thisMessageInfo.lastTimeEdit)) {
-                                    thisMessageInfo.isAnEdit = true;
-                                } else {
-                                    thisMessageInfo.isAnEdit = false;
-                                    lastIdOfMessage = thisMessageInfo.id;
+                                if (lastEditInfosForThisMessage == null) {
+                                    lastEditInfosForThisMessage = thisMessageInfo.lastTimeEdit;
                                 }
-                                listOfNewMessages.add(thisMessageInfo);
-                                listOfEditInfos.put(thisMessageInfo.id, thisMessageInfo.lastTimeEdit);
+
+                                if (thisMessageInfo.id > lastIdOfMessage || !lastEditInfosForThisMessage.equals(thisMessageInfo.lastTimeEdit)) {
+                                    if (!lastEditInfosForThisMessage.equals(thisMessageInfo.lastTimeEdit)) {
+                                        thisMessageInfo.isAnEdit = true;
+                                    } else {
+                                        thisMessageInfo.isAnEdit = false;
+                                        lastIdOfMessage = thisMessageInfo.id;
+                                    }
+                                    listOfNewMessages.add(thisMessageInfo);
+                                    listOfEditInfos.put(thisMessageInfo.id, thisMessageInfo.lastTimeEdit);
+                                }
                             }
+
+                            while (listOfEditInfos.size() > 20) {
+                                listOfEditInfos.removeAt(0);
+                            }
+
+                            firstTimeGetMessages = false;
                         }
 
-                        while (listOfEditInfos.size() > 20) {
-                            listOfEditInfos.removeAt(0);
+                        if (listenerForNewMessages != null) {
+                            listenerForNewMessages.getNewMessages(listOfNewMessages);
                         }
-
-                        firstTimeGetMessages = false;
-                    }
-
-                    if (listenerForNewMessages != null) {
-                        listenerForNewMessages.getNewMessages(listOfNewMessages);
                     }
 
                     if (!infoOfCurrentPage.lastPageLink.isEmpty()) {
