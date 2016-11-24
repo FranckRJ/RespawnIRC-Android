@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 public class ShowTopicForumFragment extends AbsShowTopicFragment {
     private JVCForumMessageGetter getterForMessages = null;
+    private boolean clearMessagesOnRefresh = true;
 
     private final JVCForumMessageGetter.NewMessagesListener listenerForNewMessages = new JVCForumMessageGetter.NewMessagesListener() {
         @Override
@@ -105,6 +106,8 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
     public void onResume() {
         super.onResume();
 
+        clearMessagesOnRefresh = sharedPref.getBoolean(getString(R.string.settingsForumClearOnRefresh), Boolean.parseBoolean(getString(R.string.forumClearOnRefreshDefault)));
+
         if (adapterForMessages.getAllItems().isEmpty()) {
             getterForMessages.startGetMessagesOfThisPage(sharedPref.getString(getString(R.string.prefUrlToFetch), ""));
         }
@@ -120,8 +123,10 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_reload_topic_showtopicforum:
-                adapterForMessages.removeAllItems();
-                adapterForMessages.updateAllItems();
+                if (clearMessagesOnRefresh) {
+                    adapterForMessages.removeAllItems();
+                    adapterForMessages.updateAllItems();
+                }
                 getterForMessages.reloadTopic();
                 return true;
             case R.id.action_switch_to_IRC_mode_showtopicforum:

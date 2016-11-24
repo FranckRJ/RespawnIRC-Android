@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
         android:title="@string/settingsGeneralTitle">
         <EditTextPreference
@@ -20,5 +21,12 @@
             android:title="@string/initialNumberOfMessagesTitle"
             android:defaultValue="@string/initialNumberOfMessagesDefault"
             android:numeric="integer"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/settingsForumModeTitle">
+        <CheckBoxPreference
+            android:key="@string/settingsForumClearOnRefresh"
+            android:title="@string/forumClearOnRefreshTitle"
+            android:defaultValue="@string/forumClearOnRefreshDefault"/>
     </PreferenceCategory>
 </PreferenceScreen>

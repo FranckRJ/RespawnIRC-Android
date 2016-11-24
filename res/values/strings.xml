@@ -29,14 +29,14 @@
     <string name="hideSpoilMessage">Cacher les spoil</string>
     <string name="showSpoilMessage">Afficher les spoil</string>
     <string name="preference">Préférences</string>
-    <string name="settingsShowMessagesTitle">Nombre de messages affichés</string>
+    <string name="settingsShowMessagesTitle">Nombre de messages affichés (IRC)</string>
     <string name="settingsMaxNumberOfMessages">settings.maxNumberOfMessages</string>
     <string name="maxNumberOfMessagesTitle">Au maximum</string>
     <string name="settingsInitialNumberOfMessages">settings.initialNumberOfMessages</string>
     <string name="initialNumberOfMessagesTitle">Au premier chargement</string>
     <string name="maxNumberOfMessagesDefault">40</string>
     <string name="initialNumberOfMessagesDefault">10</string>
-    <string name="settingsGeneralTitle">Général</string>
+    <string name="settingsGeneralTitle">Général (IRC)</string>
     <string name="settingsRefreshTopicTime">settings.refreshTopicTime</string>
     <string name="refreshTopicTimeTitle">Temps avant màj des messages</string>
     <string name="refreshTopicTimeDefault">10000</string>
@@ -64,6 +64,10 @@
     <string name="refresh">Rafraichir</string>
     <string name="prefCurrentTopicMode">pref.currentTopicMode</string>
     <string name="saveUrlToFetch">save.urlToFetch</string>
+    <string name="settingsForumModeTitle">Lors du rafraichissement (forum)</string>
+    <string name="settingsForumClearOnRefresh">settings.forumClearOnRefresh</string>
+    <string name="forumClearOnRefreshTitle">Effacer les messages</string>
+    <string name="forumClearOnRefreshDefault">true</string>
 
     <string-array name="itemChoiceDrawerList">
         <item>@string/app_name</item>
