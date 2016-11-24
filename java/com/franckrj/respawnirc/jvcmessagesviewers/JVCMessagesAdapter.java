@@ -33,18 +33,19 @@ public class JVCMessagesAdapter extends BaseAdapter {
     private final Html.ImageGetter jvcImageGetter = new Html.ImageGetter() {
         @Override
         public Drawable getDrawable(String source) {
+            Drawable drawable;
             Resources res = parentActivity.getResources();
             int resID = res.getIdentifier(source.substring(0, source.lastIndexOf(".")), "drawable", parentActivity.getPackageName());
 
             try {
-                Drawable drawable = res.getDrawable(resID);
-                drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-                return drawable;
+                drawable = res.getDrawable(resID);
             } catch (Exception e) {
                 e.printStackTrace();
+                drawable = res.getDrawable(R.drawable.image_deleted);
             }
+            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
 
-            return new ColorDrawable(Color.TRANSPARENT);
+            return drawable;
         }
     };
 
