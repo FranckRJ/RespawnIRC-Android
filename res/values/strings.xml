@@ -68,6 +68,11 @@
     <string name="settingsForumClearOnRefresh">settings.forumClearOnRefresh</string>
     <string name="forumClearOnRefreshTitle">Effacer les messages</string>
     <string name="forumClearOnRefreshDefault">true</string>
+    <string name="nextPageText"><![CDATA[>]]></string>
+    <string name="previousPageText"><![CDATA[<]]></string>
+    <string name="waitingText">…</string>
+    <string name="saveCurrentPage">save.currentPage</string>
+    <string name="saveLastPage">save.lastPage</string>
 
     <string-array name="itemChoiceDrawerList">
         <item>@string/app_name</item>

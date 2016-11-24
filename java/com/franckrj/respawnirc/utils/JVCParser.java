@@ -64,6 +64,28 @@ public final class JVCParser {
         }
     }
 
+    public static String getPageNumberForThisLink(String topicLink) {
+        Matcher pageLinkNumberMatcher = pageLinkNumberPattern.matcher(topicLink);
+
+        if (pageLinkNumberMatcher.find()) {
+            return pageLinkNumberMatcher.group(4);
+        }
+        else {
+            return "";
+        }
+    }
+
+    public static String setPageNumberForThisLink(String topicLink, int newPageNumber) {
+        Matcher pageLinkNumberMatcher = pageLinkNumberPattern.matcher(topicLink);
+
+        if (pageLinkNumberMatcher.find()) {
+            return pageLinkNumberMatcher.group(1) + String.valueOf(newPageNumber) + pageLinkNumberMatcher.group(5);
+        }
+        else {
+            return "";
+        }
+    }
+
     public static String getErrorMessage(String pageSource) {
         Matcher errorMatcher = errorPattern.matcher(pageSource);
 

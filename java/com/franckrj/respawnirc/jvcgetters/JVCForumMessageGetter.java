@@ -8,8 +8,14 @@ import com.franckrj.respawnirc.utils.WebManager;
 import java.util.ArrayList;
 
 public class JVCForumMessageGetter extends AbsJVCMessageGetter {
+    private NewNumbersOfPagesListener listenerForNewNumbersOfPages = null;
+
     public JVCForumMessageGetter(Activity newParentActivity) {
         super(newParentActivity);
+    }
+
+    public void setListenerForNewNumbersOfPages(NewNumbersOfPagesListener thisListener) {
+        listenerForNewNumbersOfPages = thisListener;
     }
 
     public boolean startGetMessagesOfThisPage(String newUrlOfPage) {
@@ -76,6 +82,9 @@ public class JVCForumMessageGetter extends AbsJVCMessageGetter {
                 if (listenerForNewMessages != null) {
                     listenerForNewMessages.getNewMessages(infoOfCurrentPage.listOfMessages);
                 }
+                if (listenerForNewNumbersOfPages != null) {
+                    listenerForNewNumbersOfPages.getNewLastPageNumber(JVCParser.getPageNumberForThisLink(infoOfCurrentPage.lastPageLink));
+                }
             } else {
                 if (listenerForNewMessages != null) {
                     listenerForNewMessages.getNewMessages(new ArrayList<JVCParser.MessageInfos>());
@@ -84,5 +93,9 @@ public class JVCForumMessageGetter extends AbsJVCMessageGetter {
 
             currentAsyncTaskForGetMessage = null;
         }
+    }
+
+    public interface NewNumbersOfPagesListener {
+        void getNewLastPageNumber(String newNumber);
     }
 }
