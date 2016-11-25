@@ -31,7 +31,23 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        updatePrefSummary(findPreference(key));
+        Preference pref = findPreference(key);
+
+        if (pref instanceof EditTextPreference) {
+            EditTextPreference editTextPref = (EditTextPreference) pref;
+            int prefValue = 0;
+            if (!editTextPref.getText().isEmpty()) {
+                try {
+                    prefValue = Integer.parseInt(editTextPref.getText());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    prefValue = 999999;
+                }
+            }
+            editTextPref.setText(String.valueOf(prefValue));
+        }
+
+        updatePrefSummary(pref);
     }
 
     private void initSummary(Preference pref) {
