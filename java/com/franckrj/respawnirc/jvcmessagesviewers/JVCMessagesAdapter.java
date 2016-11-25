@@ -3,10 +3,16 @@ package com.franckrj.respawnirc.jvcmessagesviewers;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
+import android.text.Layout;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.LeadingMarginSpan;
+import android.text.style.LineBackgroundSpan;
+import android.text.style.QuoteSpan;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -21,7 +27,6 @@ import com.franckrj.respawnirc.utils.JVCParser;
 
 import java.util.ArrayList;
 
-/*TODO: Désactiver l'highlight quand on clique sur un élément. (désactivé par défaut quand un lien est présent) (fixé depuis l'ajout des boutons ?)*/
 public class JVCMessagesAdapter extends BaseAdapter {
     private ArrayList<JVCParser.MessageInfos> listOfMessages = new ArrayList<>();
     private LayoutInflater serviceInflater;
@@ -121,6 +126,22 @@ public class JVCMessagesAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    private void replaceQuoteSpansInTextView(TextView thisTextView) {
+        Spannable spannable = new SpannableString(thisTextView.getText());
+        QuoteSpan[] quoteSpanArray = spannable.getSpans(0, spannable.length(), QuoteSpan.class);
+        for (QuoteSpan quoteSpan : quoteSpanArray) {
+            int start = spannable.getSpanStart(quoteSpan);
+            int end = spannable.getSpanEnd(quoteSpan);
+            int flags = spannable.getSpanFlags(quoteSpan);
+            spannable.removeSpan(quoteSpan);
+            spannable.setSpan(new CustomQuoteSpan(parentActivity.getResources().getColor(R.color.colorQuoteBackground),
+                            parentActivity.getResources().getColor(R.color.colorPrimary),
+                            parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripSize),
+                            parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripGap)), start, end, flags);
+        }
+        thisTextView.setText(spannable);
+    }
+
     @Override
     public int getCount() {
         return listOfMessages.size();
@@ -154,8 +175,53 @@ public class JVCMessagesAdapter extends BaseAdapter {
         }
         holder.showMenuButton.setTag(position);
         holder.firstLine.setText(Html.fromHtml(JVCParser.createMessageFirstLineFromInfos(getItem(position), currentSettings), jvcImageGetter, null));
+        replaceQuoteSpansInTextView(holder.firstLine);
         holder.secondLine.setText(Html.fromHtml(JVCParser.createMessageSecondLineFromInfos(getItem(position)), jvcImageGetter, null));
+        replaceQuoteSpansInTextView(holder.secondLine);
         return convertView;
+    }
+
+    public class CustomQuoteSpan implements LeadingMarginSpan, LineBackgroundSpan {
+        private final int backgroundColor;
+        private final int stripeColor;
+        private final float stripeWidth;
+        private final float gap;
+
+        public CustomQuoteSpan(int newBackgroundColor, int newStripeColor, float newStripeWidth, float newGap) {
+            backgroundColor = newBackgroundColor;
+            stripeColor = newStripeColor;
+            stripeWidth = newStripeWidth;
+            gap = newGap;
+        }
+
+        @Override
+        public int getLeadingMargin(boolean first) {
+            return (int) (stripeWidth + gap);
+        }
+
+        @Override
+        public void drawLeadingMargin(Canvas thisCanvas, Paint thisPaint, int pos, int dir, int top, int baseline, int bottom,
+                                      CharSequence text, int start, int end, boolean first, Layout thisLayout) {
+            Paint.Style paintStyle = thisPaint.getStyle();
+            int paintColor = thisPaint.getColor();
+
+            thisPaint.setStyle(Paint.Style.FILL);
+            thisPaint.setColor(stripeColor);
+
+            thisCanvas.drawRect(pos, top, pos + dir * stripeWidth, bottom, thisPaint);
+
+            thisPaint.setStyle(paintStyle);
+            thisPaint.setColor(paintColor);
+        }
+
+        @Override
+        public void drawBackground(Canvas thisCanvas, Paint thisPaint, int left, int right, int top, int baseline, int bottom,
+                                   CharSequence text, int start, int end, int lnum) {
+            int paintColor = thisPaint.getColor();
+            thisPaint.setColor(backgroundColor);
+            thisCanvas.drawRect(left, top, right, bottom, thisPaint);
+            thisPaint.setColor(paintColor);
+        }
     }
 
     private class ViewHolder {
