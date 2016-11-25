@@ -30,7 +30,7 @@ public class WebManager {
             urlConnection.setReadTimeout(15000);
 
             urlConnection.setRequestMethod(requestMethod);
-            urlConnection.setRequestProperty("User-Agent", "RespawnIRC");
+            urlConnection.setRequestProperty("User-Agent", "respawn irc");
             urlConnection.setRequestProperty("Connection", "Keep-Alive");
             urlConnection.setRequestProperty("Cookie", cookiesInAString);
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
