@@ -10,6 +10,7 @@ import android.text.Html;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.style.LeadingMarginSpan;
 import android.text.style.LineBackgroundSpan;
 import android.text.style.QuoteSpan;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 
 public class JVCMessagesAdapter extends BaseAdapter {
     private ArrayList<JVCParser.MessageInfos> listOfMessages = new ArrayList<>();
+    private ArrayList<ContentHolder> listOfContentForMessages = new ArrayList<>();
     private LayoutInflater serviceInflater;
     private Activity parentActivity = null;
     private int currentItemIDSelected = -1;
@@ -103,19 +105,28 @@ public class JVCMessagesAdapter extends BaseAdapter {
 
     public void removeAllItems() {
         listOfMessages.clear();
+        listOfContentForMessages.clear();
     }
 
     public void removeFirstItem() {
         listOfMessages.remove(0);
+        listOfContentForMessages.remove(0);
     }
 
     public void addItem(JVCParser.MessageInfos item) {
+        ContentHolder thisHolder = new ContentHolder();
+        thisHolder.firstLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageFirstLineFromInfos(item, currentSettings), jvcImageGetter, null));
+        thisHolder.secondLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageSecondLineFromInfos(item), jvcImageGetter, null));
         listOfMessages.add(item);
+        listOfContentForMessages.add(thisHolder);
     }
 
     public void updateThisItem(JVCParser.MessageInfos item) {
         for (int i = 0; i < listOfMessages.size(); ++i) {
             if (listOfMessages.get(i).id == item.id) {
+                ContentHolder thisHolder = listOfContentForMessages.get(i);
+                thisHolder.firstLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageFirstLineFromInfos(item, currentSettings), jvcImageGetter, null));
+                thisHolder.secondLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageSecondLineFromInfos(item), jvcImageGetter, null));
                 listOfMessages.set(i, item);
                 break;
             }
@@ -126,8 +137,8 @@ public class JVCMessagesAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    private void replaceQuoteSpansInTextView(TextView thisTextView) {
-        Spannable spannable = new SpannableString(thisTextView.getText());
+    private Spannable replaceQuoteSpans(Spanned spanToChange) {
+        Spannable spannable = new SpannableString(spanToChange);
         QuoteSpan[] quoteSpanArray = spannable.getSpans(0, spannable.length(), QuoteSpan.class);
         for (QuoteSpan quoteSpan : quoteSpanArray) {
             int start = spannable.getSpanStart(quoteSpan);
@@ -139,7 +150,7 @@ public class JVCMessagesAdapter extends BaseAdapter {
                             parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripSize),
                             parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripGap)), start, end, flags);
         }
-        thisTextView.setText(spannable);
+        return spannable;
     }
 
     @Override
@@ -174,10 +185,8 @@ public class JVCMessagesAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         holder.showMenuButton.setTag(position);
-        holder.firstLine.setText(Html.fromHtml(JVCParser.createMessageFirstLineFromInfos(getItem(position), currentSettings), jvcImageGetter, null));
-        replaceQuoteSpansInTextView(holder.firstLine);
-        holder.secondLine.setText(Html.fromHtml(JVCParser.createMessageSecondLineFromInfos(getItem(position)), jvcImageGetter, null));
-        replaceQuoteSpansInTextView(holder.secondLine);
+        holder.firstLine.setText(listOfContentForMessages.get(position).firstLineContent);
+        holder.secondLine.setText(listOfContentForMessages.get(position).secondLineContent);
         return convertView;
     }
 
@@ -225,8 +234,13 @@ public class JVCMessagesAdapter extends BaseAdapter {
     }
 
     private class ViewHolder {
-        TextView firstLine;
-        TextView secondLine;
-        ImageButton showMenuButton;
+        private TextView firstLine;
+        private TextView secondLine;
+        private ImageButton showMenuButton;
+    }
+
+    private class ContentHolder {
+        private Spannable firstLineContent;
+        private Spannable secondLineContent;
     }
 }
