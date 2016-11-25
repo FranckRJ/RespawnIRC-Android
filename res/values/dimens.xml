@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="quoteStripSize">2dp</dimen>
+    <dimen name="sizeBetweenTextAndArrow">5dp</dimen>
     <dimen name="quoteStripGap">4dp</dimen>
 </resources>

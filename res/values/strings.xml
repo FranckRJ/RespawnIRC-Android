@@ -73,6 +73,9 @@
     <string name="waitingText">…</string>
     <string name="saveCurrentPage">save.currentPage</string>
     <string name="saveLastPage">save.lastPage</string>
+    <string name="cancel">Annuler</string>
+    <string name="pageNumber">Numéro de la page…</string>
+    <string name="choosePageNumber">Choisir un numéro de page</string>
 
     <string-array name="itemChoiceDrawerList">
         <item>@string/app_name</item>

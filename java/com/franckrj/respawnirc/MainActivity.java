@@ -22,9 +22,9 @@ import com.franckrj.respawnirc.jvcmessagesviewers.ShowTopicForumFragment;
 import com.franckrj.respawnirc.jvcmessagesviewers.ShowTopicIRCFragment;
 
 public class MainActivity extends AppCompatActivity implements AbsShowTopicFragment.NewModeNeededListener {
-    private final int LIST_DRAWER_POS_HOME = 0;
-    private final int LIST_DRAWER_POS_CONNECT = 1;
-    private final int LIST_DRAWER_POS_SETTING = 2;
+    private static final int LIST_DRAWER_POS_HOME = 0;
+    private static final int LIST_DRAWER_POS_CONNECT = 1;
+    private static final int LIST_DRAWER_POS_SETTING = 2;
 
     private DrawerLayout layoutForDrawer = null;
     private ListView listForDrawer = null;

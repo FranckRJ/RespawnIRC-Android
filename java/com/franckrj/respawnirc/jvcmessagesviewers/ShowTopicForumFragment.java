@@ -1,7 +1,15 @@
 package com.franckrj.respawnirc.jvcmessagesviewers;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +29,8 @@ import com.franckrj.respawnirc.utils.JVCParser;
 import java.util.ArrayList;
 
 public class ShowTopicForumFragment extends AbsShowTopicFragment {
+    public static final int REQUEST_CHANGE_PAGE = 42;
+
     private JVCForumMessageGetter getterForMessages = null;
     private Button firstPageButton = null;
     private Button previousPageButton = null;
@@ -74,6 +84,10 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
                 goToThisNewPage(JVCParser.setPageNumberForThisLink(getterForMessages.getUrlForTopic(), 1), false);
             } else if (buttonView == previousPageButton && previousPageButton.getVisibility() == View.VISIBLE) {
                 goToThisNewPage(JVCParser.setPageNumberForThisLink(getterForMessages.getUrlForTopic(), currentPage - 1), false);
+            } else if (buttonView == currentPageButton) {
+                ChoosePageNumberDialogFragment choosePageDialogFragment = new ChoosePageNumberDialogFragment();
+                choosePageDialogFragment.setTargetFragment(ShowTopicForumFragment.this, REQUEST_CHANGE_PAGE);
+                choosePageDialogFragment.show(getFragmentManager(), "ChoosePageNumberDialogFragment");
             } else if (buttonView == nextPageButton && nextPageButton.getVisibility() == View.VISIBLE) {
                 goToThisNewPage(JVCParser.setPageNumberForThisLink(getterForMessages.getUrlForTopic(), currentPage + 1), false);
             } else if (buttonView == lastPageButton && lastPageButton.getVisibility() == View.VISIBLE) {
@@ -174,6 +188,7 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
         firstPageButton.setOnClickListener(changePageWithNavigationButtonListener);
         previousPageButton.setVisibility(View.GONE);
         previousPageButton.setOnClickListener(changePageWithNavigationButtonListener);
+        currentPageButton.setOnClickListener(changePageWithNavigationButtonListener);
         nextPageButton.setVisibility(View.GONE);
         nextPageButton.setOnClickListener(changePageWithNavigationButtonListener);
         lastPageButton.setVisibility(View.GONE);
@@ -187,6 +202,10 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Drawable arrowDrawable = getResources().getDrawable(R.drawable.ic_action_navigation_arrow_drop_down);
+        arrowDrawable.setBounds(0, 0, arrowDrawable.getIntrinsicWidth() / 2, arrowDrawable.getIntrinsicHeight() / 2);
+        currentPageButton.setCompoundDrawables(null, null, arrowDrawable, null);
+        currentPageButton.setCompoundDrawablePadding(getResources().getDimensionPixelSize(R.dimen.sizeBetweenTextAndArrow));
 
         getterForMessages.setListenerForNewMessages(listenerForNewMessages);
         getterForMessages.setListenerForNewNumbersOfPages(listenerForNewNumbersOfPages);
@@ -238,6 +257,52 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
                 }
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CHANGE_PAGE) {
+            if (resultCode > lastPage || resultCode == -REQUEST_CHANGE_PAGE) {
+                resultCode = lastPage;
+            } else if (resultCode < 1) {
+                resultCode = 1;
+            }
+            goToThisNewPage(JVCParser.setPageNumberForThisLink(getterForMessages.getUrlForTopic(), resultCode), false);
+        }
+    }
+
+    public static class ChoosePageNumberDialogFragment extends DialogFragment {
+        EditText pageNumberEdit = null;
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            super.onCreateDialog(savedInstanceState);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_choosepagenumber, null);
+            pageNumberEdit = (EditText) mainView.findViewById(R.id.pagenumber_edit_choosepagenumber);
+            builder.setTitle(R.string.choosePageNumber).setView(mainView)
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    }).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int i) {
+                            Fragment targetFrag = getTargetFragment();
+                            if (targetFrag != null && !pageNumberEdit.getText().toString().isEmpty()) {
+                                try {
+                                    targetFrag.onActivityResult(getTargetRequestCode(), Integer.parseInt(pageNumberEdit.getText().toString()), getActivity().getIntent());
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    targetFrag.onActivityResult(getTargetRequestCode(), -REQUEST_CHANGE_PAGE, getActivity().getIntent());
+                                }
+                            }
+                            dialog.dismiss();
+                        }
+            });
+            return builder.create();
         }
     }
 }

@@ -78,7 +78,7 @@
             android:background="@android:color/transparent"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:contentDescription="@string/messagePost" />
+            android:contentDescription="@string/messagePost"/>
     </LinearLayout>
 
 </RelativeLayout>
