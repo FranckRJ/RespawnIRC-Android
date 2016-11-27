@@ -8,7 +8,6 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
@@ -22,14 +21,14 @@
             android:layout_marginTop="4dp"
             android:autoLink="web"/>
         <ImageButton
+            style="@style/SelectableItemBackground"
             android:id="@+id/menu_overflow_row"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:src="@drawable/ic_action_navigation_more"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/overflow_menu_desc" />
+            android:contentDescription="@string/overflow_menu_desc"/>
     </RelativeLayout>
 
     <TextView
