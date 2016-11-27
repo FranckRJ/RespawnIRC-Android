@@ -17,14 +17,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.franckrj.respawnirc.dialogs.ChooseTopicOrForumLinkDialogFragment;
 import com.franckrj.respawnirc.jvcmessagesviewers.AbsShowTopicFragment;
 import com.franckrj.respawnirc.jvcmessagesviewers.ShowTopicForumFragment;
 import com.franckrj.respawnirc.jvcmessagesviewers.ShowTopicIRCFragment;
 
-public class MainActivity extends AppCompatActivity implements AbsShowTopicFragment.NewModeNeededListener {
+public class MainActivity extends AppCompatActivity implements AbsShowTopicFragment.NewModeNeededListener, ChooseTopicOrForumLinkDialogFragment.NewTopicOrForumSelected {
     private static final int LIST_DRAWER_POS_HOME = 0;
     private static final int LIST_DRAWER_POS_CONNECT = 1;
-    private static final int LIST_DRAWER_POS_SETTING = 2;
+    private static final int LIST_DRAWER_POS_SELECT_TOPIC_OR_FORUM = 2;
+    private static final int LIST_DRAWER_POS_SETTING = 3;
 
     private DrawerLayout layoutForDrawer = null;
     private ListView listForDrawer = null;
@@ -76,6 +78,11 @@ public class MainActivity extends AppCompatActivity implements AbsShowTopicFragm
                         break;
                     case LIST_DRAWER_POS_CONNECT:
                         startActivity(new Intent(MainActivity.this, ConnectActivity.class));
+                        break;
+                    case LIST_DRAWER_POS_SELECT_TOPIC_OR_FORUM:
+                        ChooseTopicOrForumLinkDialogFragment chooseLinkDialogFragment = new ChooseTopicOrForumLinkDialogFragment();
+                        chooseLinkDialogFragment.show(getFragmentManager(), "ChooseTopicOrForumLinkDialogFragment");
+                        listForDrawer.setItemChecked(0, true);
                         break;
                     case LIST_DRAWER_POS_SETTING:
                         startActivity(new Intent(MainActivity.this, SettingsActivity.class));
@@ -151,5 +158,11 @@ public class MainActivity extends AppCompatActivity implements AbsShowTopicFragm
             sharedPrefEdit.putInt(getString(R.string.prefCurrentTopicMode), newMode);
             sharedPrefEdit.apply();
         }
+    }
+
+    @Override
+    public void newTopicOrForumAvailable(String newTopicOrForumLink) {
+        AbsShowTopicFragment currentFragment = (AbsShowTopicFragment) getFragmentManager().findFragmentById(R.id.content_frame_main);
+        currentFragment.newTopicLinkSetted(newTopicOrForumLink);
     }
 }

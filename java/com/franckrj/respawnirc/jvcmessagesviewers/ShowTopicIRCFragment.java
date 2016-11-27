@@ -73,24 +73,22 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
         }
     };
 
-    private final Button.OnClickListener changeCurrentTopicLinkListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View buttonView) {
-            String newUrl = baseForChangeTopicLink();
-
-            getterForMessages.stopAllCurrentTask();
-            adapterForMessages.removeAllItems();
-            adapterForMessages.updateAllItems();
-            getterForMessages.setNewTopic(newUrl);
-            getterForMessages.reloadTopic();
-        }
-    };
-
     private void loadFromOldTopicInfos() {
         getterForMessages.stopAllCurrentTask();
         adapterForMessages.removeAllItems();
         adapterForMessages.updateAllItems();
         getterForMessages.setOldTopic(oldUrlForTopic, oldLastIdOfMessage);
+        getterForMessages.reloadTopic();
+    }
+
+    @Override
+    public void newTopicLinkSetted(String newTopicLink) {
+        String newUrl = baseForChangeTopicLink(newTopicLink);
+
+        getterForMessages.stopAllCurrentTask();
+        adapterForMessages.removeAllItems();
+        adapterForMessages.updateAllItems();
+        getterForMessages.setNewTopic(newUrl);
         getterForMessages.reloadTopic();
     }
 
@@ -110,15 +108,11 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View mainView = inflater.inflate(R.layout.fragment_showtopicirc, container, false);
 
-        Button topicLinkButton = (Button) mainView.findViewById(R.id.topiclink_button_showtopicirc);
-
         jvcMsgList = (ListView) mainView.findViewById(R.id.jvcmessage_view_showtopicirc);
-        urlEdit = (EditText) mainView.findViewById(R.id.topiclink_text_showtopicirc);
         messageSendEdit = (EditText) mainView.findViewById(R.id.sendmessage_text_showtopicirc);
         messageSendButton = (ImageButton) mainView.findViewById(R.id.sendmessage_button_showtopicirc);
         loadingLayout = mainView.findViewById(R.id.layout_loading_showtopicirc);
 
-        topicLinkButton.setOnClickListener(changeCurrentTopicLinkListener);
         messageSendButton.setOnClickListener(sendMessageToTopicListener);
 
         return mainView;
@@ -141,7 +135,6 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
         if (adapterForMessages.getAllItems().isEmpty()) {
             getterForMessages.setNewTopic(sharedPref.getString(getString(R.string.prefUrlToFetch), ""));
         }
-        urlEdit.setText(sharedPref.getString(getString(R.string.prefUrlToFetch), ""));
     }
 
     @Override

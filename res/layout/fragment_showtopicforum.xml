@@ -9,26 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#eee">
-        <LinearLayout
-            android:id="@+id/topiclink_layout_showtopicforum"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:orientation="horizontal">
-            <EditText
-                android:id="@+id/topiclink_text_showtopicforum"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:inputType="text"
-                android:selectAllOnFocus="true"
-                android:hint="@string/topiclinkPlaceHolder"/>
-            <Button
-                android:id="@+id/topiclink_button_showtopicforum"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/go"/>
-        </LinearLayout>
         <Button
             android:id="@+id/firstpage_button_showtopicforum"
             android:layout_width="wrap_content"
@@ -39,7 +19,7 @@
             android:layout_marginStart="4dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/topiclink_layout_showtopicforum"/>
+            android:layout_alignParentTop="true"/>
         <Button
             android:id="@+id/previouspage_button_showtopicforum"
             android:layout_width="wrap_content"
@@ -48,7 +28,7 @@
             android:minWidth="0dp"
             android:layout_toLeftOf="@+id/currentpage_button_showtopicforum"
             android:layout_toStartOf="@+id/currentpage_button_showtopicforum"
-            android:layout_below="@+id/topiclink_layout_showtopicforum"
+            android:layout_alignParentTop="true"
             android:text="@string/previousPageText"/>
         <Button
             android:id="@+id/currentpage_button_showtopicforum"
@@ -59,7 +39,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/topiclink_layout_showtopicforum"
+            android:layout_alignParentTop="true"
             android:text="@string/waitingText"/>
         <Button
             android:id="@+id/nextpage_button_showtopicforum"
@@ -69,7 +49,7 @@
             android:minWidth="0dp"
             android:layout_toRightOf="@+id/currentpage_button_showtopicforum"
             android:layout_toEndOf="@+id/currentpage_button_showtopicforum"
-            android:layout_below="@+id/topiclink_layout_showtopicforum"
+            android:layout_alignParentTop="true"
             android:text="@string/nextPageText"/>
         <Button
             android:id="@+id/lastpage_button_showtopicforum"
@@ -81,7 +61,7 @@
             android:layout_marginEnd="4dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/topiclink_layout_showtopicforum"/>
+            android:layout_alignParentTop="true"/>
     </RelativeLayout>
 
     <ListView

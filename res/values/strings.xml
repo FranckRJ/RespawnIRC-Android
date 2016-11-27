@@ -76,10 +76,13 @@
     <string name="cancel">Annuler</string>
     <string name="pageNumber">Numéro de la page…</string>
     <string name="choosePageNumber">Choisir un numéro de page</string>
+    <string name="topicOrForumLink">Lien du topic…</string>
+    <string name="chooseTopicOrForumLink">Choisir un topic</string>
 
     <string-array name="itemChoiceDrawerList">
         <item>@string/app_name</item>
         <item>@string/connectToJVC</item>
+        <item>@string/chooseTopicOrForumLink</item>
         <item>@string/preference</item>
     </string-array>
 </resources>

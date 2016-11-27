@@ -1,17 +1,11 @@
 package com.franckrj.respawnirc.jvcmessagesviewers;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -22,9 +16,9 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
-import com.franckrj.respawnirc.ConnectActivity;
 import com.franckrj.respawnirc.JVCMessageSender;
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.dialogs.HelpFirstLaunchDialogFragment;
 import com.franckrj.respawnirc.jvcgetters.AbsJVCMessageGetter;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.WebManager;
@@ -42,7 +36,6 @@ public abstract class AbsShowTopicFragment extends Fragment {
     protected JVCMessagesAdapter adapterForMessages = null;
     protected JVCMessageSender senderForMessages = null;
     protected EditText messageSendEdit = null;
-    protected EditText urlEdit = null;
     protected String latestMessageQuotedInfo = null;
     protected ImageButton messageSendButton = null;
     protected String pseudoOfUser = "";
@@ -173,43 +166,29 @@ public abstract class AbsShowTopicFragment extends Fragment {
         }
     };
 
-    protected String baseForChangeTopicLink() {
-        String newUrl;
-        View focusedView;
-        InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+    protected String baseForChangeTopicLink(String thisLink) {
         SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
 
-        newUrl = urlEdit.getText().toString();
-
-        if (!newUrl.isEmpty()) {
-            if (newUrl.startsWith("https://")) {
-                newUrl = newUrl.replaceFirst("https://", "http://");
+        if (!thisLink.isEmpty()) {
+            if (thisLink.startsWith("https://")) {
+                thisLink = thisLink.replaceFirst("https://", "http://");
             }
 
-            if (!newUrl.startsWith("http://")) {
-                newUrl = "http://" + newUrl;
+            if (!thisLink.startsWith("http://")) {
+                thisLink = "http://" + thisLink;
             }
 
-            if (newUrl.startsWith("http://m.jeuxvideo.com/")) {
-                newUrl = newUrl.replaceFirst("http://m.jeuxvideo.com/", "http://www.jeuxvideo.com/");
-            } else if (newUrl.startsWith("http://jeuxvideo.com/")) {
-                newUrl = newUrl.replaceFirst("http://jeuxvideo.com/", "http://www.jeuxvideo.com/");
-            }
-
-            if (!newUrl.equals(urlEdit.getText().toString())) {
-                urlEdit.setText(newUrl);
+            if (thisLink.startsWith("http://m.jeuxvideo.com/")) {
+                thisLink = thisLink.replaceFirst("http://m.jeuxvideo.com/", "http://www.jeuxvideo.com/");
+            } else if (thisLink.startsWith("http://jeuxvideo.com/")) {
+                thisLink = thisLink.replaceFirst("http://jeuxvideo.com/", "http://www.jeuxvideo.com/");
             }
         }
 
-        sharedPrefEdit.putString(getString(R.string.prefUrlToFetch), newUrl);
+        sharedPrefEdit.putString(getString(R.string.prefUrlToFetch), thisLink);
         sharedPrefEdit.apply();
 
-        focusedView = getActivity().getCurrentFocus();
-        if (focusedView != null) {
-            inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-
-        return newUrl;
+        return thisLink;
     }
 
     protected void stopAllCurrentTask() {
@@ -362,33 +341,11 @@ public abstract class AbsShowTopicFragment extends Fragment {
         }
     }
 
-    public static class HelpFirstLaunchDialogFragment extends DialogFragment {
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            super.onCreateDialog(savedInstanceState);
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle(R.string.welcome).setMessage(R.string.help_firstlaunch)
-                    .setNegativeButton(R.string.later, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.dismiss();
-                        }
-                    }).setPositiveButton(R.string.connectToJVC, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int i) {
-                            dialog.dismiss();
-                            startActivity(new Intent(getActivity(), ConnectActivity.class));
-                        }
-            });
-            return builder.create();
-        }
-    }
-
     public interface NewModeNeededListener {
         void newModeRequested(int newMode);
     }
 
+    public abstract void newTopicLinkSetted(String newTopicLink);
     protected abstract void initializeGetterForMessages();
     protected abstract void initializeSettings();
 }

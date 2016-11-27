@@ -1,15 +1,9 @@
 package com.franckrj.respawnirc.jvcmessagesviewers;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,14 +17,13 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.dialogs.ChoosePageNumberDialogFragment;
 import com.franckrj.respawnirc.jvcgetters.JVCForumMessageGetter;
 import com.franckrj.respawnirc.utils.JVCParser;
 
 import java.util.ArrayList;
 
 public class ShowTopicForumFragment extends AbsShowTopicFragment {
-    public static final int REQUEST_CHANGE_PAGE = 42;
-
     private JVCForumMessageGetter getterForMessages = null;
     private Button firstPageButton = null;
     private Button previousPageButton = null;
@@ -70,13 +63,6 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
         }
     };
 
-    private final Button.OnClickListener changeCurrentTopicLinkListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View buttonView) {
-            goToThisNewPage(baseForChangeTopicLink(), true);
-        }
-    };
-
     private final Button.OnClickListener changePageWithNavigationButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View buttonView) {
@@ -86,7 +72,7 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
                 goToThisNewPage(JVCParser.setPageNumberForThisLink(getterForMessages.getUrlForTopic(), currentPage - 1), false);
             } else if (buttonView == currentPageButton) {
                 ChoosePageNumberDialogFragment choosePageDialogFragment = new ChoosePageNumberDialogFragment();
-                choosePageDialogFragment.setTargetFragment(ShowTopicForumFragment.this, REQUEST_CHANGE_PAGE);
+                choosePageDialogFragment.setTargetFragment(ShowTopicForumFragment.this, ChoosePageNumberDialogFragment.REQUEST_CHANGE_PAGE);
                 choosePageDialogFragment.show(getFragmentManager(), "ChoosePageNumberDialogFragment");
             } else if (buttonView == nextPageButton && nextPageButton.getVisibility() == View.VISIBLE) {
                 goToThisNewPage(JVCParser.setPageNumberForThisLink(getterForMessages.getUrlForTopic(), currentPage + 1), false);
@@ -129,7 +115,6 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
         adapterForMessages.removeAllItems();
         adapterForMessages.updateAllItems();
         getterForMessages.startGetMessagesOfThisPage(newPageUrl);
-        urlEdit.setText(newPageUrl);
     }
 
     private void updatePageButtons() {
@@ -156,6 +141,11 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
     }
 
     @Override
+    public void newTopicLinkSetted(String newTopicLink) {
+        goToThisNewPage(baseForChangeTopicLink(newTopicLink), true);
+    }
+
+    @Override
     protected void initializeGetterForMessages() {
         getterForMessages = new JVCForumMessageGetter(getActivity());
         absGetterForMessages = getterForMessages;
@@ -171,10 +161,7 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View mainView = inflater.inflate(R.layout.fragment_showtopicforum, container, false);
 
-        Button topicLinkButton = (Button) mainView.findViewById(R.id.topiclink_button_showtopicforum);
-
         jvcMsgList = (ListView) mainView.findViewById(R.id.jvcmessage_view_showtopicforum);
-        urlEdit = (EditText) mainView.findViewById(R.id.topiclink_text_showtopicforum);
         messageSendEdit = (EditText) mainView.findViewById(R.id.sendmessage_text_showtopicforum);
         messageSendButton = (ImageButton) mainView.findViewById(R.id.sendmessage_button_showtopicforum);
         loadingLayout = mainView.findViewById(R.id.layout_loading_showtopicforum);
@@ -193,7 +180,6 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
         nextPageButton.setOnClickListener(changePageWithNavigationButtonListener);
         lastPageButton.setVisibility(View.GONE);
         lastPageButton.setOnClickListener(changePageWithNavigationButtonListener);
-        topicLinkButton.setOnClickListener(changeCurrentTopicLinkListener);
         messageSendButton.setOnClickListener(sendMessageToTopicListener);
 
         return mainView;
@@ -262,47 +248,13 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CHANGE_PAGE) {
-            if (resultCode > lastPage || resultCode == -REQUEST_CHANGE_PAGE) {
+        if (requestCode == ChoosePageNumberDialogFragment.REQUEST_CHANGE_PAGE) {
+            if (resultCode > lastPage || resultCode == -ChoosePageNumberDialogFragment.REQUEST_CHANGE_PAGE) {
                 resultCode = lastPage;
             } else if (resultCode < 1) {
                 resultCode = 1;
             }
             goToThisNewPage(JVCParser.setPageNumberForThisLink(getterForMessages.getUrlForTopic(), resultCode), false);
-        }
-    }
-
-    public static class ChoosePageNumberDialogFragment extends DialogFragment {
-        EditText pageNumberEdit = null;
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            super.onCreateDialog(savedInstanceState);
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_choosepagenumber, null);
-            pageNumberEdit = (EditText) mainView.findViewById(R.id.pagenumber_edit_choosepagenumber);
-            builder.setTitle(R.string.choosePageNumber).setView(mainView)
-                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.dismiss();
-                        }
-                    }).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int i) {
-                            Fragment targetFrag = getTargetFragment();
-                            if (targetFrag != null && !pageNumberEdit.getText().toString().isEmpty()) {
-                                try {
-                                    targetFrag.onActivityResult(getTargetRequestCode(), Integer.parseInt(pageNumberEdit.getText().toString()), getActivity().getIntent());
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    targetFrag.onActivityResult(getTargetRequestCode(), -REQUEST_CHANGE_PAGE, getActivity().getIntent());
-                                }
-                            }
-                            dialog.dismiss();
-                        }
-            });
-            return builder.create();
         }
     }
 }
