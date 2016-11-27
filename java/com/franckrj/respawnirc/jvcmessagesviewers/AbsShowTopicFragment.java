@@ -47,6 +47,7 @@ public abstract class AbsShowTopicFragment extends Fragment {
     protected final PopupMenu.OnMenuItemClickListener listenerForItemClicked = new PopupMenu.OnMenuItemClickListener() {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
+            JVCParser.MessageInfos currentItem = null;
             switch (item.getItemId()) {
                 case R.id.menu_quote_message:
                     if (absGetterForMessages.getLatestAjaxInfos().list != null && latestMessageQuotedInfo == null && currentTaskQuoteMessage == null) {
@@ -75,11 +76,15 @@ public abstract class AbsShowTopicFragment extends Fragment {
 
                     return true;
                 case R.id.menu_show_spoil_message:
-                    adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected()).showSpoil = true;
+                    currentItem = adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected());
+                    currentItem.showSpoil = true;
+                    adapterForMessages.updateThisItem(currentItem);
                     adapterForMessages.updateAllItems();
                     return true;
                 case R.id.menu_hide_spoil_message:
-                    adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected()).showSpoil = false;
+                    currentItem = adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected());
+                    currentItem.showSpoil = false;
+                    adapterForMessages.updateThisItem(currentItem);
                     adapterForMessages.updateAllItems();
                     return true;
                 default:
