@@ -238,16 +238,16 @@ public abstract class AbsShowTopicFragment extends Fragment {
 
         sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
-        initializeGetterForMessages();
-        initializeSettings();
-        reloadSettings();
         senderForMessages = new JVCMessageSender(getActivity());
         adapterForMessages = new JVCMessagesAdapter(getActivity(), currentSettings);
+        initializeGetterForMessages();
+        initializeAdapter();
+        initializeSettings();
+        reloadSettings();
         absGetterForMessages.setListenerForNewGetterState(listenerForNewGetterState);
         senderForMessages.setListenerForNewMessageWantEdit(listenerForNewMessageWantEdit);
         adapterForMessages.setActionWhenItemMenuClicked(listenerForItemClicked);
         senderForMessages.setListenerForNewMessagePosted(listenerForNewMessagePosted);
-        initializeAdapter();
 
         if (savedInstanceState != null) {
             ArrayList<JVCParser.MessageInfos> allCurrentMessagesShowed = savedInstanceState.getParcelableArrayList(getString(R.string.saveAllCurrentMessagesShowed));

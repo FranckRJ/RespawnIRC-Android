@@ -6,6 +6,9 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
+import android.text.InputFilter;
+import android.text.Spanned;
+import android.widget.EditText;
 
 /*TODO: Ajouter un minimum et un maximum aux valeur des EditTextPreference.*/
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -14,6 +17,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         super.onCreate(savedInstanceState);
         getPreferenceManager().setSharedPreferencesName(getString(R.string.preference_file_key));
         addPreferencesFromResource(R.xml.settings);
+        initFilter(getPreferenceScreen());
         initSummary(getPreferenceScreen());
     }
 
@@ -35,19 +39,35 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
         if (pref instanceof EditTextPreference) {
             EditTextPreference editTextPref = (EditTextPreference) pref;
+            MinMaxInfos prefMinMax = (MinMaxInfos) editTextPref.getEditText().getTag();
             int prefValue = 0;
             if (!editTextPref.getText().isEmpty()) {
                 try {
                     prefValue = Integer.parseInt(editTextPref.getText());
                 } catch (Exception e) {
                     e.printStackTrace();
-                    prefValue = 999999;
+                    prefValue = 999999999;
                 }
+            }
+            if (prefValue < prefMinMax.min) {
+                prefValue = prefMinMax.min;
+            } else if (prefValue > prefMinMax.max) {
+                prefValue = prefMinMax.max;
             }
             editTextPref.setText(String.valueOf(prefValue));
         }
 
         updatePrefSummary(pref);
+    }
+
+    private void initFilter(PreferenceGroup pref) {
+        EditText refreshTopicTime = ((EditTextPreference) pref.findPreference(getActivity().getString(R.string.settingsRefreshTopicTime))).getEditText();
+        EditText maxNumberOfMessages = ((EditTextPreference) pref.findPreference(getActivity().getString(R.string.settingsMaxNumberOfMessages))).getEditText();
+        EditText initialNumberOfMessages = ((EditTextPreference) pref.findPreference(getActivity().getString(R.string.settingsInitialNumberOfMessages))).getEditText();
+
+        refreshTopicTime.setTag(new MinMaxInfos(5000, 60000));
+        maxNumberOfMessages.setTag(new MinMaxInfos(1, 100));
+        initialNumberOfMessages.setTag(new MinMaxInfos(1, 20));
     }
 
     private void initSummary(Preference pref) {
@@ -64,7 +84,18 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     private void updatePrefSummary(Preference pref) {
         if (pref instanceof EditTextPreference) {
             EditTextPreference editTextPref = (EditTextPreference) pref;
-            editTextPref.setSummary(editTextPref.getText());
+            MinMaxInfos prefMinMax = (MinMaxInfos) editTextPref.getEditText().getTag();
+            editTextPref.setSummary("Entre " + String.valueOf(prefMinMax.min) + " et " + String.valueOf(prefMinMax.max) + " : " + editTextPref.getText());
+        }
+    }
+
+    private static class MinMaxInfos {
+        public final int min;
+        public final int max;
+
+        MinMaxInfos(int newMin, int newMax) {
+            min = newMin;
+            max = newMax;
         }
     }
 }

@@ -199,12 +199,10 @@ public class JVCMessagesAdapter extends BaseAdapter {
         holder.firstLine.setText(listOfContentForMessages.get(position).firstLineContent);
         holder.secondLine.setText(listOfContentForMessages.get(position).secondLineContent);
 
-        if (alternateBackgroundColor) {
-            if (position % 2 == 0) {
-                convertView.setBackgroundDrawable(holder.background);
-            } else {
-                convertView.setBackgroundColor(parentActivity.getResources().getColor(R.color.altBackgroundMessageColor));
-            }
+        if (position % 2 == 0 || !alternateBackgroundColor) {
+            convertView.setBackgroundDrawable(holder.background);
+        } else {
+            convertView.setBackgroundColor(parentActivity.getResources().getColor(R.color.altBackgroundMessageColor));
         }
 
         return convertView;

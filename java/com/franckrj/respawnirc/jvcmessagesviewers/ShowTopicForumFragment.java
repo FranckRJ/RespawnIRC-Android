@@ -161,7 +161,14 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
     @Override
     protected void initializeAdapter() {
         adapterForMessages.setIdOfLayoutToUse(R.layout.jvcmessages_rowforum);
-        adapterForMessages.setAlternateBackgroundColor(true);
+    }
+
+    @Override
+    protected void reloadSettings() {
+        super.reloadSettings();
+        clearMessagesOnRefresh = sharedPref.getBoolean(getString(R.string.settingsForumClearOnRefresh), Boolean.parseBoolean(getString(R.string.forumClearOnRefreshDefault)));
+        adapterForMessages.setAlternateBackgroundColor(sharedPref.getBoolean(getString(R.string.settingsForumAlternateBackgroundColor), Boolean.parseBoolean(getString(R.string.forumAlternateBackgroundColorDefault))));
+        adapterForMessages.updateAllItems();
     }
 
     @Override
@@ -214,8 +221,6 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        clearMessagesOnRefresh = sharedPref.getBoolean(getString(R.string.settingsForumClearOnRefresh), Boolean.parseBoolean(getString(R.string.forumClearOnRefreshDefault)));
 
         if (adapterForMessages.getAllItems().isEmpty()) {
             goToThisNewPage(sharedPref.getString(getString(R.string.prefUrlToFetch), ""), true);

@@ -29,7 +29,7 @@
     <string name="hideSpoilMessage">Cacher les spoil</string>
     <string name="showSpoilMessage">Afficher les spoil</string>
     <string name="preference">Préférences</string>
-    <string name="settingsShowMessagesTitle">Nombre de messages affichés (IRC)</string>
+    <string name="settingsMaxMessagesNumberTitle">Nombre de messages affichés (IRC)</string>
     <string name="settingsMaxNumberOfMessages">settings.maxNumberOfMessages</string>
     <string name="maxNumberOfMessagesTitle">Au maximum</string>
     <string name="settingsInitialNumberOfMessages">settings.initialNumberOfMessages</string>
@@ -64,7 +64,7 @@
     <string name="refresh">Rafraichir</string>
     <string name="prefCurrentTopicMode">pref.currentTopicMode</string>
     <string name="saveUrlToFetch">save.urlToFetch</string>
-    <string name="settingsForumModeTitle">Lors du rafraichissement (forum)</string>
+    <string name="settingsOnRefreshForumTitle">Lors du rafraichissement (forum)</string>
     <string name="settingsForumClearOnRefresh">settings.forumClearOnRefresh</string>
     <string name="forumClearOnRefreshTitle">Effacer les messages</string>
     <string name="forumClearOnRefreshDefault">true</string>
@@ -78,6 +78,10 @@
     <string name="choosePageNumber">Choisir un numéro de page</string>
     <string name="topicOrForumLink">Lien du topic…</string>
     <string name="chooseTopicOrForumLink">Choisir un topic</string>
+    <string name="settingsStyleMessageForumTitle">Affichage des messages (forum)</string>
+    <string name="settingsForumAlternateBackgroundColor">settings.forumAlternateBackgroundColor</string>
+    <string name="forumAlternateBackgroundColorTitle">Alterner la couleur de fond</string>
+    <string name="forumAlternateBackgroundColorDefault">true</string>
 
     <string-array name="itemChoiceDrawerList">
         <item>@string/app_name</item>

@@ -10,7 +10,7 @@
             android:numeric="integer"/>
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="@string/settingsShowMessagesTitle">
+        android:title="@string/settingsMaxMessagesNumberTitle">
         <EditTextPreference
             android:key="@string/settingsMaxNumberOfMessages"
             android:title="@string/maxNumberOfMessagesTitle"
@@ -23,10 +23,17 @@
             android:numeric="integer"/>
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="@string/settingsForumModeTitle">
+        android:title="@string/settingsOnRefreshForumTitle">
         <CheckBoxPreference
             android:key="@string/settingsForumClearOnRefresh"
             android:title="@string/forumClearOnRefreshTitle"
             android:defaultValue="@string/forumClearOnRefreshDefault"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/settingsStyleMessageForumTitle">
+        <CheckBoxPreference
+            android:key="@string/settingsForumAlternateBackgroundColor"
+            android:title="@string/forumAlternateBackgroundColorTitle"
+            android:defaultValue="@string/forumAlternateBackgroundColorDefault"/>
     </PreferenceCategory>
 </PreferenceScreen>
