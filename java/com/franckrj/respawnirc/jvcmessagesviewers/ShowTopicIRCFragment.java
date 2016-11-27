@@ -101,6 +101,14 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
     @Override
     protected void initializeSettings() {
         currentSettings.firstLineFormat = "[<%DATE_COLOR_START%><%DATE_TIME%><%DATE_COLOR_END%>] &lt;<%PSEUDO_COLOR_START%><%PSEUDO_PSEUDO%><%PSEUDO_COLOR_END%>&gt;";
+        currentSettings.colorPseudoUser = "#3399ff";
+        currentSettings.colorPseudoOther = "#000025";
+    }
+
+    @Override
+    protected void initializeAdapter() {
+        adapterForMessages.setIdOfLayoutToUse(R.layout.jvcmessages_rowirc);
+        adapterForMessages.setAlternateBackgroundColor(false);
     }
 
     @Override

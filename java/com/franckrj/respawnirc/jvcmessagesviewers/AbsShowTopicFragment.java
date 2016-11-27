@@ -247,6 +247,7 @@ public abstract class AbsShowTopicFragment extends Fragment {
         senderForMessages.setListenerForNewMessageWantEdit(listenerForNewMessageWantEdit);
         adapterForMessages.setActionWhenItemMenuClicked(listenerForItemClicked);
         senderForMessages.setListenerForNewMessagePosted(listenerForNewMessagePosted);
+        initializeAdapter();
 
         if (savedInstanceState != null) {
             ArrayList<JVCParser.MessageInfos> allCurrentMessagesShowed = savedInstanceState.getParcelableArrayList(getString(R.string.saveAllCurrentMessagesShowed));
@@ -353,4 +354,5 @@ public abstract class AbsShowTopicFragment extends Fragment {
     public abstract void newTopicLinkSetted(String newTopicLink);
     protected abstract void initializeGetterForMessages();
     protected abstract void initializeSettings();
+    protected abstract void initializeAdapter();
 }

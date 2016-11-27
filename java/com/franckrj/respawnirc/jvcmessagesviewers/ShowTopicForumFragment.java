@@ -153,7 +153,15 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
 
     @Override
     protected void initializeSettings() {
-        currentSettings.firstLineFormat = "<%PSEUDO_COLOR_START%><%PSEUDO_PSEUDO%><%PSEUDO_COLOR_END%><br><small>Le <%DATE_COLOR_START%><%DATE_FULL%><%DATE_COLOR_END%></small>";
+        currentSettings.firstLineFormat = "<b><%PSEUDO_COLOR_START%><%PSEUDO_PSEUDO%><%PSEUDO_COLOR_END%></b><br><small>Le <%DATE_COLOR_START%><%DATE_FULL%><%DATE_COLOR_END%></small>";
+        currentSettings.colorPseudoUser = "#3399ff";
+        currentSettings.colorPseudoOther = "#80000000";
+    }
+
+    @Override
+    protected void initializeAdapter() {
+        adapterForMessages.setIdOfLayoutToUse(R.layout.jvcmessages_rowforum);
+        adapterForMessages.setAlternateBackgroundColor(true);
     }
 
     @Override

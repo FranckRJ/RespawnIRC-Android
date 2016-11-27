@@ -258,11 +258,11 @@ public final class JVCParser {
         }
 
         if (thisMessageInfo.pseudo.toLowerCase().equals(settings.pseudoOfUser.toLowerCase())) {
-            newFirstLine = newFirstLine.replaceAll("<%PSEUDO_COLOR_START%>", "<font color=\"#3399ff\">");
+            newFirstLine = newFirstLine.replaceAll("<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoUser + "\">");
             newFirstLine = newFirstLine.replaceAll("<%PSEUDO_COLOR_END%>", "</font>");
         }
         else {
-            newFirstLine = newFirstLine.replaceAll("<%PSEUDO_COLOR_START%>", "<font color=\"#000025\">");
+            newFirstLine = newFirstLine.replaceAll("<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoOther + "\">");
             newFirstLine = newFirstLine.replaceAll("<%PSEUDO_COLOR_END%>", "</font>");
         }
 
@@ -515,6 +515,8 @@ public final class JVCParser {
     public static class Settings {
         public String pseudoOfUser = "";
         public String firstLineFormat;
+        public String colorPseudoUser;
+        public String colorPseudoOther;
     }
 
     private interface StringModifier {

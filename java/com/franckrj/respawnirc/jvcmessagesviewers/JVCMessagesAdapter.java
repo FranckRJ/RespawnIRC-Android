@@ -36,6 +36,8 @@ public class JVCMessagesAdapter extends BaseAdapter {
     private int currentItemIDSelected = -1;
     private PopupMenu.OnMenuItemClickListener actionWhenItemMenuClicked = null;
     private JVCParser.Settings currentSettings = null;
+    private int idOfLayoutToUse = 0;
+    private boolean alternateBackgroundColor = false;
 
     private final Html.ImageGetter jvcImageGetter = new Html.ImageGetter() {
         @Override
@@ -101,6 +103,14 @@ public class JVCMessagesAdapter extends BaseAdapter {
 
     public void setActionWhenItemMenuClicked(PopupMenu.OnMenuItemClickListener newAction) {
         actionWhenItemMenuClicked = newAction;
+    }
+
+    public void setIdOfLayoutToUse(int newIdToUse) {
+        idOfLayoutToUse = newIdToUse;
+    }
+
+    public void setAlternateBackgroundColor(boolean newVal) {
+        alternateBackgroundColor = newVal;
     }
 
     public void removeAllItems() {
@@ -174,10 +184,11 @@ public class JVCMessagesAdapter extends BaseAdapter {
         if (convertView == null) {
             holder = new ViewHolder();
 
-            convertView = serviceInflater.inflate(R.layout.jvcmessages_row, parent, false);
+            convertView = serviceInflater.inflate(idOfLayoutToUse, parent, false);
             holder.firstLine = (TextView) convertView.findViewById(R.id.item_one_jvcmessages_text_row);
             holder.secondLine = (TextView) convertView.findViewById(R.id.item_two_jvcmessages_text_row);
             holder.showMenuButton = (ImageButton) convertView.findViewById(R.id.menu_overflow_row);
+            holder.background = convertView.getBackground();
 
             holder.showMenuButton.setOnClickListener(menuButtonClicked);
             convertView.setTag(holder);
@@ -187,6 +198,15 @@ public class JVCMessagesAdapter extends BaseAdapter {
         holder.showMenuButton.setTag(position);
         holder.firstLine.setText(listOfContentForMessages.get(position).firstLineContent);
         holder.secondLine.setText(listOfContentForMessages.get(position).secondLineContent);
+
+        if (alternateBackgroundColor) {
+            if (position % 2 == 0) {
+                convertView.setBackgroundDrawable(holder.background);
+            } else {
+                convertView.setBackgroundColor(parentActivity.getResources().getColor(R.color.altBackgroundMessageColor));
+            }
+        }
+
         return convertView;
     }
 
@@ -237,6 +257,7 @@ public class JVCMessagesAdapter extends BaseAdapter {
         private TextView firstLine;
         private TextView secondLine;
         private ImageButton showMenuButton;
+        private Drawable background;
     }
 
     private class ContentHolder {
