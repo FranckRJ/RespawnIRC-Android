@@ -166,8 +166,8 @@ public abstract class AbsShowTopicFragment extends Fragment {
                 Toast.makeText(getActivity(), withThisError, Toast.LENGTH_LONG).show();
             } else {
                 messageSendEdit.setText("");
-                absGetterForMessages.reloadTopic();
             }
+            absGetterForMessages.reloadTopic();
         }
     };
 
