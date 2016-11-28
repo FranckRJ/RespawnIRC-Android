@@ -5,4 +5,5 @@
     <color name="colorAccent">#757575</color>
     <color name="colorQuoteBackground">#10000000</color>
     <color name="altBackgroundMessageColor">#EEF5FC</color>
+    <color name="linkColor">#006BD7</color>
 </resources>
