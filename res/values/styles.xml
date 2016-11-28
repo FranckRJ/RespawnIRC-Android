@@ -10,6 +10,6 @@
     </style>
     <style name="SelectableItemBackground">
         <item name="android:theme">@style/SelectableItemTheme</item>
-        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
     </style>
 </resources>
