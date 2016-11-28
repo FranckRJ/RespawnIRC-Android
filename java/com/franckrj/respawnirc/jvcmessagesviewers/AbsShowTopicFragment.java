@@ -47,7 +47,7 @@ public abstract class AbsShowTopicFragment extends Fragment {
     protected final PopupMenu.OnMenuItemClickListener listenerForItemClicked = new PopupMenu.OnMenuItemClickListener() {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
-            JVCParser.MessageInfos currentItem = null;
+            JVCParser.MessageInfos currentItem;
             switch (item.getItemId()) {
                 case R.id.menu_quote_message:
                     if (absGetterForMessages.getLatestAjaxInfos().list != null && latestMessageQuotedInfo == null && currentTaskQuoteMessage == null) {

@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.franckrj.respawnirc.R;
@@ -16,10 +18,13 @@ public class ChoosePageNumberDialogFragment extends DialogFragment {
     public static final int REQUEST_CHANGE_PAGE = 42;
 
     EditText pageNumberEdit = null;
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
+        AlertDialog alertToShow;
+        Window currentWindow;
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_choosepagenumber, null);
         pageNumberEdit = (EditText) mainView.findViewById(R.id.pagenumber_edit_choosepagenumber);
@@ -44,6 +49,11 @@ public class ChoosePageNumberDialogFragment extends DialogFragment {
                 dialog.dismiss();
             }
         });
-        return builder.create();
+        alertToShow = builder.create();
+        currentWindow = alertToShow.getWindow();
+        if (currentWindow != null) {
+            currentWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
+        return alertToShow;
     }
 }
