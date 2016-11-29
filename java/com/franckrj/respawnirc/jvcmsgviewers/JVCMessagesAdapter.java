@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc.jvcmessagesviewers;
+package com.franckrj.respawnirc.jvcmsgviewers;
 
 import android.app.Activity;
 import android.content.Context;

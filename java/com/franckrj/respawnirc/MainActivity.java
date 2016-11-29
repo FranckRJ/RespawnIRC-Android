@@ -18,21 +18,29 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.franckrj.respawnirc.dialogs.ChooseTopicOrForumLinkDialogFragment;
-import com.franckrj.respawnirc.jvcmessagesviewers.AbsShowTopicFragment;
-import com.franckrj.respawnirc.jvcmessagesviewers.ShowTopicForumFragment;
-import com.franckrj.respawnirc.jvcmessagesviewers.ShowTopicIRCFragment;
+import com.franckrj.respawnirc.dialogs.HelpFirstLaunchDialogFragment;
+import com.franckrj.respawnirc.jvcmsgviewers.AbsShowTopicFragment;
+import com.franckrj.respawnirc.jvcmsgviewers.ShowTopicForumFragment;
+import com.franckrj.respawnirc.jvcmsgviewers.ShowTopicIRCFragment;
+import com.franckrj.respawnirc.jvctopictools.ShowForumFragment;
+import com.franckrj.respawnirc.utils.JVCParser;
 
-public class MainActivity extends AppCompatActivity implements AbsShowTopicFragment.NewModeNeededListener, ChooseTopicOrForumLinkDialogFragment.NewTopicOrForumSelected {
+public class MainActivity extends AppCompatActivity implements AbsShowTopicFragment.NewModeNeededListener,
+                                                    ChooseTopicOrForumLinkDialogFragment.NewTopicOrForumSelected,
+                                                    ShowForumFragment.NewTopicWantRead {
     private static final int LIST_DRAWER_POS_HOME = 0;
     private static final int LIST_DRAWER_POS_CONNECT = 1;
     private static final int LIST_DRAWER_POS_SELECT_TOPIC_OR_FORUM = 2;
     private static final int LIST_DRAWER_POS_SETTING = 3;
+    private static final int FRAG_TOPIC_SHOW = 0;
+    private static final int FRAG_FORUM_SHOW = 1;
 
     private DrawerLayout layoutForDrawer = null;
     private ListView listForDrawer = null;
     private ActionBarDrawerToggle toggleForDrawer = null;
     private int lastNewActivitySelected = -1;
     private SharedPreferences sharedPref = null;
+    private int currentFragmentType = FRAG_FORUM_SHOW;
 
     private ListView.OnItemClickListener itemInDrawerClickedListener = new ListView.OnItemClickListener() {
         @Override
@@ -42,6 +50,45 @@ public class MainActivity extends AppCompatActivity implements AbsShowTopicFragm
             layoutForDrawer.closeDrawer(listForDrawer);
         }
     };
+
+    private void createNewFragmentForForumRead(String possibleForumLink) {
+        SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
+        ShowForumFragment currentFragment = new ShowForumFragment();
+
+        if (possibleForumLink != null) {
+            Bundle argForFrag = new Bundle();
+            argForFrag.putString(ShowForumFragment.ARG_FORUM_LINK, possibleForumLink);
+            currentFragment.setArguments(argForFrag);
+        }
+
+        getFragmentManager().beginTransaction().replace(R.id.content_frame_main, currentFragment).commit();
+        currentFragmentType = FRAG_FORUM_SHOW;
+        sharedPrefEdit.putInt(getString(R.string.prefLastFragmentViewed), currentFragmentType);
+        sharedPrefEdit.apply();
+    }
+
+    private void createNewFragmentForTopicRead(String possibleTopicLink) {
+        SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
+        AbsShowTopicFragment currentFragment;
+        int currentTopicMode = sharedPref.getInt(getString(R.string.prefCurrentTopicMode), AbsShowTopicFragment.MODE_IRC);
+
+        if (currentTopicMode == AbsShowTopicFragment.MODE_IRC) {
+            currentFragment = new ShowTopicIRCFragment();
+        } else {
+            currentFragment = new ShowTopicForumFragment();
+        }
+
+        if (possibleTopicLink != null) {
+            Bundle argForFrag = new Bundle();
+            argForFrag.putString(AbsShowTopicFragment.ARG_TOPIC_LINK, possibleTopicLink);
+            currentFragment.setArguments(argForFrag);
+        }
+
+        getFragmentManager().beginTransaction().replace(R.id.content_frame_main, currentFragment).commit();
+        currentFragmentType = FRAG_TOPIC_SHOW;
+        sharedPrefEdit.putInt(getString(R.string.prefLastFragmentViewed), currentFragmentType);
+        sharedPrefEdit.apply();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,18 +143,26 @@ public class MainActivity extends AppCompatActivity implements AbsShowTopicFragm
             }
         };
 
+        currentFragmentType = sharedPref.getInt(getString(R.string.prefLastFragmentViewed), FRAG_FORUM_SHOW);
         listForDrawer.setAdapter(new ArrayAdapter<>(this, R.layout.draweritem_row, getResources().getStringArray(R.array.itemChoiceDrawerList)));
         listForDrawer.setOnItemClickListener(itemInDrawerClickedListener);
         layoutForDrawer.addDrawerListener(toggleForDrawer);
         layoutForDrawer.setDrawerShadow(R.drawable.shadow_drawer, GravityCompat.START);
 
         if (savedInstanceState == null) {
-            int currentTopicMode = sharedPref.getInt(getString(R.string.prefCurrentTopicMode), AbsShowTopicFragment.MODE_IRC);
-            if (currentTopicMode == AbsShowTopicFragment.MODE_IRC) {
-                getFragmentManager().beginTransaction().replace(R.id.content_frame_main, new ShowTopicIRCFragment()).commit();
-            } else if (currentTopicMode == AbsShowTopicFragment.MODE_FORUM) {
-                getFragmentManager().beginTransaction().replace(R.id.content_frame_main, new ShowTopicForumFragment()).commit();
+            if (currentFragmentType == FRAG_FORUM_SHOW) {
+                createNewFragmentForForumRead(null);
+            } else if (currentFragmentType == FRAG_TOPIC_SHOW) {
+                createNewFragmentForTopicRead(null);
             }
+        }
+
+        if (sharedPref.getBoolean(getString(R.string.prefIsFirstLaunch), true)) {
+            SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
+            HelpFirstLaunchDialogFragment firstLaunchDialogFragment = new HelpFirstLaunchDialogFragment();
+            firstLaunchDialogFragment.show(getFragmentManager(), "HelpFirstLaunchDialogFragment");
+            sharedPrefEdit.putBoolean(getString(R.string.prefIsFirstLaunch), false);
+            sharedPrefEdit.apply();
         }
     }
 
@@ -142,6 +197,16 @@ public class MainActivity extends AppCompatActivity implements AbsShowTopicFragm
     }
 
     @Override
+    public void onBackPressed() {
+        if (currentFragmentType == FRAG_TOPIC_SHOW) {
+            AbsShowTopicFragment currentFragment = (AbsShowTopicFragment) getFragmentManager().findFragmentById(R.id.content_frame_main);
+            createNewFragmentForForumRead(JVCParser.getForumForTopicLink(currentFragment.getCurrentTopicLink()));
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public void newModeRequested(int newMode) {
         SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
         boolean errorMode = false;
@@ -162,7 +227,25 @@ public class MainActivity extends AppCompatActivity implements AbsShowTopicFragm
 
     @Override
     public void newTopicOrForumAvailable(String newTopicOrForumLink) {
-        AbsShowTopicFragment currentFragment = (AbsShowTopicFragment) getFragmentManager().findFragmentById(R.id.content_frame_main);
-        currentFragment.newTopicLinkSetted(newTopicOrForumLink);
+        if (JVCParser.checkIfItsForumLink(newTopicOrForumLink)) {
+            if (currentFragmentType == FRAG_FORUM_SHOW) {
+                ShowForumFragment currentFragment = (ShowForumFragment) getFragmentManager().findFragmentById(R.id.content_frame_main);
+                currentFragment.goToThisNewPage(newTopicOrForumLink);
+            } else {
+                createNewFragmentForForumRead(newTopicOrForumLink);
+            }
+        } else {
+            if (currentFragmentType == FRAG_TOPIC_SHOW) {
+                AbsShowTopicFragment currentFragment = (AbsShowTopicFragment) getFragmentManager().findFragmentById(R.id.content_frame_main);
+                currentFragment.setNewTopicLink(newTopicOrForumLink);
+            } else {
+                createNewFragmentForTopicRead(newTopicOrForumLink);
+            }
+        }
+    }
+
+    @Override
+    public void setReadNewTopic(String newTopicLink) {
+        newTopicOrForumAvailable(newTopicLink);
     }
 }

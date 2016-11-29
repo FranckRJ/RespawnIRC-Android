@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc.jvcgetters;
+package com.franckrj.respawnirc.jvcmsggetters;
 
 import android.app.Activity;
 
@@ -21,7 +21,7 @@ public class JVCForumMessageGetter extends AbsJVCMessageGetter {
     public boolean startGetMessagesOfThisPage(String newUrlOfPage) {
         if (currentAsyncTaskForGetMessage == null && !newUrlOfPage.isEmpty()) {
             urlForTopic = newUrlOfPage;
-            currentAsyncTaskForGetMessage = new GetJVCForumLastMessage();
+            currentAsyncTaskForGetMessage = new GetJVCForumLastMessages();
             currentAsyncTaskForGetMessage.execute(urlForTopic, cookieListInAString);
             return true;
         } else {
@@ -34,7 +34,7 @@ public class JVCForumMessageGetter extends AbsJVCMessageGetter {
         startGetMessagesOfThisPage(urlForTopic);
     }
 
-    private class GetJVCForumLastMessage extends AbsGetJVCLastMessage {
+    private class GetJVCForumLastMessages extends AbsGetJVCLastMessages {
         @Override
         protected void onPreExecute() {
             if (listenerForNewGetterState != null) {
@@ -43,13 +43,16 @@ public class JVCForumMessageGetter extends AbsJVCMessageGetter {
         }
 
         @Override
-        protected PageInfos doInBackground(String... params) {
+        protected TopicPageInfos doInBackground(String... params) {
             if (params.length > 1) {
-                PageInfos newPageInfos = null;
-                String pageContent = WebManager.sendRequest(params[0], "GET", "", params[1]);
+                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
+                TopicPageInfos newPageInfos = null;
+                String pageContent;
+                currentWebInfos.followRedirects = false;
+                pageContent = WebManager.sendRequest(params[0], "GET", "", params[1], currentWebInfos);
 
                 if (pageContent != null) {
-                    newPageInfos = new PageInfos();
+                    newPageInfos = new TopicPageInfos();
                     newPageInfos.lastPageLink = JVCParser.getLastPageOfTopic(pageContent);
                     newPageInfos.nextPageLink = JVCParser.getNextPageOfTopic(pageContent);
                     newPageInfos.listOfMessages = JVCParser.getMessagesOfThisPage(pageContent);
@@ -64,7 +67,7 @@ public class JVCForumMessageGetter extends AbsJVCMessageGetter {
         }
 
         @Override
-        protected void onPostExecute(PageInfos infoOfCurrentPage) {
+        protected void onPostExecute(TopicPageInfos infoOfCurrentPage) {
             super.onPostExecute(infoOfCurrentPage);
 
             if (listenerForNewGetterState != null) {
@@ -83,7 +86,7 @@ public class JVCForumMessageGetter extends AbsJVCMessageGetter {
                     listenerForNewMessages.getNewMessages(infoOfCurrentPage.listOfMessages);
                 }
                 if (listenerForNewNumbersOfPages != null) {
-                    listenerForNewNumbersOfPages.getNewLastPageNumber(JVCParser.getPageNumberForThisLink(infoOfCurrentPage.lastPageLink));
+                    listenerForNewNumbersOfPages.getNewLastPageNumber(JVCParser.getPageNumberForThisTopicLink(infoOfCurrentPage.lastPageLink));
                 }
             } else {
                 if (listenerForNewMessages != null) {

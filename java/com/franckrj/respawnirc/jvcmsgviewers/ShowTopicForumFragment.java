@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc.jvcmessagesviewers;
+package com.franckrj.respawnirc.jvcmsgviewers;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.dialogs.ChoosePageNumberDialogFragment;
-import com.franckrj.respawnirc.jvcgetters.JVCForumMessageGetter;
+import com.franckrj.respawnirc.jvcmsggetters.JVCForumMessageGetter;
 import com.franckrj.respawnirc.utils.JVCParser;
 
 import java.util.ArrayList;
@@ -67,17 +67,17 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
         @Override
         public void onClick(View buttonView) {
             if (buttonView == firstPageButton && firstPageButton.getVisibility() == View.VISIBLE) {
-                goToThisNewPage(JVCParser.setPageNumberForThisLink(getterForMessages.getUrlForTopic(), 1), false);
+                goToThisNewPage(JVCParser.setPageNumberForThisTopicLink(getterForMessages.getUrlForTopic(), 1), false);
             } else if (buttonView == previousPageButton && previousPageButton.getVisibility() == View.VISIBLE) {
-                goToThisNewPage(JVCParser.setPageNumberForThisLink(getterForMessages.getUrlForTopic(), currentPage - 1), false);
+                goToThisNewPage(JVCParser.setPageNumberForThisTopicLink(getterForMessages.getUrlForTopic(), currentPage - 1), false);
             } else if (buttonView == currentPageButton) {
                 ChoosePageNumberDialogFragment choosePageDialogFragment = new ChoosePageNumberDialogFragment();
                 choosePageDialogFragment.setTargetFragment(ShowTopicForumFragment.this, ChoosePageNumberDialogFragment.REQUEST_CHANGE_PAGE);
                 choosePageDialogFragment.show(getFragmentManager(), "ChoosePageNumberDialogFragment");
             } else if (buttonView == nextPageButton && nextPageButton.getVisibility() == View.VISIBLE) {
-                goToThisNewPage(JVCParser.setPageNumberForThisLink(getterForMessages.getUrlForTopic(), currentPage + 1), false);
+                goToThisNewPage(JVCParser.setPageNumberForThisTopicLink(getterForMessages.getUrlForTopic(), currentPage + 1), false);
             } else if (buttonView == lastPageButton && lastPageButton.getVisibility() == View.VISIBLE) {
-                goToThisNewPage(JVCParser.setPageNumberForThisLink(getterForMessages.getUrlForTopic(), lastPage), false);
+                goToThisNewPage(JVCParser.setPageNumberForThisTopicLink(getterForMessages.getUrlForTopic(), lastPage), false);
             }
         }
     };
@@ -96,9 +96,9 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
 
     private void goToThisNewPage(String newPageUrl, boolean updateLastPage) {
         SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
-        String currentPageNumber = JVCParser.getPageNumberForThisLink(newPageUrl);
+        String currentPageNumber = JVCParser.getPageNumberForThisTopicLink(newPageUrl);
 
-        sharedPrefEdit.putString(getString(R.string.prefUrlToFetch), newPageUrl);
+        sharedPrefEdit.putString(getString(R.string.prefTopicUrlToFetch), newPageUrl);
         sharedPrefEdit.apply();
 
         if (!currentPageNumber.isEmpty()) {
@@ -141,7 +141,7 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
     }
 
     @Override
-    public void newTopicLinkSetted(String newTopicLink) {
+    public void setNewTopicLink(String newTopicLink) {
         goToThisNewPage(baseForChangeTopicLink(newTopicLink), true);
     }
 
@@ -222,8 +222,10 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
     public void onResume() {
         super.onResume();
 
-        if (adapterForMessages.getAllItems().isEmpty()) {
-            goToThisNewPage(sharedPref.getString(getString(R.string.prefUrlToFetch), ""), true);
+        if (getterForMessages.getUrlForTopic().isEmpty()) {
+            goToThisNewPage(sharedPref.getString(getString(R.string.prefTopicUrlToFetch), ""), true);
+        } else if (adapterForMessages.getAllItems().isEmpty()) {
+            getterForMessages.reloadTopic();
         }
     }
 
@@ -267,7 +269,7 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
             } else if (resultCode < 1) {
                 resultCode = 1;
             }
-            goToThisNewPage(JVCParser.setPageNumberForThisLink(getterForMessages.getUrlForTopic(), resultCode), false);
+            goToThisNewPage(JVCParser.setPageNumberForThisTopicLink(getterForMessages.getUrlForTopic(), resultCode), false);
         }
     }
 }

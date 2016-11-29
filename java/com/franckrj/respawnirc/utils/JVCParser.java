@@ -16,6 +16,7 @@ public final class JVCParser {
     private static final Pattern ajaxModHashPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_hash_moderation_forum\" id=\"ajax_hash_moderation_forum\" value=\"([^\"]*)\" />");
     private static final Pattern messageQuotePattern = Pattern.compile("\"txt\":\"(.*)\"", Pattern.DOTALL);
     private static final Pattern entireMessagePattern = Pattern.compile("(<div class=\"bloc-message-forum \".*?)(<span id=\"post_[^\"]*\" class=\"bloc-message-forum-anchor\">|<div class=\"bloc-outils-plus-modo bloc-outils-bottom\">|<div class=\"bloc-pagi-default\">)", Pattern.DOTALL);
+    private static final Pattern entireTopicPattern = Pattern.compile("<li class=\"\" data-id=\"[^\"]*\">[^<]*<span class=\"topic-subject\">.*?</li>", Pattern.DOTALL);
     private static final Pattern pseudoInfosPattern = Pattern.compile("<span class=\"JvCare [^ ]* bloc-pseudo-msg text-([^\"]*)\" target=\"_blank\">[^a-zA-Z0-9_\\[\\]-]*([a-zA-Z0-9_\\[\\]-]*)[^<]*</span>");
     private static final Pattern messagePattern = Pattern.compile("<div class=\"bloc-contenu\"><div class=\"txt-msg  text-[^-]*-forum \">((.*?)(?=<div class=\"info-edition-msg\">)|(.*?)(?=<div class=\"signature-msg)|(.*))", Pattern.DOTALL);
     private static final Pattern currentPagePattern = Pattern.compile("<span class=\"page-active\">([^<]*)</span>");
@@ -31,55 +32,114 @@ public final class JVCParser {
     private static final Pattern spoilLinePattern = Pattern.compile("<span class=\"bloc-spoil-jv en-ligne\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
     private static final Pattern spoilBlockPattern = Pattern.compile("<span class=\"bloc-spoil-jv\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
     private static final Pattern stickerPattern = Pattern.compile("<img class=\"img-stickers\" src=\"(http://jv.stkr.fr/p/([^\"]*))\"/>");
-    private static final Pattern pageLinkNumberPattern = Pattern.compile("(http://www.jeuxvideo.com/forums/[^-]*-([^-]*)-([^-]*)-)([^-]*)(-[^-]*-[^-]*-[^-]*-[^.]*.htm)");
+    private static final Pattern pageTopicLinkNumberPattern = Pattern.compile("(http://www.jeuxvideo.com/forums/[^-]*-([^-]*)-([^-]*)-)([^-]*)(-[^-]*-[^-]*-[^-]*-[^.]*.htm)");
+    private static final Pattern pageForumLinkNumberPattern = Pattern.compile("(http://www.jeuxvideo.com/forums/[^-]*-([^-]*)-[^-]*-[^-]*-[^-]*-)([^-]*)(-[^-]*-[^.]*.htm)");
     private static final Pattern jvCarePattern = Pattern.compile("<span class=\"JvCare [^\"]*\">([^<]*)</span>");
     private static final Pattern lastEditMessagePattern = Pattern.compile("<div class=\"info-edition-msg\">Message édité le ([^ ]* [^ ]* [^ ]* [^ ]* [0-9:]*) par <span");
     private static final Pattern messageEditInfoPattern = Pattern.compile("<textarea tabindex=\"3\" class=\"area-editor\" name=\"text_commentaire\" id=\"text_commentaire\" placeholder=\"[^\"]*\">([^<]*)</textarea>");
+    private static final Pattern topicNameAndLinkPattern = Pattern.compile("<a class=\"lien-jv topic-title\" href=\"([^\"]*\" title=\"[^\"]*)\"[^>]*>");
+    private static final Pattern topicNumberMessagesPattern = Pattern.compile("<span class=\"topic-count\">[^0-9]*([0-9]*)");
+    private static final Pattern topicAuthorPattern = Pattern.compile("<span class=\".*?topic-author[^>]*>[^A-Za-z0-9\\[\\]_-]*([^<\n]*)");
+    private static final Pattern topicDatePattern = Pattern.compile("<span class=\"topic-date\">[^<]*<span[^>]*>[^0-9/:]*([0-9/:]*)");
 
     private JVCParser() {
         //rien
     }
 
-    public static boolean checkIfTopicAreSame(String firstTopicLink, String secondTopicLink) {
-        Matcher firstPageLinkNumberMatcher = pageLinkNumberPattern.matcher(firstTopicLink);
-        Matcher secondPageLinkNumberMatcher = pageLinkNumberPattern.matcher(secondTopicLink);
+    public static String getForumForTopicLink(String topicLink) {
+        Matcher pageTopicLinkNumberMatcher = pageTopicLinkNumberPattern.matcher(topicLink);
 
-        if (firstPageLinkNumberMatcher.find() && secondPageLinkNumberMatcher.find()) {
-            boolean forumAreEquals = firstPageLinkNumberMatcher.group(2).equals(secondPageLinkNumberMatcher.group(2));
-            boolean topicsAreEquals = firstPageLinkNumberMatcher.group(3).equals(secondPageLinkNumberMatcher.group(3));
+        if (pageTopicLinkNumberMatcher.find()) {
+            return "http://www.jeuxvideo.com/forums/0-" + pageTopicLinkNumberMatcher.group(2) + "-0-1-0-1-0-respawn-irc.htm";
+        } else {
+            return "";
+        }
+    }
+
+    public static String formatThisUrl(String urlToChange) {
+        if (urlToChange.startsWith("https://")) {
+            urlToChange = urlToChange.replaceFirst("https://", "http://");
+        }
+
+        if (!urlToChange.startsWith("http://")) {
+            urlToChange = "http://" + urlToChange;
+        }
+
+        if (urlToChange.startsWith("http://m.jeuxvideo.com/")) {
+            urlToChange = urlToChange.replaceFirst("http://m.jeuxvideo.com/", "http://www.jeuxvideo.com/");
+        } else if (urlToChange.startsWith("http://jeuxvideo.com/")) {
+            urlToChange = urlToChange.replaceFirst("http://jeuxvideo.com/", "http://www.jeuxvideo.com/");
+        }
+
+        return urlToChange;
+    }
+
+    public static boolean checkIfTopicAreSame(String firstTopicLink, String secondTopicLink) {
+        Matcher firstPageTopicLinkNumberMatcher = pageTopicLinkNumberPattern.matcher(firstTopicLink);
+        Matcher secondPageTopicLinkNumberMatcher = pageTopicLinkNumberPattern.matcher(secondTopicLink);
+
+        if (firstPageTopicLinkNumberMatcher.find() && secondPageTopicLinkNumberMatcher.find()) {
+            boolean forumAreEquals = firstPageTopicLinkNumberMatcher.group(2).equals(secondPageTopicLinkNumberMatcher.group(2));
+            boolean topicsAreEquals = firstPageTopicLinkNumberMatcher.group(3).equals(secondPageTopicLinkNumberMatcher.group(3));
             return forumAreEquals && topicsAreEquals;
         } else {
             return false;
         }
     }
 
-    public static String getFirstPageForThisLink(String topicLink) {
-        Matcher pageLinkNumberMatcher = pageLinkNumberPattern.matcher(topicLink);
+    public static boolean checkIfItsForumLink(String linkToCheck) {
+        return linkToCheck.contains("jeuxvideo.com/forums/0-");
+    }
 
-        if (pageLinkNumberMatcher.find()) {
-            return pageLinkNumberMatcher.group(1) + "1" + pageLinkNumberMatcher.group(5);
+    public static String getFirstPageForThisTopicLink(String topicLink) {
+        Matcher pageTopicLinkNumberMatcher = pageTopicLinkNumberPattern.matcher(topicLink);
+
+        if (pageTopicLinkNumberMatcher.find()) {
+            return pageTopicLinkNumberMatcher.group(1) + "1" + pageTopicLinkNumberMatcher.group(5);
         }
         else {
             return "";
         }
     }
 
-    public static String getPageNumberForThisLink(String topicLink) {
-        Matcher pageLinkNumberMatcher = pageLinkNumberPattern.matcher(topicLink);
+    public static String getPageNumberForThisTopicLink(String topicLink) {
+        Matcher pageTopicLinkNumberMatcher = pageTopicLinkNumberPattern.matcher(topicLink);
 
-        if (pageLinkNumberMatcher.find()) {
-            return pageLinkNumberMatcher.group(4);
+        if (pageTopicLinkNumberMatcher.find()) {
+            return pageTopicLinkNumberMatcher.group(4);
         }
         else {
             return "";
         }
     }
 
-    public static String setPageNumberForThisLink(String topicLink, int newPageNumber) {
-        Matcher pageLinkNumberMatcher = pageLinkNumberPattern.matcher(topicLink);
+    public static String setPageNumberForThisTopicLink(String topicLink, int newPageNumber) {
+        Matcher pageTopicLinkNumberMatcher = pageTopicLinkNumberPattern.matcher(topicLink);
 
-        if (pageLinkNumberMatcher.find()) {
-            return pageLinkNumberMatcher.group(1) + String.valueOf(newPageNumber) + pageLinkNumberMatcher.group(5);
+        if (pageTopicLinkNumberMatcher.find()) {
+            return pageTopicLinkNumberMatcher.group(1) + String.valueOf(newPageNumber) + pageTopicLinkNumberMatcher.group(5);
+        }
+        else {
+            return "";
+        }
+    }
+
+    public static String getPageNumberForThisForumLink(String forumLink) {
+        Matcher pageForumLinkNumberMatcher = pageForumLinkNumberPattern.matcher(forumLink);
+
+        if (pageForumLinkNumberMatcher.find()) {
+            return pageForumLinkNumberMatcher.group(3);
+        }
+        else {
+            return "";
+        }
+    }
+
+    public static String setPageNumberForThisForumLink(String forumLink, int newPageNumber) {
+        Matcher pageForumLinkNumberMatcher = pageForumLinkNumberPattern.matcher(forumLink);
+
+        if (pageForumLinkNumberMatcher.find()) {
+            return pageForumLinkNumberMatcher.group(1) + String.valueOf(newPageNumber) + pageForumLinkNumberMatcher.group(4);
         }
         else {
             return "";
@@ -383,6 +443,26 @@ public final class JVCParser {
         return newMessageInfo;
     }
 
+    public static TopicInfos createTopicInfoFromEntireTopic(String thisEntireTopic) {
+        TopicInfos newTopicInfo = new TopicInfos();
+        Matcher topicNameAndLinkMatcher = topicNameAndLinkPattern.matcher(thisEntireTopic);
+        Matcher topicNumberMessagesMatcher = topicNumberMessagesPattern.matcher(thisEntireTopic);
+        Matcher topicAuthorMatcher = topicAuthorPattern.matcher(thisEntireTopic);
+        Matcher topicDateMatcher = topicDatePattern.matcher(thisEntireTopic);
+
+        if (topicNameAndLinkMatcher.find() && topicNumberMessagesMatcher.find() && topicAuthorMatcher.find() && topicDateMatcher.find()) {
+            String topicNameAndLinkString = topicNameAndLinkMatcher.group(1);
+            newTopicInfo.topicLink = "http://www.jeuxvideo.com" + topicNameAndLinkString.substring(0, topicNameAndLinkString.indexOf("\""));
+            newTopicInfo.topicName = topicNameAndLinkString.substring(topicNameAndLinkString.indexOf("title=\"") + 7);
+            newTopicInfo.topicName = newTopicInfo.topicName.replace("&amp;", "&").replace("&quot;", "\"").replace("&#039;", "\'").replace("&lt;", "<").replace("&gt;", ">");
+            newTopicInfo.nbMessagesPosted = topicNumberMessagesMatcher.group(1);
+            newTopicInfo.pseudo = topicAuthorMatcher.group(1).trim();
+            newTopicInfo.wholeDate = topicDateMatcher.group(1);
+        }
+
+        return newTopicInfo;
+    }
+
     public static ArrayList<MessageInfos> getMessagesOfThisPage(String sourcePage) {
         ArrayList<MessageInfos> listOfParsedMessage = new ArrayList<>();
         Matcher entireMessageMatcher = entireMessagePattern.matcher(sourcePage);
@@ -396,6 +476,19 @@ public final class JVCParser {
         Collections.sort(listOfParsedMessage);
 
         return listOfParsedMessage;
+    }
+
+    public static ArrayList<TopicInfos> getTopicsOfThisPage(String sourcePage) {
+        ArrayList<TopicInfos> listOfParsedTopic = new ArrayList<>();
+        Matcher entireTopicMatcher = entireTopicPattern.matcher(sourcePage);
+
+        while (entireTopicMatcher.find()) {
+            String thisTopic = entireTopicMatcher.group(0);
+
+            listOfParsedTopic.add(createTopicInfoFromEntireTopic(thisTopic));
+        }
+
+        return listOfParsedTopic;
     }
 
     public static class MessageInfos implements Parcelable, Comparable<MessageInfos> {
@@ -464,6 +557,52 @@ public final class JVCParser {
             } else {
                 return 0;
             }
+        }
+    }
+
+    public static class TopicInfos implements Parcelable {
+        public String pseudo;
+        public String topicName;
+        public String topicLink;
+        public String wholeDate;
+        public String nbMessagesPosted;
+
+        public static final Parcelable.Creator<TopicInfos> CREATOR = new Parcelable.Creator<TopicInfos>() {
+            @Override
+            public TopicInfos createFromParcel(Parcel in) {
+                return new TopicInfos(in);
+            }
+
+            @Override
+            public TopicInfos[] newArray(int size) {
+                return new TopicInfos[size];
+            }
+        };
+
+        public TopicInfos() {
+            //rien
+        }
+
+        private TopicInfos(Parcel in) {
+            pseudo = in.readString();
+            topicName = in.readString();
+            topicLink = in.readString();
+            wholeDate = in.readString();
+            nbMessagesPosted = in.readString();
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            out.writeString(pseudo);
+            out.writeString(topicName);
+            out.writeString(topicLink);
+            out.writeString(wholeDate);
+            out.writeString(nbMessagesPosted);
         }
     }
 

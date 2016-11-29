@@ -97,7 +97,9 @@ public class JVCMessageSender {
         @Override
         protected String doInBackground(String... params) {
             if (params.length > 2) {
-                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_edit_message.php", "GET", "id_message=" + params[0] + "&" + params[1] + "&action=get", params[2]);
+                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
+                currentWebInfos.followRedirects = false;
+                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_edit_message.php", "GET", "id_message=" + params[0] + "&" + params[1] + "&action=get", params[2], currentWebInfos);
             } else {
                 return null;
             }
@@ -135,7 +137,9 @@ public class JVCMessageSender {
         @Override
         protected String doInBackground(String... params) {
             if (params.length > 3) {
-                return WebManager.sendRequest(params[0], "POST", "message_topic=" + params[1] + params[2], params[3]);
+                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
+                currentWebInfos.followRedirects = false;
+                return WebManager.sendRequest(params[0], "POST", "message_topic=" + params[1] + params[2], params[3], currentWebInfos);
             } else {
                 return null;
             }

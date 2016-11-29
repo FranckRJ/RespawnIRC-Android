@@ -8,7 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class WebManager {
-    public static String sendRequest(String linkToPage, String requestMethod, String requestParameters, String cookiesInAString) {
+    public static String sendRequest(String linkToPage, String requestMethod, String requestParameters, String cookiesInAString, WebInfos currentInfos) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
@@ -24,8 +24,9 @@ public class WebManager {
 
             urlToPage = new URL(linkToPage);
             urlConnection = (HttpURLConnection) urlToPage.openConnection();
+            currentInfos.currentUrl = urlConnection.getURL().toString();
 
-            urlConnection.setInstanceFollowRedirects(false);
+            urlConnection.setInstanceFollowRedirects(currentInfos.followRedirects);
             urlConnection.setConnectTimeout(7500);
             urlConnection.setReadTimeout(15000);
 
@@ -59,6 +60,16 @@ public class WebManager {
 
             if (buffer.length() == 0) {
                 return null;
+            } else {
+                if (currentInfos.followRedirects) {
+                    if (currentInfos.currentUrl.equals(urlConnection.getURL().toString())) {
+                        currentInfos.currentUrl = "";
+                    } else {
+                        currentInfos.currentUrl = urlConnection.getURL().toString();
+                    }
+                } else {
+                    currentInfos.currentUrl = urlConnection.getHeaderField("Location");
+                }
             }
 
             return buffer.toString();
@@ -77,5 +88,10 @@ public class WebManager {
                 }
             }
         }
+    }
+
+    public static class WebInfos {
+        public boolean followRedirects;
+        public String currentUrl;
     }
 }

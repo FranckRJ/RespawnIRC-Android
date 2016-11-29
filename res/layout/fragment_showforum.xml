@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/header_layout_showforum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#eee">
+        <Button
+            android:id="@+id/firstpage_button_showforum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"/>
+        <Button
+            android:id="@+id/previouspage_button_showforum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:layout_toLeftOf="@+id/currentpage_button_showforum"
+            android:layout_toStartOf="@+id/currentpage_button_showforum"
+            android:layout_alignParentTop="true"
+            android:text="@string/previousPageText"/>
+        <Button
+            android:id="@+id/currentpage_button_showforum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/waitingText"/>
+        <Button
+            android:id="@+id/nextpage_button_showforum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:layout_toRightOf="@+id/currentpage_button_showforum"
+            android:layout_toEndOf="@+id/currentpage_button_showforum"
+            android:layout_alignParentTop="true"
+            android:text="@string/nextPageText"/>
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/jvctopic_view_showforum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/header_layout_showforum"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="@drawable/shadow_top"
+        android:layout_below="@+id/header_layout_showforum"/>
+
+    <RelativeLayout
+        android:id="@+id/layout_loading_showforum"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"/>
+    </RelativeLayout>
+
+</RelativeLayout>

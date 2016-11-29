@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc.jvcgetters;
+package com.franckrj.respawnirc.jvcmsggetters;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -17,7 +17,7 @@ public abstract class AbsJVCMessageGetter {
     protected String latestListOfInputInAString = null;
     protected JVCParser.AjaxInfos latestAjaxInfos = new JVCParser.AjaxInfos();
     protected long lastIdOfMessage = 0;
-    protected AbsGetJVCLastMessage currentAsyncTaskForGetMessage = null;
+    protected AbsGetJVCLastMessages currentAsyncTaskForGetMessage = null;
     protected Activity parentActivity = null;
     protected String cookieListInAString = "";
     protected NewMessagesListener listenerForNewMessages = null;
@@ -67,7 +67,7 @@ public abstract class AbsJVCMessageGetter {
     }
 
     public void loadFromBundle(Bundle savedInstanceState) {
-        urlForTopic = savedInstanceState.getString(parentActivity.getString(R.string.saveUrlToFetch), "");
+        urlForTopic = savedInstanceState.getString(parentActivity.getString(R.string.saveTopicUrlToFetch), "");
         latestListOfInputInAString = savedInstanceState.getString(parentActivity.getString(R.string.saveLatestListOfInputInAString), null);
         latestAjaxInfos.list = savedInstanceState.getString(parentActivity.getString(R.string.saveLatestAjaxInfoList), null);
         latestAjaxInfos.mod = savedInstanceState.getString(parentActivity.getString(R.string.saveLatestAjaxInfoMod), null);
@@ -75,17 +75,17 @@ public abstract class AbsJVCMessageGetter {
     }
 
     public void saveToBundle(Bundle savedInstanceState) {
-        savedInstanceState.putString(parentActivity.getString(R.string.saveUrlToFetch), urlForTopic);
+        savedInstanceState.putString(parentActivity.getString(R.string.saveTopicUrlToFetch), urlForTopic);
         savedInstanceState.putString(parentActivity.getString(R.string.saveLatestListOfInputInAString), latestListOfInputInAString);
         savedInstanceState.putString(parentActivity.getString(R.string.saveLatestAjaxInfoList), latestAjaxInfos.list);
         savedInstanceState.putString(parentActivity.getString(R.string.saveLatestAjaxInfoMod), latestAjaxInfos.mod);
         savedInstanceState.putLong(parentActivity.getString(R.string.saveLastIdOfMessage), lastIdOfMessage);
     }
 
-    protected abstract class AbsGetJVCLastMessage extends AsyncTask<String, Void, PageInfos> {
+    protected abstract class AbsGetJVCLastMessages extends AsyncTask<String, Void, TopicPageInfos> {
     }
 
-    public static class PageInfos {
+    public static class TopicPageInfos {
         ArrayList<JVCParser.MessageInfos> listOfMessages;
         String lastPageLink;
         String nextPageLink;

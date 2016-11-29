@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc.jvcgetters;
+package com.franckrj.respawnirc.jvcmsggetters;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -33,7 +33,7 @@ public class JVCIRCMessageGetter extends AbsJVCMessageGetter {
         latestListOfInputInAString = null;
         lastIdOfMessage = 0;
         listOfEditInfos.clear();
-        urlForTopic = JVCParser.getFirstPageForThisLink(newUrlForTopic);
+        urlForTopic = JVCParser.getFirstPageForThisTopicLink(newUrlForTopic);
     }
 
     public void setOldTopic(String oldUrlForTopic, long oldLastIdOfMessage) {
@@ -48,7 +48,7 @@ public class JVCIRCMessageGetter extends AbsJVCMessageGetter {
         if (!urlForTopic.isEmpty()) {
             messagesNeedToBeGet = true;
             if (currentAsyncTaskForGetMessage == null) {
-                currentAsyncTaskForGetMessage = new GetJVCIRCLastMessage();
+                currentAsyncTaskForGetMessage = new GetJVCIRCLastMessages();
                 timerForFetchUrl.schedule(new LaunchGetJVCLastMessage(), timerBeforeStart);
             }
         }
@@ -102,7 +102,7 @@ public class JVCIRCMessageGetter extends AbsJVCMessageGetter {
         }
     }
 
-    private class GetJVCIRCLastMessage extends AbsGetJVCLastMessage {
+    private class GetJVCIRCLastMessages extends AbsGetJVCLastMessages {
         @Override
         protected void onPreExecute() {
             if (listenerForNewGetterState != null) {
@@ -111,13 +111,16 @@ public class JVCIRCMessageGetter extends AbsJVCMessageGetter {
         }
 
         @Override
-        protected PageInfos doInBackground(String... params) {
+        protected TopicPageInfos doInBackground(String... params) {
             if (params.length > 1) {
-                PageInfos newPageInfos = null;
-                String pageContent = WebManager.sendRequest(params[0], "GET", "", params[1]);
+                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
+                TopicPageInfos newPageInfos = null;
+                String pageContent;
+                currentWebInfos.followRedirects = false;
+                pageContent = WebManager.sendRequest(params[0], "GET", "", params[1], currentWebInfos);
 
                 if (pageContent != null) {
-                    newPageInfos = new PageInfos();
+                    newPageInfos = new TopicPageInfos();
                     newPageInfos.lastPageLink = JVCParser.getLastPageOfTopic(pageContent);
                     newPageInfos.nextPageLink = JVCParser.getNextPageOfTopic(pageContent);
                     newPageInfos.listOfMessages = JVCParser.getMessagesOfThisPage(pageContent);
@@ -132,7 +135,7 @@ public class JVCIRCMessageGetter extends AbsJVCMessageGetter {
         }
 
         @Override
-        protected void onPostExecute(PageInfos infoOfCurrentPage) {
+        protected void onPostExecute(TopicPageInfos infoOfCurrentPage) {
             super.onPostExecute(infoOfCurrentPage);
             boolean needToGetNewMessagesEarly = false;
             ArrayList<JVCParser.MessageInfos> listOfNewMessages = new ArrayList<>();

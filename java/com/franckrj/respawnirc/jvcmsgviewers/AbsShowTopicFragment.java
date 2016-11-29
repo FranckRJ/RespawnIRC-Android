@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc.jvcmessagesviewers;
+package com.franckrj.respawnirc.jvcmsgviewers;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -18,14 +18,14 @@ import android.widget.Toast;
 
 import com.franckrj.respawnirc.JVCMessageSender;
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.dialogs.HelpFirstLaunchDialogFragment;
-import com.franckrj.respawnirc.jvcgetters.AbsJVCMessageGetter;
+import com.franckrj.respawnirc.jvcmsggetters.AbsJVCMessageGetter;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.WebManager;
 
 import java.util.ArrayList;
 
 public abstract class AbsShowTopicFragment extends Fragment {
+    public static final String ARG_TOPIC_LINK = "com.franckrj.respawnirc.showtopicfragment.topic_link";
     public static final int MODE_IRC = 0;
     public static final int MODE_FORUM = 1;
 
@@ -175,22 +175,10 @@ public abstract class AbsShowTopicFragment extends Fragment {
         SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
 
         if (!thisLink.isEmpty()) {
-            if (thisLink.startsWith("https://")) {
-                thisLink = thisLink.replaceFirst("https://", "http://");
-            }
-
-            if (!thisLink.startsWith("http://")) {
-                thisLink = "http://" + thisLink;
-            }
-
-            if (thisLink.startsWith("http://m.jeuxvideo.com/")) {
-                thisLink = thisLink.replaceFirst("http://m.jeuxvideo.com/", "http://www.jeuxvideo.com/");
-            } else if (thisLink.startsWith("http://jeuxvideo.com/")) {
-                thisLink = thisLink.replaceFirst("http://jeuxvideo.com/", "http://www.jeuxvideo.com/");
-            }
+            thisLink = JVCParser.formatThisUrl(thisLink);
         }
 
-        sharedPrefEdit.putString(getString(R.string.prefUrlToFetch), thisLink);
+        sharedPrefEdit.putString(getString(R.string.prefTopicUrlToFetch), thisLink);
         sharedPrefEdit.apply();
 
         return thisLink;
@@ -206,6 +194,12 @@ public abstract class AbsShowTopicFragment extends Fragment {
     protected void reloadSettings() {
         pseudoOfUser = sharedPref.getString(getString(R.string.prefPseudoUser), "");
         currentSettings.pseudoOfUser = pseudoOfUser;
+        cookieListInAString = sharedPref.getString(getString(R.string.prefCookiesList), "");
+        absGetterForMessages.setCookieListInAString(cookieListInAString);
+    }
+
+    public String getCurrentTopicLink() {
+        return absGetterForMessages.getUrlForTopic();
     }
 
     @Override
@@ -249,6 +243,9 @@ public abstract class AbsShowTopicFragment extends Fragment {
         adapterForMessages.setActionWhenItemMenuClicked(listenerForItemClicked);
         senderForMessages.setListenerForNewMessagePosted(listenerForNewMessagePosted);
 
+        loadingLayout.setVisibility(View.GONE);
+        jvcMsgList.setAdapter(adapterForMessages);
+
         if (savedInstanceState != null) {
             ArrayList<JVCParser.MessageInfos> allCurrentMessagesShowed = savedInstanceState.getParcelableArrayList(getString(R.string.saveAllCurrentMessagesShowed));
             absGetterForMessages.loadFromBundle(savedInstanceState);
@@ -265,27 +262,22 @@ public abstract class AbsShowTopicFragment extends Fragment {
             }
 
             adapterForMessages.updateAllItems();
+        } else {
+            Bundle currentArgs = getArguments();
+
+            if (currentArgs != null) {
+                String topicLink = currentArgs.getString(ARG_TOPIC_LINK, "");
+                setNewTopicLink(topicLink);
+            }
         }
 
-        loadingLayout.setVisibility(View.GONE);
-        jvcMsgList.setAdapter(adapterForMessages);
         messageSendEdit.requestFocus();
-
-        if (sharedPref.getBoolean(getString(R.string.prefIsFirstLaunch), true)) {
-            SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
-            HelpFirstLaunchDialogFragment firstLaunchDialogFragment = new HelpFirstLaunchDialogFragment();
-            firstLaunchDialogFragment.show(getFragmentManager(), "HelpFirstLaunchDialogFragment");
-            sharedPrefEdit.putBoolean(getString(R.string.prefIsFirstLaunch), false);
-            sharedPrefEdit.apply();
-        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        cookieListInAString = sharedPref.getString(getString(R.string.prefCookiesList), "");
         reloadSettings();
-        absGetterForMessages.setCookieListInAString(cookieListInAString);
     }
 
     @Override
@@ -312,7 +304,10 @@ public abstract class AbsShowTopicFragment extends Fragment {
         @Override
         protected String doInBackground(String... params) {
             if (params.length > 2) {
-                String pageContent = WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_citation.php", "POST", "id_message=" + params[0] + "&" + params[1], params[2]);
+                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
+                String pageContent;
+                currentWebInfos.followRedirects = false;
+                pageContent = WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_citation.php", "POST", "id_message=" + params[0] + "&" + params[1], params[2], currentWebInfos);
 
                 if (pageContent != null) {
                     return JVCParser.getMessageQuoted(pageContent);
@@ -351,7 +346,7 @@ public abstract class AbsShowTopicFragment extends Fragment {
         void newModeRequested(int newMode);
     }
 
-    public abstract void newTopicLinkSetted(String newTopicLink);
+    public abstract void setNewTopicLink(String newTopicLink);
     protected abstract void initializeGetterForMessages();
     protected abstract void initializeSettings();
     protected abstract void initializeAdapter();

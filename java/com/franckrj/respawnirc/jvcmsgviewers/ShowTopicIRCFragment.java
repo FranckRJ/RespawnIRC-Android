@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc.jvcmessagesviewers;
+package com.franckrj.respawnirc.jvcmsgviewers;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,22 +7,20 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.jvcgetters.JVCIRCMessageGetter;
+import com.franckrj.respawnirc.jvcmsggetters.JVCIRCMessageGetter;
 import com.franckrj.respawnirc.utils.JVCParser;
 
 import java.util.ArrayList;
 
 /*TODO: Set focus sur la zone d'écriture des messages après citation ?
 * TODO: géré la redirection de lien (changement de nom de topic, suppression de page, etc)
-* TODO: Récupérer les deux dernières page si la dernière page contient moins de X messages (et au 1er chargement aussi ?)
-* TODO: http://stackoverflow.com/questions/5312592/how-can-i-get-my-listview-to-scroll pour pouvoir scroll le lien du topic ?*/
+* TODO: Récupérer les deux dernières page si la dernière page contient moins de X messages (et au 1er chargement aussi ?)*/
 public class ShowTopicIRCFragment extends AbsShowTopicFragment {
     private int maxNumberOfMessagesShowed = 40;
     private int initialNumberOfMessagesShowed = 10;
@@ -82,7 +80,7 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
     }
 
     @Override
-    public void newTopicLinkSetted(String newTopicLink) {
+    public void setNewTopicLink(String newTopicLink) {
         String newUrl = baseForChangeTopicLink(newTopicLink);
 
         getterForMessages.stopAllCurrentTask();
@@ -148,8 +146,8 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
             oldLastIdOfMessage = sharedPref.getLong(getString(R.string.prefOldLastIdOfMessage), 0);
         }
 
-        if (adapterForMessages.getAllItems().isEmpty()) {
-            getterForMessages.setNewTopic(sharedPref.getString(getString(R.string.prefUrlToFetch), ""));
+        if (getterForMessages.getUrlForTopic().isEmpty()) {
+            getterForMessages.setNewTopic(sharedPref.getString(getString(R.string.prefTopicUrlToFetch), ""));
         }
     }
 

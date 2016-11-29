@@ -14,7 +14,7 @@
     <string name="errorCookiesMissingConnect">Vous n\'êtes pas connecté sur JVC.</string>
     <string name="prefCookiesList">pref.cookiesList</string>
     <string name="error">Erreur.</string>
-    <string name="prefUrlToFetch">pref.urlToFetch</string>
+    <string name="prefTopicUrlToFetch">pref.topicUrlToFetch</string>
     <string name="saveLatestListOfInputInAString">save.latestListOfInputInAString</string>
     <string name="saveAllCurrentMessagesShowed">save.allCurrentMessagesShowed</string>
     <string name="saveFirstTimeGetMessages">save.firstTimeGetMessages</string>
@@ -63,7 +63,7 @@
     <string name="switchToIrcMode">Passer en mode IRC</string>
     <string name="refresh">Rafraichir</string>
     <string name="prefCurrentTopicMode">pref.currentTopicMode</string>
-    <string name="saveUrlToFetch">save.urlToFetch</string>
+    <string name="saveTopicUrlToFetch">save.topicUrlToFetch</string>
     <string name="settingsOnRefreshForumTitle">Lors du rafraichissement (forum)</string>
     <string name="settingsForumClearOnRefresh">settings.forumClearOnRefresh</string>
     <string name="forumClearOnRefreshTitle">Effacer les messages</string>
@@ -76,12 +76,16 @@
     <string name="cancel">Annuler</string>
     <string name="pageNumber">Numéro de la page…</string>
     <string name="choosePageNumber">Choisir un numéro de page</string>
-    <string name="topicOrForumLink">Lien du topic…</string>
-    <string name="chooseTopicOrForumLink">Choisir un topic</string>
+    <string name="topicOrForumLink">Lien du topic/forum…</string>
+    <string name="chooseTopicOrForumLink">Choisir un topic/forum</string>
     <string name="settingsStyleMessageForumTitle">Affichage des messages (forum)</string>
     <string name="settingsForumAlternateBackgroundColor">settings.forumAlternateBackgroundColor</string>
     <string name="forumAlternateBackgroundColorTitle">Alterner la couleur de fond</string>
     <string name="forumAlternateBackgroundColorDefault">true</string>
+    <string name="prefLastFragmentViewed">pref.lastFragmentViewed</string>
+    <string name="saveForumUrlToFetch">save.forumUrlToFetch</string>
+    <string name="saveAllCurrentTopicsShowed">save.allCurrentTopicsShowed</string>
+    <string name="prefForumUrlToFetch">pref.forumUrlToFetch</string>
 
     <string-array name="itemChoiceDrawerList">
         <item>@string/app_name</item>
