@@ -54,7 +54,7 @@ public class ShowForumFragment extends Fragment {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
             if (listenerForNewTopicWantRead != null) {
-                listenerForNewTopicWantRead.setReadNewTopic(adapterForTopics.getItem(position).topicLink);
+                listenerForNewTopicWantRead.setReadNewTopic(adapterForTopics.getItem(position).link);
             }
         }
     };

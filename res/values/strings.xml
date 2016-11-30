@@ -86,6 +86,7 @@
     <string name="saveForumUrlToFetch">save.forumUrlToFetch</string>
     <string name="saveAllCurrentTopicsShowed">save.allCurrentTopicsShowed</string>
     <string name="prefForumUrlToFetch">pref.forumUrlToFetch</string>
+    <string name="topicIcon">Icone de topic</string>
 
     <string-array name="itemChoiceDrawerList">
         <item>@string/app_name</item>

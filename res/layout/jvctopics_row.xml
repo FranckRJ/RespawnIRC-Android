@@ -5,21 +5,34 @@
     android:layout_height="wrap_content"
     android:padding="4dp">
 
+    <ImageView
+        android:id="@+id/item_topic_icon_jvctopics_image_row"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingRight="4dp"
+        android:paddingEnd="4dp"
+        android:paddingLeft="0dp"
+        android:paddingStart="0dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:contentDescription="@string/topicIcon"/>
+
     <TextView
         android:id="@+id/item_one_jvctopics_text_row"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_toRightOf="@+id/item_topic_icon_jvctopics_image_row"
+        android:layout_toEndOf="@+id/item_topic_icon_jvctopics_image_row"/>
 
     <TextView
         android:id="@+id/item_two_jvctopics_text_row"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="-4dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_toRightOf="@+id/item_topic_icon_jvctopics_image_row"
+        android:layout_toEndOf="@+id/item_topic_icon_jvctopics_image_row"
         android:layout_below="@+id/item_one_jvctopics_text_row"/>
 
     <TextView

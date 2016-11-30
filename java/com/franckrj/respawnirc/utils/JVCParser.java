@@ -41,6 +41,7 @@ public final class JVCParser {
     private static final Pattern topicNumberMessagesPattern = Pattern.compile("<span class=\"topic-count\">[^0-9]*([0-9]*)");
     private static final Pattern topicAuthorPattern = Pattern.compile("<span class=\".*?topic-author[^>]*>[^A-Za-z0-9\\[\\]_-]*([^<\n]*)");
     private static final Pattern topicDatePattern = Pattern.compile("<span class=\"topic-date\">[^<]*<span[^>]*>[^0-9/:]*([0-9/:]*)");
+    private static final Pattern topicTypePattern = Pattern.compile("<img src=\"/img/forums/topic-(.*?).png\"");
 
     private JVCParser() {
         //rien
@@ -449,15 +450,17 @@ public final class JVCParser {
         Matcher topicNumberMessagesMatcher = topicNumberMessagesPattern.matcher(thisEntireTopic);
         Matcher topicAuthorMatcher = topicAuthorPattern.matcher(thisEntireTopic);
         Matcher topicDateMatcher = topicDatePattern.matcher(thisEntireTopic);
+        Matcher topicTypeMatcher = topicTypePattern.matcher(thisEntireTopic);
 
-        if (topicNameAndLinkMatcher.find() && topicNumberMessagesMatcher.find() && topicAuthorMatcher.find() && topicDateMatcher.find()) {
+        if (topicNameAndLinkMatcher.find() && topicNumberMessagesMatcher.find() && topicAuthorMatcher.find() && topicDateMatcher.find() && topicTypeMatcher.find()) {
             String topicNameAndLinkString = topicNameAndLinkMatcher.group(1);
-            newTopicInfo.topicLink = "http://www.jeuxvideo.com" + topicNameAndLinkString.substring(0, topicNameAndLinkString.indexOf("\""));
-            newTopicInfo.topicName = topicNameAndLinkString.substring(topicNameAndLinkString.indexOf("title=\"") + 7);
-            newTopicInfo.topicName = newTopicInfo.topicName.replace("&amp;", "&").replace("&quot;", "\"").replace("&#039;", "\'").replace("&lt;", "<").replace("&gt;", ">");
-            newTopicInfo.nbMessagesPosted = topicNumberMessagesMatcher.group(1);
-            newTopicInfo.pseudo = topicAuthorMatcher.group(1).trim();
+            newTopicInfo.link = "http://www.jeuxvideo.com" + topicNameAndLinkString.substring(0, topicNameAndLinkString.indexOf("\""));
+            newTopicInfo.name = topicNameAndLinkString.substring(topicNameAndLinkString.indexOf("title=\"") + 7);
+            newTopicInfo.name = newTopicInfo.name.replace("&amp;", "&").replace("&quot;", "\"").replace("&#039;", "\'").replace("&lt;", "<").replace("&gt;", ">");
+            newTopicInfo.messages = topicNumberMessagesMatcher.group(1);
+            newTopicInfo.author = topicAuthorMatcher.group(1).trim();
             newTopicInfo.wholeDate = topicDateMatcher.group(1);
+            newTopicInfo.type = topicTypeMatcher.group(1);
         }
 
         return newTopicInfo;
@@ -561,11 +564,12 @@ public final class JVCParser {
     }
 
     public static class TopicInfos implements Parcelable {
-        public String pseudo;
-        public String topicName;
-        public String topicLink;
+        public String author;
+        public String type;
+        public String name;
+        public String link;
         public String wholeDate;
-        public String nbMessagesPosted;
+        public String messages;
 
         public static final Parcelable.Creator<TopicInfos> CREATOR = new Parcelable.Creator<TopicInfos>() {
             @Override
@@ -584,11 +588,12 @@ public final class JVCParser {
         }
 
         private TopicInfos(Parcel in) {
-            pseudo = in.readString();
-            topicName = in.readString();
-            topicLink = in.readString();
+            author = in.readString();
+            type = in.readString();
+            name = in.readString();
+            link = in.readString();
             wholeDate = in.readString();
-            nbMessagesPosted = in.readString();
+            messages = in.readString();
         }
 
         @Override
@@ -598,11 +603,12 @@ public final class JVCParser {
 
         @Override
         public void writeToParcel(Parcel out, int flags) {
-            out.writeString(pseudo);
-            out.writeString(topicName);
-            out.writeString(topicLink);
+            out.writeString(author);
+            out.writeString(type);
+            out.writeString(name);
+            out.writeString(link);
             out.writeString(wholeDate);
-            out.writeString(nbMessagesPosted);
+            out.writeString(messages);
         }
     }
 
