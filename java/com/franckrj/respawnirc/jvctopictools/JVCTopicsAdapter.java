@@ -3,6 +3,8 @@ package com.franckrj.respawnirc.jvctopictools;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 
 public class JVCTopicsAdapter extends BaseAdapter {
     private ArrayList<JVCParser.TopicInfos> listOfTopics = new ArrayList<>();
+    private ArrayList<ContentHolder> listOfContentForTopics = new ArrayList<>();
     private LayoutInflater serviceInflater;
     private Activity parentActivity = null;
     private boolean alternateBackgroundColor = false;
@@ -35,10 +38,18 @@ public class JVCTopicsAdapter extends BaseAdapter {
 
     public void removeAllItems() {
         listOfTopics.clear();
+        listOfContentForTopics.clear();
     }
 
     public void addItem(JVCParser.TopicInfos item) {
+        ContentHolder thisHolder = new ContentHolder();
+        thisHolder.firstLineContent = Html.fromHtml("<b><font color=\"" +
+                                        String.format("#%06X", 0xFFFFFF & parentActivity.getResources().getColor(R.color.linkColor)) +
+                                        "\">" + item.topicName + "</font> (" + item.nbMessagesPosted + ")</b>");
+        thisHolder.secondLineContent = Html.fromHtml("<small>" + item.pseudo + "</small>");
+        thisHolder.thirdLineContent = Html.fromHtml("<small>" + item.wholeDate + "</small>");
         listOfTopics.add(item);
+        listOfContentForTopics.add(thisHolder);
     }
 
     public void updateAllItems() {
@@ -63,21 +74,23 @@ public class JVCTopicsAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-        JVCParser.TopicInfos currentTopic = listOfTopics.get(position);
+        ContentHolder currentTopicContent = listOfContentForTopics.get(position);
         if (convertView == null) {
             holder = new ViewHolder();
 
             convertView = serviceInflater.inflate(R.layout.jvctopics_row, parent, false);
             holder.firstLine = (TextView) convertView.findViewById(R.id.item_one_jvctopics_text_row);
             holder.secondLine = (TextView) convertView.findViewById(R.id.item_two_jvctopics_text_row);
+            holder.thirdLine = (TextView) convertView.findViewById(R.id.item_three_jvctopics_text_row);
             holder.background = convertView.getBackground();
 
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.firstLine.setText(currentTopic.topicName);
-        holder.secondLine.setText(currentTopic.pseudo + " | " + currentTopic.nbMessagesPosted + " | " + currentTopic.wholeDate);
+        holder.firstLine.setText(currentTopicContent.firstLineContent);
+        holder.secondLine.setText(currentTopicContent.secondLineContent);
+        holder.thirdLine.setText(currentTopicContent.thirdLineContent);
 
         if (position % 2 == 0 || !alternateBackgroundColor) {
             convertView.setBackgroundDrawable(holder.background);
@@ -91,6 +104,13 @@ public class JVCTopicsAdapter extends BaseAdapter {
     private class ViewHolder {
         private TextView firstLine;
         private TextView secondLine;
+        private TextView thirdLine;
         private Drawable background;
+    }
+
+    private class ContentHolder {
+        private Spanned firstLineContent;
+        private Spanned secondLineContent;
+        private Spanned thirdLineContent;
     }
 }

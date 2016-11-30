@@ -227,19 +227,21 @@ public class MainActivity extends AppCompatActivity implements AbsShowTopicFragm
 
     @Override
     public void newTopicOrForumAvailable(String newTopicOrForumLink) {
-        if (JVCParser.checkIfItsForumLink(newTopicOrForumLink)) {
-            if (currentFragmentType == FRAG_FORUM_SHOW) {
-                ShowForumFragment currentFragment = (ShowForumFragment) getFragmentManager().findFragmentById(R.id.content_frame_main);
-                currentFragment.goToThisNewPage(newTopicOrForumLink);
+        if (newTopicOrForumLink != null) {
+            if (JVCParser.checkIfItsForumLink(newTopicOrForumLink)) {
+                if (currentFragmentType == FRAG_FORUM_SHOW) {
+                    ShowForumFragment currentFragment = (ShowForumFragment) getFragmentManager().findFragmentById(R.id.content_frame_main);
+                    currentFragment.goToThisNewPage(newTopicOrForumLink);
+                } else {
+                    createNewFragmentForForumRead(newTopicOrForumLink);
+                }
             } else {
-                createNewFragmentForForumRead(newTopicOrForumLink);
-            }
-        } else {
-            if (currentFragmentType == FRAG_TOPIC_SHOW) {
-                AbsShowTopicFragment currentFragment = (AbsShowTopicFragment) getFragmentManager().findFragmentById(R.id.content_frame_main);
-                currentFragment.setNewTopicLink(newTopicOrForumLink);
-            } else {
-                createNewFragmentForTopicRead(newTopicOrForumLink);
+                if (currentFragmentType == FRAG_TOPIC_SHOW) {
+                    AbsShowTopicFragment currentFragment = (AbsShowTopicFragment) getFragmentManager().findFragmentById(R.id.content_frame_main);
+                    currentFragment.setNewTopicLink(newTopicOrForumLink);
+                } else {
+                    createNewFragmentForTopicRead(newTopicOrForumLink);
+                }
             }
         }
     }
