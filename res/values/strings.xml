@@ -36,7 +36,8 @@
     <string name="initialNumberOfMessagesTitle">Au premier chargement</string>
     <string name="maxNumberOfMessagesDefault">40</string>
     <string name="initialNumberOfMessagesDefault">10</string>
-    <string name="settingsGeneralTitle">Général (IRC)</string>
+    <string name="settingsGeneralTitle">Général</string>
+    <string name="settingsGeneralIRCTitle">Général (IRC)</string>
     <string name="settingsRefreshTopicTime">settings.refreshTopicTime</string>
     <string name="refreshTopicTimeTitle">Temps avant màj des messages</string>
     <string name="refreshTopicTimeDefault">10000</string>
@@ -87,6 +88,11 @@
     <string name="saveAllCurrentTopicsShowed">save.allCurrentTopicsShowed</string>
     <string name="prefForumUrlToFetch">pref.forumUrlToFetch</string>
     <string name="topicIcon">Icone de topic</string>
+    <string name="showQuoteMessage">Afficher les citations imbriquées</string>
+    <string name="hideQuoteMessage">Cacher les citations imbriquées</string>
+    <string name="maxNumberOfOverlyQuoteDefault">2</string>
+    <string name="settingsMaxNumberOfOverlyQuote">settings.maxNumberOfOverlyQuote</string>
+    <string name="maxNumberOfOverlyQuoteTitle">Nb max de citations imbriquées</string>
 
     <string-array name="itemChoiceDrawerList">
         <item>@string/app_name</item>

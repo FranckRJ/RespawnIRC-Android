@@ -75,6 +75,14 @@ public class JVCMessagesAdapter extends BaseAdapter {
                 inflater.inflate(R.menu.menu_message_others, popup.getMenu());
             }
 
+            if (itemSelected.numberOfOverlyQuote > currentSettings.maxNumberOfOverlyQuotes) {
+                if (itemSelected.showOverlyQuote) {
+                    inflater.inflate(R.menu.menu_message_hide_quote, popup.getMenu());
+                } else {
+                    inflater.inflate(R.menu.menu_message_show_quote, popup.getMenu());
+                }
+            }
+
             if (itemSelected.containSpoil) {
                 if (itemSelected.showSpoil) {
                     inflater.inflate(R.menu.menu_message_hide_spoil, popup.getMenu());
@@ -126,7 +134,7 @@ public class JVCMessagesAdapter extends BaseAdapter {
     public void addItem(JVCParser.MessageInfos item) {
         ContentHolder thisHolder = new ContentHolder();
         thisHolder.firstLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageFirstLineFromInfos(item, currentSettings), jvcImageGetter, null));
-        thisHolder.secondLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageSecondLineFromInfos(item), jvcImageGetter, null));
+        thisHolder.secondLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageSecondLineFromInfos(item, currentSettings), jvcImageGetter, null));
         listOfMessages.add(item);
         listOfContentForMessages.add(thisHolder);
     }
@@ -136,7 +144,7 @@ public class JVCMessagesAdapter extends BaseAdapter {
             if (listOfMessages.get(i).id == item.id) {
                 ContentHolder thisHolder = listOfContentForMessages.get(i);
                 thisHolder.firstLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageFirstLineFromInfos(item, currentSettings), jvcImageGetter, null));
-                thisHolder.secondLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageSecondLineFromInfos(item), jvcImageGetter, null));
+                thisHolder.secondLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageSecondLineFromInfos(item, currentSettings), jvcImageGetter, null));
                 listOfMessages.set(i, item);
                 break;
             }

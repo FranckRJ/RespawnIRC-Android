@@ -42,6 +42,7 @@ public final class JVCParser {
     private static final Pattern topicAuthorPattern = Pattern.compile("<span class=\".*?topic-author[^>]*>[^A-Za-z0-9\\[\\]_-]*([^<\n]*)");
     private static final Pattern topicDatePattern = Pattern.compile("<span class=\"topic-date\">[^<]*<span[^>]*>[^0-9/:]*([0-9/:]*)");
     private static final Pattern topicTypePattern = Pattern.compile("<img src=\"/img/forums/topic-(.*?).png\"");
+    private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
 
     private JVCParser() {
         //rien
@@ -330,12 +331,12 @@ public final class JVCParser {
         return newFirstLine;
     }
 
-    public static String createMessageSecondLineFromInfos(MessageInfos thisMessageInfo) {
-        return parseMessageToPrettyMessage(thisMessageInfo.messageNotParsed, thisMessageInfo.showSpoil);
+    public static String createMessageSecondLineFromInfos(MessageInfos thisMessageInfo, Settings settings) {
+        return parseMessageToPrettyMessage(thisMessageInfo.messageNotParsed, settings, thisMessageInfo.showSpoil, thisMessageInfo.showOverlyQuote);
     }
 
     /*TODO: A refaire en plus propre et plus complet.*/
-    public static String parseMessageToPrettyMessage(String thisMessage, boolean showSpoil) {
+    public static String parseMessageToPrettyMessage(String thisMessage, Settings settings, boolean showSpoil, boolean showOverlyQuote) {
         thisMessage = parseThisMessageWithThisPattern(thisMessage, codeBlockPattern, 1, "<p><font face=\"monospace\">", "</font></p>", new ConvertStringToString("\n", "<br />"), new ConvertStringToString(" ", " ")); //remplace les espaces par des alt+255
         thisMessage = parseThisMessageWithThisPattern(thisMessage, codeLinePattern, 1, "<font face=\"monospace\">", "</font>", new ConvertStringToString(" ", " "), null); //remplace les espaces par des alt+255
         thisMessage = parseThisMessageWithThisPattern(thisMessage, stickerPattern, 2, "<img src=\"sticker_", ".png\"/>", new ConvertStringToString("-", "_"), null);
@@ -386,7 +387,84 @@ public final class JVCParser {
             thisMessage = thisMessage.trim();
         }
 
+        if (!showOverlyQuote) {
+            thisMessage = removeOverlyQuoteInPrettyMessage(thisMessage, settings.maxNumberOfOverlyQuotes);
+        }
+
         return thisMessage;
+    }
+
+    public static String removeOverlyQuoteInPrettyMessage(String prettyMessage, int maxNumberOfOverlyQuotes) {
+        Matcher htmlTagMatcher = htmlTagPattern.matcher(prettyMessage);
+        int lastOffsetOfTag = 0;
+
+        maxNumberOfOverlyQuotes += 1;
+
+        while (htmlTagMatcher.find(lastOffsetOfTag)) {
+            if (htmlTagMatcher.group().equals("<blockquote>")) {
+                --maxNumberOfOverlyQuotes;
+            }
+            else if (htmlTagMatcher.group().equals("</blockquote>")) {
+                ++maxNumberOfOverlyQuotes;
+            }
+
+            lastOffsetOfTag = htmlTagMatcher.end();
+
+            if (maxNumberOfOverlyQuotes <= 0) {
+                Matcher secHtmlTagMatcher = htmlTagPattern.matcher(prettyMessage);
+                int tmpNumberQuote = 0;
+                boolean hasMatched = false;
+                int secLastOffsetTag = htmlTagMatcher.end();
+
+                while (secHtmlTagMatcher.find(secLastOffsetTag)) {
+                    hasMatched = true;
+
+                    if (secHtmlTagMatcher.group().equals("<blockquote>")) {
+                        ++tmpNumberQuote;
+                    }
+                    else if (secHtmlTagMatcher.group().equals("</blockquote>")) {
+                        --tmpNumberQuote;
+                    }
+
+                    secLastOffsetTag = secHtmlTagMatcher.end();
+
+                    if (tmpNumberQuote < 0) {
+                        break;
+                    }
+                }
+
+                if (hasMatched) {
+                    prettyMessage = prettyMessage.substring(0, htmlTagMatcher.end()) + "[...]" + prettyMessage.substring(secHtmlTagMatcher.start());
+                    htmlTagMatcher = htmlTagPattern.matcher(prettyMessage);
+                }
+            }
+        }
+
+        return prettyMessage;
+    }
+
+    public static int countNumberOfOverlyQuoteInNotPrettyMessage(String notPrettyMessage) {
+        Matcher htmlTagMatcher = htmlTagPattern.matcher(notPrettyMessage);
+        int maxNumberOfOverlyQuoteInMessage = 0;
+        int currentNumberOfOverlyQuoteInMessage = 0;
+        int lastOffsetOfTag = 0;
+
+        while (htmlTagMatcher.find(lastOffsetOfTag)) {
+            if (htmlTagMatcher.group().equals("<blockquote class=\"blockquote-jv\">")) {
+                ++currentNumberOfOverlyQuoteInMessage;
+            }
+            else if (htmlTagMatcher.group().equals("</blockquote>")) {
+                --currentNumberOfOverlyQuoteInMessage;
+            }
+
+            if (currentNumberOfOverlyQuoteInMessage > maxNumberOfOverlyQuoteInMessage) {
+                maxNumberOfOverlyQuoteInMessage = currentNumberOfOverlyQuoteInMessage;
+            }
+
+            lastOffsetOfTag = htmlTagMatcher.end();
+        }
+
+        return maxNumberOfOverlyQuoteInMessage;
     }
 
     public static String parseThisMessageWithThisPattern(String messageToParse, Pattern patternToUse, int groupToUse, String stringBefore, String stringAfter, StringModifier firstModifier, StringModifier secondModifier) {
@@ -438,6 +516,7 @@ public final class JVCParser {
             newMessageInfo.dateTime = dateMessageMatcher.group(3);
             newMessageInfo.wholeDate = dateMessageMatcher.group(2);
             newMessageInfo.containSpoil = newMessageInfo.messageNotParsed.contains("<span class=\"contenu-spoil\">");
+            newMessageInfo.numberOfOverlyQuote = countNumberOfOverlyQuoteInNotPrettyMessage(newMessageInfo.messageNotParsed);
             newMessageInfo.id = Long.parseLong(messageIDMatcher.group(1));
         }
 
@@ -502,6 +581,8 @@ public final class JVCParser {
         public String lastTimeEdit;
         public boolean containSpoil = false;
         public boolean showSpoil = false;
+        public int numberOfOverlyQuote = 0;
+        public boolean showOverlyQuote = false;
         public boolean isAnEdit = false;
         public long id = 0;
 
@@ -529,6 +610,8 @@ public final class JVCParser {
             lastTimeEdit = in.readString();
             containSpoil = (in.readInt() == 1);
             showSpoil = (in.readInt() == 1);
+            numberOfOverlyQuote = in.readInt();
+            showOverlyQuote = (in.readInt() == 1);
             isAnEdit = (in.readInt() == 1);
             id = in.readLong();
         }
@@ -547,6 +630,8 @@ public final class JVCParser {
             out.writeString(lastTimeEdit);
             out.writeInt(containSpoil ? 1 : 0);
             out.writeInt(showSpoil ? 1 : 0);
+            out.writeInt(numberOfOverlyQuote);
+            out.writeInt(showOverlyQuote ? 1 : 0);
             out.writeInt(isAnEdit ? 1 : 0);
             out.writeLong(id);
         }
@@ -662,6 +747,7 @@ public final class JVCParser {
         public String firstLineFormat;
         public String colorPseudoUser;
         public String colorPseudoOther;
+        public int maxNumberOfOverlyQuotes = 0;
     }
 
     private interface StringModifier {

@@ -87,6 +87,18 @@ public abstract class AbsShowTopicFragment extends Fragment {
                     adapterForMessages.updateThisItem(currentItem);
                     adapterForMessages.updateAllItems();
                     return true;
+                case R.id.menu_show_quote_message:
+                    currentItem = adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected());
+                    currentItem.showOverlyQuote = true;
+                    adapterForMessages.updateThisItem(currentItem);
+                    adapterForMessages.updateAllItems();
+                    return true;
+                case R.id.menu_hide_quote_message:
+                    currentItem = adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected());
+                    currentItem.showOverlyQuote = false;
+                    adapterForMessages.updateThisItem(currentItem);
+                    adapterForMessages.updateAllItems();
+                    return true;
                 default:
                     return false;
             }
@@ -192,6 +204,7 @@ public abstract class AbsShowTopicFragment extends Fragment {
     }
 
     protected void reloadSettings() {
+        currentSettings.maxNumberOfOverlyQuotes = Integer.parseInt(sharedPref.getString(getString(R.string.settingsMaxNumberOfOverlyQuote), getString(R.string.maxNumberOfOverlyQuoteDefault)));
         pseudoOfUser = sharedPref.getString(getString(R.string.prefPseudoUser), "");
         currentSettings.pseudoOfUser = pseudoOfUser;
         cookieListInAString = sharedPref.getString(getString(R.string.prefCookiesList), "");

@@ -4,6 +4,14 @@
     <PreferenceCategory
         android:title="@string/settingsGeneralTitle">
         <EditTextPreference
+            android:key="@string/settingsMaxNumberOfOverlyQuote"
+            android:title="@string/maxNumberOfOverlyQuoteTitle"
+            android:defaultValue="@string/maxNumberOfOverlyQuoteDefault"
+            android:numeric="integer"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/settingsGeneralIRCTitle">
+        <EditTextPreference
             android:key="@string/settingsRefreshTopicTime"
             android:title="@string/refreshTopicTimeTitle"
             android:defaultValue="@string/refreshTopicTimeDefault"

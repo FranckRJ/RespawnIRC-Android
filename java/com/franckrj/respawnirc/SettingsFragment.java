@@ -61,10 +61,12 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     }
 
     private void initFilter(PreferenceGroup pref) {
+        EditText maxNumberOfOverlyQuote = ((EditTextPreference) pref.findPreference(getActivity().getString(R.string.settingsMaxNumberOfOverlyQuote))).getEditText();
         EditText refreshTopicTime = ((EditTextPreference) pref.findPreference(getActivity().getString(R.string.settingsRefreshTopicTime))).getEditText();
         EditText maxNumberOfMessages = ((EditTextPreference) pref.findPreference(getActivity().getString(R.string.settingsMaxNumberOfMessages))).getEditText();
         EditText initialNumberOfMessages = ((EditTextPreference) pref.findPreference(getActivity().getString(R.string.settingsInitialNumberOfMessages))).getEditText();
 
+        maxNumberOfOverlyQuote.setTag(new MinMaxInfos(0, 15));
         refreshTopicTime.setTag(new MinMaxInfos(5000, 60000));
         maxNumberOfMessages.setTag(new MinMaxInfos(1, 100));
         initialNumberOfMessages.setTag(new MinMaxInfos(1, 20));
