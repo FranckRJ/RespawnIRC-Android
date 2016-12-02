@@ -56,6 +56,24 @@ public class ShowForumActivity extends AppCompatActivity implements ChooseTopicO
         getFragmentManager().beginTransaction().replace(R.id.content_frame_showforum, currentFragment).commit();
     }
 
+    private void setTopicOrForum(String link, boolean updateForumFragIfNeeded) {
+        if (link != null) {
+            ShowForumFragment currentFragment = (ShowForumFragment) getFragmentManager().findFragmentById(R.id.content_frame_showforum);
+            if (JVCParser.checkIfItsForumLink(link)) {
+                currentFragment.goToThisNewPage(link);
+            } else {
+                Intent newShowTopicIntent = new Intent(this, ShowTopicActivity.class);
+
+                if (updateForumFragIfNeeded) {
+                    currentFragment.setForumByTopicLink(link);
+                }
+
+                newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_LINK, link);
+                startActivity(newShowTopicIntent);
+            }
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,21 +180,11 @@ public class ShowForumActivity extends AppCompatActivity implements ChooseTopicO
 
     @Override
     public void newTopicOrForumAvailable(String newTopicOrForumLink) {
-        if (newTopicOrForumLink != null) {
-            ShowForumFragment currentFragment = (ShowForumFragment) getFragmentManager().findFragmentById(R.id.content_frame_showforum);
-            if (JVCParser.checkIfItsForumLink(newTopicOrForumLink)) {
-                currentFragment.goToThisNewPage(newTopicOrForumLink);
-            } else {
-                Intent newShowTopicIntent = new Intent(this, ShowTopicActivity.class);
-                currentFragment.setForumByTopicLink(newTopicOrForumLink);
-                newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_LINK, newTopicOrForumLink);
-                startActivity(newShowTopicIntent);
-            }
-        }
+        setTopicOrForum(newTopicOrForumLink, true);
     }
 
     @Override
     public void setReadNewTopic(String newTopicLink) {
-        newTopicOrForumAvailable(newTopicLink);
+        setTopicOrForum(newTopicLink, false);
     }
 }
