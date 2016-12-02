@@ -20,12 +20,12 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
 
     private void createNewFragmentForTopicRead(String possibleTopicLink) {
         AbsShowTopicFragment currentFragment;
-        int currentTopicMode = sharedPref.getInt(getString(R.string.prefCurrentTopicMode), AbsShowTopicFragment.MODE_IRC);
+        int currentTopicMode = sharedPref.getInt(getString(R.string.prefCurrentTopicMode), AbsShowTopicFragment.MODE_FORUM);
 
-        if (currentTopicMode == AbsShowTopicFragment.MODE_IRC) {
-            currentFragment = new ShowTopicIRCFragment();
-        } else {
+        if (currentTopicMode == AbsShowTopicFragment.MODE_FORUM) {
             currentFragment = new ShowTopicForumFragment();
+        } else {
+            currentFragment = new ShowTopicIRCFragment();
         }
 
         if (possibleTopicLink != null) {
