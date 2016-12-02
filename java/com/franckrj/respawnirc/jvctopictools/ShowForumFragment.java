@@ -138,6 +138,10 @@ public class ShowForumFragment extends Fragment {
         getterForTopics.startGetMessagesOfThisPage(newPageToGo);
     }
 
+    public void setForumByTopicLink(String topicLink) {
+        goToThisNewPage(JVCParser.getForumForTopicLink(JVCParser.formatThisUrl(topicLink)));
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);

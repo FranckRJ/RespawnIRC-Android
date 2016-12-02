@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout_drawer_main"
+    android:id="@+id/layout_drawer_showforum"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.franckrj.respawnirc.MainActivity">
+        android:layout_height="match_parent">
 
         <include
-            android:id="@+id/toolbar_main"
+            android:id="@+id/toolbar_showforum"
             layout="@layout/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"/>
 
         <FrameLayout
-            android:id="@+id/content_frame_main"
-            android:layout_below="@+id/toolbar_main"
+            android:id="@+id/content_frame_showforum"
+            android:layout_below="@+id/toolbar_showforum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -28,12 +26,12 @@
             android:layout_width="match_parent"
             android:layout_height="4dp"
             android:background="@drawable/shadow_top"
-            android:layout_below="@+id/toolbar_main"/>
+            android:layout_below="@+id/toolbar_showforum"/>
 
     </RelativeLayout>
 
     <ListView
-        android:id="@+id/view_left_drawer_main"
+        android:id="@+id/view_left_drawer_showforum"
         android:layout_width="280dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"

@@ -18,20 +18,41 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:windowSoftInputMode="stateAlwaysHidden">
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
-            android:name=".ConnectActivity"
-            android:label="@string/connectToJVC"
+            android:name=".ShowForumActivity"
+            android:launchMode="singleTop"
             android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
         <activity
+            android:name=".ShowTopicActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:parentActivityName="com.franckrj.respawnirc.ShowForumActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.franckrj.respawnirc.ShowForumActivity"/>
+        </activity>
+        <activity
+            android:name=".ConnectActivity"
+            android:label="@string/connectToJVC"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:parentActivityName="com.franckrj.respawnirc.ShowForumActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.franckrj.respawnirc.ShowForumActivity"/>
+        </activity>
+        <activity
             android:name=".SettingsActivity"
-            android:label="@string/preference">
+            android:label="@string/preference"
+            android:parentActivityName="com.franckrj.respawnirc.ShowForumActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.franckrj.respawnirc.ShowForumActivity"/>
         </activity>
     </application>
 

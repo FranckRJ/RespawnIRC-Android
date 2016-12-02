@@ -83,7 +83,6 @@
     <string name="settingsForumAlternateBackgroundColor">settings.forumAlternateBackgroundColor</string>
     <string name="forumAlternateBackgroundColorTitle">Alterner la couleur de fond</string>
     <string name="forumAlternateBackgroundColorDefault">true</string>
-    <string name="prefLastFragmentViewed">pref.lastFragmentViewed</string>
     <string name="saveForumUrlToFetch">save.forumUrlToFetch</string>
     <string name="saveAllCurrentTopicsShowed">save.allCurrentTopicsShowed</string>
     <string name="prefForumUrlToFetch">pref.forumUrlToFetch</string>
@@ -93,6 +92,7 @@
     <string name="maxNumberOfOverlyQuoteDefault">2</string>
     <string name="settingsMaxNumberOfOverlyQuote">settings.maxNumberOfOverlyQuote</string>
     <string name="maxNumberOfOverlyQuoteTitle">Nb max de citations imbriquées</string>
+    <string name="prefLastActivityViewed">pref.lastActivityViewed</string>
 
     <string-array name="itemChoiceDrawerList">
         <item>@string/app_name</item>
