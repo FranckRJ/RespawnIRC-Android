@@ -1,6 +1,5 @@
 package com.franckrj.respawnirc.jvcmsgviewers;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -211,28 +210,6 @@ public abstract class AbsShowTopicFragment extends Fragment {
         absGetterForMessages.setCookieListInAString(cookieListInAString);
     }
 
-    public String getCurrentTopicLink() {
-        return absGetterForMessages.getUrlForTopic();
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        if (activity instanceof NewModeNeededListener) {
-            listenerForNewModeNeeded = (NewModeNeededListener) activity;
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        if (context instanceof NewModeNeededListener) {
-            listenerForNewModeNeeded = (NewModeNeededListener) context;
-        }
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -255,6 +232,13 @@ public abstract class AbsShowTopicFragment extends Fragment {
         senderForMessages.setListenerForNewMessageWantEdit(listenerForNewMessageWantEdit);
         adapterForMessages.setActionWhenItemMenuClicked(listenerForItemClicked);
         senderForMessages.setListenerForNewMessagePosted(listenerForNewMessagePosted);
+
+        if (getActivity() instanceof NewModeNeededListener) {
+            listenerForNewModeNeeded = (NewModeNeededListener) getActivity();
+        }
+        if (getActivity() instanceof AbsJVCMessageGetter.NewForumAndTopicNameAvailable) {
+            absGetterForMessages.setListenerForNewForumAndTopicName((AbsJVCMessageGetter.NewForumAndTopicNameAvailable) getActivity());
+        }
 
         loadingLayout.setVisibility(View.GONE);
         jvcMsgList.setAdapter(adapterForMessages);

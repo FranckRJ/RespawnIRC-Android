@@ -126,6 +126,7 @@ public class JVCIRCMessageGetter extends AbsJVCMessageGetter {
                     newPageInfos.listOfMessages = JVCParser.getMessagesOfThisPage(pageContent);
                     newPageInfos.listOfInputInAString = JVCParser.getListOfInputInAString(pageContent);
                     newPageInfos.ajaxInfosOfThisPage = JVCParser.getAllAjaxInfos(pageContent);
+                    newPageInfos.newNames = JVCParser.getForumAndTopicNameInTopicPage(pageContent);
                 }
 
                 return newPageInfos;
@@ -179,6 +180,13 @@ public class JVCIRCMessageGetter extends AbsJVCMessageGetter {
 
                         if (listenerForNewMessages != null) {
                             listenerForNewMessages.getNewMessages(listOfNewMessages);
+                        }
+                    }
+
+                    if (!infoOfCurrentPage.newNames.equals(currentNames)) {
+                        currentNames = infoOfCurrentPage.newNames;
+                        if (listenerForNewForumAndTopicName != null) {
+                            listenerForNewForumAndTopicName.getNewForumAndTopicName(currentNames);
                         }
                     }
 

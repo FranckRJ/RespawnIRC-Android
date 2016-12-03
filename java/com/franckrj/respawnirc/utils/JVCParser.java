@@ -37,6 +37,11 @@ public final class JVCParser {
     private static final Pattern jvCarePattern = Pattern.compile("<span class=\"JvCare [^\"]*\">([^<]*)</span>");
     private static final Pattern lastEditMessagePattern = Pattern.compile("<div class=\"info-edition-msg\">Message édité le ([^ ]* [^ ]* [^ ]* [^ ]* [0-9:]*) par <span");
     private static final Pattern messageEditInfoPattern = Pattern.compile("<textarea tabindex=\"3\" class=\"area-editor\" name=\"text_commentaire\" id=\"text_commentaire\" placeholder=\"[^\"]*\">([^<]*)</textarea>");
+    private static final Pattern allArianeStringPattern = Pattern.compile("<div class=\"fil-ariane-crumb\">.*?</h1>", Pattern.DOTALL);
+    private static final Pattern forumNameInArianeStringPattern = Pattern.compile("<span><a href=\"/forums/0-[^\"]*\">([^<]*)</a></span>");
+    private static final Pattern topicNameInArianeStringPattern = Pattern.compile("<h1 class=\"highlight\">([^<]*)</h1>");
+    private static final Pattern topicNameAltInArianeStringPattern = Pattern.compile("<span><a href=\"/forums/(42|1)-[^\"]*\">([^<]*)</a></span>");
+    private static final Pattern forumNameInForumPagePattern = Pattern.compile("<title>(.*?)- jeuxvideo.com</title>");
     private static final Pattern topicNameAndLinkPattern = Pattern.compile("<a class=\"lien-jv topic-title[^\"]*\" href=\"([^\"]*\" title=\"[^\"]*)\"[^>]*>");
     private static final Pattern topicNumberMessagesPattern = Pattern.compile("<span class=\"topic-count\">[^0-9]*([0-9]*)");
     private static final Pattern topicAuthorPattern = Pattern.compile("<span class=\".*?topic-author[^>]*>[^A-Za-z0-9\\[\\]_-]*([^<\n]*)");
@@ -146,6 +151,57 @@ public final class JVCParser {
         else {
             return "";
         }
+    }
+
+    public static String getForumNameInForumPage(String pageSource) {
+        Matcher forumNameMatcher = forumNameInForumPagePattern.matcher(pageSource);
+
+        if (forumNameMatcher.find()) {
+            String forumName = forumNameMatcher.group(1);
+
+            if (forumName.startsWith("Forum")) {
+                forumName = forumName.substring(("Forum").length());
+            }
+
+            return forumName.trim();
+        } else {
+            return "";
+        }
+    }
+
+    public static ForumAndTopicName getForumAndTopicNameInTopicPage(String pageSource) {
+        ForumAndTopicName currentNames = new ForumAndTopicName();
+        Matcher allArianeStringMatcher = allArianeStringPattern.matcher(pageSource);
+
+        if (allArianeStringMatcher.find()) {
+            String allArianeString = allArianeStringMatcher.group();
+            Matcher forumNameMatcher = forumNameInArianeStringPattern.matcher(allArianeString);
+            Matcher topicNameAltMatcher = topicNameAltInArianeStringPattern.matcher(allArianeString);
+            Matcher topicNameMatcher = topicNameInArianeStringPattern.matcher(allArianeString);
+            int lastOffset = 0;
+
+            while (forumNameMatcher.find(lastOffset)) {
+                currentNames.forum = forumNameMatcher.group(1);
+                lastOffset = forumNameMatcher.end();
+            }
+            if (topicNameAltMatcher.find()) {
+                currentNames.topic = topicNameAltMatcher.group(2);
+            } else if (topicNameMatcher.find()) {
+                currentNames.topic = topicNameMatcher.group(1);
+            }
+
+            if (currentNames.forum.startsWith("Forum")) {
+                currentNames.forum =  currentNames.forum.substring(("Forum").length());
+            }
+            if (currentNames.topic.startsWith("Topic")) {
+                currentNames.topic =  currentNames.topic.substring(("Topic").length());
+            }
+
+            currentNames.forum = currentNames.forum.trim();
+            currentNames.topic = currentNames.topic.trim();
+        }
+
+        return currentNames;
     }
 
     public static String getErrorMessage(String pageSource) {
@@ -735,6 +791,11 @@ public final class JVCParser {
             }
             return baseString;
         }
+    }
+
+    public static class ForumAndTopicName {
+        public String forum = "";
+        public String topic = "";
     }
 
     public static class AjaxInfos {

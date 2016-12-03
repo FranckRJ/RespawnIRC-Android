@@ -93,6 +93,9 @@
     <string name="settingsMaxNumberOfOverlyQuote">settings.maxNumberOfOverlyQuote</string>
     <string name="maxNumberOfOverlyQuoteTitle">Nb max de citations imbriquées</string>
     <string name="prefLastActivityViewed">pref.lastActivityViewed</string>
+    <string name="saveCurrentForumTitle">save.currentForumTitle</string>
+    <string name="saveCurrentForumTitleForTopic">save.currentForumTitleForTopic</string>
+    <string name="saveCurrentTopicTitleForTopic">save.currentTopicTitleForTopic</string>
 
     <string-array name="itemChoiceDrawerList">
         <item>@string/app_name</item>

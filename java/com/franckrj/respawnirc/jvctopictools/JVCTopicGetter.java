@@ -20,6 +20,8 @@ public class JVCTopicGetter {
     private String cookieListInAString = "";
     private NewTopicsListener listenerForNewTopics = null;
     private NewGetterStateListener listenerForNewGetterState = null;
+    private NewForumNameAvailable listenerForNewForumName = null;
+    private String forumName = "";
 
     public JVCTopicGetter(Activity newParentActivity) {
         parentActivity = newParentActivity;
@@ -39,6 +41,10 @@ public class JVCTopicGetter {
 
     public void setListenerForNewGetterState(NewGetterStateListener thisListener) {
         listenerForNewGetterState = thisListener;
+    }
+
+    public void setListenerForNewForumName(NewForumNameAvailable thisListener) {
+        listenerForNewForumName = thisListener;
     }
 
     public boolean startGetMessagesOfThisPage(String newUrlOfPage) {
@@ -96,6 +102,7 @@ public class JVCTopicGetter {
                     newPageInfos = new ForumPageInfos();
                     newPageInfos.listOfTopics = JVCParser.getTopicsOfThisPage(pageContent);
                     newPageInfos.newUrlForForumPage = currentWebInfos.currentUrl;
+                    newPageInfos.newForumName = JVCParser.getForumNameInForumPage(pageContent);
                 }
 
                 return newPageInfos;
@@ -117,6 +124,13 @@ public class JVCTopicGetter {
                     urlForForum = infoOfCurrentPage.newUrlForForumPage;
                 }
 
+                if (!infoOfCurrentPage.newForumName.equals(forumName)) {
+                    forumName = infoOfCurrentPage.newForumName;
+                    if (listenerForNewForumName != null) {
+                        listenerForNewForumName.getNewForumName(forumName);
+                    }
+                }
+
                 if (listenerForNewTopics != null) {
                     listenerForNewTopics.getNewTopics(infoOfCurrentPage.listOfTopics);
                 }
@@ -133,6 +147,11 @@ public class JVCTopicGetter {
     public static class ForumPageInfos {
         ArrayList<JVCParser.TopicInfos> listOfTopics;
         String newUrlForForumPage;
+        String newForumName;
+    }
+
+    public interface NewForumNameAvailable {
+        void getNewForumName(String newForumName);
     }
 
     public interface NewTopicsListener {

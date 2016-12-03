@@ -1,6 +1,5 @@
 package com.franckrj.respawnirc.jvctopictools;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -54,7 +53,7 @@ public class ShowForumFragment extends Fragment {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
             if (listenerForNewTopicWantRead != null) {
-                listenerForNewTopicWantRead.setReadNewTopic(adapterForTopics.getItem(position).link);
+                listenerForNewTopicWantRead.setReadNewTopic(adapterForTopics.getItem(position).link, adapterForTopics.getItem(position).name);
             }
         }
     };
@@ -143,24 +142,6 @@ public class ShowForumFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        if (activity instanceof NewTopicWantRead) {
-            listenerForNewTopicWantRead = (NewTopicWantRead) activity;
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        if (context instanceof NewTopicWantRead) {
-            listenerForNewTopicWantRead = (NewTopicWantRead) context;
-        }
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
@@ -201,6 +182,13 @@ public class ShowForumFragment extends Fragment {
         getterForTopics.setListenerForNewTopics(listenerForNewTopics);
         adapterForTopics.setAlternateBackgroundColor(true);
         jvcTopicList.setOnItemClickListener(listenerForItemClickedInListViw);
+
+        if (getActivity() instanceof NewTopicWantRead) {
+            listenerForNewTopicWantRead = (NewTopicWantRead) getActivity();
+        }
+        if (getActivity() instanceof JVCTopicGetter.NewForumNameAvailable) {
+            getterForTopics.setListenerForNewForumName((JVCTopicGetter.NewForumNameAvailable) getActivity());
+        }
 
         loadingLayout.setVisibility(View.GONE);
         jvcTopicList.setAdapter(adapterForTopics);
@@ -275,6 +263,6 @@ public class ShowForumFragment extends Fragment {
     }
 
     public interface NewTopicWantRead {
-        void setReadNewTopic(String newTopicLink);
+        void setReadNewTopic(String newTopicLink, String newTopicName);
     }
 }

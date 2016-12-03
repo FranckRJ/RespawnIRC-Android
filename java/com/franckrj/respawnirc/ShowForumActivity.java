@@ -19,11 +19,12 @@ import android.widget.ListView;
 
 import com.franckrj.respawnirc.dialogs.ChooseTopicOrForumLinkDialogFragment;
 import com.franckrj.respawnirc.dialogs.HelpFirstLaunchDialogFragment;
+import com.franckrj.respawnirc.jvctopictools.JVCTopicGetter;
 import com.franckrj.respawnirc.jvctopictools.ShowForumFragment;
 import com.franckrj.respawnirc.utils.JVCParser;
 
 public class ShowForumActivity extends AppCompatActivity implements ChooseTopicOrForumLinkDialogFragment.NewTopicOrForumSelected,
-                                                    ShowForumFragment.NewTopicWantRead {
+                                                    ShowForumFragment.NewTopicWantRead, JVCTopicGetter.NewForumNameAvailable {
     private static final int LIST_DRAWER_POS_HOME = 0;
     private static final int LIST_DRAWER_POS_CONNECT = 1;
     private static final int LIST_DRAWER_POS_SELECT_TOPIC_OR_FORUM = 2;
@@ -34,6 +35,7 @@ public class ShowForumActivity extends AppCompatActivity implements ChooseTopicO
     private ActionBarDrawerToggle toggleForDrawer = null;
     private int lastNewActivitySelected = -1;
     private SharedPreferences sharedPref = null;
+    private String currentTitle = "";
 
     private ListView.OnItemClickListener itemInDrawerClickedListener = new ListView.OnItemClickListener() {
         @Override
@@ -56,7 +58,7 @@ public class ShowForumActivity extends AppCompatActivity implements ChooseTopicO
         getFragmentManager().beginTransaction().replace(R.id.content_frame_showforum, currentFragment).commit();
     }
 
-    private void setTopicOrForum(String link, boolean updateForumFragIfNeeded) {
+    private void setTopicOrForum(String link, boolean updateForumFragIfNeeded, String topicName) {
         if (link != null) {
             ShowForumFragment currentFragment = (ShowForumFragment) getFragmentManager().findFragmentById(R.id.content_frame_showforum);
             if (JVCParser.checkIfItsForumLink(link)) {
@@ -66,6 +68,13 @@ public class ShowForumActivity extends AppCompatActivity implements ChooseTopicO
 
                 if (updateForumFragIfNeeded) {
                     currentFragment.setForumByTopicLink(link);
+                }
+
+                if (topicName != null) {
+                    newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_NAME, topicName);
+                }
+                if (!currentTitle.equals(getString(R.string.app_name))) {
+                    newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_FORUM_NAME, currentTitle);
                 }
 
                 newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_LINK, link);
@@ -133,8 +142,12 @@ public class ShowForumActivity extends AppCompatActivity implements ChooseTopicO
         layoutForDrawer.setDrawerShadow(R.drawable.shadow_drawer, GravityCompat.START);
 
         if (savedInstanceState == null) {
+            currentTitle = getString(R.string.app_name);
             createNewFragmentForForumRead(null);
+        } else {
+            currentTitle = savedInstanceState.getString(getString(R.string.saveCurrentForumTitle), getString(R.string.app_name));
         }
+        setTitle(currentTitle);
 
         if (sharedPref.getBoolean(getString(R.string.prefIsFirstLaunch), true)) {
             SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
@@ -161,6 +174,12 @@ public class ShowForumActivity extends AppCompatActivity implements ChooseTopicO
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(getString(R.string.saveCurrentForumTitle), currentTitle);
+    }
+
+    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         toggleForDrawer.onConfigurationChanged(newConfig);
@@ -180,11 +199,21 @@ public class ShowForumActivity extends AppCompatActivity implements ChooseTopicO
 
     @Override
     public void newTopicOrForumAvailable(String newTopicOrForumLink) {
-        setTopicOrForum(newTopicOrForumLink, true);
+        setTopicOrForum(newTopicOrForumLink, true, null);
     }
 
     @Override
-    public void setReadNewTopic(String newTopicLink) {
-        setTopicOrForum(newTopicLink, false);
+    public void setReadNewTopic(String newTopicLink, String newTopicName) {
+        setTopicOrForum(newTopicLink, false, newTopicName);
+    }
+
+    @Override
+    public void getNewForumName(String newForumName) {
+        if (!newForumName.isEmpty()) {
+            currentTitle = newForumName;
+        } else {
+            currentTitle = getString(R.string.app_name);
+        }
+        setTitle(currentTitle);
     }
 }

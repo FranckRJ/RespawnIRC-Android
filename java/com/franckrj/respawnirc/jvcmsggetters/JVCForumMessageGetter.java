@@ -58,6 +58,7 @@ public class JVCForumMessageGetter extends AbsJVCMessageGetter {
                     newPageInfos.listOfMessages = JVCParser.getMessagesOfThisPage(pageContent);
                     newPageInfos.listOfInputInAString = JVCParser.getListOfInputInAString(pageContent);
                     newPageInfos.ajaxInfosOfThisPage = JVCParser.getAllAjaxInfos(pageContent);
+                    newPageInfos.newNames = JVCParser.getForumAndTopicNameInTopicPage(pageContent);
                 }
 
                 return newPageInfos;
@@ -80,6 +81,13 @@ public class JVCForumMessageGetter extends AbsJVCMessageGetter {
 
                 if (!infoOfCurrentPage.listOfMessages.isEmpty()) {
                     lastIdOfMessage = infoOfCurrentPage.listOfMessages.get(infoOfCurrentPage.listOfMessages.size() - 1).id;
+                }
+
+                if (!infoOfCurrentPage.newNames.equals(currentNames)) {
+                    currentNames = infoOfCurrentPage.newNames;
+                    if (listenerForNewForumAndTopicName != null) {
+                        listenerForNewForumAndTopicName.getNewForumAndTopicName(currentNames);
+                    }
                 }
 
                 if (listenerForNewMessages != null) {

@@ -22,6 +22,8 @@ public abstract class AbsJVCMessageGetter {
     protected String cookieListInAString = "";
     protected NewMessagesListener listenerForNewMessages = null;
     protected NewGetterStateListener listenerForNewGetterState = null;
+    protected NewForumAndTopicNameAvailable listenerForNewForumAndTopicName = null;
+    protected JVCParser.ForumAndTopicName currentNames = new JVCParser.ForumAndTopicName();
 
     public AbsJVCMessageGetter(Activity newParentActivity) {
         parentActivity = newParentActivity;
@@ -53,6 +55,10 @@ public abstract class AbsJVCMessageGetter {
 
     public void setListenerForNewGetterState(NewGetterStateListener thisListener) {
         listenerForNewGetterState = thisListener;
+    }
+
+    public void setListenerForNewForumAndTopicName(NewForumAndTopicNameAvailable thisListener) {
+        listenerForNewForumAndTopicName = thisListener;
     }
 
     public void stopAllCurrentTask() {
@@ -91,6 +97,11 @@ public abstract class AbsJVCMessageGetter {
         String nextPageLink;
         String listOfInputInAString;
         JVCParser.AjaxInfos ajaxInfosOfThisPage;
+        JVCParser.ForumAndTopicName newNames;
+    }
+
+    public interface NewForumAndTopicNameAvailable {
+        void getNewForumAndTopicName(JVCParser.ForumAndTopicName newNames);
     }
 
     public interface NewMessagesListener {
