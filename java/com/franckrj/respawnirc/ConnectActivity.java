@@ -118,6 +118,7 @@ public class ConnectActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                Toast.makeText(this, getString(R.string.warningNotConnected), Toast.LENGTH_LONG).show();
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
             case R.id.action_showhelp_connect:
@@ -126,6 +127,12 @@ public class ConnectActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(this, getString(R.string.warningNotConnected), Toast.LENGTH_LONG).show();
+        super.onBackPressed();
     }
 
     public static class HelpConnectDialogFragment extends DialogFragment {

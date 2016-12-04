@@ -96,6 +96,7 @@
     <string name="saveCurrentForumTitle">save.currentForumTitle</string>
     <string name="saveCurrentForumTitleForTopic">save.currentForumTitleForTopic</string>
     <string name="saveCurrentTopicTitleForTopic">save.currentTopicTitleForTopic</string>
+    <string name="warningNotConnected">Vous ne vous êtes pas connecté</string>
 
     <string-array name="itemChoiceDrawerList">
         <item>@string/app_name</item>
