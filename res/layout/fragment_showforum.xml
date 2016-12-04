@@ -58,6 +58,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:drawSelectorOnTop="true"
         android:layout_below="@+id/header_layout_showforum"/>
     <View
         android:layout_width="match_parent"
