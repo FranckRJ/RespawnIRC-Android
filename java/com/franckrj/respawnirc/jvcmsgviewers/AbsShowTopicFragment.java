@@ -199,6 +199,7 @@ public abstract class AbsShowTopicFragment extends Fragment {
         if (currentTaskQuoteMessage != null) {
             currentTaskQuoteMessage.cancel(false);
             currentTaskQuoteMessage = null;
+            latestMessageQuotedInfo = null;
         }
     }
 
@@ -330,11 +331,11 @@ public abstract class AbsShowTopicFragment extends Fragment {
 
                 messageSendEdit.setText(currentMessage);
                 messageSendEdit.setSelection(currentMessage.length());
-                latestMessageQuotedInfo = null;
             } else {
                 Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
             }
 
+            latestMessageQuotedInfo = null;
             currentTaskQuoteMessage = null;
         }
     }
