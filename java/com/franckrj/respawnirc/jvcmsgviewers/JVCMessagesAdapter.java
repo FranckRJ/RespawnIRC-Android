@@ -24,6 +24,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.utils.CustomTagHandler;
 import com.franckrj.respawnirc.utils.JVCParser;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class JVCMessagesAdapter extends BaseAdapter {
     private JVCParser.Settings currentSettings = null;
     private int idOfLayoutToUse = 0;
     private boolean alternateBackgroundColor = false;
+    private CustomTagHandler tagHandler = new CustomTagHandler();
 
     private final Html.ImageGetter jvcImageGetter = new Html.ImageGetter() {
         @Override
@@ -133,8 +135,8 @@ public class JVCMessagesAdapter extends BaseAdapter {
 
     public void addItem(JVCParser.MessageInfos item) {
         ContentHolder thisHolder = new ContentHolder();
-        thisHolder.firstLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageFirstLineFromInfos(item, currentSettings), jvcImageGetter, null));
-        thisHolder.secondLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageSecondLineFromInfos(item, currentSettings), jvcImageGetter, null));
+        thisHolder.firstLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageFirstLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
+        thisHolder.secondLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageSecondLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
         listOfMessages.add(item);
         listOfContentForMessages.add(thisHolder);
     }
@@ -143,8 +145,8 @@ public class JVCMessagesAdapter extends BaseAdapter {
         for (int i = 0; i < listOfMessages.size(); ++i) {
             if (listOfMessages.get(i).id == item.id) {
                 ContentHolder thisHolder = listOfContentForMessages.get(i);
-                thisHolder.firstLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageFirstLineFromInfos(item, currentSettings), jvcImageGetter, null));
-                thisHolder.secondLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageSecondLineFromInfos(item, currentSettings), jvcImageGetter, null));
+                thisHolder.firstLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageFirstLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
+                thisHolder.secondLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageSecondLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
                 listOfMessages.set(i, item);
                 break;
             }
