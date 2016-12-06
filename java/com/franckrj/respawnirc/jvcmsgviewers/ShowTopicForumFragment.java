@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,7 +41,6 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
             if (!listOfNewMessages.isEmpty()) {
                 boolean scrolledAtTheEnd = false;
 
-                loadingLayout.setVisibility(View.GONE);
                 adapterForMessages.removeAllItems();
 
                 if (jvcMsgList.getChildCount() > 0) {
@@ -94,6 +94,15 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
         }
     };
 
+    private final SwipeRefreshLayout.OnRefreshListener listenerForRefresh = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            if (!reloadAllTopic()) {
+                swipeRefresh.setRefreshing(false);
+            }
+        }
+    };
+
     private void goToThisNewPage(String newPageUrl, boolean updateLastPage) {
         SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
         String currentPageNumber = JVCParser.getPageNumberForThisTopicLink(newPageUrl);
@@ -140,6 +149,14 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
         }
     }
 
+    private boolean reloadAllTopic() {
+        if (clearMessagesOnRefresh) {
+            adapterForMessages.removeAllItems();
+            adapterForMessages.updateAllItems();
+        }
+        return getterForMessages.reloadTopic();
+    }
+
     @Override
     public void setNewTopicLink(String newTopicLink) {
         goToThisNewPage(baseForChangeTopicLink(newTopicLink), true);
@@ -153,6 +170,7 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
 
     @Override
     protected void initializeSettings() {
+        showRefreshWhenMessagesShowed = true;
         currentSettings.firstLineFormat = "<b><%PSEUDO_COLOR_START%><%PSEUDO_PSEUDO%><%PSEUDO_COLOR_END%></b><br><small>Le <%DATE_COLOR_START%><%DATE_FULL%><%DATE_COLOR_END%></small>";
         currentSettings.colorPseudoUser = "#3399ff";
         currentSettings.colorPseudoOther = "#80000000";
@@ -179,13 +197,14 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
         jvcMsgList = (ListView) mainView.findViewById(R.id.jvcmessage_view_showtopicforum);
         messageSendEdit = (EditText) mainView.findViewById(R.id.sendmessage_text_showtopicforum);
         messageSendButton = (ImageButton) mainView.findViewById(R.id.sendmessage_button_showtopicforum);
-        loadingLayout = mainView.findViewById(R.id.layout_loading_showtopicforum);
+        swipeRefresh = (SwipeRefreshLayout) mainView.findViewById(R.id.swiperefresh_showtopicforum);
         firstPageButton = (Button) mainView.findViewById(R.id.firstpage_button_showtopicforum);
         previousPageButton = (Button) mainView.findViewById(R.id.previouspage_button_showtopicforum);
         currentPageButton = (Button) mainView.findViewById(R.id.currentpage_button_showtopicforum);
         nextPageButton = (Button) mainView.findViewById(R.id.nextpage_button_showtopicforum);
         lastPageButton = (Button) mainView.findViewById(R.id.lastpage_button_showtopicforum);
 
+        swipeRefresh.setOnRefreshListener(listenerForRefresh);
         firstPageButton.setVisibility(View.GONE);
         firstPageButton.setOnClickListener(changePageWithNavigationButtonListener);
         previousPageButton.setVisibility(View.GONE);
@@ -246,11 +265,7 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_reload_topic_showtopicforum:
-                if (clearMessagesOnRefresh) {
-                    adapterForMessages.removeAllItems();
-                    adapterForMessages.updateAllItems();
-                }
-                getterForMessages.reloadTopic();
+                reloadAllTopic();
                 return true;
             case R.id.action_switch_to_IRC_mode_showtopicforum:
                 if (listenerForNewModeNeeded != null) {

@@ -44,25 +44,30 @@ public class JVCIRCMessageGetter extends AbsJVCMessageGetter {
         urlForTopic = oldUrlForTopic;
     }
 
-    public void startGetMessages(int timerBeforeStart) {
+    public boolean startGetMessages(int timerBeforeStart) {
         if (!urlForTopic.isEmpty()) {
             messagesNeedToBeGet = true;
             if (currentAsyncTaskForGetMessage == null) {
                 currentAsyncTaskForGetMessage = new GetJVCIRCLastMessages();
                 timerForFetchUrl.schedule(new LaunchGetJVCLastMessage(), timerBeforeStart);
             }
+            return true;
+        } else {
+            return false;
         }
     }
 
     @Override
-    public void reloadTopic() {
+    public boolean reloadTopic() {
         if (currentAsyncTaskForGetMessage != null) {
             if (!currentAsyncTaskForGetMessage.getStatus().equals(AsyncTask.Status.RUNNING)) {
                 stopAllCurrentTask();
-                startGetMessages(0);
+                return startGetMessages(0);
+            } else {
+                return true;
             }
         } else {
-            startGetMessages(0);
+            return startGetMessages(0);
         }
     }
 

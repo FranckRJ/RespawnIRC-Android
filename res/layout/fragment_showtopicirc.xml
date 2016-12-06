@@ -4,23 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ListView
-        android:id="@+id/jvcmessage_view_showtopicirc"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swiperefresh_showtopicirc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/sendmessage_layout_showtopicirc"
-        android:layout_alignParentTop="true"/>
-
-    <RelativeLayout
-        android:id="@+id/layout_loading_showtopicirc"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center">
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"/>
-    </RelativeLayout>
+        android:layout_alignParentTop="true">
+        <ListView
+            android:id="@+id/jvcmessage_view_showtopicirc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <View
         android:layout_width="match_parent"

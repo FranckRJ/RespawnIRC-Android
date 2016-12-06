@@ -58,8 +58,8 @@ public class JVCTopicGetter {
         }
     }
 
-    public void reloadForum() {
-        startGetMessagesOfThisPage(urlForForum);
+    public boolean reloadForum() {
+        return startGetMessagesOfThisPage(urlForForum);
     }
 
     public void stopAllCurrentTask() {

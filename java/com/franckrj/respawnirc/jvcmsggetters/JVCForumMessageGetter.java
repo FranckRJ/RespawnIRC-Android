@@ -30,8 +30,8 @@ public class JVCForumMessageGetter extends AbsJVCMessageGetter {
     }
 
     @Override
-    public void reloadTopic() {
-        startGetMessagesOfThisPage(urlForTopic);
+    public boolean reloadTopic() {
+        return startGetMessagesOfThisPage(urlForTopic);
     }
 
     private class GetJVCForumLastMessages extends AbsGetJVCLastMessages {

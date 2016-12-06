@@ -1,6 +1,7 @@
 package com.franckrj.respawnirc.jvcmsgviewers;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,8 +35,6 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
             if (!listOfNewMessages.isEmpty()) {
                 boolean scrolledAtTheEnd = true;
                 boolean firstTimeGetMessages = adapterForMessages.getAllItems().isEmpty();
-
-                loadingLayout.setVisibility(View.GONE);
 
                 if (jvcMsgList.getChildCount() > 0) {
                     scrolledAtTheEnd = (jvcMsgList.getLastVisiblePosition() == jvcMsgList.getCount() - 1) &&
@@ -98,6 +97,7 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
 
     @Override
     protected void initializeSettings() {
+        showRefreshWhenMessagesShowed = false;
         currentSettings.firstLineFormat = "[<%DATE_COLOR_START%><%DATE_TIME%><%DATE_COLOR_END%>] &lt;<%PSEUDO_COLOR_START%><%PSEUDO_PSEUDO%><%PSEUDO_COLOR_END%>&gt;";
         currentSettings.colorPseudoUser = "#3399ff";
         currentSettings.colorPseudoOther = "#000025";
@@ -125,7 +125,7 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
         jvcMsgList = (ListView) mainView.findViewById(R.id.jvcmessage_view_showtopicirc);
         messageSendEdit = (EditText) mainView.findViewById(R.id.sendmessage_text_showtopicirc);
         messageSendButton = (ImageButton) mainView.findViewById(R.id.sendmessage_button_showtopicirc);
-        loadingLayout = mainView.findViewById(R.id.layout_loading_showtopicirc);
+        swipeRefresh = (SwipeRefreshLayout) mainView.findViewById(R.id.swiperefresh_showtopicirc);
 
         messageSendButton.setOnClickListener(sendMessageToTopicListener);
 
@@ -137,6 +137,7 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
         super.onActivityCreated(savedInstanceState);
 
         getterForMessages.setListenerForNewMessages(listenerForNewMessages);
+        swipeRefresh.setEnabled(false);
 
         if (savedInstanceState != null) {
             oldUrlForTopic = savedInstanceState.getString(getString(R.string.saveOldUrlForTopic), "");

@@ -112,5 +112,5 @@ public abstract class AbsJVCMessageGetter {
         void newStateSetted(int newState);
     }
 
-    public abstract void reloadTopic();
+    public abstract boolean reloadTopic();
 }

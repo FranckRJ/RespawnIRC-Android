@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -41,7 +42,8 @@ public abstract class AbsShowTopicFragment extends Fragment {
     protected String cookieListInAString = "";
     protected JVCParser.Settings currentSettings = new JVCParser.Settings();
     protected NewModeNeededListener listenerForNewModeNeeded = null;
-    protected View loadingLayout = null;
+    protected SwipeRefreshLayout swipeRefresh = null;
+    protected boolean showRefreshWhenMessagesShowed = true;
 
     protected final PopupMenu.OnMenuItemClickListener listenerForItemClicked = new PopupMenu.OnMenuItemClickListener() {
         @Override
@@ -107,11 +109,11 @@ public abstract class AbsShowTopicFragment extends Fragment {
     protected final AbsJVCMessageGetter.NewGetterStateListener listenerForNewGetterState = new AbsJVCMessageGetter.NewGetterStateListener() {
         @Override
         public void newStateSetted(int newState) {
-            if (adapterForMessages.getAllItems().isEmpty()) {
+            if (showRefreshWhenMessagesShowed || adapterForMessages.getAllItems().isEmpty()) {
                 if (newState == AbsJVCMessageGetter.STATE_LOADING) {
-                    loadingLayout.setVisibility(View.VISIBLE);
+                    swipeRefresh.setRefreshing(true);
                 } else if (newState == AbsJVCMessageGetter.STATE_NOT_LOADING) {
-                    loadingLayout.setVisibility(View.GONE);
+                    swipeRefresh.setRefreshing(false);
                 }
             }
         }
@@ -241,7 +243,7 @@ public abstract class AbsShowTopicFragment extends Fragment {
             absGetterForMessages.setListenerForNewForumAndTopicName((AbsJVCMessageGetter.NewForumAndTopicNameAvailable) getActivity());
         }
 
-        loadingLayout.setVisibility(View.GONE);
+        swipeRefresh.setColorSchemeResources(R.color.colorAccent);
         jvcMsgList.setAdapter(adapterForMessages);
 
         if (savedInstanceState != null) {

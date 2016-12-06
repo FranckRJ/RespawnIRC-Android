@@ -53,28 +53,23 @@
             android:text="@string/nextPageText"/>
     </RelativeLayout>
 
-    <ListView
-        android:id="@+id/jvctopic_view_showforum"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swiperefresh_showforum"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:drawSelectorOnTop="true"
-        android:layout_below="@+id/header_layout_showforum"/>
+        android:layout_below="@+id/header_layout_showforum">
+        <ListView
+            android:id="@+id/jvctopic_view_showforum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawSelectorOnTop="true"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="4dp"
         android:background="@drawable/shadow_top"
         android:layout_below="@+id/header_layout_showforum"/>
-
-    <RelativeLayout
-        android:id="@+id/layout_loading_showforum"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center">
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"/>
-    </RelativeLayout>
 
 </RelativeLayout>

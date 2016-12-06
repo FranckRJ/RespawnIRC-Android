@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,7 +25,7 @@ public class ShowForumFragment extends Fragment {
     public static final String ARG_FORUM_LINK = "com.franckrj.respawnirc.showtopicfragment.forum_link";
 
     private SharedPreferences sharedPref = null;
-    private View loadingLayout = null;
+    private SwipeRefreshLayout swipeRefresh = null;
     private NewTopicWantRead listenerForNewTopicWantRead = null;
     private JVCTopicGetter getterForTopics = null;
     private ListView jvcTopicList = null;
@@ -61,12 +62,10 @@ public class ShowForumFragment extends Fragment {
     private final JVCTopicGetter.NewGetterStateListener listenerForNewGetterState = new JVCTopicGetter.NewGetterStateListener() {
         @Override
         public void newStateSetted(int newState) {
-            if (adapterForTopics.getAllItems().isEmpty()) {
-                if (newState == JVCTopicGetter.STATE_LOADING) {
-                    loadingLayout.setVisibility(View.VISIBLE);
-                } else if (newState == JVCTopicGetter.STATE_NOT_LOADING) {
-                    loadingLayout.setVisibility(View.GONE);
-                }
+            if (newState == JVCTopicGetter.STATE_LOADING) {
+                swipeRefresh.setRefreshing(true);
+            } else if (newState == JVCTopicGetter.STATE_NOT_LOADING) {
+                swipeRefresh.setRefreshing(false);
             }
         }
     };
@@ -75,7 +74,6 @@ public class ShowForumFragment extends Fragment {
         @Override
         public void getNewTopics(ArrayList<JVCParser.TopicInfos> listOfNewTopics) {
             if (!listOfNewTopics.isEmpty()) {
-                loadingLayout.setVisibility(View.GONE);
                 adapterForTopics.removeAllItems();
 
                 for (JVCParser.TopicInfos thisTopicInfo : listOfNewTopics) {
@@ -85,6 +83,15 @@ public class ShowForumFragment extends Fragment {
                 adapterForTopics.updateAllItems();
             } else {
                 Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
+
+    private final SwipeRefreshLayout.OnRefreshListener listenerForRefresh = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            if (!reloadAllForum()) {
+                swipeRefresh.setRefreshing(false);
             }
         }
     };
@@ -110,6 +117,14 @@ public class ShowForumFragment extends Fragment {
     private void reloadSettings() {
         getterForTopics.setCookieListInAString(sharedPref.getString(getString(R.string.prefCookiesList), ""));
         clearTopicsOnRefresh = true;
+    }
+
+    private boolean reloadAllForum() {
+        if (clearTopicsOnRefresh) {
+            adapterForTopics.removeAllItems();
+            adapterForTopics.updateAllItems();
+        }
+        return getterForTopics.reloadForum();
     }
 
     public void goToThisNewPage(String newPageToGo) {
@@ -153,12 +168,13 @@ public class ShowForumFragment extends Fragment {
         View mainView = inflater.inflate(R.layout.fragment_showforum, container, false);
 
         jvcTopicList = (ListView) mainView.findViewById(R.id.jvctopic_view_showforum);
-        loadingLayout = mainView.findViewById(R.id.layout_loading_showforum);
+        swipeRefresh = (SwipeRefreshLayout) mainView.findViewById(R.id.swiperefresh_showforum);
         firstPageButton = (Button) mainView.findViewById(R.id.firstpage_button_showforum);
         previousPageButton = (Button) mainView.findViewById(R.id.previouspage_button_showforum);
         currentPageButton = (Button) mainView.findViewById(R.id.currentpage_button_showforum);
         nextPageButton = (Button) mainView.findViewById(R.id.nextpage_button_showforum);
 
+        swipeRefresh.setOnRefreshListener(listenerForRefresh);
         firstPageButton.setVisibility(View.GONE);
         firstPageButton.setOnClickListener(changePageWithNavigationButtonListener);
         previousPageButton.setVisibility(View.GONE);
@@ -190,7 +206,7 @@ public class ShowForumFragment extends Fragment {
             getterForTopics.setListenerForNewForumName((JVCTopicGetter.NewForumNameAvailable) getActivity());
         }
 
-        loadingLayout.setVisibility(View.GONE);
+        swipeRefresh.setColorSchemeResources(R.color.colorAccent);
         jvcTopicList.setAdapter(adapterForTopics);
 
         if (savedInstanceState != null) {
@@ -251,11 +267,7 @@ public class ShowForumFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_reload_forum_showforum:
-                if (clearTopicsOnRefresh) {
-                    adapterForTopics.removeAllItems();
-                    adapterForTopics.updateAllItems();
-                }
-                getterForTopics.reloadForum();
+                reloadAllForum();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
