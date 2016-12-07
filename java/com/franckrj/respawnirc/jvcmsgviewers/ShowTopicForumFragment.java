@@ -174,6 +174,8 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
         currentSettings.firstLineFormat = "<b><%PSEUDO_COLOR_START%><%PSEUDO_PSEUDO%><%PSEUDO_COLOR_END%></b><br><small>Le <%DATE_COLOR_START%><%DATE_FULL%><%DATE_COLOR_END%></small>";
         currentSettings.colorPseudoUser = "#3399ff";
         currentSettings.colorPseudoOther = "#80000000";
+        currentSettings.colorPseudoModo = "#3A9D23";
+        currentSettings.colorPseudoAdmin = "#DB0F0F";
     }
 
     @Override

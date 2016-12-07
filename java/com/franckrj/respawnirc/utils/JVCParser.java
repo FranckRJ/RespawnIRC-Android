@@ -43,7 +43,7 @@ public final class JVCParser {
     private static final Pattern highlightInArianeStringPattern = Pattern.compile("<h1 class=\"highlight\">([^<]*)</h1>");
     private static final Pattern topicNameAndLinkPattern = Pattern.compile("<a class=\"lien-jv topic-title[^\"]*\" href=\"([^\"]*\" title=\"[^\"]*)\"[^>]*>");
     private static final Pattern topicNumberMessagesPattern = Pattern.compile("<span class=\"topic-count\">[^0-9]*([0-9]*)");
-    private static final Pattern topicAuthorPattern = Pattern.compile("<span class=\".*?topic-author[^>]*>[^A-Za-z0-9\\[\\]_-]*([^<\n]*)");
+    private static final Pattern topicAuthorPattern = Pattern.compile("<span class=\".*?text-([^ ]*) topic-author[^>]*>[^A-Za-z0-9\\[\\]_-]*([^<\n]*)");
     private static final Pattern topicDatePattern = Pattern.compile("<span class=\"topic-date\">[^<]*<span[^>]*>[^0-9/:]*([0-9/:]*)");
     private static final Pattern topicTypePattern = Pattern.compile("<img src=\"/img/forums/topic-(.*?).png\"");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
@@ -389,12 +389,14 @@ public final class JVCParser {
 
         if (thisMessageInfo.pseudo.toLowerCase().equals(settings.pseudoOfUser.toLowerCase())) {
             newFirstLine = newFirstLine.replaceAll("<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoUser + "\">");
-            newFirstLine = newFirstLine.replaceAll("<%PSEUDO_COLOR_END%>", "</font>");
-        }
-        else {
+        } else if (thisMessageInfo.pseudoType.equals("modo")){
+            newFirstLine = newFirstLine.replaceAll("<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoModo + "\">");
+        } else if (thisMessageInfo.pseudoType.equals("admin") || thisMessageInfo.pseudoType.equals("staff")){
+            newFirstLine = newFirstLine.replaceAll("<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoAdmin + "\">");
+        } else {
             newFirstLine = newFirstLine.replaceAll("<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoOther + "\">");
-            newFirstLine = newFirstLine.replaceAll("<%PSEUDO_COLOR_END%>", "</font>");
         }
+        newFirstLine = newFirstLine.replaceAll("<%PSEUDO_COLOR_END%>", "</font>");
 
         return newFirstLine;
     }
@@ -569,8 +571,10 @@ public final class JVCParser {
 
         if (pseudoInfosMatcher.find()) {
             newMessageInfo.pseudo = pseudoInfosMatcher.group(2);
+            newMessageInfo.pseudoType = pseudoInfosMatcher.group(1);
         } else {
             newMessageInfo.pseudo = "Pseudo supprimé";
+            newMessageInfo.pseudoType = "user";
         }
 
         if (lastEditMessageMatcher.find()) {
@@ -605,7 +609,8 @@ public final class JVCParser {
             newTopicInfo.name = topicNameAndLinkString.substring(topicNameAndLinkString.indexOf("title=\"") + 7);
             newTopicInfo.name = newTopicInfo.name.replace("&amp;", "&").replace("&quot;", "\"").replace("&#039;", "\'").replace("&lt;", "<").replace("&gt;", ">");
             newTopicInfo.messages = topicNumberMessagesMatcher.group(1);
-            newTopicInfo.author = topicAuthorMatcher.group(1).trim();
+            newTopicInfo.author = topicAuthorMatcher.group(2).trim();
+            newTopicInfo.authorType = topicAuthorMatcher.group(1).trim();
             newTopicInfo.wholeDate = topicDateMatcher.group(1);
             newTopicInfo.type = topicTypeMatcher.group(1);
         }
@@ -643,6 +648,7 @@ public final class JVCParser {
 
     public static class MessageInfos implements Parcelable, Comparable<MessageInfos> {
         public String pseudo;
+        public String pseudoType;
         public String messageNotParsed;
         public String dateTime;
         public String wholeDate;
@@ -672,6 +678,7 @@ public final class JVCParser {
 
         private MessageInfos(Parcel in) {
             pseudo = in.readString();
+            pseudoType = in.readString();
             messageNotParsed = in.readString();
             dateTime = in.readString();
             wholeDate = in.readString();
@@ -692,6 +699,7 @@ public final class JVCParser {
         @Override
         public void writeToParcel(Parcel out, int flags) {
             out.writeString(pseudo);
+            out.writeString(pseudoType);
             out.writeString(messageNotParsed);
             out.writeString(dateTime);
             out.writeString(wholeDate);
@@ -718,6 +726,7 @@ public final class JVCParser {
 
     public static class TopicInfos implements Parcelable {
         public String author;
+        public String authorType;
         public String type;
         public String name;
         public String link;
@@ -742,6 +751,7 @@ public final class JVCParser {
 
         private TopicInfos(Parcel in) {
             author = in.readString();
+            authorType = in.readString();
             type = in.readString();
             name = in.readString();
             link = in.readString();
@@ -757,6 +767,7 @@ public final class JVCParser {
         @Override
         public void writeToParcel(Parcel out, int flags) {
             out.writeString(author);
+            out.writeString(authorType);
             out.writeString(type);
             out.writeString(name);
             out.writeString(link);
@@ -820,6 +831,8 @@ public final class JVCParser {
         public String firstLineFormat;
         public String colorPseudoUser;
         public String colorPseudoOther;
+        public String colorPseudoModo;
+        public String colorPseudoAdmin;
         public int maxNumberOfOverlyQuotes = 0;
     }
 

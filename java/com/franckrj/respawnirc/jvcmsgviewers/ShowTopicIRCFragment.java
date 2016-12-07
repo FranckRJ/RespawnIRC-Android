@@ -101,6 +101,8 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
         currentSettings.firstLineFormat = "[<%DATE_COLOR_START%><%DATE_TIME%><%DATE_COLOR_END%>] &lt;<%PSEUDO_COLOR_START%><%PSEUDO_PSEUDO%><%PSEUDO_COLOR_END%>&gt;";
         currentSettings.colorPseudoUser = "#3399ff";
         currentSettings.colorPseudoOther = "#000025";
+        currentSettings.colorPseudoModo = "#3A9D23";
+        currentSettings.colorPseudoAdmin = "#DB0F0F";
     }
 
     @Override

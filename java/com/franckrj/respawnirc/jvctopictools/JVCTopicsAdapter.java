@@ -55,11 +55,24 @@ public class JVCTopicsAdapter extends BaseAdapter {
     }
 
     public void addItem(JVCParser.TopicInfos item) {
+        String textForAuthor;
         ContentHolder thisHolder = new ContentHolder();
         thisHolder.firstLineContent = Html.fromHtml("<b><font color=\"" +
                                         String.format("#%06X", 0xFFFFFF & parentActivity.getResources().getColor(R.color.linkColor)) +
                                         "\">" + item.name + "</font> (" + item.messages + ")</b>");
-        thisHolder.secondLineContent = Html.fromHtml("<small>" + item.author + "</small>");
+        switch (item.authorType) {
+            case "modo":
+                textForAuthor = "<small><font color=\"#3A9D23\">" + item.author + "</font></small>";
+                break;
+            case "admin":
+            case "staff":
+                textForAuthor = "<small><font color=\"#DB0F0F\">" + item.author + "</font></small>";
+                break;
+            default:
+                textForAuthor = "<small>" + item.author + "</small>";
+                break;
+        }
+        thisHolder.secondLineContent = Html.fromHtml(textForAuthor);
         thisHolder.thirdLineContent = Html.fromHtml("<small>" + item.wholeDate + "</small>");
         listOfTopics.add(item);
         listOfContentForTopics.add(thisHolder);
