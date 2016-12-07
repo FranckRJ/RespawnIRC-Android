@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.jvcmsggetters.JVCIRCMessageGetter;
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -99,10 +100,10 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
     protected void initializeSettings() {
         showRefreshWhenMessagesShowed = false;
         currentSettings.firstLineFormat = "[<%DATE_COLOR_START%><%DATE_TIME%><%DATE_COLOR_END%>] &lt;<%PSEUDO_COLOR_START%><%PSEUDO_PSEUDO%><%PSEUDO_COLOR_END%>&gt;";
-        currentSettings.colorPseudoUser = "#3399ff";
+        currentSettings.colorPseudoUser = Utils.resColorToString(R.color.colorPseudoUser, getActivity());
         currentSettings.colorPseudoOther = "#000025";
-        currentSettings.colorPseudoModo = "#3A9D23";
-        currentSettings.colorPseudoAdmin = "#DB0F0F";
+        currentSettings.colorPseudoModo = Utils.resColorToString(R.color.colorPseudoModo, getActivity());
+        currentSettings.colorPseudoAdmin = Utils.resColorToString(R.color.colorPseudoAdmin, getActivity());
         currentSettings.secondLineFormat = "<%MESSAGE_MESSAGE%>";
         currentSettings.addBeforeEdit = "";
         currentSettings.addAfterEdit = "";

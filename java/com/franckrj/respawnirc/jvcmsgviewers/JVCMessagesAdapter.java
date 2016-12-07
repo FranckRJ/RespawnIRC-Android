@@ -134,19 +134,14 @@ public class JVCMessagesAdapter extends BaseAdapter {
     }
 
     public void addItem(JVCParser.MessageInfos item) {
-        ContentHolder thisHolder = new ContentHolder();
-        thisHolder.firstLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageFirstLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
-        thisHolder.secondLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageSecondLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
+        listOfContentForMessages.add(updateHolderWithNewItem(new ContentHolder(), item));
         listOfMessages.add(item);
-        listOfContentForMessages.add(thisHolder);
     }
 
     public void updateThisItem(JVCParser.MessageInfos item) {
         for (int i = 0; i < listOfMessages.size(); ++i) {
             if (listOfMessages.get(i).id == item.id) {
-                ContentHolder thisHolder = listOfContentForMessages.get(i);
-                thisHolder.firstLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageFirstLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
-                thisHolder.secondLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageSecondLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
+                updateHolderWithNewItem(listOfContentForMessages.get(i), item);
                 listOfMessages.set(i, item);
                 break;
             }
@@ -155,6 +150,12 @@ public class JVCMessagesAdapter extends BaseAdapter {
 
     public void updateAllItems() {
         notifyDataSetChanged();
+    }
+
+    private ContentHolder updateHolderWithNewItem(ContentHolder holder, JVCParser.MessageInfos item) {
+        holder.firstLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageFirstLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
+        holder.secondLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageSecondLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
+        return holder;
     }
 
     private Spannable replaceQuoteSpans(Spanned spanToChange) {

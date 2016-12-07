@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -57,16 +58,15 @@ public class JVCTopicsAdapter extends BaseAdapter {
     public void addItem(JVCParser.TopicInfos item) {
         String textForAuthor;
         ContentHolder thisHolder = new ContentHolder();
-        thisHolder.firstLineContent = Html.fromHtml("<b><font color=\"" +
-                                        String.format("#%06X", 0xFFFFFF & parentActivity.getResources().getColor(R.color.linkColor)) +
+        thisHolder.firstLineContent = Html.fromHtml("<b><font color=\"" + Utils.resColorToString(R.color.linkColor, parentActivity) +
                                         "\">" + item.name + "</font> (" + item.messages + ")</b>");
         switch (item.authorType) {
             case "modo":
-                textForAuthor = "<small><font color=\"#3A9D23\">" + item.author + "</font></small>";
+                textForAuthor = "<small><font color=\"" + Utils.resColorToString(R.color.colorPseudoModo, parentActivity) + "\">" + item.author + "</font></small>";
                 break;
             case "admin":
             case "staff":
-                textForAuthor = "<small><font color=\"#DB0F0F\">" + item.author + "</font></small>";
+                textForAuthor = "<small><font color=\"" + Utils.resColorToString(R.color.colorPseudoAdmin, parentActivity) + "\">" + item.author + "</font></small>";
                 break;
             default:
                 textForAuthor = "<small>" + item.author + "</small>";

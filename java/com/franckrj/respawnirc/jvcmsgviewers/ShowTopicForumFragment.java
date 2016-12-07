@@ -21,6 +21,7 @@ import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.dialogs.ChoosePageNumberDialogFragment;
 import com.franckrj.respawnirc.jvcmsggetters.JVCForumMessageGetter;
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -172,10 +173,10 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
     protected void initializeSettings() {
         showRefreshWhenMessagesShowed = true;
         currentSettings.firstLineFormat = "<b><%PSEUDO_COLOR_START%><%PSEUDO_PSEUDO%><%PSEUDO_COLOR_END%></b><br><small>Le <%DATE_COLOR_START%><%DATE_FULL%><%DATE_COLOR_END%></small>";
-        currentSettings.colorPseudoUser = "#3399ff";
+        currentSettings.colorPseudoUser = Utils.resColorToString(R.color.colorPseudoUser, getActivity());
         currentSettings.colorPseudoOther = "#80000000";
-        currentSettings.colorPseudoModo = "#3A9D23";
-        currentSettings.colorPseudoAdmin = "#DB0F0F";
+        currentSettings.colorPseudoModo = Utils.resColorToString(R.color.colorPseudoModo, getActivity());
+        currentSettings.colorPseudoAdmin = Utils.resColorToString(R.color.colorPseudoAdmin, getActivity());
         currentSettings.secondLineFormat = "<%MESSAGE_MESSAGE%><%EDIT_ALL%>";
         currentSettings.addBeforeEdit = "<br /><br /><small><i>";
         currentSettings.addAfterEdit = "</i></small>";

@@ -6,4 +6,7 @@
     <color name="colorQuoteBackground">#10000000</color>
     <color name="altBackgroundMessageColor">#EEF5FC</color>
     <color name="linkColor">#006BD7</color>
+    <color name="colorPseudoUser">#3399ff</color>
+    <color name="colorPseudoModo">#3A9D23</color>
+    <color name="colorPseudoAdmin">#DB0F0F</color>
 </resources>
