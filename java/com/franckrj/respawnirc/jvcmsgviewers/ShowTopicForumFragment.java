@@ -176,6 +176,9 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
         currentSettings.colorPseudoOther = "#80000000";
         currentSettings.colorPseudoModo = "#3A9D23";
         currentSettings.colorPseudoAdmin = "#DB0F0F";
+        currentSettings.secondLineFormat = "<%MESSAGE_MESSAGE%><%EDIT_ALL%>";
+        currentSettings.addBeforeEdit = "<br /><br /><small><i>";
+        currentSettings.addAfterEdit = "</i></small>";
     }
 
     @Override

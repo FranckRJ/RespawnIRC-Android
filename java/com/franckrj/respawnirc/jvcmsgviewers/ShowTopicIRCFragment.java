@@ -103,6 +103,9 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
         currentSettings.colorPseudoOther = "#000025";
         currentSettings.colorPseudoModo = "#3A9D23";
         currentSettings.colorPseudoAdmin = "#DB0F0F";
+        currentSettings.secondLineFormat = "<%MESSAGE_MESSAGE%>";
+        currentSettings.addBeforeEdit = "";
+        currentSettings.addAfterEdit = "";
     }
 
     @Override

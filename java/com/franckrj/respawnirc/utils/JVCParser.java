@@ -35,7 +35,7 @@ public final class JVCParser {
     private static final Pattern pageTopicLinkNumberPattern = Pattern.compile("(http://www.jeuxvideo.com/forums/[^-]*-([^-]*)-([^-]*)-)([^-]*)(-[^-]*-[^-]*-[^-]*-[^.]*.htm)");
     private static final Pattern pageForumLinkNumberPattern = Pattern.compile("(http://www.jeuxvideo.com/forums/[^-]*-([^-]*)-[^-]*-[^-]*-[^-]*-)([^-]*)(-[^-]*-[^.]*.htm)");
     private static final Pattern jvCarePattern = Pattern.compile("<span class=\"JvCare [^\"]*\">([^<]*)</span>");
-    private static final Pattern lastEditMessagePattern = Pattern.compile("<div class=\"info-edition-msg\">Message édité le ([^ ]* [^ ]* [^ ]* [^ ]* [0-9:]*) par <span");
+    private static final Pattern lastEditMessagePattern = Pattern.compile("<div class=\"info-edition-msg\">(Message édité le ([^ ]* [^ ]* [^ ]* [^ ]* [0-9:]*) par.*?)</div>");
     private static final Pattern messageEditInfoPattern = Pattern.compile("<textarea tabindex=\"3\" class=\"area-editor\" name=\"text_commentaire\" id=\"text_commentaire\" placeholder=\"[^\"]*\">([^<]*)</textarea>");
     private static final Pattern allArianeStringPattern = Pattern.compile("<div class=\"fil-ariane-crumb\">.*?</h1>", Pattern.DOTALL);
     private static final Pattern forumNameInArianeStringPattern = Pattern.compile("<span><a href=\"/forums/0-[^\"]*\">([^<]*)</a></span>");
@@ -175,7 +175,7 @@ public final class JVCParser {
             if (forumName.startsWith("Forum")) {
                 forumName =  forumName.substring(("Forum").length());
             }
-            forumName = forumName.trim().replace("&amp;", "&").replace("&quot;", "\"").replace("&#039;", "\'").replace("&lt;", "<").replace("&gt;", ">");;
+            forumName = forumName.trim().replace("&amp;", "&").replace("&quot;", "\"").replace("&#039;", "\'").replace("&lt;", "<").replace("&gt;", ">");
         }
 
         return forumName;
@@ -209,8 +209,8 @@ public final class JVCParser {
                 currentNames.topic =  currentNames.topic.substring(("Topic").length());
             }
 
-            currentNames.forum = currentNames.forum.trim().replace("&amp;", "&").replace("&quot;", "\"").replace("&#039;", "\'").replace("&lt;", "<").replace("&gt;", ">");;
-            currentNames.topic = currentNames.topic.trim().replace("&amp;", "&").replace("&quot;", "\"").replace("&#039;", "\'").replace("&lt;", "<").replace("&gt;", ">");;
+            currentNames.forum = currentNames.forum.trim().replace("&amp;", "&").replace("&quot;", "\"").replace("&#039;", "\'").replace("&lt;", "<").replace("&gt;", ">");
+            currentNames.topic = currentNames.topic.trim().replace("&amp;", "&").replace("&quot;", "\"").replace("&#039;", "\'").replace("&lt;", "<").replace("&gt;", ">");
         }
 
         return currentNames;
@@ -371,7 +371,6 @@ public final class JVCParser {
         return "";
     }
 
-    /*TODO: Améliorer ça, le rendre plus propre, et gérer plus de cas (pseudo admin/modo).*/
     public static String createMessageFirstLineFromInfos(MessageInfos thisMessageInfo, Settings settings) {
         String newFirstLine = settings.firstLineFormat;
 
@@ -402,24 +401,22 @@ public final class JVCParser {
     }
 
     public static String createMessageSecondLineFromInfos(MessageInfos thisMessageInfo, Settings settings) {
-        return parseMessageToPrettyMessage(thisMessageInfo.messageNotParsed, settings, thisMessageInfo.showSpoil, thisMessageInfo.showOverlyQuote);
-    }
+        String finalMessage = settings.secondLineFormat;
+        String tmpMessage = thisMessageInfo.messageNotParsed;
 
-    /*TODO: A refaire en plus propre et plus complet.*/
-    public static String parseMessageToPrettyMessage(String thisMessage, Settings settings, boolean showSpoil, boolean showOverlyQuote) {
-        thisMessage = parseThisMessageWithThisPattern(thisMessage, codeBlockPattern, 1, "<p><font face=\"monospace\">", "</font></p>", new ConvertStringToString("\n", "<br />"), new ConvertStringToString(" ", " ")); //remplace les espaces par des alt+255
-        thisMessage = parseThisMessageWithThisPattern(thisMessage, codeLinePattern, 1, "<font face=\"monospace\">", "</font>", new ConvertStringToString(" ", " "), null); //remplace les espaces par des alt+255
-        thisMessage = parseThisMessageWithThisPattern(thisMessage, stickerPattern, 2, "<img src=\"sticker_", ".png\"/>", new ConvertStringToString("-", "_"), null);
+        tmpMessage = parseThisMessageWithThisPattern(tmpMessage, codeBlockPattern, 1, "<p><font face=\"monospace\">", "</font></p>", new ConvertStringToString("\n", "<br />"), new ConvertStringToString(" ", " ")); //remplace les espaces par des alt+255
+        tmpMessage = parseThisMessageWithThisPattern(tmpMessage, codeLinePattern, 1, "<font face=\"monospace\">", "</font>", new ConvertStringToString(" ", " "), null); //remplace les espaces par des alt+255
+        tmpMessage = parseThisMessageWithThisPattern(tmpMessage, stickerPattern, 2, "<img src=\"sticker_", ".png\"/>", new ConvertStringToString("-", "_"), null);
 
-        if (!showSpoil) {
-            thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilLinePattern, 1, "", "", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
-            thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilBlockPattern, 1, "<p>", "</p>", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
+        if (!thisMessageInfo.showSpoil) {
+            tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilLinePattern, 1, "", "", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
+            tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilBlockPattern, 1, "<p>", "</p>", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
         } else {
-            thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilLinePattern, 1, "<font color=\"#000000\">", "</font>", null, null);
-            thisMessage = parseThisMessageWithThisPattern(thisMessage, spoilBlockPattern, 1, "<p><font color=\"#000000\">", "</font></p>", null, null);
+            tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilLinePattern, 1, "<font color=\"#000000\">", "</font>", null, null);
+            tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilBlockPattern, 1, "<p><font color=\"#000000\">", "</font></p>", null, null);
         }
 
-        thisMessage = thisMessage.replace("\n", "")
+        tmpMessage = tmpMessage.replace("\n", "")
                 .replace("\r", "")
                 .replaceAll("<ul[^>]*>", "<p>")
                 .replace("</ul>", "</p>")
@@ -443,25 +440,33 @@ public final class JVCParser {
                 .replaceAll("<(/)?p>", "<br /><br />")
                 .replaceAll("(<br /> *)*(<(/)?blockquote>)( *<br />)*", "$2");
 
-        thisMessage = parseThisMessageWithThisPattern(thisMessage, jvCarePattern, 1, "", "", new MakeLinkIfPossible(), null);
+        tmpMessage = parseThisMessageWithThisPattern(tmpMessage, jvCarePattern, 1, "", "", new MakeLinkIfPossible(), null);
 
-        thisMessage = thisMessage.trim();
+        tmpMessage = tmpMessage.trim();
 
-        while (thisMessage.startsWith("<br />")) {
-            thisMessage = thisMessage.substring(6);
-            thisMessage = thisMessage.trim();
+        while (tmpMessage.startsWith("<br />")) {
+            tmpMessage = tmpMessage.substring(6);
+            tmpMessage = tmpMessage.trim();
         }
 
-        while (thisMessage.endsWith("<br />")) {
-            thisMessage = thisMessage.substring(0, thisMessage.length() - 6);
-            thisMessage = thisMessage.trim();
+        while (tmpMessage.endsWith("<br />")) {
+            tmpMessage = tmpMessage.substring(0, tmpMessage.length() - 6);
+            tmpMessage = tmpMessage.trim();
         }
 
-        if (!showOverlyQuote) {
-            thisMessage = removeOverlyQuoteInPrettyMessage(thisMessage, settings.maxNumberOfOverlyQuotes);
+        if (!thisMessageInfo.showOverlyQuote) {
+            tmpMessage = removeOverlyQuoteInPrettyMessage(tmpMessage, settings.maxNumberOfOverlyQuotes);
         }
 
-        return thisMessage;
+        finalMessage = finalMessage.replace("<%MESSAGE_MESSAGE%>", tmpMessage);
+        if (!thisMessageInfo.lastTimeEdit.isEmpty()) {
+            finalMessage = finalMessage.replace("<%EDIT_ALL%>", settings.addBeforeEdit + thisMessageInfo.lastTimeEdit.trim() + settings.addAfterEdit);
+        } else {
+            finalMessage = finalMessage.replace("<%EDIT_ALL%>", "");
+        }
+        finalMessage = finalMessage.replaceAll("(<br /> *)*(<(/)?blockquote>)( *<br />)*", "$2");
+
+        return finalMessage;
     }
 
     public static String removeOverlyQuoteInPrettyMessage(String prettyMessage, int maxNumberOfOverlyQuotes) {
@@ -578,7 +583,7 @@ public final class JVCParser {
         }
 
         if (lastEditMessageMatcher.find()) {
-            newMessageInfo.lastTimeEdit = lastEditMessageMatcher.group(1);
+            newMessageInfo.lastTimeEdit = lastEditMessageMatcher.group(1).replaceAll(htmlTagPattern.pattern(), "");
         } else {
             newMessageInfo.lastTimeEdit = "";
         }
@@ -829,6 +834,9 @@ public final class JVCParser {
     public static class Settings {
         public String pseudoOfUser = "";
         public String firstLineFormat;
+        public String secondLineFormat;
+        public String addBeforeEdit;
+        public String addAfterEdit;
         public String colorPseudoUser;
         public String colorPseudoOther;
         public String colorPseudoModo;
