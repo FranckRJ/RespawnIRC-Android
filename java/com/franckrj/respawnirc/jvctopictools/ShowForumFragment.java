@@ -50,12 +50,24 @@ public class ShowForumFragment extends Fragment {
         }
     };
 
-    private final AdapterView.OnItemClickListener listenerForItemClickedInListViw = new AdapterView.OnItemClickListener() {
+    private final AdapterView.OnItemClickListener listenerForItemClickedInListView = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
             if (listenerForNewTopicWantRead != null) {
                 listenerForNewTopicWantRead.setReadNewTopic(adapterForTopics.getItem(position).link, adapterForTopics.getItem(position).name);
             }
+        }
+    };
+
+    private final AdapterView.OnItemLongClickListener listenerForItemLongClickedInListView = new AdapterView.OnItemLongClickListener() {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+            if (listenerForNewTopicWantRead != null) {
+                String realPageToGo = JVCParser.setPageNumberForThisTopicLink(adapterForTopics.getItem(position).link, (Integer.parseInt(adapterForTopics.getItem(position).messages) / 20) + 1);
+                listenerForNewTopicWantRead.setReadNewTopic(realPageToGo, adapterForTopics.getItem(position).name);
+                return true;
+            }
+            return false;
         }
     };
 
@@ -197,7 +209,8 @@ public class ShowForumFragment extends Fragment {
         getterForTopics.setListenerForNewGetterState(listenerForNewGetterState);
         getterForTopics.setListenerForNewTopics(listenerForNewTopics);
         adapterForTopics.setAlternateBackgroundColor(true);
-        jvcTopicList.setOnItemClickListener(listenerForItemClickedInListViw);
+        jvcTopicList.setOnItemClickListener(listenerForItemClickedInListView);
+        jvcTopicList.setOnItemLongClickListener(listenerForItemLongClickedInListView);
 
         if (getActivity() instanceof NewTopicWantRead) {
             listenerForNewTopicWantRead = (NewTopicWantRead) getActivity();
