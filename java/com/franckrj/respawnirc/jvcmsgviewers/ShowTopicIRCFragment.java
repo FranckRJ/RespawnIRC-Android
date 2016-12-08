@@ -66,7 +66,7 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
                     jvcMsgList.setSelection(jvcMsgList.getCount() - 1);
                 }
             } else if (adapterForMessages.getAllItems().isEmpty()) {
-                Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
             }
         }
     };

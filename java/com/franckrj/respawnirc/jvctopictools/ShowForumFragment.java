@@ -94,7 +94,7 @@ public class ShowForumFragment extends Fragment {
 
                 adapterForTopics.updateAllItems();
             } else {
-                Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
             }
         }
     };

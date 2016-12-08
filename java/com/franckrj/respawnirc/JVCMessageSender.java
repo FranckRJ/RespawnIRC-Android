@@ -156,6 +156,10 @@ public class JVCMessageSender {
                         if (listenerForNewMessagePosted != null) {
                             errorWhenSending = JVCParser.getErrorMessage(pageResult);
                         }
+                    } else {
+                        if (listenerForNewMessagePosted != null) {
+                            errorWhenSending = JVCParser.getErrorMessageInEditMode(pageResult);
+                        }
                     }
                 }
             }

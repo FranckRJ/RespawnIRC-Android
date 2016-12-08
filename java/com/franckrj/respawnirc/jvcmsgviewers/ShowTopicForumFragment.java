@@ -59,7 +59,7 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
                     jvcMsgList.setSelection(jvcMsgList.getCount() - 1);
                 }
             } else {
-                Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
             }
         }
     };

@@ -27,6 +27,7 @@ public final class JVCParser {
     private static final Pattern messageIDPattern = Pattern.compile("<div class=\"bloc-message-forum \" data-id=\"([^\"]*)\">");
     private static final Pattern unicodeInTextPattern = Pattern.compile("\\\\u([a-zA-Z0-9]{4})");
     private static final Pattern errorPattern = Pattern.compile("<div class=\"alert-row\">([^<]*)</div>");
+    private static final Pattern errorInEditModePattern = Pattern.compile("\"erreur\":\\[\"([^\"]*)\"");
     private static final Pattern codeBlockPattern = Pattern.compile("<pre class=\"pre-jv\"><code class=\"code-jv\">([^<]*)</code></pre>");
     private static final Pattern codeLinePattern = Pattern.compile("<code class=\"code-jv\">(.*?)</code>", Pattern.DOTALL);
     private static final Pattern spoilLinePattern = Pattern.compile("<span class=\"bloc-spoil-jv en-ligne\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
@@ -223,6 +224,16 @@ public final class JVCParser {
             return "Erreur : " + errorMatcher.group(1);
         } else {
             return "Erreur : le message n'a pas été envoyé.";
+        }
+    }
+
+    public static String getErrorMessageInEditMode(String pageSource) {
+        Matcher errorMatcher = errorInEditModePattern.matcher(pageSource);
+
+        if (errorMatcher.find()) {
+            return "Erreur : " + parsingAjaxMessages(errorMatcher.group(1));
+        } else {
+            return null;
         }
     }
 

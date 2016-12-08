@@ -97,6 +97,12 @@
     <string name="saveCurrentForumTitleForTopic">save.currentForumTitleForTopic</string>
     <string name="saveCurrentTopicTitleForTopic">save.currentTopicTitleForTopic</string>
     <string name="warningNotConnected">Vous ne vous êtes pas connecté</string>
+    <string name="errorQuoteAlreadyRunning">Erreur, citation déjà en cours.</string>
+    <string name="errorInfosMissings">Erreur, informations manquantes (rechargez la page ?).</string>
+    <string name="errorMessageAlreadySending">Erreur, envoie ou édition d\'un message actuellement en cours.</string>
+    <string name="errorCantGetEditInfos">Erreur, impossible de récupérer les informations d\'édition.</string>
+    <string name="errorDownloadFailed">Erreur, la récupération des informations a échouée.</string>
+    <string name="errorConnectNeeded">Erreur, vous devez vous connecté pour effectuer cette action.</string>
 
     <string-array name="itemChoiceDrawerList">
         <item>@string/app_name</item>

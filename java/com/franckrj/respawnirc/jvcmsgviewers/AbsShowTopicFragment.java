@@ -51,14 +51,20 @@ public abstract class AbsShowTopicFragment extends Fragment {
             JVCParser.MessageInfos currentItem;
             switch (item.getItemId()) {
                 case R.id.menu_quote_message:
-                    if (absGetterForMessages.getLatestAjaxInfos().list != null && latestMessageQuotedInfo == null && currentTaskQuoteMessage == null) {
+                    if (absGetterForMessages.getLatestAjaxInfos().list != null && latestMessageQuotedInfo == null && currentTaskQuoteMessage == null && !pseudoOfUser.isEmpty()) {
                         String idOfMessage = Long.toString(adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected()).id);
                         latestMessageQuotedInfo = JVCParser.buildMessageQuotedInfoFromThis(adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected()));
 
                         currentTaskQuoteMessage = new QuoteJVCMessage();
                         currentTaskQuoteMessage.execute(idOfMessage, absGetterForMessages.getLatestAjaxInfos().list, cookieListInAString);
                     } else {
-                        Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
+                        if (pseudoOfUser.isEmpty()) {
+                            Toast.makeText(getActivity(), R.string.errorConnectNeeded, Toast.LENGTH_SHORT).show();
+                        } else if (latestMessageQuotedInfo != null || currentTaskQuoteMessage != null) {
+                            Toast.makeText(getActivity(), R.string.errorQuoteAlreadyRunning, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity(), R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     return true;
@@ -72,7 +78,11 @@ public abstract class AbsShowTopicFragment extends Fragment {
                     }
 
                     if (!infoForEditAreGetted) {
-                        Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
+                        if (!messageSendButton.isEnabled()) {
+                            Toast.makeText(getActivity(), R.string.errorMessageAlreadySending, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity(), R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     return true;
@@ -126,7 +136,7 @@ public abstract class AbsShowTopicFragment extends Fragment {
 
             if (newMessageToEdit.isEmpty()) {
                 messageSendButton.setImageResource(R.drawable.ic_action_content_send);
-                Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.errorCantGetEditInfos, Toast.LENGTH_SHORT).show();
             } else {
                 messageSendEdit.setText(newMessageToEdit);
             }
@@ -149,7 +159,7 @@ public abstract class AbsShowTopicFragment extends Fragment {
                         }
 
                         if (!messageIsSended) {
-                            Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         messageSendButton.setEnabled(false);
@@ -164,7 +174,7 @@ public abstract class AbsShowTopicFragment extends Fragment {
                     inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 }
             } else {
-                Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.errorMessageAlreadySending, Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -334,7 +344,7 @@ public abstract class AbsShowTopicFragment extends Fragment {
                 messageSendEdit.setText(currentMessage);
                 messageSendEdit.setSelection(currentMessage.length());
             } else {
-                Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
             }
 
             latestMessageQuotedInfo = null;
