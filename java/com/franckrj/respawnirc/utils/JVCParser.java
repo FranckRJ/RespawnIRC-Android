@@ -408,27 +408,32 @@ public final class JVCParser {
         tmpMessage = parseThisMessageWithThisPattern(tmpMessage, codeLinePattern, 1, "<font face=\"monospace\">", "</font>", new ConvertStringToString(" ", " "), null); //remplace les espaces par des alt+255
         tmpMessage = parseThisMessageWithThisPattern(tmpMessage, stickerPattern, 2, "<img src=\"sticker_", ".png\"/>", new ConvertStringToString("-", "_"), null);
 
-        if (!thisMessageInfo.showSpoil) {
-            tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilLinePattern, 1, "", "", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
-            tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilBlockPattern, 1, "<p>", "</p>", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
-        } else {
-            tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilLinePattern, 1, "<font color=\"#000000\">", "</font>", null, null);
-            tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilBlockPattern, 1, "<p><font color=\"#000000\">", "</font></p>", null, null);
+        if (thisMessageInfo.containSpoil) {
+            if (!thisMessageInfo.showSpoil) {
+                tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilLinePattern, 1, "", "", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
+                tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilBlockPattern, 1, "<p>", "</p>", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
+            } else {
+                tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilLinePattern, 1, "<font color=\"#000000\">", "</font>", null, null);
+                tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilBlockPattern, 1, "<p><font color=\"#000000\">", "</font></p>", null, null);
+            }
         }
 
-        tmpMessage = tmpMessage.replace("\n", "")
-                .replace("\r", "")
-                .replaceAll("<ul[^>]*>", "<p>")
-                .replace("</ul>", "</p>")
-                .replaceAll("<ol[^>]*>", "<p>")
-                .replace("</ol>", "</p>")
-                .replace("<li><p><li>", "<li><li>")
-                .replace("<li><p><li>", "<li><li>")
-                .replace("<li>", " • ")
-                .replaceAll("</li></p></li>", "</li>")
-                .replaceAll("</li></p></li>", "</li>")
-                .replace("</li>", "<br />")
-                .replaceAll("<img src=\"//image.jeuxvideo.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-def=\"SMILEYS\" data-code=\"([^\"]*)\" title=\"[^\"]*\" />", "<img src=\"smiley_$1\"/>")
+        tmpMessage = tmpMessage.replace("\n", "").replace("\r", "");
+
+        if (tmpMessage.contains("<li>")) {
+            tmpMessage = tmpMessage.replaceAll("<ul[^>]*>", "<p>")
+                    .replace("</ul>", "</p>")
+                    .replaceAll("<ol[^>]*>", "<p>")
+                    .replace("</ol>", "</p>")
+                    .replace("<li><p><li>", "<li><li>")
+                    .replace("<li><p><li>", "<li><li>")
+                    .replace("<li>", " • ")
+                    .replaceAll("</li></p></li>", "</li>")
+                    .replaceAll("</li></p></li>", "</li>")
+                    .replace("</li>", "<br />");
+        }
+
+        tmpMessage = tmpMessage.replaceAll("<img src=\"//image.jeuxvideo.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-def=\"SMILEYS\" data-code=\"([^\"]*)\" title=\"[^\"]*\" />", "<img src=\"smiley_$1\"/>")
                 .replaceAll("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe .*? src=\"http(s)?://www.youtube.com/embed/([^\"]*)\"[^>]*></iframe></div></div>", "<a href=\"http://youtu.be/$2\">http://youtu.be/$2</a>")
                 .replaceAll("<a href=\"([^\"]*)\"( title=\"[^\"]*\")?>.*?</a>", "<a href=\"$1\">$1</a>")
                 .replaceAll("<span class=\"JvCare [^\"]*\" rel=\"nofollow[^\"]*\" target=\"_blank\">([^<]*)</span>", "<a href=\"$1\">$1</a>")
