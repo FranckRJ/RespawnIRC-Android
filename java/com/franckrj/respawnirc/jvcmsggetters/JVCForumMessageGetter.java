@@ -70,6 +70,7 @@ public class JVCForumMessageGetter extends AbsJVCMessageGetter {
         @Override
         protected void onPostExecute(TopicPageInfos infoOfCurrentPage) {
             super.onPostExecute(infoOfCurrentPage);
+            currentAsyncTaskForGetMessage = null;
 
             if (listenerForNewGetterState != null) {
                 listenerForNewGetterState.newStateSetted(STATE_NOT_LOADING);
@@ -101,8 +102,6 @@ public class JVCForumMessageGetter extends AbsJVCMessageGetter {
                     listenerForNewMessages.getNewMessages(new ArrayList<JVCParser.MessageInfos>());
                 }
             }
-
-            currentAsyncTaskForGetMessage = null;
         }
     }
 

@@ -44,6 +44,7 @@ public abstract class AbsShowTopicFragment extends Fragment {
     protected NewModeNeededListener listenerForNewModeNeeded = null;
     protected SwipeRefreshLayout swipeRefresh = null;
     protected boolean showRefreshWhenMessagesShowed = true;
+    protected boolean isInErrorMode = false;
 
     protected final PopupMenu.OnMenuItemClickListener listenerForItemClicked = new PopupMenu.OnMenuItemClickListener() {
         @Override

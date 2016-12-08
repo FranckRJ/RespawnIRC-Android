@@ -145,6 +145,7 @@ public class JVCIRCMessageGetter extends AbsJVCMessageGetter {
             super.onPostExecute(infoOfCurrentPage);
             boolean needToGetNewMessagesEarly = false;
             ArrayList<JVCParser.MessageInfos> listOfNewMessages = new ArrayList<>();
+            currentAsyncTaskForGetMessage = null;
 
             if (listenerForNewGetterState != null) {
                 listenerForNewGetterState.newStateSetted(STATE_NOT_LOADING);
@@ -208,8 +209,6 @@ public class JVCIRCMessageGetter extends AbsJVCMessageGetter {
                         listenerForNewMessages.getNewMessages(new ArrayList<JVCParser.MessageInfos>());
                     }
                 }
-
-                currentAsyncTaskForGetMessage = null;
 
                 if (needToGetNewMessagesEarly) {
                     reloadTopic();

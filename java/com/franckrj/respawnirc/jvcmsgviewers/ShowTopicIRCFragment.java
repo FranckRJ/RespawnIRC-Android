@@ -36,6 +36,7 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
             if (!listOfNewMessages.isEmpty()) {
                 boolean scrolledAtTheEnd = true;
                 boolean firstTimeGetMessages = adapterForMessages.getAllItems().isEmpty();
+                isInErrorMode = false;
 
                 if (jvcMsgList.getChildCount() > 0) {
                     scrolledAtTheEnd = (jvcMsgList.getLastVisiblePosition() == jvcMsgList.getCount() - 1) &&
@@ -65,13 +66,19 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
                 if (scrolledAtTheEnd && jvcMsgList.getCount() > 0) {
                     jvcMsgList.setSelection(jvcMsgList.getCount() - 1);
                 }
-            } else if (adapterForMessages.getAllItems().isEmpty()) {
-                Toast.makeText(getActivity(), R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
+            } else {
+                if (!isInErrorMode) {
+                    getterForMessages.reloadTopic();
+                    isInErrorMode = true;
+                } else if (adapterForMessages.getAllItems().isEmpty()) {
+                    Toast.makeText(getActivity(), R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     };
 
     private void loadFromOldTopicInfos() {
+        isInErrorMode = false;
         getterForMessages.stopAllCurrentTask();
         adapterForMessages.removeAllItems();
         adapterForMessages.updateAllItems();
@@ -82,6 +89,7 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
     @Override
     public void setNewTopicLink(String newTopicLink) {
         String newUrl = baseForChangeTopicLink(newTopicLink);
+        isInErrorMode = false;
 
         getterForMessages.stopAllCurrentTask();
         adapterForMessages.removeAllItems();
@@ -161,6 +169,7 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
     @Override
     public void onResume() {
         super.onResume();
+        isInErrorMode = false;
         getterForMessages.reloadTopic();
     }
 

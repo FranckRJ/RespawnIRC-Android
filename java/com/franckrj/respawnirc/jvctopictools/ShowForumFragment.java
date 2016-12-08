@@ -36,6 +36,7 @@ public class ShowForumFragment extends Fragment {
     private Button nextPageButton = null;
     private int currentPage = 0;
     private boolean clearTopicsOnRefresh = true;
+    private boolean isInErrorMode = false;
 
     private final Button.OnClickListener changePageWithNavigationButtonListener = new View.OnClickListener() {
         @Override
@@ -86,6 +87,7 @@ public class ShowForumFragment extends Fragment {
         @Override
         public void getNewTopics(ArrayList<JVCParser.TopicInfos> listOfNewTopics) {
             if (!listOfNewTopics.isEmpty()) {
+                isInErrorMode = false;
                 adapterForTopics.removeAllItems();
 
                 for (JVCParser.TopicInfos thisTopicInfo : listOfNewTopics) {
@@ -94,7 +96,12 @@ public class ShowForumFragment extends Fragment {
 
                 adapterForTopics.updateAllItems();
             } else {
-                Toast.makeText(getActivity(), R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
+                if (!isInErrorMode) {
+                    getterForTopics.reloadForum();
+                    isInErrorMode = true;
+                } else {
+                    Toast.makeText(getActivity(), R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     };
@@ -132,6 +139,7 @@ public class ShowForumFragment extends Fragment {
     }
 
     private boolean reloadAllForum() {
+        isInErrorMode = false;
         if (clearTopicsOnRefresh) {
             adapterForTopics.removeAllItems();
             adapterForTopics.updateAllItems();
@@ -142,6 +150,7 @@ public class ShowForumFragment extends Fragment {
     public void goToThisNewPage(String newPageToGo) {
         SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
         String currentPageNumber;
+        isInErrorMode = false;
 
         if (!newPageToGo.isEmpty()) {
             newPageToGo = JVCParser.formatThisUrl(newPageToGo);
@@ -249,6 +258,7 @@ public class ShowForumFragment extends Fragment {
     public void onResume() {
         super.onResume();
         reloadSettings();
+        isInErrorMode = false;
 
         if (getterForTopics.getUrlForForum().isEmpty()) {
             goToThisNewPage(sharedPref.getString(getString(R.string.prefForumUrlToFetch), ""));

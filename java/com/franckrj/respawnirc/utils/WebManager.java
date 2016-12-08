@@ -27,8 +27,8 @@ public class WebManager {
             currentInfos.currentUrl = urlConnection.getURL().toString();
 
             urlConnection.setInstanceFollowRedirects(currentInfos.followRedirects);
-            urlConnection.setConnectTimeout(7500);
-            urlConnection.setReadTimeout(15000);
+            urlConnection.setConnectTimeout(5000);
+            urlConnection.setReadTimeout(7500);
 
             urlConnection.setRequestMethod(requestMethod);
             urlConnection.setRequestProperty("User-Agent", "ResdroidIRC");

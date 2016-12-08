@@ -41,6 +41,7 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
         public void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages) {
             if (!listOfNewMessages.isEmpty()) {
                 boolean scrolledAtTheEnd = false;
+                isInErrorMode = false;
 
                 adapterForMessages.removeAllItems();
 
@@ -59,7 +60,12 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
                     jvcMsgList.setSelection(jvcMsgList.getCount() - 1);
                 }
             } else {
-                Toast.makeText(getActivity(), R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
+                if (!isInErrorMode) {
+                    getterForMessages.reloadTopic();
+                    isInErrorMode = true;
+                } else {
+                    Toast.makeText(getActivity(), R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     };
@@ -107,6 +113,7 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
     private void goToThisNewPage(String newPageUrl, boolean updateLastPage) {
         SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
         String currentPageNumber = JVCParser.getPageNumberForThisTopicLink(newPageUrl);
+        isInErrorMode = false;
 
         sharedPrefEdit.putString(getString(R.string.prefTopicUrlToFetch), newPageUrl);
         sharedPrefEdit.apply();
@@ -151,6 +158,7 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
     }
 
     private boolean reloadAllTopic() {
+        isInErrorMode = false;
         if (clearMessagesOnRefresh) {
             adapterForMessages.removeAllItems();
             adapterForMessages.updateAllItems();
@@ -246,6 +254,7 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
     @Override
     public void onResume() {
         super.onResume();
+        isInErrorMode = false;
 
         if (getterForMessages.getUrlForTopic().isEmpty()) {
             goToThisNewPage(sharedPref.getString(getString(R.string.prefTopicUrlToFetch), ""), true);

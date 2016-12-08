@@ -114,6 +114,7 @@ public class JVCTopicGetter {
         @Override
         protected void onPostExecute(ForumPageInfos infoOfCurrentPage) {
             super.onPostExecute(infoOfCurrentPage);
+            currentAsyncTaskForGetTopic = null;
 
             if (listenerForNewGetterState != null) {
                 listenerForNewGetterState.newStateSetted(STATE_NOT_LOADING);
@@ -139,8 +140,6 @@ public class JVCTopicGetter {
                     listenerForNewTopics.getNewTopics(new ArrayList<JVCParser.TopicInfos>());
                 }
             }
-
-            currentAsyncTaskForGetTopic = null;
         }
     }
 
