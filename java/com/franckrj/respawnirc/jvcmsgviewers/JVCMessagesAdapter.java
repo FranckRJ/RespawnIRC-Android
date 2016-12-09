@@ -66,6 +66,15 @@ public class JVCMessagesAdapter extends BaseAdapter {
         }
     };
 
+    private final ImageDownloader.DownloadFinished listenerForDownloadFinished = new ImageDownloader.DownloadFinished() {
+        @Override
+        public void newDownloadFinished(int numberOfDownloadRemaining) {
+            if (numberOfDownloadRemaining == 0) {
+                notifyDataSetInvalidated();
+            }
+        }
+    };
+
     private final View.OnClickListener menuButtonClicked = new View.OnClickListener() {
         @Override
         public void onClick(View buttonView) {
@@ -107,7 +116,8 @@ public class JVCMessagesAdapter extends BaseAdapter {
         parentActivity = newParentActivity;
         currentSettings = newSettings;
         serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        downloaderForImage.setDefaultDrawable(parentActivity.getResources().getDrawable(R.drawable.image_deleted));
+        downloaderForImage.setListenerForDownloadFinished(listenerForDownloadFinished);
+        downloaderForImage.setDefaultDrawable(parentActivity.getResources().getDrawable(R.drawable.image_file_download));
     }
 
     public int getCurrentItemIDSelected() {

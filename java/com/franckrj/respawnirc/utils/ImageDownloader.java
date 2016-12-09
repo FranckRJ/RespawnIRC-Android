@@ -11,24 +11,41 @@ import java.util.HashMap;
 public class ImageDownloader {
     HashMap<String, DrawableWrapper> listOfDrawable = new HashMap<>();
     Drawable defaultDrawable = null;
+    int numberOfFilesDownloading = 0;
+    DownloadFinished listenerForDownloadFinished = null;
+
+    public void setListenerForDownloadFinished(DownloadFinished newListener) {
+        listenerForDownloadFinished = newListener;
+    }
 
     public void setDefaultDrawable(Drawable newDrawable) {
         defaultDrawable = newDrawable;
     }
 
     public Drawable getDrawableFromLink(String link) {
-        DrawableWrapper tmpDrawable = listOfDrawable.get(link);
+        DrawableWrapper drawable = listOfDrawable.get(link);
 
-        if (tmpDrawable == null) {
-            ImageGetterAsyncTask getterForImage;
-            tmpDrawable = new DrawableWrapper(defaultDrawable);
-            tmpDrawable.setBounds(0, 0, defaultDrawable.getIntrinsicWidth(), defaultDrawable.getIntrinsicHeight());
-            getterForImage = new ImageGetterAsyncTask(tmpDrawable);
-            getterForImage.execute(link);
-            listOfDrawable.put(link, tmpDrawable);
+        if (drawable == null) {
+            drawable = new DrawableWrapper(defaultDrawable);
+            drawable.setBounds(0, 0, defaultDrawable.getIntrinsicWidth(), defaultDrawable.getIntrinsicHeight());
+            startDownloadOfThisFileInThisWrapper(link, drawable);
+            listOfDrawable.put(link, drawable);
         }
 
-        return tmpDrawable;
+        return drawable;
+    }
+
+    private void startDownloadOfThisFileInThisWrapper(String linkToFile, DrawableWrapper thisWrapper) {
+        ImageGetterAsyncTask getterForImage = new ImageGetterAsyncTask(thisWrapper);
+        getterForImage.execute(linkToFile);
+        ++numberOfFilesDownloading;
+    }
+
+    private void downloadOfAFileEnded() {
+        --numberOfFilesDownloading;
+        if (listenerForDownloadFinished != null) {
+            listenerForDownloadFinished.newDownloadFinished(numberOfFilesDownloading);
+        }
     }
 
     private class ImageGetterAsyncTask extends AsyncTask<String, Void, Drawable> {
@@ -50,6 +67,7 @@ public class ImageDownloader {
                 wrapperForDrawable.setWrappedDrawable(result);
                 wrapperForDrawable.setBounds(0, 0, Double.valueOf(result.getIntrinsicWidth() * 1.5).intValue(), Double.valueOf(result.getIntrinsicHeight() * 1.5).intValue());
             }
+            downloadOfAFileEnded();
         }
 
         public Drawable fetchDrawable(String urlString) {
@@ -60,5 +78,9 @@ public class ImageDownloader {
                 return null;
             }
         }
+    }
+
+    public interface DownloadFinished {
+        void newDownloadFinished(int numberOfDownloadRemaining);
     }
 }
