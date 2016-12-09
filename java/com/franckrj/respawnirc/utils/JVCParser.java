@@ -448,9 +448,15 @@ public final class JVCParser {
                 .replaceAll("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe .*? src=\"http(s)?://www.youtube.com/embed/([^\"]*)\"[^>]*></iframe></div></div>", "<a href=\"http://youtu.be/$2\">http://youtu.be/$2</a>")
                 .replaceAll("<a href=\"([^\"]*)\"( title=\"[^\"]*\")?>.*?</a>", "<a href=\"$1\">$1</a>")
                 .replaceAll("<span class=\"JvCare [^\"]*\" rel=\"nofollow[^\"]*\" target=\"_blank\">([^<]*)</span>", "<a href=\"$1\">$1</a>")
-                .replaceAll("<span class=\"JvCare [^\"]*\"[^i]*itle=\"([^\"]*)\">[^<]*<i></i><span>[^<]*</span>[^<]*</span>", "<a href=\"$1\">$1</a>")
-                .replaceAll("<a href=\"([^\"]*)\" data-def=\"NOELSHACK\" target=\"_blank\"><img class=\"img-shack\" .*? src=\"//([^\"]*)\" [^>]*></a>", "<a href=\"$1\">$1</a>")
-                .replace("<blockquote class=\"blockquote-jv\">", "<blockquote>")
+                .replaceAll("<span class=\"JvCare [^\"]*\"[^i]*itle=\"([^\"]*)\">[^<]*<i></i><span>[^<]*</span>[^<]*</span>", "<a href=\"$1\">$1</a>");
+
+        if (settings.showNoelshackImages) {
+            tmpMessage = tmpMessage.replaceAll("<a href=\"([^\"]*)\" data-def=\"NOELSHACK\" target=\"_blank\"><img class=\"img-shack\" .*? src=\"//([^\"]*)\" [^>]*></a>", "<img src=\"http://$2\"/>");
+        } else {
+            tmpMessage = tmpMessage.replaceAll("<a href=\"([^\"]*)\" data-def=\"NOELSHACK\" target=\"_blank\"><img class=\"img-shack\" .*? src=\"//([^\"]*)\" [^>]*></a>", "<a href=\"$1\">$1</a>");
+        }
+
+        tmpMessage = tmpMessage.replace("<blockquote class=\"blockquote-jv\">", "<blockquote>")
                 .replaceAll("<div[^>]*>", "")
                 .replace("</div>", "")
                 .replaceAll("(<br /> *){0,2}</p> *<p>( *<br />){0,2}", "<br /><br />")
@@ -862,6 +868,7 @@ public final class JVCParser {
         public String colorPseudoModo;
         public String colorPseudoAdmin;
         public int maxNumberOfOverlyQuotes = 0;
+        public boolean showNoelshackImages = true;
     }
 
     private interface StringModifier {

@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.CustomTagHandler;
+import com.franckrj.respawnirc.utils.ImageDownloader;
 import com.franckrj.respawnirc.utils.JVCParser;
 
 import java.util.ArrayList;
@@ -40,23 +41,28 @@ public class JVCMessagesAdapter extends BaseAdapter {
     private int idOfLayoutToUse = 0;
     private boolean alternateBackgroundColor = false;
     private CustomTagHandler tagHandler = new CustomTagHandler();
+    private ImageDownloader downloaderForImage = new ImageDownloader();
 
     private final Html.ImageGetter jvcImageGetter = new Html.ImageGetter() {
         @Override
         public Drawable getDrawable(String source) {
-            Drawable drawable;
-            Resources res = parentActivity.getResources();
-            int resID = res.getIdentifier(source.substring(0, source.lastIndexOf(".")), "drawable", parentActivity.getPackageName());
+            if (!source.startsWith("http")) {
+                Drawable drawable;
+                Resources res = parentActivity.getResources();
+                int resID = res.getIdentifier(source.substring(0, source.lastIndexOf(".")), "drawable", parentActivity.getPackageName());
 
-            try {
-                drawable = res.getDrawable(resID);
-            } catch (Exception e) {
-                e.printStackTrace();
-                drawable = res.getDrawable(R.drawable.image_deleted);
+                try {
+                    drawable = res.getDrawable(resID);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    drawable = res.getDrawable(R.drawable.image_deleted);
+                }
+                drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+
+                return drawable;
+            } else {
+                return downloaderForImage.getDrawableFromLink(source);
             }
-            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-
-            return drawable;
         }
     };
 
@@ -101,6 +107,7 @@ public class JVCMessagesAdapter extends BaseAdapter {
         parentActivity = newParentActivity;
         currentSettings = newSettings;
         serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        downloaderForImage.setDefaultDrawable(parentActivity.getResources().getDrawable(R.drawable.image_deleted));
     }
 
     public int getCurrentItemIDSelected() {
