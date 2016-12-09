@@ -103,6 +103,9 @@
     <string name="errorCantGetEditInfos">Erreur, impossible de récupérer les informations d\'édition.</string>
     <string name="errorDownloadFailed">Erreur, la récupération des informations a échouée.</string>
     <string name="errorConnectNeeded">Erreur, vous devez vous connecté pour effectuer cette action.</string>
+    <string name="settingsShowNoelshackImage">settings.showNoelshackImage</string>
+    <string name="showNoelshackImageDefault">false</string>
+    <string name="showNoelshackImageTitle">Afficher les images noelshack</string>
 
     <string-array name="itemChoiceDrawerList">
         <item>@string/app_name</item>

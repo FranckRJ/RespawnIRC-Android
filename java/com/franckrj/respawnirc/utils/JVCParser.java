@@ -868,7 +868,7 @@ public final class JVCParser {
         public String colorPseudoModo;
         public String colorPseudoAdmin;
         public int maxNumberOfOverlyQuotes = 0;
-        public boolean showNoelshackImages = true;
+        public boolean showNoelshackImages = false;
     }
 
     private interface StringModifier {

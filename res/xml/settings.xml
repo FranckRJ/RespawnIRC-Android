@@ -8,6 +8,10 @@
             android:title="@string/maxNumberOfOverlyQuoteTitle"
             android:defaultValue="@string/maxNumberOfOverlyQuoteDefault"
             android:numeric="integer"/>
+        <CheckBoxPreference
+            android:key="@string/settingsShowNoelshackImage"
+            android:title="@string/showNoelshackImageTitle"
+            android:defaultValue="@string/showNoelshackImageDefault"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/settingsGeneralIRCTitle">
