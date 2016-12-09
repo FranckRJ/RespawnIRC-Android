@@ -113,11 +113,15 @@ public class JVCMessagesAdapter extends BaseAdapter {
     };
 
     public JVCMessagesAdapter(Activity newParentActivity, JVCParser.Settings newSettings) {
+        Resources res;
+
         parentActivity = newParentActivity;
         currentSettings = newSettings;
         serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        res = parentActivity.getResources();
         downloaderForImage.setListenerForDownloadFinished(listenerForDownloadFinished);
-        downloaderForImage.setDefaultDrawable(parentActivity.getResources().getDrawable(R.drawable.image_file_download));
+        downloaderForImage.setImagesSize(res.getDimensionPixelSize(R.dimen.imagesWidth), res.getDimensionPixelSize(R.dimen.imagesHeight));
+        downloaderForImage.setDefaultDrawable(res.getDrawable(R.drawable.image_file_download));
     }
 
     public int getCurrentItemIDSelected() {

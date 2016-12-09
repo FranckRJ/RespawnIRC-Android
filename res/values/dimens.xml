@@ -3,4 +3,6 @@
     <dimen name="quoteStripSize">2dp</dimen>
     <dimen name="sizeBetweenTextAndArrow">5dp</dimen>
     <dimen name="quoteStripGap">4dp</dimen>
+    <dimen name="imagesWidth">102dp</dimen>
+    <dimen name="imagesHeight">77dp</dimen>
 </resources>

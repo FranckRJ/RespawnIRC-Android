@@ -13,6 +13,13 @@ public class ImageDownloader {
     Drawable defaultDrawable = null;
     int numberOfFilesDownloading = 0;
     DownloadFinished listenerForDownloadFinished = null;
+    int imagesWidth = 0;
+    int imagesHeight = 0;
+
+    public void setImagesSize(int newWidth, int newHeight) {
+        imagesWidth = newWidth;
+        imagesHeight = newHeight;
+    }
 
     public void setListenerForDownloadFinished(DownloadFinished newListener) {
         listenerForDownloadFinished = newListener;
@@ -27,7 +34,7 @@ public class ImageDownloader {
 
         if (drawable == null) {
             drawable = new DrawableWrapper(defaultDrawable);
-            drawable.setBounds(0, 0, defaultDrawable.getIntrinsicWidth(), defaultDrawable.getIntrinsicHeight());
+            drawable.setBounds(0, 0, imagesWidth, imagesHeight);
             startDownloadOfThisFileInThisWrapper(link, drawable);
             listOfDrawable.put(link, drawable);
         }
@@ -64,8 +71,8 @@ public class ImageDownloader {
         @Override
         protected void onPostExecute(Drawable result) {
             if (result != null) {
+                result.setBounds(0, 0, imagesWidth, imagesHeight);
                 wrapperForDrawable.setWrappedDrawable(result);
-                wrapperForDrawable.setBounds(0, 0, Double.valueOf(result.getIntrinsicWidth() * 1.5).intValue(), Double.valueOf(result.getIntrinsicHeight() * 1.5).intValue());
             }
             downloadOfAFileEnded();
         }
