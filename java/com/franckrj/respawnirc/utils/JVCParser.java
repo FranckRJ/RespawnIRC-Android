@@ -634,14 +634,20 @@ public final class JVCParser {
         Matcher topicDateMatcher = topicDatePattern.matcher(thisEntireTopic);
         Matcher topicTypeMatcher = topicTypePattern.matcher(thisEntireTopic);
 
-        if (topicNameAndLinkMatcher.find() && topicNumberMessagesMatcher.find() && topicAuthorMatcher.find() && topicDateMatcher.find() && topicTypeMatcher.find()) {
+        if (topicAuthorMatcher.find()) {
+            newTopicInfo.author = topicAuthorMatcher.group(2).trim();
+            newTopicInfo.authorType = topicAuthorMatcher.group(1).trim();
+        } else {
+            newTopicInfo.author = "Pseudo supprimé";
+            newTopicInfo.authorType = "user";
+        }
+
+        if (topicNameAndLinkMatcher.find() && topicNumberMessagesMatcher.find() && topicDateMatcher.find() && topicTypeMatcher.find()) {
             String topicNameAndLinkString = topicNameAndLinkMatcher.group(1);
             newTopicInfo.link = "http://www.jeuxvideo.com" + topicNameAndLinkString.substring(0, topicNameAndLinkString.indexOf("\""));
             newTopicInfo.name = topicNameAndLinkString.substring(topicNameAndLinkString.indexOf("title=\"") + 7);
             newTopicInfo.name = newTopicInfo.name.replace("&amp;", "&").replace("&quot;", "\"").replace("&#039;", "\'").replace("&lt;", "<").replace("&gt;", ">");
             newTopicInfo.messages = topicNumberMessagesMatcher.group(1);
-            newTopicInfo.author = topicAuthorMatcher.group(2).trim();
-            newTopicInfo.authorType = topicAuthorMatcher.group(1).trim();
             newTopicInfo.wholeDate = topicDateMatcher.group(1);
             newTopicInfo.type = topicTypeMatcher.group(1);
         }
@@ -678,12 +684,12 @@ public final class JVCParser {
     }
 
     public static class MessageInfos implements Parcelable, Comparable<MessageInfos> {
-        public String pseudo;
-        public String pseudoType;
-        public String messageNotParsed;
-        public String dateTime;
-        public String wholeDate;
-        public String lastTimeEdit;
+        public String pseudo = "";
+        public String pseudoType = "";
+        public String messageNotParsed = "";
+        public String dateTime = "";
+        public String wholeDate = "";
+        public String lastTimeEdit = "";
         public boolean containSpoil = false;
         public boolean showSpoil = false;
         public int numberOfOverlyQuote = 0;
@@ -756,13 +762,13 @@ public final class JVCParser {
     }
 
     public static class TopicInfos implements Parcelable {
-        public String author;
-        public String authorType;
-        public String type;
-        public String name;
-        public String link;
-        public String wholeDate;
-        public String messages;
+        public String author = "";
+        public String authorType = "";
+        public String type = "";
+        public String name = "";
+        public String link = "";
+        public String wholeDate = "";
+        public String messages = "";
 
         public static final Parcelable.Creator<TopicInfos> CREATOR = new Parcelable.Creator<TopicInfos>() {
             @Override
