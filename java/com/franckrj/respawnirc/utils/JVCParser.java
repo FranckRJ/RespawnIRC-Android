@@ -484,6 +484,10 @@ public final class JVCParser {
             tmpMessage = removeOverlyQuoteInPrettyMessage(tmpMessage, settings.maxNumberOfOverlyQuotes);
         }
 
+        if (!settings.pseudoOfUser.isEmpty()) {
+            tmpMessage = tmpMessage.replaceAll("(?i)" + settings.pseudoOfUser.replace("[", "\\[").replace("]", "\\]") + "(?![^<>]*(>|</a>))", "<font color=\"" + settings.colorPseudoUser + "\">$0</font>");
+        }
+
         finalMessage = finalMessage.replace("<%MESSAGE_MESSAGE%>", tmpMessage);
         if (!thisMessageInfo.lastTimeEdit.isEmpty()) {
             finalMessage = finalMessage.replace("<%EDIT_ALL%>", settings.addBeforeEdit + thisMessageInfo.lastTimeEdit.trim() + settings.addAfterEdit);
