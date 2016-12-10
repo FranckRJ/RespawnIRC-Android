@@ -42,6 +42,7 @@ public class JVCMessagesAdapter extends BaseAdapter {
     private boolean alternateBackgroundColor = false;
     private CustomTagHandler tagHandler = new CustomTagHandler();
     private ImageDownloader downloaderForImage = new ImageDownloader();
+    private Drawable deletedDrawable = null;
 
     private final Html.ImageGetter jvcImageGetter = new Html.ImageGetter() {
         @Override
@@ -55,13 +56,15 @@ public class JVCMessagesAdapter extends BaseAdapter {
                     drawable = res.getDrawable(resID);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    drawable = res.getDrawable(R.drawable.image_deleted);
+                    drawable = deletedDrawable;
                 }
                 drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
 
                 return drawable;
-            } else {
+            } else if (source.startsWith("http://image.noelshack.com/minis")) {
                 return downloaderForImage.getDrawableFromLink(source);
+            } else {
+                return deletedDrawable;
             }
         }
     };
@@ -70,7 +73,7 @@ public class JVCMessagesAdapter extends BaseAdapter {
         @Override
         public void newDownloadFinished(int numberOfDownloadRemaining) {
             if (numberOfDownloadRemaining == 0) {
-                notifyDataSetInvalidated();
+                notifyDataSetChanged();
             }
         }
     };
@@ -119,9 +122,12 @@ public class JVCMessagesAdapter extends BaseAdapter {
         currentSettings = newSettings;
         serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         res = parentActivity.getResources();
+        deletedDrawable = res.getDrawable(R.drawable.image_deleted);
+        deletedDrawable.setBounds(0, 0, deletedDrawable.getIntrinsicWidth(), deletedDrawable.getIntrinsicHeight());
         downloaderForImage.setListenerForDownloadFinished(listenerForDownloadFinished);
         downloaderForImage.setImagesSize(res.getDimensionPixelSize(R.dimen.imagesWidth), res.getDimensionPixelSize(R.dimen.imagesHeight));
         downloaderForImage.setDefaultDrawable(res.getDrawable(R.drawable.image_file_download));
+        downloaderForImage.setDeletedDrawable(deletedDrawable);
     }
 
     public int getCurrentItemIDSelected() {

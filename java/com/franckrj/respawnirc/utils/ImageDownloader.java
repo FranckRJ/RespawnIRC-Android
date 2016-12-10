@@ -11,6 +11,7 @@ import java.util.HashMap;
 public class ImageDownloader {
     HashMap<String, DrawableWrapper> listOfDrawable = new HashMap<>();
     Drawable defaultDrawable = null;
+    Drawable deletedDrawable = null;
     int numberOfFilesDownloading = 0;
     DownloadFinished listenerForDownloadFinished = null;
     int imagesWidth = 0;
@@ -27,6 +28,10 @@ public class ImageDownloader {
 
     public void setDefaultDrawable(Drawable newDrawable) {
         defaultDrawable = newDrawable;
+    }
+
+    public void setDeletedDrawable(Drawable newDrawable) {
+        deletedDrawable = newDrawable;
     }
 
     public Drawable getDrawableFromLink(String link) {
@@ -73,6 +78,8 @@ public class ImageDownloader {
             if (result != null) {
                 result.setBounds(0, 0, imagesWidth, imagesHeight);
                 wrapperForDrawable.setWrappedDrawable(result);
+            } else {
+                wrapperForDrawable.setWrappedDrawable(deletedDrawable);
             }
             downloadOfAFileEnded();
         }
