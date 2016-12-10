@@ -6,8 +6,24 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Random;
 
 public class WebManager {
+    private static String userAgentString = "ResdroidIRC";
+
+    public static void generateNewUserAgent() {
+        String newUserAgent = "";
+        String baseForUserAgent = "RespawnIRC jeuxvideo.com bonjour logiciel";
+        Random rand = new Random();
+        int newSize = rand.nextInt(20) + 30;
+
+        for (int i = 0; i < newSize; ++i) {
+            newUserAgent += baseForUserAgent.charAt(rand.nextInt(baseForUserAgent.length()));
+        }
+
+        userAgentString = newUserAgent;
+    }
+
     public static String sendRequest(String linkToPage, String requestMethod, String requestParameters, String cookiesInAString, WebInfos currentInfos) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
@@ -31,7 +47,7 @@ public class WebManager {
             urlConnection.setReadTimeout(7500);
 
             urlConnection.setRequestMethod(requestMethod);
-            urlConnection.setRequestProperty("User-Agent", "ResdroidIRC");
+            urlConnection.setRequestProperty("User-Agent", userAgentString);
             urlConnection.setRequestProperty("Connection", "Keep-Alive");
             urlConnection.setRequestProperty("Cookie", cookiesInAString);
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");

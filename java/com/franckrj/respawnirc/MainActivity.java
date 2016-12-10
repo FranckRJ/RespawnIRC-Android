@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.franckrj.respawnirc.utils.WebManager;
+
 import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
                 thisFile.delete();
             }
         }
+
+        WebManager.generateNewUserAgent();
 
         startActivity(new Intent(this, ShowForumActivity.class));
         if (lastActivityViewed == ACTIVITY_SHOW_TOPIC) {
