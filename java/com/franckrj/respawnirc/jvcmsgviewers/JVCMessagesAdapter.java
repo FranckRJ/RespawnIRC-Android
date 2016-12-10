@@ -124,7 +124,9 @@ public class JVCMessagesAdapter extends BaseAdapter {
         res = parentActivity.getResources();
         deletedDrawable = res.getDrawable(R.drawable.image_deleted);
         deletedDrawable.setBounds(0, 0, deletedDrawable.getIntrinsicWidth(), deletedDrawable.getIntrinsicHeight());
+        downloaderForImage.setParentActivity(parentActivity);
         downloaderForImage.setListenerForDownloadFinished(listenerForDownloadFinished);
+        downloaderForImage.setImagesCacheDir(parentActivity.getCacheDir());
         downloaderForImage.setImagesSize(res.getDimensionPixelSize(R.dimen.imagesWidth), res.getDimensionPixelSize(R.dimen.imagesHeight));
         downloaderForImage.setDefaultDrawable(res.getDrawable(R.drawable.image_file_download));
         downloaderForImage.setDeletedDrawable(deletedDrawable);
@@ -153,6 +155,7 @@ public class JVCMessagesAdapter extends BaseAdapter {
     public void removeAllItems() {
         listOfMessages.clear();
         listOfContentForMessages.clear();
+        downloaderForImage.clearMemoryCache();
     }
 
     public void removeFirstItem() {
