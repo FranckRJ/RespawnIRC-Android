@@ -22,24 +22,24 @@ public class ChooseTopicOrForumLinkDialogFragment extends DialogFragment {
         View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_choosetopicorforumlink, null);
         linkEdit = (EditText) mainView.findViewById(R.id.link_edit_choosetopicorforumlink);
         builder.setTitle(R.string.chooseTopicOrForumLink).setView(mainView)
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                }).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int i) {
-                if (!linkEdit.getText().toString().isEmpty()) {
-                    Activity currentActivity = getActivity();
-
-                    if (currentActivity instanceof NewTopicOrForumSelected) {
-                        ((NewTopicOrForumSelected) currentActivity).newTopicOrForumAvailable(linkEdit.getText().toString());
-                    }
+            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
                 }
-                dialog.dismiss();
-            }
-        });
+            }).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int i) {
+                    if (!linkEdit.getText().toString().isEmpty()) {
+                        Activity currentActivity = getActivity();
+
+                        if (currentActivity instanceof NewTopicOrForumSelected) {
+                            ((NewTopicOrForumSelected) currentActivity).newTopicOrForumAvailable(linkEdit.getText().toString());
+                        }
+                    }
+                    dialog.dismiss();
+                }
+            });
         return builder.create();
     }
 

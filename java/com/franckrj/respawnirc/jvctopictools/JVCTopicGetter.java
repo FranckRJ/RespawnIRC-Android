@@ -21,14 +21,11 @@ public class JVCTopicGetter {
     private NewTopicsListener listenerForNewTopics = null;
     private NewGetterStateListener listenerForNewGetterState = null;
     private NewForumNameAvailable listenerForNewForumName = null;
+    private ForumLinkChanged listenerForForumLinkChanged = null;
     private String forumName = "";
 
     public JVCTopicGetter(Activity newParentActivity) {
         parentActivity = newParentActivity;
-    }
-
-    public String getUrlForForum() {
-        return urlForForum;
     }
 
     public void setCookieListInAString(String newCookieListInAString) {
@@ -47,6 +44,10 @@ public class JVCTopicGetter {
         listenerForNewForumName = thisListener;
     }
 
+    public void setListenerForForumLinkChanged(ForumLinkChanged thisListener) {
+        listenerForForumLinkChanged = thisListener;
+    }
+
     public boolean startGetMessagesOfThisPage(String newUrlOfPage) {
         if (currentAsyncTaskForGetTopic == null && !newUrlOfPage.isEmpty()) {
             urlForForum = newUrlOfPage;
@@ -54,6 +55,7 @@ public class JVCTopicGetter {
             currentAsyncTaskForGetTopic.execute(urlForForum, cookieListInAString);
             return true;
         } else {
+            urlForForum = newUrlOfPage;
             return false;
         }
     }
@@ -123,6 +125,9 @@ public class JVCTopicGetter {
             if (infoOfCurrentPage != null) {
                 if (!infoOfCurrentPage.newUrlForForumPage.isEmpty()) {
                     urlForForum = infoOfCurrentPage.newUrlForForumPage;
+                    if (listenerForForumLinkChanged != null) {
+                        listenerForForumLinkChanged.getNewForumLink(urlForForum);
+                    }
                 }
 
                 if (!infoOfCurrentPage.newForumName.equals(forumName)) {
@@ -151,6 +156,10 @@ public class JVCTopicGetter {
 
     public interface NewForumNameAvailable {
         void getNewForumName(String newForumName);
+    }
+
+    public interface ForumLinkChanged {
+        void getNewForumLink(String newForumLink);
     }
 
     public interface NewTopicsListener {

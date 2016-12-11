@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -30,26 +29,8 @@ public class ShowForumFragment extends Fragment {
     private JVCTopicGetter getterForTopics = null;
     private ListView jvcTopicList = null;
     private JVCTopicsAdapter adapterForTopics;
-    private Button firstPageButton = null;
-    private Button previousPageButton = null;
-    private Button currentPageButton = null;
-    private Button nextPageButton = null;
-    private int currentPage = 0;
     private boolean clearTopicsOnRefresh = true;
     private boolean isInErrorMode = false;
-
-    private final Button.OnClickListener changePageWithNavigationButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View buttonView) {
-            if (buttonView == firstPageButton && firstPageButton.getVisibility() == View.VISIBLE) {
-                goToThisNewPage(JVCParser.setPageNumberForThisForumLink(getterForTopics.getUrlForForum(), 1));
-            } else if (buttonView == previousPageButton && previousPageButton.getVisibility() == View.VISIBLE) {
-                goToThisNewPage(JVCParser.setPageNumberForThisForumLink(getterForTopics.getUrlForForum(), currentPage - 25));
-            }  else if (buttonView == nextPageButton && nextPageButton.getVisibility() == View.VISIBLE) {
-                goToThisNewPage(JVCParser.setPageNumberForThisForumLink(getterForTopics.getUrlForForum(), currentPage + 25));
-            }
-        }
-    };
 
     private final AdapterView.OnItemClickListener listenerForItemClickedInListView = new AdapterView.OnItemClickListener() {
         @Override
@@ -115,24 +96,6 @@ public class ShowForumFragment extends Fragment {
         }
     };
 
-    private void updatePageButtons() {
-        firstPageButton.setVisibility(View.GONE);
-        previousPageButton.setVisibility(View.GONE);
-        currentPageButton.setText(R.string.waitingText);
-        nextPageButton.setVisibility(View.GONE);
-
-        if (currentPage > 0) {
-            currentPageButton.setText(String.valueOf(((currentPage - 1) / 25) + 1));
-            nextPageButton.setVisibility(View.VISIBLE);
-
-            if (currentPage > 1) {
-                firstPageButton.setVisibility(View.VISIBLE);
-                firstPageButton.setText(String.valueOf(1));
-                previousPageButton.setVisibility(View.VISIBLE);
-            }
-        }
-    }
-
     private void reloadSettings() {
         getterForTopics.setCookieListInAString(sharedPref.getString(getString(R.string.prefCookiesList), ""));
         clearTopicsOnRefresh = true;
@@ -147,34 +110,24 @@ public class ShowForumFragment extends Fragment {
         return getterForTopics.reloadForum();
     }
 
-    public void goToThisNewPage(String newPageToGo) {
-        SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
-        String currentPageNumber;
+    public void setForumPageLink(String newForumPageLink) {
         isInErrorMode = false;
 
-        if (!newPageToGo.isEmpty()) {
-            newPageToGo = JVCParser.formatThisUrl(newPageToGo);
-        }
-        currentPageNumber = JVCParser.getPageNumberForThisForumLink(newPageToGo);
-
-        sharedPrefEdit.putString(getString(R.string.prefForumUrlToFetch), newPageToGo);
-        sharedPrefEdit.apply();
-
-        if (!currentPageNumber.isEmpty()) {
-            currentPage = Integer.parseInt(currentPageNumber);
-        } else {
-            currentPage = 0;
+        if (!newForumPageLink.isEmpty()) {
+            newForumPageLink = JVCParser.formatThisUrl(newForumPageLink);
         }
 
-        updatePageButtons();
         getterForTopics.stopAllCurrentTask();
         adapterForTopics.removeAllItems();
         adapterForTopics.updateAllItems();
-        getterForTopics.startGetMessagesOfThisPage(newPageToGo);
+        getterForTopics.startGetMessagesOfThisPage(newForumPageLink);
     }
 
-    public void setForumByTopicLink(String topicLink) {
-        goToThisNewPage(JVCParser.getForumForTopicLink(JVCParser.formatThisUrl(topicLink)));
+    public void clearForum() {
+        getterForTopics.stopAllCurrentTask();
+        adapterForTopics.removeAllItems();
+        adapterForTopics.updateAllItems();
+        getterForTopics.startGetMessagesOfThisPage("");
     }
 
     @Override
@@ -190,18 +143,8 @@ public class ShowForumFragment extends Fragment {
 
         jvcTopicList = (ListView) mainView.findViewById(R.id.jvctopic_view_showforum);
         swipeRefresh = (SwipeRefreshLayout) mainView.findViewById(R.id.swiperefresh_showforum);
-        firstPageButton = (Button) mainView.findViewById(R.id.firstpage_button_showforum);
-        previousPageButton = (Button) mainView.findViewById(R.id.previouspage_button_showforum);
-        currentPageButton = (Button) mainView.findViewById(R.id.currentpage_button_showforum);
-        nextPageButton = (Button) mainView.findViewById(R.id.nextpage_button_showforum);
 
         swipeRefresh.setOnRefreshListener(listenerForRefresh);
-        firstPageButton.setVisibility(View.GONE);
-        firstPageButton.setOnClickListener(changePageWithNavigationButtonListener);
-        previousPageButton.setVisibility(View.GONE);
-        previousPageButton.setOnClickListener(changePageWithNavigationButtonListener);
-        nextPageButton.setVisibility(View.GONE);
-        nextPageButton.setOnClickListener(changePageWithNavigationButtonListener);
 
         return mainView;
     }
@@ -227,6 +170,9 @@ public class ShowForumFragment extends Fragment {
         if (getActivity() instanceof JVCTopicGetter.NewForumNameAvailable) {
             getterForTopics.setListenerForNewForumName((JVCTopicGetter.NewForumNameAvailable) getActivity());
         }
+        if (getActivity() instanceof JVCTopicGetter.ForumLinkChanged) {
+            getterForTopics.setListenerForForumLinkChanged((JVCTopicGetter.ForumLinkChanged) getActivity());
+        }
 
         swipeRefresh.setColorSchemeResources(R.color.colorAccent);
         jvcTopicList.setAdapter(adapterForTopics);
@@ -242,14 +188,12 @@ public class ShowForumFragment extends Fragment {
             }
 
             adapterForTopics.updateAllItems();
-            currentPage = Integer.parseInt(JVCParser.getPageNumberForThisForumLink(getterForTopics.getUrlForForum()));
-            updatePageButtons();
         } else {
             Bundle currentArgs = getArguments();
 
             if (currentArgs != null) {
                 String forumLink = currentArgs.getString(ARG_FORUM_LINK, "");
-                goToThisNewPage(forumLink);
+                setForumPageLink(forumLink);
             }
         }
     }
@@ -260,9 +204,7 @@ public class ShowForumFragment extends Fragment {
         reloadSettings();
         isInErrorMode = false;
 
-        if (getterForTopics.getUrlForForum().isEmpty()) {
-            goToThisNewPage(sharedPref.getString(getString(R.string.prefForumUrlToFetch), ""));
-        } else if (adapterForTopics.getAllItems().isEmpty()) {
+        if (adapterForTopics.getAllItems().isEmpty()) {
             getterForTopics.reloadForum();
         }
     }
