@@ -37,7 +37,7 @@ public final class JVCParser {
     private static final Pattern pageForumLinkNumberPattern = Pattern.compile("(http://www.jeuxvideo.com/forums/[^-]*-([^-]*)-[^-]*-[^-]*-[^-]*-)([^-]*)(-[^-]*-[^.]*.htm)");
     private static final Pattern jvCarePattern = Pattern.compile("<span class=\"JvCare [^\"]*\">([^<]*)</span>");
     private static final Pattern lastEditMessagePattern = Pattern.compile("<div class=\"info-edition-msg\">(Message édité le ([^ ]* [^ ]* [^ ]* [^ ]* [0-9:]*) par.*?)</div>");
-    private static final Pattern messageEditInfoPattern = Pattern.compile("<textarea tabindex=\"3\" class=\"area-editor\" name=\"text_commentaire\" id=\"text_commentaire\" placeholder=\"[^\"]*\">([^<]*)</textarea>");
+    private static final Pattern messageEditInfoPattern = Pattern.compile("<textarea tabindex=\"3\" class=\"area-editor\" name=\"text_commentaire\" id=\"text_commentaire\" placeholder=\"[^\"]*\">(.*?)</textarea>", Pattern.DOTALL);
     private static final Pattern allArianeStringPattern = Pattern.compile("<div class=\"fil-ariane-crumb\">.*?</h1>", Pattern.DOTALL);
     private static final Pattern forumNameInArianeStringPattern = Pattern.compile("<span><a href=\"/forums/0-[^\"]*\">([^<]*)</a></span>");
     private static final Pattern topicNameInArianeStringPattern = Pattern.compile("<span><a href=\"/forums/(42|1)-[^\"]*\">([^<]*)</a></span>");
@@ -255,11 +255,12 @@ public final class JVCParser {
         Matcher unicodeInTextMatcher;
 
         ajaxMessage = ajaxMessage.replace("\n", "")
-                .replace("\\r", "")
-                .replace("\\\"", "\"")
-                .replace("\\/", "/")
-                .replace("\\\\", "\\")
-                .replace("\\n", "\n");
+                .replace("\r", "")
+                .replaceAll("(?<!\\\\)\\\\r", "")
+                .replaceAll("(?<!\\\\)\\\\\"", "\"")
+                .replaceAll("(?<!\\\\)\\\\/", "/")
+                .replaceAll("(?<!\\\\)\\\\n", "\n")
+                .replace("\\\\", "\\");
 
         unicodeInTextMatcher = unicodeInTextPattern.matcher(ajaxMessage);
         while (unicodeInTextMatcher.find()) {

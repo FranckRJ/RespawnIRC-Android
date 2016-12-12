@@ -153,13 +153,9 @@ public class JVCMessageSender {
             if (pageResult != null) {
                 if (!pageResult.isEmpty()) {
                     if (!isInEdit) {
-                        if (listenerForNewMessagePosted != null) {
-                            errorWhenSending = JVCParser.getErrorMessage(pageResult);
-                        }
+                        errorWhenSending = JVCParser.getErrorMessage(pageResult);
                     } else {
-                        if (listenerForNewMessagePosted != null) {
-                            errorWhenSending = JVCParser.getErrorMessageInEditMode(pageResult);
-                        }
+                        errorWhenSending = JVCParser.getErrorMessageInEditMode(pageResult);
                     }
                 }
             }
