@@ -63,7 +63,7 @@ public abstract class AbsJVCMessageGetter {
 
     public void stopAllCurrentTask() {
         if (currentAsyncTaskForGetMessage != null) {
-            currentAsyncTaskForGetMessage.cancel(false);
+            currentAsyncTaskForGetMessage.cancel(true);
             currentAsyncTaskForGetMessage = null;
         }
 

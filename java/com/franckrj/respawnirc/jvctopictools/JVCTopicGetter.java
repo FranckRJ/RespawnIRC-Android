@@ -66,7 +66,7 @@ public class JVCTopicGetter {
 
     public void stopAllCurrentTask() {
         if (currentAsyncTaskForGetTopic != null) {
-            currentAsyncTaskForGetTopic.cancel(false);
+            currentAsyncTaskForGetTopic.cancel(true);
             currentAsyncTaskForGetTopic = null;
         }
 

@@ -210,7 +210,7 @@ public abstract class AbsShowTopicFragment extends Fragment {
 
     protected void stopAllCurrentTask() {
         if (currentTaskQuoteMessage != null) {
-            currentTaskQuoteMessage.cancel(false);
+            currentTaskQuoteMessage.cancel(true);
             currentTaskQuoteMessage = null;
             latestMessageQuotedInfo = null;
         }

@@ -53,11 +53,11 @@ public class JVCMessageSender {
 
     public void stopAllCurrentTask() {
         if (currentAsyncTaskForSendMessage != null) {
-            currentAsyncTaskForSendMessage.cancel(false);
+            currentAsyncTaskForSendMessage.cancel(true);
             currentAsyncTaskForSendMessage = null;
         }
         if (currentAsyncTaskForGetEditInfos != null) {
-            currentAsyncTaskForGetEditInfos.cancel(false);
+            currentAsyncTaskForGetEditInfos.cancel(true);
             currentAsyncTaskForGetEditInfos = null;
         }
     }
