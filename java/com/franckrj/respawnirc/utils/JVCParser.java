@@ -419,16 +419,6 @@ public final class JVCParser {
         tmpMessage = parseThisMessageWithThisPattern(tmpMessage, codeLinePattern, 1, "<font face=\"monospace\">", "</font>", new ConvertStringToString(" ", " "), null); //remplace les espaces par des alt+255
         tmpMessage = parseThisMessageWithThisPattern(tmpMessage, stickerPattern, 2, "<img src=\"sticker_", ".png\"/>", new ConvertStringToString("-", "_"), null);
 
-        if (thisMessageInfo.containSpoil) {
-            if (!thisMessageInfo.showSpoil) {
-                tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilLinePattern, 1, "", "", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
-                tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilBlockPattern, 1, "<p>", "</p>", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
-            } else {
-                tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilLinePattern, 1, "<font color=\"#000000\">", "</font>", null, null);
-                tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilBlockPattern, 1, "<p><font color=\"#000000\">", "</font></p>", null, null);
-            }
-        }
-
         tmpMessage = tmpMessage.replace("\n", "").replace("\r", "");
 
         if (tmpMessage.contains("<li>")) {
@@ -454,6 +444,16 @@ public final class JVCParser {
             tmpMessage = tmpMessage.replaceAll("<a href=\"([^\"]*)\" data-def=\"NOELSHACK\" target=\"_blank\"><img class=\"img-shack\" .*? src=\"//([^\"]*)\" [^>]*></a>", "<img src=\"http://$2\"/>");
         } else {
             tmpMessage = tmpMessage.replaceAll("<a href=\"([^\"]*)\" data-def=\"NOELSHACK\" target=\"_blank\"><img class=\"img-shack\" .*? src=\"//([^\"]*)\" [^>]*></a>", "<a href=\"$1\">$1</a>");
+        }
+
+        if (thisMessageInfo.containSpoil) {
+            if (!thisMessageInfo.showSpoil) {
+                tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilLinePattern, 1, "", "", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
+                tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilBlockPattern, 1, "<p>", "</p>", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
+            } else {
+                tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilLinePattern, 1, "<font color=\"#000000\">", "</font>", null, null);
+                tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilBlockPattern, 1, "<p><font color=\"#000000\">", "</font></p>", null, null);
+            }
         }
 
         tmpMessage = tmpMessage.replace("<blockquote class=\"blockquote-jv\">", "<blockquote>")
