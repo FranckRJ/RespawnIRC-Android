@@ -82,12 +82,14 @@ public class ShowForumActivity extends AppCompatActivity implements ChooseTopicO
 
         if (pagerView.getCurrentItem() >= 0) {
             currentPageButton.setText(String.valueOf(pagerView.getCurrentItem() + 1));
-            nextPageButton.setVisibility(View.VISIBLE);
 
             if (pagerView.getCurrentItem() > 0) {
                 firstPageButton.setVisibility(View.VISIBLE);
                 firstPageButton.setText(String.valueOf(1));
                 previousPageButton.setVisibility(View.VISIBLE);
+            }
+            if (pagerView.getCurrentItem() < adapterForPagerView.getCount() - 1) {
+                nextPageButton.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -104,6 +106,15 @@ public class ShowForumActivity extends AppCompatActivity implements ChooseTopicO
         return currentFragment;
     }
 
+    private void setNewForumLink(String newLink) {
+        currentForumLink = newLink;
+        updateAdapterForPagerView();
+        updateCurrentItemToCurrentLink();
+        if (pagerView.getCurrentItem() > 0) {
+            clearPageForThisFragment(0);
+        }
+    }
+
     private void setTopicOrForum(String link, boolean updateForumFragIfNeeded, String topicName) {
         if (link != null) {
             if (!link.isEmpty()) {
@@ -111,16 +122,12 @@ public class ShowForumActivity extends AppCompatActivity implements ChooseTopicO
             }
 
             if (JVCParser.checkIfItsForumLink(link)) {
-                currentForumLink = link;
-                updateAdapterForPagerView();
-                updateCurrentItemToCurrentLink();
+                setNewForumLink(link);
             } else {
                 Intent newShowTopicIntent = new Intent(this, ShowTopicActivity.class);
 
                 if (updateForumFragIfNeeded) {
-                    currentForumLink = JVCParser.getForumForTopicLink(link);
-                    updateAdapterForPagerView();
-                    updateCurrentItemToCurrentLink();
+                    setNewForumLink(JVCParser.getForumForTopicLink(link));
                 }
 
                 if (topicName != null) {
@@ -347,7 +354,7 @@ public class ShowForumActivity extends AppCompatActivity implements ChooseTopicO
     }
 
     @Override
-    public void getNewForumLink(String newForumLink) {
+    public void updateForumLink(String newForumLink) {
         currentForumLink = newForumLink;
     }
 

@@ -126,7 +126,7 @@ public class JVCTopicGetter {
                 if (!infoOfCurrentPage.newUrlForForumPage.isEmpty()) {
                     urlForForum = infoOfCurrentPage.newUrlForForumPage;
                     if (listenerForForumLinkChanged != null) {
-                        listenerForForumLinkChanged.getNewForumLink(urlForForum);
+                        listenerForForumLinkChanged.updateForumLink(urlForForum);
                     }
                 }
 
@@ -159,7 +159,7 @@ public class JVCTopicGetter {
     }
 
     public interface ForumLinkChanged {
-        void getNewForumLink(String newForumLink);
+        void updateForumLink(String newForumLink);
     }
 
     public interface NewTopicsListener {
