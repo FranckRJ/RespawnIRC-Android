@@ -109,7 +109,7 @@ public class ShowForumActivity extends AppCompatActivity implements ChooseTopicO
     private void setNewForumLink(String newLink) {
         currentForumLink = newLink;
         updateAdapterForPagerView();
-        updateCurrentItemToCurrentLink();
+        updateCurrentItemAndButtonsToCurrentLink();
         if (pagerView.getCurrentItem() > 0) {
             clearPageForThisFragment(0);
         }
@@ -148,7 +148,7 @@ public class ShowForumActivity extends AppCompatActivity implements ChooseTopicO
         pagerView.setAdapter(adapterForPagerView);
     }
 
-    private void updateCurrentItemToCurrentLink() {
+    private void updateCurrentItemAndButtonsToCurrentLink() {
         if (!currentForumLink.isEmpty()) {
             pagerView.setCurrentItem((Integer.parseInt(JVCParser.getPageNumberForThisForumLink(currentForumLink)) - 1) / 25);
             updateNavigationButtons();
@@ -268,12 +268,12 @@ public class ShowForumActivity extends AppCompatActivity implements ChooseTopicO
         currentForumLink = sharedPref.getString(getString(R.string.prefForumUrlToFetch), "");
         if (savedInstanceState == null) {
             currentTitle = getString(R.string.app_name);
-            updateCurrentItemToCurrentLink();
+            updateCurrentItemAndButtonsToCurrentLink();
         } else {
             currentTitle = savedInstanceState.getString(getString(R.string.saveCurrentForumTitle), getString(R.string.app_name));
+            updateNavigationButtons();
         }
         setTitle(currentTitle);
-        updateNavigationButtons();
 
         if (sharedPref.getBoolean(getString(R.string.prefIsFirstLaunch), true)) {
             SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();

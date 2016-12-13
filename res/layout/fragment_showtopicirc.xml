@@ -7,47 +7,13 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swiperefresh_showtopicirc"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/sendmessage_layout_showtopicirc"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentTop="true">
         <ListView
             android:id="@+id/jvcmessage_view_showtopicirc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </android.support.v4.widget.SwipeRefreshLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:background="@drawable/shadow_bottom"
-        android:layout_above="@+id/sendmessage_layout_showtopicirc"/>
-    <LinearLayout
-        android:id="@+id/sendmessage_layout_showtopicirc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_alignParentBottom="true"
-        android:background="#eee">
-        <EditText
-            android:id="@+id/sendmessage_text_showtopicirc"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="8dp"
-            android:inputType="textMultiLine|textCapSentences"
-            android:maxLines="4"
-            android:hint="@string/messagePlaceHolder"
-            android:background="@android:color/transparent"/>
-        <ImageButton
-            style="@style/SelectableItemBackground"
-            android:id="@+id/sendmessage_button_showtopicirc"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_action_content_send"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:contentDescription="@string/messagePost"/>
-    </LinearLayout>
 
 </RelativeLayout>

@@ -8,8 +8,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -77,6 +75,10 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
         }
     };
 
+    public static boolean getShowNavigationButtons() {
+        return false;
+    }
+
     private void loadFromOldTopicInfos() {
         isInErrorMode = false;
         getterForMessages.stopAllCurrentTask();
@@ -88,13 +90,12 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
 
     @Override
     public void setNewTopicLink(String newTopicLink) {
-        String newUrl = baseForChangeTopicLink(newTopicLink);
         isInErrorMode = false;
 
         getterForMessages.stopAllCurrentTask();
         adapterForMessages.removeAllItems();
         adapterForMessages.updateAllItems();
-        getterForMessages.setNewTopic(newUrl);
+        getterForMessages.setNewTopic(newTopicLink);
         getterForMessages.reloadTopic();
     }
 
@@ -138,11 +139,7 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
         View mainView = inflater.inflate(R.layout.fragment_showtopicirc, container, false);
 
         jvcMsgList = (ListView) mainView.findViewById(R.id.jvcmessage_view_showtopicirc);
-        messageSendEdit = (EditText) mainView.findViewById(R.id.sendmessage_text_showtopicirc);
-        messageSendButton = (ImageButton) mainView.findViewById(R.id.sendmessage_button_showtopicirc);
         swipeRefresh = (SwipeRefreshLayout) mainView.findViewById(R.id.swiperefresh_showtopicirc);
-
-        messageSendButton.setOnClickListener(sendMessageToTopicListener);
 
         return mainView;
     }
@@ -160,10 +157,6 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
         } else {
             oldUrlForTopic = sharedPref.getString(getString(R.string.prefOldUrlForTopic), "");
             oldLastIdOfMessage = sharedPref.getLong(getString(R.string.prefOldLastIdOfMessage), 0);
-        }
-
-        if (getterForMessages.getUrlForTopic().isEmpty()) {
-            getterForMessages.setNewTopic(sharedPref.getString(getString(R.string.prefTopicUrlToFetch), ""));
         }
     }
 

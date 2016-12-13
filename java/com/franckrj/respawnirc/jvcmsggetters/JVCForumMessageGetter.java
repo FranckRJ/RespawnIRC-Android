@@ -25,6 +25,7 @@ public class JVCForumMessageGetter extends AbsJVCMessageGetter {
             currentAsyncTaskForGetMessage.execute(urlForTopic, cookieListInAString);
             return true;
         } else {
+            urlForTopic = newUrlOfPage;
             return false;
         }
     }

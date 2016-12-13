@@ -1,9 +1,9 @@
 package com.franckrj.respawnirc.dialogs;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,8 +15,6 @@ import android.widget.EditText;
 import com.franckrj.respawnirc.R;
 
 public class ChoosePageNumberDialogFragment extends DialogFragment {
-    public static final int REQUEST_CHANGE_PAGE = 42;
-
     EditText pageNumberEdit = null;
 
     @NonNull
@@ -37,13 +35,19 @@ public class ChoosePageNumberDialogFragment extends DialogFragment {
                 }).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int i) {
-                Fragment targetFrag = getTargetFragment();
-                if (targetFrag != null && !pageNumberEdit.getText().toString().isEmpty()) {
+                if (!pageNumberEdit.getText().toString().isEmpty()) {
+                    Activity currentActivity = getActivity();
+                    int newPageNumber;
+
                     try {
-                        targetFrag.onActivityResult(getTargetRequestCode(), Integer.parseInt(pageNumberEdit.getText().toString()), getActivity().getIntent());
+                        newPageNumber = Integer.parseInt(pageNumberEdit.getText().toString());
                     } catch (Exception e) {
                         e.printStackTrace();
-                        targetFrag.onActivityResult(getTargetRequestCode(), -REQUEST_CHANGE_PAGE, getActivity().getIntent());
+                        newPageNumber = -1;
+                    }
+
+                    if (currentActivity instanceof NewPageNumberSelected) {
+                        ((NewPageNumberSelected) currentActivity).newPageNumberChoosen(newPageNumber);
                     }
                 }
                 dialog.dismiss();
@@ -55,5 +59,9 @@ public class ChoosePageNumberDialogFragment extends DialogFragment {
             currentWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
         return alertToShow;
+    }
+
+    public interface NewPageNumberSelected {
+        void newPageNumberChoosen(int newPageNumber);
     }
 }

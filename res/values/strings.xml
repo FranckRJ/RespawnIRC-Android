@@ -106,6 +106,8 @@
     <string name="settingsShowNoelshackImage">settings.showNoelshackImage</string>
     <string name="showNoelshackImageDefault">false</string>
     <string name="showNoelshackImageTitle">Afficher les images noelshack</string>
+    <string name="saveCookies">save.cookies</string>
+    <string name="savePseudo">save.pseudo</string>
 
     <string-array name="itemChoiceDrawerList">
         <item>@string/app_name</item>

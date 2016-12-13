@@ -4,116 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/header_layout_showtopicforum"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#eee">
-        <Button
-            android:id="@+id/firstpage_button_showtopicforum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginStart="4dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"/>
-        <Button
-            android:id="@+id/previouspage_button_showtopicforum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
-            android:layout_toLeftOf="@+id/currentpage_button_showtopicforum"
-            android:layout_toStartOf="@+id/currentpage_button_showtopicforum"
-            android:layout_alignParentTop="true"
-            android:text="@string/previousPageText"/>
-        <Button
-            android:id="@+id/currentpage_button_showtopicforum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentTop="true"
-            android:text="@string/waitingText"/>
-        <Button
-            android:id="@+id/nextpage_button_showtopicforum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
-            android:layout_toRightOf="@+id/currentpage_button_showtopicforum"
-            android:layout_toEndOf="@+id/currentpage_button_showtopicforum"
-            android:layout_alignParentTop="true"
-            android:text="@string/nextPageText"/>
-        <Button
-            android:id="@+id/lastpage_button_showtopicforum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
-            android:layout_marginRight="4dp"
-            android:layout_marginEnd="4dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"/>
-    </RelativeLayout>
-
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swiperefresh_showtopicforum"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/sendmessage_layout_showtopicforum"
-        android:layout_below="@+id/header_layout_showtopicforum">
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true">
         <ListView
             android:id="@+id/jvcmessage_view_showtopicforum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </android.support.v4.widget.SwipeRefreshLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:background="@drawable/shadow_top"
-        android:layout_below="@+id/header_layout_showtopicforum"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:background="@drawable/shadow_bottom"
-        android:layout_above="@+id/sendmessage_layout_showtopicforum"/>
-    <LinearLayout
-        android:id="@+id/sendmessage_layout_showtopicforum"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_alignParentBottom="true"
-        android:background="#eee">
-        <EditText
-            android:id="@+id/sendmessage_text_showtopicforum"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="8dp"
-            android:inputType="textMultiLine|textCapSentences"
-            android:maxLines="4"
-            android:hint="@string/messagePlaceHolder"
-            android:background="@android:color/transparent"/>
-        <ImageButton
-            style="@style/SelectableItemBackground"
-            android:id="@+id/sendmessage_button_showtopicforum"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_action_content_send"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:contentDescription="@string/messagePost"/>
-    </LinearLayout>
 
 </RelativeLayout>

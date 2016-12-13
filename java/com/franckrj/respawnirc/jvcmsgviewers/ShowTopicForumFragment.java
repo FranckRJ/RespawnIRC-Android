@@ -1,8 +1,5 @@
 package com.franckrj.respawnirc.jvcmsgviewers;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -11,14 +8,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.dialogs.ChoosePageNumberDialogFragment;
 import com.franckrj.respawnirc.jvcmsggetters.JVCForumMessageGetter;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Utils;
@@ -27,13 +20,6 @@ import java.util.ArrayList;
 
 public class ShowTopicForumFragment extends AbsShowTopicFragment {
     private JVCForumMessageGetter getterForMessages = null;
-    private Button firstPageButton = null;
-    private Button previousPageButton = null;
-    private Button currentPageButton = null;
-    private Button nextPageButton = null;
-    private Button lastPageButton = null;
-    private int currentPage = 0;
-    private int lastPage = 0;
     private boolean clearMessagesOnRefresh = true;
 
     private final JVCForumMessageGetter.NewMessagesListener listenerForNewMessages = new JVCForumMessageGetter.NewMessagesListener() {
@@ -70,37 +56,6 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
         }
     };
 
-    private final Button.OnClickListener changePageWithNavigationButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View buttonView) {
-            if (buttonView == firstPageButton && firstPageButton.getVisibility() == View.VISIBLE) {
-                goToThisNewPage(JVCParser.setPageNumberForThisTopicLink(getterForMessages.getUrlForTopic(), 1), false);
-            } else if (buttonView == previousPageButton && previousPageButton.getVisibility() == View.VISIBLE) {
-                goToThisNewPage(JVCParser.setPageNumberForThisTopicLink(getterForMessages.getUrlForTopic(), currentPage - 1), false);
-            } else if (buttonView == currentPageButton) {
-                ChoosePageNumberDialogFragment choosePageDialogFragment = new ChoosePageNumberDialogFragment();
-                choosePageDialogFragment.setTargetFragment(ShowTopicForumFragment.this, ChoosePageNumberDialogFragment.REQUEST_CHANGE_PAGE);
-                choosePageDialogFragment.show(getFragmentManager(), "ChoosePageNumberDialogFragment");
-            } else if (buttonView == nextPageButton && nextPageButton.getVisibility() == View.VISIBLE) {
-                goToThisNewPage(JVCParser.setPageNumberForThisTopicLink(getterForMessages.getUrlForTopic(), currentPage + 1), false);
-            } else if (buttonView == lastPageButton && lastPageButton.getVisibility() == View.VISIBLE) {
-                goToThisNewPage(JVCParser.setPageNumberForThisTopicLink(getterForMessages.getUrlForTopic(), lastPage), false);
-            }
-        }
-    };
-
-    private final JVCForumMessageGetter.NewNumbersOfPagesListener listenerForNewNumbersOfPages = new JVCForumMessageGetter.NewNumbersOfPagesListener() {
-        @Override
-        public void getNewLastPageNumber(String newNumber) {
-            if (!newNumber.isEmpty()) {
-                lastPage = Integer.parseInt(newNumber);
-            } else {
-                lastPage = currentPage;
-            }
-            updatePageButtons();
-        }
-    };
-
     private final SwipeRefreshLayout.OnRefreshListener listenerForRefresh = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
@@ -110,51 +65,8 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
         }
     };
 
-    private void goToThisNewPage(String newPageUrl, boolean updateLastPage) {
-        SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
-        String currentPageNumber = JVCParser.getPageNumberForThisTopicLink(newPageUrl);
-        isInErrorMode = false;
-
-        sharedPrefEdit.putString(getString(R.string.prefTopicUrlToFetch), newPageUrl);
-        sharedPrefEdit.apply();
-
-        if (!currentPageNumber.isEmpty()) {
-            currentPage = Integer.parseInt(currentPageNumber);
-        } else {
-            currentPage = 0;
-        }
-        if (updateLastPage) {
-            lastPage = currentPage;
-        }
-
-        updatePageButtons();
-        getterForMessages.stopAllCurrentTask();
-        adapterForMessages.removeAllItems();
-        adapterForMessages.updateAllItems();
-        getterForMessages.startGetMessagesOfThisPage(newPageUrl);
-    }
-
-    private void updatePageButtons() {
-        firstPageButton.setVisibility(View.GONE);
-        previousPageButton.setVisibility(View.GONE);
-        currentPageButton.setText(R.string.waitingText);
-        nextPageButton.setVisibility(View.GONE);
-        lastPageButton.setVisibility(View.GONE);
-
-        if (currentPage > 0 && lastPage > 0) {
-            currentPageButton.setText(String.valueOf(currentPage));
-
-            if (currentPage > 1) {
-                firstPageButton.setVisibility(View.VISIBLE);
-                firstPageButton.setText(String.valueOf(1));
-                previousPageButton.setVisibility(View.VISIBLE);
-            }
-            if (currentPage < lastPage) {
-                nextPageButton.setVisibility(View.VISIBLE);
-                lastPageButton.setVisibility(View.VISIBLE);
-                lastPageButton.setText(String.valueOf(lastPage));
-            }
-        }
+    public static boolean getShowNavigationButtons() {
+        return true;
     }
 
     private boolean reloadAllTopic() {
@@ -168,7 +80,12 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
 
     @Override
     public void setNewTopicLink(String newTopicLink) {
-        goToThisNewPage(baseForChangeTopicLink(newTopicLink), true);
+        isInErrorMode = false;
+
+        getterForMessages.stopAllCurrentTask();
+        adapterForMessages.removeAllItems();
+        adapterForMessages.updateAllItems();
+        getterForMessages.startGetMessagesOfThisPage(newTopicLink);
     }
 
     @Override
@@ -210,26 +127,9 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
         View mainView = inflater.inflate(R.layout.fragment_showtopicforum, container, false);
 
         jvcMsgList = (ListView) mainView.findViewById(R.id.jvcmessage_view_showtopicforum);
-        messageSendEdit = (EditText) mainView.findViewById(R.id.sendmessage_text_showtopicforum);
-        messageSendButton = (ImageButton) mainView.findViewById(R.id.sendmessage_button_showtopicforum);
         swipeRefresh = (SwipeRefreshLayout) mainView.findViewById(R.id.swiperefresh_showtopicforum);
-        firstPageButton = (Button) mainView.findViewById(R.id.firstpage_button_showtopicforum);
-        previousPageButton = (Button) mainView.findViewById(R.id.previouspage_button_showtopicforum);
-        currentPageButton = (Button) mainView.findViewById(R.id.currentpage_button_showtopicforum);
-        nextPageButton = (Button) mainView.findViewById(R.id.nextpage_button_showtopicforum);
-        lastPageButton = (Button) mainView.findViewById(R.id.lastpage_button_showtopicforum);
 
         swipeRefresh.setOnRefreshListener(listenerForRefresh);
-        firstPageButton.setVisibility(View.GONE);
-        firstPageButton.setOnClickListener(changePageWithNavigationButtonListener);
-        previousPageButton.setVisibility(View.GONE);
-        previousPageButton.setOnClickListener(changePageWithNavigationButtonListener);
-        currentPageButton.setOnClickListener(changePageWithNavigationButtonListener);
-        nextPageButton.setVisibility(View.GONE);
-        nextPageButton.setOnClickListener(changePageWithNavigationButtonListener);
-        lastPageButton.setVisibility(View.GONE);
-        lastPageButton.setOnClickListener(changePageWithNavigationButtonListener);
-        messageSendButton.setOnClickListener(sendMessageToTopicListener);
 
         return mainView;
     }
@@ -237,18 +137,11 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Drawable arrowDrawable = getResources().getDrawable(R.drawable.ic_action_navigation_arrow_drop_down);
-        arrowDrawable.setBounds(0, 0, arrowDrawable.getIntrinsicWidth() / 2, arrowDrawable.getIntrinsicHeight() / 2);
-        currentPageButton.setCompoundDrawables(null, null, arrowDrawable, null);
-        currentPageButton.setCompoundDrawablePadding(getResources().getDimensionPixelSize(R.dimen.sizeBetweenTextAndArrow));
 
         getterForMessages.setListenerForNewMessages(listenerForNewMessages);
-        getterForMessages.setListenerForNewNumbersOfPages(listenerForNewNumbersOfPages);
 
-        if (savedInstanceState != null) {
-            currentPage = savedInstanceState.getInt(getString(R.string.saveCurrentPage));
-            lastPage = savedInstanceState.getInt(getString(R.string.saveLastPage));
-            updatePageButtons();
+        if (getActivity() instanceof JVCForumMessageGetter.NewNumbersOfPagesListener) {
+            getterForMessages.setListenerForNewNumbersOfPages((JVCForumMessageGetter.NewNumbersOfPagesListener) getActivity());
         }
     }
 
@@ -257,9 +150,7 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
         super.onResume();
         isInErrorMode = false;
 
-        if (getterForMessages.getUrlForTopic().isEmpty()) {
-            goToThisNewPage(sharedPref.getString(getString(R.string.prefTopicUrlToFetch), ""), true);
-        } else if (adapterForMessages.getAllItems().isEmpty()) {
+        if (adapterForMessages.getAllItems().isEmpty()) {
             getterForMessages.reloadTopic();
         }
     }
@@ -267,8 +158,6 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(getString(R.string.saveCurrentPage), currentPage);
-        outState.putInt(getString(R.string.saveLastPage), lastPage);
     }
 
     @Override
@@ -289,18 +178,6 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
                 }
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ChoosePageNumberDialogFragment.REQUEST_CHANGE_PAGE) {
-            if (resultCode > lastPage || resultCode == -ChoosePageNumberDialogFragment.REQUEST_CHANGE_PAGE) {
-                resultCode = lastPage;
-            } else if (resultCode < 1) {
-                resultCode = 1;
-            }
-            goToThisNewPage(JVCParser.setPageNumberForThisTopicLink(getterForMessages.getUrlForTopic(), resultCode), false);
         }
     }
 }
