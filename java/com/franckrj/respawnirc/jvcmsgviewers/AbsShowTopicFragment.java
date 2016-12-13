@@ -49,8 +49,14 @@ public abstract class AbsShowTopicFragment extends Fragment {
 
     protected void reloadSettings() {
         currentSettings.maxNumberOfOverlyQuotes = Integer.parseInt(sharedPref.getString(getString(R.string.settingsMaxNumberOfOverlyQuote), getString(R.string.maxNumberOfOverlyQuoteDefault)));
+        updateConnectInfos();
+    }
+
+    protected void updateConnectInfos() {
         currentSettings.pseudoOfUser = pseudoOfUser;
-        absGetterForMessages.setCookieListInAString(cookieListInAString);
+        if (absGetterForMessages != null) {
+            absGetterForMessages.setCookieListInAString(cookieListInAString);
+        }
     }
 
     public boolean onMenuItemClick(MenuItem item) {
@@ -115,10 +121,7 @@ public abstract class AbsShowTopicFragment extends Fragment {
     public void setPseudoAndCookies(String newPseudo, String newCookieList) {
         pseudoOfUser = newPseudo;
         cookieListInAString = newCookieList;
-        currentSettings.pseudoOfUser = pseudoOfUser;
-        if (absGetterForMessages != null) {
-            absGetterForMessages.setCookieListInAString(cookieListInAString);
-        }
+        updateConnectInfos();
     }
 
     @Override
@@ -157,8 +160,7 @@ public abstract class AbsShowTopicFragment extends Fragment {
             ArrayList<JVCParser.MessageInfos> allCurrentMessagesShowed = savedInstanceState.getParcelableArrayList(getString(R.string.saveAllCurrentMessagesShowed));
             pseudoOfUser = savedInstanceState.getString(getString(R.string.savePseudo), "");
             cookieListInAString = savedInstanceState.getString(getString(R.string.saveCookies), "");
-            currentSettings.pseudoOfUser = pseudoOfUser;
-            absGetterForMessages.setCookieListInAString(cookieListInAString);
+            updateConnectInfos();
             absGetterForMessages.loadFromBundle(savedInstanceState);
 
             if (allCurrentMessagesShowed != null) {
@@ -175,6 +177,7 @@ public abstract class AbsShowTopicFragment extends Fragment {
                 String topicLink = currentArgs.getString(ARG_TOPIC_LINK, "");
                 pseudoOfUser = currentArgs.getString(ARG_PSEUDO, "");
                 cookieListInAString = currentArgs.getString(ARG_COOKIES, "");
+                updateConnectInfos();
                 setNewTopicLink(topicLink);
             }
         }

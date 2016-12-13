@@ -23,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.franckrj.respawnirc.dialogs.ChooseTopicOrForumLinkDialogFragment;
 import com.franckrj.respawnirc.dialogs.HelpFirstLaunchDialogFragment;
@@ -122,8 +123,11 @@ public class ShowForumActivity extends AppCompatActivity implements ChooseTopicO
             }
 
             if (JVCParser.checkIfItsForumLink(link)) {
-                setNewForumLink(link);
-            } else {
+                if (!JVCParser.getPageNumberForThisForumLink(link).isEmpty()) {
+                    setNewForumLink(link);
+                    return;
+                }
+            } else if (!JVCParser.getPageNumberForThisTopicLink(link).isEmpty()) {
                 Intent newShowTopicIntent = new Intent(this, ShowTopicActivity.class);
 
                 if (updateForumFragIfNeeded) {
@@ -139,8 +143,11 @@ public class ShowForumActivity extends AppCompatActivity implements ChooseTopicO
 
                 newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_LINK, link);
                 startActivity(newShowTopicIntent);
+                return;
             }
         }
+
+        Toast.makeText(this, R.string.errorInvalidLink, Toast.LENGTH_SHORT).show();
     }
 
     private void updateAdapterForPagerView() {

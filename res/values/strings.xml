@@ -108,6 +108,7 @@
     <string name="showNoelshackImageTitle">Afficher les images noelshack</string>
     <string name="saveCookies">save.cookies</string>
     <string name="savePseudo">save.pseudo</string>
+    <string name="errorInvalidLink">Erreur, lien invalide.</string>
 
     <string-array name="itemChoiceDrawerList">
         <item>@string/app_name</item>
