@@ -452,8 +452,8 @@ public final class JVCParser {
                 tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilLinePattern, 1, "", "", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
                 tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilBlockPattern, 1, "<p>", "</p>", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
             } else {
-                tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilLinePattern, 1, "<font color=\"#000000\">", "</font>", null, null);
-                tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilBlockPattern, 1, "<p><font color=\"#000000\">", "</font></p>", null, null);
+                tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilLinePattern, 1, "<font color=\"#000000\">", "</font>", new RemoveFirstsAndLastsP(), null);
+                tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilBlockPattern, 1, "<p><font color=\"#000000\">", "</font></p>",  new RemoveFirstsAndLastsP(), null);
             }
         }
 
@@ -472,13 +472,11 @@ public final class JVCParser {
         tmpMessage = tmpMessage.trim();
 
         while (tmpMessage.startsWith("<br />")) {
-            tmpMessage = tmpMessage.substring(6);
-            tmpMessage = tmpMessage.trim();
+            tmpMessage = tmpMessage.substring(6).trim();
         }
 
         while (tmpMessage.endsWith("<br />")) {
-            tmpMessage = tmpMessage.substring(0, tmpMessage.length() - 6);
-            tmpMessage = tmpMessage.trim();
+            tmpMessage = tmpMessage.substring(0, tmpMessage.length() - 6).trim();
         }
 
         if (!thisMessageInfo.showOverlyQuote) {
@@ -853,6 +851,20 @@ public final class JVCParser {
         public String changeString(String baseString) {
             if ((baseString.startsWith("http://") || baseString.startsWith("https://")) && !baseString.contains(" ")) {
                 baseString = "<a href=\"" + baseString + "\">" + baseString + "</a>";
+            }
+            return baseString;
+        }
+    }
+
+    private static class RemoveFirstsAndLastsP implements StringModifier {
+        @Override
+        public String changeString(String baseString) {
+            baseString = baseString.trim();
+            while (baseString.startsWith("<p>")) {
+                baseString = baseString.substring(3).trim();
+            }
+            while (baseString.endsWith("</p>")) {
+                baseString = baseString.substring(0, baseString.length() - 4).trim();
             }
             return baseString;
         }
