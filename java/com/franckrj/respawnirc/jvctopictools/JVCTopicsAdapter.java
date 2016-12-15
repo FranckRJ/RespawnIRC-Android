@@ -3,7 +3,6 @@ package com.franckrj.respawnirc.jvctopictools;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.text.Html;
 import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,7 @@ import android.widget.TextView;
 
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
@@ -34,12 +34,12 @@ public class JVCTopicsAdapter extends BaseAdapter {
     public JVCTopicsAdapter(Activity newParentActivity) {
         parentActivity = newParentActivity;
         serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        iconMarqueOn = parentActivity.getResources().getDrawable(R.drawable.icon_topic_marque_on);
-        iconMarqueOff = parentActivity.getResources().getDrawable(R.drawable.icon_topic_marque_off);
-        iconDossier2 = parentActivity.getResources().getDrawable(R.drawable.icon_topic_dossier2);
-        iconLock = parentActivity.getResources().getDrawable(R.drawable.icon_topic_lock);
-        iconResolu = parentActivity.getResources().getDrawable(R.drawable.icon_topic_resolu);
-        iconDossier1 = parentActivity.getResources().getDrawable(R.drawable.icon_topic_dossier1);
+        iconMarqueOn = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_marque_on);
+        iconMarqueOff = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_marque_off);
+        iconDossier2 = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_dossier2);
+        iconLock = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_lock);
+        iconResolu = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_resolu);
+        iconDossier1 = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_dossier1);
     }
 
     public ArrayList<JVCParser.TopicInfos> getAllItems() {
@@ -58,7 +58,7 @@ public class JVCTopicsAdapter extends BaseAdapter {
     public void addItem(JVCParser.TopicInfos item) {
         String textForAuthor;
         ContentHolder thisHolder = new ContentHolder();
-        thisHolder.firstLineContent = Html.fromHtml("<b><font color=\"" + Utils.resColorToString(R.color.linkColor, parentActivity) +
+        thisHolder.firstLineContent = Undeprecator.htmlFromHtml("<b><font color=\"" + Utils.resColorToString(R.color.linkColor, parentActivity) +
                                         "\">" + item.name + "</font> (" + item.messages + ")</b>");
         switch (item.authorType) {
             case "modo":
@@ -72,8 +72,8 @@ public class JVCTopicsAdapter extends BaseAdapter {
                 textForAuthor = "<small>" + item.author + "</small>";
                 break;
         }
-        thisHolder.secondLineContent = Html.fromHtml(textForAuthor);
-        thisHolder.thirdLineContent = Html.fromHtml("<small>" + item.wholeDate + "</small>");
+        thisHolder.secondLineContent = Undeprecator.htmlFromHtml(textForAuthor);
+        thisHolder.thirdLineContent = Undeprecator.htmlFromHtml("<small>" + item.wholeDate + "</small>");
         listOfTopics.add(item);
         listOfContentForTopics.add(thisHolder);
     }
@@ -144,9 +144,9 @@ public class JVCTopicsAdapter extends BaseAdapter {
         }
 
         if (position % 2 == 0 || !alternateBackgroundColor) {
-            convertView.setBackgroundDrawable(holder.background);
+            Undeprecator.viewSetBackgroundDrawable(convertView, holder.background);
         } else {
-            convertView.setBackgroundColor(parentActivity.getResources().getColor(R.color.altBackgroundMessageColor));
+            convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.altBackgroundMessageColor));
         }
 
         return convertView;

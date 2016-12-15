@@ -31,6 +31,7 @@ import com.franckrj.respawnirc.jvcmsgviewers.AbsShowTopicFragment;
 import com.franckrj.respawnirc.jvcmsgviewers.ShowTopicForumFragment;
 import com.franckrj.respawnirc.jvcmsgviewers.ShowTopicIRCFragment;
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.WebManager;
 
 public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCMessageGetter.NewForumAndTopicNameAvailable,
@@ -268,7 +269,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showtopic);
 
-        Drawable arrowDrawable = getResources().getDrawable(R.drawable.ic_action_navigation_arrow_drop_down);
+        Drawable arrowDrawable = Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_action_navigation_arrow_drop_down);
         arrowDrawable.setBounds(0, 0, arrowDrawable.getIntrinsicWidth() / 2, arrowDrawable.getIntrinsicHeight() / 2);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_showtopic);

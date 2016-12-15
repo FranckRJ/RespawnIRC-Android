@@ -32,6 +32,7 @@ import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.CustomTagHandler;
 import com.franckrj.respawnirc.utils.ImageDownloader;
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.Undeprecator;
 
 import java.util.ArrayList;
 
@@ -58,7 +59,7 @@ public class JVCMessagesAdapter extends BaseAdapter {
                 int resID = res.getIdentifier(source.substring(0, source.lastIndexOf(".")), "drawable", parentActivity.getPackageName());
 
                 try {
-                    drawable = res.getDrawable(resID);
+                    drawable = Undeprecator.resourcesGetDrawable(res, resID);
                 } catch (Exception e) {
                     e.printStackTrace();
                     drawable = deletedDrawable;
@@ -127,13 +128,13 @@ public class JVCMessagesAdapter extends BaseAdapter {
         currentSettings = newSettings;
         serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         res = parentActivity.getResources();
-        deletedDrawable = res.getDrawable(R.drawable.image_deleted);
+        deletedDrawable = Undeprecator.resourcesGetDrawable(res, R.drawable.image_deleted);
         deletedDrawable.setBounds(0, 0, deletedDrawable.getIntrinsicWidth(), deletedDrawable.getIntrinsicHeight());
         downloaderForImage.setParentActivity(parentActivity);
         downloaderForImage.setListenerForDownloadFinished(listenerForDownloadFinished);
         downloaderForImage.setImagesCacheDir(parentActivity.getCacheDir());
         downloaderForImage.setImagesSize(res.getDimensionPixelSize(R.dimen.imagesWidth), res.getDimensionPixelSize(R.dimen.imagesHeight));
-        downloaderForImage.setDefaultDrawable(res.getDrawable(R.drawable.image_file_download));
+        downloaderForImage.setDefaultDrawable(Undeprecator.resourcesGetDrawable(res, R.drawable.image_file_download));
         downloaderForImage.setDeletedDrawable(deletedDrawable);
     }
 
@@ -188,8 +189,8 @@ public class JVCMessagesAdapter extends BaseAdapter {
     }
 
     private ContentHolder updateHolderWithNewItem(ContentHolder holder, JVCParser.MessageInfos item) {
-        holder.firstLineContent = replaceQuoteAndUrlSpans(Html.fromHtml(JVCParser.createMessageFirstLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
-        holder.secondLineContent = replaceQuoteAndUrlSpans(Html.fromHtml(JVCParser.createMessageSecondLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
+        holder.firstLineContent = replaceQuoteAndUrlSpans(Undeprecator.htmlFromHtml(JVCParser.createMessageFirstLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
+        holder.secondLineContent = replaceQuoteAndUrlSpans(Undeprecator.htmlFromHtml(JVCParser.createMessageSecondLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
         return holder;
     }
 
@@ -205,8 +206,8 @@ public class JVCMessagesAdapter extends BaseAdapter {
         Spannable spannable = new SpannableString(spanToChange);
         QuoteSpan[] quoteSpanArray = spannable.getSpans(0, spannable.length(), QuoteSpan.class);
         for (QuoteSpan quoteSpan : quoteSpanArray) {
-            replaceSpanByAnotherSpan(spannable, quoteSpan, new CustomQuoteSpan(parentActivity.getResources().getColor(R.color.colorQuoteBackground),
-                    parentActivity.getResources().getColor(R.color.colorPrimary),
+            replaceSpanByAnotherSpan(spannable, quoteSpan, new CustomQuoteSpan(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.colorQuoteBackground),
+                    Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.colorPrimary),
                     parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripSize),
                     parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripGap)));
         }
@@ -265,9 +266,9 @@ public class JVCMessagesAdapter extends BaseAdapter {
         holder.secondLine.setText(listOfContentForMessages.get(position).secondLineContent);
 
         if (position % 2 == 0 || !alternateBackgroundColor) {
-            convertView.setBackgroundDrawable(holder.background);
+            Undeprecator.viewSetBackgroundDrawable(convertView, holder.background);
         } else {
-            convertView.setBackgroundColor(parentActivity.getResources().getColor(R.color.altBackgroundMessageColor));
+            convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.altBackgroundMessageColor));
         }
 
         return convertView;

@@ -6,11 +6,8 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
-import android.text.InputFilter;
-import android.text.Spanned;
 import android.widget.EditText;
 
-/*TODO: Ajouter un minimum et un maximum aux valeur des EditTextPreference.*/
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
