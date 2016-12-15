@@ -2,18 +2,23 @@ package com.franckrj.respawnirc.jvcmsgviewers;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.text.Html;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.text.style.LeadingMarginSpan;
 import android.text.style.LineBackgroundSpan;
 import android.text.style.QuoteSpan;
+import android.text.style.URLSpan;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -183,23 +188,41 @@ public class JVCMessagesAdapter extends BaseAdapter {
     }
 
     private ContentHolder updateHolderWithNewItem(ContentHolder holder, JVCParser.MessageInfos item) {
-        holder.firstLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageFirstLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
-        holder.secondLineContent = replaceQuoteSpans(Html.fromHtml(JVCParser.createMessageSecondLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
+        holder.firstLineContent = replaceQuoteAndUrlSpans(Html.fromHtml(JVCParser.createMessageFirstLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
+        holder.secondLineContent = replaceQuoteAndUrlSpans(Html.fromHtml(JVCParser.createMessageSecondLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
         return holder;
     }
 
-    private Spannable replaceQuoteSpans(Spanned spanToChange) {
+    private void replaceSpanByAnotherSpan(Spannable inThisSpan, Object oldSpan, Object newSpan) {
+        int start = inThisSpan.getSpanStart(oldSpan);
+        int end = inThisSpan.getSpanEnd(oldSpan);
+        int flags = inThisSpan.getSpanFlags(oldSpan);
+        inThisSpan.setSpan(newSpan, start, end, flags);
+        inThisSpan.removeSpan(oldSpan);
+    }
+
+    private Spannable replaceQuoteAndUrlSpans(Spanned spanToChange) {
         Spannable spannable = new SpannableString(spanToChange);
         QuoteSpan[] quoteSpanArray = spannable.getSpans(0, spannable.length(), QuoteSpan.class);
         for (QuoteSpan quoteSpan : quoteSpanArray) {
-            int start = spannable.getSpanStart(quoteSpan);
-            int end = spannable.getSpanEnd(quoteSpan);
-            int flags = spannable.getSpanFlags(quoteSpan);
-            spannable.removeSpan(quoteSpan);
-            spannable.setSpan(new CustomQuoteSpan(parentActivity.getResources().getColor(R.color.colorQuoteBackground),
-                            parentActivity.getResources().getColor(R.color.colorPrimary),
-                            parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripSize),
-                            parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripGap)), start, end, flags);
+            replaceSpanByAnotherSpan(spannable, quoteSpan, new CustomQuoteSpan(parentActivity.getResources().getColor(R.color.colorQuoteBackground),
+                    parentActivity.getResources().getColor(R.color.colorPrimary),
+                    parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripSize),
+                    parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripGap)));
+        }
+        URLSpan[] urlSpanArray = spannable.getSpans(0, spannable.length(), URLSpan.class);
+        for (final URLSpan urlSpan : urlSpanArray) {
+            replaceSpanByAnotherSpan(spannable, urlSpan, new ClickableSpan() {
+                private String url = urlSpan.getURL();
+                public void onClick(View view) {
+                    try {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        parentActivity.startActivity(browserIntent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
         return spannable;
     }
@@ -231,6 +254,7 @@ public class JVCMessagesAdapter extends BaseAdapter {
             holder.showMenuButton = (ImageButton) convertView.findViewById(R.id.menu_overflow_row);
             holder.background = convertView.getBackground();
 
+            holder.secondLine.setMovementMethod(LinkMovementMethod.getInstance());
             holder.showMenuButton.setOnClickListener(menuButtonClicked);
             convertView.setTag(holder);
         } else {
