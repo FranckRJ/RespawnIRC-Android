@@ -16,8 +16,8 @@ public class JVCMessageSender {
     private String lastInfosForEdit = null;
     private NewMessageWantEditListener listenerForNewMessageWantEdit = null;
     private NewMessagePostedListener listenerForNewMessagePosted = null;
-    private AsyncTask<String, Void, String> currentAsyncTaskForSendMessage = null;
-    private AsyncTask<String, Void, String> currentAsyncTaskForGetEditInfos = null;
+    private PostJVCMessage currentAsyncTaskForSendMessage = null;
+    private GetEditJVCMessageInfos currentAsyncTaskForGetEditInfos = null;
 
     public JVCMessageSender(Activity newParentActivity) {
         parentActivity = newParentActivity;

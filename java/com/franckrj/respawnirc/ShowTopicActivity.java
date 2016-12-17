@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseArray;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +63,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     private int lastPage = 0;
     private String currentTopicLink = "";
     private boolean showNavigationButtons = true;
+    private String lastMessageSended = "";
 
     private final JVCMessageSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageSender.NewMessageWantEditListener() {
         @Override
@@ -97,6 +99,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         public void onClick(View buttonView) {
             if (messageSendButton.isEnabled()) {
                 InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                String tmpLastMessageSended = "";
                 View focusedView;
 
                 if (!pseudoOfUser.isEmpty()) {
@@ -104,7 +107,8 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
                         boolean messageIsSended = false;
                         if (getCurrentFragment().getLatestListOfInputInAString() != null) {
                             messageSendButton.setEnabled(false);
-                            messageIsSended = senderForMessages.sendThisMessage(messageSendEdit.getText().toString(), getCurrentFragment().getCurrentUrlOfTopic(), getCurrentFragment().getLatestListOfInputInAString(), cookieListInAString);
+                            tmpLastMessageSended = messageSendEdit.getText().toString();
+                            messageIsSended = senderForMessages.sendThisMessage(tmpLastMessageSended, getCurrentFragment().getCurrentUrlOfTopic(), getCurrentFragment().getLatestListOfInputInAString(), cookieListInAString);
                         }
 
                         if (!messageIsSended) {
@@ -112,7 +116,8 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
                         }
                     } else {
                         messageSendButton.setEnabled(false);
-                        senderForMessages.sendEditMessage(messageSendEdit.getText().toString(), cookieListInAString);
+                        tmpLastMessageSended = messageSendEdit.getText().toString();
+                        senderForMessages.sendEditMessage(tmpLastMessageSended, cookieListInAString);
                     }
                 } else {
                     Toast.makeText(ShowTopicActivity.this, R.string.errorConnectedNeededBeforePost, Toast.LENGTH_LONG).show();
@@ -121,6 +126,13 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
                 focusedView = getCurrentFocus();
                 if (focusedView != null) {
                     inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                }
+
+                if (!tmpLastMessageSended.isEmpty()) {
+                    SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
+                    lastMessageSended = tmpLastMessageSended;
+                    sharedPrefEdit.putString(getString(R.string.prefLastMessageSended), lastMessageSended);
+                    sharedPrefEdit.apply();
                 }
             } else {
                 Toast.makeText(ShowTopicActivity.this, R.string.errorMessageAlreadySending, Toast.LENGTH_SHORT).show();
@@ -204,6 +216,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         AbsShowTopicFragment fragment = getCurrentFragment();
         pseudoOfUser = sharedPref.getString(getString(R.string.prefPseudoUser), "");
         cookieListInAString = sharedPref.getString(getString(R.string.prefCookiesList), "");
+        lastMessageSended = sharedPref.getString(getString(R.string.prefLastMessageSended), "");
 
         if (fragment != null) {
             fragment.setPseudoAndCookies(pseudoOfUser, cookieListInAString);
@@ -416,11 +429,27 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_showtopic, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.action_past_last_message_sended_showtopic).setEnabled(!lastMessageSended.isEmpty());
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
+            case R.id.action_past_last_message_sended_showtopic:
+                messageSendEdit.setText(lastMessageSended);
             default:
                 return super.onOptionsItemSelected(item);
         }

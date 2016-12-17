@@ -109,6 +109,8 @@
     <string name="saveCookies">save.cookies</string>
     <string name="savePseudo">save.pseudo</string>
     <string name="errorInvalidLink">Erreur, lien invalide.</string>
+    <string name="pastLastMessageSended">Coller le dernier message envoyé</string>
+    <string name="prefLastMessageSended">pref.lastMessageSended</string>
 
     <string-array name="itemChoiceDrawerList">
         <item>@string/app_name</item>
