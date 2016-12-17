@@ -1,6 +1,5 @@
 package com.franckrj.respawnirc.jvctopictools;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,12 +14,13 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.franckrj.respawnirc.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.JVCParser;
 
 import java.util.ArrayList;
 
-public class ShowForumFragment extends Fragment {
+public class ShowForumFragment extends AbsShowSomethingFragment {
     public static final String ARG_FORUM_LINK = "com.franckrj.respawnirc.showtopicfragment.forum_link";
 
     private SharedPreferences sharedPref = null;
@@ -110,7 +110,7 @@ public class ShowForumFragment extends Fragment {
         return getterForTopics.reloadForum();
     }
 
-    public void setForumPageLink(String newForumPageLink) {
+    public void setPageLink(String newForumPageLink) {
         isInErrorMode = false;
 
         if (!newForumPageLink.isEmpty()) {
@@ -123,7 +123,7 @@ public class ShowForumFragment extends Fragment {
         getterForTopics.startGetMessagesOfThisPage(newForumPageLink);
     }
 
-    public void clearForum() {
+    public void clearContent() {
         getterForTopics.stopAllCurrentTask();
         adapterForTopics.removeAllItems();
         adapterForTopics.updateAllItems();
@@ -193,7 +193,7 @@ public class ShowForumFragment extends Fragment {
 
             if (currentArgs != null) {
                 String forumLink = currentArgs.getString(ARG_FORUM_LINK, "");
-                setForumPageLink(forumLink);
+                setPageLink(forumLink);
             }
         }
     }

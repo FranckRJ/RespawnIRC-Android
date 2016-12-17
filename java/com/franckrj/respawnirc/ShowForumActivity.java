@@ -1,24 +1,18 @@
 package com.franckrj.respawnirc;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -31,7 +25,7 @@ import com.franckrj.respawnirc.jvctopictools.JVCTopicGetter;
 import com.franckrj.respawnirc.jvctopictools.ShowForumFragment;
 import com.franckrj.respawnirc.utils.JVCParser;
 
-public class ShowForumActivity extends AppCompatActivity implements ChooseTopicOrForumLinkDialogFragment.NewTopicOrForumSelected,
+public class ShowForumActivity extends AbsShowSomethingActivity implements ChooseTopicOrForumLinkDialogFragment.NewTopicOrForumSelected,
                                                     ShowForumFragment.NewTopicWantRead, JVCTopicGetter.NewForumNameAvailable,
                                                     JVCTopicGetter.ForumLinkChanged {
     private static final int LIST_DRAWER_POS_HOME = 0;
@@ -45,26 +39,6 @@ public class ShowForumActivity extends AppCompatActivity implements ChooseTopicO
     private int lastNewActivitySelected = -1;
     private SharedPreferences sharedPref = null;
     private String currentTitle = "";
-    private Button firstPageButton = null;
-    private Button previousPageButton = null;
-    private Button currentPageButton = null;
-    private Button nextPageButton = null;
-    private String currentForumLink = "";
-    private ViewPager pagerView = null;
-    private ScreenSlidePagerAdapter adapterForPagerView = null;
-
-    private final Button.OnClickListener changePageWithNavigationButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View buttonView) {
-            if (buttonView == firstPageButton && firstPageButton.getVisibility() == View.VISIBLE) {
-                pagerView.setCurrentItem(0);
-            } else if (buttonView == previousPageButton && previousPageButton.getVisibility() == View.VISIBLE) {
-                pagerView.setCurrentItem(pagerView.getCurrentItem() - 1);
-            }  else if (buttonView == nextPageButton && nextPageButton.getVisibility() == View.VISIBLE) {
-                pagerView.setCurrentItem(pagerView.getCurrentItem() + 1);
-            }
-        }
-    };
 
     private ListView.OnItemClickListener itemInDrawerClickedListener = new ListView.OnItemClickListener() {
         @Override
@@ -75,27 +49,11 @@ public class ShowForumActivity extends AppCompatActivity implements ChooseTopicO
         }
     };
 
-    private void updateNavigationButtons() {
-        firstPageButton.setVisibility(View.GONE);
-        previousPageButton.setVisibility(View.GONE);
-        currentPageButton.setText(R.string.waitingText);
-        nextPageButton.setVisibility(View.GONE);
-
-        if (pagerView.getCurrentItem() >= 0) {
-            currentPageButton.setText(String.valueOf(pagerView.getCurrentItem() + 1));
-
-            if (pagerView.getCurrentItem() > 0) {
-                firstPageButton.setVisibility(View.VISIBLE);
-                firstPageButton.setText(String.valueOf(1));
-                previousPageButton.setVisibility(View.VISIBLE);
-            }
-            if (pagerView.getCurrentItem() < adapterForPagerView.getCount() - 1) {
-                nextPageButton.setVisibility(View.VISIBLE);
-            }
-        }
+    public ShowForumActivity() {
+        lastPage = 100;
     }
 
-    private ShowForumFragment createNewFragmentForForumRead(String possibleForumLink) {
+    protected AbsShowSomethingFragment createNewFragmentForRead(String possibleForumLink) {
         ShowForumFragment currentFragment = new ShowForumFragment();
 
         if (possibleForumLink != null) {
@@ -108,7 +66,7 @@ public class ShowForumActivity extends AppCompatActivity implements ChooseTopicO
     }
 
     private void setNewForumLink(String newLink) {
-        currentForumLink = newLink;
+        currentLink = newLink;
         updateAdapterForPagerView();
         updateCurrentItemAndButtonsToCurrentLink();
         if (pagerView.getCurrentItem() > 0) {
@@ -148,34 +106,6 @@ public class ShowForumActivity extends AppCompatActivity implements ChooseTopicO
         }
 
         Toast.makeText(this, R.string.errorInvalidLink, Toast.LENGTH_SHORT).show();
-    }
-
-    private void updateAdapterForPagerView() {
-        adapterForPagerView = new ScreenSlidePagerAdapter(getFragmentManager());
-        pagerView.setAdapter(adapterForPagerView);
-    }
-
-    private void updateCurrentItemAndButtonsToCurrentLink() {
-        if (!currentForumLink.isEmpty()) {
-            pagerView.setCurrentItem((Integer.parseInt(JVCParser.getPageNumberForThisForumLink(currentForumLink)) - 1) / 25);
-            updateNavigationButtons();
-        }
-    }
-
-    private void loadPageForThisFragment(int position) {
-        if (!currentForumLink.isEmpty()) {
-            ShowForumFragment currentFragment = adapterForPagerView.getFragment(position);
-            if (currentFragment != null) {
-                currentFragment.setForumPageLink(JVCParser.setPageNumberForThisForumLink(currentForumLink, (position * 25) + 1));
-            }
-        }
-    }
-
-    private void clearPageForThisFragment(int position) {
-        ShowForumFragment currentFragment = adapterForPagerView.getFragment(position);
-        if (currentFragment != null) {
-            currentFragment.clearForum();
-        }
     }
 
     @Override
@@ -237,42 +167,14 @@ public class ShowForumActivity extends AppCompatActivity implements ChooseTopicO
         };
 
         updateAdapterForPagerView();
-        pagerView.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                //rien
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                loadPageForThisFragment(position);
-                updateNavigationButtons();
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                if (state == ViewPager.SCROLL_STATE_IDLE) {
-                    if (pagerView.getCurrentItem() > 0) {
-                        clearPageForThisFragment(pagerView.getCurrentItem() - 1);
-                    }
-                    if (pagerView.getCurrentItem() < adapterForPagerView.getCount() - 1) {
-                        clearPageForThisFragment(pagerView.getCurrentItem() + 1);
-                    }
-                }
-            }
-        });
+        pagerView.addOnPageChangeListener(pageChangeOnPagerListener);
         listForDrawer.setAdapter(new ArrayAdapter<>(this, R.layout.draweritem_row, getResources().getStringArray(R.array.itemChoiceDrawerList)));
         listForDrawer.setOnItemClickListener(itemInDrawerClickedListener);
         layoutForDrawer.addDrawerListener(toggleForDrawer);
         layoutForDrawer.setDrawerShadow(R.drawable.shadow_drawer, GravityCompat.START);
-        firstPageButton.setVisibility(View.GONE);
-        firstPageButton.setOnClickListener(changePageWithNavigationButtonListener);
-        previousPageButton.setVisibility(View.GONE);
-        previousPageButton.setOnClickListener(changePageWithNavigationButtonListener);
-        nextPageButton.setVisibility(View.GONE);
-        nextPageButton.setOnClickListener(changePageWithNavigationButtonListener);
+        initializeNavigationButtons();
 
-        currentForumLink = sharedPref.getString(getString(R.string.prefForumUrlToFetch), "");
+        currentLink = sharedPref.getString(getString(R.string.prefForumUrlToFetch), "");
         if (savedInstanceState == null) {
             currentTitle = getString(R.string.app_name);
             updateCurrentItemAndButtonsToCurrentLink();
@@ -309,9 +211,9 @@ public class ShowForumActivity extends AppCompatActivity implements ChooseTopicO
     @Override
     public void onPause() {
         super.onPause();
-        if (!currentForumLink.isEmpty()) {
+        if (!currentLink.isEmpty()) {
             SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
-            sharedPrefEdit.putString(getString(R.string.prefForumUrlToFetch), JVCParser.setPageNumberForThisForumLink(currentForumLink, (pagerView.getCurrentItem() * 25) + 1));
+            sharedPrefEdit.putString(getString(R.string.prefForumUrlToFetch), setShowedPageNumberForThisLink(currentLink, pagerView.getCurrentItem() + 1));
             sharedPrefEdit.apply();
         }
     }
@@ -362,46 +264,16 @@ public class ShowForumActivity extends AppCompatActivity implements ChooseTopicO
 
     @Override
     public void updateForumLink(String newForumLink) {
-        currentForumLink = newForumLink;
+        currentLink = newForumLink;
     }
 
-    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
-        SparseArray<ShowForumFragment> referenceMap = new SparseArray<>();
+    @Override
+    protected int getShowablePageNumberForThisLink(String link) {
+        return ((Integer.parseInt(JVCParser.getPageNumberForThisForumLink(link)) - 1) / 25) + 1;
+    }
 
-        public ScreenSlidePagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        public ShowForumFragment getFragment(int key) {
-            return referenceMap.get(key);
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            ((ShowForumFragment) object).clearForum();
-            referenceMap.remove(position);
-            super.destroyItem(container, position, object);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            if (position == pagerView.getCurrentItem() && !currentForumLink.isEmpty()) {
-                return createNewFragmentForForumRead(JVCParser.setPageNumberForThisForumLink(currentForumLink, (position * 25) + 1));
-            } else {
-                return createNewFragmentForForumRead(null);
-            }
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            ShowForumFragment fragment = (ShowForumFragment) super.instantiateItem(container, position);
-            referenceMap.put(position, fragment);
-            return fragment;
-        }
-
-        @Override
-        public int getCount() {
-            return 100;
-        }
+    @Override
+    protected String setShowedPageNumberForThisLink(String link, int newPageNumber) {
+        return JVCParser.setPageNumberForThisForumLink(link, ((newPageNumber - 1) * 25) + 1);
     }
 }

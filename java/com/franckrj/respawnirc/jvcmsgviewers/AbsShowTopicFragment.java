@@ -1,6 +1,5 @@
 package com.franckrj.respawnirc.jvcmsgviewers;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,13 +8,14 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 
+import com.franckrj.respawnirc.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.jvcmsggetters.AbsJVCMessageGetter;
 import com.franckrj.respawnirc.utils.JVCParser;
 
 import java.util.ArrayList;
 
-public abstract class AbsShowTopicFragment extends Fragment {
+public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     public static final String ARG_TOPIC_LINK = "com.franckrj.respawnirc.showtopicfragment.topic_link";
     public static final String ARG_PSEUDO = "com.franckrj.respawnirc.showtopicfragment.pseudo";
     public static final String ARG_COOKIES = "com.franckrj.respawnirc.showtopicfragment.cookies";
@@ -95,11 +95,11 @@ public abstract class AbsShowTopicFragment extends Fragment {
         absGetterForMessages.reloadTopic();
     }
 
-    public void clearTopic() {
+    public void clearContent() {
         absGetterForMessages.stopAllCurrentTask();
         adapterForMessages.removeAllItems();
         adapterForMessages.updateAllItems();
-        setNewTopicLink("");
+        setPageLink("");
     }
 
     public String getLatestListOfInputInAString() {
@@ -178,7 +178,7 @@ public abstract class AbsShowTopicFragment extends Fragment {
                 pseudoOfUser = currentArgs.getString(ARG_PSEUDO, "");
                 cookieListInAString = currentArgs.getString(ARG_COOKIES, "");
                 updateConnectInfos();
-                setNewTopicLink(topicLink);
+                setPageLink(topicLink);
             }
         }
     }
@@ -212,7 +212,6 @@ public abstract class AbsShowTopicFragment extends Fragment {
         void newModeRequested(int newMode);
     }
 
-    public abstract void setNewTopicLink(String newTopicLink);
     protected abstract void initializeGetterForMessages();
     protected abstract void initializeSettings();
     protected abstract void initializeAdapter();

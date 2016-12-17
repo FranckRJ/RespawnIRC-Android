@@ -89,7 +89,7 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
     }
 
     @Override
-    public void setNewTopicLink(String newTopicLink) {
+    public void setPageLink(String newTopicLink) {
         isInErrorMode = false;
 
         getterForMessages.stopAllCurrentTask();
