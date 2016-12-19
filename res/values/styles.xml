@@ -12,4 +12,7 @@
         <item name="android:theme">@style/SelectableItemTheme</item>
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
     </style>
+    <style name="NavigationViewStyle">
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>

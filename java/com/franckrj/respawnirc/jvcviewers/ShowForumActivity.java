@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -13,10 +15,9 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.ConnectActivity;
@@ -28,28 +29,41 @@ import com.franckrj.respawnirc.dialogs.HelpFirstLaunchDialogFragment;
 import com.franckrj.respawnirc.jvctopictools.JVCTopicGetter;
 import com.franckrj.respawnirc.jvctopictools.ShowForumFragment;
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.Undeprecator;
 
 public class ShowForumActivity extends AbsShowSomethingActivity implements ChooseTopicOrForumLinkDialogFragment.NewTopicOrForumSelected,
                                                     ShowForumFragment.NewTopicWantRead, JVCTopicGetter.NewForumNameAvailable,
                                                     JVCTopicGetter.ForumLinkChanged {
-    private static final int LIST_DRAWER_POS_HOME = 0;
-    private static final int LIST_DRAWER_POS_CONNECT = 1;
-    private static final int LIST_DRAWER_POS_SELECT_TOPIC_OR_FORUM = 2;
-    private static final int LIST_DRAWER_POS_SETTING = 3;
-
     private DrawerLayout layoutForDrawer = null;
-    private ListView listForDrawer = null;
+    private NavigationView navigationForDrawer = null;
+    private TextView pseudoTextNavigation = null;
+    private ImageView contextConnectImageNavigation = null;
     private ActionBarDrawerToggle toggleForDrawer = null;
-    private int lastNewActivitySelected = -1;
+    private int lastItemSelected = -1;
     private SharedPreferences sharedPref = null;
     private String currentTitle = "";
+    private String pseudoOfUser = "";
+    private boolean isInNavigationConnectMode = false;
 
-    private ListView.OnItemClickListener itemInDrawerClickedListener = new ListView.OnItemClickListener() {
+    private NavigationView.OnNavigationItemSelectedListener itemInNavigationClickedListener = new NavigationView.OnNavigationItemSelectedListener() {
         @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            lastNewActivitySelected = position;
-            listForDrawer.setItemChecked(position, true);
-            layoutForDrawer.closeDrawer(listForDrawer);
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            lastItemSelected = item.getItemId();
+            layoutForDrawer.closeDrawer(navigationForDrawer);
+            return true;
+        }
+    };
+
+    private View.OnClickListener headerClickedListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (!pseudoOfUser.isEmpty()) {
+                isInNavigationConnectMode = !isInNavigationConnectMode;
+                updateNavigationMenu();
+            } else {
+                lastItemSelected = R.id.action_connect_navigation;
+                layoutForDrawer.closeDrawer(navigationForDrawer);
+            }
         }
     };
 
@@ -67,6 +81,30 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
         }
 
         return currentFragment;
+    }
+
+    private void updateNavigationMenu() {
+        if (!pseudoOfUser.isEmpty()) {
+            pseudoTextNavigation.setText(pseudoOfUser);
+        } else {
+            pseudoTextNavigation.setText(R.string.connectToJVC);
+        }
+
+        if (pseudoOfUser.isEmpty() || !isInNavigationConnectMode) {
+            navigationForDrawer.getMenu().clear();
+            navigationForDrawer.inflateMenu(R.menu.menu_navigation_view);
+            navigationForDrawer.setCheckedItem(R.id.action_home_navigation);
+
+            if (pseudoOfUser.isEmpty()) {
+                contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_action_content_add_circle_outline));
+            } else {
+                contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_action_navigation_expand_more));
+            }
+        } else {
+            navigationForDrawer.getMenu().clear();
+            navigationForDrawer.inflateMenu(R.menu.menu_navigation_view_already_connected);
+            contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_action_navigation_expand_less));
+        }
     }
 
     private void setNewForumLink(String newLink) {
@@ -130,7 +168,7 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
 
         pagerView = (ViewPager) findViewById(R.id.pager_showforum);
         layoutForDrawer = (DrawerLayout) findViewById(R.id.layout_drawer_showforum);
-        listForDrawer = (ListView) findViewById(R.id.view_left_drawer_showforum);
+        navigationForDrawer = (NavigationView) findViewById(R.id.navigation_view_showforum);
         firstPageButton = (Button) findViewById(R.id.firstpage_button_showforum);
         previousPageButton = (Button) findViewById(R.id.previouspage_button_showforum);
         currentPageButton = (Button) findViewById(R.id.currentpage_button_showforum);
@@ -141,26 +179,34 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 super.onDrawerSlide(drawerView, 0);
-                lastNewActivitySelected = -1;
+                lastItemSelected = -1;
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                switch (lastNewActivitySelected) {
-                    case LIST_DRAWER_POS_HOME:
-                        break;
-                    case LIST_DRAWER_POS_CONNECT:
-                        startActivity(new Intent(ShowForumActivity.this, ConnectActivity.class));
-                        break;
-                    case LIST_DRAWER_POS_SELECT_TOPIC_OR_FORUM:
-                        ChooseTopicOrForumLinkDialogFragment chooseLinkDialogFragment = new ChooseTopicOrForumLinkDialogFragment();
-                        chooseLinkDialogFragment.show(getFragmentManager(), "ChooseTopicOrForumLinkDialogFragment");
-                        listForDrawer.setItemChecked(0, true);
-                        break;
-                    case LIST_DRAWER_POS_SETTING:
-                        startActivity(new Intent(ShowForumActivity.this, SettingsActivity.class));
-                        break;
+                if (lastItemSelected != -1) {
+                    switch (lastItemSelected) {
+                        case R.id.action_home_navigation:
+                            break;
+                        case R.id.action_connect_new_account_navigation:
+                        case R.id.action_connect_navigation:
+                            startActivity(new Intent(ShowForumActivity.this, ConnectActivity.class));
+                            break;
+                        case R.id.action_choose_topic_forum_navigation:
+                            ChooseTopicOrForumLinkDialogFragment chooseLinkDialogFragment = new ChooseTopicOrForumLinkDialogFragment();
+                            chooseLinkDialogFragment.show(getFragmentManager(), "ChooseTopicOrForumLinkDialogFragment");
+                            navigationForDrawer.setCheckedItem(R.id.action_home_navigation);
+                            break;
+                        case R.id.action_settings_navigation:
+                            startActivity(new Intent(ShowForumActivity.this, SettingsActivity.class));
+                            break;
+                    }
+                }
+
+                if (isInNavigationConnectMode) {
+                    isInNavigationConnectMode = false;
+                    updateNavigationMenu();
                 }
             }
 
@@ -171,9 +217,14 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
         };
 
         updateAdapterForPagerView();
+
+        View navigationHeader = navigationForDrawer.getHeaderView(0);
+        pseudoTextNavigation = (TextView) navigationHeader.findViewById(R.id.pseudo_text_navigation_header);
+        contextConnectImageNavigation = (ImageView) navigationHeader.findViewById(R.id.context_connect_image_navigation_header);
         pagerView.addOnPageChangeListener(pageChangeOnPagerListener);
-        listForDrawer.setAdapter(new ArrayAdapter<>(this, R.layout.draweritem_row, getResources().getStringArray(R.array.itemChoiceDrawerList)));
-        listForDrawer.setOnItemClickListener(itemInDrawerClickedListener);
+        navigationForDrawer.setItemTextColor(null);
+        navigationForDrawer.setNavigationItemSelectedListener(itemInNavigationClickedListener);
+        navigationHeader.setOnClickListener(headerClickedListener);
         layoutForDrawer.addDrawerListener(toggleForDrawer);
         layoutForDrawer.setDrawerShadow(R.drawable.shadow_drawer, GravityCompat.START);
         initializeNavigationButtons();
@@ -207,9 +258,11 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
     public void onResume() {
         super.onResume();
         SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
-        listForDrawer.setItemChecked(0, true);
         sharedPrefEdit.putInt(getString(R.string.prefLastActivityViewed), MainActivity.ACTIVITY_SHOW_FORUM);
         sharedPrefEdit.apply();
+
+        pseudoOfUser = sharedPref.getString(getString(R.string.prefPseudoUser), "");
+        updateNavigationMenu();
     }
 
     @Override
@@ -219,6 +272,15 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
             SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
             sharedPrefEdit.putString(getString(R.string.prefForumUrlToFetch), setShowedPageNumberForThisLink(currentLink, pagerView.getCurrentItem() + 1));
             sharedPrefEdit.apply();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (layoutForDrawer.isDrawerOpen(navigationForDrawer)) {
+            layoutForDrawer.closeDrawer(navigationForDrawer);
+        } else {
+            super.onBackPressed();
         }
     }
 

@@ -111,11 +111,6 @@
     <string name="errorInvalidLink">Erreur, lien invalide.</string>
     <string name="pastLastMessageSended">Coller le dernier message envoyé</string>
     <string name="prefLastMessageSended">pref.lastMessageSended</string>
-
-    <string-array name="itemChoiceDrawerList">
-        <item>@string/app_name</item>
-        <item>@string/connectToJVC</item>
-        <item>@string/chooseTopicOrForumLink</item>
-        <item>@string/preference</item>
-    </string-array>
+    <string name="avatar_account">Avatar du compte</string>
+    <string name="connectWithAnotherAccount">Se connecter avec un autre compte</string>
 </resources>
