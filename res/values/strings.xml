@@ -112,5 +112,5 @@
     <string name="pastLastMessageSended">Coller le dernier message envoyé</string>
     <string name="prefLastMessageSended">pref.lastMessageSended</string>
     <string name="avatar_account">Avatar du compte</string>
-    <string name="connectWithAnotherAccount">Se connecter avec un autre compte</string>
+    <string name="connectWithAnotherAccount">Changer de compte</string>
 </resources>

@@ -5,17 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="140dp"
     android:padding="16dp"
-    android:background="@android:color/darker_gray">
-
-    <ImageView
-        android:id="@+id/avatar_account_navigation_header"
-        android:layout_width="76dp"
-        android:layout_height="76dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:src="@drawable/image_deleted"
-        android:contentDescription="@string/avatar_account"/>
+    android:background="@drawable/navigation_header_background">
 
     <TextView
         android:id="@+id/pseudo_text_navigation_header"

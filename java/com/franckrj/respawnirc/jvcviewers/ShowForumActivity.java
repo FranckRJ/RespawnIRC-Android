@@ -223,6 +223,7 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
         contextConnectImageNavigation = (ImageView) navigationHeader.findViewById(R.id.context_connect_image_navigation_header);
         pagerView.addOnPageChangeListener(pageChangeOnPagerListener);
         navigationForDrawer.setItemTextColor(null);
+        navigationForDrawer.setItemIconTintList(Undeprecator.resourcesGetColorStateList(getResources(), R.color.navigation_menu_item));
         navigationForDrawer.setNavigationItemSelectedListener(itemInNavigationClickedListener);
         navigationHeader.setOnClickListener(headerClickedListener);
         layoutForDrawer.addDrawerListener(toggleForDrawer);

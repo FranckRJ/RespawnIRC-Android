@@ -6,6 +6,7 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/action_connect_new_account_navigation"
+            android:icon="@drawable/ic_action_content_add"
             android:title="@string/connectWithAnotherAccount"/>
     </group>
 
