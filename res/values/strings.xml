@@ -3,9 +3,6 @@
     <string name="app_name">RespawnIRC</string>
     <string name="messagePlaceHolder">Message…</string>
     <string name="messagePost">Envoyer</string>
-    <string name="nothingPlaceHolder">Rien.</string>
-    <string name="go">Go</string>
-    <string name="topiclinkPlaceHolder">Lien du topic sur JVC</string>
     <string name="connectToJVC">Se connecter à JVC</string>
     <string name="pseudoForConnect">Votre pseudo</string>
     <string name="endConnect">Terminer</string>
@@ -13,7 +10,6 @@
     <string name="errorPseudoMissingConnect">Veuillez insérer le pseudo avec lequel vous vous êtes connecté dans le champ en haut.</string>
     <string name="errorCookiesMissingConnect">Vous n\'êtes pas connecté sur JVC.</string>
     <string name="prefCookiesList">pref.cookiesList</string>
-    <string name="error">Erreur.</string>
     <string name="prefTopicUrlToFetch">pref.topicUrlToFetch</string>
     <string name="saveLatestListOfInputInAString">save.latestListOfInputInAString</string>
     <string name="saveAllCurrentMessagesShowed">save.allCurrentMessagesShowed</string>
@@ -47,7 +43,6 @@
     <string name="saveOldUrlForTopic">save.OldUrlForTopic</string>
     <string name="saveOldLastIdOfMessage">save.OldLastIdOfMessage</string>
     <string name="saveListOfEditInfos">save.listOfEditInfos</string>
-    <string name="messageEdit">Editer</string>
     <string name="saveOldAjaxListInfos">save.oldAjaxListInfos</string>
     <string name="saveIsInEdit">save.isInEdit</string>
     <string name="saveLastInfosForEdit">save.lastInfosForEdit</string>
@@ -72,7 +67,6 @@
     <string name="nextPageText"><![CDATA[>]]></string>
     <string name="previousPageText"><![CDATA[<]]></string>
     <string name="waitingText">…</string>
-    <string name="saveCurrentPage">save.currentPage</string>
     <string name="saveLastPage">save.lastPage</string>
     <string name="cancel">Annuler</string>
     <string name="pageNumber">Numéro de la page…</string>
@@ -111,6 +105,5 @@
     <string name="errorInvalidLink">Erreur, lien invalide.</string>
     <string name="pastLastMessageSended">Coller le dernier message envoyé</string>
     <string name="prefLastMessageSended">pref.lastMessageSended</string>
-    <string name="avatar_account">Avatar du compte</string>
     <string name="connectWithAnotherAccount">Changer de compte</string>
 </resources>
