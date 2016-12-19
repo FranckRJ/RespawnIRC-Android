@@ -48,7 +48,6 @@ public class WebManager {
 
             urlConnection.setRequestMethod(requestMethod);
             urlConnection.setRequestProperty("User-Agent", userAgentString);
-            urlConnection.setRequestProperty("Connection", "Keep-Alive");
             urlConnection.setRequestProperty("Cookie", cookiesInAString);
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 

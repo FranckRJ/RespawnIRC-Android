@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        System.setProperty("http.keepAlive", "false");
         WebManager.generateNewUserAgent();
 
         startActivity(new Intent(this, ShowForumActivity.class));
