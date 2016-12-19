@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc;
+package com.franckrj.respawnirc.jvcviewers;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +19,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.franckrj.respawnirc.ConnectActivity;
+import com.franckrj.respawnirc.MainActivity;
+import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.SettingsActivity;
 import com.franckrj.respawnirc.dialogs.ChooseTopicOrForumLinkDialogFragment;
 import com.franckrj.respawnirc.dialogs.HelpFirstLaunchDialogFragment;
 import com.franckrj.respawnirc.jvctopictools.JVCTopicGetter;

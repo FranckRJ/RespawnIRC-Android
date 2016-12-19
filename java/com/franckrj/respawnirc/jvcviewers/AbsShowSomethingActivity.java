@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc;
+package com.franckrj.respawnirc.jvcviewers;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -9,6 +9,8 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.franckrj.respawnirc.R;
 
 public abstract class AbsShowSomethingActivity extends AppCompatActivity {
     protected Button firstPageButton = null;

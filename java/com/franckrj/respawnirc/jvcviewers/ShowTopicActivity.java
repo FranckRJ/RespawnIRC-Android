@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc;
+package com.franckrj.respawnirc.jvcviewers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -19,6 +19,9 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.franckrj.respawnirc.JVCMessageSender;
+import com.franckrj.respawnirc.MainActivity;
+import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.dialogs.ChoosePageNumberDialogFragment;
 import com.franckrj.respawnirc.jvcmsggetters.AbsJVCMessageGetter;
 import com.franckrj.respawnirc.jvcmsggetters.JVCForumMessageGetter;

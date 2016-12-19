@@ -20,34 +20,34 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ShowForumActivity"
+            android:name=".jvcviewers.ShowForumActivity"
             android:launchMode="singleTop"
             android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
         <activity
-            android:name=".ShowTopicActivity"
+            android:name=".jvcviewers.ShowTopicActivity"
             android:windowSoftInputMode="stateAlwaysHidden"
-            android:parentActivityName="com.franckrj.respawnirc.ShowForumActivity">
+            android:parentActivityName="com.franckrj.respawnirc.jvcviewers.ShowForumActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.franckrj.respawnirc.ShowForumActivity"/>
+                android:value="com.franckrj.respawnirc.jvcviewers.ShowForumActivity"/>
         </activity>
         <activity
             android:name=".ConnectActivity"
             android:label="@string/connectToJVC"
             android:windowSoftInputMode="stateAlwaysHidden"
-            android:parentActivityName="com.franckrj.respawnirc.ShowForumActivity">
+            android:parentActivityName="com.franckrj.respawnirc.jvcviewers.ShowForumActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.franckrj.respawnirc.ShowForumActivity"/>
+                android:value="com.franckrj.respawnirc.jvcviewers.ShowForumActivity"/>
         </activity>
         <activity
             android:name=".SettingsActivity"
             android:label="@string/preference"
-            android:parentActivityName="com.franckrj.respawnirc.ShowForumActivity">
+            android:parentActivityName="com.franckrj.respawnirc.jvcviewers.ShowForumActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.franckrj.respawnirc.ShowForumActivity"/>
+                android:value="com.franckrj.respawnirc.jvcviewers.ShowForumActivity"/>
         </activity>
     </application>
 

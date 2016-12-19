@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.franckrj.respawnirc.jvcviewers.ShowForumActivity;
+import com.franckrj.respawnirc.jvcviewers.ShowTopicActivity;
 import com.franckrj.respawnirc.utils.WebManager;
 
 import java.io.File;

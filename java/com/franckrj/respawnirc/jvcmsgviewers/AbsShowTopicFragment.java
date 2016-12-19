@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 
-import com.franckrj.respawnirc.AbsShowSomethingFragment;
+import com.franckrj.respawnirc.jvcviewers.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.jvcmsggetters.AbsJVCMessageGetter;
 import com.franckrj.respawnirc.utils.JVCParser;
