@@ -4,7 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_drawer_showforum"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -88,11 +90,10 @@
 
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation_view_showforum"
-        app:theme="@style/NavigationViewStyle"
         android:layout_width="280dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:choiceMode="singleChoice"
+        android:fitsSystemWindows="true"
         app:headerLayout="@layout/navigation_view_header"
         app:menu="@menu/menu_navigation_view"/>
 </android.support.v4.widget.DrawerLayout>
