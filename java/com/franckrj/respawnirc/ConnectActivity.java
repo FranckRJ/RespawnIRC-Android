@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -63,7 +62,7 @@ public class ConnectActivity extends AppCompatActivity {
                 sharedPrefEdit.putString(getString(R.string.prefPseudoUser), pseudoText.getText().toString());
                 sharedPrefEdit.apply();
 
-                NavUtils.navigateUpFromSameTask(this);
+                super.onBackPressed();
                 return;
             }
         } else {
@@ -118,8 +117,7 @@ public class ConnectActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Toast.makeText(this, getString(R.string.warningNotConnected), Toast.LENGTH_LONG).show();
-                NavUtils.navigateUpFromSameTask(this);
+                onBackPressed();
                 return true;
             case R.id.action_showhelp_connect:
                 helpDialogFragment.show(getFragmentManager(), "HelpConnectDialogFragment");

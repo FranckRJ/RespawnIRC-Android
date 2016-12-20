@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -350,7 +349,7 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
+                onBackPressed();
                 return true;
             case R.id.action_past_last_message_sended_showtopic:
                 messageSendEdit.setText(lastMessageSended);

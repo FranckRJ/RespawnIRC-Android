@@ -26,28 +26,16 @@
         </activity>
         <activity
             android:name=".jvcviewers.ShowTopicActivity"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:parentActivityName="com.franckrj.respawnirc.jvcviewers.ShowForumActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.franckrj.respawnirc.jvcviewers.ShowForumActivity"/>
+            android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
         <activity
             android:name=".ConnectActivity"
             android:label="@string/connectToJVC"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:parentActivityName="com.franckrj.respawnirc.jvcviewers.ShowForumActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.franckrj.respawnirc.jvcviewers.ShowForumActivity"/>
+            android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/preference"
-            android:parentActivityName="com.franckrj.respawnirc.jvcviewers.ShowForumActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.franckrj.respawnirc.jvcviewers.ShowForumActivity"/>
+            android:label="@string/preference">
         </activity>
     </application>
 
