@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="action_connect_navigation" type="id">action_connect_navigation</item>
+    <item name="group_forum_fav_navigation" type="id">group_forum_fav_navigation</item>
+    <item name="action_refresh_favs_navigation" type="id">action_refresh_favs_navigation</item>
 </resources>

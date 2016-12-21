@@ -13,7 +13,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -26,14 +28,17 @@ import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.SettingsActivity;
 import com.franckrj.respawnirc.dialogs.ChooseTopicOrForumLinkDialogFragment;
 import com.franckrj.respawnirc.dialogs.HelpFirstLaunchDialogFragment;
+import com.franckrj.respawnirc.dialogs.RefreshFavDialogFragment;
 import com.franckrj.respawnirc.jvctopictools.JVCTopicGetter;
 import com.franckrj.respawnirc.jvctopictools.ShowForumFragment;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Undeprecator;
 
+import java.util.ArrayList;
+
 public class ShowForumActivity extends AbsShowSomethingActivity implements ChooseTopicOrForumLinkDialogFragment.NewTopicOrForumSelected,
                                                     ShowForumFragment.NewTopicWantRead, JVCTopicGetter.NewForumNameAvailable,
-                                                    JVCTopicGetter.ForumLinkChanged {
+                                                    JVCTopicGetter.ForumLinkChanged, RefreshFavDialogFragment.NewForumsFavs {
     private DrawerLayout layoutForDrawer = null;
     private NavigationView navigationForDrawer = null;
     private TextView pseudoTextNavigation = null;
@@ -48,9 +53,27 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
     private NavigationView.OnNavigationItemSelectedListener itemInNavigationClickedListener = new NavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            lastItemSelected = item.getItemId();
-            layoutForDrawer.closeDrawer(navigationForDrawer);
-            return true;
+            if (item.getItemId() == R.id.action_refresh_favs_navigation) {
+                if (!pseudoOfUser.isEmpty()) {
+                    Bundle argForFrag = new Bundle();
+                    RefreshFavDialogFragment refreshFavsDialogFragment = new RefreshFavDialogFragment();
+
+                    argForFrag.putString(RefreshFavDialogFragment.ARG_PSEUDO, pseudoOfUser);
+                    refreshFavsDialogFragment.setArguments(argForFrag);
+                    refreshFavsDialogFragment.show(getFragmentManager(), "RefreshFavDialogFragment");
+                } else {
+                    Toast.makeText(ShowForumActivity.this, R.string.errorConnectNeeded, Toast.LENGTH_SHORT).show();
+                }
+                return false;
+            } else if (item.getGroupId() == R.id.group_forum_fav_navigation) {
+                setTopicOrForum(sharedPref.getString(getString(R.string.prefForumFavLink) + String.valueOf(item.getItemId()), ""), true, null);
+                layoutForDrawer.closeDrawer(navigationForDrawer);
+                return true;
+            } else {
+                lastItemSelected = item.getItemId();
+                layoutForDrawer.closeDrawer(navigationForDrawer);
+                return true;
+            }
         }
     };
 
@@ -100,6 +123,8 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
             } else {
                 contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_action_navigation_expand_more));
             }
+
+            updateFavsInNavigationMenu();
         } else {
             navigationForDrawer.getMenu().clear();
             navigationForDrawer.inflateMenu(R.menu.menu_navigation_view_already_connected);
@@ -107,8 +132,24 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
         }
     }
 
+    private void updateFavsInNavigationMenu() {
+        SubMenu forumFavSubMenu = navigationForDrawer.getMenu().addSubMenu(Menu.NONE, R.id.group_forum_fav_navigation, Menu.NONE, R.string.forumFav);
+        MenuItem refreshForumFav;
+        int currentForumFavArraySize = sharedPref.getInt(getString(R.string.prefForumFavArraySize), 0);
+
+        for (int i = 0; i < currentForumFavArraySize; ++i) {
+            forumFavSubMenu.add(R.id.group_forum_fav_navigation, i, Menu.NONE, sharedPref.getString(getString(R.string.prefForumFavName) + String.valueOf(i), ""));
+        }
+
+        refreshForumFav = forumFavSubMenu.add(R.id.group_forum_fav_navigation, R.id.action_refresh_favs_navigation, Menu.NONE, R.string.refresh);
+        refreshForumFav.setIcon(R.drawable.ic_action_navigation_refresh);
+
+        forumFavSubMenu.setGroupCheckable(R.id.group_forum_fav_navigation, true, true);
+    }
+
     private void setNewForumLink(String newLink) {
         currentLink = newLink;
+        setTitle(R.string.app_name);
         updateAdapterForPagerView();
         updateCurrentItemAndButtonsToCurrentLink();
         if (pagerView.getCurrentItem() > 0) {
@@ -196,13 +237,13 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
                         case R.id.action_choose_topic_forum_navigation:
                             ChooseTopicOrForumLinkDialogFragment chooseLinkDialogFragment = new ChooseTopicOrForumLinkDialogFragment();
                             chooseLinkDialogFragment.show(getFragmentManager(), "ChooseTopicOrForumLinkDialogFragment");
-                            navigationForDrawer.setCheckedItem(R.id.action_home_navigation);
                             break;
                         case R.id.action_settings_navigation:
                             startActivity(new Intent(ShowForumActivity.this, SettingsActivity.class));
                             break;
                     }
                 }
+                navigationForDrawer.setCheckedItem(R.id.action_home_navigation);
 
                 if (isInNavigationConnectMode) {
                     isInNavigationConnectMode = false;
@@ -342,5 +383,30 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
     @Override
     protected String setShowedPageNumberForThisLink(String link, int newPageNumber) {
         return JVCParser.setPageNumberForThisForumLink(link, ((newPageNumber - 1) * 25) + 1);
+    }
+
+    @Override
+    public void getNewForumsFavs(ArrayList<JVCParser.NameAndLink> listOfForumsFavs) {
+        if (listOfForumsFavs != null) {
+            SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
+            int currentForumFavArraySize = sharedPref.getInt(getString(R.string.prefForumFavArraySize), 0);
+
+            for (int i = 0; i < currentForumFavArraySize; ++i) {
+                sharedPrefEdit.remove(getString(R.string.prefForumFavName) + String.valueOf(i));
+                sharedPrefEdit.remove(getString(R.string.prefForumFavLink) + String.valueOf(i));
+            }
+
+            sharedPrefEdit.putInt(getString(R.string.prefForumFavArraySize), listOfForumsFavs.size());
+
+            for (int i = 0; i < listOfForumsFavs.size(); ++i) {
+                sharedPrefEdit.putString(getString(R.string.prefForumFavName) + String.valueOf(i), listOfForumsFavs.get(i).name);
+                sharedPrefEdit.putString(getString(R.string.prefForumFavLink) + String.valueOf(i), listOfForumsFavs.get(i).link);
+            }
+
+            sharedPrefEdit.apply();
+            updateNavigationMenu();
+        } else {
+            Toast.makeText(this, R.string.errorDuringFetchFavs, Toast.LENGTH_SHORT).show();
+        }
     }
 }

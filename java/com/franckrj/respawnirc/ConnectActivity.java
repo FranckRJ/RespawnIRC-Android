@@ -59,7 +59,7 @@ public class ConnectActivity extends AppCompatActivity {
                 SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
 
                 sharedPrefEdit.putString(getString(R.string.prefCookiesList), "dlrowolleh=" + helloCookieValue + ";coniunctio=" + connectCookieValue);
-                sharedPrefEdit.putString(getString(R.string.prefPseudoUser), pseudoText.getText().toString());
+                sharedPrefEdit.putString(getString(R.string.prefPseudoUser), pseudoText.getText().toString().trim());
                 sharedPrefEdit.apply();
 
                 super.onBackPressed();

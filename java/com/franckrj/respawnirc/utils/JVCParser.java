@@ -47,6 +47,8 @@ public final class JVCParser {
     private static final Pattern topicAuthorPattern = Pattern.compile("<span class=\".*?text-([^ ]*) topic-author[^>]*>[^A-Za-z0-9\\[\\]_-]*([^<\n]*)");
     private static final Pattern topicDatePattern = Pattern.compile("<span class=\"topic-date\">[^<]*<span[^>]*>[^0-9/:]*([0-9/:]*)");
     private static final Pattern topicTypePattern = Pattern.compile("<img src=\"/img/forums/topic-(.*?).png\"");
+    private static final Pattern forumFavsBlocPattern = Pattern.compile("<h2>Mes forums favoris</h2>.*?<ul class=\"display-list-simple\">(.*?)</ul>", Pattern.DOTALL);
+    private static final Pattern forumFavPattern = Pattern.compile("<li><a href=\"([^\"]*)\">([^<]*)</a></li>");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
 
     private JVCParser() {
@@ -151,6 +153,26 @@ public final class JVCParser {
         else {
             return "";
         }
+    }
+
+    public static ArrayList<NameAndLink> getListOfForumsFavs(String pageSource) {
+        Matcher forumFavsBlocMatcher = forumFavsBlocPattern.matcher(pageSource);
+        ArrayList<NameAndLink> listOfForumsFav = new ArrayList<>();
+
+        if (forumFavsBlocMatcher.find()) {
+            Matcher forumFavMatcher = forumFavPattern.matcher(forumFavsBlocMatcher.group());
+            int lastOffset = 0;
+
+            while (forumFavMatcher.find(lastOffset)) {
+                NameAndLink newFav = new NameAndLink();
+                newFav.name = forumFavMatcher.group(2);
+                newFav.link = "http:" + forumFavMatcher.group(1);
+                listOfForumsFav.add(newFav);
+                lastOffset = forumFavMatcher.end();
+            }
+        }
+
+        return listOfForumsFav;
     }
 
     public static String getForumNameInForumPage(String pageSource) {
@@ -873,6 +895,11 @@ public final class JVCParser {
     public static class ForumAndTopicName {
         public String forum = "";
         public String topic = "";
+    }
+
+    public static class NameAndLink {
+        public String name = "";
+        public String link = "";
     }
 
     public static class AjaxInfos {

@@ -50,7 +50,7 @@
     <string name="ok">OK</string>
     <string name="help_dialog_connect">• Pour commencer, veuillez entrer votre pseudo dans le champ présent tout en haut.\n• Ensuite, veuillez vous connecter sur JVC avec ce même pseudo.\n• Enfin, cliquez sur le bouton \"Terminer\" tout en haut à droite.</string>
     <string name="welcome">Bienvenue !</string>
-    <string name="later">Plus tard</string>>
+    <string name="later">Plus tard</string>
     <string name="help_firstlaunch">Bienvenue sur RespawnIRC !\n\nPour commencer il est conseillé de se connecter à JVC, mais vous pouvez très bien le faire plus tard.</string>
     <string name="prefIsFirstLaunch">pref.isFirstLaunch</string>
     <string name="openDrawerContentDescRes">Ouverture du menu latéral</string>
@@ -96,7 +96,7 @@
     <string name="errorMessageAlreadySending">Erreur, envoie ou édition d\'un message actuellement en cours.</string>
     <string name="errorCantGetEditInfos">Erreur, impossible de récupérer les informations d\'édition.</string>
     <string name="errorDownloadFailed">Erreur, la récupération des informations a échouée.</string>
-    <string name="errorConnectNeeded">Erreur, vous devez vous connecté pour effectuer cette action.</string>
+    <string name="errorConnectNeeded">Erreur, vous devez vous connecter pour effectuer cette action.</string>
     <string name="settingsShowNoelshackImage">settings.showNoelshackImage</string>
     <string name="showNoelshackImageDefault">false</string>
     <string name="showNoelshackImageTitle">Afficher les images noelshack</string>
@@ -106,4 +106,10 @@
     <string name="pastLastMessageSended">Coller le dernier message envoyé</string>
     <string name="prefLastMessageSended">pref.lastMessageSended</string>
     <string name="connectWithAnotherAccount">Changer de compte</string>
+    <string name="loadingFavs">Chargement des favoris…</string>
+    <string name="forumFav">Forums favoris</string>
+    <string name="prefForumFavArraySize">pref.forumFavArraySize</string>
+    <string name="prefForumFavName">pref.forumFavName.</string>
+    <string name="prefForumFavLink">pref.forumFavLink.</string>
+    <string name="errorDuringFetchFavs">Erreur durant la récupération des favoris</string>
 </resources>
