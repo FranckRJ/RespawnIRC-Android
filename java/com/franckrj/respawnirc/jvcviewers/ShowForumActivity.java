@@ -142,10 +142,10 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
             forumFavSubMenu.add(R.id.group_forum_fav_navigation, i, Menu.NONE, sharedPref.getString(getString(R.string.prefForumFavName) + String.valueOf(i), ""));
         }
 
-        refreshForumFav = forumFavSubMenu.add(R.id.group_forum_fav_navigation, R.id.action_refresh_favs_navigation, Menu.NONE, R.string.refresh);
-        refreshForumFav.setIcon(R.drawable.ic_action_navigation_refresh);
-
         forumFavSubMenu.setGroupCheckable(R.id.group_forum_fav_navigation, true, true);
+
+        refreshForumFav = navigationForDrawer.getMenu().add(Menu.NONE, R.id.action_refresh_favs_navigation, Menu.NONE, R.string.refresh);
+        refreshForumFav.setIcon(R.drawable.ic_action_navigation_refresh);
     }
 
     private void setNewForumLink(String newLink) {
