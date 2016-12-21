@@ -4,8 +4,7 @@
     android:id="@+id/layout_navigation_view_header"
     android:layout_width="match_parent"
     android:layout_height="140dp"
-    android:padding="16dp"
-    android:background="@drawable/navigation_header_background">
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/pseudo_text_navigation_header"

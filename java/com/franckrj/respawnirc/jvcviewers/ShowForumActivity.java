@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -280,6 +281,12 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
             updateNavigationButtons();
         }
         setTitle(currentTitle);
+
+        if (Build.VERSION.SDK_INT > 15) {
+            Undeprecator.viewSetBackgroundDrawable(navigationHeader, Undeprecator.resourcesGetDrawable(getResources(), R.drawable.navigation_header_background));
+        } else {
+            navigationHeader.setBackgroundColor(Undeprecator.resourcesGetColor(getResources(), R.color.colorPrimaryDark));
+        }
 
         if (sharedPref.getBoolean(getString(R.string.prefIsFirstLaunch), true)) {
             SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
