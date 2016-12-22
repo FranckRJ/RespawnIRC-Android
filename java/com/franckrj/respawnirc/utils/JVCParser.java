@@ -48,7 +48,8 @@ public final class JVCParser {
     private static final Pattern topicDatePattern = Pattern.compile("<span class=\"topic-date\">[^<]*<span[^>]*>[^0-9/:]*([0-9/:]*)");
     private static final Pattern topicTypePattern = Pattern.compile("<img src=\"/img/forums/topic-(.*?).png\"");
     private static final Pattern forumFavsBlocPattern = Pattern.compile("<h2>Mes forums favoris</h2>.*?<ul class=\"display-list-simple\">(.*?)</ul>", Pattern.DOTALL);
-    private static final Pattern forumFavPattern = Pattern.compile("<li><a href=\"([^\"]*)\">([^<]*)</a></li>");
+    private static final Pattern topicFavsBlocPattern = Pattern.compile("<h2>Mes sujets favoris</h2>.*?<ul class=\"display-list-simple\">(.*?)</ul>", Pattern.DOTALL);
+    private static final Pattern favPattern = Pattern.compile("<li><a href=\"([^\"]*)\">([^<]*)</a></li>");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
 
     private JVCParser() {
@@ -157,22 +158,38 @@ public final class JVCParser {
 
     public static ArrayList<NameAndLink> getListOfForumsFavs(String pageSource) {
         Matcher forumFavsBlocMatcher = forumFavsBlocPattern.matcher(pageSource);
-        ArrayList<NameAndLink> listOfForumsFav = new ArrayList<>();
 
         if (forumFavsBlocMatcher.find()) {
-            Matcher forumFavMatcher = forumFavPattern.matcher(forumFavsBlocMatcher.group());
-            int lastOffset = 0;
+            return getListOfFavInBloc(forumFavsBlocMatcher.group());
+        } else {
+            return new ArrayList<>();
+        }
+    }
 
-            while (forumFavMatcher.find(lastOffset)) {
-                NameAndLink newFav = new NameAndLink();
-                newFav.name = forumFavMatcher.group(2);
-                newFav.link = "http:" + forumFavMatcher.group(1);
-                listOfForumsFav.add(newFav);
-                lastOffset = forumFavMatcher.end();
-            }
+    public static ArrayList<NameAndLink> getListOfTopicsFavs(String pageSource) {
+        Matcher topicFavsBlocMatcher = topicFavsBlocPattern.matcher(pageSource);
+
+        if (topicFavsBlocMatcher.find()) {
+            return getListOfFavInBloc(topicFavsBlocMatcher.group());
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    public static ArrayList<NameAndLink> getListOfFavInBloc(String pageSource) {
+        Matcher favMatcher = favPattern.matcher(pageSource);
+        ArrayList<NameAndLink> listOfFav = new ArrayList<>();
+        int lastOffset = 0;
+
+        while (favMatcher.find(lastOffset)) {
+            NameAndLink newFav = new NameAndLink();
+            newFav.name = favMatcher.group(2);
+            newFav.link = "http:" + favMatcher.group(1);
+            listOfFav.add(newFav);
+            lastOffset = favMatcher.end();
         }
 
-        return listOfForumsFav;
+        return listOfFav;
     }
 
     public static String getForumNameInForumPage(String pageSource) {

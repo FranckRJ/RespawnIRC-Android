@@ -19,6 +19,9 @@ import java.util.ArrayList;
 
 public class RefreshFavDialogFragment extends DialogFragment {
     public static final String ARG_PSEUDO = "com.franckrj.respawnirc.refreshfavdialogfragment.pseudo";
+    public static final String ARG_FAV_TYPE = "com.franckrj.respawnirc.refreshfavdialogfragment.fav_type";
+    public static final int FAV_FORUM = 0;
+    public static final int FAV_TOPIC = 1;
 
     private GetFavsOfPseudo currentTaskGetFavs = null;
 
@@ -34,15 +37,17 @@ public class RefreshFavDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         Bundle currentArgs = getArguments();
         String pseudoToFetch = "";
+        int typeOfFav = FAV_FORUM;
 
         if (currentArgs != null) {
             pseudoToFetch = currentArgs.getString(ARG_PSEUDO, "");
+            typeOfFav = currentArgs.getInt(ARG_FAV_TYPE, FAV_FORUM);
         }
 
         if (pseudoToFetch.isEmpty()) {
             dismiss();
         } else {
-            currentTaskGetFavs = new GetFavsOfPseudo();
+            currentTaskGetFavs = new GetFavsOfPseudo(typeOfFav);
             currentTaskGetFavs.execute(pseudoToFetch);
         }
     }
@@ -81,6 +86,12 @@ public class RefreshFavDialogFragment extends DialogFragment {
     }
 
     private class GetFavsOfPseudo extends AsyncTask<String, Void, ArrayList<JVCParser.NameAndLink>> {
+        final int typeOfFav;
+
+        GetFavsOfPseudo(int newTypeOfFav) {
+            typeOfFav = newTypeOfFav;
+        }
+
         @Override
         protected ArrayList<JVCParser.NameAndLink> doInBackground(String... params) {
             if (params.length > 0) {
@@ -90,7 +101,11 @@ public class RefreshFavDialogFragment extends DialogFragment {
                 pageContent = WebManager.sendRequest("http://www.jeuxvideo.com/profil/" + params[0].toLowerCase(), "GET", "mode=favoris", "", currentWebInfos);
 
                 if (pageContent != null) {
-                    return JVCParser.getListOfForumsFavs(pageContent);
+                    if (typeOfFav == FAV_FORUM) {
+                        return JVCParser.getListOfForumsFavs(pageContent);
+                    } else {
+                        return JVCParser.getListOfTopicsFavs(pageContent);
+                    }
                 }
             }
             return null;
@@ -100,8 +115,8 @@ public class RefreshFavDialogFragment extends DialogFragment {
         protected void onPostExecute(ArrayList<JVCParser.NameAndLink> listOfForumsFavs) {
             super.onPostExecute(listOfForumsFavs);
 
-            if (getActivity() instanceof NewForumsFavs) {
-                ((NewForumsFavs) getActivity()).getNewForumsFavs(listOfForumsFavs);
+            if (getActivity() instanceof NewFavsAvailable) {
+                ((NewFavsAvailable) getActivity()).getNewForumsFavs(listOfForumsFavs, typeOfFav);
             }
 
             currentTaskGetFavs = null;
@@ -109,7 +124,7 @@ public class RefreshFavDialogFragment extends DialogFragment {
         }
     }
 
-    public interface NewForumsFavs {
-        void getNewForumsFavs(ArrayList<JVCParser.NameAndLink> listOfForumsFavs);
+    public interface NewFavsAvailable {
+        void getNewForumsFavs(ArrayList<JVCParser.NameAndLink> listOfFavs, int typeOfFav);
     }
 }

@@ -112,4 +112,8 @@
     <string name="prefForumFavName">pref.forumFavName.</string>
     <string name="prefForumFavLink">pref.forumFavLink.</string>
     <string name="errorDuringFetchFavs">Erreur durant la récupération des favoris</string>
+    <string name="topicFav">Topics favoris</string>
+    <string name="prefTopicFavArraySize">pref.topicFavArraySize</string>
+    <string name="prefTopicFavName">pref.topicFavName.</string>
+    <string name="prefTopicFavLink">pref.topicFavLink.</string>
 </resources>
