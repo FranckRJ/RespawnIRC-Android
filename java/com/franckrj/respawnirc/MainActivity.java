@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.franckrj.respawnirc.jvcviewers.ShowForumActivity;
 import com.franckrj.respawnirc.jvcviewers.ShowTopicActivity;
+import com.franckrj.respawnirc.utils.StickerConverter;
 import com.franckrj.respawnirc.utils.WebManager;
 
 import java.io.File;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
         System.setProperty("http.keepAlive", "false");
         WebManager.generateNewUserAgent();
+        StickerConverter.initializeBasesRules();
 
         startActivity(new Intent(this, ShowForumActivity.class));
         if (lastActivityViewed == ACTIVITY_SHOW_TOPIC) {
