@@ -116,4 +116,7 @@
     <string name="prefTopicFavArraySize">pref.topicFavArraySize</string>
     <string name="prefTopicFavName">pref.topicFavName.</string>
     <string name="prefTopicFavLink">pref.topicFavLink.</string>
+    <string name="deleteMessage">Supprimer</string>
+    <string name="supressSuccess">Message supprimé.</string>
+    <string name="errorDeleteAlreadyRunning">Erreur, suppression déjà en cours.</string>
 </resources>

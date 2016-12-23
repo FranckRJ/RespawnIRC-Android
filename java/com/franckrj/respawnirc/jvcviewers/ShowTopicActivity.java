@@ -44,6 +44,7 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
     private ImageButton messageSendButton = null;
     private EditText messageSendEdit = null;
     private QuoteJVCMessage currentTaskQuoteMessage = null;
+    private DeleteJVCMessage currentTaskDeleteMessage = null;
     private String latestMessageQuotedInfo = null;
     private String pseudoOfUser = "";
     private String cookieListInAString = "";
@@ -160,6 +161,10 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
             currentTaskQuoteMessage.cancel(true);
             currentTaskQuoteMessage = null;
             latestMessageQuotedInfo = null;
+        }
+        if (currentTaskDeleteMessage != null) {
+            currentTaskDeleteMessage.cancel(true);
+            currentTaskDeleteMessage = null;
         }
     }
 
@@ -451,6 +456,23 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
                 }
 
                 return true;
+            case R.id.menu_delete_message:
+                if (getCurrentFragment().getLatestAjaxInfos().mod != null && currentTaskDeleteMessage == null && !pseudoOfUser.isEmpty()) {
+                    String idOfMessage = Long.toString(getCurrentFragment().getCurrentItemSelected().id);
+
+                    currentTaskDeleteMessage = new DeleteJVCMessage();
+                    currentTaskDeleteMessage.execute(idOfMessage, getCurrentFragment().getLatestAjaxInfos().mod, cookieListInAString);
+                } else {
+                    if (pseudoOfUser.isEmpty()) {
+                        Toast.makeText(this, R.string.errorConnectNeeded, Toast.LENGTH_SHORT).show();
+                    } else if (currentTaskDeleteMessage != null) {
+                        Toast.makeText(this, R.string.errorDeleteAlreadyRunning, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                return true;
             default:
                 return getCurrentFragment().onMenuItemClick(item);
         }
@@ -529,6 +551,37 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
 
             latestMessageQuotedInfo = null;
             currentTaskQuoteMessage = null;
+        }
+    }
+
+    protected class DeleteJVCMessage extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            if (params.length > 2) {
+                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
+                currentWebInfos.followRedirects = false;
+                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/modal_del_message.php", "GET", "tab_message[]=" + params[0] + "&type=delete&" + params[1], params[2], currentWebInfos);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String pageContent) {
+            super.onPostExecute(pageContent);
+
+            if (pageContent != null) {
+                String currentError = JVCParser.getErrorMessageInEditMode(pageContent);
+
+                if (currentError == null) {
+                    Toast.makeText(ShowTopicActivity.this, R.string.supressSuccess, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ShowTopicActivity.this, currentError, Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(ShowTopicActivity.this, R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
+            }
+
+            currentTaskDeleteMessage = null;
         }
     }
 }
