@@ -20,6 +20,7 @@ import android.text.style.LineBackgroundSpan;
 import android.text.style.QuoteSpan;
 import android.text.style.URLSpan;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,17 +104,17 @@ public class JVCMessagesAdapter extends BaseAdapter {
 
             if (itemSelected.numberOfOverlyQuote > currentSettings.maxNumberOfOverlyQuotes) {
                 if (itemSelected.showOverlyQuote) {
-                    inflater.inflate(R.menu.menu_message_hide_quote, popup.getMenu());
+                    popup.getMenu().add(Menu.NONE, R.id.menu_hide_quote_message, Menu.NONE, R.string.hideQuoteMessage);
                 } else {
-                    inflater.inflate(R.menu.menu_message_show_quote, popup.getMenu());
+                    popup.getMenu().add(Menu.NONE, R.id.menu_show_quote_message, Menu.NONE, R.string.showQuoteMessage);
                 }
             }
 
             if (itemSelected.containSpoil) {
                 if (itemSelected.showSpoil) {
-                    inflater.inflate(R.menu.menu_message_hide_spoil, popup.getMenu());
+                    popup.getMenu().add(Menu.NONE, R.id.menu_hide_spoil_message, Menu.NONE, R.string.hideSpoilMessage);
                 } else {
-                    inflater.inflate(R.menu.menu_message_show_spoil, popup.getMenu());
+                    popup.getMenu().add(Menu.NONE, R.id.menu_show_spoil_message, Menu.NONE, R.string.showSpoilMessage);
                 }
             }
 

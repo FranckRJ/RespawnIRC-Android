@@ -427,19 +427,26 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
 
                 return true;
             case R.id.menu_edit_message:
-                boolean infoForEditAreGetted = false;
-                if (messageSendButton.isEnabled() && getCurrentFragment().getLatestAjaxInfos().list != null) {
-                    String idOfMessage = Long.toString(getCurrentFragment().getCurrentItemSelected().id);
-                    messageSendButton.setEnabled(false);
-                    messageSendButton.setImageResource(R.drawable.ic_action_content_edit);
-                    infoForEditAreGetted = senderForMessages.getInfosForEditMessage(idOfMessage, getCurrentFragment().getLatestAjaxInfos().list, cookieListInAString);
-                }
+                if (senderForMessages.getIsInEdit()) {
+                    senderForMessages.cancelEdit();
+                    messageSendButton.setEnabled(true);
+                    messageSendButton.setImageResource(R.drawable.ic_action_content_send);
+                    messageSendEdit.setText("");
+                } else {
+                    boolean infoForEditAreGetted = false;
+                    if (messageSendButton.isEnabled() && getCurrentFragment().getLatestAjaxInfos().list != null) {
+                        String idOfMessage = Long.toString(getCurrentFragment().getCurrentItemSelected().id);
+                        messageSendButton.setEnabled(false);
+                        messageSendButton.setImageResource(R.drawable.ic_action_content_edit);
+                        infoForEditAreGetted = senderForMessages.getInfosForEditMessage(idOfMessage, getCurrentFragment().getLatestAjaxInfos().list, cookieListInAString);
+                    }
 
-                if (!infoForEditAreGetted) {
-                    if (!messageSendButton.isEnabled()) {
-                        Toast.makeText(this, R.string.errorMessageAlreadySending, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
+                    if (!infoForEditAreGetted) {
+                        if (!messageSendButton.isEnabled()) {
+                            Toast.makeText(this, R.string.errorMessageAlreadySending, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
 

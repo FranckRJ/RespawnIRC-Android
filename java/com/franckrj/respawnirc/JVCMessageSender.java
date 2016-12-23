@@ -56,10 +56,22 @@ public class JVCMessageSender {
             currentAsyncTaskForSendMessage.cancel(true);
             currentAsyncTaskForSendMessage = null;
         }
+        stopCurrentEditTask();
+    }
+
+    public void stopCurrentEditTask() {
         if (currentAsyncTaskForGetEditInfos != null) {
             currentAsyncTaskForGetEditInfos.cancel(true);
             currentAsyncTaskForGetEditInfos = null;
+            isInEdit = false;
         }
+    }
+
+    public void cancelEdit() {
+        stopCurrentEditTask();
+        isInEdit = false;
+        lastInfosForEdit = null;
+        ajaxListInfos = null;
     }
 
     public boolean sendThisMessage(String messageToSend, String urlToSend, String latestListOfInput, String cookieListInAString) {
