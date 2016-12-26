@@ -2,19 +2,15 @@ package com.franckrj.respawnirc.jvcmsgviewers;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.text.Html;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.text.style.LeadingMarginSpan;
 import android.text.style.LineBackgroundSpan;
 import android.text.style.QuoteSpan;
@@ -33,6 +29,8 @@ import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.CustomTagHandler;
 import com.franckrj.respawnirc.utils.ImageDownloader;
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.LongClickLinkMovementMethod;
+import com.franckrj.respawnirc.utils.LongClickableSpan;
 import com.franckrj.respawnirc.utils.Undeprecator;
 
 import java.util.ArrayList;
@@ -50,6 +48,7 @@ public class JVCMessagesAdapter extends BaseAdapter {
     private CustomTagHandler tagHandler = new CustomTagHandler();
     private ImageDownloader downloaderForImage = new ImageDownloader();
     private Drawable deletedDrawable = null;
+    private URLClicked urlCLickedListener = null;
 
     private final Html.ImageGetter jvcImageGetter = new Html.ImageGetter() {
         @Override
@@ -147,6 +146,10 @@ public class JVCMessagesAdapter extends BaseAdapter {
         return listOfMessages;
     }
 
+    public void setUrlCLickedListener(URLClicked newListener) {
+        urlCLickedListener = newListener;
+    }
+
     public void setActionWhenItemMenuClicked(PopupMenu.OnMenuItemClickListener newAction) {
         actionWhenItemMenuClicked = newAction;
     }
@@ -214,14 +217,18 @@ public class JVCMessagesAdapter extends BaseAdapter {
         }
         URLSpan[] urlSpanArray = spannable.getSpans(0, spannable.length(), URLSpan.class);
         for (final URLSpan urlSpan : urlSpanArray) {
-            replaceSpanByAnotherSpan(spannable, urlSpan, new ClickableSpan() {
+            replaceSpanByAnotherSpan(spannable, urlSpan, new LongClickableSpan() {
                 private String url = urlSpan.getURL();
+                @Override
                 public void onClick(View view) {
-                    try {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                        parentActivity.startActivity(browserIntent);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    if (urlCLickedListener != null) {
+                        urlCLickedListener.getClickedURL(url, false);
+                    }
+                }
+                @Override
+                public void onLongClick(View v) {
+                    if (urlCLickedListener != null) {
+                        urlCLickedListener.getClickedURL(url, true);
                     }
                 }
             });
@@ -256,7 +263,7 @@ public class JVCMessagesAdapter extends BaseAdapter {
             holder.showMenuButton = (ImageButton) convertView.findViewById(R.id.menu_overflow_row);
             holder.background = convertView.getBackground();
 
-            holder.secondLine.setMovementMethod(LinkMovementMethod.getInstance());
+            holder.secondLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
             holder.showMenuButton.setOnClickListener(menuButtonClicked);
             convertView.setTag(holder);
         } else {
@@ -328,5 +335,9 @@ public class JVCMessagesAdapter extends BaseAdapter {
     private class ContentHolder {
         private Spannable firstLineContent;
         private Spannable secondLineContent;
+    }
+
+    public interface URLClicked {
+        void getClickedURL(String link, boolean itsLongClick);
     }
 }

@@ -27,32 +27,32 @@ public class ChoosePageNumberDialogFragment extends DialogFragment {
         View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_choosepagenumber, null);
         pageNumberEdit = (EditText) mainView.findViewById(R.id.pagenumber_edit_choosepagenumber);
         builder.setTitle(R.string.choosePageNumber).setView(mainView)
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                }).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int i) {
-                if (!pageNumberEdit.getText().toString().isEmpty()) {
-                    Activity currentActivity = getActivity();
-                    int newPageNumber;
-
-                    try {
-                        newPageNumber = Integer.parseInt(pageNumberEdit.getText().toString());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        newPageNumber = -1;
-                    }
-
-                    if (currentActivity instanceof NewPageNumberSelected) {
-                        ((NewPageNumberSelected) currentActivity).newPageNumberChoosen(newPageNumber);
-                    }
+            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
                 }
-                dialog.dismiss();
-            }
-        });
+            }).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int i) {
+                    if (!pageNumberEdit.getText().toString().isEmpty()) {
+                        Activity currentActivity = getActivity();
+                        int newPageNumber;
+
+                        try {
+                            newPageNumber = Integer.parseInt(pageNumberEdit.getText().toString());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            newPageNumber = -1;
+                        }
+
+                        if (currentActivity instanceof NewPageNumberSelected) {
+                            ((NewPageNumberSelected) currentActivity).newPageNumberChoosen(newPageNumber);
+                        }
+                    }
+                    dialog.dismiss();
+                }
+            });
         alertToShow = builder.create();
         currentWindow = alertToShow.getWindow();
         if (currentWindow != null) {

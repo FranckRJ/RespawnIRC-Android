@@ -152,6 +152,9 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         if (getActivity() instanceof PopupMenu.OnMenuItemClickListener) {
             adapterForMessages.setActionWhenItemMenuClicked((PopupMenu.OnMenuItemClickListener) getActivity());
         }
+        if (getActivity() instanceof JVCMessagesAdapter.URLClicked) {
+            adapterForMessages.setUrlCLickedListener((JVCMessagesAdapter.URLClicked) getActivity());
+        }
 
         swipeRefresh.setColorSchemeResources(R.color.colorAccent);
         jvcMsgList.setAdapter(adapterForMessages);

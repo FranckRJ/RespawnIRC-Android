@@ -1,8 +1,10 @@
 package com.franckrj.respawnirc.jvcviewers;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -22,9 +24,11 @@ import com.franckrj.respawnirc.JVCMessageSender;
 import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.dialogs.ChoosePageNumberDialogFragment;
+import com.franckrj.respawnirc.dialogs.LinkContextMenuDialogFragment;
 import com.franckrj.respawnirc.jvcmsggetters.AbsJVCMessageGetter;
 import com.franckrj.respawnirc.jvcmsggetters.JVCForumMessageGetter;
 import com.franckrj.respawnirc.jvcmsgviewers.AbsShowTopicFragment;
+import com.franckrj.respawnirc.jvcmsgviewers.JVCMessagesAdapter;
 import com.franckrj.respawnirc.jvcmsgviewers.ShowTopicForumFragment;
 import com.franckrj.respawnirc.jvcmsgviewers.ShowTopicIRCFragment;
 import com.franckrj.respawnirc.utils.JVCParser;
@@ -33,7 +37,7 @@ import com.franckrj.respawnirc.utils.WebManager;
 
 public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCMessageGetter.NewForumAndTopicNameAvailable,
                                                                     PopupMenu.OnMenuItemClickListener, JVCForumMessageGetter.NewNumbersOfPagesListener,
-                                                                    ChoosePageNumberDialogFragment.NewPageNumberSelected {
+                                                                    ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCMessagesAdapter.URLClicked {
     public static final String EXTRA_TOPIC_LINK = "com.franckrj.respawnirc.EXTRA_TOPIC_LINK";
     public static final String EXTRA_TOPIC_NAME = "com.franckrj.respawnirc.EXTRA_TOPIC_NAME";
     public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.EXTRA_FORUM_NAME";
@@ -510,6 +514,24 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
     @Override
     protected String setShowedPageNumberForThisLink(String link, int newPageNumber) {
         return JVCParser.setPageNumberForThisTopicLink(link, newPageNumber);
+    }
+
+    @Override
+    public void getClickedURL(String link, boolean itsLongClick) {
+        if (!itsLongClick) {
+            try {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+                startActivity(browserIntent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            Bundle argForFrag = new Bundle();
+            LinkContextMenuDialogFragment linkMenuDialogFragment = new LinkContextMenuDialogFragment();
+            argForFrag.putString(LinkContextMenuDialogFragment.ARG_URL, link);
+            linkMenuDialogFragment.setArguments(argForFrag);
+            linkMenuDialogFragment.show(getFragmentManager(), "LinkContextMenuDialogFragment");
+        }
     }
 
     protected class QuoteJVCMessage extends AsyncTask<String, Void, String> {

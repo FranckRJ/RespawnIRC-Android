@@ -119,4 +119,11 @@
     <string name="deleteMessage">Supprimer</string>
     <string name="supressSuccess">Message supprimé.</string>
     <string name="errorDeleteAlreadyRunning">Erreur, suppression déjà en cours.</string>
+    <string name="openInBrowser">Ouvrir dans le navigateur</string>
+    <string name="copy">Copier</string>
+
+    <string-array name="choicesForLinkContextMenu">
+        <item>@string/openInBrowser</item>
+        <item>@string/copy</item>
+    </string-array>
 </resources>
