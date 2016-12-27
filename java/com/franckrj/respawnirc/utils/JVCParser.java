@@ -101,6 +101,12 @@ public final class JVCParser {
         return linkToCheck.contains("jeuxvideo.com/forums/0-");
     }
 
+    public static boolean checkIfItsJVCLink(String linkToCheck) {
+        return linkToCheck.startsWith("http://www.jeuxvideo.com/forums/0-") ||
+                linkToCheck.startsWith("http://www.jeuxvideo.com/forums/1-") ||
+                linkToCheck.startsWith("http://www.jeuxvideo.com/forums/42-");
+    }
+
     public static String getFirstPageForThisTopicLink(String topicLink) {
         Matcher pageTopicLinkNumberMatcher = pageTopicLinkNumberPattern.matcher(topicLink);
 

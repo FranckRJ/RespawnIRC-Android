@@ -519,11 +519,23 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
     @Override
     public void getClickedURL(String link, boolean itsLongClick) {
         if (!itsLongClick) {
-            try {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
-                startActivity(browserIntent);
-            } catch (Exception e) {
-                e.printStackTrace();
+            String possibleNewLink = JVCParser.formatThisUrl(link);
+
+            if (JVCParser.checkIfTopicAreSame(currentLink, possibleNewLink)) {
+                pagerView.setCurrentItem(getShowablePageNumberForThisLink(possibleNewLink) - 1);
+            } else if (JVCParser.checkIfItsJVCLink(possibleNewLink)) {
+                Intent newShowForumIntent = new Intent(this, ShowForumActivity.class);
+                newShowForumIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                newShowForumIntent.putExtra(ShowForumActivity.EXTRA_NEW_LINK, possibleNewLink);
+                startActivity(newShowForumIntent);
+                finish();
+            } else {
+                try {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+                    startActivity(browserIntent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         } else {
             Bundle argForFrag = new Bundle();

@@ -40,6 +40,8 @@ import java.util.ArrayList;
 public class ShowForumActivity extends AbsShowSomethingActivity implements ChooseTopicOrForumLinkDialogFragment.NewTopicOrForumSelected,
                                                     ShowForumFragment.NewTopicWantRead, JVCTopicGetter.NewForumNameAvailable,
                                                     JVCTopicGetter.ForumLinkChanged, RefreshFavDialogFragment.NewFavsAvailable {
+    public static final String EXTRA_NEW_LINK = "com.franckrj.respawnirc.EXTRA_NEW_LINK";
+
     private DrawerLayout layoutForDrawer = null;
     private NavigationView navigationForDrawer = null;
     private TextView pseudoTextNavigation = null;
@@ -346,6 +348,16 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
     public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         toggleForDrawer.syncState();
+    }
+
+    @Override
+    public void onNewIntent(Intent newIntent) {
+        super.onNewIntent(newIntent);
+        String newLinkToGo = newIntent.getStringExtra(EXTRA_NEW_LINK);
+
+        if (newLinkToGo != null) {
+            setTopicOrForum(newLinkToGo, true, null);
+        }
     }
 
     @Override
