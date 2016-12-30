@@ -20,6 +20,11 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".SelectForumActivity"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="stateAlwaysHidden">
+        </activity>
+        <activity
             android:name=".jvcviewers.ShowForumActivity"
             android:launchMode="singleTop"
             android:windowSoftInputMode="stateAlwaysHidden">

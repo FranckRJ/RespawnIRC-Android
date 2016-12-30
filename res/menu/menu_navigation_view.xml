@@ -7,7 +7,11 @@
         <item
             android:id="@+id/action_home_navigation"
             android:icon="@drawable/ic_action_action_home"
-            android:title="@string/app_name"/>
+            android:title="@string/home"/>
+        <item
+            android:id="@+id/action_forum_navigation"
+            android:icon="@drawable/ic_action_communication_forum"
+            android:title="@string/forum"/>
         <item
             android:id="@+id/action_choose_topic_forum_navigation"
             android:icon="@drawable/ic_action_action_input"

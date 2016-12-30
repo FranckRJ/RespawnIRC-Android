@@ -924,6 +924,15 @@ public final class JVCParser {
     public static class NameAndLink {
         public String name = "";
         public String link = "";
+
+        public NameAndLink() {
+            //rien
+        }
+
+        public NameAndLink(String newName, String newLink) {
+            name = newName;
+            link = newLink;
+        }
     }
 
     public static class AjaxInfos {

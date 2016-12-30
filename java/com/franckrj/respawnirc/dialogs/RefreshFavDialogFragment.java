@@ -116,7 +116,7 @@ public class RefreshFavDialogFragment extends DialogFragment {
             super.onPostExecute(listOfForumsFavs);
 
             if (getActivity() instanceof NewFavsAvailable) {
-                ((NewFavsAvailable) getActivity()).getNewForumsFavs(listOfForumsFavs, typeOfFav);
+                ((NewFavsAvailable) getActivity()).getNewFavs(listOfForumsFavs, typeOfFav);
             }
 
             currentTaskGetFavs = null;
@@ -125,6 +125,6 @@ public class RefreshFavDialogFragment extends DialogFragment {
     }
 
     public interface NewFavsAvailable {
-        void getNewForumsFavs(ArrayList<JVCParser.NameAndLink> listOfFavs, int typeOfFav);
+        void getNewFavs(ArrayList<JVCParser.NameAndLink> listOfFavs, int typeOfFav);
     }
 }

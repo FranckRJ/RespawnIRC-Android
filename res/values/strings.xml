@@ -121,6 +121,10 @@
     <string name="errorDeleteAlreadyRunning">Erreur, suppression déjà en cours.</string>
     <string name="openInBrowser">Ouvrir dans le navigateur</string>
     <string name="copy">Copier</string>
+    <string name="forum">Forum</string>
+    <string name="home">Accueil</string>
+    <string name="expandList">Étendre la liste</string>
+    <string name="isForum">Est un forum</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInBrowser</item>

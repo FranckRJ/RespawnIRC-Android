@@ -10,4 +10,5 @@
     <item name="action_refresh_forum_fav_navigation" type="id">action_refresh_forum_fav_navigation</item>
     <item name="action_refresh_topic_fav_navigation" type="id">action_refresh_topic_fav_navigation</item>
     <item name="action_topic_fav_selected" type="id">action_topic_fav_selected</item>
+    <item name="action_forum_fav_selected" type="id">action_forum_fav_selected</item>
 </resources>

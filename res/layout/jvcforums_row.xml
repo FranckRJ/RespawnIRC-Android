@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/image_is_forum_jvcforums_text_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/ic_action_communication_forum_dark"
+        android:contentDescription="@string/isForum"/>
+
+    <TextView
+        android:id="@+id/item_one_jvcforums_text_row"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/image_is_forum_jvcforums_text_row"
+        android:layout_toEndOf="@+id/image_is_forum_jvcforums_text_row"
+        android:layout_toLeftOf="@+id/image_button_expand_jvcforums_text_row"
+        android:layout_toStartOf="@+id/image_button_expand_jvcforums_text_row"
+        android:layout_centerVertical="true"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"/>
+
+    <ImageView
+        android:id="@+id/image_button_expand_jvcforums_text_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_action_navigation_expand_more_dark"
+        android:contentDescription="@string/expandList"/>
+
+</RelativeLayout>

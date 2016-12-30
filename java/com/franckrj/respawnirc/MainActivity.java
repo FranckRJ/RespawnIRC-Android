@@ -16,12 +16,13 @@ import java.io.File;
 public class MainActivity extends AppCompatActivity {
     public static final int ACTIVITY_SHOW_FORUM = 0;
     public static final int ACTIVITY_SHOW_TOPIC = 1;
+    public static final int ACTIVITY_SELECT_FORUM = 2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        int lastActivityViewed = sharedPref.getInt(getString(R.string.prefLastActivityViewed), ACTIVITY_SHOW_FORUM);
+        int lastActivityViewed = sharedPref.getInt(getString(R.string.prefLastActivityViewed), ACTIVITY_SELECT_FORUM);
 
         for (File thisFile : getCacheDir().listFiles()) {
             if (!thisFile.isDirectory() && thisFile.getName().startsWith("nlshck_")) {
@@ -34,9 +35,13 @@ public class MainActivity extends AppCompatActivity {
         WebManager.generateNewUserAgent();
         StickerConverter.initializeBasesRules();
 
-        startActivity(new Intent(this, ShowForumActivity.class));
-        if (lastActivityViewed == ACTIVITY_SHOW_TOPIC) {
-            startActivity(new Intent(this, ShowTopicActivity.class));
+        if (lastActivityViewed == ACTIVITY_SELECT_FORUM) {
+            startActivity(new Intent(this, SelectForumActivity.class));
+        } else {
+            startActivity(new Intent(this, ShowForumActivity.class));
+            if (lastActivityViewed == ACTIVITY_SHOW_TOPIC) {
+                startActivity(new Intent(this, ShowTopicActivity.class));
+            }
         }
 
         finish();
