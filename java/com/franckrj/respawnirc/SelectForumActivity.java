@@ -4,14 +4,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.dialogs.ChooseTopicOrForumLinkDialogFragment;
@@ -20,7 +25,9 @@ import com.franckrj.respawnirc.dialogs.RefreshFavDialogFragment;
 import com.franckrj.respawnirc.jvcviewers.ShowForumActivity;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.NavigationViewUtil;
+import com.franckrj.respawnirc.utils.WebManager;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class SelectForumActivity extends AppCompatActivity implements ChooseTopicOrForumLinkDialogFragment.NewTopicOrForumSelected,
@@ -28,8 +35,22 @@ public class SelectForumActivity extends AppCompatActivity implements ChooseTopi
                                                                       NavigationViewUtil.NewForumOrTopicNeedToBeRead {
     private NavigationViewUtil navigationView = null;
     private SharedPreferences sharedPref = null;
-    private ExpandableListView forumListView = null;
     private JVCForumsAdapter adapterForForums = null;
+    private EditText textForSearch = null;
+    private GetSearchedForums currentAsyncTaskForGetSearchedForums = null;
+    private SwipeRefreshLayout swipeRefresh = null;
+
+    private View.OnClickListener searchButtonClickedListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (textForSearch.getText().toString().isEmpty()) {
+                adapterForForums.setNewListOfForums(null);
+            } else if (currentAsyncTaskForGetSearchedForums == null) {
+                currentAsyncTaskForGetSearchedForums = new GetSearchedForums();
+                currentAsyncTaskForGetSearchedForums.execute(textForSearch.getText().toString());
+            }
+        }
+    };
 
     private void readNewTopicOrForum(String linkToTopicOrForum) {
         if (linkToTopicOrForum != null) {
@@ -39,6 +60,14 @@ public class SelectForumActivity extends AppCompatActivity implements ChooseTopi
             startActivity(newShowForumIntent);
             finish();
         }
+    }
+
+    private void stopAllCurrentTasks() {
+        if (currentAsyncTaskForGetSearchedForums != null) {
+            currentAsyncTaskForGetSearchedForums.cancel(true);
+            currentAsyncTaskForGetSearchedForums = null;
+        }
+        swipeRefresh.setRefreshing(false);
     }
 
     @Override
@@ -59,8 +88,15 @@ public class SelectForumActivity extends AppCompatActivity implements ChooseTopi
         navigationView = new NavigationViewUtil(this, sharedPref, R.id.action_home_navigation);
         navigationView.initialize((DrawerLayout) findViewById(R.id.layout_drawer_selectforum), (NavigationView) findViewById(R.id.navigation_view_selectforum));
 
+        ImageButton buttonForSearch = (ImageButton) findViewById(R.id.searchforum_button_selectforum);
+        textForSearch = (EditText) findViewById(R.id.searchforum_text_selectforum);
+        swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swiperefresh_selectforum);
+        buttonForSearch.setOnClickListener(searchButtonClickedListener);
+        swipeRefresh.setEnabled(false);
+        swipeRefresh.setColorSchemeResources(R.color.colorAccent);
+
+        ExpandableListView forumListView = (ExpandableListView) findViewById(R.id.forum_expendable_list_selectforum);
         adapterForForums = new JVCForumsAdapter(this);
-        forumListView = (ExpandableListView) findViewById(R.id.forum_expendable_list_selectforum);
         forumListView.setAdapter(adapterForForums);
         forumListView.setGroupIndicator(null);
         forumListView.setOnGroupClickListener(adapterForForums);
@@ -89,6 +125,12 @@ public class SelectForumActivity extends AppCompatActivity implements ChooseTopi
         sharedPrefEdit.apply();
 
         navigationView.updateNavigationViewIfNeeded();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopAllCurrentTasks();
     }
 
     @Override
@@ -138,5 +180,63 @@ public class SelectForumActivity extends AppCompatActivity implements ChooseTopi
     @Override
     public void getNewForumLink(String link) {
         readNewTopicOrForum(link);
+    }
+
+    private class GetSearchedForums extends AsyncTask<String, Void, String> {
+        @Override
+        protected void onPreExecute() {
+            adapterForForums.clearListOfForums();
+            swipeRefresh.setRefreshing(true);
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            if (params.length > 0) {
+                String pageResult;
+                String searchToDo = params[0].replace(" ", "+");
+                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
+                currentWebInfos.followRedirects = false;
+
+                try {
+                    searchToDo = URLEncoder.encode(searchToDo, "UTF-8");
+                } catch (Exception e) {
+                    searchToDo = "";
+                    e.printStackTrace();
+                }
+
+                pageResult = WebManager.sendRequest("http://www.jeuxvideo.com/forums/recherche.php", "GET", "q=" + searchToDo, "", currentWebInfos);
+
+                if (!currentWebInfos.currentUrl.isEmpty()) {
+                    return "respawnirc:redirect:" + currentWebInfos.currentUrl;
+                } else {
+                    return pageResult;
+                }
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String pageResult) {
+            super.onPostExecute(pageResult);
+            swipeRefresh.setRefreshing(false);
+
+            currentAsyncTaskForGetSearchedForums = null;
+
+            if (pageResult != null) {
+                if (pageResult.startsWith("respawnirc:redirect:")) {
+                    String newLink = pageResult.substring(("respawnirc:redirect:").length());
+                    if (!newLink.isEmpty()) {
+                        readNewTopicOrForum("http://www.jeuxvideo.com" + newLink);
+                        return;
+                    }
+                } else {
+                    adapterForForums.setNewListOfForums(JVCParser.getListOfForumsInSearchPage(pageResult));
+                    return;
+                }
+            }
+
+            adapterForForums.setNewListOfForums(new ArrayList<JVCParser.NameAndLink>());
+        }
     }
 }

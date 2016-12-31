@@ -125,6 +125,8 @@
     <string name="home">Accueil</string>
     <string name="expandList">Étendre la liste</string>
     <string name="isForum">Est un forum</string>
+    <string name="forumSearch">Rechercher un forum</string>
+    <string name="noResultFound">Pas de résultat</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInBrowser</item>

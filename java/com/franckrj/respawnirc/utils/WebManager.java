@@ -73,18 +73,22 @@ public class WebManager {
                 buffer.append(line).append("\n");
             }
 
+            if (currentInfos.followRedirects) {
+                if (currentInfos.currentUrl.equals(urlConnection.getURL().toString())) {
+                    currentInfos.currentUrl = "";
+                } else {
+                    currentInfos.currentUrl = urlConnection.getURL().toString();
+                }
+            } else {
+                currentInfos.currentUrl = urlConnection.getHeaderField("Location");
+            }
+
+            if (currentInfos.currentUrl == null) {
+                currentInfos.currentUrl = "";
+            }
+
             if (buffer.length() == 0) {
                 return null;
-            } else {
-                if (currentInfos.followRedirects) {
-                    if (currentInfos.currentUrl.equals(urlConnection.getURL().toString())) {
-                        currentInfos.currentUrl = "";
-                    } else {
-                        currentInfos.currentUrl = urlConnection.getURL().toString();
-                    }
-                } else {
-                    currentInfos.currentUrl = urlConnection.getHeaderField("Location");
-                }
             }
 
             return buffer.toString();
@@ -106,7 +110,7 @@ public class WebManager {
     }
 
     public static class WebInfos {
-        public boolean followRedirects;
-        public String currentUrl;
+        public boolean followRedirects = false;
+        public String currentUrl = "";
     }
 }

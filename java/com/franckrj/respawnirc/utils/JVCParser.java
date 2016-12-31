@@ -50,6 +50,7 @@ public final class JVCParser {
     private static final Pattern forumFavsBlocPattern = Pattern.compile("<h2>Mes forums favoris</h2>.*?<ul class=\"display-list-simple\">(.*?)</ul>", Pattern.DOTALL);
     private static final Pattern topicFavsBlocPattern = Pattern.compile("<h2>Mes sujets favoris</h2>.*?<ul class=\"display-list-simple\">(.*?)</ul>", Pattern.DOTALL);
     private static final Pattern favPattern = Pattern.compile("<li><a href=\"([^\"]*)\">([^<]*)</a></li>");
+    private static final Pattern forumInSearchPagePattern = Pattern.compile("<a class=\"list-search-forum-name\" href=\"([^\"]*)\"[^>]*>(.*?)</a>");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
 
     private JVCParser() {
@@ -160,6 +161,26 @@ public final class JVCParser {
         else {
             return "";
         }
+    }
+
+    public static ArrayList<NameAndLink> getListOfForumsInSearchPage(String pageSource) {
+        ArrayList<NameAndLink> listOfForums = new ArrayList<>();
+        Matcher forumInSearchPageMatcher = forumInSearchPagePattern.matcher(pageSource);
+        int lastOffset = 0;
+
+        while (forumInSearchPageMatcher.find(lastOffset)) {
+            NameAndLink newNameAndLink = new NameAndLink();
+
+            newNameAndLink.name = forumInSearchPageMatcher.group(2).replace("<em>", "").replace("</em>", "");
+            if (!forumInSearchPageMatcher.group(1).isEmpty()) {
+                newNameAndLink.link = "http://www.jeuxvideo.com" + forumInSearchPageMatcher.group(1);
+            }
+
+            listOfForums.add(newNameAndLink);
+            lastOffset = forumInSearchPageMatcher.end();
+        }
+
+        return listOfForums;
     }
 
     public static ArrayList<NameAndLink> getListOfForumsFavs(String pageSource) {
