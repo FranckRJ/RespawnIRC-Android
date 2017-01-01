@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
         android:src="@drawable/ic_action_communication_forum_dark"
         android:contentDescription="@string/isForum"/>
 
@@ -31,6 +32,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:paddingRight="8dp"
+        android:paddingLeft="8dp"
         android:src="@drawable/ic_action_navigation_expand_more_dark"
         android:contentDescription="@string/expandList"/>
 

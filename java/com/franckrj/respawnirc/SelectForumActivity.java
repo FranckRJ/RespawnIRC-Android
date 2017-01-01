@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
@@ -43,11 +44,19 @@ public class SelectForumActivity extends AppCompatActivity implements ChooseTopi
     private View.OnClickListener searchButtonClickedListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            View focusedView;
+
             if (textForSearch.getText().toString().isEmpty()) {
                 adapterForForums.setNewListOfForums(null);
             } else if (currentAsyncTaskForGetSearchedForums == null) {
                 currentAsyncTaskForGetSearchedForums = new GetSearchedForums();
                 currentAsyncTaskForGetSearchedForums.execute(textForSearch.getText().toString());
+            }
+
+            focusedView = getCurrentFocus();
+            if (focusedView != null) {
+                inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
             }
         }
     };
