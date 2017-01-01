@@ -261,7 +261,6 @@ public class JVCMessagesAdapter extends BaseAdapter {
             holder.firstLine = (TextView) convertView.findViewById(R.id.item_one_jvcmessages_text_row);
             holder.secondLine = (TextView) convertView.findViewById(R.id.item_two_jvcmessages_text_row);
             holder.showMenuButton = (ImageButton) convertView.findViewById(R.id.menu_overflow_row);
-            holder.background = convertView.getBackground();
 
             holder.secondLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
             holder.showMenuButton.setOnClickListener(menuButtonClicked);
@@ -274,7 +273,7 @@ public class JVCMessagesAdapter extends BaseAdapter {
         holder.secondLine.setText(listOfContentForMessages.get(position).secondLineContent);
 
         if (position % 2 == 0 || !alternateBackgroundColor) {
-            Undeprecator.viewSetBackgroundDrawable(convertView, holder.background);
+            convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.defaultColorForBackground));
         } else {
             convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.altBackgroundMessageColor));
         }
@@ -329,7 +328,6 @@ public class JVCMessagesAdapter extends BaseAdapter {
         private TextView firstLine;
         private TextView secondLine;
         private ImageButton showMenuButton;
-        private Drawable background;
     }
 
     private class ContentHolder {

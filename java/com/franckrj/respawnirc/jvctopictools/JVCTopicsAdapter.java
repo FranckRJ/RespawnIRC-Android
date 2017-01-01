@@ -111,7 +111,6 @@ public class JVCTopicsAdapter extends BaseAdapter {
             holder.secondLine = (TextView) convertView.findViewById(R.id.item_two_jvctopics_text_row);
             holder.thirdLine = (TextView) convertView.findViewById(R.id.item_three_jvctopics_text_row);
             holder.topicIcon = (ImageView) convertView.findViewById(R.id.item_topic_icon_jvctopics_image_row);
-            holder.background = convertView.getBackground();
 
             convertView.setTag(holder);
         } else {
@@ -143,10 +142,10 @@ public class JVCTopicsAdapter extends BaseAdapter {
                 break;
         }
 
-        if (position % 2 == 0 || !alternateBackgroundColor) {
-            Undeprecator.viewSetBackgroundDrawable(convertView, holder.background);
-        } else {
+        if (position % 2 == 0 && alternateBackgroundColor) {
             convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.altBackgroundMessageColor));
+        } else {
+            convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.defaultColorForBackground));
         }
 
         return convertView;
@@ -156,7 +155,6 @@ public class JVCTopicsAdapter extends BaseAdapter {
         private TextView firstLine;
         private TextView secondLine;
         private TextView thirdLine;
-        private Drawable background;
         private ImageView topicIcon;
     }
 

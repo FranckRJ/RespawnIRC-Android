@@ -10,4 +10,6 @@
     <color name="colorPseudoModo">#3A9D23</color>
     <color name="colorPseudoAdmin">#DB0F0F</color>
     <color name="colorSelectedIconItem">#606060</color>
+    <color name="defaultColorForBackground">#fafafa</color>
+    <color name="darkerColorForBackground">#efefef</color>
 </resources>

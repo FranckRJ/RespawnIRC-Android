@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.Undeprecator;
 
 import java.util.ArrayList;
 
@@ -471,6 +472,7 @@ public class JVCForumsAdapter extends BaseExpandableListAdapter implements Expan
             holder = (ViewHolder) convertView.getTag();
         }
 
+        convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.darkerColorForBackground));
         holder.itemOne.setTypeface(null, Typeface.NORMAL);
         holder.itemOne.setPaintFlags(holder.itemOne.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
         holder.itemOne.setText(childTitle);
@@ -515,6 +517,7 @@ public class JVCForumsAdapter extends BaseExpandableListAdapter implements Expan
             holder = (ViewHolder) convertView.getTag();
         }
 
+        convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.defaultColorForBackground));
         holder.itemOne.setText(groupTitle);
         holder.imageButtonExpand.setImageResource(isExpanded ? R.drawable.ic_action_navigation_expand_less_dark : R.drawable.ic_action_navigation_expand_more_dark);
 
