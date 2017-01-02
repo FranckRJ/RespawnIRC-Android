@@ -167,7 +167,7 @@ public class JVCMessageSender {
                     if (!isInEdit) {
                         errorWhenSending = JVCParser.getErrorMessage(pageResult);
                     } else {
-                        errorWhenSending = JVCParser.getErrorMessageInEditMode(pageResult);
+                        errorWhenSending = JVCParser.getErrorMessageInJSONMode(pageResult);
                     }
                 }
             }

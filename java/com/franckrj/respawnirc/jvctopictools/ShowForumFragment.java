@@ -5,8 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,6 +128,18 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         getterForTopics.startGetMessagesOfThisPage("");
     }
 
+    public JVCParser.AjaxInfos getLatestAjaxInfos() {
+        return getterForTopics.getLatestAjaxInfos();
+    }
+
+    public Boolean getIsInFavs() {
+        return getterForTopics.getIsInFavs();
+    }
+
+    public void setIsInFavs(Boolean newVal) {
+        getterForTopics.setIsInFavs(newVal);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -220,12 +230,6 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(getString(R.string.saveAllCurrentTopicsShowed), adapterForTopics.getAllItems());
         getterForTopics.saveToBundle(outState);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_showforum, menu);
     }
 
     @Override

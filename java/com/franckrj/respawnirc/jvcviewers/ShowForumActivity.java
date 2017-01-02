@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
@@ -22,6 +24,7 @@ import com.franckrj.respawnirc.jvctopictools.JVCTopicGetter;
 import com.franckrj.respawnirc.jvctopictools.ShowForumFragment;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.NavigationViewUtil;
+import com.franckrj.respawnirc.utils.WebManager;
 
 import java.util.ArrayList;
 
@@ -34,6 +37,7 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
     private SharedPreferences sharedPref = null;
     private String currentTitle = "";
     private NavigationViewUtil navigationView = null;
+    private AddOrRemoveForumToFavs currentTaskForForumFavs = null;
 
     public ShowForumActivity() {
         lastPage = 100;
@@ -93,6 +97,17 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
         }
 
         Toast.makeText(this, R.string.errorInvalidLink, Toast.LENGTH_SHORT).show();
+    }
+
+    private void stopAllCurrentTasks() {
+        if (currentTaskForForumFavs != null) {
+            currentTaskForForumFavs.cancel(true);
+            currentTaskForForumFavs = null;
+        }
+    }
+
+    private ShowForumFragment getCurrentFragment() {
+        return (ShowForumFragment) adapterForPagerView.getFragment(pagerView.getCurrentItem());
     }
 
     @Override
@@ -165,6 +180,7 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
     @Override
     public void onPause() {
         super.onPause();
+        stopAllCurrentTasks();
         if (!currentLink.isEmpty()) {
             SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
             sharedPrefEdit.putString(getString(R.string.prefForumUrlToFetch), setShowedPageNumberForThisLink(currentLink, pagerView.getCurrentItem() + 1));
@@ -192,12 +208,46 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_showforum, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        if (!navigationView.getPseudoOfUser().isEmpty()) {
+            if (getCurrentFragment().getIsInFavs() != null) {
+                menu.findItem(R.id.action_change_forum_fav_value_showforum).setEnabled(true);
+                if (getCurrentFragment().getIsInFavs()) {
+                    menu.findItem(R.id.action_change_forum_fav_value_showforum).setTitle(R.string.removeOfFavs);
+                } else {
+                    menu.findItem(R.id.action_change_forum_fav_value_showforum).setTitle(R.string.addToFavs);
+                }
+                return true;
+            }
+        }
+        menu.findItem(R.id.action_change_forum_fav_value_showforum).setEnabled(false);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (navigationView.onOptionsItemSelectedForToggleForDrawer(item)) {
             return true;
         }
 
         switch (item.getItemId()) {
+            case R.id.action_change_forum_fav_value_showforum:
+                if (currentTaskForForumFavs == null) {
+                    currentTaskForForumFavs = new AddOrRemoveForumToFavs(!getCurrentFragment().getIsInFavs());
+                    currentTaskForForumFavs.execute(JVCParser.getForumIDOfThisForum(currentLink), getCurrentFragment().getLatestAjaxInfos().pref, sharedPref.getString(getString(R.string.prefCookiesList), ""));
+                } else {
+                    Toast.makeText(ShowForumActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
+                }
+
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -251,6 +301,65 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
             setTopicOrForum(link, true, null);
         } else if (!itsAForum && isWhenDrawerIsClosed) {
             setTopicOrForum(link, true, null);
+        }
+    }
+
+    private class AddOrRemoveForumToFavs extends AsyncTask<String, Void, String> {
+        final boolean addToFavs;
+
+        AddOrRemoveForumToFavs(boolean itsAnAdd) {
+            addToFavs = itsAnAdd;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            if (params.length > 2) {
+                String actionToDo;
+                String pageContent;
+                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
+                currentWebInfos.followRedirects = true;
+
+                if (addToFavs) {
+                    actionToDo = "add";
+                } else {
+                    actionToDo = "delete";
+                }
+
+                pageContent = WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_forum_prefere.php", "GET", "id_forum=" + params[0] + "&id_topic=0&action=" + actionToDo + "&type=forum&" + params[1], params[2], currentWebInfos);
+
+                if (pageContent != null) {
+                    if (!pageContent.isEmpty()) {
+                        return JVCParser.getErrorMessageInJSONMode(pageContent);
+                    }
+                }
+                return null;
+            } else {
+                return "";
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String errorResult) {
+            super.onPostExecute(errorResult);
+
+            currentTaskForForumFavs = null;
+
+            if (errorResult != null) {
+                if (!errorResult.isEmpty()) {
+                    Toast.makeText(ShowForumActivity.this, errorResult, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ShowForumActivity.this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
+            if (addToFavs) {
+                Toast.makeText(ShowForumActivity.this, R.string.favAdded, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(ShowForumActivity.this, R.string.favRemoved, Toast.LENGTH_SHORT).show();
+            }
+
+            getCurrentFragment().setIsInFavs(addToFavs);
         }
     }
 }

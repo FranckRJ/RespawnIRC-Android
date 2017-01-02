@@ -10,10 +10,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class JVCParser {
-    private static final Pattern ajaxTimestampPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_timestamp_liste_messages\" id=\"ajax_timestamp_liste_messages\" value=\"([^\"]*)\" />");
-    private static final Pattern ajaxHashPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_hash_liste_messages\" id=\"ajax_hash_liste_messages\" value=\"([^\"]*)\" />");
+    private static final Pattern ajaxTimestampPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_timestamp_liste_(messages|topics)\" id=\"ajax_timestamp_liste_(messages|topics)\" value=\"([^\"]*)\" />");
+    private static final Pattern ajaxHashPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_hash_liste_(messages|topics)\" id=\"ajax_hash_liste_(messages|topics)\" value=\"([^\"]*)\" />");
     private static final Pattern ajaxModTimestampPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_timestamp_moderation_forum\" id=\"ajax_timestamp_moderation_forum\" value=\"([^\"]*)\" />");
     private static final Pattern ajaxModHashPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_hash_moderation_forum\" id=\"ajax_hash_moderation_forum\" value=\"([^\"]*)\" />");
+    private static final Pattern ajaxPrefTimestampPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_timestamp_preference_user\" id=\"ajax_timestamp_preference_user\" value=\"([^\"]*)\" />");
+    private static final Pattern ajaxPrefHashPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_hash_preference_user\" id=\"ajax_hash_preference_user\" value=\"([^\"]*)\" />");
     private static final Pattern messageQuotePattern = Pattern.compile("\"txt\":\"(.*)\"", Pattern.DOTALL);
     private static final Pattern entireMessagePattern = Pattern.compile("(<div class=\"bloc-message-forum \".*?)(<span id=\"post_[^\"]*\" class=\"bloc-message-forum-anchor\">|<div class=\"bloc-outils-plus-modo bloc-outils-bottom\">|<div class=\"bloc-pagi-default\">)", Pattern.DOTALL);
     private static final Pattern entireTopicPattern = Pattern.compile("<li class=\"\" data-id=\"[^\"]*\">[^<]*<span class=\"topic-subject\">.*?</li>", Pattern.DOTALL);
@@ -51,6 +53,7 @@ public final class JVCParser {
     private static final Pattern topicFavsBlocPattern = Pattern.compile("<h2>Mes sujets favoris</h2>.*?<ul class=\"display-list-simple\">(.*?)</ul>", Pattern.DOTALL);
     private static final Pattern favPattern = Pattern.compile("<li><a href=\"([^\"]*)\">([^<]*)</a></li>");
     private static final Pattern forumInSearchPagePattern = Pattern.compile("<a class=\"list-search-forum-name\" href=\"([^\"]*)\"[^>]*>(.*?)</a>");
+    private static final Pattern isInFavPattern = Pattern.compile("<span class=\"picto-favoris([^\"]*)\"");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
 
     private JVCParser() {
@@ -115,6 +118,16 @@ public final class JVCParser {
             return pageTopicLinkNumberMatcher.group(1) + "1" + pageTopicLinkNumberMatcher.group(5);
         }
         else {
+            return "";
+        }
+    }
+
+    public static String getForumIDOfThisForum(String forumLink) {
+        Matcher forumLinkNumberMatcher = pageForumLinkNumberPattern.matcher(forumLink);
+
+        if (forumLinkNumberMatcher.find()) {
+            return forumLinkNumberMatcher.group(2);
+        } else {
             return "";
         }
     }
@@ -283,6 +296,16 @@ public final class JVCParser {
         return currentNames;
     }
 
+    public static Boolean getIsInFavsFromPage(String pageSource) {
+        Matcher isInFavMatcher = isInFavPattern.matcher(pageSource);
+
+        if (isInFavMatcher.find()) {
+            return !isInFavMatcher.group(1).isEmpty();
+        } else {
+            return null;
+        }
+    }
+
     public static String getErrorMessage(String pageSource) {
         Matcher errorMatcher = errorPattern.matcher(pageSource);
 
@@ -293,7 +316,7 @@ public final class JVCParser {
         }
     }
 
-    public static String getErrorMessageInEditMode(String pageSource) {
+    public static String getErrorMessageInJSONMode(String pageSource) {
         Matcher errorMatcher = errorInEditModePattern.matcher(pageSource);
 
         if (errorMatcher.find()) {
@@ -361,13 +384,19 @@ public final class JVCParser {
         Matcher ajaxHashMatcher = ajaxHashPattern.matcher(pageSource);
         Matcher ajaxModTimestampMatcher = ajaxModTimestampPattern.matcher(pageSource);
         Matcher ajaxModHashMatcher = ajaxModHashPattern.matcher(pageSource);
+        Matcher ajaxPrefTimestampMatcher = ajaxPrefTimestampPattern.matcher(pageSource);
+        Matcher ajaxPrefHashMatcher = ajaxPrefHashPattern.matcher(pageSource);
 
         if (ajaxTimestampMatcher.find() && ajaxHashMatcher.find()) {
-            newAjaxInfos.list = "ajax_timestamp=" + ajaxTimestampMatcher.group(1) + "&ajax_hash=" + ajaxHashMatcher.group(1);
+            newAjaxInfos.list = "ajax_timestamp=" + ajaxTimestampMatcher.group(3) + "&ajax_hash=" + ajaxHashMatcher.group(3);
         }
 
         if (ajaxModTimestampMatcher.find() && ajaxModHashMatcher.find()) {
             newAjaxInfos.mod = "ajax_timestamp=" + ajaxModTimestampMatcher.group(1) + "&ajax_hash=" + ajaxModHashMatcher.group(1);
+        }
+
+        if (ajaxPrefTimestampMatcher.find() && ajaxPrefHashMatcher.find()) {
+            newAjaxInfos.pref = "ajax_timestamp=" + ajaxPrefTimestampMatcher.group(1) + "&ajax_hash=" + ajaxPrefHashMatcher.group(1);
         }
 
         return newAjaxInfos;
@@ -959,6 +988,7 @@ public final class JVCParser {
     public static class AjaxInfos {
         public String list = null;
         public String mod = null;
+        public String pref = null;
     }
 
     public static class Settings {

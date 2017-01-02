@@ -127,6 +127,13 @@
     <string name="isForum">Est un forum</string>
     <string name="forumSearch">Rechercher un forum</string>
     <string name="noResultFound">Pas de résultat</string>
+    <string name="addToFavs">Ajouter aux favoris</string>
+    <string name="removeOfFavs">Retirer des favoris</string>
+    <string name="errorActionAlreadyRunning">Erreur, action déjà en cours.</string>
+    <string name="favAdded">Favori ajouté</string>
+    <string name="favRemoved">Favori retiré</string>
+    <string name="saveLatestAjaxInfoPref">save.latestAjaxInfoPref</string>
+    <string name="saveForumIsInFav">save.forumIsInFav</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInBrowser</item>

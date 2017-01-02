@@ -55,6 +55,7 @@ public class NavigationViewUtil {
                     RefreshFavDialogFragment refreshFavsDialogFragment = new RefreshFavDialogFragment();
 
                     argForFrag.putString(RefreshFavDialogFragment.ARG_PSEUDO, pseudoOfUser);
+                    argForFrag.putString(RefreshFavDialogFragment.ARG_COOKIE_LIST, sharedPref.getString(parentActivity.getString(R.string.prefCookiesList), ""));
                     if (item.getItemId() == R.id.action_refresh_forum_fav_navigation) {
                         argForFrag.putInt(RefreshFavDialogFragment.ARG_FAV_TYPE, RefreshFavDialogFragment.FAV_FORUM);
                     } else {
@@ -330,6 +331,10 @@ public class NavigationViewUtil {
         } else {
             return false;
         }
+    }
+
+    public String getPseudoOfUser() {
+        return pseudoOfUser;
     }
 
     public interface NewForumOrTopicNeedToBeRead {

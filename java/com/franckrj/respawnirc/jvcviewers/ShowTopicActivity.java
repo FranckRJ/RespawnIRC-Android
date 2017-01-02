@@ -604,7 +604,7 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
             super.onPostExecute(pageContent);
 
             if (pageContent != null) {
-                String currentError = JVCParser.getErrorMessageInEditMode(pageContent);
+                String currentError = JVCParser.getErrorMessageInJSONMode(pageContent);
 
                 if (currentError == null) {
                     Toast.makeText(ShowTopicActivity.this, R.string.supressSuccess, Toast.LENGTH_SHORT).show();
