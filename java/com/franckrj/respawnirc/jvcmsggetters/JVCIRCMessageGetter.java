@@ -132,6 +132,8 @@ public class JVCIRCMessageGetter extends AbsJVCMessageGetter {
                     newPageInfos.listOfInputInAString = JVCParser.getListOfInputInAString(pageContent);
                     newPageInfos.ajaxInfosOfThisPage = JVCParser.getAllAjaxInfos(pageContent);
                     newPageInfos.newNames = JVCParser.getForumAndTopicNameInTopicPage(pageContent);
+                    newPageInfos.newIsInFavs = JVCParser.getIsInFavsFromPage(pageContent);
+                    newPageInfos.newTopicID = JVCParser.getTopicIDInThisTopicPage(pageContent);
                 }
 
                 return newPageInfos;
@@ -155,6 +157,8 @@ public class JVCIRCMessageGetter extends AbsJVCMessageGetter {
                 if (infoOfCurrentPage != null) {
                     latestListOfInputInAString = infoOfCurrentPage.listOfInputInAString;
                     latestAjaxInfos = infoOfCurrentPage.ajaxInfosOfThisPage;
+                    isInFavs = infoOfCurrentPage.newIsInFavs;
+                    topicID = infoOfCurrentPage.newTopicID;
 
                     if (infoOfCurrentPage.lastPageLink.isEmpty() || !firstTimeGetMessages) {
                         if (!infoOfCurrentPage.listOfMessages.isEmpty()) {

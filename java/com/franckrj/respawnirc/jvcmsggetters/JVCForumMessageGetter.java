@@ -60,6 +60,8 @@ public class JVCForumMessageGetter extends AbsJVCMessageGetter {
                     newPageInfos.listOfInputInAString = JVCParser.getListOfInputInAString(pageContent);
                     newPageInfos.ajaxInfosOfThisPage = JVCParser.getAllAjaxInfos(pageContent);
                     newPageInfos.newNames = JVCParser.getForumAndTopicNameInTopicPage(pageContent);
+                    newPageInfos.newIsInFavs = JVCParser.getIsInFavsFromPage(pageContent);
+                    newPageInfos.newTopicID = JVCParser.getTopicIDInThisTopicPage(pageContent);
                 }
 
                 return newPageInfos;
@@ -80,6 +82,8 @@ public class JVCForumMessageGetter extends AbsJVCMessageGetter {
             if (infoOfCurrentPage != null) {
                 latestListOfInputInAString = infoOfCurrentPage.listOfInputInAString;
                 latestAjaxInfos = infoOfCurrentPage.ajaxInfosOfThisPage;
+                isInFavs = infoOfCurrentPage.newIsInFavs;
+                topicID = infoOfCurrentPage.newTopicID;
 
                 if (!infoOfCurrentPage.listOfMessages.isEmpty()) {
                     lastIdOfMessage = infoOfCurrentPage.listOfMessages.get(infoOfCurrentPage.listOfMessages.size() - 1).id;

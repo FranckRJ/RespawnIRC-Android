@@ -10,8 +10,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class JVCParser {
-    private static final Pattern ajaxTimestampPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_timestamp_liste_(messages|topics)\" id=\"ajax_timestamp_liste_(messages|topics)\" value=\"([^\"]*)\" />");
-    private static final Pattern ajaxHashPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_hash_liste_(messages|topics)\" id=\"ajax_hash_liste_(messages|topics)\" value=\"([^\"]*)\" />");
+    private static final Pattern ajaxListTimestampPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_timestamp_liste_(messages|topics)\" id=\"ajax_timestamp_liste_(messages|topics)\" value=\"([^\"]*)\" />");
+    private static final Pattern ajaxListHashPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_hash_liste_(messages|topics)\" id=\"ajax_hash_liste_(messages|topics)\" value=\"([^\"]*)\" />");
     private static final Pattern ajaxModTimestampPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_timestamp_moderation_forum\" id=\"ajax_timestamp_moderation_forum\" value=\"([^\"]*)\" />");
     private static final Pattern ajaxModHashPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_hash_moderation_forum\" id=\"ajax_hash_moderation_forum\" value=\"([^\"]*)\" />");
     private static final Pattern ajaxPrefTimestampPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_timestamp_preference_user\" id=\"ajax_timestamp_preference_user\" value=\"([^\"]*)\" />");
@@ -54,6 +54,7 @@ public final class JVCParser {
     private static final Pattern favPattern = Pattern.compile("<li><a href=\"([^\"]*)\">([^<]*)</a></li>");
     private static final Pattern forumInSearchPagePattern = Pattern.compile("<a class=\"list-search-forum-name\" href=\"([^\"]*)\"[^>]*>(.*?)</a>");
     private static final Pattern isInFavPattern = Pattern.compile("<span class=\"picto-favoris([^\"]*)\"");
+    private static final Pattern topicIDInTopicPagePattern = Pattern.compile("<div (.*?)data-topic-id=\"([^\"]*)\">");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
 
     private JVCParser() {
@@ -127,6 +128,26 @@ public final class JVCParser {
 
         if (forumLinkNumberMatcher.find()) {
             return forumLinkNumberMatcher.group(2);
+        } else {
+            return "";
+        }
+    }
+
+    public static String getForumIDOfThisTopic(String topicLink) {
+        Matcher topicLinkNumberMatcher = pageTopicLinkNumberPattern.matcher(topicLink);
+
+        if (topicLinkNumberMatcher.find()) {
+            return topicLinkNumberMatcher.group(2);
+        } else {
+            return "";
+        }
+    }
+
+    public static String getTopicIDInThisTopicPage(String topicContent) {
+        Matcher topicIDInTopicPageMatcher = topicIDInTopicPagePattern.matcher(topicContent);
+
+        if (topicIDInTopicPageMatcher.find()) {
+            return topicIDInTopicPageMatcher.group(2);
         } else {
             return "";
         }
@@ -380,15 +401,15 @@ public final class JVCParser {
     public static AjaxInfos getAllAjaxInfos(String pageSource) {
         AjaxInfos newAjaxInfos = new AjaxInfos();
 
-        Matcher ajaxTimestampMatcher = ajaxTimestampPattern.matcher(pageSource);
-        Matcher ajaxHashMatcher = ajaxHashPattern.matcher(pageSource);
+        Matcher ajaxListTimestampMatcher = ajaxListTimestampPattern.matcher(pageSource);
+        Matcher ajaxListHashMatcher = ajaxListHashPattern.matcher(pageSource);
         Matcher ajaxModTimestampMatcher = ajaxModTimestampPattern.matcher(pageSource);
         Matcher ajaxModHashMatcher = ajaxModHashPattern.matcher(pageSource);
         Matcher ajaxPrefTimestampMatcher = ajaxPrefTimestampPattern.matcher(pageSource);
         Matcher ajaxPrefHashMatcher = ajaxPrefHashPattern.matcher(pageSource);
 
-        if (ajaxTimestampMatcher.find() && ajaxHashMatcher.find()) {
-            newAjaxInfos.list = "ajax_timestamp=" + ajaxTimestampMatcher.group(3) + "&ajax_hash=" + ajaxHashMatcher.group(3);
+        if (ajaxListTimestampMatcher.find() && ajaxListHashMatcher.find()) {
+            newAjaxInfos.list = "ajax_timestamp=" + ajaxListTimestampMatcher.group(3) + "&ajax_hash=" + ajaxListHashMatcher.group(3);
         }
 
         if (ajaxModTimestampMatcher.find() && ajaxModHashMatcher.find()) {

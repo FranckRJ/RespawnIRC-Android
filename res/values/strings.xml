@@ -134,6 +134,8 @@
     <string name="favRemoved">Favori retiré</string>
     <string name="saveLatestAjaxInfoPref">save.latestAjaxInfoPref</string>
     <string name="saveForumIsInFav">save.forumIsInFav</string>
+    <string name="saveTopicIsInFav">save.topicIsInFav</string>
+    <string name="saveTopicID">save.topicID</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInBrowser</item>

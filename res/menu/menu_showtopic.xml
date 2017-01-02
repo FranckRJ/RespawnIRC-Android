@@ -2,6 +2,9 @@
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/action_change_topic_fav_value_showtopic"
+        android:title="@string/addToFavs"/>
+    <item
         android:id="@+id/action_past_last_message_sended_showtopic"
         android:title="@string/pastLastMessageSended"/>
 

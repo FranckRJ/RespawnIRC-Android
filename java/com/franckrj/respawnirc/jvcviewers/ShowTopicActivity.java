@@ -55,6 +55,7 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
     private View layoutForAllNavigationButtons = null;
     private View shadowForAllNavigationButtons = null;
     private String lastMessageSended = "";
+    private AddOrRemoveTopicToFavs currentTaskForTopicFavs = null;
 
     private final JVCMessageSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageSender.NewMessageWantEditListener() {
         @Override
@@ -169,6 +170,10 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
         if (currentTaskDeleteMessage != null) {
             currentTaskDeleteMessage.cancel(true);
             currentTaskDeleteMessage = null;
+        }
+        if (currentTaskForTopicFavs != null) {
+            currentTaskForTopicFavs.cancel(true);
+            currentTaskForTopicFavs = null;
         }
     }
 
@@ -351,6 +356,19 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.action_past_last_message_sended_showtopic).setEnabled(!lastMessageSended.isEmpty());
+
+        if (!pseudoOfUser.isEmpty()) {
+            if (getCurrentFragment().getIsInFavs() != null) {
+                menu.findItem(R.id.action_change_topic_fav_value_showtopic).setEnabled(true);
+                if (getCurrentFragment().getIsInFavs()) {
+                    menu.findItem(R.id.action_change_topic_fav_value_showtopic).setTitle(R.string.removeOfFavs);
+                } else {
+                    menu.findItem(R.id.action_change_topic_fav_value_showtopic).setTitle(R.string.addToFavs);
+                }
+                return true;
+            }
+        }
+        menu.findItem(R.id.action_change_topic_fav_value_showtopic).setEnabled(false);
         return true;
     }
 
@@ -360,8 +378,18 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.action_change_topic_fav_value_showtopic:
+                if (currentTaskForTopicFavs == null) {
+                    currentTaskForTopicFavs = new AddOrRemoveTopicToFavs(!getCurrentFragment().getIsInFavs());
+                    currentTaskForTopicFavs.execute(JVCParser.getForumIDOfThisTopic(currentLink), getCurrentFragment().getTopicID(), getCurrentFragment().getLatestAjaxInfos().pref, cookieListInAString);
+                } else {
+                    Toast.makeText(ShowTopicActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
+                }
+
+                return true;
             case R.id.action_past_last_message_sended_showtopic:
                 messageSendEdit.setText(lastMessageSended);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -616,6 +644,65 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
             }
 
             currentTaskDeleteMessage = null;
+        }
+    }
+
+    private class AddOrRemoveTopicToFavs extends AsyncTask<String, Void, String> {
+        final boolean addToFavs;
+
+        AddOrRemoveTopicToFavs(boolean itsAnAdd) {
+            addToFavs = itsAnAdd;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            if (params.length > 3) {
+                String actionToDo;
+                String pageContent;
+                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
+                currentWebInfos.followRedirects = true;
+
+                if (addToFavs) {
+                    actionToDo = "add";
+                } else {
+                    actionToDo = "delete";
+                }
+
+                pageContent = WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_forum_prefere.php", "GET", "id_forum=" + params[0] + "&id_topic=" + params[1] + "&action=" + actionToDo + "&type=topic&" + params[2], params[3], currentWebInfos);
+
+                if (pageContent != null) {
+                    if (!pageContent.isEmpty()) {
+                        return JVCParser.getErrorMessageInJSONMode(pageContent);
+                    }
+                }
+                return null;
+            } else {
+                return "";
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String errorResult) {
+            super.onPostExecute(errorResult);
+
+            currentTaskForTopicFavs = null;
+
+            if (errorResult != null) {
+                if (!errorResult.isEmpty()) {
+                    Toast.makeText(ShowTopicActivity.this, errorResult, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ShowTopicActivity.this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
+            if (addToFavs) {
+                Toast.makeText(ShowTopicActivity.this, R.string.favAdded, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(ShowTopicActivity.this, R.string.favRemoved, Toast.LENGTH_SHORT).show();
+            }
+
+            getCurrentFragment().setIsInFavs(addToFavs);
         }
     }
 }

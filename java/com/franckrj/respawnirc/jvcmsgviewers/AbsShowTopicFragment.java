@@ -118,6 +118,18 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         return absGetterForMessages.getUrlForTopic();
     }
 
+    public Boolean getIsInFavs() {
+        return absGetterForMessages.getIsInFavs();
+    }
+
+    public String getTopicID() {
+        return absGetterForMessages.getTopicID();
+    }
+
+    public void setIsInFavs(Boolean newVal) {
+        absGetterForMessages.setIsInFavs(newVal);
+    }
+
     public void setPseudoAndCookies(String newPseudo, String newCookieList) {
         pseudoOfUser = newPseudo;
         cookieListInAString = newCookieList;

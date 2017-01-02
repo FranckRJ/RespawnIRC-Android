@@ -24,6 +24,8 @@ public abstract class AbsJVCMessageGetter {
     protected NewGetterStateListener listenerForNewGetterState = null;
     protected NewForumAndTopicNameAvailable listenerForNewForumAndTopicName = null;
     protected JVCParser.ForumAndTopicName currentNames = new JVCParser.ForumAndTopicName();
+    protected Boolean isInFavs = null;
+    protected String topicID = "";
 
     public AbsJVCMessageGetter(Activity newParentActivity) {
         parentActivity = newParentActivity;
@@ -43,6 +45,18 @@ public abstract class AbsJVCMessageGetter {
 
     public long getLastIdOfMessage() {
         return lastIdOfMessage;
+    }
+
+    public Boolean getIsInFavs() {
+        return isInFavs;
+    }
+
+    public String getTopicID() {
+        return topicID;
+    }
+
+    public void setIsInFavs(Boolean newVal) {
+        isInFavs = newVal;
     }
 
     public void setCookieListInAString(String newCookieListInAString) {
@@ -77,7 +91,14 @@ public abstract class AbsJVCMessageGetter {
         latestListOfInputInAString = savedInstanceState.getString(parentActivity.getString(R.string.saveLatestListOfInputInAString), null);
         latestAjaxInfos.list = savedInstanceState.getString(parentActivity.getString(R.string.saveLatestAjaxInfoList), null);
         latestAjaxInfos.mod = savedInstanceState.getString(parentActivity.getString(R.string.saveLatestAjaxInfoMod), null);
+        latestAjaxInfos.pref = savedInstanceState.getString(parentActivity.getString(R.string.saveLatestAjaxInfoPref), null);
         lastIdOfMessage = savedInstanceState.getLong(parentActivity.getString(R.string.saveLastIdOfMessage), 0);
+        topicID = savedInstanceState.getString(parentActivity.getString(R.string.saveTopicID), "");
+        if (savedInstanceState.containsKey(parentActivity.getString(R.string.saveTopicIsInFav))) {
+            isInFavs = savedInstanceState.getBoolean(parentActivity.getString(R.string.saveTopicIsInFav), false);
+        } else {
+            isInFavs = null;
+        }
     }
 
     public void saveToBundle(Bundle savedInstanceState) {
@@ -85,19 +106,26 @@ public abstract class AbsJVCMessageGetter {
         savedInstanceState.putString(parentActivity.getString(R.string.saveLatestListOfInputInAString), latestListOfInputInAString);
         savedInstanceState.putString(parentActivity.getString(R.string.saveLatestAjaxInfoList), latestAjaxInfos.list);
         savedInstanceState.putString(parentActivity.getString(R.string.saveLatestAjaxInfoMod), latestAjaxInfos.mod);
+        savedInstanceState.putString(parentActivity.getString(R.string.saveLatestAjaxInfoPref), latestAjaxInfos.pref);
         savedInstanceState.putLong(parentActivity.getString(R.string.saveLastIdOfMessage), lastIdOfMessage);
+        savedInstanceState.putString(parentActivity.getString(R.string.saveTopicID), topicID);
+        if (isInFavs != null) {
+            savedInstanceState.putBoolean(parentActivity.getString(R.string.saveTopicIsInFav), isInFavs);
+        }
     }
 
     protected abstract class AbsGetJVCLastMessages extends AsyncTask<String, Void, TopicPageInfos> {
     }
 
-    public static class TopicPageInfos {
+    protected static class TopicPageInfos {
         ArrayList<JVCParser.MessageInfos> listOfMessages;
         String lastPageLink;
         String nextPageLink;
         String listOfInputInAString;
         JVCParser.AjaxInfos ajaxInfosOfThisPage;
         JVCParser.ForumAndTopicName newNames;
+        Boolean newIsInFavs;
+        String newTopicID;
     }
 
     public interface NewForumAndTopicNameAvailable {
