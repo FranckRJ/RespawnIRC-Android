@@ -12,12 +12,15 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.dialogs.ChooseTopicOrForumLinkDialogFragment;
@@ -44,22 +47,37 @@ public class SelectForumActivity extends AppCompatActivity implements ChooseTopi
     private View.OnClickListener searchButtonClickedListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            View focusedView;
-
-            if (textForSearch.getText().toString().isEmpty()) {
-                adapterForForums.setNewListOfForums(null);
-            } else if (currentAsyncTaskForGetSearchedForums == null) {
-                currentAsyncTaskForGetSearchedForums = new GetSearchedForums();
-                currentAsyncTaskForGetSearchedForums.execute(textForSearch.getText().toString());
-            }
-
-            focusedView = getCurrentFocus();
-            if (focusedView != null) {
-                inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-            }
+            performSearch();
         }
     };
+
+    private TextView.OnEditorActionListener actionInSearchEditTextListener = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                performSearch();
+                return true;
+            }
+            return false;
+        }
+    };
+
+    private void performSearch() {
+        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        View focusedView;
+
+        if (textForSearch.getText().toString().isEmpty()) {
+            adapterForForums.setNewListOfForums(null);
+        } else if (currentAsyncTaskForGetSearchedForums == null) {
+            currentAsyncTaskForGetSearchedForums = new GetSearchedForums();
+            currentAsyncTaskForGetSearchedForums.execute(textForSearch.getText().toString());
+        }
+
+        focusedView = getCurrentFocus();
+        if (focusedView != null) {
+            inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
 
     private void readNewTopicOrForum(String linkToTopicOrForum) {
         if (linkToTopicOrForum != null) {
@@ -101,6 +119,7 @@ public class SelectForumActivity extends AppCompatActivity implements ChooseTopi
         textForSearch = (EditText) findViewById(R.id.searchforum_text_selectforum);
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swiperefresh_selectforum);
         buttonForSearch.setOnClickListener(searchButtonClickedListener);
+        textForSearch.setOnEditorActionListener(actionInSearchEditTextListener);
         swipeRefresh.setEnabled(false);
         swipeRefresh.setColorSchemeResources(R.color.colorAccent);
 
@@ -215,7 +234,7 @@ public class SelectForumActivity extends AppCompatActivity implements ChooseTopi
 
                 pageResult = WebManager.sendRequest("http://www.jeuxvideo.com/forums/recherche.php", "GET", "q=" + searchToDo, "", currentWebInfos);
 
-                if (!currentWebInfos.currentUrl.isEmpty()) {
+                if (!currentWebInfos.currentUrl.isEmpty() && !currentWebInfos.currentUrl.startsWith("http://www.jeuxvideo.com/forums/recherche.php")) {
                     return "respawnirc:redirect:" + currentWebInfos.currentUrl;
                 } else {
                     return pageResult;
