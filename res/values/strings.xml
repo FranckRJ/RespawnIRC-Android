@@ -136,6 +136,10 @@
     <string name="saveForumIsInFav">save.forumIsInFav</string>
     <string name="saveTopicIsInFav">save.topicIsInFav</string>
     <string name="saveTopicID">save.topicID</string>
+    <string name="saveLockReason">save.lockReason</string>
+    <string name="topicLockedForReason">Sujet fermé : %1$s</string>
+    <string name="saveReasonOfLock">save.reasonOfLock</string>
+    <string name="errorTopicIsLocked">Erreur, le topic est fermé.</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInBrowser</item>

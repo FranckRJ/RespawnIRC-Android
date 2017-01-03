@@ -7,7 +7,6 @@ import android.os.Bundle;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.ParcelableLongSparseStringArray;
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.utils.WebManager;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -118,25 +117,7 @@ public class JVCIRCMessageGetter extends AbsJVCMessageGetter {
         @Override
         protected TopicPageInfos doInBackground(String... params) {
             if (params.length > 1) {
-                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
-                TopicPageInfos newPageInfos = null;
-                String pageContent;
-                currentWebInfos.followRedirects = false;
-                pageContent = WebManager.sendRequest(params[0], "GET", "", params[1], currentWebInfos);
-
-                if (pageContent != null) {
-                    newPageInfos = new TopicPageInfos();
-                    newPageInfos.lastPageLink = JVCParser.getLastPageOfTopic(pageContent);
-                    newPageInfos.nextPageLink = JVCParser.getNextPageOfTopic(pageContent);
-                    newPageInfos.listOfMessages = JVCParser.getMessagesOfThisPage(pageContent);
-                    newPageInfos.listOfInputInAString = JVCParser.getListOfInputInAString(pageContent);
-                    newPageInfos.ajaxInfosOfThisPage = JVCParser.getAllAjaxInfos(pageContent);
-                    newPageInfos.newNames = JVCParser.getForumAndTopicNameInTopicPage(pageContent);
-                    newPageInfos.newIsInFavs = JVCParser.getIsInFavsFromPage(pageContent);
-                    newPageInfos.newTopicID = JVCParser.getTopicIDInThisTopicPage(pageContent);
-                }
-
-                return newPageInfos;
+                return downloadAndParseTopicPage(params[0], params[1]);
             } else {
                 return null;
             }
@@ -155,10 +136,7 @@ public class JVCIRCMessageGetter extends AbsJVCMessageGetter {
 
             if (messagesNeedToBeGet) {
                 if (infoOfCurrentPage != null) {
-                    latestListOfInputInAString = infoOfCurrentPage.listOfInputInAString;
-                    latestAjaxInfos = infoOfCurrentPage.ajaxInfosOfThisPage;
-                    isInFavs = infoOfCurrentPage.newIsInFavs;
-                    topicID = infoOfCurrentPage.newTopicID;
+                    fillBaseClassInfoFromPageInfo(infoOfCurrentPage);
 
                     if (infoOfCurrentPage.lastPageLink.isEmpty() || !firstTimeGetMessages) {
                         if (!infoOfCurrentPage.listOfMessages.isEmpty()) {
@@ -190,13 +168,6 @@ public class JVCIRCMessageGetter extends AbsJVCMessageGetter {
 
                         if (listenerForNewMessages != null) {
                             listenerForNewMessages.getNewMessages(listOfNewMessages);
-                        }
-                    }
-
-                    if (!infoOfCurrentPage.newNames.equals(currentNames)) {
-                        currentNames = infoOfCurrentPage.newNames;
-                        if (listenerForNewForumAndTopicName != null) {
-                            listenerForNewForumAndTopicName.getNewForumAndTopicName(currentNames);
                         }
                     }
 

@@ -3,7 +3,6 @@ package com.franckrj.respawnirc.jvcmsggetters;
 import android.app.Activity;
 
 import com.franckrj.respawnirc.utils.JVCParser;
-import com.franckrj.respawnirc.utils.WebManager;
 
 import java.util.ArrayList;
 
@@ -46,25 +45,7 @@ public class JVCForumMessageGetter extends AbsJVCMessageGetter {
         @Override
         protected TopicPageInfos doInBackground(String... params) {
             if (params.length > 1) {
-                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
-                TopicPageInfos newPageInfos = null;
-                String pageContent;
-                currentWebInfos.followRedirects = false;
-                pageContent = WebManager.sendRequest(params[0], "GET", "", params[1], currentWebInfos);
-
-                if (pageContent != null) {
-                    newPageInfos = new TopicPageInfos();
-                    newPageInfos.lastPageLink = JVCParser.getLastPageOfTopic(pageContent);
-                    newPageInfos.nextPageLink = JVCParser.getNextPageOfTopic(pageContent);
-                    newPageInfos.listOfMessages = JVCParser.getMessagesOfThisPage(pageContent);
-                    newPageInfos.listOfInputInAString = JVCParser.getListOfInputInAString(pageContent);
-                    newPageInfos.ajaxInfosOfThisPage = JVCParser.getAllAjaxInfos(pageContent);
-                    newPageInfos.newNames = JVCParser.getForumAndTopicNameInTopicPage(pageContent);
-                    newPageInfos.newIsInFavs = JVCParser.getIsInFavsFromPage(pageContent);
-                    newPageInfos.newTopicID = JVCParser.getTopicIDInThisTopicPage(pageContent);
-                }
-
-                return newPageInfos;
+                return downloadAndParseTopicPage(params[0], params[1]);
             } else {
                 return null;
             }
@@ -80,20 +61,10 @@ public class JVCForumMessageGetter extends AbsJVCMessageGetter {
             }
 
             if (infoOfCurrentPage != null) {
-                latestListOfInputInAString = infoOfCurrentPage.listOfInputInAString;
-                latestAjaxInfos = infoOfCurrentPage.ajaxInfosOfThisPage;
-                isInFavs = infoOfCurrentPage.newIsInFavs;
-                topicID = infoOfCurrentPage.newTopicID;
+                fillBaseClassInfoFromPageInfo(infoOfCurrentPage);
 
                 if (!infoOfCurrentPage.listOfMessages.isEmpty()) {
                     lastIdOfMessage = infoOfCurrentPage.listOfMessages.get(infoOfCurrentPage.listOfMessages.size() - 1).id;
-                }
-
-                if (!infoOfCurrentPage.newNames.equals(currentNames)) {
-                    currentNames = infoOfCurrentPage.newNames;
-                    if (listenerForNewForumAndTopicName != null) {
-                        listenerForNewForumAndTopicName.getNewForumAndTopicName(currentNames);
-                    }
                 }
 
                 if (listenerForNewMessages != null) {

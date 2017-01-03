@@ -161,6 +161,9 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         if (getActivity() instanceof AbsJVCMessageGetter.NewForumAndTopicNameAvailable) {
             absGetterForMessages.setListenerForNewForumAndTopicName((AbsJVCMessageGetter.NewForumAndTopicNameAvailable) getActivity());
         }
+        if (getActivity() instanceof AbsJVCMessageGetter.NewReasonForTopicLock) {
+            absGetterForMessages.setListenerForNewReasonForTopicLock((AbsJVCMessageGetter.NewReasonForTopicLock) getActivity());
+        }
         if (getActivity() instanceof PopupMenu.OnMenuItemClickListener) {
             adapterForMessages.setActionWhenItemMenuClicked((PopupMenu.OnMenuItemClickListener) getActivity());
         }

@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.utils.Utils;
+import com.franckrj.respawnirc.utils.WebManager;
 
 import java.util.ArrayList;
 
@@ -26,6 +28,8 @@ public abstract class AbsJVCMessageGetter {
     protected JVCParser.ForumAndTopicName currentNames = new JVCParser.ForumAndTopicName();
     protected Boolean isInFavs = null;
     protected String topicID = "";
+    protected NewReasonForTopicLock listenerForNewReasonForTopicLock = null;
+    protected String lockReason = "";
 
     public AbsJVCMessageGetter(Activity newParentActivity) {
         parentActivity = newParentActivity;
@@ -75,6 +79,10 @@ public abstract class AbsJVCMessageGetter {
         listenerForNewForumAndTopicName = thisListener;
     }
 
+    public void setListenerForNewReasonForTopicLock(NewReasonForTopicLock thisListener) {
+        listenerForNewReasonForTopicLock = thisListener;
+    }
+
     public void stopAllCurrentTask() {
         if (currentAsyncTaskForGetMessage != null) {
             currentAsyncTaskForGetMessage.cancel(true);
@@ -94,6 +102,7 @@ public abstract class AbsJVCMessageGetter {
         latestAjaxInfos.pref = savedInstanceState.getString(parentActivity.getString(R.string.saveLatestAjaxInfoPref), null);
         lastIdOfMessage = savedInstanceState.getLong(parentActivity.getString(R.string.saveLastIdOfMessage), 0);
         topicID = savedInstanceState.getString(parentActivity.getString(R.string.saveTopicID), "");
+        lockReason = savedInstanceState.getString(parentActivity.getString(R.string.saveLockReason), "");
         if (savedInstanceState.containsKey(parentActivity.getString(R.string.saveTopicIsInFav))) {
             isInFavs = savedInstanceState.getBoolean(parentActivity.getString(R.string.saveTopicIsInFav), false);
         } else {
@@ -109,8 +118,53 @@ public abstract class AbsJVCMessageGetter {
         savedInstanceState.putString(parentActivity.getString(R.string.saveLatestAjaxInfoPref), latestAjaxInfos.pref);
         savedInstanceState.putLong(parentActivity.getString(R.string.saveLastIdOfMessage), lastIdOfMessage);
         savedInstanceState.putString(parentActivity.getString(R.string.saveTopicID), topicID);
+        savedInstanceState.putString(parentActivity.getString(R.string.saveLockReason), lockReason);
         if (isInFavs != null) {
             savedInstanceState.putBoolean(parentActivity.getString(R.string.saveTopicIsInFav), isInFavs);
+        }
+    }
+
+    protected TopicPageInfos downloadAndParseTopicPage(String topicLink, String cookies) {
+        WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
+        TopicPageInfos newPageInfos = null;
+        String pageContent;
+        currentWebInfos.followRedirects = false;
+        pageContent = WebManager.sendRequest(topicLink, "GET", "", cookies, currentWebInfos);
+
+        if (pageContent != null) {
+            newPageInfos = new TopicPageInfos();
+            newPageInfos.lastPageLink = JVCParser.getLastPageOfTopic(pageContent);
+            newPageInfos.nextPageLink = JVCParser.getNextPageOfTopic(pageContent);
+            newPageInfos.listOfMessages = JVCParser.getMessagesOfThisPage(pageContent);
+            newPageInfos.listOfInputInAString = JVCParser.getListOfInputInAString(pageContent);
+            newPageInfos.ajaxInfosOfThisPage = JVCParser.getAllAjaxInfos(pageContent);
+            newPageInfos.newNames = JVCParser.getForumAndTopicNameInTopicPage(pageContent);
+            newPageInfos.newIsInFavs = JVCParser.getIsInFavsFromPage(pageContent);
+            newPageInfos.newTopicID = JVCParser.getTopicIDInThisTopicPage(pageContent);
+            newPageInfos.newLockReason = JVCParser.getLockReasonFromPage(pageContent);
+        }
+
+        return newPageInfos;
+    }
+
+    protected void fillBaseClassInfoFromPageInfo(TopicPageInfos infoOfCurrentPage) {
+        latestListOfInputInAString = infoOfCurrentPage.listOfInputInAString;
+        latestAjaxInfos = infoOfCurrentPage.ajaxInfosOfThisPage;
+        isInFavs = infoOfCurrentPage.newIsInFavs;
+        topicID = infoOfCurrentPage.newTopicID;
+
+        if (!infoOfCurrentPage.newNames.equals(currentNames)) {
+            currentNames = infoOfCurrentPage.newNames;
+            if (listenerForNewForumAndTopicName != null) {
+                listenerForNewForumAndTopicName.getNewForumAndTopicName(currentNames);
+            }
+        }
+
+        if (!Utils.compareStrings(infoOfCurrentPage.newLockReason, lockReason)) {
+            lockReason = infoOfCurrentPage.newLockReason;
+            if (listenerForNewReasonForTopicLock != null) {
+                listenerForNewReasonForTopicLock.getNewLockReason(lockReason);
+            }
         }
     }
 
@@ -126,6 +180,7 @@ public abstract class AbsJVCMessageGetter {
         JVCParser.ForumAndTopicName newNames;
         Boolean newIsInFavs;
         String newTopicID;
+        String newLockReason;
     }
 
     public interface NewForumAndTopicNameAvailable {
@@ -138,6 +193,10 @@ public abstract class AbsJVCMessageGetter {
 
     public interface NewGetterStateListener {
         void newStateSetted(int newState);
+    }
+
+    public interface NewReasonForTopicLock {
+        void getNewLockReason(String newReason);
     }
 
     public abstract boolean reloadTopic();

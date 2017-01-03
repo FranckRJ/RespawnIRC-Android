@@ -55,6 +55,7 @@ public final class JVCParser {
     private static final Pattern forumInSearchPagePattern = Pattern.compile("<a class=\"list-search-forum-name\" href=\"([^\"]*)\"[^>]*>(.*?)</a>");
     private static final Pattern isInFavPattern = Pattern.compile("<span class=\"picto-favoris([^\"]*)\"");
     private static final Pattern topicIDInTopicPagePattern = Pattern.compile("<div (.*?)data-topic-id=\"([^\"]*)\">");
+    private static final Pattern lockReasonPattern = Pattern.compile("<div class=\"message-lock-topic\">[^<]*<span>([^<]*)</span>");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
 
     private JVCParser() {
@@ -276,7 +277,7 @@ public final class JVCParser {
             if (forumName.startsWith("Forum")) {
                 forumName =  forumName.substring(("Forum").length());
             }
-            forumName = forumName.trim().replace("&amp;", "&").replace("&quot;", "\"").replace("&#039;", "\'").replace("&lt;", "<").replace("&gt;", ">");
+            forumName = specialCharToNormalChar(forumName.trim());
         }
 
         return forumName;
@@ -310,8 +311,8 @@ public final class JVCParser {
                 currentNames.topic =  currentNames.topic.substring(("Topic").length());
             }
 
-            currentNames.forum = currentNames.forum.trim().replace("&amp;", "&").replace("&quot;", "\"").replace("&#039;", "\'").replace("&lt;", "<").replace("&gt;", ">");
-            currentNames.topic = currentNames.topic.trim().replace("&amp;", "&").replace("&quot;", "\"").replace("&#039;", "\'").replace("&lt;", "<").replace("&gt;", ">");
+            currentNames.forum = specialCharToNormalChar(currentNames.forum.trim());
+            currentNames.topic = specialCharToNormalChar(currentNames.topic.trim());
         }
 
         return currentNames;
@@ -322,6 +323,16 @@ public final class JVCParser {
 
         if (isInFavMatcher.find()) {
             return !isInFavMatcher.group(1).isEmpty();
+        } else {
+            return null;
+        }
+    }
+
+    public static String getLockReasonFromPage(String pageSource) {
+        Matcher lockReasonMatcher = lockReasonPattern.matcher(pageSource);
+
+        if (lockReasonMatcher.find()) {
+            return specialCharToNormalChar(lockReasonMatcher.group(1).replace("\n", " "));
         } else {
             return null;
         }
@@ -379,11 +390,7 @@ public final class JVCParser {
             unicodeInTextMatcher = unicodeInTextPattern.matcher(ajaxMessage);
         }
 
-        ajaxMessage = ajaxMessage.replace("&amp;", "&")
-                .replace("&quot;", "\"")
-                .replace("&#039;", "\'")
-                .replace("&lt;", "<")
-                .replace("&gt;", ">");
+        ajaxMessage = specialCharToNormalChar(ajaxMessage);
 
         return ajaxMessage;
     }
@@ -800,6 +807,10 @@ public final class JVCParser {
         }
 
         return listOfParsedTopic;
+    }
+
+    public static String specialCharToNormalChar(String baseMessage) {
+        return baseMessage.replace("&amp;", "&").replace("&quot;", "\"").replace("&#039;", "\'").replace("&lt;", "<").replace("&gt;", ">");
     }
 
     public static class MessageInfos implements Parcelable, Comparable<MessageInfos> {

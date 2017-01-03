@@ -33,11 +33,13 @@ import com.franckrj.respawnirc.jvcmsgviewers.ShowTopicForumFragment;
 import com.franckrj.respawnirc.jvcmsgviewers.ShowTopicIRCFragment;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Undeprecator;
+import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
 public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCMessageGetter.NewForumAndTopicNameAvailable,
                                                                     PopupMenu.OnMenuItemClickListener, JVCForumMessageGetter.NewNumbersOfPagesListener,
-                                                                    ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCMessagesAdapter.URLClicked {
+                                                                    ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCMessagesAdapter.URLClicked,
+                                                                    AbsJVCMessageGetter.NewReasonForTopicLock {
     public static final String EXTRA_TOPIC_LINK = "com.franckrj.respawnirc.EXTRA_TOPIC_LINK";
     public static final String EXTRA_TOPIC_NAME = "com.franckrj.respawnirc.EXTRA_TOPIC_NAME";
     public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.EXTRA_FORUM_NAME";
@@ -56,17 +58,20 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
     private View shadowForAllNavigationButtons = null;
     private String lastMessageSended = "";
     private AddOrRemoveTopicToFavs currentTaskForTopicFavs = null;
+    private String reasonOfLock = null;
 
     private final JVCMessageSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageSender.NewMessageWantEditListener() {
         @Override
         public void initializeEditMode(String newMessageToEdit) {
-            messageSendButton.setEnabled(true);
+            if (reasonOfLock == null) {
+                messageSendButton.setEnabled(true);
 
-            if (newMessageToEdit.isEmpty()) {
-                messageSendButton.setImageResource(R.drawable.ic_action_content_send);
-                Toast.makeText(ShowTopicActivity.this, R.string.errorCantGetEditInfos, Toast.LENGTH_SHORT).show();
-            } else {
-                messageSendEdit.setText(newMessageToEdit);
+                if (newMessageToEdit.isEmpty()) {
+                    messageSendButton.setImageResource(R.drawable.ic_action_content_send);
+                    Toast.makeText(ShowTopicActivity.this, R.string.errorCantGetEditInfos, Toast.LENGTH_SHORT).show();
+                } else {
+                    messageSendEdit.setText(newMessageToEdit);
+                }
             }
         }
     };
@@ -74,22 +79,24 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
     private final JVCMessageSender.NewMessagePostedListener listenerForNewMessagePosted = new JVCMessageSender.NewMessagePostedListener() {
         @Override
         public void lastMessageIsSended(String withThisError) {
-            messageSendButton.setEnabled(true);
-            messageSendButton.setImageResource(R.drawable.ic_action_content_send);
+            if (reasonOfLock == null) {
+                messageSendButton.setEnabled(true);
+                messageSendButton.setImageResource(R.drawable.ic_action_content_send);
 
-            if (withThisError != null) {
-                Toast.makeText(ShowTopicActivity.this, withThisError, Toast.LENGTH_LONG).show();
-            } else {
-                messageSendEdit.setText("");
+                if (withThisError != null) {
+                    Toast.makeText(ShowTopicActivity.this, withThisError, Toast.LENGTH_LONG).show();
+                } else {
+                    messageSendEdit.setText("");
+                }
+                getCurrentFragment().reloadTopic();
             }
-            getCurrentFragment().reloadTopic();
         }
     };
 
     private final Button.OnClickListener sendMessageToTopicListener = new View.OnClickListener() {
         @Override
         public void onClick(View buttonView) {
-            if (messageSendButton.isEnabled()) {
+            if (messageSendButton.isEnabled() && reasonOfLock == null) {
                 InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 String tmpLastMessageSended = "";
                 View focusedView;
@@ -298,6 +305,7 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
             currentTitles.forum = savedInstanceState.getString(getString(R.string.saveCurrentForumTitleForTopic), getString(R.string.app_name));
             currentTitles.topic = savedInstanceState.getString(getString(R.string.saveCurrentTopicTitleForTopic), "");
             lastPage = savedInstanceState.getInt(getString(R.string.saveLastPage), pagerView.getCurrentItem() + 1);
+            getNewLockReason(savedInstanceState.getString(getString(R.string.saveReasonOfLock), null));
             adapterForPagerView.notifyDataSetChanged();
 
             senderForMessages.loadFromBundle(savedInstanceState);
@@ -342,6 +350,7 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
         outState.putString(getString(R.string.saveCurrentForumTitleForTopic), currentTitles.forum);
         outState.putString(getString(R.string.saveCurrentTopicTitleForTopic), currentTitles.topic);
         outState.putInt(getString(R.string.saveLastPage), lastPage);
+        outState.putString(getString(R.string.saveReasonOfLock), reasonOfLock);
         senderForMessages.saveToBundle(outState);
     }
 
@@ -388,7 +397,9 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
 
                 return true;
             case R.id.action_past_last_message_sended_showtopic:
-                messageSendEdit.setText(lastMessageSended);
+                if (reasonOfLock == null) {
+                    messageSendEdit.setText(lastMessageSended);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -446,7 +457,7 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_quote_message:
-                if (getCurrentFragment().getLatestAjaxInfos().list != null && latestMessageQuotedInfo == null && currentTaskQuoteMessage == null && !pseudoOfUser.isEmpty()) {
+                if (getCurrentFragment().getLatestAjaxInfos().list != null && latestMessageQuotedInfo == null && currentTaskQuoteMessage == null && !pseudoOfUser.isEmpty() && reasonOfLock == null) {
                     String idOfMessage = Long.toString(getCurrentFragment().getCurrentItemSelected().id);
                     latestMessageQuotedInfo = JVCParser.buildMessageQuotedInfoFromThis(getCurrentFragment().getCurrentItemSelected());
 
@@ -457,6 +468,8 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
                         Toast.makeText(this, R.string.errorConnectNeeded, Toast.LENGTH_SHORT).show();
                     } else if (latestMessageQuotedInfo != null || currentTaskQuoteMessage != null) {
                         Toast.makeText(this, R.string.errorQuoteAlreadyRunning, Toast.LENGTH_SHORT).show();
+                    } else if (reasonOfLock != null) {
+                        Toast.makeText(this, R.string.errorTopicIsLocked, Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
                     }
@@ -464,27 +477,31 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
 
                 return true;
             case R.id.menu_edit_message:
-                if (senderForMessages.getIsInEdit()) {
-                    senderForMessages.cancelEdit();
-                    messageSendButton.setEnabled(true);
-                    messageSendButton.setImageResource(R.drawable.ic_action_content_send);
-                    messageSendEdit.setText("");
-                } else {
-                    boolean infoForEditAreGetted = false;
-                    if (messageSendButton.isEnabled() && getCurrentFragment().getLatestAjaxInfos().list != null) {
-                        String idOfMessage = Long.toString(getCurrentFragment().getCurrentItemSelected().id);
-                        messageSendButton.setEnabled(false);
-                        messageSendButton.setImageResource(R.drawable.ic_action_content_edit);
-                        infoForEditAreGetted = senderForMessages.getInfosForEditMessage(idOfMessage, getCurrentFragment().getLatestAjaxInfos().list, cookieListInAString);
-                    }
+                if (reasonOfLock == null) {
+                    if (senderForMessages.getIsInEdit()) {
+                        senderForMessages.cancelEdit();
+                        messageSendButton.setEnabled(true);
+                        messageSendButton.setImageResource(R.drawable.ic_action_content_send);
+                        messageSendEdit.setText("");
+                    } else {
+                        boolean infoForEditAreGetted = false;
+                        if (messageSendButton.isEnabled() && getCurrentFragment().getLatestAjaxInfos().list != null) {
+                            String idOfMessage = Long.toString(getCurrentFragment().getCurrentItemSelected().id);
+                            messageSendButton.setEnabled(false);
+                            messageSendButton.setImageResource(R.drawable.ic_action_content_edit);
+                            infoForEditAreGetted = senderForMessages.getInfosForEditMessage(idOfMessage, getCurrentFragment().getLatestAjaxInfos().list, cookieListInAString);
+                        }
 
-                    if (!infoForEditAreGetted) {
-                        if (!messageSendButton.isEnabled()) {
-                            Toast.makeText(this, R.string.errorMessageAlreadySending, Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
+                        if (!infoForEditAreGetted) {
+                            if (!messageSendButton.isEnabled()) {
+                                Toast.makeText(this, R.string.errorMessageAlreadySending, Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
+                } else {
+                    Toast.makeText(this, R.string.errorTopicIsLocked, Toast.LENGTH_SHORT).show();
                 }
 
                 return true;
@@ -574,6 +591,20 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
         }
     }
 
+    @Override
+    public void getNewLockReason(String newReason) {
+        reasonOfLock = newReason;
+        if (reasonOfLock == null) {
+            messageSendButton.setEnabled(true);
+            messageSendEdit.setEnabled(true);
+            messageSendEdit.setText("");
+        } else {
+            messageSendButton.setEnabled(false);
+            messageSendEdit.setEnabled(false);
+            messageSendEdit.setText(getString(R.string.topicLockedForReason, Utils.truncateString(reasonOfLock, 60, getString(R.string.waitingText))));
+        }
+    }
+
     protected class QuoteJVCMessage extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
@@ -594,7 +625,7 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
         protected void onPostExecute(String messageQuoted) {
             super.onPostExecute(messageQuoted);
 
-            if (messageQuoted != null) {
+            if (messageQuoted != null && reasonOfLock == null) {
                 String currentMessage = messageSendEdit.getText().toString();
 
                 if (!currentMessage.isEmpty() && !currentMessage.endsWith("\n\n")) {
