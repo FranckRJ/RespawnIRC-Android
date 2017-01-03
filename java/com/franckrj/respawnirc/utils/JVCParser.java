@@ -766,7 +766,6 @@ public final class JVCParser {
             String topicNameAndLinkString = topicNameAndLinkMatcher.group(1);
             newTopicInfo.link = "http://www.jeuxvideo.com" + topicNameAndLinkString.substring(0, topicNameAndLinkString.indexOf("\""));
             newTopicInfo.name = topicNameAndLinkString.substring(topicNameAndLinkString.indexOf("title=\"") + 7);
-            newTopicInfo.name = newTopicInfo.name.replace("&amp;", "&").replace("&quot;", "\"").replace("&#039;", "\'").replace("&lt;", "<").replace("&gt;", ">");
             newTopicInfo.messages = topicNumberMessagesMatcher.group(1);
             newTopicInfo.wholeDate = topicDateMatcher.group(1);
             newTopicInfo.type = topicTypeMatcher.group(1);
