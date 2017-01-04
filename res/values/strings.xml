@@ -140,6 +140,7 @@
     <string name="topicLockedForReason">Sujet fermé : %1$s</string>
     <string name="saveReasonOfLock">save.reasonOfLock</string>
     <string name="errorTopicIsLocked">Erreur, le topic est fermé.</string>
+    <string name="saveListOfSearchedForumShowed">save.listOfSearchedForumShowed</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInBrowser</item>

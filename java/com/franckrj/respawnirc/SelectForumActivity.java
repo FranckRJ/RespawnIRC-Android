@@ -130,6 +130,10 @@ public class SelectForumActivity extends AppCompatActivity implements ChooseTopi
         forumListView.setOnGroupClickListener(adapterForForums);
         forumListView.setOnChildClickListener(adapterForForums);
 
+        if (savedInstanceState != null) {
+            adapterForForums.loadFromBundle(savedInstanceState);
+        }
+
         if (sharedPref.getBoolean(getString(R.string.prefIsFirstLaunch), true)) {
             SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
             HelpFirstLaunchDialogFragment firstLaunchDialogFragment = new HelpFirstLaunchDialogFragment();
@@ -159,6 +163,12 @@ public class SelectForumActivity extends AppCompatActivity implements ChooseTopi
     public void onPause() {
         super.onPause();
         stopAllCurrentTasks();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        adapterForForums.saveToBundle(outState);
     }
 
     @Override

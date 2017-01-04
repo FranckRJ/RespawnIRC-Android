@@ -943,6 +943,48 @@ public final class JVCParser {
         }
     }
 
+    public static class NameAndLink implements Parcelable {
+        public String name = "";
+        public String link = "";
+
+        public static final Parcelable.Creator<NameAndLink> CREATOR = new Parcelable.Creator<NameAndLink>() {
+            @Override
+            public NameAndLink createFromParcel(Parcel in) {
+                return new NameAndLink(in);
+            }
+
+            @Override
+            public NameAndLink[] newArray(int size) {
+                return new NameAndLink[size];
+            }
+        };
+
+        public NameAndLink() {
+            //rien
+        }
+
+        public NameAndLink(String newName, String newLink) {
+            name = newName;
+            link = newLink;
+        }
+
+        private NameAndLink(Parcel in) {
+            name = in.readString();
+            link = in.readString();
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            out.writeString(name);
+            out.writeString(link);
+        }
+    }
+
     private static class ConvertStringToString implements StringModifier {
         private final String stringToRemplace;
         private final String stringNew;
@@ -1000,20 +1042,6 @@ public final class JVCParser {
     public static class ForumAndTopicName {
         public String forum = "";
         public String topic = "";
-    }
-
-    public static class NameAndLink {
-        public String name = "";
-        public String link = "";
-
-        public NameAndLink() {
-            //rien
-        }
-
-        public NameAndLink(String newName, String newLink) {
-            name = newName;
-            link = newLink;
-        }
     }
 
     public static class AjaxInfos {

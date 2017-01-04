@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 public class JVCForumsAdapter extends BaseExpandableListAdapter implements ExpandableListView.OnGroupClickListener, ExpandableListView.OnChildClickListener {
     private ArrayList<ForumInfo> currentListOfForums = null;
     private ArrayList<ForumInfo> baseListOfForums = null;
+    private ArrayList<JVCParser.NameAndLink> lastListOfForumsShowed = null;
     private LayoutInflater serviceInflater;
     private Activity parentActivity = null;
 
@@ -416,13 +418,15 @@ public class JVCForumsAdapter extends BaseExpandableListAdapter implements Expan
     }
 
     public void setNewListOfForums(ArrayList<JVCParser.NameAndLink> newListOfForums) {
-        if (newListOfForums == null) {
+        lastListOfForumsShowed = newListOfForums;
+
+        if (lastListOfForumsShowed == null) {
             currentListOfForums = baseListOfForums;
         } else {
             currentListOfForums = new ArrayList<>();
 
-            if (!newListOfForums.isEmpty()) {
-                for (JVCParser.NameAndLink thisForum : newListOfForums) {
+            if (!lastListOfForumsShowed.isEmpty()) {
+                for (JVCParser.NameAndLink thisForum : lastListOfForumsShowed) {
                     ForumInfo tmpForumInfo = new ForumInfo();
                     tmpForumInfo.isTitle = false;
                     tmpForumInfo.isForum = true;
@@ -444,6 +448,15 @@ public class JVCForumsAdapter extends BaseExpandableListAdapter implements Expan
     public void clearListOfForums() {
         currentListOfForums = new ArrayList<>();
         notifyDataSetChanged();
+    }
+
+    public void saveToBundle(Bundle savedInstanceState) {
+        savedInstanceState.putParcelableArrayList(parentActivity.getString(R.string.saveListOfSearchedForumShowed), lastListOfForumsShowed);
+    }
+
+    public void loadFromBundle(Bundle savedInstanceState) {
+        lastListOfForumsShowed = savedInstanceState.getParcelableArrayList(parentActivity.getString(R.string.saveListOfSearchedForumShowed));
+        setNewListOfForums(lastListOfForumsShowed);
     }
 
     @Override
