@@ -18,4 +18,12 @@ public class Utils {
 
         return baseString;
     }
+
+    public static boolean stringIsEmptyOrNull(String thisString) {
+        //noinspection SimplifiableIfStatement
+        if (thisString == null) {
+            return true;
+        }
+        return thisString.isEmpty();
+    }
 }

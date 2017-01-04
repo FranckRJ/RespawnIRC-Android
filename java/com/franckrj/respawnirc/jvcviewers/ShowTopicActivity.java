@@ -281,23 +281,19 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
                 currentTitles.topic = getIntent().getStringExtra(EXTRA_TOPIC_NAME);
                 currentTitles.forum = getIntent().getStringExtra(EXTRA_FORUM_NAME);
 
-                if (currentTitles.topic != null) {
-                    if (currentTitles.topic.isEmpty()) {
-                        currentTitles.topic = getString(R.string.app_name);
-                    }
-                } else {
-                    currentTitles.topic = getString(R.string.app_name);
+                if (currentTitles.topic == null) {
+                    currentTitles.topic = "";
                 }
-                if (currentTitles.forum == null) {
-                    currentTitles.forum = "";
+                if (Utils.stringIsEmptyOrNull(currentTitles.forum)) {
+                    currentTitles.forum = getString(R.string.app_name);
                 }
 
                 if (getIntent().getStringExtra(EXTRA_TOPIC_LINK) != null) {
                     currentLink = getIntent().getStringExtra(EXTRA_TOPIC_LINK);
                 }
             } else {
-                currentTitles.topic = getString(R.string.app_name);
-                currentTitles.forum = "";
+                currentTitles.topic = "";
+                currentTitles.forum = getString(R.string.app_name);
             }
 
             updateLastPageAndCurrentItemAndButtonsToCurrentLink();
@@ -319,8 +315,8 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
         reloadSettings();
 
         if (myActionBar != null) {
-            myActionBar.setTitle(currentTitles.topic);
-            myActionBar.setSubtitle(currentTitles.forum);
+            myActionBar.setTitle(currentTitles.forum);
+            myActionBar.setSubtitle(currentTitles.topic);
         }
     }
 
@@ -438,18 +434,18 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
         if (!newNames.topic.isEmpty()) {
             currentTitles.topic = newNames.topic;
         } else {
-            currentTitles.topic = getString(R.string.app_name);
+            currentTitles.topic = "";
         }
 
         if (!newNames.forum.isEmpty()) {
             currentTitles.forum = newNames.forum;
         } else {
-            currentTitles.forum = "";
+            currentTitles.forum = getString(R.string.app_name);
         }
 
         if (myActionBar != null) {
-            myActionBar.setTitle(currentTitles.topic);
-            myActionBar.setSubtitle(currentTitles.forum);
+            myActionBar.setTitle(currentTitles.forum);
+            myActionBar.setSubtitle(currentTitles.topic);
         }
     }
 

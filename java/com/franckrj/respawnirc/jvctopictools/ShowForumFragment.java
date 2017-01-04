@@ -34,7 +34,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
             if (listenerForNewTopicWantRead != null) {
-                listenerForNewTopicWantRead.setReadNewTopic(adapterForTopics.getItem(position).link, adapterForTopics.getItem(position).name);
+                listenerForNewTopicWantRead.setReadNewTopic(adapterForTopics.getItem(position).link, JVCParser.specialCharToNormalChar(adapterForTopics.getItem(position).name));
             }
         }
     };
@@ -44,7 +44,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
             if (listenerForNewTopicWantRead != null) {
                 String realPageToGo = JVCParser.setPageNumberForThisTopicLink(adapterForTopics.getItem(position).link, (Integer.parseInt(adapterForTopics.getItem(position).messages) / 20) + 1);
-                listenerForNewTopicWantRead.setReadNewTopic(realPageToGo, adapterForTopics.getItem(position).name);
+                listenerForNewTopicWantRead.setReadNewTopic(realPageToGo, JVCParser.specialCharToNormalChar(adapterForTopics.getItem(position).name));
                 return true;
             }
             return false;
