@@ -2,7 +2,6 @@ package com.franckrj.respawnirc.dialogs;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -77,14 +76,8 @@ public class RefreshFavDialogFragment extends DialogFragment {
     }
 
     @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-        stopAllCurrentTask();
-    }
-
-    @Override
-    public void onCancel(DialogInterface dialog) {
-        super.onCancel(dialog);
+    public void onPause() {
+        super.onPause();
         stopAllCurrentTask();
     }
 

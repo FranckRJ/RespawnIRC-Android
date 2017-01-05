@@ -283,6 +283,12 @@ public class SelectStickerDialogFragment extends DialogFragment {
         return builder.create();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        dismiss();
+    }
+
     public interface StickerSelected {
         void getSelectedSticker(String newStickerToAdd);
     }
