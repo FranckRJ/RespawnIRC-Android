@@ -7,12 +7,14 @@ import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -29,6 +31,7 @@ import com.franckrj.respawnirc.dialogs.RefreshFavDialogFragment;
 import com.franckrj.respawnirc.jvcviewers.ShowForumActivity;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.NavigationViewUtil;
+import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
 import java.net.URLEncoder;
@@ -41,8 +44,10 @@ public class SelectForumActivity extends AppCompatActivity implements ChooseTopi
     private SharedPreferences sharedPref = null;
     private JVCForumsAdapter adapterForForums = null;
     private EditText textForSearch = null;
+    private MenuItem searchExpandableItem = null;
     private GetSearchedForums currentAsyncTaskForGetSearchedForums = null;
     private SwipeRefreshLayout swipeRefresh = null;
+    private String lastSearchedText = null;
 
     private View.OnClickListener searchButtonClickedListener = new View.OnClickListener() {
         @Override
@@ -63,19 +68,16 @@ public class SelectForumActivity extends AppCompatActivity implements ChooseTopi
     };
 
     private void performSearch() {
-        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        View focusedView;
+        if (textForSearch != null) {
+            if (textForSearch.getText().toString().isEmpty()) {
+                stopAllCurrentTasks();
+                adapterForForums.setNewListOfForums(null);
+            } else if (currentAsyncTaskForGetSearchedForums == null) {
+                currentAsyncTaskForGetSearchedForums = new GetSearchedForums();
+                currentAsyncTaskForGetSearchedForums.execute(textForSearch.getText().toString());
+            }
 
-        if (textForSearch.getText().toString().isEmpty()) {
-            adapterForForums.setNewListOfForums(null);
-        } else if (currentAsyncTaskForGetSearchedForums == null) {
-            currentAsyncTaskForGetSearchedForums = new GetSearchedForums();
-            currentAsyncTaskForGetSearchedForums.execute(textForSearch.getText().toString());
-        }
-
-        focusedView = getCurrentFocus();
-        if (focusedView != null) {
-            inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            Utils.hideSoftKeyboard(SelectForumActivity.this);
         }
     }
 
@@ -115,22 +117,18 @@ public class SelectForumActivity extends AppCompatActivity implements ChooseTopi
         navigationView = new NavigationViewUtil(this, sharedPref, R.id.action_home_navigation);
         navigationView.initialize((DrawerLayout) findViewById(R.id.layout_drawer_selectforum), (NavigationView) findViewById(R.id.navigation_view_selectforum));
 
-        ImageButton buttonForSearch = (ImageButton) findViewById(R.id.searchforum_button_selectforum);
-        textForSearch = (EditText) findViewById(R.id.searchforum_text_selectforum);
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swiperefresh_selectforum);
-        buttonForSearch.setOnClickListener(searchButtonClickedListener);
-        textForSearch.setOnEditorActionListener(actionInSearchEditTextListener);
         swipeRefresh.setEnabled(false);
         swipeRefresh.setColorSchemeResources(R.color.colorAccent);
 
         ExpandableListView forumListView = (ExpandableListView) findViewById(R.id.forum_expendable_list_selectforum);
         adapterForForums = new JVCForumsAdapter(this);
         forumListView.setAdapter(adapterForForums);
-        forumListView.setGroupIndicator(null);
         forumListView.setOnGroupClickListener(adapterForForums);
         forumListView.setOnChildClickListener(adapterForForums);
 
         if (savedInstanceState != null) {
+            lastSearchedText = savedInstanceState.getString(getString(R.string.saveSearchForumContent), null);
             adapterForForums.loadFromBundle(savedInstanceState);
         }
 
@@ -169,6 +167,13 @@ public class SelectForumActivity extends AppCompatActivity implements ChooseTopi
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         adapterForForums.saveToBundle(outState);
+
+        outState.putString(getString(R.string.saveSearchForumContent), null);
+        if (textForSearch != null && searchExpandableItem != null) {
+            if (MenuItemCompat.isActionViewExpanded(searchExpandableItem)) {
+                outState.putString(getString(R.string.saveSearchForumContent), textForSearch.getText().toString());
+            }
+        }
     }
 
     @Override
@@ -182,6 +187,45 @@ public class SelectForumActivity extends AppCompatActivity implements ChooseTopi
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         navigationView.onConfigurationChangedForToggleForDrawer(newConfig);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_selectforum, menu);
+        searchExpandableItem = menu.findItem(R.id.action_search_selectforum);
+
+        View rootView = searchExpandableItem.getActionView();
+        ImageButton buttonForSearch = (ImageButton) rootView.findViewById(R.id.searchforum_button_selectforum);
+        textForSearch = (EditText) rootView.findViewById(R.id.searchforum_text_selectforum);
+        textForSearch.setOnEditorActionListener(actionInSearchEditTextListener);
+        buttonForSearch.setOnClickListener(searchButtonClickedListener);
+
+        MenuItemCompat.setOnActionExpandListener(searchExpandableItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                textForSearch.setText("");
+                stopAllCurrentTasks();
+                adapterForForums.setNewListOfForums(null);
+                Utils.hideSoftKeyboard(SelectForumActivity.this);
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                textForSearch.requestFocus();
+                inputManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+                return true;
+            }
+        });
+
+        if (lastSearchedText != null) {
+            textForSearch.setText(lastSearchedText);
+            MenuItemCompat.expandActionView(searchExpandableItem);
+        }
+
+        return true;
     }
 
     @Override

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_search_selectforum"
+        android:title="@string/forumSearch"
+        android:icon="@drawable/ic_action_action_search"
+        app:showAsAction="collapseActionView|always"
+        app:actionLayout="@layout/actionbar_search_edittext_selectforum"/>
+</menu>

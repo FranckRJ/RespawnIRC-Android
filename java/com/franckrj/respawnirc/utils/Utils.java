@@ -1,6 +1,9 @@
 package com.franckrj.respawnirc.utils;
 
 import android.app.Activity;
+import android.content.Context;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 public class Utils {
     public static String resColorToString(int resID, Activity baseActivity) {
@@ -25,5 +28,13 @@ public class Utils {
             return true;
         }
         return thisString.isEmpty();
+    }
+
+    public static void hideSoftKeyboard(Activity fromThisActivity) {
+        InputMethodManager inputManager = (InputMethodManager) fromThisActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        View focusedView = fromThisActivity.getCurrentFocus();
+        if (focusedView != null) {
+            inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 }
