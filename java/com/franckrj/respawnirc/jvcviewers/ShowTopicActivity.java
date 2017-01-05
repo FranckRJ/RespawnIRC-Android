@@ -25,6 +25,7 @@ import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.dialogs.ChoosePageNumberDialogFragment;
 import com.franckrj.respawnirc.dialogs.LinkContextMenuDialogFragment;
+import com.franckrj.respawnirc.dialogs.SelectStickerDialogFragment;
 import com.franckrj.respawnirc.jvcmsggetters.AbsJVCMessageGetter;
 import com.franckrj.respawnirc.jvcmsggetters.JVCForumMessageGetter;
 import com.franckrj.respawnirc.jvcmsgviewers.AbsShowTopicFragment;
@@ -39,7 +40,7 @@ import com.franckrj.respawnirc.utils.WebManager;
 public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCMessageGetter.NewForumAndTopicNameAvailable,
                                                                     PopupMenu.OnMenuItemClickListener, JVCForumMessageGetter.NewNumbersOfPagesListener,
                                                                     ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCMessagesAdapter.URLClicked,
-                                                                    AbsJVCMessageGetter.NewReasonForTopicLock {
+                                                                    AbsJVCMessageGetter.NewReasonForTopicLock, SelectStickerDialogFragment.StickerSelected {
     public static final String EXTRA_TOPIC_LINK = "com.franckrj.respawnirc.EXTRA_TOPIC_LINK";
     public static final String EXTRA_TOPIC_NAME = "com.franckrj.respawnirc.EXTRA_TOPIC_NAME";
     public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.EXTRA_FORUM_NAME";
@@ -59,6 +60,7 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
     private String lastMessageSended = "";
     private AddOrRemoveTopicToFavs currentTaskForTopicFavs = null;
     private String reasonOfLock = null;
+    private ImageButton selectStickerButton = null;
 
     private final JVCMessageSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageSender.NewMessageWantEditListener() {
         @Override
@@ -136,6 +138,14 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
             } else {
                 Toast.makeText(ShowTopicActivity.this, R.string.errorMessageAlreadySending, Toast.LENGTH_SHORT).show();
             }
+        }
+    };
+
+    private final Button.OnClickListener selectStickerClickedListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View buttonView) {
+            SelectStickerDialogFragment selectStickerDialogFragment = new SelectStickerDialogFragment();
+            selectStickerDialogFragment.show(getFragmentManager(), "SelectStickerDialogFragment");
         }
     };
 
@@ -254,6 +264,7 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
 
         messageSendEdit = (EditText) findViewById(R.id.sendmessage_text_showtopic);
         messageSendButton = (ImageButton) findViewById(R.id.sendmessage_button_showtopic);
+        selectStickerButton = (ImageButton) findViewById(R.id.selectsticker_button_showtopic);
         firstPageButton = (Button) findViewById(R.id.firstpage_button_showtopic);
         previousPageButton = (Button) findViewById(R.id.previouspage_button_showtopic);
         currentPageButton = (Button) findViewById(R.id.currentpage_button_showtopic);
@@ -272,6 +283,7 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
         senderForMessages.setListenerForNewMessageWantEdit(listenerForNewMessageWantEdit);
         senderForMessages.setListenerForNewMessagePosted(listenerForNewMessagePosted);
         messageSendButton.setOnClickListener(sendMessageToTopicListener);
+        selectStickerButton.setOnClickListener(selectStickerClickedListener);
         initializeNavigationButtons();
 
         currentLink = sharedPref.getString(getString(R.string.prefTopicUrlToFetch), "");
@@ -591,13 +603,22 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
     public void getNewLockReason(String newReason) {
         reasonOfLock = newReason;
         if (reasonOfLock == null) {
+            selectStickerButton.setVisibility(View.VISIBLE);
             messageSendButton.setEnabled(true);
             messageSendEdit.setEnabled(true);
             messageSendEdit.setText("");
         } else {
+            selectStickerButton.setVisibility(View.GONE);
             messageSendButton.setEnabled(false);
             messageSendEdit.setEnabled(false);
             messageSendEdit.setText(getString(R.string.topicLockedForReason, Utils.truncateString(reasonOfLock, 60, getString(R.string.waitingText))));
+        }
+    }
+
+    @Override
+    public void getSelectedSticker(String newStickerToAdd) {
+        if (reasonOfLock == null) {
+            messageSendEdit.append(newStickerToAdd);
         }
     }
 

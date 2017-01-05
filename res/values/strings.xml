@@ -142,6 +142,7 @@
     <string name="errorTopicIsLocked">Erreur, le topic est fermé.</string>
     <string name="saveListOfSearchedForumShowed">save.listOfSearchedForumShowed</string>
     <string name="saveSearchForumContent">save.searchForumContent</string>
+    <string name="selectSticker">Sélectionner un sticker</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInBrowser</item>

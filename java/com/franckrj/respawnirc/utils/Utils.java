@@ -2,6 +2,7 @@ package com.franckrj.respawnirc.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.Spannable;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -36,5 +37,13 @@ public class Utils {
         if (focusedView != null) {
             inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
+    }
+
+    public static void replaceSpanByAnotherSpan(Spannable inThisSpan, Object oldSpan, Object newSpan) {
+        int start = inThisSpan.getSpanStart(oldSpan);
+        int end = inThisSpan.getSpanEnd(oldSpan);
+        int flags = inThisSpan.getSpanFlags(oldSpan);
+        inThisSpan.setSpan(newSpan, start, end, flags);
+        inThisSpan.removeSpan(oldSpan);
     }
 }

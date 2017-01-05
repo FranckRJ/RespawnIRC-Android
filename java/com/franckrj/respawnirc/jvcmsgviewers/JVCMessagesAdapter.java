@@ -26,12 +26,14 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.utils.CustomImageGetter;
 import com.franckrj.respawnirc.utils.CustomTagHandler;
 import com.franckrj.respawnirc.utils.ImageDownloader;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.LongClickLinkMovementMethod;
 import com.franckrj.respawnirc.utils.LongClickableSpan;
 import com.franckrj.respawnirc.utils.Undeprecator;
+import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -47,33 +49,8 @@ public class JVCMessagesAdapter extends BaseAdapter {
     private boolean alternateBackgroundColor = false;
     private CustomTagHandler tagHandler = new CustomTagHandler();
     private ImageDownloader downloaderForImage = new ImageDownloader();
-    private Drawable deletedDrawable = null;
     private URLClicked urlCLickedListener = null;
-
-    private final Html.ImageGetter jvcImageGetter = new Html.ImageGetter() {
-        @Override
-        public Drawable getDrawable(String source) {
-            if (!source.startsWith("http")) {
-                Drawable drawable;
-                Resources res = parentActivity.getResources();
-                int resID = res.getIdentifier(source.substring(0, source.lastIndexOf(".")), "drawable", parentActivity.getPackageName());
-
-                try {
-                    drawable = Undeprecator.resourcesGetDrawable(res, resID);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    drawable = deletedDrawable;
-                }
-                drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-
-                return drawable;
-            } else if (source.startsWith("http://image.noelshack.com/minis")) {
-                return downloaderForImage.getDrawableFromLink(source);
-            } else {
-                return deletedDrawable;
-            }
-        }
-    };
+    private Html.ImageGetter jvcImageGetter = null;
 
     private final ImageDownloader.DownloadFinished listenerForDownloadFinished = new ImageDownloader.DownloadFinished() {
         @Override
@@ -122,6 +99,7 @@ public class JVCMessagesAdapter extends BaseAdapter {
     };
 
     public JVCMessagesAdapter(Activity newParentActivity, JVCParser.Settings newSettings) {
+        Drawable deletedDrawable;
         Resources res;
 
         parentActivity = newParentActivity;
@@ -130,6 +108,8 @@ public class JVCMessagesAdapter extends BaseAdapter {
         res = parentActivity.getResources();
         deletedDrawable = Undeprecator.resourcesGetDrawable(res, R.drawable.image_deleted);
         deletedDrawable.setBounds(0, 0, deletedDrawable.getIntrinsicWidth(), deletedDrawable.getIntrinsicHeight());
+
+        jvcImageGetter = new CustomImageGetter(parentActivity, deletedDrawable, downloaderForImage);
         downloaderForImage.setParentActivity(parentActivity);
         downloaderForImage.setListenerForDownloadFinished(listenerForDownloadFinished);
         downloaderForImage.setImagesCacheDir(parentActivity.getCacheDir());
@@ -198,26 +178,18 @@ public class JVCMessagesAdapter extends BaseAdapter {
         return holder;
     }
 
-    private void replaceSpanByAnotherSpan(Spannable inThisSpan, Object oldSpan, Object newSpan) {
-        int start = inThisSpan.getSpanStart(oldSpan);
-        int end = inThisSpan.getSpanEnd(oldSpan);
-        int flags = inThisSpan.getSpanFlags(oldSpan);
-        inThisSpan.setSpan(newSpan, start, end, flags);
-        inThisSpan.removeSpan(oldSpan);
-    }
-
     private Spannable replaceQuoteAndUrlSpans(Spanned spanToChange) {
         Spannable spannable = new SpannableString(spanToChange);
         QuoteSpan[] quoteSpanArray = spannable.getSpans(0, spannable.length(), QuoteSpan.class);
         for (QuoteSpan quoteSpan : quoteSpanArray) {
-            replaceSpanByAnotherSpan(spannable, quoteSpan, new CustomQuoteSpan(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.colorQuoteBackground),
+            Utils.replaceSpanByAnotherSpan(spannable, quoteSpan, new CustomQuoteSpan(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.colorQuoteBackground),
                     Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.colorPrimary),
                     parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripSize),
                     parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripGap)));
         }
         URLSpan[] urlSpanArray = spannable.getSpans(0, spannable.length(), URLSpan.class);
         for (final URLSpan urlSpan : urlSpanArray) {
-            replaceSpanByAnotherSpan(spannable, urlSpan, new LongClickableSpan() {
+            Utils.replaceSpanByAnotherSpan(spannable, urlSpan, new LongClickableSpan() {
                 private String url = urlSpan.getURL();
                 @Override
                 public void onClick(View view) {
