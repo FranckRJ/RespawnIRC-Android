@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,10 +38,11 @@ import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
-public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCMessageGetter.NewForumAndTopicNameAvailable,
+public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCMessageGetter.NewForumAndTopicNameAvailable,
                                                                     PopupMenu.OnMenuItemClickListener, JVCForumMessageGetter.NewNumbersOfPagesListener,
                                                                     ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCMessagesAdapter.URLClicked,
-                                                                    AbsJVCMessageGetter.NewReasonForTopicLock, SelectStickerDialogFragment.StickerSelected {
+                                                                    AbsJVCMessageGetter.NewReasonForTopicLock, SelectStickerDialogFragment.StickerSelected,
+                                                                    PageNavigationUtil.PageNavigationFunctions {
     public static final String EXTRA_TOPIC_LINK = "com.franckrj.respawnirc.EXTRA_TOPIC_LINK";
     public static final String EXTRA_TOPIC_NAME = "com.franckrj.respawnirc.EXTRA_TOPIC_NAME";
     public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.EXTRA_FORUM_NAME";
@@ -55,12 +57,11 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
     private String latestMessageQuotedInfo = null;
     private String pseudoOfUser = "";
     private String cookieListInAString = "";
-    private View layoutForAllNavigationButtons = null;
-    private View shadowForAllNavigationButtons = null;
     private String lastMessageSended = "";
     private AddOrRemoveTopicToFavs currentTaskForTopicFavs = null;
     private String reasonOfLock = null;
     private ImageButton selectStickerButton = null;
+    private PageNavigationUtil pageNavigation = null;
 
     private final JVCMessageSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageSender.NewMessageWantEditListener() {
         @Override
@@ -149,33 +150,8 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
         }
     };
 
-    @Override
-    protected void extendPageSelection(View buttonView) {
-        if (buttonView == currentPageButton) {
-            ChoosePageNumberDialogFragment choosePageDialogFragment = new ChoosePageNumberDialogFragment();
-            choosePageDialogFragment.show(getFragmentManager(), "ChoosePageNumberDialogFragment");
-        }
-    }
-
-    protected AbsShowSomethingFragment createNewFragmentForRead(String possibleTopicLink) {
-        int currentTopicMode = sharedPref.getInt(getString(R.string.prefCurrentTopicMode), AbsShowTopicFragment.MODE_FORUM);
-        AbsShowTopicFragment newFragment;
-
-        if (currentTopicMode == AbsShowTopicFragment.MODE_FORUM) {
-            newFragment = new ShowTopicForumFragment();
-        } else {
-            newFragment = new ShowTopicIRCFragment();
-        }
-
-        if (possibleTopicLink != null) {
-            Bundle argForFrag = new Bundle();
-            argForFrag.putString(AbsShowTopicFragment.ARG_TOPIC_LINK, possibleTopicLink);
-            argForFrag.putString(AbsShowTopicFragment.ARG_PSEUDO, pseudoOfUser);
-            argForFrag.putString(AbsShowTopicFragment.ARG_COOKIES, cookieListInAString);
-            newFragment.setArguments(argForFrag);
-        }
-
-        return newFragment;
+    public ShowTopicActivity() {
+        pageNavigation = new PageNavigationUtil(this);
     }
 
     private void stopAllCurrentTask() {
@@ -209,38 +185,22 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
         int currentTopicMode = sharedPref.getInt(getString(R.string.prefCurrentTopicMode), AbsShowTopicFragment.MODE_FORUM);
 
         if (currentTopicMode == AbsShowTopicFragment.MODE_FORUM) {
-            showNavigationButtons = ShowTopicForumFragment.getShowNavigationButtons();
+            pageNavigation.setShowNavigationButtons(ShowTopicForumFragment.getShowNavigationButtons());
         } else {
-            showNavigationButtons = ShowTopicIRCFragment.getShowNavigationButtons();
-        }
-
-        if (showNavigationButtons) {
-            layoutForAllNavigationButtons.setVisibility(View.VISIBLE);
-            shadowForAllNavigationButtons.setVisibility(View.VISIBLE);
-        } else {
-            layoutForAllNavigationButtons.setVisibility(View.GONE);
-            shadowForAllNavigationButtons.setVisibility(View.GONE);
-            lastPage = 0;
-            adapterForPagerView.notifyDataSetChanged();
+            pageNavigation.setShowNavigationButtons(ShowTopicIRCFragment.getShowNavigationButtons());
         }
     }
 
     private void updateLastPageAndCurrentItemAndButtonsToCurrentLink() {
-        if (!currentLink.isEmpty()) {
-            lastPage = getShowablePageNumberForThisLink(currentLink);
-            adapterForPagerView.notifyDataSetChanged();
-            updateCurrentItemAndButtonsToCurrentLink();
+        if (!pageNavigation.getCurrentLink().isEmpty()) {
+            pageNavigation.setLastPageNumber(getShowablePageNumberForThisLink(pageNavigation.getCurrentLink()));
+            pageNavigation.notifyDataSetChanged();
+            pageNavigation.updateCurrentItemAndButtonsToCurrentLink();
         }
     }
 
     private AbsShowTopicFragment getCurrentFragment() {
-        return (AbsShowTopicFragment) adapterForPagerView.getFragment(pagerView.getCurrentItem());
-    }
-
-    @Override
-    protected void loadPageForThisFragment(int position) {
-        reloadSettings();
-        super.loadPageForThisFragment(position);
+        return (AbsShowTopicFragment) pageNavigation.getCurrentFragment();
     }
 
     @Override
@@ -265,28 +225,22 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
         messageSendEdit = (EditText) findViewById(R.id.sendmessage_text_showtopic);
         messageSendButton = (ImageButton) findViewById(R.id.sendmessage_button_showtopic);
         selectStickerButton = (ImageButton) findViewById(R.id.selectsticker_button_showtopic);
-        firstPageButton = (Button) findViewById(R.id.firstpage_button_showtopic);
-        previousPageButton = (Button) findViewById(R.id.previouspage_button_showtopic);
-        currentPageButton = (Button) findViewById(R.id.currentpage_button_showtopic);
-        nextPageButton = (Button) findViewById(R.id.nextpage_button_showtopic);
-        lastPageButton = (Button) findViewById(R.id.lastpage_button_showtopic);
-        layoutForAllNavigationButtons = findViewById(R.id.header_layout_showtopic);
-        shadowForAllNavigationButtons = findViewById(R.id.shadow_header_showtopic);
-        pagerView = (ViewPager) findViewById(R.id.pager_showtopic);
 
-        currentPageButton.setCompoundDrawables(null, null, arrowDrawable, null);
-        currentPageButton.setCompoundDrawablePadding(getResources().getDimensionPixelSize(R.dimen.sizeBetweenTextAndArrow));
+        pageNavigation.initializeLayoutForAllNavigationButtons(findViewById(R.id.header_layout_showtopic), findViewById(R.id.shadow_header_showtopic));
+        pageNavigation.initializePagerView((ViewPager) findViewById(R.id.pager_showtopic));
+        pageNavigation.initializeNavigationButtons((Button) findViewById(R.id.firstpage_button_showtopic), (Button) findViewById(R.id.previouspage_button_showtopic),
+                (Button) findViewById(R.id.currentpage_button_showtopic), (Button) findViewById(R.id.nextpage_button_showtopic), (Button) findViewById(R.id.lastpage_button_showtopic));
 
-        updateAdapterForPagerView();
-        pagerView.addOnPageChangeListener(pageChangeOnPagerListener);
+        pageNavigation.setDrawableForCurrentPageButton(arrowDrawable);
+
+        pageNavigation.updateAdapterForPagerView();
         senderForMessages = new JVCMessageSender(this);
         senderForMessages.setListenerForNewMessageWantEdit(listenerForNewMessageWantEdit);
         senderForMessages.setListenerForNewMessagePosted(listenerForNewMessagePosted);
         messageSendButton.setOnClickListener(sendMessageToTopicListener);
         selectStickerButton.setOnClickListener(selectStickerClickedListener);
-        initializeNavigationButtons();
 
-        currentLink = sharedPref.getString(getString(R.string.prefTopicUrlToFetch), "");
+        pageNavigation.setCurrentLink(sharedPref.getString(getString(R.string.prefTopicUrlToFetch), ""));
         updateShowNavigationButtons();
         if (savedInstanceState == null) {
             if (getIntent() != null) {
@@ -301,7 +255,7 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
                 }
 
                 if (getIntent().getStringExtra(EXTRA_TOPIC_LINK) != null) {
-                    currentLink = getIntent().getStringExtra(EXTRA_TOPIC_LINK);
+                    pageNavigation.setCurrentLink(getIntent().getStringExtra(EXTRA_TOPIC_LINK));
                 }
             } else {
                 currentTitles.topic = "";
@@ -312,9 +266,9 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
         } else {
             currentTitles.forum = savedInstanceState.getString(getString(R.string.saveCurrentForumTitleForTopic), getString(R.string.app_name));
             currentTitles.topic = savedInstanceState.getString(getString(R.string.saveCurrentTopicTitleForTopic), "");
-            lastPage = savedInstanceState.getInt(getString(R.string.saveLastPage), pagerView.getCurrentItem() + 1);
+            pageNavigation.setLastPageNumber(savedInstanceState.getInt(getString(R.string.saveLastPage), pageNavigation.getCurrentItemIndex() + 1));
             getNewLockReason(savedInstanceState.getString(getString(R.string.saveReasonOfLock), null));
-            adapterForPagerView.notifyDataSetChanged();
+            pageNavigation.notifyDataSetChanged();
 
             senderForMessages.loadFromBundle(savedInstanceState);
 
@@ -322,7 +276,7 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
                 messageSendButton.setImageResource(R.drawable.ic_action_content_edit);
             }
 
-            updateNavigationButtons();
+            pageNavigation.updateNavigationButtons();
         }
         reloadSettings();
 
@@ -345,9 +299,9 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
         super.onPause();
         stopAllCurrentTask();
         senderForMessages.stopAllCurrentTask();
-        if (!currentLink.isEmpty()) {
+        if (!pageNavigation.getCurrentLink().isEmpty()) {
             SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
-            sharedPrefEdit.putString(getString(R.string.prefTopicUrlToFetch), setShowedPageNumberForThisLink(currentLink, pagerView.getCurrentItem() + 1));
+            sharedPrefEdit.putString(getString(R.string.prefTopicUrlToFetch), setShowedPageNumberForThisLink(pageNavigation.getCurrentLink(), pageNavigation.getCurrentItemIndex() + 1));
             sharedPrefEdit.apply();
         }
     }
@@ -357,7 +311,7 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
         super.onSaveInstanceState(outState);
         outState.putString(getString(R.string.saveCurrentForumTitleForTopic), currentTitles.forum);
         outState.putString(getString(R.string.saveCurrentTopicTitleForTopic), currentTitles.topic);
-        outState.putInt(getString(R.string.saveLastPage), lastPage);
+        outState.putInt(getString(R.string.saveLastPage), pageNavigation.getLastPage());
         outState.putString(getString(R.string.saveReasonOfLock), reasonOfLock);
         senderForMessages.saveToBundle(outState);
     }
@@ -398,7 +352,7 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
             case R.id.action_change_topic_fav_value_showtopic:
                 if (currentTaskForTopicFavs == null) {
                     currentTaskForTopicFavs = new AddOrRemoveTopicToFavs(!getCurrentFragment().getIsInFavs());
-                    currentTaskForTopicFavs.execute(JVCParser.getForumIDOfThisTopic(currentLink), getCurrentFragment().getTopicID(), getCurrentFragment().getLatestAjaxInfos().pref, cookieListInAString);
+                    currentTaskForTopicFavs.execute(JVCParser.getForumIDOfThisTopic(pageNavigation.getCurrentLink()), getCurrentFragment().getTopicID(), getCurrentFragment().getLatestAjaxInfos().pref, cookieListInAString);
                 } else {
                     Toast.makeText(ShowTopicActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
                 }
@@ -421,19 +375,19 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
         if (newMode == AbsShowTopicFragment.MODE_IRC || newMode == AbsShowTopicFragment.MODE_FORUM) {
             sharedPrefEdit.putInt(getString(R.string.prefCurrentTopicMode), newMode);
 
-            if (newMode == AbsShowTopicFragment.MODE_IRC && !currentLink.isEmpty()) {
-                sharedPrefEdit.putString(getString(R.string.prefTopicUrlToFetch), setShowedPageNumberForThisLink(currentLink, pagerView.getCurrentItem() + 1));
+            if (newMode == AbsShowTopicFragment.MODE_IRC && !pageNavigation.getCurrentLink().isEmpty()) {
+                sharedPrefEdit.putString(getString(R.string.prefTopicUrlToFetch), setShowedPageNumberForThisLink(pageNavigation.getCurrentLink(), pageNavigation.getCurrentItemIndex() + 1));
             }
 
             sharedPrefEdit.apply();
             updateShowNavigationButtons();
-            updateAdapterForPagerView();
+            pageNavigation.updateAdapterForPagerView();
 
             if (newMode == AbsShowTopicFragment.MODE_FORUM) {
-                currentLink = sharedPref.getString(getString(R.string.prefTopicUrlToFetch), "");
+                pageNavigation.setCurrentLink(sharedPref.getString(getString(R.string.prefTopicUrlToFetch), ""));
                 updateLastPageAndCurrentItemAndButtonsToCurrentLink();
-                if (pagerView.getCurrentItem() > 0) {
-                    clearPageForThisFragment(0);
+                if (pageNavigation.getCurrentItemIndex() > 0) {
+                    pageNavigation.clearPageForThisFragment(0);
                 }
             }
         }
@@ -538,34 +492,69 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
     @Override
     public void getNewLastPageNumber(String newNumber) {
         if (!newNumber.isEmpty()) {
-            lastPage = Integer.parseInt(newNumber);
+            pageNavigation.setLastPageNumber(Integer.parseInt(newNumber));
         } else {
-            lastPage = pagerView.getCurrentItem() + 1;
+            pageNavigation.setLastPageNumber(pageNavigation.getCurrentItemIndex() + 1);
         }
-        adapterForPagerView.notifyDataSetChanged();
-        updateNavigationButtons();
+        pageNavigation.notifyDataSetChanged();
+        pageNavigation.updateNavigationButtons();
     }
 
     @Override
     public void newPageNumberChoosen(int newPageNumber) {
-        if (!currentLink.isEmpty()) {
-            if (newPageNumber > lastPage || newPageNumber < 0) {
-                newPageNumber = lastPage;
+        if (!pageNavigation.getCurrentLink().isEmpty()) {
+            if (newPageNumber > pageNavigation.getLastPage() || newPageNumber < 0) {
+                newPageNumber = pageNavigation.getLastPage();
             } else if (newPageNumber < 1) {
                 newPageNumber = 1;
             }
 
-            pagerView.setCurrentItem(newPageNumber - 1);
+            pageNavigation.setCurrentItemIndex(newPageNumber - 1);
         }
     }
 
     @Override
-    protected int getShowablePageNumberForThisLink(String link) {
+    public void onPageLoaded() {
+        reloadSettings();
+    }
+
+    @Override
+    public void extendPageSelection(View buttonView) {
+        if (pageNavigation.getIdOfThisButton(buttonView) == PageNavigationUtil.ID_BUTTON_CURRENT) {
+            ChoosePageNumberDialogFragment choosePageDialogFragment = new ChoosePageNumberDialogFragment();
+            choosePageDialogFragment.show(getFragmentManager(), "ChoosePageNumberDialogFragment");
+        }
+    }
+
+    @Override
+    public AbsShowSomethingFragment createNewFragmentForRead(String possibleTopicLink) {
+        int currentTopicMode = sharedPref.getInt(getString(R.string.prefCurrentTopicMode), AbsShowTopicFragment.MODE_FORUM);
+        AbsShowTopicFragment newFragment;
+
+        if (currentTopicMode == AbsShowTopicFragment.MODE_FORUM) {
+            newFragment = new ShowTopicForumFragment();
+        } else {
+            newFragment = new ShowTopicIRCFragment();
+        }
+
+        if (possibleTopicLink != null) {
+            Bundle argForFrag = new Bundle();
+            argForFrag.putString(AbsShowTopicFragment.ARG_TOPIC_LINK, possibleTopicLink);
+            argForFrag.putString(AbsShowTopicFragment.ARG_PSEUDO, pseudoOfUser);
+            argForFrag.putString(AbsShowTopicFragment.ARG_COOKIES, cookieListInAString);
+            newFragment.setArguments(argForFrag);
+        }
+
+        return newFragment;
+    }
+
+    @Override
+    public int getShowablePageNumberForThisLink(String link) {
         return Integer.parseInt(JVCParser.getPageNumberForThisTopicLink(link));
     }
 
     @Override
-    protected String setShowedPageNumberForThisLink(String link, int newPageNumber) {
+    public String setShowedPageNumberForThisLink(String link, int newPageNumber) {
         return JVCParser.setPageNumberForThisTopicLink(link, newPageNumber);
     }
 
@@ -574,8 +563,8 @@ public class ShowTopicActivity extends AbsShowSomethingActivity implements AbsSh
         if (!itsLongClick) {
             String possibleNewLink = JVCParser.formatThisUrl(link);
 
-            if (JVCParser.checkIfTopicAreSame(currentLink, possibleNewLink)) {
-                pagerView.setCurrentItem(getShowablePageNumberForThisLink(possibleNewLink) - 1);
+            if (JVCParser.checkIfTopicAreSame(pageNavigation.getCurrentLink(), possibleNewLink)) {
+                pageNavigation.setCurrentItemIndex(getShowablePageNumberForThisLink(possibleNewLink) - 1);
             } else if (JVCParser.checkIfItsJVCLink(possibleNewLink)) {
                 Intent newShowForumIntent = new Intent(this, ShowForumActivity.class);
                 newShowForumIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

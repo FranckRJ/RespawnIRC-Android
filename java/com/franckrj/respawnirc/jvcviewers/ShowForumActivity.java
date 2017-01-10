@@ -1,9 +1,7 @@
 package com.franckrj.respawnirc.jvcviewers;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -13,55 +11,41 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.dialogs.ChooseTopicOrForumLinkDialogFragment;
-import com.franckrj.respawnirc.dialogs.RefreshFavDialogFragment;
 import com.franckrj.respawnirc.jvctopictools.JVCTopicGetter;
 import com.franckrj.respawnirc.jvctopictools.ShowForumFragment;
 import com.franckrj.respawnirc.utils.JVCParser;
-import com.franckrj.respawnirc.utils.NavigationViewUtil;
+import com.franckrj.respawnirc.utils.AbsNavigationViewActivity;
 import com.franckrj.respawnirc.utils.WebManager;
 
-import java.util.ArrayList;
-
-public class ShowForumActivity extends AbsShowSomethingActivity implements ChooseTopicOrForumLinkDialogFragment.NewTopicOrForumSelected,
+public class ShowForumActivity extends AbsNavigationViewActivity implements ChooseTopicOrForumLinkDialogFragment.NewTopicOrForumSelected,
                                                     ShowForumFragment.NewTopicWantRead, JVCTopicGetter.NewForumNameAvailable,
-                                                    JVCTopicGetter.ForumLinkChanged, RefreshFavDialogFragment.NewFavsAvailable,
-                                                    NavigationViewUtil.NewForumOrTopicNeedToBeRead {
+                                                    JVCTopicGetter.ForumLinkChanged, PageNavigationUtil.PageNavigationFunctions {
     public static final String EXTRA_NEW_LINK = "com.franckrj.respawnirc.EXTRA_NEW_LINK";
 
-    private SharedPreferences sharedPref = null;
     private String currentTitle = "";
-    private NavigationViewUtil navigationView = null;
     private AddOrRemoveForumToFavs currentTaskForForumFavs = null;
+    private PageNavigationUtil pageNavigation = null;
 
     public ShowForumActivity() {
-        lastPage = 100;
-    }
-
-    protected AbsShowSomethingFragment createNewFragmentForRead(String possibleForumLink) {
-        ShowForumFragment currentFragment = new ShowForumFragment();
-
-        if (possibleForumLink != null) {
-            Bundle argForFrag = new Bundle();
-            argForFrag.putString(ShowForumFragment.ARG_FORUM_LINK, possibleForumLink);
-            currentFragment.setArguments(argForFrag);
-        }
-
-        return currentFragment;
+        idOfBaseActivity = R.id.action_forum_navigation;
+        pageNavigation = new PageNavigationUtil(this);
+        pageNavigation.setLastPageNumber(100);
     }
 
     private void setNewForumLink(String newLink) {
-        currentLink = newLink;
+        pageNavigation.setCurrentLink(newLink);
         setTitle(R.string.app_name);
-        updateAdapterForPagerView();
-        updateCurrentItemAndButtonsToCurrentLink();
-        if (pagerView.getCurrentItem() > 0) {
-            clearPageForThisFragment(0);
+        pageNavigation.updateAdapterForPagerView();
+        pageNavigation.updateCurrentItemAndButtonsToCurrentLink();
+        if (pageNavigation.getCurrentItemIndex() > 0) {
+            pageNavigation.clearPageForThisFragment(0);
         }
     }
 
@@ -107,54 +91,28 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
     }
 
     private ShowForumFragment getCurrentFragment() {
-        return (ShowForumFragment) adapterForPagerView.getFragment(pagerView.getCurrentItem());
+        return (ShowForumFragment) pageNavigation.getCurrentFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_showforum);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_showforum);
-        setSupportActionBar(myToolbar);
+        pageNavigation.initializePagerView((ViewPager) findViewById(R.id.pager_showforum));
+        pageNavigation.initializeNavigationButtons((Button) findViewById(R.id.firstpage_button_showforum), (Button) findViewById(R.id.previouspage_button_showforum),
+                        (Button) findViewById(R.id.currentpage_button_showforum), (Button) findViewById(R.id.nextpage_button_showforum), null);
+        pageNavigation.updateAdapterForPagerView();
 
-        ActionBar myActionBar = getSupportActionBar();
-        if (myActionBar != null) {
-            myActionBar.setHomeButtonEnabled(true);
-            myActionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-        sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        navigationView = new NavigationViewUtil(this, sharedPref, R.id.action_forum_navigation);
-
-        pagerView = (ViewPager) findViewById(R.id.pager_showforum);
-        firstPageButton = (Button) findViewById(R.id.firstpage_button_showforum);
-        previousPageButton = (Button) findViewById(R.id.previouspage_button_showforum);
-        currentPageButton = (Button) findViewById(R.id.currentpage_button_showforum);
-        nextPageButton = (Button) findViewById(R.id.nextpage_button_showforum);
-
-        navigationView.initialize((DrawerLayout) findViewById(R.id.layout_drawer_showforum), (NavigationView) findViewById(R.id.navigation_view_showforum));
-        updateAdapterForPagerView();
-
-        pagerView.addOnPageChangeListener(pageChangeOnPagerListener);
-        initializeNavigationButtons();
-
-        currentLink = sharedPref.getString(getString(R.string.prefForumUrlToFetch), "");
+        pageNavigation.setCurrentLink(sharedPref.getString(getString(R.string.prefForumUrlToFetch), ""));
         if (savedInstanceState == null) {
             currentTitle = getString(R.string.app_name);
             onNewIntent(getIntent());
-            updateCurrentItemAndButtonsToCurrentLink();
+            pageNavigation.updateCurrentItemAndButtonsToCurrentLink();
         } else {
             currentTitle = savedInstanceState.getString(getString(R.string.saveCurrentForumTitle), getString(R.string.app_name));
-            updateNavigationButtons();
+            pageNavigation.updateNavigationButtons();
         }
         setTitle(currentTitle);
-    }
-
-    @Override
-    public void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        navigationView.syncStateOfToggleForDrawer();
     }
 
     @Override
@@ -173,25 +131,16 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
         SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
         sharedPrefEdit.putInt(getString(R.string.prefLastActivityViewed), MainActivity.ACTIVITY_SHOW_FORUM);
         sharedPrefEdit.apply();
-
-        navigationView.updateNavigationViewIfNeeded();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         stopAllCurrentTasks();
-        if (!currentLink.isEmpty()) {
+        if (!pageNavigation.getCurrentLink().isEmpty()) {
             SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
-            sharedPrefEdit.putString(getString(R.string.prefForumUrlToFetch), setShowedPageNumberForThisLink(currentLink, pagerView.getCurrentItem() + 1));
+            sharedPrefEdit.putString(getString(R.string.prefForumUrlToFetch), setShowedPageNumberForThisLink(pageNavigation.getCurrentLink(), pageNavigation.getCurrentItemIndex() + 1));
             sharedPrefEdit.apply();
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (!navigationView.closeNavigationView()) {
-            super.onBackPressed();
         }
     }
 
@@ -199,12 +148,6 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(getString(R.string.saveCurrentForumTitle), currentTitle);
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        navigationView.onConfigurationChangedForToggleForDrawer(newConfig);
     }
 
     @Override
@@ -217,7 +160,7 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        if (!navigationView.getPseudoOfUser().isEmpty()) {
+        if (!pseudoOfUser.isEmpty()) {
             if (getCurrentFragment().getIsInFavs() != null) {
                 menu.findItem(R.id.action_change_forum_fav_value_showforum).setEnabled(true);
                 if (getCurrentFragment().getIsInFavs()) {
@@ -234,15 +177,11 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (navigationView.onOptionsItemSelectedForToggleForDrawer(item)) {
-            return true;
-        }
-
         switch (item.getItemId()) {
             case R.id.action_change_forum_fav_value_showforum:
                 if (currentTaskForForumFavs == null) {
                     currentTaskForForumFavs = new AddOrRemoveForumToFavs(!getCurrentFragment().getIsInFavs());
-                    currentTaskForForumFavs.execute(JVCParser.getForumIDOfThisForum(currentLink), getCurrentFragment().getLatestAjaxInfos().pref, sharedPref.getString(getString(R.string.prefCookiesList), ""));
+                    currentTaskForForumFavs.execute(JVCParser.getForumIDOfThisForum(pageNavigation.getCurrentLink()), getCurrentFragment().getLatestAjaxInfos().pref, sharedPref.getString(getString(R.string.prefCookiesList), ""));
                 } else {
                     Toast.makeText(ShowForumActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
                 }
@@ -250,6 +189,32 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void initializeViewAndToolbar() {
+        setContentView(R.layout.activity_showforum);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_showforum);
+        setSupportActionBar(myToolbar);
+
+        ActionBar myActionBar = getSupportActionBar();
+        if (myActionBar != null) {
+            myActionBar.setHomeButtonEnabled(true);
+            myActionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        layoutForDrawer = (DrawerLayout) findViewById(R.id.layout_drawer_showforum);
+        navigationForDrawer = (NavigationView) findViewById(R.id.navigation_view_showforum);
+    }
+
+    @Override
+    protected void newForumOrTopicToRead(String link, boolean itsAForum, boolean isWhenDrawerIsClosed) {
+        if (itsAForum && !isWhenDrawerIsClosed) {
+            setTopicOrForum(link, true, null);
+        } else if (!itsAForum && isWhenDrawerIsClosed) {
+            setTopicOrForum(link, true, null);
         }
     }
 
@@ -275,33 +240,40 @@ public class ShowForumActivity extends AbsShowSomethingActivity implements Choos
 
     @Override
     public void updateForumLink(String newForumLink) {
-        currentLink = newForumLink;
+        pageNavigation.setCurrentLink(newForumLink);
     }
 
     @Override
-    protected int getShowablePageNumberForThisLink(String link) {
+    public void onPageLoaded() {
+        //rien
+    }
+
+    @Override
+    public void extendPageSelection(View buttonView) {
+        //rien
+    }
+
+    @Override
+    public AbsShowSomethingFragment createNewFragmentForRead(String possibleForumLink) {
+        ShowForumFragment currentFragment = new ShowForumFragment();
+
+        if (possibleForumLink != null) {
+            Bundle argForFrag = new Bundle();
+            argForFrag.putString(ShowForumFragment.ARG_FORUM_LINK, possibleForumLink);
+            currentFragment.setArguments(argForFrag);
+        }
+
+        return currentFragment;
+    }
+
+    @Override
+    public int getShowablePageNumberForThisLink(String link) {
         return ((Integer.parseInt(JVCParser.getPageNumberForThisForumLink(link)) - 1) / 25) + 1;
     }
 
     @Override
-    protected String setShowedPageNumberForThisLink(String link, int newPageNumber) {
+    public String setShowedPageNumberForThisLink(String link, int newPageNumber) {
         return JVCParser.setPageNumberForThisForumLink(link, ((newPageNumber - 1) * 25) + 1);
-    }
-
-    @Override
-    public void getNewFavs(ArrayList<JVCParser.NameAndLink> listOfFavs, int typeOfFav) {
-        if (!navigationView.updateFavs(listOfFavs, typeOfFav)) {
-            Toast.makeText(this, R.string.errorDuringFetchFavs, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void newForumOrTopicToRead(String link, boolean itsAForum, boolean isWhenDrawerIsClosed) {
-        if (itsAForum && !isWhenDrawerIsClosed) {
-            setTopicOrForum(link, true, null);
-        } else if (!itsAForum && isWhenDrawerIsClosed) {
-            setTopicOrForum(link, true, null);
-        }
     }
 
     private class AddOrRemoveForumToFavs extends AsyncTask<String, Void, String> {

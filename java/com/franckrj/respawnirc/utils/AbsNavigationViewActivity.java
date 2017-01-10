@@ -1,6 +1,6 @@
 package com.franckrj.respawnirc.utils;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -11,6 +11,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -28,25 +29,24 @@ import com.franckrj.respawnirc.dialogs.RefreshFavDialogFragment;
 
 import java.util.ArrayList;
 
-public class NavigationViewUtil {
-    private Activity parentActivity = null;
-    private DrawerLayout layoutForDrawer = null;
-    private NavigationView navigationForDrawer = null;
-    private TextView pseudoTextNavigation = null;
-    private ImageView contextConnectImageNavigation = null;
-    private ActionBarDrawerToggle toggleForDrawer = null;
-    private int lastItemSelected = -1;
-    private SharedPreferences sharedPref = null;
-    private String pseudoOfUser = "";
-    private boolean isInNavigationConnectMode = false;
-    private SubMenu forumFavSubMenu = null;
-    private MenuItem refreshForumFavExtern = null;
-    private SubMenu topicFavSubMenu = null;
-    private MenuItem refreshTopicFavExtern = null;
-    private String newFavSelected = "";
-    private int idOfBaseAcitivy = -1;
+public abstract class AbsNavigationViewActivity extends AppCompatActivity implements RefreshFavDialogFragment.NewFavsAvailable {
+    protected DrawerLayout layoutForDrawer = null;
+    protected NavigationView navigationForDrawer = null;
+    protected TextView pseudoTextNavigation = null;
+    protected ImageView contextConnectImageNavigation = null;
+    protected ActionBarDrawerToggle toggleForDrawer = null;
+    protected int lastItemSelected = -1;
+    protected SharedPreferences sharedPref = null;
+    protected String pseudoOfUser = "";
+    protected boolean isInNavigationConnectMode = false;
+    protected SubMenu forumFavSubMenu = null;
+    protected MenuItem refreshForumFavExtern = null;
+    protected SubMenu topicFavSubMenu = null;
+    protected MenuItem refreshTopicFavExtern = null;
+    protected String newFavSelected = "";
+    protected int idOfBaseActivity = -1;
 
-    private NavigationView.OnNavigationItemSelectedListener itemInNavigationClickedListener = new NavigationView.OnNavigationItemSelectedListener() {
+    protected NavigationView.OnNavigationItemSelectedListener itemInNavigationClickedListener = new NavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             if ((item.getItemId() == R.id.action_refresh_forum_fav_navigation || item.getItemId() == R.id.action_refresh_topic_fav_navigation) && item.getGroupId() == Menu.NONE) {
@@ -55,7 +55,7 @@ public class NavigationViewUtil {
                     RefreshFavDialogFragment refreshFavsDialogFragment = new RefreshFavDialogFragment();
 
                     argForFrag.putString(RefreshFavDialogFragment.ARG_PSEUDO, pseudoOfUser);
-                    argForFrag.putString(RefreshFavDialogFragment.ARG_COOKIE_LIST, sharedPref.getString(parentActivity.getString(R.string.prefCookiesList), ""));
+                    argForFrag.putString(RefreshFavDialogFragment.ARG_COOKIE_LIST, sharedPref.getString(getString(R.string.prefCookiesList), ""));
                     if (item.getItemId() == R.id.action_refresh_forum_fav_navigation) {
                         argForFrag.putInt(RefreshFavDialogFragment.ARG_FAV_TYPE, RefreshFavDialogFragment.FAV_FORUM);
                     } else {
@@ -63,25 +63,21 @@ public class NavigationViewUtil {
                     }
 
                     refreshFavsDialogFragment.setArguments(argForFrag);
-                    refreshFavsDialogFragment.show(parentActivity.getFragmentManager(), "RefreshFavDialogFragment");
+                    refreshFavsDialogFragment.show(getFragmentManager(), "RefreshFavDialogFragment");
                 } else {
-                    Toast.makeText(parentActivity, R.string.errorConnectNeeded, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AbsNavigationViewActivity.this, R.string.errorConnectNeeded, Toast.LENGTH_SHORT).show();
                 }
                 return false;
             } else if (item.getGroupId() == R.id.group_forum_fav_navigation) {
                 lastItemSelected = R.id.action_forum_fav_selected;
-                newFavSelected = sharedPref.getString(parentActivity.getString(R.string.prefForumFavLink) + String.valueOf(item.getItemId()), "");
-                if (parentActivity instanceof NewForumOrTopicNeedToBeRead) {
-                    ((NewForumOrTopicNeedToBeRead) parentActivity).newForumOrTopicToRead(newFavSelected, true, false);
-                }
+                newFavSelected = sharedPref.getString(getString(R.string.prefForumFavLink) + String.valueOf(item.getItemId()), "");
+                newForumOrTopicToRead(newFavSelected, true, false);
                 layoutForDrawer.closeDrawer(navigationForDrawer);
                 return true;
             } else if (item.getGroupId() == R.id.group_topic_fav_navigation) {
                 lastItemSelected = R.id.action_topic_fav_selected;
-                newFavSelected = sharedPref.getString(parentActivity.getString(R.string.prefTopicFavLink) + String.valueOf(item.getItemId()), "");
-                if (parentActivity instanceof NewForumOrTopicNeedToBeRead) {
-                    ((NewForumOrTopicNeedToBeRead) parentActivity).newForumOrTopicToRead(newFavSelected, false, false);
-                }
+                newFavSelected = sharedPref.getString(getString(R.string.prefTopicFavLink) + String.valueOf(item.getItemId()), "");
+                newForumOrTopicToRead(newFavSelected, false, false);
                 layoutForDrawer.closeDrawer(navigationForDrawer);
                 return true;
             } else {
@@ -105,12 +101,6 @@ public class NavigationViewUtil {
         }
     };
 
-    public NavigationViewUtil(Activity newParentActivity, SharedPreferences newSharedPref, int newIdOfBaseActivity) {
-        parentActivity = newParentActivity;
-        sharedPref = newSharedPref;
-        idOfBaseAcitivy = newIdOfBaseActivity;
-    }
-
     private void updateNavigationMenu() {
         if (!pseudoOfUser.isEmpty()) {
             pseudoTextNavigation.setText(pseudoOfUser);
@@ -129,37 +119,37 @@ public class NavigationViewUtil {
             refreshTopicFavExtern = navigationForDrawer.getMenu().add(Menu.NONE, R.id.action_refresh_topic_fav_navigation, Menu.NONE, R.string.refresh);
             refreshTopicFavExtern.setIcon(R.drawable.ic_action_navigation_refresh);
             updateFavsInNavigationMenu();
-            navigationForDrawer.setCheckedItem(idOfBaseAcitivy);
+            navigationForDrawer.setCheckedItem(idOfBaseActivity);
 
-            if (idOfBaseAcitivy != R.id.action_forum_navigation) {
+            if (idOfBaseActivity != R.id.action_forum_navigation) {
                 navigationForDrawer.getMenu().findItem(R.id.action_forum_navigation).setVisible(false);
             }
 
             if (pseudoOfUser.isEmpty()) {
-                contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.ic_action_content_add_circle_outline));
+                contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_action_content_add_circle_outline));
             } else {
-                contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.ic_action_navigation_expand_more));
+                contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_action_navigation_expand_more));
             }
         } else {
             navigationForDrawer.getMenu().clear();
             navigationForDrawer.inflateMenu(R.menu.menu_navigation_view_already_connected);
-            contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.ic_action_navigation_expand_less));
+            contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_action_navigation_expand_less));
         }
     }
 
     private void updateFavsInNavigationMenu() {
-        int currentForumFavArraySize = sharedPref.getInt(parentActivity.getString(R.string.prefForumFavArraySize), 0);
-        int currentTopicFavArraySize = sharedPref.getInt(parentActivity.getString(R.string.prefTopicFavArraySize), 0);
+        int currentForumFavArraySize = sharedPref.getInt(getString(R.string.prefForumFavArraySize), 0);
+        int currentTopicFavArraySize = sharedPref.getInt(getString(R.string.prefTopicFavArraySize), 0);
 
         forumFavSubMenu.clear();
         for (int i = 0; i < currentForumFavArraySize; ++i) {
-            forumFavSubMenu.add(R.id.group_forum_fav_navigation, i, Menu.NONE, sharedPref.getString(parentActivity.getString(R.string.prefForumFavName) + String.valueOf(i), ""));
+            forumFavSubMenu.add(R.id.group_forum_fav_navigation, i, Menu.NONE, sharedPref.getString(getString(R.string.prefForumFavName) + String.valueOf(i), ""));
         }
         forumFavSubMenu.setGroupCheckable(R.id.group_forum_fav_navigation, true, true);
 
         topicFavSubMenu.clear();
         for (int i = 0; i < currentTopicFavArraySize; ++i) {
-            topicFavSubMenu.add(R.id.group_topic_fav_navigation, i, Menu.NONE, sharedPref.getString(parentActivity.getString(R.string.prefTopicFavName) + String.valueOf(i), ""));
+            topicFavSubMenu.add(R.id.group_topic_fav_navigation, i, Menu.NONE, sharedPref.getString(getString(R.string.prefTopicFavName) + String.valueOf(i), ""));
         }
         topicFavSubMenu.setGroupCheckable(R.id.group_topic_fav_navigation, true, true);
 
@@ -179,13 +169,15 @@ public class NavigationViewUtil {
         }
     }
 
-    public void initialize(DrawerLayout newLayoutForDrawer, NavigationView newNavigationForDrawer) {
-        pseudoOfUser = sharedPref.getString(parentActivity.getString(R.string.prefPseudoUser), "");
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initializeViewAndToolbar();
 
-        layoutForDrawer = newLayoutForDrawer;
-        navigationForDrawer = newNavigationForDrawer;
+        sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        pseudoOfUser = sharedPref.getString(getString(R.string.prefPseudoUser), "");
 
-        toggleForDrawer = new ActionBarDrawerToggle(parentActivity, layoutForDrawer, R.string.openDrawerContentDescRes, R.string.closeDrawerContentDescRes) {
+        toggleForDrawer = new ActionBarDrawerToggle(this, layoutForDrawer, R.string.openDrawerContentDescRes, R.string.closeDrawerContentDescRes) {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
@@ -199,39 +191,35 @@ public class NavigationViewUtil {
                 if (lastItemSelected != -1) {
                     switch (lastItemSelected) {
                         case R.id.action_home_navigation:
-                            if (idOfBaseAcitivy != R.id.action_home_navigation) {
-                                Intent newShowForumIntent = new Intent(parentActivity, SelectForumActivity.class);
+                            if (idOfBaseActivity != R.id.action_home_navigation) {
+                                Intent newShowForumIntent = new Intent(AbsNavigationViewActivity.this, SelectForumActivity.class);
                                 newShowForumIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                parentActivity.startActivity(newShowForumIntent);
-                                parentActivity.finish();
+                                startActivity(newShowForumIntent);
+                                finish();
                             }
                             break;
                         case R.id.action_connect_new_account_navigation:
                         case R.id.action_connect_navigation:
-                            parentActivity.startActivity(new Intent(parentActivity, ConnectActivity.class));
+                            startActivity(new Intent(AbsNavigationViewActivity.this, ConnectActivity.class));
                             break;
                         case R.id.action_choose_topic_forum_navigation:
                             ChooseTopicOrForumLinkDialogFragment chooseLinkDialogFragment = new ChooseTopicOrForumLinkDialogFragment();
-                            chooseLinkDialogFragment.show(parentActivity.getFragmentManager(), "ChooseTopicOrForumLinkDialogFragment");
+                            chooseLinkDialogFragment.show(getFragmentManager(), "ChooseTopicOrForumLinkDialogFragment");
                             break;
                         case R.id.action_settings_navigation:
-                            parentActivity.startActivity(new Intent(parentActivity, SettingsActivity.class));
+                            startActivity(new Intent(AbsNavigationViewActivity.this, SettingsActivity.class));
                             break;
                         case R.id.action_forum_fav_selected:
-                            if (parentActivity instanceof NewForumOrTopicNeedToBeRead) {
-                                ((NewForumOrTopicNeedToBeRead) parentActivity).newForumOrTopicToRead(newFavSelected, true, true);
-                            }
+                            newForumOrTopicToRead(newFavSelected, true, true);
                             newFavSelected = "";
                             break;
                         case R.id.action_topic_fav_selected:
-                            if (parentActivity instanceof NewForumOrTopicNeedToBeRead) {
-                                ((NewForumOrTopicNeedToBeRead) parentActivity).newForumOrTopicToRead(newFavSelected, false, true);
-                            }
+                            newForumOrTopicToRead(newFavSelected, false, true);
                             newFavSelected = "";
                             break;
                     }
                 }
-                navigationForDrawer.setCheckedItem(idOfBaseAcitivy);
+                navigationForDrawer.setCheckedItem(idOfBaseActivity);
 
                 if (isInNavigationConnectMode) {
                     isInNavigationConnectMode = false;
@@ -249,7 +237,7 @@ public class NavigationViewUtil {
         pseudoTextNavigation = (TextView) navigationHeader.findViewById(R.id.pseudo_text_navigation_header);
         contextConnectImageNavigation = (ImageView) navigationHeader.findViewById(R.id.context_connect_image_navigation_header);
         navigationForDrawer.setItemTextColor(null);
-        navigationForDrawer.setItemIconTintList(Undeprecator.resourcesGetColorStateList(parentActivity.getResources(), R.color.navigation_menu_item));
+        navigationForDrawer.setItemIconTintList(Undeprecator.resourcesGetColorStateList(getResources(), R.color.navigation_menu_item));
         navigationForDrawer.setNavigationItemSelectedListener(itemInNavigationClickedListener);
         navigationHeader.setOnClickListener(headerClickedListener);
         layoutForDrawer.addDrawerListener(toggleForDrawer);
@@ -257,18 +245,22 @@ public class NavigationViewUtil {
         updateNavigationMenu();
 
         if (Build.VERSION.SDK_INT > 15) {
-            Undeprecator.viewSetBackgroundDrawable(navigationHeader, Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.navigation_header_background));
+            Undeprecator.viewSetBackgroundDrawable(navigationHeader, Undeprecator.resourcesGetDrawable(getResources(), R.drawable.navigation_header_background));
         } else {
-            navigationHeader.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.colorPrimaryDark));
+            navigationHeader.setBackgroundColor(Undeprecator.resourcesGetColor(getResources(), R.color.colorPrimaryDark));
         }
     }
 
-    public void syncStateOfToggleForDrawer() {
+    @Override
+    public void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         toggleForDrawer.syncState();
     }
 
-    public void updateNavigationViewIfNeeded() {
-        String tmpPseudoOfUser = sharedPref.getString(parentActivity.getString(R.string.prefPseudoUser), "");
+    @Override
+    public void onResume() {
+        super.onResume();
+        String tmpPseudoOfUser = sharedPref.getString(getString(R.string.prefPseudoUser), "");
 
         if (!tmpPseudoOfUser.equals(pseudoOfUser)) {
             pseudoOfUser = tmpPseudoOfUser;
@@ -276,24 +268,33 @@ public class NavigationViewUtil {
         }
     }
 
-    public boolean closeNavigationView() {
+    @Override
+    public void onBackPressed() {
         if (layoutForDrawer.isDrawerOpen(navigationForDrawer)) {
             layoutForDrawer.closeDrawer(navigationForDrawer);
-            return true;
         } else {
-            return false;
+            super.onBackPressed();
         }
     }
 
-    public void onConfigurationChangedForToggleForDrawer(Configuration newConfig) {
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
         toggleForDrawer.onConfigurationChanged(newConfig);
     }
 
-    public boolean onOptionsItemSelectedForToggleForDrawer(MenuItem item) {
-        return toggleForDrawer.onOptionsItemSelected(item);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //noinspection SimplifiableIfStatement
+        if (toggleForDrawer.onOptionsItemSelected(item)) {
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
-    public boolean updateFavs(ArrayList<JVCParser.NameAndLink> listOfFavs, int typeOfFav) {
+    @Override
+    public void getNewFavs(ArrayList<JVCParser.NameAndLink> listOfFavs, int typeOfFav) {
         if (listOfFavs != null) {
             SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
             String prefFavArrayize;
@@ -302,13 +303,13 @@ public class NavigationViewUtil {
             int currentForumFavArraySize;
 
             if (typeOfFav == RefreshFavDialogFragment.FAV_FORUM) {
-                prefFavArrayize = parentActivity.getString(R.string.prefForumFavArraySize);
-                prefFavName = parentActivity.getString(R.string.prefForumFavName);
-                prefFavLink = parentActivity.getString(R.string.prefForumFavLink);
+                prefFavArrayize = getString(R.string.prefForumFavArraySize);
+                prefFavName = getString(R.string.prefForumFavName);
+                prefFavLink = getString(R.string.prefForumFavLink);
             } else {
-                prefFavArrayize = parentActivity.getString(R.string.prefTopicFavArraySize);
-                prefFavName = parentActivity.getString(R.string.prefTopicFavName);
-                prefFavLink = parentActivity.getString(R.string.prefTopicFavLink);
+                prefFavArrayize = getString(R.string.prefTopicFavArraySize);
+                prefFavName = getString(R.string.prefTopicFavName);
+                prefFavLink = getString(R.string.prefTopicFavLink);
             }
 
             currentForumFavArraySize = sharedPref.getInt(prefFavArrayize, 0);
@@ -327,17 +328,11 @@ public class NavigationViewUtil {
 
             sharedPrefEdit.apply();
             updateFavsInNavigationMenu();
-            return true;
         } else {
-            return false;
+            Toast.makeText(this, R.string.errorDuringFetchFavs, Toast.LENGTH_SHORT).show();
         }
     }
 
-    public String getPseudoOfUser() {
-        return pseudoOfUser;
-    }
-
-    public interface NewForumOrTopicNeedToBeRead {
-        void newForumOrTopicToRead(String link, boolean itsAForum, boolean isWhenDrawerIsClosed);
-    }
+    protected abstract void initializeViewAndToolbar();
+    protected abstract void newForumOrTopicToRead(String link, boolean itsAForum, boolean isWhenDrawerIsClosed);
 }
