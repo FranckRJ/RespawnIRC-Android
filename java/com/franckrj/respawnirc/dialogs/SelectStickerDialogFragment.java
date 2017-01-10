@@ -213,6 +213,8 @@ public class SelectStickerDialogFragment extends DialogFragment {
             appendAnotherSticker("sticker_1ntu", textForShowAllStickers);
             appendAnotherSticker("sticker_1ntv", textForShowAllStickers);
             appendAnotherSticker("sticker_1ntw", textForShowAllStickers);
+            appendAnotherSticker("sticker_1ntx", textForShowAllStickers);
+            appendAnotherSticker("sticker_1nty", textForShowAllStickers);
             appendAnotherSticker("sticker_1ntz", textForShowAllStickers);
             appendAnotherSticker("sticker_1nu0", textForShowAllStickers);
             appendAnotherSticker("sticker_1nu6", textForShowAllStickers);
