@@ -14,7 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -101,9 +100,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         @Override
         public void onClick(View buttonView) {
             if (messageSendButton.isEnabled() && reasonOfLock == null) {
-                InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 String tmpLastMessageSended = "";
-                View focusedView;
 
                 if (!pseudoOfUser.isEmpty()) {
                     if (!senderForMessages.getIsInEdit()) {
@@ -126,10 +123,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
                     Toast.makeText(ShowTopicActivity.this, R.string.errorConnectedNeededBeforePost, Toast.LENGTH_LONG).show();
                 }
 
-                focusedView = getCurrentFocus();
-                if (focusedView != null) {
-                    inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                }
+                Utils.hideSoftKeyboard(ShowTopicActivity.this);
 
                 if (!tmpLastMessageSended.isEmpty()) {
                     SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();

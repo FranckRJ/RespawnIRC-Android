@@ -109,7 +109,9 @@
             android:orientation="horizontal"
             android:gravity="center"
             android:layout_alignParentBottom="true"
-            android:background="#eee">
+            android:background="#eee"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
             <ImageButton
                 style="@style/SelectableItemBackground"
                 android:id="@+id/selectsticker_button_showtopic"
