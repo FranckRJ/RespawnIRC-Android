@@ -143,6 +143,10 @@
     <string name="saveListOfSearchedForumShowed">save.listOfSearchedForumShowed</string>
     <string name="saveSearchForumContent">save.searchForumContent</string>
     <string name="selectSticker">Sélectionner un sticker</string>
+    <string name="transformStickerToSmileyDefault">false</string>
+    <string name="settingsTransformStickerToSmiley">settings.transformStickerToSmiley</string>
+    <string name="transformStickerToSmileyTitle">Changer les stickers en smiley</string>
+    <string name="transformStickerToSmileySummary">(Tous les stickers ne sont pas changés)</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInBrowser</item>

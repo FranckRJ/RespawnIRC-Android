@@ -12,6 +12,11 @@
             android:key="@string/settingsShowNoelshackImage"
             android:title="@string/showNoelshackImageTitle"
             android:defaultValue="@string/showNoelshackImageDefault"/>
+        <CheckBoxPreference
+            android:key="@string/settingsTransformStickerToSmiley"
+            android:title="@string/transformStickerToSmileyTitle"
+            android:summary="@string/transformStickerToSmileySummary"
+            android:defaultValue="@string/transformStickerToSmileyDefault"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/settingsGeneralIRCTitle">

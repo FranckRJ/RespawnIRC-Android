@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class StickerConverter {
     public static StickerConvertRule ruleForNoLangageSticker = null;
+    public static StickerConvertRule ruleForStickerToSmiley = null;
 
     public static void initializeBasesRules() {
         ruleForNoLangageSticker = new StickerConvertRule();
@@ -18,6 +19,55 @@ public class StickerConverter {
         ruleForNoLangageSticker.listOfConvert.add(new InfoForConvert("1n1m", "1n1m-fr"));
         ruleForNoLangageSticker.listOfConvert.add(new InfoForConvert("1n1p", "1n1p-fr"));
         ruleForNoLangageSticker.convertToSmiley = false;
+
+        ruleForStickerToSmiley = new StickerConvertRule();
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1jnh", "45.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1kki", "1.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1jng", "15.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1jni", "56.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1jnj", "61.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1kku", "hapoelparty.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1klb", "54.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1kl8", "54.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1lgg", "45.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1jnf", "45.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1jne", "57.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1kkl", "play.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1kkh", "60.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1lmk", "14.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1jnd", "67.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1lmh", "nyu.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1kkn", "36.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1jnc", "41.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1kkr", "11.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1kkq", "11.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1lgd", "70.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1kkp", "11.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1ljp", "36.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1lmn", "62.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1kl6", "66.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("zu2", "41.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1lml", "27.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1lge", "36.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1lm9", "36.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("zuc", "36.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1jc5", "54.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1kl4", "52.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1jc3-fr", "42.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1jch", "41.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1lmc", "14.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1lmb", "39.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1lma", "70.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1lgc", "2.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1mqx", "62.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("zua", "27.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("zu9", "15.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("zu8", "57.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1lgf", "70.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1lgb", "15.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1lgh", "pf.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1lga", "46.gif"));
+        ruleForStickerToSmiley.convertToSmiley = true;
     }
 
     public static String convertStickerWithThisRule(String messageToConvert, StickerConvertRule ruleToFollow) {
@@ -26,6 +76,9 @@ public class StickerConverter {
                 if (!ruleToFollow.convertToSmiley) {
                     messageToConvert = messageToConvert.replace("<img class=\"img-stickers\" src=\"http://jv.stkr.fr/p/" + thisInfo.base + "\"/>",
                                                                 "<img class=\"img-stickers\" src=\"http://jv.stkr.fr/p/" + thisInfo.replacement + "\"/>");
+                } else {
+                    messageToConvert = messageToConvert.replace("<img class=\"img-stickers\" src=\"http://jv.stkr.fr/p/" + thisInfo.base + "\"/>",
+                            "<img src=\"//image.jeuxvideo.com/smileys_img/" + thisInfo.replacement + "\" alt=\"\" data-def=\"SMILEYS\" data-code=\"\" title=\"\" />");
                 }
             }
         }

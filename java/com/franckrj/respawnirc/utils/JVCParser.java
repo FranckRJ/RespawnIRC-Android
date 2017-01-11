@@ -542,6 +542,9 @@ public final class JVCParser {
         tmpMessage = parseThisMessageWithThisPattern(tmpMessage, codeBlockPattern, 1, "<p><font face=\"monospace\">", "</font></p>", new ConvertStringToString("\n", "<br />"), new ConvertStringToString(" ", " ")); //remplace les espaces par des alt+255
         tmpMessage = parseThisMessageWithThisPattern(tmpMessage, codeLinePattern, 1, "<font face=\"monospace\">", "</font>", new ConvertStringToString(" ", " "), null); //remplace les espaces par des alt+255
         tmpMessage = StickerConverter.convertStickerWithThisRule(tmpMessage, StickerConverter.ruleForNoLangageSticker);
+        if (settings.transformStickerToSmiley) {
+            tmpMessage = StickerConverter.convertStickerWithThisRule(tmpMessage, StickerConverter.ruleForStickerToSmiley);
+        }
         tmpMessage = parseThisMessageWithThisPattern(tmpMessage, stickerPattern, 2, "<img src=\"sticker_", ".png\"/>", new ConvertStringToString("-", "_"), null);
 
         tmpMessage = tmpMessage.replace("\n", "").replace("\r", "");
@@ -1062,6 +1065,7 @@ public final class JVCParser {
         public String colorPseudoAdmin;
         public int maxNumberOfOverlyQuotes = 0;
         public boolean showNoelshackImages = false;
+        public boolean transformStickerToSmiley = false;
     }
 
     private interface StringModifier {

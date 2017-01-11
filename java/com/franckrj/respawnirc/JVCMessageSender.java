@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
 import java.net.URLEncoder;
@@ -122,13 +123,11 @@ public class JVCMessageSender {
             super.onPostExecute(pageResult);
             String newMessageEdit = "";
 
-            if (pageResult != null) {
-                if (!pageResult.isEmpty()) {
-                    lastInfosForEdit += ajaxListInfos + "&action=post";
-                    pageResult = JVCParser.parsingAjaxMessages(pageResult);
-                    lastInfosForEdit += JVCParser.getListOfInputInAString(pageResult);
-                    newMessageEdit = JVCParser.getMessageEdit(pageResult);
-                }
+            if (!Utils.stringIsEmptyOrNull(pageResult)) {
+                lastInfosForEdit += ajaxListInfos + "&action=post";
+                pageResult = JVCParser.parsingAjaxMessages(pageResult);
+                lastInfosForEdit += JVCParser.getListOfInputInAString(pageResult);
+                newMessageEdit = JVCParser.getMessageEdit(pageResult);
             }
 
             if (newMessageEdit.isEmpty()) {
@@ -162,13 +161,11 @@ public class JVCMessageSender {
             super.onPostExecute(pageResult);
             String errorWhenSending = null;
 
-            if (pageResult != null) {
-                if (!pageResult.isEmpty()) {
-                    if (!isInEdit) {
-                        errorWhenSending = JVCParser.getErrorMessage(pageResult);
-                    } else {
-                        errorWhenSending = JVCParser.getErrorMessageInJSONMode(pageResult);
-                    }
+            if (!Utils.stringIsEmptyOrNull(pageResult)) {
+                if (!isInEdit) {
+                    errorWhenSending = JVCParser.getErrorMessage(pageResult);
+                } else {
+                    errorWhenSending = JVCParser.getErrorMessageInJSONMode(pageResult);
                 }
             }
 
