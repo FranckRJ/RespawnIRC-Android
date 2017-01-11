@@ -161,7 +161,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Choo
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        if (!pseudoOfUser.isEmpty()) {
+        if (!pseudoOfUser.isEmpty() && getCurrentFragment() != null) {
             if (getCurrentFragment().getIsInFavs() != null) {
                 menu.findItem(R.id.action_change_forum_fav_value_showforum).setEnabled(true);
                 if (getCurrentFragment().getIsInFavs()) {

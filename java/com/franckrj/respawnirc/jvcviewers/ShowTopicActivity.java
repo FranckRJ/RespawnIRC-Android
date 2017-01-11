@@ -323,7 +323,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.action_past_last_message_sended_showtopic).setEnabled(!lastMessageSended.isEmpty());
 
-        if (!pseudoOfUser.isEmpty()) {
+        if (!pseudoOfUser.isEmpty() && getCurrentFragment() != null) {
             if (getCurrentFragment().getIsInFavs() != null) {
                 menu.findItem(R.id.action_change_topic_fav_value_showtopic).setEnabled(true);
                 if (getCurrentFragment().getIsInFavs()) {
