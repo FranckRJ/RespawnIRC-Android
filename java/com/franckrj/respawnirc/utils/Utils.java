@@ -6,6 +6,8 @@ import android.text.Spannable;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import java.net.URLEncoder;
+
 public class Utils {
     public static String resColorToString(int resID, Activity baseActivity) {
         return String.format("#%06X", 0xFFFFFF & Undeprecator.resourcesGetColor(baseActivity.getResources(), resID));
@@ -45,5 +47,15 @@ public class Utils {
         int flags = inThisSpan.getSpanFlags(oldSpan);
         inThisSpan.setSpan(newSpan, start, end, flags);
         inThisSpan.removeSpan(oldSpan);
+    }
+
+    public static String convertStringToUrlString(String baseString) {
+        try {
+            baseString = URLEncoder.encode(baseString, "UTF-8");
+        } catch (Exception e) {
+            baseString = "";
+            e.printStackTrace();
+        }
+        return baseString;
     }
 }

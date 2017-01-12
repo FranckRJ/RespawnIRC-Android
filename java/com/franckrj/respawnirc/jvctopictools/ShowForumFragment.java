@@ -88,7 +88,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     private final SwipeRefreshLayout.OnRefreshListener listenerForRefresh = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
-            if (!reloadAllForum()) {
+            if (!reloadAllForum(false)) {
                 swipeRefresh.setRefreshing(false);
             }
         }
@@ -99,13 +99,17 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         clearTopicsOnRefresh = true;
     }
 
-    private boolean reloadAllForum() {
+    private boolean reloadAllForum(boolean forceDontClear) {
         isInErrorMode = false;
-        if (clearTopicsOnRefresh) {
+        if (clearTopicsOnRefresh && !forceDontClear) {
             adapterForTopics.removeAllItems();
             adapterForTopics.updateAllItems();
         }
         return getterForTopics.reloadForum();
+    }
+
+    public void refreshForum() {
+        reloadAllForum(true);
     }
 
     public void setPageLink(String newForumPageLink) {
@@ -134,6 +138,10 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
 
     public Boolean getIsInFavs() {
         return getterForTopics.getIsInFavs();
+    }
+
+    public String getLatestListOfInputInAString() {
+        return getterForTopics.getLatestListOfInputInAString();
     }
 
     public void setIsInFavs(Boolean newVal) {
@@ -236,7 +244,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_reload_forum_showforum:
-                reloadAllForum();
+                reloadAllForum(false);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

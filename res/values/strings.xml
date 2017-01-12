@@ -148,6 +148,13 @@
     <string name="transformStickerToSmileyTitle">Changer les stickers en smiley</string>
     <string name="transformStickerToSmileySummary">(Tous les stickers ne sont pas changés)</string>
     <string name="unknownErrorPleaseResend">Erreur inconnue, essayez de ré-envoyer le message.</string>
+    <string name="sendATopic">Poster un topic</string>
+    <string name="topicTitlePlaceHolder">Titre…</string>
+    <string name="topicIsSended">Le topic a été posté.</string>
+    <string name="saveRefreshNeededOnNextResume">save.refreshNeededOnNextResume</string>
+    <string name="prefLastTopicTitleSended">pref.lastTopicTitleSended</string>
+    <string name="prefLastTopicContentSended">pref.lastTopicContentSended</string>
+    <string name="pastLastTopicSended">Coller le dernier topic envoyé</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInBrowser</item>

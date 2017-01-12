@@ -136,7 +136,7 @@ public abstract class AbsJVCMessageGetter {
             newPageInfos.lastPageLink = JVCParser.getLastPageOfTopic(pageContent);
             newPageInfos.nextPageLink = JVCParser.getNextPageOfTopic(pageContent);
             newPageInfos.listOfMessages = JVCParser.getMessagesOfThisPage(pageContent);
-            newPageInfos.listOfInputInAString = JVCParser.getListOfInputInAString(pageContent);
+            newPageInfos.listOfInputInAString = JVCParser.getListOfInputInAStringInTopicFormForThisPage(pageContent);
             newPageInfos.ajaxInfosOfThisPage = JVCParser.getAllAjaxInfos(pageContent);
             newPageInfos.newNames = JVCParser.getForumAndTopicNameInTopicPage(pageContent);
             newPageInfos.newIsInFavs = JVCParser.getIsInFavsFromPage(pageContent);

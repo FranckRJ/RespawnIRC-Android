@@ -24,7 +24,7 @@ public final class JVCParser {
     private static final Pattern currentPagePattern = Pattern.compile("<span class=\"page-active\">([^<]*)</span>");
     private static final Pattern pageLinkPattern = Pattern.compile("<span><a href=\"([^\"]*)\" class=\"lien-jv\">([0-9]*)</a></span>");
     private static final Pattern topicFormPattern = Pattern.compile("(<form role=\"form\" class=\"form-post-topic[^\"]*\" method=\"post\" action=\"\".*?>.*?</form>)", Pattern.DOTALL);
-    private static final Pattern inputFormPattern = Pattern.compile("<input ([^=]*)=\"([^\"]*)\" ([^=]*)=\"([^\"]*)\" ([^=]*)=\"([^\"]*)\"/>");
+    private static final Pattern inputFormPattern = Pattern.compile("<input (type|name|value)=\"([^\"]*)\" (type|name|value)=\"([^\"]*)\" (type|name|value)=\"([^\"]*)\"/>");
     private static final Pattern dateMessagePattern = Pattern.compile("<div class=\"bloc-date-msg\">([^<]*<span class=\"JvCare [^ ]* lien-jv\" target=\"_blank\">)?[^a-zA-Z0-9]*([^ ]* [^ ]* [^ ]* [^ ]* ([0-9:]*))");
     private static final Pattern messageIDPattern = Pattern.compile("<div class=\"bloc-message-forum \" data-id=\"([^\"]*)\">");
     private static final Pattern unicodeInTextPattern = Pattern.compile("\\\\u([a-zA-Z0-9]{4})");
@@ -430,37 +430,40 @@ public final class JVCParser {
         return newAjaxInfos;
     }
 
-    public static String getListOfInputInAString(String pageSource) {
-        StringBuilder allInputInAString = new StringBuilder();
+    public static String getListOfInputInAStringInTopicFormForThisPage(String pageSource) {
         Matcher topicFormMatcher = topicFormPattern.matcher(pageSource);
 
         if (topicFormMatcher.find()) {
-            Matcher inputFormMatcher;
-            pageSource = topicFormMatcher.group(1);
+            return getListOfInputInAStringInThisForm(topicFormMatcher.group(1));
+        }
 
-            inputFormMatcher = inputFormPattern.matcher(pageSource);
+        return "";
+    }
 
-            while (inputFormMatcher.find()) {
-                allInputInAString.append("&");
+    public static String getListOfInputInAStringInThisForm(String thisForm) {
+        Matcher inputFormMatcher = inputFormPattern.matcher(thisForm);
+        StringBuilder allInputInAString = new StringBuilder();
 
-                if (inputFormMatcher.group(1).equals("type")) {
-                    if (inputFormMatcher.group(3).equals("name")) {
-                        allInputInAString.append(inputFormMatcher.group(4)).append("=").append(inputFormMatcher.group(6));
-                    } else {
-                        allInputInAString.append(inputFormMatcher.group(6)).append("=").append(inputFormMatcher.group(4));
-                    }
-                } else if (inputFormMatcher.group(3).equals("type")) {
-                    if (inputFormMatcher.group(1).equals("name")) {
-                        allInputInAString.append(inputFormMatcher.group(2)).append("=").append(inputFormMatcher.group(6));
-                    } else {
-                        allInputInAString.append(inputFormMatcher.group(6)).append("=").append(inputFormMatcher.group(2));
-                    }
+        while (inputFormMatcher.find()) {
+            allInputInAString.append("&");
+
+            if (inputFormMatcher.group(1).equals("type")) {
+                if (inputFormMatcher.group(3).equals("name")) {
+                    allInputInAString.append(inputFormMatcher.group(4)).append("=").append(inputFormMatcher.group(6));
                 } else {
-                    if (inputFormMatcher.group(1).equals("name")) {
-                        allInputInAString.append(inputFormMatcher.group(2)).append("=").append(inputFormMatcher.group(4));
-                    } else {
-                        allInputInAString.append(inputFormMatcher.group(4)).append("=").append(inputFormMatcher.group(2));
-                    }
+                    allInputInAString.append(inputFormMatcher.group(6)).append("=").append(inputFormMatcher.group(4));
+                }
+            } else if (inputFormMatcher.group(3).equals("type")) {
+                if (inputFormMatcher.group(1).equals("name")) {
+                    allInputInAString.append(inputFormMatcher.group(2)).append("=").append(inputFormMatcher.group(6));
+                } else {
+                    allInputInAString.append(inputFormMatcher.group(6)).append("=").append(inputFormMatcher.group(2));
+                }
+            } else {
+                if (inputFormMatcher.group(1).equals("name")) {
+                    allInputInAString.append(inputFormMatcher.group(2)).append("=").append(inputFormMatcher.group(4));
+                } else {
+                    allInputInAString.append(inputFormMatcher.group(4)).append("=").append(inputFormMatcher.group(2));
                 }
             }
         }

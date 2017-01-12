@@ -239,14 +239,7 @@ public class SelectForumActivity extends AbsNavigationViewActivity implements Ch
                 WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
                 currentWebInfos.followRedirects = false;
 
-                try {
-                    searchToDo = URLEncoder.encode(searchToDo, "UTF-8");
-                } catch (Exception e) {
-                    searchToDo = "";
-                    e.printStackTrace();
-                }
-
-                pageResult = WebManager.sendRequest("http://www.jeuxvideo.com/forums/recherche.php", "GET", "q=" + searchToDo, "", currentWebInfos);
+                pageResult = WebManager.sendRequest("http://www.jeuxvideo.com/forums/recherche.php", "GET", "q=" + Utils.convertStringToUrlString(searchToDo), "", currentWebInfos);
 
                 if (!currentWebInfos.currentUrl.isEmpty() && !currentWebInfos.currentUrl.startsWith("http://www.jeuxvideo.com/forums/recherche.php")) {
                     return "respawnirc:redirect:" + currentWebInfos.currentUrl;

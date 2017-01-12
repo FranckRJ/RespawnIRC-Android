@@ -16,12 +16,14 @@ import android.widget.Toast;
 
 import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.SendTopicActivity;
 import com.franckrj.respawnirc.dialogs.ChooseTopicOrForumLinkDialogFragment;
 import com.franckrj.respawnirc.jvctopictools.JVCTopicGetter;
 import com.franckrj.respawnirc.jvctopictools.ShowForumFragment;
 import com.franckrj.respawnirc.utils.AddOrRemoveThingToFavs;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.AbsNavigationViewActivity;
+import com.franckrj.respawnirc.utils.Utils;
 
 public class ShowForumActivity extends AbsNavigationViewActivity implements ChooseTopicOrForumLinkDialogFragment.NewTopicOrForumSelected,
                                                     ShowForumFragment.NewTopicWantRead, JVCTopicGetter.NewForumNameAvailable,
@@ -32,6 +34,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Choo
     private String currentTitle = "";
     private AddOrRemoveThingToFavs currentTaskForFavs = null;
     private PageNavigationUtil pageNavigation = null;
+    private boolean refreshNeededOnNextResume = false;
 
     public ShowForumActivity() {
         idOfBaseActivity = R.id.action_forum_navigation;
@@ -111,6 +114,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Choo
             pageNavigation.updateCurrentItemAndButtonsToCurrentLink();
         } else {
             currentTitle = savedInstanceState.getString(getString(R.string.saveCurrentForumTitle), getString(R.string.app_name));
+            refreshNeededOnNextResume = savedInstanceState.getBoolean(getString(R.string.saveRefreshNeededOnNextResume), false);
             pageNavigation.updateNavigationButtons();
         }
         setTitle(currentTitle);
@@ -132,6 +136,13 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Choo
         SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
         sharedPrefEdit.putInt(getString(R.string.prefLastActivityViewed), MainActivity.ACTIVITY_SHOW_FORUM);
         sharedPrefEdit.apply();
+
+        if (refreshNeededOnNextResume) {
+            refreshNeededOnNextResume = false;
+            if (getCurrentFragment() != null) {
+                getCurrentFragment().refreshForum();
+            }
+        }
     }
 
     @Override
@@ -149,6 +160,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Choo
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(getString(R.string.saveCurrentForumTitle), currentTitle);
+        outState.putBoolean(getString(R.string.saveRefreshNeededOnNextResume), refreshNeededOnNextResume);
     }
 
     @Override
@@ -161,18 +173,24 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Choo
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        if (!pseudoOfUser.isEmpty() && getCurrentFragment() != null) {
-            if (getCurrentFragment().getIsInFavs() != null) {
+
+        menu.findItem(R.id.action_change_forum_fav_value_showforum).setEnabled(false);
+
+        if (getCurrentFragment() != null) {
+            menu.findItem(R.id.action_send_topic_showforum).setEnabled(!Utils.stringIsEmptyOrNull(getCurrentFragment().getLatestListOfInputInAString()) && !pageNavigation.getCurrentLink().isEmpty());
+
+            if (!pseudoOfUser.isEmpty() && getCurrentFragment().getIsInFavs() != null) {
                 menu.findItem(R.id.action_change_forum_fav_value_showforum).setEnabled(true);
                 if (getCurrentFragment().getIsInFavs()) {
                     menu.findItem(R.id.action_change_forum_fav_value_showforum).setTitle(R.string.removeOfFavs);
                 } else {
                     menu.findItem(R.id.action_change_forum_fav_value_showforum).setTitle(R.string.addToFavs);
                 }
-                return true;
             }
+        } else {
+            menu.findItem(R.id.action_send_topic_showforum).setEnabled(false);
         }
-        menu.findItem(R.id.action_change_forum_fav_value_showforum).setEnabled(false);
+
         return true;
     }
 
@@ -187,6 +205,14 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Choo
                     Toast.makeText(ShowForumActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
                 }
 
+                return true;
+            case R.id.action_send_topic_showforum:
+                Intent newSendTopicIntent = new Intent(this, SendTopicActivity.class);
+                newSendTopicIntent.putExtra(SendTopicActivity.EXTRA_FORUM_NAME, currentTitle);
+                newSendTopicIntent.putExtra(SendTopicActivity.EXTRA_FORUM_LINK, pageNavigation.getCurrentLink());
+                newSendTopicIntent.putExtra(SendTopicActivity.EXTRA_INPUT_LIST, getCurrentFragment().getLatestListOfInputInAString() + "&spotify_topic=&submit_sondage=0&question_sondage=&reponse_sondage[]=&form_alias_rang=1");
+                startActivity(newSendTopicIntent);
+                refreshNeededOnNextResume = true;
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

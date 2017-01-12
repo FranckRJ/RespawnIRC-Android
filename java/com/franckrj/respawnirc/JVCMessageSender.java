@@ -77,15 +77,8 @@ public class JVCMessageSender {
 
     public boolean sendThisMessage(String messageToSend, String urlToSend, String latestListOfInput, String cookieListInAString) {
         if (currentAsyncTaskForSendMessage == null) {
-            try {
-                messageToSend = URLEncoder.encode(messageToSend, "UTF-8");
-            } catch (Exception e) {
-                messageToSend = "";
-                e.printStackTrace();
-            }
-
             currentAsyncTaskForSendMessage = new PostJVCMessage();
-            currentAsyncTaskForSendMessage.execute(urlToSend, messageToSend, latestListOfInput + "&form_alias_rang=1", cookieListInAString);
+            currentAsyncTaskForSendMessage.execute(urlToSend, Utils.convertStringToUrlString(messageToSend), latestListOfInput + "&form_alias_rang=1", cookieListInAString);
             return true;
         } else {
             return false;
@@ -126,7 +119,7 @@ public class JVCMessageSender {
             if (!Utils.stringIsEmptyOrNull(pageResult)) {
                 lastInfosForEdit += ajaxListInfos + "&action=post";
                 pageResult = JVCParser.parsingAjaxMessages(pageResult);
-                lastInfosForEdit += JVCParser.getListOfInputInAString(pageResult);
+                lastInfosForEdit += JVCParser.getListOfInputInAStringInTopicFormForThisPage(pageResult);
                 newMessageEdit = JVCParser.getMessageEdit(pageResult);
             }
 

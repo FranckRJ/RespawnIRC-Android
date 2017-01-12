@@ -25,6 +25,7 @@ public class JVCTopicGetter {
     private String forumName = "";
     private JVCParser.AjaxInfos latestAjaxInfos = new JVCParser.AjaxInfos();
     private Boolean isInFavs = null;
+    private String latestListOfInputInAString = null;
 
     public JVCTopicGetter(Activity newParentActivity) {
         parentActivity = newParentActivity;
@@ -36,6 +37,10 @@ public class JVCTopicGetter {
 
     public Boolean getIsInFavs() {
         return isInFavs;
+    }
+
+    public String getLatestListOfInputInAString() {
+        return latestListOfInputInAString;
     }
 
     public void setIsInFavs(Boolean newVal) {
@@ -92,6 +97,7 @@ public class JVCTopicGetter {
     public void loadFromBundle(Bundle savedInstanceState) {
         urlForForum = savedInstanceState.getString(parentActivity.getString(R.string.saveForumUrlToFetch), "");
         latestAjaxInfos.pref = savedInstanceState.getString(parentActivity.getString(R.string.saveLatestAjaxInfoPref), null);
+        latestListOfInputInAString = savedInstanceState.getString(parentActivity.getString(R.string.saveLatestListOfInputInAString), null);
         if (savedInstanceState.containsKey(parentActivity.getString(R.string.saveForumIsInFav))) {
             isInFavs = savedInstanceState.getBoolean(parentActivity.getString(R.string.saveForumIsInFav), false);
         } else {
@@ -102,6 +108,7 @@ public class JVCTopicGetter {
     public void saveToBundle(Bundle savedInstanceState) {
         savedInstanceState.putString(parentActivity.getString(R.string.saveForumUrlToFetch), urlForForum);
         savedInstanceState.putString(parentActivity.getString(R.string.saveLatestAjaxInfoPref), latestAjaxInfos.pref);
+        savedInstanceState.putString(parentActivity.getString(R.string.saveLatestListOfInputInAString), latestListOfInputInAString);
         if (isInFavs != null) {
             savedInstanceState.putBoolean(parentActivity.getString(R.string.saveForumIsInFav), isInFavs);
         }
@@ -131,6 +138,7 @@ public class JVCTopicGetter {
                     newPageInfos.newForumName = JVCParser.getForumNameInForumPage(pageContent);
                     newPageInfos.newLatestAjaxInfos = JVCParser.getAllAjaxInfos(pageContent);
                     newPageInfos.newIsInFavs = JVCParser.getIsInFavsFromPage(pageContent);
+                    newPageInfos.newListOfInputInAString = JVCParser.getListOfInputInAStringInTopicFormForThisPage(pageContent);
                 }
 
                 return newPageInfos;
@@ -151,6 +159,7 @@ public class JVCTopicGetter {
             if (infoOfCurrentPage != null) {
                 latestAjaxInfos = infoOfCurrentPage.newLatestAjaxInfos;
                 isInFavs = infoOfCurrentPage.newIsInFavs;
+                latestListOfInputInAString = infoOfCurrentPage.newListOfInputInAString;
 
                 if (!infoOfCurrentPage.newUrlForForumPage.isEmpty()) {
                     urlForForum = infoOfCurrentPage.newUrlForForumPage;
@@ -183,6 +192,7 @@ public class JVCTopicGetter {
         String newForumName;
         JVCParser.AjaxInfos newLatestAjaxInfos;
         Boolean newIsInFavs;
+        String newListOfInputInAString;
 
     }
 

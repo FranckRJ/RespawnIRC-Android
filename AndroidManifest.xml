@@ -30,6 +30,11 @@
             android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
         <activity
+            android:name=".SendTopicActivity"
+            android:label="@string/sendATopic"
+            android:windowSoftInputMode="stateAlwaysHidden">
+        </activity>
+        <activity
             android:name=".jvcviewers.ShowTopicActivity"
             android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
