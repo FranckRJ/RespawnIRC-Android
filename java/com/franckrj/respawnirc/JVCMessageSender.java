@@ -148,9 +148,16 @@ public class JVCMessageSender {
         @Override
         protected String doInBackground(String... params) {
             if (params.length > 3) {
+                String pageContent;
                 WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
                 currentWebInfos.followRedirects = false;
-                return WebManager.sendRequest(params[0], "POST", "message_topic=" + params[1] + params[2], params[3], currentWebInfos);
+                pageContent = WebManager.sendRequest(params[0], "POST", "message_topic=" + params[1] + params[2], params[3], currentWebInfos);
+
+                if (params[0].equals(currentWebInfos.currentUrl)) {
+                    pageContent = "respawnirc:resendneeded";
+                }
+
+                return pageContent;
             } else {
                 return null;
             }
@@ -161,15 +168,19 @@ public class JVCMessageSender {
             super.onPostExecute(pageResult);
             String errorWhenSending = null;
 
+            currentAsyncTaskForSendMessage = null;
+
             if (!Utils.stringIsEmptyOrNull(pageResult)) {
-                if (!isInEdit) {
+                if (pageResult.equals("respawnirc:resendneeded")) {
+                    errorWhenSending = pageResult;
+                } else if (!isInEdit) {
                     errorWhenSending = JVCParser.getErrorMessage(pageResult);
                 } else {
                     errorWhenSending = JVCParser.getErrorMessageInJSONMode(pageResult);
                 }
             }
 
-            if (isInEdit) {
+            if (isInEdit && !Utils.compareStrings(errorWhenSending, "respawnirc:resendneeded")) {
                 isInEdit = false;
                 lastInfosForEdit = null;
                 ajaxListInfos = null;
@@ -178,8 +189,6 @@ public class JVCMessageSender {
             if (listenerForNewMessagePosted != null) {
                 listenerForNewMessagePosted.lastMessageIsSended(errorWhenSending);
             }
-
-            currentAsyncTaskForSendMessage = null;
         }
     }
 

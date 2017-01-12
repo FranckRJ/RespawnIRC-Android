@@ -147,6 +147,7 @@
     <string name="settingsTransformStickerToSmiley">settings.transformStickerToSmiley</string>
     <string name="transformStickerToSmileyTitle">Changer les stickers en smiley</string>
     <string name="transformStickerToSmileySummary">(Tous les stickers ne sont pas changés)</string>
+    <string name="unknownErrorPleaseResend">Erreur inconnue, essayez de ré-envoyer le message.</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInBrowser</item>

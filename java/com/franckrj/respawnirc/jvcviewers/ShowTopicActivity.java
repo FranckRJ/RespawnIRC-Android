@@ -62,6 +62,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     private String reasonOfLock = null;
     private ImageButton selectStickerButton = null;
     private PageNavigationUtil pageNavigation = null;
+    private boolean lastMessageSendedIsAResend = false;
 
     private final JVCMessageSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageSender.NewMessageWantEditListener() {
         @Override
@@ -84,14 +85,25 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         public void lastMessageIsSended(String withThisError) {
             if (reasonOfLock == null) {
                 messageSendButton.setEnabled(true);
-                messageSendButton.setImageResource(R.drawable.ic_action_content_send);
 
-                if (withThisError != null) {
-                    Toast.makeText(ShowTopicActivity.this, withThisError, Toast.LENGTH_LONG).show();
+                if (!Utils.compareStrings(withThisError, "respawnirc:resendneeded") || lastMessageSendedIsAResend) {
+                    lastMessageSendedIsAResend = false;
+                    messageSendButton.setImageResource(R.drawable.ic_action_content_send);
+
+                    if (withThisError != null) {
+                        if (withThisError.equals("respawnirc:resendneeded")) {
+                            withThisError = getString(R.string.unknownErrorPleaseResend);
+                        }
+                        Toast.makeText(ShowTopicActivity.this, withThisError, Toast.LENGTH_LONG).show();
+                    } else {
+                        messageSendEdit.setText("");
+                    }
+
+                    getCurrentFragment().reloadTopic();
                 } else {
-                    messageSendEdit.setText("");
+                    lastMessageSendedIsAResend = true;
+                    messageSendButton.callOnClick();
                 }
-                getCurrentFragment().reloadTopic();
             }
         }
     };
