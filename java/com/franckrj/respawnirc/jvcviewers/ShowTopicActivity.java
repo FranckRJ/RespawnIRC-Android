@@ -53,6 +53,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     private JVCMessageSender senderForMessages = null;
     private ImageButton messageSendButton = null;
     private EditText messageSendEdit = null;
+    private View messageSendLayout = null;
     private QuoteJVCMessage currentTaskQuoteMessage = null;
     private DeleteJVCMessage currentTaskDeleteMessage = null;
     private String latestMessageQuotedInfo = null;
@@ -127,6 +128,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
                 }
 
                 Utils.hideSoftKeyboard(ShowTopicActivity.this);
+                messageSendLayout.requestFocus();
 
                 if (!tmpLastMessageSended.isEmpty()) {
                     SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
@@ -220,6 +222,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
 
         sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
+        messageSendLayout = findViewById(R.id.sendmessage_layout_showtopic);
         messageSendEdit = (EditText) findViewById(R.id.sendmessage_text_showtopic);
         messageSendButton = (ImageButton) findViewById(R.id.sendmessage_button_showtopic);
         selectStickerButton = (ImageButton) findViewById(R.id.selectsticker_button_showtopic);
