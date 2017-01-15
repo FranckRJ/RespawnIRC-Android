@@ -153,6 +153,10 @@ public abstract class AbsJVCMessageGetter {
         isInFavs = infoOfCurrentPage.newIsInFavs;
         topicID = infoOfCurrentPage.newTopicID;
 
+        if (!latestListOfInputInAString.isEmpty()) {
+            latestListOfInputInAString = latestListOfInputInAString + "&form_alias_rang=1";
+        }
+
         if (!infoOfCurrentPage.newNames.equals(currentNames)) {
             currentNames = infoOfCurrentPage.newNames;
             if (listenerForNewForumAndTopicName != null) {

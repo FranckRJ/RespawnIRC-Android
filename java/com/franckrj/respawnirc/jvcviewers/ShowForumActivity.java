@@ -210,7 +210,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Choo
                 Intent newSendTopicIntent = new Intent(this, SendTopicActivity.class);
                 newSendTopicIntent.putExtra(SendTopicActivity.EXTRA_FORUM_NAME, currentTitle);
                 newSendTopicIntent.putExtra(SendTopicActivity.EXTRA_FORUM_LINK, pageNavigation.getCurrentLink());
-                newSendTopicIntent.putExtra(SendTopicActivity.EXTRA_INPUT_LIST, getCurrentFragment().getLatestListOfInputInAString() + "&spotify_topic=&submit_sondage=0&question_sondage=&reponse_sondage[]=&form_alias_rang=1");
+                newSendTopicIntent.putExtra(SendTopicActivity.EXTRA_INPUT_LIST, getCurrentFragment().getLatestListOfInputInAString());
                 startActivity(newSendTopicIntent);
                 refreshNeededOnNextResume = true;
                 return true;

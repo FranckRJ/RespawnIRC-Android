@@ -161,6 +161,10 @@ public class JVCTopicGetter {
                 isInFavs = infoOfCurrentPage.newIsInFavs;
                 latestListOfInputInAString = infoOfCurrentPage.newListOfInputInAString;
 
+                if (!latestListOfInputInAString.isEmpty()) {
+                    latestListOfInputInAString = latestListOfInputInAString + "&spotify_topic=&submit_sondage=0&question_sondage=&reponse_sondage[]=&form_alias_rang=1";
+                }
+
                 if (!infoOfCurrentPage.newUrlForForumPage.isEmpty()) {
                     urlForForum = infoOfCurrentPage.newUrlForForumPage;
                     if (listenerForForumLinkChanged != null) {

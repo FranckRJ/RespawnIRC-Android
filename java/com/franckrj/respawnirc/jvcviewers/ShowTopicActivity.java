@@ -63,7 +63,6 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     private String reasonOfLock = null;
     private ImageButton selectStickerButton = null;
     private PageNavigationUtil pageNavigation = null;
-    private boolean lastMessageSendedIsAResend = false;
     private boolean useInternalNavigatorForDefaultOpening = false;
 
     private final JVCMessageSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageSender.NewMessageWantEditListener() {
@@ -87,25 +86,15 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         public void lastMessageIsSended(String withThisError) {
             if (reasonOfLock == null) {
                 messageSendButton.setEnabled(true);
+                messageSendButton.setImageResource(R.drawable.ic_action_content_send);
 
-                if (!Utils.compareStrings(withThisError, "respawnirc:resendneeded") || lastMessageSendedIsAResend) {
-                    lastMessageSendedIsAResend = false;
-                    messageSendButton.setImageResource(R.drawable.ic_action_content_send);
-
-                    if (withThisError != null) {
-                        if (withThisError.equals("respawnirc:resendneeded")) {
-                            withThisError = getString(R.string.unknownErrorPleaseResend);
-                        }
-                        Toast.makeText(ShowTopicActivity.this, withThisError, Toast.LENGTH_LONG).show();
-                    } else {
-                        messageSendEdit.setText("");
-                    }
-
-                    getCurrentFragment().reloadTopic();
+                if (withThisError != null) {
+                    Toast.makeText(ShowTopicActivity.this, withThisError, Toast.LENGTH_LONG).show();
                 } else {
-                    lastMessageSendedIsAResend = true;
-                    messageSendButton.callOnClick();
+                    messageSendEdit.setText("");
                 }
+
+                getCurrentFragment().reloadTopic();
             }
         }
     };
@@ -122,7 +111,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
                         if (getCurrentFragment().getLatestListOfInputInAString() != null) {
                             messageSendButton.setEnabled(false);
                             tmpLastMessageSended = messageSendEdit.getText().toString();
-                            messageIsSended = senderForMessages.sendThisMessage(tmpLastMessageSended, getCurrentFragment().getCurrentUrlOfTopic(), getCurrentFragment().getLatestListOfInputInAString(), cookieListInAString);
+                            messageIsSended = senderForMessages.sendThisMessage(tmpLastMessageSended, getCurrentFragment().getCurrentUrlOfTopic(), getCurrentFragment().getLatestListOfInputInAString(), cookieListInAString, false);
                         }
 
                         if (!messageIsSended) {

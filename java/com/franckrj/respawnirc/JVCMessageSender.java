@@ -8,8 +8,6 @@ import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
-import java.net.URLEncoder;
-
 public class JVCMessageSender {
     private Activity parentActivity = null;
     private String ajaxListInfos = null;
@@ -19,6 +17,8 @@ public class JVCMessageSender {
     private NewMessagePostedListener listenerForNewMessagePosted = null;
     private PostJVCMessage currentAsyncTaskForSendMessage = null;
     private GetEditJVCMessageInfos currentAsyncTaskForGetEditInfos = null;
+    private boolean lastMessageSendedIsAResend = false;
+    private InfosOfSend infosOfLastSend = new InfosOfSend();
 
     public JVCMessageSender(Activity newParentActivity) {
         parentActivity = newParentActivity;
@@ -49,7 +49,7 @@ public class JVCMessageSender {
     }
 
     public void sendEditMessage(String messageEditedToSend, String cookieListInAString) {
-        sendThisMessage(messageEditedToSend, "http://www.jeuxvideo.com/forums/ajax_edit_message.php", lastInfosForEdit, cookieListInAString);
+        sendThisMessage(messageEditedToSend, "http://www.jeuxvideo.com/forums/ajax_edit_message.php", lastInfosForEdit, cookieListInAString, false);
     }
 
     public void stopAllCurrentTask() {
@@ -75,10 +75,16 @@ public class JVCMessageSender {
         ajaxListInfos = null;
     }
 
-    public boolean sendThisMessage(String messageToSend, String urlToSend, String latestListOfInput, String cookieListInAString) {
+    public boolean sendThisMessage(String messageToSend, String urlToSend, String latestListOfInput, String cookieListInAString, boolean itsAResend) {
         if (currentAsyncTaskForSendMessage == null) {
+            infosOfLastSend.messageSended = messageToSend;
+            infosOfLastSend.urlUsed = urlToSend;
+            infosOfLastSend.listOfInputUsed = latestListOfInput;
+            infosOfLastSend.cookiesUsed = cookieListInAString;
+
+            lastMessageSendedIsAResend = itsAResend;
             currentAsyncTaskForSendMessage = new PostJVCMessage();
-            currentAsyncTaskForSendMessage.execute(urlToSend, Utils.convertStringToUrlString(messageToSend), latestListOfInput + "&form_alias_rang=1", cookieListInAString);
+            currentAsyncTaskForSendMessage.execute(infosOfLastSend);
             return true;
         } else {
             return false;
@@ -137,16 +143,16 @@ public class JVCMessageSender {
         }
     }
 
-    private class PostJVCMessage extends AsyncTask<String, Void, String> {
+    private class PostJVCMessage extends AsyncTask<InfosOfSend, Void, String> {
         @Override
-        protected String doInBackground(String... params) {
-            if (params.length > 3) {
+        protected String doInBackground(final InfosOfSend... info) {
+            if (info.length == 1) {
                 String pageContent;
                 WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
                 currentWebInfos.followRedirects = false;
-                pageContent = WebManager.sendRequest(params[0], "POST", "message_topic=" + params[1] + params[2], params[3], currentWebInfos);
+                pageContent = WebManager.sendRequest(info[0].urlUsed, "POST", "message_topic=" + info[0].messageSended + info[0].listOfInputUsed, info[0].cookiesUsed, currentWebInfos);
 
-                if (params[0].equals(currentWebInfos.currentUrl)) {
+                if (info[0].urlUsed.equals(currentWebInfos.currentUrl)) {
                     pageContent = "respawnirc:resendneeded";
                 }
 
@@ -165,7 +171,12 @@ public class JVCMessageSender {
 
             if (!Utils.stringIsEmptyOrNull(pageResult)) {
                 if (pageResult.equals("respawnirc:resendneeded")) {
-                    errorWhenSending = pageResult;
+                    if (!lastMessageSendedIsAResend) {
+                        sendThisMessage(infosOfLastSend.messageSended, infosOfLastSend.urlUsed, infosOfLastSend.listOfInputUsed, infosOfLastSend.cookiesUsed, true);
+                        return;
+                    } else {
+                        errorWhenSending = parentActivity.getString(R.string.unknownErrorPleaseResend);
+                    }
                 } else if (!isInEdit) {
                     errorWhenSending = JVCParser.getErrorMessage(pageResult);
                 } else {
@@ -183,6 +194,13 @@ public class JVCMessageSender {
                 listenerForNewMessagePosted.lastMessageIsSended(errorWhenSending);
             }
         }
+    }
+
+    private class InfosOfSend {
+        String messageSended;
+        String urlUsed;
+        String listOfInputUsed;
+        String cookiesUsed;
     }
 
     public interface NewMessageWantEditListener {
