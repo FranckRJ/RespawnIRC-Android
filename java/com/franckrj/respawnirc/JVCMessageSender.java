@@ -150,7 +150,7 @@ public class JVCMessageSender {
                 String pageContent;
                 WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
                 currentWebInfos.followRedirects = false;
-                pageContent = WebManager.sendRequest(info[0].urlUsed, "POST", "message_topic=" + info[0].messageSended + info[0].listOfInputUsed, info[0].cookiesUsed, currentWebInfos);
+                pageContent = WebManager.sendRequest(info[0].urlUsed, "POST", "message_topic=" + Utils.convertStringToUrlString(info[0].messageSended) + info[0].listOfInputUsed, info[0].cookiesUsed, currentWebInfos);
 
                 if (info[0].urlUsed.equals(currentWebInfos.currentUrl)) {
                     pageContent = "respawnirc:resendneeded";
