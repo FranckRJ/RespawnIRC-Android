@@ -12,11 +12,12 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.franckrj.respawnirc.dialogs.SelectStickerDialogFragment;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
-public class SendTopicActivity extends AppCompatActivity {
+public class SendTopicActivity extends AppCompatActivity implements SelectStickerDialogFragment.StickerSelected {
     public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_FORUM_NAME";
     public static final String EXTRA_FORUM_LINK = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_FORUM_LINK";
     public static final String EXTRA_INPUT_LIST = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_INPUT_LIST";
@@ -111,7 +112,7 @@ public class SendTopicActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        menu.findItem(R.id.action_past_last_topic_sended_sendtopic).setEnabled(!lastTopicTitleSended.isEmpty());
+        menu.findItem(R.id.action_past_last_topic_sended_sendtopic).setEnabled(!lastTopicTitleSended.isEmpty() || !lastTopicContentSended.isEmpty());
         return true;
     }
 
@@ -127,9 +128,19 @@ public class SendTopicActivity extends AppCompatActivity {
             case R.id.action_past_last_topic_sended_sendtopic:
                 topicTitleEdit.setText(lastTopicTitleSended);
                 topicContentEdit.setText(lastTopicContentSended);
+                return true;
+            case R.id.action_select_sticker_sendtopic:
+                SelectStickerDialogFragment selectStickerDialogFragment = new SelectStickerDialogFragment();
+                selectStickerDialogFragment.show(getFragmentManager(), "SelectStickerDialogFragment");
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void getSelectedSticker(String newStickerToAdd) {
+        topicContentEdit.append(newStickerToAdd);
     }
 
     private class SendTopicToJVC extends AsyncTask<String, Void, String> {

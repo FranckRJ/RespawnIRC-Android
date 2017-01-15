@@ -10,4 +10,7 @@
     <item
         android:id="@+id/action_past_last_topic_sended_sendtopic"
         android:title="@string/pastLastTopicSended"/>
+    <item
+        android:id="@+id/action_select_sticker_sendtopic"
+        android:title="@string/selectSticker"/>
 </menu>
