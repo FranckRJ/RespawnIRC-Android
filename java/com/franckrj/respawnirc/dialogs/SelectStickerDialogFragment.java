@@ -11,7 +11,6 @@ import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.view.View;
 import android.widget.TextView;
@@ -19,6 +18,7 @@ import android.widget.TextView;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.CustomImageGetter;
 import com.franckrj.respawnirc.utils.LongClickLinkMovementMethod;
+import com.franckrj.respawnirc.utils.LongClickableSpan;
 import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
 
@@ -243,14 +243,20 @@ public class SelectStickerDialogFragment extends DialogFragment {
         Spannable spannable = new SpannableString(spanToChange);
         URLSpan[] urlSpanArray = spannable.getSpans(0, spannable.length(), URLSpan.class);
         for (final URLSpan urlSpan : urlSpanArray) {
-            Utils.replaceSpanByAnotherSpan(spannable, urlSpan, new ClickableSpan() {
+            Utils.replaceSpanByAnotherSpan(spannable, urlSpan, new LongClickableSpan() {
                 private String url = urlSpan.getURL();
+
                 @Override
-                public void onClick(View view) {
+                public void onLongClick(View view) {
                     if (getActivity() instanceof StickerSelected) {
                         String newSticker = "[[sticker:p/" + url.replace("sticker_", "").replace("_", "-") + "]]";
                         ((StickerSelected) getActivity()).getSelectedSticker(newSticker);
                     }
+                }
+
+                @Override
+                public void onClick(View view) {
+                    onLongClick(view);
                     dismiss();
                 }
             });

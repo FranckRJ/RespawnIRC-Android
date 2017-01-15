@@ -1,6 +1,8 @@
 package com.franckrj.respawnirc.utils;
 
+import android.content.Context;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
@@ -56,6 +58,8 @@ public class LongClickLinkMovementMethod extends LinkMovementMethod {
                     longClickHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            Vibrator vibratorService = (Vibrator) widget.getContext().getSystemService(Context.VIBRATOR_SERVICE);
+                            vibratorService.vibrate(40);
                             link[0].onLongClick(widget);
                             itsLongPress = true;
                         }
