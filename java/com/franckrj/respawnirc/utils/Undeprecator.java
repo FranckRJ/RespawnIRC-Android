@@ -10,6 +10,8 @@ import android.support.annotation.DrawableRes;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.View;
+import android.webkit.CookieManager;
+import android.webkit.WebSettings;
 
 public class Undeprecator {
     public static void viewSetBackgroundDrawable(View view, Drawable drawable) {
@@ -64,6 +66,20 @@ public class Undeprecator {
         } else {
             //noinspection deprecation
             return Html.fromHtml(source, imageGetter, tagHandler);
+        }
+    }
+
+    public static void webSettingsSetSavePassword(WebSettings settings, boolean newVal) {
+        //noinspection deprecation
+        settings.setSavePassword(newVal);
+    }
+
+    public static void cookieManagerRemoveAllCookies(CookieManager manager) {
+        if (Build.VERSION.SDK_INT >= 21) {
+            manager.removeAllCookies(null);
+        } else {
+            //noinspection deprecation
+            manager.removeAllCookie();
         }
     }
 }

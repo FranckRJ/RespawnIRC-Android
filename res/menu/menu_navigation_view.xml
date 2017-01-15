@@ -13,9 +13,9 @@
             android:icon="@drawable/ic_action_communication_forum"
             android:title="@string/forum"/>
         <item
-            android:id="@+id/action_choose_topic_forum_navigation"
-            android:icon="@drawable/ic_action_action_input"
-            android:title="@string/chooseTopicOrForumLink"/>
+            android:id="@+id/action_showmp_navigation"
+            android:icon="@drawable/ic_action_content_mail"
+            android:title="@string/showMP"/>
         <item
             android:id="@+id/action_settings_navigation"
             android:icon="@drawable/ic_action_action_settings"

@@ -22,6 +22,8 @@ import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.franckrj.respawnirc.utils.Undeprecator;
+
 /*TODO: Récupérer le pseudo automatiquement.*/
 public class ConnectActivity extends AppCompatActivity {
     private WebView jvcWebView = null;
@@ -93,13 +95,13 @@ public class ConnectActivity extends AppCompatActivity {
 
         helpDialogFragment = new HelpConnectDialogFragment();
 
-        CookieManager.getInstance().removeAllCookie();
+        Undeprecator.cookieManagerRemoveAllCookies(CookieManager.getInstance());
 
         jvcWebView.setWebViewClient(new WebViewClient());
         jvcWebView.setWebChromeClient(new WebChromeClient());
         jvcWebView.getSettings().setJavaScriptEnabled(true);
         jvcWebView.getSettings().setSaveFormData(false);
-        jvcWebView.getSettings().setSavePassword(false);
+        Undeprecator.webSettingsSetSavePassword(jvcWebView.getSettings(), false);
         jvcWebView.clearCache(true);
         jvcWebView.clearHistory();
 

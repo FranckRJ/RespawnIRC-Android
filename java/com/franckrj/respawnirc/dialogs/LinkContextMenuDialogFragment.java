@@ -13,12 +13,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.WebNavigatorActivity;
 
 public class LinkContextMenuDialogFragment extends DialogFragment {
     public static final String ARG_URL = "com.franckrj.respawnirc.linkcontextmenudialogfragment.url";
 
-    private static final int POS_OPEN_IN_BROWSER = 0;
-    private static final int POS_COPY = 1;
+    private static final int POS_OPEN_IN_WEB_BROWSER = 0;
+    private static final int POS_OPEN_IN_INTERN_BROWSER = 1;
+    private static final int POS_COPY = 2;
 
     private String urlOfLink;
 
@@ -40,13 +42,18 @@ public class LinkContextMenuDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
-                    case POS_OPEN_IN_BROWSER:
+                    case POS_OPEN_IN_WEB_BROWSER:
                         try {
                             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlOfLink));
                             startActivity(browserIntent);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                        break;
+                    case POS_OPEN_IN_INTERN_BROWSER:
+                        Intent newNavigatorIntent = new Intent(getActivity(), WebNavigatorActivity.class);
+                        newNavigatorIntent.putExtra(WebNavigatorActivity.EXTRA_URL_LOAD, urlOfLink);
+                        startActivity(newNavigatorIntent);
                         break;
                     case POS_COPY:
                         ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);

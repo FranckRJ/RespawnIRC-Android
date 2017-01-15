@@ -119,7 +119,8 @@
     <string name="deleteMessage">Supprimer</string>
     <string name="supressSuccess">Message supprimé.</string>
     <string name="errorDeleteAlreadyRunning">Erreur, suppression déjà en cours.</string>
-    <string name="openInBrowser">Ouvrir dans le navigateur</string>
+    <string name="openInWebBrowser">Ouvrir dans le navigateur web</string>
+    <string name="openInInternBrowser">Ouvrir dans le navigateur interne</string>
     <string name="copy">Copier</string>
     <string name="forum">Forum</string>
     <string name="home">Accueil</string>
@@ -155,9 +156,17 @@
     <string name="prefLastTopicTitleSended">pref.lastTopicTitleSended</string>
     <string name="prefLastTopicContentSended">pref.lastTopicContentSended</string>
     <string name="pastLastTopicSended">Coller le dernier topic envoyé</string>
+    <string name="showMP">Consulter les MP</string>
+    <string name="saveUrlForNavigator">save.urlForNavigator</string>
+    <string name="saveTitleForNavigator">save.titleForNavigator</string>
+    <string name="settingsLinkOpeningTitle">Ouverture des liens</string>
+    <string name="useInternalNavigatorTitle">Navigateur interne par défaut</string>
+    <string name="settingsUseInternalNavigator">settings.useInternalNavigator</string>
+    <string name="useInternalNavigatorDefault">false</string>
 
     <string-array name="choicesForLinkContextMenu">
-        <item>@string/openInBrowser</item>
+        <item>@string/openInWebBrowser</item>
+        <item>@string/openInInternBrowser</item>
         <item>@string/copy</item>
     </string-array>
 </resources>

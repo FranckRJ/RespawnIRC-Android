@@ -19,6 +19,13 @@
             android:defaultValue="@string/transformStickerToSmileyDefault"/>
     </PreferenceCategory>
     <PreferenceCategory
+        android:title="@string/settingsLinkOpeningTitle">
+        <CheckBoxPreference
+            android:key="@string/settingsUseInternalNavigator"
+            android:title="@string/useInternalNavigatorTitle"
+            android:defaultValue="@string/useInternalNavigatorDefault"/>
+    </PreferenceCategory>
+    <PreferenceCategory
         android:title="@string/settingsGeneralIRCTitle">
         <EditTextPreference
             android:key="@string/settingsRefreshTopicTime"

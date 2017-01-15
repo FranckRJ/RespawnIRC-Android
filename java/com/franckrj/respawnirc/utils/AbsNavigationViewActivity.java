@@ -24,7 +24,7 @@ import com.franckrj.respawnirc.ConnectActivity;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.SelectForumActivity;
 import com.franckrj.respawnirc.SettingsActivity;
-import com.franckrj.respawnirc.dialogs.ChooseTopicOrForumLinkDialogFragment;
+import com.franckrj.respawnirc.WebNavigatorActivity;
 import com.franckrj.respawnirc.dialogs.RefreshFavDialogFragment;
 
 import java.util.ArrayList;
@@ -119,6 +119,7 @@ public abstract class AbsNavigationViewActivity extends AppCompatActivity implem
             refreshTopicFavExtern = navigationForDrawer.getMenu().add(Menu.NONE, R.id.action_refresh_topic_fav_navigation, Menu.NONE, R.string.refresh);
             refreshTopicFavExtern.setIcon(R.drawable.ic_action_navigation_refresh);
             updateFavsInNavigationMenu();
+            navigationForDrawer.getMenu().findItem(R.id.action_showmp_navigation).setEnabled(!pseudoOfUser.isEmpty());
             navigationForDrawer.setCheckedItem(idOfBaseActivity);
 
             if (idOfBaseActivity != R.id.action_forum_navigation) {
@@ -202,9 +203,10 @@ public abstract class AbsNavigationViewActivity extends AppCompatActivity implem
                         case R.id.action_connect_navigation:
                             startActivity(new Intent(AbsNavigationViewActivity.this, ConnectActivity.class));
                             break;
-                        case R.id.action_choose_topic_forum_navigation:
-                            ChooseTopicOrForumLinkDialogFragment chooseLinkDialogFragment = new ChooseTopicOrForumLinkDialogFragment();
-                            chooseLinkDialogFragment.show(getFragmentManager(), "ChooseTopicOrForumLinkDialogFragment");
+                        case R.id.action_showmp_navigation:
+                            Intent newShowMPIntent = new Intent(AbsNavigationViewActivity.this, WebNavigatorActivity.class);
+                            newShowMPIntent.putExtra(WebNavigatorActivity.EXTRA_URL_LOAD, "http://www.jeuxvideo.com/messages-prives/boite-reception.php");
+                            startActivity(newShowMPIntent);
                             break;
                         case R.id.action_settings_navigation:
                             startActivity(new Intent(AbsNavigationViewActivity.this, SettingsActivity.class));

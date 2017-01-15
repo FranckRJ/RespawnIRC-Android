@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.franckrj.respawnirc.JVCMessageSender;
 import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.WebNavigatorActivity;
 import com.franckrj.respawnirc.dialogs.ChoosePageNumberDialogFragment;
 import com.franckrj.respawnirc.dialogs.LinkContextMenuDialogFragment;
 import com.franckrj.respawnirc.dialogs.SelectStickerDialogFragment;
@@ -63,6 +64,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     private ImageButton selectStickerButton = null;
     private PageNavigationUtil pageNavigation = null;
     private boolean lastMessageSendedIsAResend = false;
+    private boolean useInternalNavigatorForDefaultOpening = false;
 
     private final JVCMessageSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageSender.NewMessageWantEditListener() {
         @Override
@@ -299,6 +301,8 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
         sharedPrefEdit.putInt(getString(R.string.prefLastActivityViewed), MainActivity.ACTIVITY_SHOW_TOPIC);
         sharedPrefEdit.apply();
+
+        useInternalNavigatorForDefaultOpening = sharedPref.getBoolean(getString(R.string.settingsUseInternalNavigator), Boolean.valueOf(getString(R.string.useInternalNavigatorDefault)));
     }
 
     @Override
@@ -579,11 +583,17 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
                 startActivity(newShowForumIntent);
                 finish();
             } else {
-                try {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
-                    startActivity(browserIntent);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (!useInternalNavigatorForDefaultOpening) {
+                    try {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+                        startActivity(browserIntent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Intent newNavigatorIntent = new Intent(this, WebNavigatorActivity.class);
+                    newNavigatorIntent.putExtra(WebNavigatorActivity.EXTRA_URL_LOAD, link);
+                    startActivity(newNavigatorIntent);
                 }
             }
         } else {
