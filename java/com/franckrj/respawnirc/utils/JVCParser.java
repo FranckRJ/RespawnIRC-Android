@@ -90,6 +90,31 @@ public final class JVCParser {
         return urlToChange;
     }
 
+    public static String noelshackToDirectLink(String baseLink) {
+        if (baseLink.contains("noelshack.com/")) {
+            baseLink = baseLink.substring(baseLink.indexOf("noelshack.com/") + 14);
+        } else {
+            return baseLink;
+        }
+
+        if (baseLink.startsWith("fichiers/") || baseLink.startsWith("minis/")) {
+            baseLink = baseLink.substring(baseLink.indexOf("/") + 1);
+        } else {
+            baseLink = baseLink.replaceFirst("-", "/").replaceFirst("-", "/");
+        }
+
+        return "http://image.noelshack.com/fichiers/" + baseLink;
+    }
+
+    public static boolean checkIfItsNoelshackLink(String linkToCheck) {
+        if (linkToCheck.startsWith("http://") || linkToCheck.startsWith("https://")) {
+            linkToCheck = linkToCheck.substring(linkToCheck.indexOf("://") + 3);
+        }
+
+        return linkToCheck.startsWith("image.noelshack.com/") || linkToCheck.startsWith("www.noelshack.com/") ||
+               linkToCheck.startsWith("noelshack.com/");
+    }
+
     public static boolean checkIfTopicAreSame(String firstTopicLink, String secondTopicLink) {
         Matcher firstPageTopicLinkNumberMatcher = pageTopicLinkNumberPattern.matcher(firstTopicLink);
         Matcher secondPageTopicLinkNumberMatcher = pageTopicLinkNumberPattern.matcher(secondTopicLink);

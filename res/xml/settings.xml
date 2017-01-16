@@ -9,14 +9,21 @@
             android:defaultValue="@string/maxNumberOfOverlyQuoteDefault"
             android:numeric="integer"/>
         <CheckBoxPreference
-            android:key="@string/settingsShowNoelshackImage"
-            android:title="@string/showNoelshackImageTitle"
-            android:defaultValue="@string/showNoelshackImageDefault"/>
-        <CheckBoxPreference
             android:key="@string/settingsTransformStickerToSmiley"
             android:title="@string/transformStickerToSmileyTitle"
             android:summary="@string/transformStickerToSmileySummary"
             android:defaultValue="@string/transformStickerToSmileyDefault"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/noelshack">
+        <CheckBoxPreference
+            android:key="@string/settingsShowNoelshackImage"
+            android:title="@string/showNoelshackImageTitle"
+            android:defaultValue="@string/showNoelshackImageDefault"/>
+        <CheckBoxPreference
+            android:key="@string/settingsUseDirectNoelshackLink"
+            android:title="@string/useDirectNoelshackLinkTitle"
+            android:defaultValue="@string/useDirectNoelshackLinkDefault"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/settingsLinkOpeningTitle">

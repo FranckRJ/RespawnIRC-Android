@@ -99,7 +99,7 @@
     <string name="errorConnectNeeded">Erreur, vous devez vous connecter pour effectuer cette action.</string>
     <string name="settingsShowNoelshackImage">settings.showNoelshackImage</string>
     <string name="showNoelshackImageDefault">false</string>
-    <string name="showNoelshackImageTitle">Afficher les images noelshack</string>
+    <string name="showNoelshackImageTitle">Afficher les miniatures</string>
     <string name="saveCookies">save.cookies</string>
     <string name="savePseudo">save.pseudo</string>
     <string name="errorInvalidLink">Erreur, lien invalide.</string>
@@ -163,6 +163,10 @@
     <string name="useInternalNavigatorTitle">Navigateur interne par défaut</string>
     <string name="settingsUseInternalNavigator">settings.useInternalNavigator</string>
     <string name="useInternalNavigatorDefault">false</string>
+    <string name="settingsUseDirectNoelshackLink">settings.useDirectNoelshackLink</string>
+    <string name="useDirectNoelshackLinkDefault">false</string>
+    <string name="noelshack">Noelshack</string>
+    <string name="useDirectNoelshackLinkTitle">Utiliser les liens directs</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInWebBrowser</item>

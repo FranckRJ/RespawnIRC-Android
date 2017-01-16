@@ -65,6 +65,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     private ImageButton selectStickerButton = null;
     private PageNavigationUtil pageNavigation = null;
     private boolean useInternalNavigatorForDefaultOpening = false;
+    private boolean convertNoelshackLinkToDirectLink = false;
 
     private final JVCMessageSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageSender.NewMessageWantEditListener() {
         @Override
@@ -295,6 +296,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         sharedPrefEdit.apply();
 
         useInternalNavigatorForDefaultOpening = sharedPref.getBoolean(getString(R.string.settingsUseInternalNavigator), Boolean.valueOf(getString(R.string.useInternalNavigatorDefault)));
+        convertNoelshackLinkToDirectLink = sharedPref.getBoolean(getString(R.string.settingsUseDirectNoelshackLink), Boolean.valueOf(getString(R.string.useDirectNoelshackLinkDefault)));
     }
 
     @Override
@@ -563,6 +565,12 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
 
     @Override
     public void getClickedURL(String link, boolean itsLongClick) {
+        if (convertNoelshackLinkToDirectLink) {
+            if (JVCParser.checkIfItsNoelshackLink(link)) {
+                link = JVCParser.noelshackToDirectLink(link);
+            }
+        }
+
         if (!itsLongClick) {
             String possibleNewLink = JVCParser.formatThisUrl(link);
 
