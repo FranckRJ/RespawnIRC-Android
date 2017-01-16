@@ -607,17 +607,19 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
 
     @Override
     public void getNewLockReason(String newReason) {
-        reasonOfLock = newReason;
-        if (reasonOfLock == null) {
-            selectStickerButton.setVisibility(View.VISIBLE);
-            messageSendButton.setEnabled(true);
-            messageSendEdit.setEnabled(true);
-            messageSendEdit.setText("");
-        } else {
-            selectStickerButton.setVisibility(View.GONE);
-            messageSendButton.setEnabled(false);
-            messageSendEdit.setEnabled(false);
-            messageSendEdit.setText(getString(R.string.topicLockedForReason, Utils.truncateString(reasonOfLock, 60, getString(R.string.waitingText))));
+        if (!Utils.compareStrings(reasonOfLock, newReason)) {
+            reasonOfLock = newReason;
+            if (reasonOfLock == null) {
+                selectStickerButton.setVisibility(View.VISIBLE);
+                messageSendButton.setEnabled(true);
+                messageSendEdit.setEnabled(true);
+                messageSendEdit.setText("");
+            } else {
+                selectStickerButton.setVisibility(View.GONE);
+                messageSendButton.setEnabled(false);
+                messageSendEdit.setEnabled(false);
+                messageSendEdit.setText(getString(R.string.topicLockedForReason, Utils.truncateString(reasonOfLock, 60, getString(R.string.waitingText))));
+            }
         }
     }
 

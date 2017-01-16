@@ -59,7 +59,7 @@ public class LongClickLinkMovementMethod extends LinkMovementMethod {
                         @Override
                         public void run() {
                             Vibrator vibratorService = (Vibrator) widget.getContext().getSystemService(Context.VIBRATOR_SERVICE);
-                            vibratorService.vibrate(40);
+                            vibratorService.vibrate(30);
                             link[0].onLongClick(widget);
                             itsLongPress = true;
                         }
