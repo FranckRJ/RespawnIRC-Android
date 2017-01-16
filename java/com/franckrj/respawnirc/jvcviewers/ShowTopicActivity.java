@@ -27,6 +27,7 @@ import com.franckrj.respawnirc.WebNavigatorActivity;
 import com.franckrj.respawnirc.dialogs.ChoosePageNumberDialogFragment;
 import com.franckrj.respawnirc.dialogs.LinkContextMenuDialogFragment;
 import com.franckrj.respawnirc.dialogs.SelectStickerDialogFragment;
+import com.franckrj.respawnirc.dialogs.ShowImageDialogFragment;
 import com.franckrj.respawnirc.jvcmsggetters.AbsJVCMessageGetter;
 import com.franckrj.respawnirc.jvcmsggetters.JVCForumMessageGetter;
 import com.franckrj.respawnirc.jvcmsgviewers.AbsShowTopicFragment;
@@ -66,6 +67,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     private PageNavigationUtil pageNavigation = null;
     private boolean useInternalNavigatorForDefaultOpening = false;
     private boolean convertNoelshackLinkToDirectLink = false;
+    private boolean showOverviewOnImageClick = false;
 
     private final JVCMessageSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageSender.NewMessageWantEditListener() {
         @Override
@@ -297,6 +299,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
 
         useInternalNavigatorForDefaultOpening = sharedPref.getBoolean(getString(R.string.settingsUseInternalNavigator), Boolean.valueOf(getString(R.string.useInternalNavigatorDefault)));
         convertNoelshackLinkToDirectLink = sharedPref.getBoolean(getString(R.string.settingsUseDirectNoelshackLink), Boolean.valueOf(getString(R.string.useDirectNoelshackLinkDefault)));
+        showOverviewOnImageClick = sharedPref.getBoolean(getString(R.string.settingsShowOverviewOnImageClick), Boolean.valueOf(getString(R.string.showOverviewOnImageClickDefault)));
     }
 
     @Override
@@ -582,6 +585,12 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
                 newShowForumIntent.putExtra(ShowForumActivity.EXTRA_NEW_LINK, possibleNewLink);
                 startActivity(newShowForumIntent);
                 finish();
+            } else if (showOverviewOnImageClick && JVCParser.checkIfItsNoelshackLink(link)) {
+                Bundle argForFrag = new Bundle();
+                ShowImageDialogFragment showImageDialogFragment = new ShowImageDialogFragment();
+                argForFrag.putString(ShowImageDialogFragment.ARG_IMAGE_LINK, JVCParser.noelshackToDirectLink(link));
+                showImageDialogFragment.setArguments(argForFrag);
+                showImageDialogFragment.show(getFragmentManager(), "ShowImageDialogFragment");
             } else {
                 if (!useInternalNavigatorForDefaultOpening) {
                     try {

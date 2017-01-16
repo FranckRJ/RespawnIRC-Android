@@ -167,6 +167,9 @@
     <string name="useDirectNoelshackLinkDefault">false</string>
     <string name="noelshack">Noelshack</string>
     <string name="useDirectNoelshackLinkTitle">Utiliser les liens directs</string>
+    <string name="settingsShowOverviewOnImageClick">settings.showOverviewOnImageClick</string>
+    <string name="showOverviewOnImageClickDefault">false</string>
+    <string name="showOverviewOnImageClickTitle">Aperçu lors d\'un clique</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInWebBrowser</item>

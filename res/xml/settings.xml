@@ -24,6 +24,10 @@
             android:key="@string/settingsUseDirectNoelshackLink"
             android:title="@string/useDirectNoelshackLinkTitle"
             android:defaultValue="@string/useDirectNoelshackLinkDefault"/>
+        <CheckBoxPreference
+            android:key="@string/settingsShowOverviewOnImageClick"
+            android:title="@string/showOverviewOnImageClickTitle"
+            android:defaultValue="@string/showOverviewOnImageClickDefault"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/settingsLinkOpeningTitle">
