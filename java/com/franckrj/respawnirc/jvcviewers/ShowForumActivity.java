@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.SendTopicActivity;
-import com.franckrj.respawnirc.dialogs.ChooseTopicOrForumLinkDialogFragment;
 import com.franckrj.respawnirc.jvctopictools.JVCTopicGetter;
 import com.franckrj.respawnirc.jvctopictools.ShowForumFragment;
 import com.franckrj.respawnirc.utils.AddOrRemoveThingToFavs;
@@ -25,8 +24,7 @@ import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.AbsNavigationViewActivity;
 import com.franckrj.respawnirc.utils.Utils;
 
-public class ShowForumActivity extends AbsNavigationViewActivity implements ChooseTopicOrForumLinkDialogFragment.NewTopicOrForumSelected,
-                                                    ShowForumFragment.NewTopicWantRead, JVCTopicGetter.NewForumNameAvailable,
+public class ShowForumActivity extends AbsNavigationViewActivity implements ShowForumFragment.NewTopicWantRead, JVCTopicGetter.NewForumNameAvailable,
                                                     JVCTopicGetter.ForumLinkChanged, PageNavigationUtil.PageNavigationFunctions,
                                                     AddOrRemoveThingToFavs.ActionToFavsEnded {
     public static final String EXTRA_NEW_LINK = "com.franckrj.respawnirc.EXTRA_NEW_LINK";
@@ -243,11 +241,6 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Choo
         } else if (!itsAForum && isWhenDrawerIsClosed) {
             setTopicOrForum(link, true, null);
         }
-    }
-
-    @Override
-    public void newTopicOrForumAvailable(String newTopicOrForumLink) {
-        setTopicOrForum(newTopicOrForumLink, true, null);
     }
 
     @Override

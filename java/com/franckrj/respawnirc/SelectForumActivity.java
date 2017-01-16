@@ -22,7 +22,6 @@ import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.franckrj.respawnirc.dialogs.ChooseTopicOrForumLinkDialogFragment;
 import com.franckrj.respawnirc.dialogs.HelpFirstLaunchDialogFragment;
 import com.franckrj.respawnirc.jvcviewers.ShowForumActivity;
 import com.franckrj.respawnirc.utils.JVCParser;
@@ -30,11 +29,9 @@ import com.franckrj.respawnirc.utils.AbsNavigationViewActivity;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class SelectForumActivity extends AbsNavigationViewActivity implements ChooseTopicOrForumLinkDialogFragment.NewTopicOrForumSelected,
-                                                                              JVCForumsAdapter.NewForumSelected {
+public class SelectForumActivity extends AbsNavigationViewActivity implements JVCForumsAdapter.NewForumSelected {
     private JVCForumsAdapter adapterForForums = null;
     private EditText textForSearch = null;
     private MenuItem searchExpandableItem = null;
@@ -205,11 +202,6 @@ public class SelectForumActivity extends AbsNavigationViewActivity implements Ch
 
         layoutForDrawer = (DrawerLayout) findViewById(R.id.layout_drawer_selectforum);
         navigationForDrawer = (NavigationView) findViewById(R.id.navigation_view_selectforum);
-    }
-
-    @Override
-    public void newTopicOrForumAvailable(String newTopicOrForumLink) {
-        readNewTopicOrForum(newTopicOrForumLink);
     }
 
     @Override
