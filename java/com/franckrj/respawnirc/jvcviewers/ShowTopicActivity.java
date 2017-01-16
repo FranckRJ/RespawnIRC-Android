@@ -611,14 +611,16 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
             reasonOfLock = newReason;
             if (reasonOfLock == null) {
                 selectStickerButton.setVisibility(View.VISIBLE);
+                messageSendButton.setVisibility(View.VISIBLE);
                 messageSendButton.setEnabled(true);
                 messageSendEdit.setEnabled(true);
                 messageSendEdit.setText("");
             } else {
                 selectStickerButton.setVisibility(View.GONE);
+                messageSendButton.setVisibility(View.GONE);
                 messageSendButton.setEnabled(false);
                 messageSendEdit.setEnabled(false);
-                messageSendEdit.setText(getString(R.string.topicLockedForReason, Utils.truncateString(reasonOfLock, 60, getString(R.string.waitingText))));
+                messageSendEdit.setText(getString(R.string.topicLockedForReason, Utils.truncateString(reasonOfLock, 80, getString(R.string.waitingText))));
             }
         }
     }
