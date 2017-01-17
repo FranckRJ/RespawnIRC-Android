@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 
 public class LongClickLinkMovementMethod extends LinkMovementMethod {
-    private static final int LONG_CLICK_TIME = 750;
+    private static final int LONG_CLICK_TIME = 600;
 
     private static LongClickLinkMovementMethod instance;
 
@@ -59,7 +59,7 @@ public class LongClickLinkMovementMethod extends LinkMovementMethod {
                         @Override
                         public void run() {
                             Vibrator vibratorService = (Vibrator) widget.getContext().getSystemService(Context.VIBRATOR_SERVICE);
-                            vibratorService.vibrate(30);
+                            vibratorService.vibrate(25);
                             link[0].onLongClick(widget);
                             itsLongPress = true;
                         }

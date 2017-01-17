@@ -3,17 +3,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:minWidth="10000dp"
+    android:minHeight="10000dp"
     android:layout_margin="0dp"
-    android:gravity="center"
     android:padding="0dp"
-    android:minWidth="1000dp"
-    android:minHeight="1000dp"
+    android:gravity="center"
     android:orientation="vertical">
     <ImageView
         android:id="@+id/imageview_image_showimage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:minWidth="10000dp"
+        android:minHeight="10000dp"
+        android:scaleType="fitCenter"
         android:contentDescription="@string/noelshack"/>
     <ProgressBar
         android:id="@+id/downloading_image_showimage"

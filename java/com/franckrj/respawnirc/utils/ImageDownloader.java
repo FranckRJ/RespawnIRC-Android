@@ -17,16 +17,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ImageDownloader {
-    HashMap<String, DrawableWrapper> listOfDrawable = new HashMap<>();
-    ArrayList<ImageGetterAsyncTask> listOfCurrentsTasks = new ArrayList<>();
-    Drawable defaultDrawable = null;
-    Drawable deletedDrawable = null;
-    int numberOfFilesDownloading = 0;
-    DownloadFinished listenerForDownloadFinished = null;
-    int imagesWidth = 0;
-    int imagesHeight = 0;
-    File imagesCacheDir = null;
-    Activity parentActivity = null;
+    private HashMap<String, DrawableWrapper> listOfDrawable = new HashMap<>();
+    private ArrayList<ImageGetterAsyncTask> listOfCurrentsTasks = new ArrayList<>();
+    private Drawable defaultDrawable = null;
+    private Drawable deletedDrawable = null;
+    private int numberOfFilesDownloading = 0;
+    private DownloadFinished listenerForDownloadFinished = null;
+    private int imagesWidth = 0;
+    private int imagesHeight = 0;
+    private File imagesCacheDir = null;
+    private Activity parentActivity = null;
+    private boolean scaleLargeImages = false;
 
     public int getNumberOfFilesDownloading() {
         return numberOfFilesDownloading;
@@ -57,6 +58,10 @@ public class ImageDownloader {
         deletedDrawable = newDrawable;
     }
 
+    public void setScaleLargeImages(boolean newVal) {
+        scaleLargeImages = newVal;
+    }
+
     public Drawable getDrawableFromLink(String link) {
         DrawableWrapper drawable = listOfDrawable.get(link);
 
@@ -77,12 +82,7 @@ public class ImageDownloader {
                 startDownloadOfThisFileInThisWrapper(link, drawable);
             }
 
-
-            if (imagesWidth != 0 || imagesHeight != 0) {
-                drawable.setBounds(0, 0, imagesWidth, imagesHeight);
-            } else {
-                drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-            }
+            drawable.setBounds(0, 0, imagesWidth, imagesHeight);
             listOfDrawable.put(link, drawable);
         }
 
@@ -151,11 +151,7 @@ public class ImageDownloader {
         protected void onPostExecute(Bitmap result) {
             if (result != null) {
                 BitmapDrawable newDrawable = new BitmapDrawable(parentActivity.getResources(), result);
-                if (imagesWidth != 0 || imagesHeight != 0) {
-                    newDrawable.setBounds(0, 0, imagesWidth, imagesHeight);
-                } else {
-                    newDrawable.setBounds(0, 0, newDrawable.getIntrinsicWidth(), newDrawable.getIntrinsicHeight());
-                }
+                newDrawable.setBounds(0, 0, imagesWidth, imagesHeight);
                 wrapperForDrawable.setWrappedDrawable(newDrawable);
 
                 if (!fileName.isEmpty() && !imagesCacheDir.getPath().isEmpty()) {
@@ -178,11 +174,40 @@ public class ImageDownloader {
 
         public Bitmap fetchDrawable(String urlString) {
             try {
+                Bitmap bitmapToReturn;
+                BitmapFactory.Options currentOptions = new BitmapFactory.Options();
                 InputStream stream = (InputStream) new URL(urlString).getContent();
-                return BitmapFactory.decodeStream(stream);
+
+                if (scaleLargeImages) {
+                    int maxOfScreenSize = Math.max(imagesWidth, imagesHeight);
+                    currentOptions.inJustDecodeBounds = true;
+                    BitmapFactory.decodeStream(stream, null, currentOptions);
+                    stream.close();
+                    stream = (InputStream) new URL(urlString).getContent();
+                    currentOptions.inSampleSize = calculateInSampleSize(currentOptions, maxOfScreenSize, maxOfScreenSize);
+                    currentOptions.inJustDecodeBounds = false;
+                }
+
+                bitmapToReturn = BitmapFactory.decodeStream(stream, null, currentOptions);
+                stream.close();
+                return bitmapToReturn;
             } catch (Exception e) {
                 return null;
             }
+        }
+
+        public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+            int height = options.outHeight;
+            int width = options.outWidth;
+            int inSampleSize = 1;
+
+            while (width / 2 > reqWidth * 0.9 || height / 2 > reqHeight * 0.9) {
+                inSampleSize *= 2;
+                width /= 2;
+                height /=2;
+            }
+
+            return inSampleSize;
         }
     }
 

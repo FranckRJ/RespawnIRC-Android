@@ -9,6 +9,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +57,9 @@ public class ShowImageDialogFragment extends DialogFragment {
         } else {
             Drawable deletedDrawable;
             Resources res = getActivity().getResources();
+            DisplayMetrics metrics = new DisplayMetrics();
+
+            getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
             deletedDrawable = Undeprecator.resourcesGetDrawable(res, R.drawable.image_deleted);
             deletedDrawable.setBounds(0, 0, deletedDrawable.getIntrinsicWidth(), deletedDrawable.getIntrinsicHeight());
@@ -63,7 +67,8 @@ public class ShowImageDialogFragment extends DialogFragment {
             downloaderForImage.setParentActivity(getActivity());
             downloaderForImage.setListenerForDownloadFinished(listenerForDownloadFinished);
             downloaderForImage.setImagesCacheDir(getActivity().getCacheDir());
-            downloaderForImage.setImagesSize(0, 0);
+            downloaderForImage.setScaleLargeImages(true);
+            downloaderForImage.setImagesSize(metrics.widthPixels, metrics.heightPixels);
             downloaderForImage.setDefaultDrawable(deletedDrawable);
             downloaderForImage.setDeletedDrawable(deletedDrawable);
         }
