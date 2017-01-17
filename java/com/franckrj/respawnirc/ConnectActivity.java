@@ -24,7 +24,6 @@ import android.widget.Toast;
 
 import com.franckrj.respawnirc.utils.Undeprecator;
 
-/*TODO: Récupérer le pseudo automatiquement.*/
 public class ConnectActivity extends AppCompatActivity {
     private WebView jvcWebView = null;
     private EditText pseudoText = null;

@@ -6,9 +6,9 @@ import android.graphics.drawable.Drawable;
 import android.text.Html;
 
 public class CustomImageGetter implements Html.ImageGetter {
-    Activity parentActivity = null;
-    Drawable deletedDrawable = null;
-    ImageDownloader downloaderForImage = null;
+    private Activity parentActivity = null;
+    private Drawable deletedDrawable = null;
+    private ImageDownloader downloaderForImage = null;
 
     public CustomImageGetter(Activity newParentActivity, Drawable newDeletedDrawable, ImageDownloader newDownloaderForImage) {
         parentActivity = newParentActivity;

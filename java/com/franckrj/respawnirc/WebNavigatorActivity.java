@@ -23,7 +23,7 @@ public class WebNavigatorActivity extends AppCompatActivity {
     private String currentUrl = "";
     private String currentTitle = "";
 
-    void updateTitleAndSubtitle() {
+    private void updateTitleAndSubtitle() {
         ActionBar myActionBar = getSupportActionBar();
         if (myActionBar != null) {
             myActionBar.setTitle(currentTitle);

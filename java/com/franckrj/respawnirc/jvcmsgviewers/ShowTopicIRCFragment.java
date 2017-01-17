@@ -18,9 +18,6 @@ import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 
-/*TODO: Set focus sur la zone d'écriture des messages après citation ?
-* TODO: géré la redirection de lien (changement de nom de topic, suppression de page, etc)
-* TODO: Récupérer les deux dernières page si la dernière page contient moins de X messages (et au 1er chargement aussi ?)*/
 public class ShowTopicIRCFragment extends AbsShowTopicFragment {
     private int maxNumberOfMessagesShowed = 40;
     private int initialNumberOfMessagesShowed = 10;

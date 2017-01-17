@@ -55,16 +55,6 @@ public class RefreshFavDialogFragment extends DialogFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        View mainView = inflater.inflate(R.layout.dialog_loading, container, false);
-        TextView textView = (TextView) mainView.findViewById(R.id.textview_loading_dialog);
-        textView.setText(R.string.loadingFavs);
-
-        return mainView;
-    }
-
-    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
 
@@ -73,6 +63,16 @@ public class RefreshFavDialogFragment extends DialogFragment {
         }
 
         return dialog;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        View mainView = inflater.inflate(R.layout.dialog_loading, container, false);
+        TextView textView = (TextView) mainView.findViewById(R.id.textview_loading_dialog);
+        textView.setText(R.string.loadingFavs);
+
+        return mainView;
     }
 
     @Override

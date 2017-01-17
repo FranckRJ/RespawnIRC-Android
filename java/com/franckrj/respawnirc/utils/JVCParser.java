@@ -749,7 +749,6 @@ public final class JVCParser {
         return messageToParse;
     }
 
-    /*TODO: Possiblement passer "Pseudo supprimé" en ressource (string.xml).*/
     public static MessageInfos createMessageInfoFromEntireMessage(String thisEntireMessage) {
         MessageInfos newMessageInfo = new MessageInfos();
         Matcher pseudoInfosMatcher = pseudoInfosPattern.matcher(thisEntireMessage);
