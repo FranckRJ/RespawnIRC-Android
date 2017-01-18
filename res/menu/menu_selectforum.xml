@@ -8,4 +8,7 @@
         android:icon="@drawable/ic_action_action_search"
         app:showAsAction="collapseActionView|always"
         app:actionLayout="@layout/actionbar_search_edittext_selectforum"/>
+    <item
+        android:id="@+id/action_select_topic_or_forum_selectforum"
+        android:title="@string/openTopicOrForumLink"/>
 </menu>

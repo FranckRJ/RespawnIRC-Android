@@ -22,6 +22,7 @@ import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.franckrj.respawnirc.dialogs.ChooseTopicOrForumLinkDialogFragment;
 import com.franckrj.respawnirc.dialogs.HelpFirstLaunchDialogFragment;
 import com.franckrj.respawnirc.jvcviewers.ShowForumActivity;
 import com.franckrj.respawnirc.utils.JVCParser;
@@ -31,7 +32,8 @@ import com.franckrj.respawnirc.utils.WebManager;
 
 import java.util.ArrayList;
 
-public class SelectForumActivity extends AbsNavigationViewActivity implements JVCForumsAdapter.NewForumSelected {
+public class SelectForumActivity extends AbsNavigationViewActivity implements ChooseTopicOrForumLinkDialogFragment.NewTopicOrForumSelected,
+                                                                              JVCForumsAdapter.NewForumSelected {
     private JVCForumsAdapter adapterForForums = null;
     private EditText textForSearch = null;
     private MenuItem searchExpandableItem = null;
@@ -188,6 +190,18 @@ public class SelectForumActivity extends AbsNavigationViewActivity implements JV
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_select_topic_or_forum_selectforum:
+                ChooseTopicOrForumLinkDialogFragment chooseLinkDialogFragment = new ChooseTopicOrForumLinkDialogFragment();
+                chooseLinkDialogFragment.show(getFragmentManager(), "ChooseTopicOrForumLinkDialogFragment");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     protected void initializeViewAndToolbar() {
         setContentView(R.layout.activity_selectforum);
 
@@ -214,6 +228,11 @@ public class SelectForumActivity extends AbsNavigationViewActivity implements JV
     @Override
     public void getNewForumLink(String link) {
         readNewTopicOrForum(link);
+    }
+
+    @Override
+    public void newTopicOrForumAvailable(String newTopicOrForumLink) {
+        readNewTopicOrForum(newTopicOrForumLink);
     }
 
     private class GetSearchedForums extends AsyncTask<String, Void, String> {
