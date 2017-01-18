@@ -7,13 +7,11 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.WebNavigatorActivity;
+import com.franckrj.respawnirc.utils.Utils;
 
 public class LinkContextMenuDialogFragment extends DialogFragment {
     public static final String ARG_URL = "com.franckrj.respawnirc.linkcontextmenudialogfragment.url";
@@ -43,17 +41,10 @@ public class LinkContextMenuDialogFragment extends DialogFragment {
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case POS_OPEN_IN_WEB_BROWSER:
-                        try {
-                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlOfLink));
-                            startActivity(browserIntent);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        Utils.openLinkInExternalNavigator(urlOfLink, getActivity());
                         break;
                     case POS_OPEN_IN_INTERN_BROWSER:
-                        Intent newNavigatorIntent = new Intent(getActivity(), WebNavigatorActivity.class);
-                        newNavigatorIntent.putExtra(WebNavigatorActivity.EXTRA_URL_LOAD, urlOfLink);
-                        startActivity(newNavigatorIntent);
+                        Utils.openLinkInInternalNavigator(urlOfLink, getActivity());
                         break;
                     case POS_COPY:
                         ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);

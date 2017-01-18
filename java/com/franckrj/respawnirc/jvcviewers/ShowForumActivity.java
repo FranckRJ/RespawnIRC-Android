@@ -33,6 +33,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     private AddOrRemoveThingToFavs currentTaskForFavs = null;
     private PageNavigationUtil pageNavigation = null;
     private boolean refreshNeededOnNextResume = false;
+    private boolean useInternalNavigatorForDefaultOpening = false;
 
     public ShowForumActivity() {
         idOfBaseActivity = R.id.action_forum_navigation;
@@ -141,6 +142,8 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
                 getCurrentFragment().refreshForum();
             }
         }
+
+        useInternalNavigatorForDefaultOpening = sharedPref.getBoolean(getString(R.string.settingsUseInternalNavigator), Boolean.valueOf(getString(R.string.useInternalNavigatorDefault)));
     }
 
     @Override
@@ -203,6 +206,13 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
                     Toast.makeText(ShowForumActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
                 }
 
+                return true;
+            case R.id.action_open_in_browser_showforum:
+                if (!useInternalNavigatorForDefaultOpening) {
+                    Utils.openLinkInExternalNavigator(pageNavigation.getCurrentLink(), this);
+                } else {
+                    Utils.openLinkInInternalNavigator(pageNavigation.getCurrentLink(), this);
+                }
                 return true;
             case R.id.action_send_topic_showforum:
                 Intent newSendTopicIntent = new Intent(this, SendTopicActivity.class);

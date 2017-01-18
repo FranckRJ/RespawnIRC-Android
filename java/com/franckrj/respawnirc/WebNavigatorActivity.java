@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
@@ -96,6 +97,13 @@ public class WebNavigatorActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_webnavigator, menu);
+        return true;
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(getString(R.string.saveUrlForNavigator), currentUrl);
@@ -107,6 +115,9 @@ public class WebNavigatorActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 super.onBackPressed();
+                return true;
+            case R.id.action_open_in_external_browser_webnavigator:
+                Utils.openLinkInExternalNavigator(currentUrl, this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

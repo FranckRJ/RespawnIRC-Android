@@ -2,9 +2,13 @@ package com.franckrj.respawnirc.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.text.Spannable;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+
+import com.franckrj.respawnirc.WebNavigatorActivity;
 
 import java.net.URLEncoder;
 
@@ -57,5 +61,20 @@ public class Utils {
             e.printStackTrace();
         }
         return baseString;
+    }
+
+    public static void openLinkInExternalNavigator(String link, Activity parentActviity) {
+        try {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+            parentActviity.startActivity(browserIntent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void openLinkInInternalNavigator(String link, Activity parentActviity) {
+        Intent newNavigatorIntent = new Intent(parentActviity, WebNavigatorActivity.class);
+        newNavigatorIntent.putExtra(WebNavigatorActivity.EXTRA_URL_LOAD, link);
+        parentActviity.startActivity(newNavigatorIntent);
     }
 }

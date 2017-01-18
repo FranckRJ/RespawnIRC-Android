@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -23,7 +22,6 @@ import android.widget.Toast;
 import com.franckrj.respawnirc.JVCMessageSender;
 import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.WebNavigatorActivity;
 import com.franckrj.respawnirc.dialogs.ChoosePageNumberDialogFragment;
 import com.franckrj.respawnirc.dialogs.LinkContextMenuDialogFragment;
 import com.franckrj.respawnirc.dialogs.SelectStickerDialogFragment;
@@ -366,6 +364,13 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
                 }
 
                 return true;
+            case R.id.action_open_in_browser_showtopic:
+                if (!useInternalNavigatorForDefaultOpening) {
+                    Utils.openLinkInExternalNavigator(pageNavigation.getCurrentLink(), this);
+                } else {
+                    Utils.openLinkInInternalNavigator(pageNavigation.getCurrentLink(), this);
+                }
+                return true;
             case R.id.action_past_last_message_sended_showtopic:
                 if (reasonOfLock == null) {
                     messageSendEdit.setText(lastMessageSended);
@@ -593,16 +598,9 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
                 showImageDialogFragment.show(getFragmentManager(), "ShowImageDialogFragment");
             } else {
                 if (!useInternalNavigatorForDefaultOpening) {
-                    try {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
-                        startActivity(browserIntent);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    Utils.openLinkInExternalNavigator(link, this);
                 } else {
-                    Intent newNavigatorIntent = new Intent(this, WebNavigatorActivity.class);
-                    newNavigatorIntent.putExtra(WebNavigatorActivity.EXTRA_URL_LOAD, link);
-                    startActivity(newNavigatorIntent);
+                    Utils.openLinkInInternalNavigator(link, this);
                 }
             }
         } else {

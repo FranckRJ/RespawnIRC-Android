@@ -24,7 +24,6 @@ import com.franckrj.respawnirc.ConnectActivity;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.SelectForumActivity;
 import com.franckrj.respawnirc.SettingsActivity;
-import com.franckrj.respawnirc.WebNavigatorActivity;
 import com.franckrj.respawnirc.dialogs.RefreshFavDialogFragment;
 
 import java.util.ArrayList;
@@ -204,9 +203,7 @@ public abstract class AbsNavigationViewActivity extends AppCompatActivity implem
                             startActivity(new Intent(AbsNavigationViewActivity.this, ConnectActivity.class));
                             break;
                         case R.id.action_showmp_navigation:
-                            Intent newShowMPIntent = new Intent(AbsNavigationViewActivity.this, WebNavigatorActivity.class);
-                            newShowMPIntent.putExtra(WebNavigatorActivity.EXTRA_URL_LOAD, "http://www.jeuxvideo.com/messages-prives/boite-reception.php");
-                            startActivity(newShowMPIntent);
+                            Utils.openLinkInInternalNavigator("http://www.jeuxvideo.com/messages-prives/boite-reception.php", AbsNavigationViewActivity.this);
                             break;
                         case R.id.action_settings_navigation:
                             startActivity(new Intent(AbsNavigationViewActivity.this, SettingsActivity.class));
