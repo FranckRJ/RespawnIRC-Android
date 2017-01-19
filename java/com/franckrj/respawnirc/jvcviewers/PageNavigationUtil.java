@@ -165,8 +165,6 @@ public class PageNavigationUtil {
             if (currentFragment != null) {
                 currentFragment.setPageLink(((PageNavigationFunctions) parentActivity).setShowedPageNumberForThisLink(currentLink, position + 1));
             }
-
-            ((PageNavigationFunctions) parentActivity).onPageLoaded();
         }
     }
 
@@ -285,7 +283,6 @@ public class PageNavigationUtil {
     }
 
     public interface PageNavigationFunctions {
-        void onPageLoaded();
         void extendPageSelection(View buttonView);
         AbsShowSomethingFragment createNewFragmentForRead(String possibleLink);
         int getShowablePageNumberForThisLink(String link);

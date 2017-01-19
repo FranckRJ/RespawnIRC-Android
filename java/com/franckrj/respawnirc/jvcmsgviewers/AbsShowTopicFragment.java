@@ -17,8 +17,6 @@ import java.util.ArrayList;
 
 public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     public static final String ARG_TOPIC_LINK = "com.franckrj.respawnirc.showtopicfragment.topic_link";
-    public static final String ARG_PSEUDO = "com.franckrj.respawnirc.showtopicfragment.pseudo";
-    public static final String ARG_COOKIES = "com.franckrj.respawnirc.showtopicfragment.cookies";
     public static final int MODE_IRC = 0;
     public static final int MODE_FORUM = 1;
 
@@ -26,8 +24,6 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected ListView jvcMsgList = null;
     protected SharedPreferences sharedPref = null;
     protected JVCMessagesAdapter adapterForMessages = null;
-    protected String pseudoOfUser = "";
-    protected String cookieListInAString = "";
     protected JVCParser.Settings currentSettings = new JVCParser.Settings();
     protected NewModeNeededListener listenerForNewModeNeeded = null;
     protected SwipeRefreshLayout swipeRefresh = null;
@@ -51,14 +47,8 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         currentSettings.maxNumberOfOverlyQuotes = Integer.parseInt(sharedPref.getString(getString(R.string.settingsMaxNumberOfOverlyQuote), getString(R.string.maxNumberOfOverlyQuoteDefault)));
         currentSettings.showNoelshackImages = sharedPref.getBoolean(getString(R.string.settingsShowNoelshackImage), Boolean.parseBoolean(getString(R.string.showNoelshackImageDefault)));
         currentSettings.transformStickerToSmiley = sharedPref.getBoolean(getString(R.string.settingsTransformStickerToSmiley), Boolean.parseBoolean(getString(R.string.transformStickerToSmileyDefault)));
-        updateConnectInfos();
-    }
-
-    protected void updateConnectInfos() {
-        currentSettings.pseudoOfUser = pseudoOfUser;
-        if (absGetterForMessages != null) {
-            absGetterForMessages.setCookieListInAString(cookieListInAString);
-        }
+        currentSettings.pseudoOfUser = sharedPref.getString(getString(R.string.prefPseudoUser), "");
+        absGetterForMessages.setCookieListInAString(sharedPref.getString(getString(R.string.prefCookiesList), ""));
     }
 
     public boolean onMenuItemClick(MenuItem item) {
@@ -132,12 +122,6 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         absGetterForMessages.setIsInFavs(newVal);
     }
 
-    public void setPseudoAndCookies(String newPseudo, String newCookieList) {
-        pseudoOfUser = newPseudo;
-        cookieListInAString = newCookieList;
-        updateConnectInfos();
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,9 +162,6 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
 
         if (savedInstanceState != null) {
             ArrayList<JVCParser.MessageInfos> allCurrentMessagesShowed = savedInstanceState.getParcelableArrayList(getString(R.string.saveAllCurrentMessagesShowed));
-            pseudoOfUser = savedInstanceState.getString(getString(R.string.savePseudo), "");
-            cookieListInAString = savedInstanceState.getString(getString(R.string.saveCookies), "");
-            updateConnectInfos();
             absGetterForMessages.loadFromBundle(savedInstanceState);
 
             if (allCurrentMessagesShowed != null) {
@@ -195,9 +176,6 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
 
             if (currentArgs != null) {
                 String topicLink = currentArgs.getString(ARG_TOPIC_LINK, "");
-                pseudoOfUser = currentArgs.getString(ARG_PSEUDO, "");
-                cookieListInAString = currentArgs.getString(ARG_COOKIES, "");
-                updateConnectInfos();
                 setPageLink(topicLink);
             }
         }
@@ -223,8 +201,6 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(getString(R.string.saveAllCurrentMessagesShowed), adapterForMessages.getAllItems());
-        outState.putString(getString(R.string.savePseudo), pseudoOfUser);
-        outState.putString(getString(R.string.saveCookies), cookieListInAString);
         absGetterForMessages.saveToBundle(outState);
     }
 

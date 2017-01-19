@@ -274,11 +274,6 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     }
 
     @Override
-    public void onPageLoaded() {
-        //rien
-    }
-
-    @Override
     public void extendPageSelection(View buttonView) {
         //rien
     }

@@ -172,14 +172,9 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     }
 
     private void reloadSettings() {
-        AbsShowTopicFragment fragment = getCurrentFragment();
         pseudoOfUser = sharedPref.getString(getString(R.string.prefPseudoUser), "");
         cookieListInAString = sharedPref.getString(getString(R.string.prefCookiesList), "");
         lastMessageSended = sharedPref.getString(getString(R.string.prefLastMessageSended), "");
-
-        if (fragment != null) {
-            fragment.setPseudoAndCookies(pseudoOfUser, cookieListInAString);
-        }
     }
 
     private void updateShowNavigationButtons() {
@@ -527,11 +522,6 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     }
 
     @Override
-    public void onPageLoaded() {
-        reloadSettings();
-    }
-
-    @Override
     public void extendPageSelection(View buttonView) {
         if (pageNavigation.getIdOfThisButton(buttonView) == PageNavigationUtil.ID_BUTTON_CURRENT) {
             ChoosePageNumberDialogFragment choosePageDialogFragment = new ChoosePageNumberDialogFragment();
@@ -553,8 +543,6 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         if (possibleTopicLink != null) {
             Bundle argForFrag = new Bundle();
             argForFrag.putString(AbsShowTopicFragment.ARG_TOPIC_LINK, possibleTopicLink);
-            argForFrag.putString(AbsShowTopicFragment.ARG_PSEUDO, pseudoOfUser);
-            argForFrag.putString(AbsShowTopicFragment.ARG_COOKIES, cookieListInAString);
             newFragment.setArguments(argForFrag);
         }
 
