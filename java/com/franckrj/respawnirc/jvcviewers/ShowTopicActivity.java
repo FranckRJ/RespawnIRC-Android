@@ -143,6 +143,14 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         }
     };
 
+    private final Button.OnLongClickListener refreshFromSendButton = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            getCurrentFragment().reloadTopic();
+            return true;
+        }
+    };
+
     private final Button.OnClickListener selectStickerClickedListener = new View.OnClickListener() {
         @Override
         public void onClick(View buttonView) {
@@ -235,6 +243,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         senderForMessages.setListenerForNewMessageWantEdit(listenerForNewMessageWantEdit);
         senderForMessages.setListenerForNewMessagePosted(listenerForNewMessagePosted);
         messageSendButton.setOnClickListener(sendMessageToTopicListener);
+        messageSendButton.setOnLongClickListener(refreshFromSendButton);
         selectStickerButton.setOnClickListener(selectStickerClickedListener);
 
         pageNavigation.setCurrentLink(sharedPref.getString(getString(R.string.prefTopicUrlToFetch), ""));
