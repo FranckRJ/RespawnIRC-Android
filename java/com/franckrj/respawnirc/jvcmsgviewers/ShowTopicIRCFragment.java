@@ -1,5 +1,6 @@
 package com.franckrj.respawnirc.jvcmsgviewers;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -76,6 +77,15 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
         return false;
     }
 
+    private void saveOldTopicInfos() {
+        if (!getterForMessages.getUrlForTopic().isEmpty()) {
+            SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
+            sharedPrefEdit.putString(getString(R.string.prefOldUrlForTopic), getterForMessages.getUrlForTopic());
+            sharedPrefEdit.putLong(getString(R.string.prefOldLastIdOfMessage), getterForMessages.getLastIdOfMessage());
+            sharedPrefEdit.apply();
+        }
+    }
+
     private void loadFromOldTopicInfos() {
         isInErrorMode = false;
         getterForMessages.stopAllCurrentTask();
@@ -94,6 +104,12 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
         adapterForMessages.updateAllItems();
         getterForMessages.setNewTopic(newTopicLink);
         getterForMessages.reloadTopic();
+    }
+
+    @Override
+    public void clearContent() {
+        saveOldTopicInfos();
+        super.clearContent();
     }
 
     @Override
@@ -161,6 +177,12 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
         super.onResume();
         isInErrorMode = false;
         getterForMessages.reloadTopic();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        saveOldTopicInfos();
     }
 
     @Override

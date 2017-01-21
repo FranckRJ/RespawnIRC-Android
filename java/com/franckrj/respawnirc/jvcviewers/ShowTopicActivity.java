@@ -387,21 +387,15 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
 
     @Override
     public void newModeRequested(int newMode) {
-        SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
-
         if (newMode == AbsShowTopicFragment.MODE_IRC || newMode == AbsShowTopicFragment.MODE_FORUM) {
+            SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
+
             sharedPrefEdit.putInt(getString(R.string.prefCurrentTopicMode), newMode);
-
-            if (newMode == AbsShowTopicFragment.MODE_IRC && !pageNavigation.getCurrentLink().isEmpty()) {
-                sharedPrefEdit.putString(getString(R.string.prefTopicUrlToFetch), setShowedPageNumberForThisLink(pageNavigation.getCurrentLink(), pageNavigation.getCurrentItemIndex() + 1));
-            }
-
             sharedPrefEdit.apply();
             updateShowNavigationButtons();
             pageNavigation.updateAdapterForPagerView();
 
             if (newMode == AbsShowTopicFragment.MODE_FORUM) {
-                pageNavigation.setCurrentLink(sharedPref.getString(getString(R.string.prefTopicUrlToFetch), ""));
                 updateLastPageAndCurrentItemAndButtonsToCurrentLink();
                 if (pageNavigation.getCurrentItemIndex() > 0) {
                     pageNavigation.clearPageForThisFragment(0);

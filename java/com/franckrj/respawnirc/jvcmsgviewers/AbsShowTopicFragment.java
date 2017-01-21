@@ -87,13 +87,6 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         absGetterForMessages.reloadTopic();
     }
 
-    public void clearContent() {
-        absGetterForMessages.stopAllCurrentTask();
-        adapterForMessages.removeAllItems();
-        adapterForMessages.updateAllItems();
-        setPageLink("");
-    }
-
     public String getLatestListOfInputInAString() {
         return absGetterForMessages.getLatestListOfInputInAString();
     }
@@ -120,6 +113,14 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
 
     public void setIsInFavs(Boolean newVal) {
         absGetterForMessages.setIsInFavs(newVal);
+    }
+
+    @Override
+    public void clearContent() {
+        absGetterForMessages.stopAllCurrentTask();
+        adapterForMessages.removeAllItems();
+        adapterForMessages.updateAllItems();
+        setPageLink("");
     }
 
     @Override
@@ -190,11 +191,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     @Override
     public void onPause() {
         super.onPause();
-        SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
         absGetterForMessages.stopAllCurrentTask();
-        sharedPrefEdit.putString(getString(R.string.prefOldUrlForTopic), absGetterForMessages.getUrlForTopic());
-        sharedPrefEdit.putLong(getString(R.string.prefOldLastIdOfMessage), absGetterForMessages.getLastIdOfMessage());
-        sharedPrefEdit.apply();
     }
 
     @Override
