@@ -31,7 +31,7 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
 
                 adapterForMessages.removeAllItems();
 
-                if (jvcMsgList.getChildCount() > 0) {
+                if (jvcMsgList.getChildCount() > (adapterForMessages.getShowSurvey() ? 1 : 0)) {
                     scrolledAtTheEnd = (jvcMsgList.getLastVisiblePosition() == jvcMsgList.getCount() - 1) &&
                             (jvcMsgList.getChildAt(jvcMsgList.getChildCount() - 1).getBottom() <= jvcMsgList.getHeight());
                 }
@@ -72,6 +72,7 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
     private boolean reloadAllTopic() {
         isInErrorMode = false;
         if (clearMessagesOnRefresh) {
+            adapterForMessages.disableSurvey();
             adapterForMessages.removeAllItems();
             adapterForMessages.updateAllItems();
         }
@@ -83,6 +84,7 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
         isInErrorMode = false;
 
         getterForMessages.stopAllCurrentTask();
+        adapterForMessages.disableSurvey();
         adapterForMessages.removeAllItems();
         adapterForMessages.updateAllItems();
         getterForMessages.startGetMessagesOfThisPage(newTopicLink);

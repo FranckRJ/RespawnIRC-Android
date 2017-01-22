@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.franckrj.respawnirc.JVCMessageSender;
 import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.ShowSurveyActivity;
 import com.franckrj.respawnirc.dialogs.ChoosePageNumberDialogFragment;
 import com.franckrj.respawnirc.dialogs.LinkContextMenuDialogFragment;
 import com.franckrj.respawnirc.dialogs.SelectStickerDialogFragment;
@@ -42,7 +43,8 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
                                                                     PopupMenu.OnMenuItemClickListener, JVCForumMessageGetter.NewNumbersOfPagesListener,
                                                                     ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCMessagesAdapter.URLClicked,
                                                                     AbsJVCMessageGetter.NewReasonForTopicLock, SelectStickerDialogFragment.StickerSelected,
-                                                                    PageNavigationUtil.PageNavigationFunctions, AddOrRemoveThingToFavs.ActionToFavsEnded {
+                                                                    PageNavigationUtil.PageNavigationFunctions, AddOrRemoveThingToFavs.ActionToFavsEnded,
+                                                                    AbsShowTopicFragment.NewSurveyNeedToBeShown {
     public static final String EXTRA_TOPIC_LINK = "com.franckrj.respawnirc.EXTRA_TOPIC_LINK";
     public static final String EXTRA_TOPIC_NAME = "com.franckrj.respawnirc.EXTRA_TOPIC_NAME";
     public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.EXTRA_FORUM_NAME";
@@ -647,6 +649,13 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
             getCurrentFragment().setIsInFavs(currentTaskForFavs.getAddToFavs());
         }
         currentTaskForFavs = null;
+    }
+
+    @Override
+    public void getNewSurveyInfos(String surveyTitle) {
+        Intent newShowSurveyIntent = new Intent(ShowTopicActivity.this, ShowSurveyActivity.class);
+        newShowSurveyIntent.putExtra(ShowSurveyActivity.EXTRA_SURVEY_TITLE, surveyTitle);
+        startActivity(newShowSurveyIntent);
     }
 
     protected class QuoteJVCMessage extends AsyncTask<String, Void, String> {

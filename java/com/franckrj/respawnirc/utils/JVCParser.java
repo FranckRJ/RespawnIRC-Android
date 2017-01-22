@@ -56,6 +56,7 @@ public final class JVCParser {
     private static final Pattern isInFavPattern = Pattern.compile("<span class=\"picto-favoris([^\"]*)\"");
     private static final Pattern topicIDInTopicPagePattern = Pattern.compile("<div (.*?)data-topic-id=\"([^\"]*)\">");
     private static final Pattern lockReasonPattern = Pattern.compile("<div class=\"message-lock-topic\">[^<]*<span>([^<]*)</span>");
+    private static final Pattern surveyTitlePattern = Pattern.compile("<div class=\"intitule-sondage\">([^<]*)</div>");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
 
     private JVCParser() {
@@ -360,6 +361,16 @@ public final class JVCParser {
             return specialCharToNormalChar(lockReasonMatcher.group(1).replace("\n", " "));
         } else {
             return null;
+        }
+    }
+
+    public static String getSurveyTitleFromPage(String pageSource) {
+        Matcher surveyTitleMatcher = surveyTitlePattern.matcher(pageSource);
+
+        if (surveyTitleMatcher.find()) {
+            return specialCharToNormalChar(surveyTitleMatcher.group(1));
+        } else {
+            return "";
         }
     }
 

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 
@@ -12,6 +13,7 @@ import com.franckrj.respawnirc.jvcviewers.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.jvcmsggetters.AbsJVCMessageGetter;
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -38,6 +40,29 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
                     swipeRefresh.setRefreshing(true);
                 } else if (newState == AbsJVCMessageGetter.STATE_NOT_LOADING) {
                     swipeRefresh.setRefreshing(false);
+                }
+            }
+        }
+    };
+
+    protected final AbsJVCMessageGetter.NewSurveyForTopic listenerForNewSurveyForTopic = new AbsJVCMessageGetter.NewSurveyForTopic() {
+        @Override
+        public void getNewSurveyTitle(String newTitle) {
+            if (!newTitle.isEmpty()) {
+                adapterForMessages.enableSurvey(newTitle);
+            } else {
+                adapterForMessages.disableSurvey();
+            }
+            adapterForMessages.updateAllItems();
+        }
+    };
+
+    private final View.OnClickListener surveyItemClickedListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (adapterForMessages.getShowSurvey()) {
+                if (getActivity() instanceof NewSurveyNeedToBeShown) {
+                    ((NewSurveyNeedToBeShown) getActivity()).getNewSurveyInfos(absGetterForMessages.getSurveyTitle());
                 }
             }
         }
@@ -118,6 +143,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     @Override
     public void clearContent() {
         absGetterForMessages.stopAllCurrentTask();
+        adapterForMessages.disableSurvey();
         adapterForMessages.removeAllItems();
         adapterForMessages.updateAllItems();
         setPageLink("");
@@ -141,6 +167,8 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         initializeSettings();
         reloadSettings();
         absGetterForMessages.setListenerForNewGetterState(listenerForNewGetterState);
+        absGetterForMessages.setListenerForNewSurveyForTopic(listenerForNewSurveyForTopic);
+        adapterForMessages.setOnSurveyClickListener(surveyItemClickedListener);
 
         if (getActivity() instanceof NewModeNeededListener) {
             listenerForNewModeNeeded = (NewModeNeededListener) getActivity();
@@ -164,6 +192,10 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         if (savedInstanceState != null) {
             ArrayList<JVCParser.MessageInfos> allCurrentMessagesShowed = savedInstanceState.getParcelableArrayList(getString(R.string.saveAllCurrentMessagesShowed));
             absGetterForMessages.loadFromBundle(savedInstanceState);
+
+            if (!Utils.stringIsEmptyOrNull(absGetterForMessages.getSurveyTitle())) {
+                adapterForMessages.enableSurvey(absGetterForMessages.getSurveyTitle());
+            }
 
             if (allCurrentMessagesShowed != null) {
                 for (JVCParser.MessageInfos thisMessageInfo : allCurrentMessagesShowed) {
@@ -203,6 +235,10 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
 
     public interface NewModeNeededListener {
         void newModeRequested(int newMode);
+    }
+
+    public interface NewSurveyNeedToBeShown {
+        void getNewSurveyInfos(String surveyTitle);
     }
 
     protected abstract void initializeGetterForMessages();

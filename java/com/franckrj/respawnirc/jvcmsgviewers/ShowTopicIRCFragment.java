@@ -34,7 +34,7 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
                 boolean firstTimeGetMessages = adapterForMessages.getAllItems().isEmpty();
                 isInErrorMode = false;
 
-                if (jvcMsgList.getChildCount() > 0) {
+                if (jvcMsgList.getChildCount() > (adapterForMessages.getShowSurvey() ? 1 : 0)) {
                     scrolledAtTheEnd = (jvcMsgList.getLastVisiblePosition() == jvcMsgList.getCount() - 1) &&
                             (jvcMsgList.getChildAt(jvcMsgList.getChildCount() - 1).getBottom() <= jvcMsgList.getHeight());
                 }
@@ -89,6 +89,7 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
     private void loadFromOldTopicInfos() {
         isInErrorMode = false;
         getterForMessages.stopAllCurrentTask();
+        adapterForMessages.disableSurvey();
         adapterForMessages.removeAllItems();
         adapterForMessages.updateAllItems();
         getterForMessages.setOldTopic(oldUrlForTopic, oldLastIdOfMessage);
@@ -100,6 +101,7 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
         isInErrorMode = false;
 
         getterForMessages.stopAllCurrentTask();
+        adapterForMessages.disableSurvey();
         adapterForMessages.removeAllItems();
         adapterForMessages.updateAllItems();
         getterForMessages.setNewTopic(newTopicLink);

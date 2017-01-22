@@ -30,6 +30,8 @@ public abstract class AbsJVCMessageGetter {
     protected String topicID = "";
     protected NewReasonForTopicLock listenerForNewReasonForTopicLock = null;
     protected String lockReason = "";
+    protected NewSurveyForTopic listenerForNewSurveyForTopic = null;
+    protected String surveyTitle = null;
 
     public AbsJVCMessageGetter(Activity newParentActivity) {
         parentActivity = newParentActivity;
@@ -59,6 +61,10 @@ public abstract class AbsJVCMessageGetter {
         return topicID;
     }
 
+    public String getSurveyTitle() {
+        return surveyTitle;
+    }
+
     public void setIsInFavs(Boolean newVal) {
         isInFavs = newVal;
     }
@@ -83,6 +89,10 @@ public abstract class AbsJVCMessageGetter {
         listenerForNewReasonForTopicLock = thisListener;
     }
 
+    public void setListenerForNewSurveyForTopic(NewSurveyForTopic thisListener) {
+        listenerForNewSurveyForTopic = thisListener;
+    }
+
     public void stopAllCurrentTask() {
         if (currentAsyncTaskForGetMessage != null) {
             currentAsyncTaskForGetMessage.cancel(true);
@@ -103,6 +113,7 @@ public abstract class AbsJVCMessageGetter {
         lastIdOfMessage = savedInstanceState.getLong(parentActivity.getString(R.string.saveLastIdOfMessage), 0);
         topicID = savedInstanceState.getString(parentActivity.getString(R.string.saveTopicID), "");
         lockReason = savedInstanceState.getString(parentActivity.getString(R.string.saveLockReason), "");
+        surveyTitle = savedInstanceState.getString(parentActivity.getString(R.string.saveSurveyTitle), "");
         if (savedInstanceState.containsKey(parentActivity.getString(R.string.saveTopicIsInFav))) {
             isInFavs = savedInstanceState.getBoolean(parentActivity.getString(R.string.saveTopicIsInFav), false);
         } else {
@@ -119,6 +130,7 @@ public abstract class AbsJVCMessageGetter {
         savedInstanceState.putLong(parentActivity.getString(R.string.saveLastIdOfMessage), lastIdOfMessage);
         savedInstanceState.putString(parentActivity.getString(R.string.saveTopicID), topicID);
         savedInstanceState.putString(parentActivity.getString(R.string.saveLockReason), lockReason);
+        savedInstanceState.putString(parentActivity.getString(R.string.saveSurveyTitle), surveyTitle);
         if (isInFavs != null) {
             savedInstanceState.putBoolean(parentActivity.getString(R.string.saveTopicIsInFav), isInFavs);
         }
@@ -142,6 +154,7 @@ public abstract class AbsJVCMessageGetter {
             newPageInfos.newIsInFavs = JVCParser.getIsInFavsFromPage(pageContent);
             newPageInfos.newTopicID = JVCParser.getTopicIDInThisTopicPage(pageContent);
             newPageInfos.newLockReason = JVCParser.getLockReasonFromPage(pageContent);
+            newPageInfos.newSurveyTitle = JVCParser.getSurveyTitleFromPage(pageContent);
         }
 
         return newPageInfos;
@@ -170,6 +183,13 @@ public abstract class AbsJVCMessageGetter {
                 listenerForNewReasonForTopicLock.getNewLockReason(lockReason);
             }
         }
+
+        if (!Utils.compareStrings(infoOfCurrentPage.newSurveyTitle, surveyTitle)) {
+            surveyTitle = infoOfCurrentPage.newSurveyTitle;
+            if (listenerForNewSurveyForTopic != null) {
+                listenerForNewSurveyForTopic.getNewSurveyTitle(surveyTitle);
+            }
+        }
     }
 
     protected abstract class AbsGetJVCLastMessages extends AsyncTask<String, Void, TopicPageInfos> {
@@ -185,6 +205,7 @@ public abstract class AbsJVCMessageGetter {
         Boolean newIsInFavs;
         String newTopicID;
         String newLockReason;
+        String newSurveyTitle;
     }
 
     public interface NewForumAndTopicNameAvailable {
@@ -201,6 +222,10 @@ public abstract class AbsJVCMessageGetter {
 
     public interface NewReasonForTopicLock {
         void getNewLockReason(String newReason);
+    }
+
+    public interface NewSurveyForTopic {
+        void getNewSurveyTitle(String newTitle);
     }
 
     public abstract boolean reloadTopic();

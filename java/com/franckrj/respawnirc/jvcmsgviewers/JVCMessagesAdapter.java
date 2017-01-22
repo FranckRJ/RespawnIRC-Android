@@ -51,6 +51,9 @@ public class JVCMessagesAdapter extends BaseAdapter {
     private ImageDownloader downloaderForImage = new ImageDownloader();
     private URLClicked urlCLickedListener = null;
     private Html.ImageGetter jvcImageGetter = null;
+    private boolean showSurvey = false;
+    private String surveyTitle = "";
+    private View.OnClickListener onSurveyClickListener = null;
 
     private final ImageDownloader.DownloadFinished listenerForDownloadFinished = new ImageDownloader.DownloadFinished() {
         @Override
@@ -126,6 +129,10 @@ public class JVCMessagesAdapter extends BaseAdapter {
         return listOfMessages;
     }
 
+    public boolean getShowSurvey() {
+        return showSurvey;
+    }
+
     public void setUrlCLickedListener(URLClicked newListener) {
         urlCLickedListener = newListener;
     }
@@ -140,6 +147,19 @@ public class JVCMessagesAdapter extends BaseAdapter {
 
     public void setAlternateBackgroundColor(boolean newVal) {
         alternateBackgroundColor = newVal;
+    }
+
+    public void setOnSurveyClickListener(View.OnClickListener newListener) {
+        onSurveyClickListener = newListener;
+    }
+
+    public void enableSurvey(String newSurveyTitle) {
+        showSurvey = true;
+        surveyTitle = newSurveyTitle;
+    }
+
+    public void disableSurvey() {
+        showSurvey = false;
     }
 
     public void removeAllItems() {
@@ -210,11 +230,15 @@ public class JVCMessagesAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return listOfMessages.size();
+        return listOfMessages.size() + (showSurvey ? 1 : 0);
     }
 
     @Override
     public JVCParser.MessageInfos getItem(int position) {
+        position = position - (showSurvey ? 1 : 0);
+        if (position < 0) {
+            return new JVCParser.MessageInfos();
+        }
         return listOfMessages.get(position);
     }
 
@@ -240,14 +264,30 @@ public class JVCMessagesAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.showMenuButton.setTag(position);
-        holder.firstLine.setText(listOfContentForMessages.get(position).firstLineContent);
-        holder.secondLine.setText(listOfContentForMessages.get(position).secondLineContent);
 
-        if (position % 2 == 0 || !alternateBackgroundColor) {
-            convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.defaultColorForBackground));
-        } else {
+        if (position == 0 && showSurvey) {
+            holder.showMenuButton.setVisibility(View.GONE);
+            holder.firstLine.setText(parentActivity.getString(R.string.titleForSurvey, surveyTitle));
+            holder.secondLine.setText(parentActivity.getString(R.string.clickHereToSee));
+            convertView.setOnClickListener(onSurveyClickListener);
+            holder.firstLine.setOnClickListener(onSurveyClickListener);
+            holder.secondLine.setOnClickListener(onSurveyClickListener);
             convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.altBackgroundMessageColor));
+        } else {
+            holder.showMenuButton.setTag(position);
+            position = position - (showSurvey ? 1 : 0);
+            holder.showMenuButton.setVisibility(View.VISIBLE);
+            holder.firstLine.setText(listOfContentForMessages.get(position).firstLineContent);
+            holder.secondLine.setText(listOfContentForMessages.get(position).secondLineContent);
+            convertView.setOnClickListener(null);
+            holder.firstLine.setOnClickListener(null);
+            holder.secondLine.setOnClickListener(null);
+
+            if (position % 2 == 0 || !alternateBackgroundColor) {
+                convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.defaultColorForBackground));
+            } else {
+                convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.altBackgroundMessageColor));
+            }
         }
 
         return convertView;

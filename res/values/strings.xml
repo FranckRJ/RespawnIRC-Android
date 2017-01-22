@@ -171,6 +171,9 @@
     <string name="showOverviewOnImageClickDefault">false</string>
     <string name="showOverviewOnImageClickTitle">Aperçu lors d\'un clique</string>
     <string name="openInBrowser">Ouvrir dans le navigateur</string>
+    <string name="saveSurveyTitle">save.surveyTitle</string>
+    <string name="clickHereToSee">Cliquez ici pour le voir.</string>
+    <string name="titleForSurvey">Sondage : %s1</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
