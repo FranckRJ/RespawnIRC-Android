@@ -652,13 +652,16 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     }
 
     @Override
-    public void getNewSurveyInfos(String surveyTitle) {
+    public void getNewSurveyInfos(String surveyTitle, String topicID, String ajaxInfos) {
         Intent newShowSurveyIntent = new Intent(ShowTopicActivity.this, ShowSurveyActivity.class);
         newShowSurveyIntent.putExtra(ShowSurveyActivity.EXTRA_SURVEY_TITLE, surveyTitle);
+        newShowSurveyIntent.putExtra(ShowSurveyActivity.EXTRA_TOPIC_ID, topicID);
+        newShowSurveyIntent.putExtra(ShowSurveyActivity.EXTRA_AJAX_INFOS, ajaxInfos);
+        newShowSurveyIntent.putExtra(ShowSurveyActivity.EXTRA_COOKIES, cookieListInAString);
         startActivity(newShowSurveyIntent);
     }
 
-    protected class QuoteJVCMessage extends AsyncTask<String, Void, String> {
+    private class QuoteJVCMessage extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
             if (params.length > 2) {
@@ -700,7 +703,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         }
     }
 
-    protected class DeleteJVCMessage extends AsyncTask<String, Void, String> {
+    private class DeleteJVCMessage extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
             if (params.length > 2) {

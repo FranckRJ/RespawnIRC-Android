@@ -173,7 +173,10 @@
     <string name="openInBrowser">Ouvrir dans le navigateur</string>
     <string name="saveSurveyTitle">save.surveyTitle</string>
     <string name="clickHereToSee">Cliquez ici pour le voir.</string>
-    <string name="titleForSurvey">Sondage : %s1</string>
+    <string name="titleForSurvey">Sondage : %1$s</string>
+    <string name="titleForClosedSurvey">Sondage fermé : %1$s</string>
+    <string name="survey">Sondage</string>
+    <string name="saveContentForSurvey">save.contentForSurvey</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

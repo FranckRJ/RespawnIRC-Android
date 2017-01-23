@@ -16,12 +16,21 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"/>
 
-        <TextView
-            android:id="@+id/content_showsurvey"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"/>
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swiperefresh_showsurvey"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar_showsurvey">
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/content_showsurvey"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"/>
+            </ScrollView>
+        </android.support.v4.widget.SwipeRefreshLayout>
 
         <View
             android:layout_width="match_parent"

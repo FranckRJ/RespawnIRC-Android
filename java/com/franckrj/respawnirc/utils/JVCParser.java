@@ -57,6 +57,9 @@ public final class JVCParser {
     private static final Pattern topicIDInTopicPagePattern = Pattern.compile("<div (.*?)data-topic-id=\"([^\"]*)\">");
     private static final Pattern lockReasonPattern = Pattern.compile("<div class=\"message-lock-topic\">[^<]*<span>([^<]*)</span>");
     private static final Pattern surveyTitlePattern = Pattern.compile("<div class=\"intitule-sondage\">([^<]*)</div>");
+    private static final Pattern surveyResultPattern = Pattern.compile("<div class=\"pied-result\">([^<]*)</div>");
+    private static final Pattern surveyReplyPattern = Pattern.compile("<td class=\"result-pourcent\">[^<]*<div class=\"pourcent\">([^<]*)</div>.*?<td class=\"reponse\">([^<]*)</td>", Pattern.DOTALL);
+    private static final Pattern realSurveyContentPattern = Pattern.compile("\"html\":\"(.*?)\"\\}");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
 
     private JVCParser() {
@@ -224,6 +227,34 @@ public final class JVCParser {
         }
     }
 
+    public static SurveyInfos getSurveyInfosFromSurveyBlock(String surveyBlock) {
+        SurveyInfos currentInfos = new SurveyInfos();
+        Matcher surveyTitleMatcher = surveyTitlePattern.matcher(surveyBlock);
+        Matcher surveyResultMatcher = surveyResultPattern.matcher(surveyBlock);
+        Matcher surveyReplyMatcher = surveyReplyPattern.matcher(surveyBlock);
+        int lastOffset = 0;
+
+        if (surveyTitleMatcher.find()) {
+            currentInfos.title = surveyTitleMatcher.group(1);
+        }
+        if (surveyResultMatcher.find()) {
+            currentInfos.numberOfVotes = surveyResultMatcher.group(1).replace("\n", "").replaceAll(" +", " ").trim();
+        }
+        currentInfos.isOpen = !surveyBlock.contains("<span>Sondage fermé</span>");
+
+        while (surveyReplyMatcher.find(lastOffset)) {
+            SurveyInfos.SurveyReply replyForSurvey = new SurveyInfos.SurveyReply();
+
+            replyForSurvey.percentageOfVotes = surveyReplyMatcher.group(1);
+            replyForSurvey.title = surveyReplyMatcher.group(2);
+
+            currentInfos.listOfReplys.add(replyForSurvey);
+            lastOffset = surveyReplyMatcher.end();
+        }
+
+        return currentInfos;
+    }
+
     public static ArrayList<NameAndLink> getListOfForumsInSearchPage(String pageSource) {
         ArrayList<NameAndLink> listOfForums = new ArrayList<>();
         Matcher forumInSearchPageMatcher = forumInSearchPagePattern.matcher(pageSource);
@@ -369,6 +400,16 @@ public final class JVCParser {
 
         if (surveyTitleMatcher.find()) {
             return specialCharToNormalChar(surveyTitleMatcher.group(1));
+        } else {
+            return "";
+        }
+    }
+
+    public static String getRealSurveyContent(String pageSource) {
+        Matcher realSurveyContentMatcher = realSurveyContentPattern.matcher(pageSource);
+
+        if (realSurveyContentMatcher.find()) {
+            return parsingAjaxMessages(realSurveyContentMatcher.group(1));
         } else {
             return "";
         }
@@ -1077,6 +1118,18 @@ public final class JVCParser {
                 baseString = baseString.substring(0, baseString.length() - 4).trim();
             }
             return baseString;
+        }
+    }
+
+    public static class SurveyInfos {
+        public boolean isOpen = true;
+        public String title = "";
+        public String numberOfVotes = "";
+        public ArrayList<SurveyReply> listOfReplys = new ArrayList<>();
+
+        public static class SurveyReply {
+            public String title = "";
+            public String percentageOfVotes = "";
         }
     }
 

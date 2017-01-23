@@ -62,7 +62,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         public void onClick(View view) {
             if (adapterForMessages.getShowSurvey()) {
                 if (getActivity() instanceof NewSurveyNeedToBeShown) {
-                    ((NewSurveyNeedToBeShown) getActivity()).getNewSurveyInfos(absGetterForMessages.getSurveyTitle());
+                    ((NewSurveyNeedToBeShown) getActivity()).getNewSurveyInfos(absGetterForMessages.getSurveyTitle(), absGetterForMessages.getTopicID(), absGetterForMessages.getLatestAjaxInfos().list);
                 }
             }
         }
@@ -238,7 +238,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     }
 
     public interface NewSurveyNeedToBeShown {
-        void getNewSurveyInfos(String surveyTitle);
+        void getNewSurveyInfos(String surveyTitle, String topicID, String ajaxInfos);
     }
 
     protected abstract void initializeGetterForMessages();
