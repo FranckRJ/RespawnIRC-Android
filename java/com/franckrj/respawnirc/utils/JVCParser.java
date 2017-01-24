@@ -35,8 +35,8 @@ public final class JVCParser {
     private static final Pattern spoilLinePattern = Pattern.compile("<span class=\"bloc-spoil-jv en-ligne\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
     private static final Pattern spoilBlockPattern = Pattern.compile("<span class=\"bloc-spoil-jv\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
     private static final Pattern stickerPattern = Pattern.compile("<img class=\"img-stickers\" src=\"(http://jv.stkr.fr/p/([^\"]*))\"/>");
-    private static final Pattern pageTopicLinkNumberPattern = Pattern.compile("(http://www.jeuxvideo.com/forums/[0-9]*-([0-9]*)-([0-9]*)-)([0-9]*)(-[0-9]*-[0-9]*-[0-9]*-[^.]*.htm)");
-    private static final Pattern pageForumLinkNumberPattern = Pattern.compile("(http://www.jeuxvideo.com/forums/[0-9]*-([0-9]*)-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-[^.]*.htm)");
+    private static final Pattern pageTopicLinkNumberPattern = Pattern.compile("^(http://www.jeuxvideo.com/forums/[0-9]*-([0-9]*)-([0-9]*)-)([0-9]*)(-[0-9]*-[0-9]*-[0-9]*-[^.]*.htm)");
+    private static final Pattern pageForumLinkNumberPattern = Pattern.compile("^(http://www.jeuxvideo.com/forums/[0-9]*-([0-9]*)-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-[^.]*.htm)");
     private static final Pattern jvCarePattern = Pattern.compile("<span class=\"JvCare [^\"]*\">([^<]*)</span>");
     private static final Pattern lastEditMessagePattern = Pattern.compile("<div class=\"info-edition-msg\">(Message édité le ([^ ]* [^ ]* [^ ]* [^ ]* [0-9:]*) par.*?)</div>");
     private static final Pattern messageEditInfoPattern = Pattern.compile("<textarea tabindex=\"3\" class=\"area-editor\" name=\"text_commentaire\" id=\"text_commentaire\" placeholder=\"[^\"]*\">(.*?)</textarea>", Pattern.DOTALL);
@@ -78,17 +78,15 @@ public final class JVCParser {
 
     public static String formatThisUrl(String urlToChange) {
         if (urlToChange.startsWith("https://")) {
-            urlToChange = urlToChange.replaceFirst("https://", "http://");
-        }
-
-        if (!urlToChange.startsWith("http://")) {
+            urlToChange = "http://" + urlToChange.substring(("https://").length());
+        } else if (!urlToChange.startsWith("http://")) {
             urlToChange = "http://" + urlToChange;
         }
 
         if (urlToChange.startsWith("http://m.jeuxvideo.com/")) {
-            urlToChange = urlToChange.replaceFirst("http://m.jeuxvideo.com/", "http://www.jeuxvideo.com/");
+            urlToChange = "http://www.jeuxvideo.com/" + urlToChange.substring(("http://m.jeuxvideo.com/").length());
         } else if (urlToChange.startsWith("http://jeuxvideo.com/")) {
-            urlToChange = urlToChange.replaceFirst("http://jeuxvideo.com/", "http://www.jeuxvideo.com/");
+            urlToChange = "http://www.jeuxvideo.com/" + urlToChange.substring(("http://jeuxvideo.com/").length());
         }
 
         return urlToChange;
@@ -111,12 +109,16 @@ public final class JVCParser {
     }
 
     public static boolean checkIfItsNoelshackLink(String linkToCheck) {
-        if (linkToCheck.startsWith("http://") || linkToCheck.startsWith("https://")) {
-            linkToCheck = linkToCheck.substring(linkToCheck.indexOf("://") + 3);
-        }
+        if (!linkToCheck.contains(".php")) {
+            if (linkToCheck.startsWith("http://") || linkToCheck.startsWith("https://")) {
+                linkToCheck = linkToCheck.substring(linkToCheck.indexOf("://") + 3);
+            }
 
-        return linkToCheck.startsWith("image.noelshack.com/") || linkToCheck.startsWith("www.noelshack.com/") ||
-               linkToCheck.startsWith("noelshack.com/");
+            return linkToCheck.startsWith("image.noelshack.com/") || linkToCheck.startsWith("www.noelshack.com/") ||
+                    linkToCheck.startsWith("noelshack.com/");
+        } else {
+            return false;
+        }
     }
 
     public static boolean checkIfTopicAreSame(String firstTopicLink, String secondTopicLink) {
@@ -133,7 +135,7 @@ public final class JVCParser {
     }
 
     public static boolean checkIfItsForumLink(String linkToCheck) {
-        return linkToCheck.contains("jeuxvideo.com/forums/0-");
+        return linkToCheck.startsWith("http://www.jeuxvideo.com/forums/0-");
     }
 
     public static boolean checkIfItsJVCLink(String linkToCheck) {
