@@ -140,6 +140,12 @@ public abstract class AbsJVCMessageGetter {
         }
     }
 
+    /* Je savais pas comment l'appeler, en gros ça reset les infos affichées dans la liste des messages
+    * pour que lors d'un refresh qui efface les messages ces infos soient retransmisent via listener.*/
+    public void resetDirectlyShowedInfos() {
+        surveyTitle = null;
+    }
+
     protected TopicPageInfos downloadAndParseTopicPage(String topicLink, String cookies) {
         WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
         TopicPageInfos newPageInfos = null;

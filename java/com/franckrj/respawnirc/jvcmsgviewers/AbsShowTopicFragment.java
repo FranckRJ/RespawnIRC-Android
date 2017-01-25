@@ -145,6 +145,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     @Override
     public void clearContent() {
         absGetterForMessages.stopAllCurrentTask();
+        absGetterForMessages.resetDirectlyShowedInfos();
         adapterForMessages.disableSurvey();
         adapterForMessages.removeAllItems();
         adapterForMessages.updateAllItems();

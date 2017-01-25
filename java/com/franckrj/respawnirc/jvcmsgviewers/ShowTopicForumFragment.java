@@ -72,6 +72,7 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
     private boolean reloadAllTopic() {
         isInErrorMode = false;
         if (clearMessagesOnRefresh) {
+            getterForMessages.resetDirectlyShowedInfos();
             adapterForMessages.disableSurvey();
             adapterForMessages.removeAllItems();
             adapterForMessages.updateAllItems();
@@ -84,6 +85,7 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
         isInErrorMode = false;
 
         getterForMessages.stopAllCurrentTask();
+        getterForMessages.resetDirectlyShowedInfos();
         adapterForMessages.disableSurvey();
         adapterForMessages.removeAllItems();
         adapterForMessages.updateAllItems();

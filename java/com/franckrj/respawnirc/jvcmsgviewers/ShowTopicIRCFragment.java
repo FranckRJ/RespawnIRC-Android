@@ -92,6 +92,7 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
     private void loadFromOldTopicInfos() {
         isInErrorMode = false;
         getterForMessages.stopAllCurrentTask();
+        getterForMessages.resetDirectlyShowedInfos();
         adapterForMessages.disableSurvey();
         adapterForMessages.removeAllItems();
         adapterForMessages.updateAllItems();
@@ -104,6 +105,7 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
         isInErrorMode = false;
 
         getterForMessages.stopAllCurrentTask();
+        getterForMessages.resetDirectlyShowedInfos();
         adapterForMessages.disableSurvey();
         adapterForMessages.removeAllItems();
         adapterForMessages.updateAllItems();
