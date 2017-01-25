@@ -266,22 +266,22 @@ public class JVCMessagesAdapter extends BaseAdapter {
         }
 
         if (position == 0 && showSurvey) {
+            String advertiseForSurveyToShow = parentActivity.getString(R.string.titleForSurvey) + " <b>" + surveyTitle + "</b><br><small>" + parentActivity.getString(R.string.clickHereToSee) + "</small>";
             holder.showMenuButton.setVisibility(View.GONE);
-            holder.firstLine.setText(parentActivity.getString(R.string.titleForSurvey, surveyTitle));
-            holder.secondLine.setText(parentActivity.getString(R.string.clickHereToSee));
+            holder.secondLine.setVisibility(View.GONE);
+            holder.firstLine.setText(Undeprecator.htmlFromHtml(advertiseForSurveyToShow));
             convertView.setOnClickListener(onSurveyClickListener);
             holder.firstLine.setOnClickListener(onSurveyClickListener);
-            holder.secondLine.setOnClickListener(onSurveyClickListener);
             convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.altBackgroundMessageColor));
         } else {
             holder.showMenuButton.setTag(position);
             position = position - (showSurvey ? 1 : 0);
             holder.showMenuButton.setVisibility(View.VISIBLE);
+            holder.secondLine.setVisibility(View.VISIBLE);
             holder.firstLine.setText(listOfContentForMessages.get(position).firstLineContent);
             holder.secondLine.setText(listOfContentForMessages.get(position).secondLineContent);
             convertView.setOnClickListener(null);
             holder.firstLine.setOnClickListener(null);
-            holder.secondLine.setOnClickListener(null);
 
             if (position % 2 == 0 || !alternateBackgroundColor) {
                 convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.defaultColorForBackground));

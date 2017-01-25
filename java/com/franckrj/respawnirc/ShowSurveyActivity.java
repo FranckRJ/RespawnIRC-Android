@@ -128,9 +128,9 @@ public class ShowSurveyActivity extends AppCompatActivity {
                     StringBuilder newContentToShow = new StringBuilder();
 
                     if (infosForSurvey.isOpen) {
-                        newContentToShow.append(getString(R.string.titleForSurvey, infosForSurvey.title));
+                        newContentToShow.append(getString(R.string.titleForSurvey)).append(" ").append(infosForSurvey.title);
                     } else {
-                        newContentToShow.append(getString(R.string.titleForClosedSurvey, infosForSurvey.title));
+                        newContentToShow.append(getString(R.string.titleForClosedSurvey)).append(" ").append(infosForSurvey.title);
                     }
                     newContentToShow.append("\n");
 

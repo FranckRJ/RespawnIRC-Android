@@ -140,8 +140,8 @@
     <string name="showOverviewOnImageClickTitle">Aperçu lors d\'un clique</string>
     <string name="openInBrowser">Ouvrir dans le navigateur</string>
     <string name="clickHereToSee">Cliquez ici pour le voir.</string>
-    <string name="titleForSurvey">Sondage : %1$s</string>
-    <string name="titleForClosedSurvey">Sondage fermé : %1$s</string>
+    <string name="titleForSurvey">Sondage :</string>
+    <string name="titleForClosedSurvey">Sondage fermé :</string>
     <string name="survey">Sondage</string>
 
     <string-array name="choicesForLinkContextMenu">
