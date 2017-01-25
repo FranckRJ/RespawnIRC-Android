@@ -22,6 +22,8 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     public static final int MODE_IRC = 0;
     public static final int MODE_FORUM = 1;
 
+    protected static final String SAVE_ALL_MESSAGES_SHOWED = "saveAllCurrentMessagesShowed";
+
     protected AbsJVCMessageGetter absGetterForMessages = null;
     protected ListView jvcMsgList = null;
     protected SharedPreferences sharedPref = null;
@@ -190,7 +192,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         jvcMsgList.setAdapter(adapterForMessages);
 
         if (savedInstanceState != null) {
-            ArrayList<JVCParser.MessageInfos> allCurrentMessagesShowed = savedInstanceState.getParcelableArrayList(getString(R.string.saveAllCurrentMessagesShowed));
+            ArrayList<JVCParser.MessageInfos> allCurrentMessagesShowed = savedInstanceState.getParcelableArrayList(SAVE_ALL_MESSAGES_SHOWED);
             absGetterForMessages.loadFromBundle(savedInstanceState);
 
             if (!Utils.stringIsEmptyOrNull(absGetterForMessages.getSurveyTitle())) {
@@ -229,7 +231,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(getString(R.string.saveAllCurrentMessagesShowed), adapterForMessages.getAllItems());
+        outState.putParcelableArrayList(SAVE_ALL_MESSAGES_SHOWED, adapterForMessages.getAllItems());
         absGetterForMessages.saveToBundle(outState);
     }
 

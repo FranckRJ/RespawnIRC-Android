@@ -20,6 +20,9 @@ import com.franckrj.respawnirc.utils.Utils;
 public class WebNavigatorActivity extends AppCompatActivity {
     public static final String EXTRA_URL_LOAD = "com.franckrj.respawnirc.webnavigatoractivity.EXTRA_URL_LOAD";
 
+    private static final String SAVE_TITLE_FOR_NAVIGATOR = "saveTitleForNavigator";
+    private static final String SAVE_URL_FOR_NAVIGATOR = "saveUrlForNavigator";
+
     private WebView navigatorWebView = null;
     private String currentUrl = "";
     private String currentTitle = "";
@@ -85,8 +88,8 @@ public class WebNavigatorActivity extends AppCompatActivity {
                 navigatorWebView.loadUrl(currentUrl);
             }
         } else if (savedInstanceState != null) {
-            currentTitle = savedInstanceState.getString(getString(R.string.saveTitleForNavigator), getString(R.string.app_name));
-            currentUrl = savedInstanceState.getString(getString(R.string.saveUrlForNavigator), "");
+            currentTitle = savedInstanceState.getString(SAVE_TITLE_FOR_NAVIGATOR, getString(R.string.app_name));
+            currentUrl = savedInstanceState.getString(SAVE_URL_FOR_NAVIGATOR, "");
 
             if (!currentUrl.isEmpty()) {
                 navigatorWebView.loadUrl(currentUrl);
@@ -106,8 +109,8 @@ public class WebNavigatorActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(getString(R.string.saveUrlForNavigator), currentUrl);
-        outState.putString(getString(R.string.saveTitleForNavigator), currentTitle);
+        outState.putString(SAVE_TITLE_FOR_NAVIGATOR, currentTitle);
+        outState.putString(SAVE_URL_FOR_NAVIGATOR, currentUrl);
     }
 
     @Override

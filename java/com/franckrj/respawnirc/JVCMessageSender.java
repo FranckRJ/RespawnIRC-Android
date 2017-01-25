@@ -9,6 +9,10 @@ import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
 public class JVCMessageSender {
+    private static final String SAVE_OLD_AJAX_LIST_INFOS = "saveOldAjaxListInfos";
+    private static final String SAVE_IS_IN_EDIT = "saveIsInEdit";
+    private static final String SAVE_LAST_INFOS_FOR_EDIT = "saveLastInfosForEdit";
+
     private Activity parentActivity = null;
     private String ajaxListInfos = null;
     private boolean isInEdit = false;
@@ -37,15 +41,15 @@ public class JVCMessageSender {
     }
 
     public void loadFromBundle(Bundle savedInstanceState) {
-        ajaxListInfos = savedInstanceState.getString(parentActivity.getString(R.string.saveOldAjaxListInfos), null);
-        isInEdit = savedInstanceState.getBoolean(parentActivity.getString(R.string.saveIsInEdit), false);
-        lastInfosForEdit = savedInstanceState.getString(parentActivity.getString(R.string.saveLastInfosForEdit), null);
+        ajaxListInfos = savedInstanceState.getString(SAVE_OLD_AJAX_LIST_INFOS, null);
+        isInEdit = savedInstanceState.getBoolean(SAVE_IS_IN_EDIT, false);
+        lastInfosForEdit = savedInstanceState.getString(SAVE_LAST_INFOS_FOR_EDIT, null);
     }
 
     public void saveToBundle(Bundle savedInstanceState) {
-        savedInstanceState.putString(parentActivity.getString(R.string.saveOldAjaxListInfos), ajaxListInfos);
-        savedInstanceState.putBoolean(parentActivity.getString(R.string.saveIsInEdit), isInEdit);
-        savedInstanceState.putString(parentActivity.getString(R.string.saveLastInfosForEdit), lastInfosForEdit);
+        savedInstanceState.putString(SAVE_OLD_AJAX_LIST_INFOS, ajaxListInfos);
+        savedInstanceState.putBoolean(SAVE_IS_IN_EDIT, isInEdit);
+        savedInstanceState.putString(SAVE_LAST_INFOS_FOR_EDIT, lastInfosForEdit);
     }
 
     public void sendEditMessage(String messageEditedToSend, String cookieListInAString) {

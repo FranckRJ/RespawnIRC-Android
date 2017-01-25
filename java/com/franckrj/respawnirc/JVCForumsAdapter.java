@@ -19,6 +19,8 @@ import com.franckrj.respawnirc.utils.Undeprecator;
 import java.util.ArrayList;
 
 public class JVCForumsAdapter extends BaseExpandableListAdapter implements ExpandableListView.OnGroupClickListener, ExpandableListView.OnChildClickListener {
+    private static final String SAVE_LIST_OF_SEARCHED_FORUM_SHOWED = "saveListOfSearchedForumShowed";
+
     private ArrayList<ForumInfo> currentListOfForums = null;
     private ArrayList<ForumInfo> baseListOfForums = null;
     private ArrayList<JVCParser.NameAndLink> lastListOfForumsShowed = null;
@@ -451,11 +453,11 @@ public class JVCForumsAdapter extends BaseExpandableListAdapter implements Expan
     }
 
     public void saveToBundle(Bundle savedInstanceState) {
-        savedInstanceState.putParcelableArrayList(parentActivity.getString(R.string.saveListOfSearchedForumShowed), lastListOfForumsShowed);
+        savedInstanceState.putParcelableArrayList(SAVE_LIST_OF_SEARCHED_FORUM_SHOWED, lastListOfForumsShowed);
     }
 
     public void loadFromBundle(Bundle savedInstanceState) {
-        lastListOfForumsShowed = savedInstanceState.getParcelableArrayList(parentActivity.getString(R.string.saveListOfSearchedForumShowed));
+        lastListOfForumsShowed = savedInstanceState.getParcelableArrayList(SAVE_LIST_OF_SEARCHED_FORUM_SHOWED);
         setNewListOfForums(lastListOfForumsShowed);
     }
 

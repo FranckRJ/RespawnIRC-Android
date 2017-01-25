@@ -92,7 +92,7 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
 
     @Override
     protected void initializeGetterForMessages() {
-        getterForMessages = new JVCForumMessageGetter(getActivity());
+        getterForMessages = new JVCForumMessageGetter();
         absGetterForMessages = getterForMessages;
     }
 
@@ -154,11 +154,6 @@ public class ShowTopicForumFragment extends AbsShowTopicFragment {
         if (adapterForMessages.getAllItems().isEmpty()) {
             getterForMessages.reloadTopic();
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
     }
 
     @Override

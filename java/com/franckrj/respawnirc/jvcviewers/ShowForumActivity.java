@@ -29,6 +29,9 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
                                                     AddOrRemoveThingToFavs.ActionToFavsEnded {
     public static final String EXTRA_NEW_LINK = "com.franckrj.respawnirc.EXTRA_NEW_LINK";
 
+    private static final String SAVE_CURRENT_FORUM_TITLE = "saveCurrentForumTitle";
+    private static final String SAVE_REFRESH_NEEDED_NEXT_RESUME = "saveRefreshNeededOnNextResume";
+
     private String currentTitle = "";
     private AddOrRemoveThingToFavs currentTaskForFavs = null;
     private PageNavigationUtil pageNavigation = null;
@@ -112,8 +115,8 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
             onNewIntent(getIntent());
             pageNavigation.updateCurrentItemAndButtonsToCurrentLink();
         } else {
-            currentTitle = savedInstanceState.getString(getString(R.string.saveCurrentForumTitle), getString(R.string.app_name));
-            refreshNeededOnNextResume = savedInstanceState.getBoolean(getString(R.string.saveRefreshNeededOnNextResume), false);
+            currentTitle = savedInstanceState.getString(SAVE_CURRENT_FORUM_TITLE, getString(R.string.app_name));
+            refreshNeededOnNextResume = savedInstanceState.getBoolean(SAVE_REFRESH_NEEDED_NEXT_RESUME, false);
             pageNavigation.updateNavigationButtons();
         }
         setTitle(currentTitle);
@@ -160,8 +163,8 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(getString(R.string.saveCurrentForumTitle), currentTitle);
-        outState.putBoolean(getString(R.string.saveRefreshNeededOnNextResume), refreshNeededOnNextResume);
+        outState.putString(SAVE_CURRENT_FORUM_TITLE, currentTitle);
+        outState.putBoolean(SAVE_REFRESH_NEEDED_NEXT_RESUME, refreshNeededOnNextResume);
     }
 
     @Override

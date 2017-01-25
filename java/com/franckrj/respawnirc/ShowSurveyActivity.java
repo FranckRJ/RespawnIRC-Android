@@ -20,6 +20,8 @@ public class ShowSurveyActivity extends AppCompatActivity {
     public static final String EXTRA_AJAX_INFOS = "com.franckrj.respawnirc.showsurveyactivity.EXTRA_AJAX_INFOS";
     public static final String EXTRA_COOKIES = "com.franckrj.respawnirc.showsurveyactivity.EXTRA_COOKIES";
 
+    private static final String SAVE_CONTENT_FOR_SURVEY = "saveContentForSurvey";
+
     private TextView contentText = null;
     private SwipeRefreshLayout swipeRefresh = null;
     private DownloadInfosForSurvey currentTaskForSurvey = null;
@@ -54,7 +56,7 @@ public class ShowSurveyActivity extends AppCompatActivity {
         swipeRefresh.setColorSchemeResources(R.color.colorAccent);
 
         if (savedInstanceState != null) {
-            contentForSurvey = savedInstanceState.getString(getString(R.string.saveContentForSurvey), "");
+            contentForSurvey = savedInstanceState.getString(SAVE_CONTENT_FOR_SURVEY, "");
             contentText.setText(contentForSurvey);
         }
         if (contentForSurvey.isEmpty() && getIntent() != null) {
@@ -83,7 +85,7 @@ public class ShowSurveyActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(getString(R.string.saveContentForSurvey), contentForSurvey);
+        outState.putString(SAVE_CONTENT_FOR_SURVEY, contentForSurvey);
     }
 
     @Override

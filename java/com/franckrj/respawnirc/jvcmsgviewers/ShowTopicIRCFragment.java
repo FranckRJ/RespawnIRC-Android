@@ -20,6 +20,9 @@ import com.franckrj.respawnirc.utils.Utils;
 import java.util.ArrayList;
 
 public class ShowTopicIRCFragment extends AbsShowTopicFragment {
+    private static final String SAVE_OLD_URL_FOR_TOPIC = "saveOldUrlForTopic";
+    private static final String SAVE_OLD_LAST_ID_OF_MESSAGE = "saveOldLastIdOfMessage";
+
     private int maxNumberOfMessagesShowed = 40;
     private int initialNumberOfMessagesShowed = 10;
     private JVCIRCMessageGetter getterForMessages = null;
@@ -166,8 +169,8 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
         swipeRefresh.setEnabled(false);
 
         if (savedInstanceState != null) {
-            oldUrlForTopic = savedInstanceState.getString(getString(R.string.saveOldUrlForTopic), "");
-            oldLastIdOfMessage = savedInstanceState.getLong(getString(R.string.saveOldLastIdOfMessage), 0);
+            oldUrlForTopic = savedInstanceState.getString(SAVE_OLD_URL_FOR_TOPIC, "");
+            oldLastIdOfMessage = savedInstanceState.getLong(SAVE_OLD_LAST_ID_OF_MESSAGE, 0);
         } else {
             oldUrlForTopic = sharedPref.getString(getString(R.string.prefOldUrlForTopic), "");
             oldLastIdOfMessage = sharedPref.getLong(getString(R.string.prefOldLastIdOfMessage), 0);
@@ -190,8 +193,8 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(getString(R.string.saveOldUrlForTopic), oldUrlForTopic);
-        outState.putLong(getString(R.string.saveOldLastIdOfMessage), oldLastIdOfMessage);
+        outState.putString(SAVE_OLD_URL_FOR_TOPIC, oldUrlForTopic);
+        outState.putLong(SAVE_OLD_LAST_ID_OF_MESSAGE, oldLastIdOfMessage);
     }
 
     @Override

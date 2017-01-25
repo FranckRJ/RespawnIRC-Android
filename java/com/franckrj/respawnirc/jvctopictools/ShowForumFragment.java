@@ -21,6 +21,8 @@ import java.util.ArrayList;
 public class ShowForumFragment extends AbsShowSomethingFragment {
     public static final String ARG_FORUM_LINK = "com.franckrj.respawnirc.showtopicfragment.forum_link";
 
+    private static final String SAVE_ALL_TOPICS_SHOWED = "saveAllCurrentTopicsShowed";
+
     private SharedPreferences sharedPref = null;
     private SwipeRefreshLayout swipeRefresh = null;
     private NewTopicWantRead listenerForNewTopicWantRead = null;
@@ -173,7 +175,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
 
         sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
-        getterForTopics = new JVCTopicGetter(getActivity());
+        getterForTopics = new JVCTopicGetter();
         adapterForTopics = new JVCTopicsAdapter(getActivity());
         reloadSettings();
         getterForTopics.setListenerForNewGetterState(listenerForNewGetterState);
@@ -196,7 +198,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         jvcTopicList.setAdapter(adapterForTopics);
 
         if (savedInstanceState != null) {
-            ArrayList<JVCParser.TopicInfos> allCurrentTopicsShowed = savedInstanceState.getParcelableArrayList(getString(R.string.saveAllCurrentTopicsShowed));
+            ArrayList<JVCParser.TopicInfos> allCurrentTopicsShowed = savedInstanceState.getParcelableArrayList(SAVE_ALL_TOPICS_SHOWED);
             getterForTopics.loadFromBundle(savedInstanceState);
 
             if (allCurrentTopicsShowed != null) {
@@ -236,7 +238,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(getString(R.string.saveAllCurrentTopicsShowed), adapterForTopics.getAllItems());
+        outState.putParcelableArrayList(SAVE_ALL_TOPICS_SHOWED, adapterForTopics.getAllItems());
         getterForTopics.saveToBundle(outState);
     }
 

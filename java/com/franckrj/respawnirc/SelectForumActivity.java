@@ -34,6 +34,8 @@ import java.util.ArrayList;
 
 public class SelectForumActivity extends AbsNavigationViewActivity implements ChooseTopicOrForumLinkDialogFragment.NewTopicOrForumSelected,
                                                                               JVCForumsAdapter.NewForumSelected {
+    private static final String SAVE_SEARCH_FORUM_CONTENT = "saveSearchForumContent";
+
     private JVCForumsAdapter adapterForForums = null;
     private EditText textForSearch = null;
     private MenuItem searchExpandableItem = null;
@@ -41,14 +43,14 @@ public class SelectForumActivity extends AbsNavigationViewActivity implements Ch
     private SwipeRefreshLayout swipeRefresh = null;
     private String lastSearchedText = null;
 
-    private View.OnClickListener searchButtonClickedListener = new View.OnClickListener() {
+    private final View.OnClickListener searchButtonClickedListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             performSearch();
         }
     };
 
-    private TextView.OnEditorActionListener actionInSearchEditTextListener = new TextView.OnEditorActionListener() {
+    private final TextView.OnEditorActionListener actionInSearchEditTextListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -110,7 +112,7 @@ public class SelectForumActivity extends AbsNavigationViewActivity implements Ch
         forumListView.setOnChildClickListener(adapterForForums);
 
         if (savedInstanceState != null) {
-            lastSearchedText = savedInstanceState.getString(getString(R.string.saveSearchForumContent), null);
+            lastSearchedText = savedInstanceState.getString(SAVE_SEARCH_FORUM_CONTENT, null);
             adapterForForums.loadFromBundle(savedInstanceState);
         }
 
@@ -142,10 +144,10 @@ public class SelectForumActivity extends AbsNavigationViewActivity implements Ch
         super.onSaveInstanceState(outState);
         adapterForForums.saveToBundle(outState);
 
-        outState.putString(getString(R.string.saveSearchForumContent), null);
+        outState.putString(SAVE_SEARCH_FORUM_CONTENT, null);
         if (textForSearch != null && searchExpandableItem != null) {
             if (MenuItemCompat.isActionViewExpanded(searchExpandableItem)) {
-                outState.putString(getString(R.string.saveSearchForumContent), textForSearch.getText().toString());
+                outState.putString(SAVE_SEARCH_FORUM_CONTENT, textForSearch.getText().toString());
             }
         }
     }

@@ -49,6 +49,11 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     public static final String EXTRA_TOPIC_NAME = "com.franckrj.respawnirc.EXTRA_TOPIC_NAME";
     public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.EXTRA_FORUM_NAME";
 
+    private static final String SAVE_CURRENT_FORUM_TITLE_FOR_TOPIC = "saveCurrentForumTitleForTopic";
+    private static final String SAVE_CURRENT_TOPIC_TITLE_FOR_TOPIC = "saveCurrentTopicTitleForTopic";
+    private static final String SAVE_LAST_PAGE = "saveLastPage";
+    private static final String SAVE_REASON_OF_LOCK = "saveReasonOfLock";
+
     private SharedPreferences sharedPref = null;
     private JVCParser.ForumAndTopicName currentTitles = new JVCParser.ForumAndTopicName();
     private JVCMessageSender senderForMessages = null;
@@ -272,10 +277,10 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
 
             updateLastPageAndCurrentItemAndButtonsToCurrentLink();
         } else {
-            currentTitles.forum = savedInstanceState.getString(getString(R.string.saveCurrentForumTitleForTopic), getString(R.string.app_name));
-            currentTitles.topic = savedInstanceState.getString(getString(R.string.saveCurrentTopicTitleForTopic), "");
-            pageNavigation.setLastPageNumber(savedInstanceState.getInt(getString(R.string.saveLastPage), pageNavigation.getCurrentItemIndex() + 1));
-            getNewLockReason(savedInstanceState.getString(getString(R.string.saveReasonOfLock), null));
+            currentTitles.forum = savedInstanceState.getString(SAVE_CURRENT_FORUM_TITLE_FOR_TOPIC, getString(R.string.app_name));
+            currentTitles.topic = savedInstanceState.getString(SAVE_CURRENT_TOPIC_TITLE_FOR_TOPIC, "");
+            pageNavigation.setLastPageNumber(savedInstanceState.getInt(SAVE_LAST_PAGE, pageNavigation.getCurrentItemIndex() + 1));
+            getNewLockReason(savedInstanceState.getString(SAVE_REASON_OF_LOCK, null));
             pageNavigation.notifyDataSetChanged();
 
             senderForMessages.loadFromBundle(savedInstanceState);
@@ -321,10 +326,10 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(getString(R.string.saveCurrentForumTitleForTopic), currentTitles.forum);
-        outState.putString(getString(R.string.saveCurrentTopicTitleForTopic), currentTitles.topic);
-        outState.putInt(getString(R.string.saveLastPage), pageNavigation.getLastPage());
-        outState.putString(getString(R.string.saveReasonOfLock), reasonOfLock);
+        outState.putString(SAVE_CURRENT_FORUM_TITLE_FOR_TOPIC, currentTitles.forum);
+        outState.putString(SAVE_CURRENT_TOPIC_TITLE_FOR_TOPIC, currentTitles.topic);
+        outState.putInt(SAVE_LAST_PAGE, pageNavigation.getLastPage());
+        outState.putString(SAVE_REASON_OF_LOCK, reasonOfLock);
         senderForMessages.saveToBundle(outState);
     }
 

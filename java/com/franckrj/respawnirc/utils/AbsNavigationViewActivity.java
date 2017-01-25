@@ -45,7 +45,7 @@ public abstract class AbsNavigationViewActivity extends AppCompatActivity implem
     protected String newFavSelected = "";
     protected int idOfBaseActivity = -1;
 
-    protected NavigationView.OnNavigationItemSelectedListener itemInNavigationClickedListener = new NavigationView.OnNavigationItemSelectedListener() {
+    protected final NavigationView.OnNavigationItemSelectedListener itemInNavigationClickedListener = new NavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             if ((item.getItemId() == R.id.action_refresh_forum_fav_navigation || item.getItemId() == R.id.action_refresh_topic_fav_navigation) && item.getGroupId() == Menu.NONE) {
@@ -87,7 +87,7 @@ public abstract class AbsNavigationViewActivity extends AppCompatActivity implem
         }
     };
 
-    private View.OnClickListener headerClickedListener = new View.OnClickListener() {
+    private final View.OnClickListener headerClickedListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             if (!pseudoOfUser.isEmpty()) {

@@ -30,7 +30,7 @@ public class ShowImageDialogFragment extends DialogFragment {
     private String linkOfImage = "";
     private Drawable fullsizeImage = null;
 
-    private ImageDownloader.DownloadFinished listenerForDownloadFinished = new ImageDownloader.DownloadFinished() {
+    private final ImageDownloader.DownloadFinished listenerForDownloadFinished = new ImageDownloader.DownloadFinished() {
         @Override
         public void newDownloadFinished(int numberOfDownloadRemaining) {
             updateViewForImage();

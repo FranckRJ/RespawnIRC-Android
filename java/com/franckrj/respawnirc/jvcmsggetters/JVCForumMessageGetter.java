@@ -1,17 +1,11 @@
 package com.franckrj.respawnirc.jvcmsggetters;
 
-import android.app.Activity;
-
 import com.franckrj.respawnirc.utils.JVCParser;
 
 import java.util.ArrayList;
 
 public class JVCForumMessageGetter extends AbsJVCMessageGetter {
     private NewNumbersOfPagesListener listenerForNewNumbersOfPages = null;
-
-    public JVCForumMessageGetter(Activity newParentActivity) {
-        super(newParentActivity);
-    }
 
     public void setListenerForNewNumbersOfPages(NewNumbersOfPagesListener thisListener) {
         listenerForNewNumbersOfPages = thisListener;

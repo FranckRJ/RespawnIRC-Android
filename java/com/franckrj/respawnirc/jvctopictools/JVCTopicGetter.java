@@ -1,11 +1,9 @@
 package com.franckrj.respawnirc.jvctopictools;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.franckrj.respawnirc.utils.JVCParser;
-import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.WebManager;
 
 import java.util.ArrayList;
@@ -14,9 +12,13 @@ public class JVCTopicGetter {
     public static final int STATE_LOADING = 0;
     public static final int STATE_NOT_LOADING = 1;
 
+    private static final String SAVE_FORUM_URL_TO_FETCH = "saveForumUrlToFetch";
+    private static final String SAVE_LATEST_AJAX_INFO_PREF = "saveLatestAjaxInfoPref";
+    private static final String SAVE_LATEST_LIST_OF_INPUT = "saveLatestListOfInputInAString";
+    private static final String SAVE_FORUM_IS_IN_FAV = "saveForumIsInFav";
+
     private String urlForForum = "";
     private GetJVCLastTopics currentAsyncTaskForGetTopic = null;
-    private Activity parentActivity = null;
     private String cookieListInAString = "";
     private NewTopicsListener listenerForNewTopics = null;
     private NewGetterStateListener listenerForNewGetterState = null;
@@ -26,10 +28,6 @@ public class JVCTopicGetter {
     private JVCParser.AjaxInfos latestAjaxInfos = new JVCParser.AjaxInfos();
     private Boolean isInFavs = null;
     private String latestListOfInputInAString = null;
-
-    public JVCTopicGetter(Activity newParentActivity) {
-        parentActivity = newParentActivity;
-    }
 
     public JVCParser.AjaxInfos getLatestAjaxInfos() {
         return latestAjaxInfos;
@@ -95,22 +93,22 @@ public class JVCTopicGetter {
     }
 
     public void loadFromBundle(Bundle savedInstanceState) {
-        urlForForum = savedInstanceState.getString(parentActivity.getString(R.string.saveForumUrlToFetch), "");
-        latestAjaxInfos.pref = savedInstanceState.getString(parentActivity.getString(R.string.saveLatestAjaxInfoPref), null);
-        latestListOfInputInAString = savedInstanceState.getString(parentActivity.getString(R.string.saveLatestListOfInputInAString), null);
-        if (savedInstanceState.containsKey(parentActivity.getString(R.string.saveForumIsInFav))) {
-            isInFavs = savedInstanceState.getBoolean(parentActivity.getString(R.string.saveForumIsInFav), false);
+        urlForForum = savedInstanceState.getString(SAVE_FORUM_URL_TO_FETCH, "");
+        latestAjaxInfos.pref = savedInstanceState.getString(SAVE_LATEST_AJAX_INFO_PREF, null);
+        latestListOfInputInAString = savedInstanceState.getString(SAVE_LATEST_LIST_OF_INPUT, null);
+        if (savedInstanceState.containsKey(SAVE_FORUM_IS_IN_FAV)) {
+            isInFavs = savedInstanceState.getBoolean(SAVE_FORUM_IS_IN_FAV, false);
         } else {
             isInFavs = null;
         }
     }
 
     public void saveToBundle(Bundle savedInstanceState) {
-        savedInstanceState.putString(parentActivity.getString(R.string.saveForumUrlToFetch), urlForForum);
-        savedInstanceState.putString(parentActivity.getString(R.string.saveLatestAjaxInfoPref), latestAjaxInfos.pref);
-        savedInstanceState.putString(parentActivity.getString(R.string.saveLatestListOfInputInAString), latestListOfInputInAString);
+        savedInstanceState.putString(SAVE_FORUM_URL_TO_FETCH, urlForForum);
+        savedInstanceState.putString(SAVE_LATEST_AJAX_INFO_PREF, latestAjaxInfos.pref);
+        savedInstanceState.putString(SAVE_LATEST_LIST_OF_INPUT, latestListOfInputInAString);
         if (isInFavs != null) {
-            savedInstanceState.putBoolean(parentActivity.getString(R.string.saveForumIsInFav), isInFavs);
+            savedInstanceState.putBoolean(SAVE_FORUM_IS_IN_FAV, isInFavs);
         }
     }
 

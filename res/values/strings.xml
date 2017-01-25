@@ -11,14 +11,8 @@
     <string name="errorCookiesMissingConnect">Vous n\'êtes pas connecté sur JVC.</string>
     <string name="prefCookiesList">pref.cookiesList</string>
     <string name="prefTopicUrlToFetch">pref.topicUrlToFetch</string>
-    <string name="saveLatestListOfInputInAString">save.latestListOfInputInAString</string>
-    <string name="saveAllCurrentMessagesShowed">save.allCurrentMessagesShowed</string>
-    <string name="saveFirstTimeGetMessages">save.firstTimeGetMessages</string>
-    <string name="saveLastIdOfMessage">save.lastIdOfMessage</string>
     <string name="overflow_menu_desc">Menu déroulant</string>
     <string name="quoteMessage">Citer</string>
-    <string name="saveLatestAjaxInfoList">save.latestAjaxInfoList</string>
-    <string name="saveLatestAjaxInfoMod">save.latestAjaxInfoMod</string>
     <string name="prefPseudoUser">pref.pseudoUser</string>
     <string name="errorConnectedNeededBeforePost">Erreur, veuillez vous connecter avant d\'envoyer un message.</string>
     <string name="editMessage">Editer</string>
@@ -40,12 +34,6 @@
     <string name="prefOldUrlForTopic">pref.oldUrlForTopic</string>
     <string name="prefOldLastIdOfMessage">pref.oldLastIdOfMessage</string>
     <string name="loadTopicFromOldInfos">Poursuivre la lecture</string>
-    <string name="saveOldUrlForTopic">save.OldUrlForTopic</string>
-    <string name="saveOldLastIdOfMessage">save.OldLastIdOfMessage</string>
-    <string name="saveListOfEditInfos">save.listOfEditInfos</string>
-    <string name="saveOldAjaxListInfos">save.oldAjaxListInfos</string>
-    <string name="saveIsInEdit">save.isInEdit</string>
-    <string name="saveLastInfosForEdit">save.lastInfosForEdit</string>
     <string name="help">Aide</string>
     <string name="ok">OK</string>
     <string name="help_dialog_connect">• Pour commencer, veuillez entrer votre pseudo dans le champ présent tout en haut.\n• Ensuite, veuillez vous connecter sur JVC avec ce même pseudo.\n• Enfin, cliquez sur le bouton \"Terminer\" tout en haut à droite.</string>
@@ -59,7 +47,6 @@
     <string name="switchToIrcMode">Passer en mode IRC</string>
     <string name="refresh">Rafraichir</string>
     <string name="prefCurrentTopicMode">pref.currentTopicMode</string>
-    <string name="saveTopicUrlToFetch">save.topicUrlToFetch</string>
     <string name="settingsOnRefreshForumTitle">Lors du rafraichissement (forum)</string>
     <string name="settingsForumClearOnRefresh">settings.forumClearOnRefresh</string>
     <string name="forumClearOnRefreshTitle">Effacer les messages</string>
@@ -67,7 +54,6 @@
     <string name="nextPageText"><![CDATA[>]]></string>
     <string name="previousPageText"><![CDATA[<]]></string>
     <string name="waitingText">…</string>
-    <string name="saveLastPage">save.lastPage</string>
     <string name="cancel">Annuler</string>
     <string name="pageNumber">Numéro de la page…</string>
     <string name="choosePageNumber">Choisir un numéro de page</string>
@@ -77,8 +63,6 @@
     <string name="settingsForumAlternateBackgroundColor">settings.forumAlternateBackgroundColor</string>
     <string name="forumAlternateBackgroundColorTitle">Alterner la couleur de fond</string>
     <string name="forumAlternateBackgroundColorDefault">true</string>
-    <string name="saveForumUrlToFetch">save.forumUrlToFetch</string>
-    <string name="saveAllCurrentTopicsShowed">save.allCurrentTopicsShowed</string>
     <string name="prefForumUrlToFetch">pref.forumUrlToFetch</string>
     <string name="topicIcon">Icone de topic</string>
     <string name="showQuoteMessage">Afficher les citations imbriquées</string>
@@ -87,9 +71,6 @@
     <string name="settingsMaxNumberOfOverlyQuote">settings.maxNumberOfOverlyQuote</string>
     <string name="maxNumberOfOverlyQuoteTitle">Nb max de citations imbriquées</string>
     <string name="prefLastActivityViewed">pref.lastActivityViewed</string>
-    <string name="saveCurrentForumTitle">save.currentForumTitle</string>
-    <string name="saveCurrentForumTitleForTopic">save.currentForumTitleForTopic</string>
-    <string name="saveCurrentTopicTitleForTopic">save.currentTopicTitleForTopic</string>
     <string name="warningNotConnected">Vous ne vous êtes pas connecté</string>
     <string name="errorQuoteAlreadyRunning">Erreur, citation déjà en cours.</string>
     <string name="errorInfosMissings">Erreur, informations manquantes (rechargez la page ?).</string>
@@ -100,8 +81,6 @@
     <string name="settingsShowNoelshackImage">settings.showNoelshackImage</string>
     <string name="showNoelshackImageDefault">false</string>
     <string name="showNoelshackImageTitle">Afficher les miniatures</string>
-    <string name="saveCookies">save.cookies</string>
-    <string name="savePseudo">save.pseudo</string>
     <string name="errorInvalidLink">Erreur, lien invalide.</string>
     <string name="pastLastMessageSended">Coller le dernier message envoyé</string>
     <string name="prefLastMessageSended">pref.lastMessageSended</string>
@@ -133,16 +112,8 @@
     <string name="errorActionAlreadyRunning">Erreur, action déjà en cours.</string>
     <string name="favAdded">Favori ajouté</string>
     <string name="favRemoved">Favori retiré</string>
-    <string name="saveLatestAjaxInfoPref">save.latestAjaxInfoPref</string>
-    <string name="saveForumIsInFav">save.forumIsInFav</string>
-    <string name="saveTopicIsInFav">save.topicIsInFav</string>
-    <string name="saveTopicID">save.topicID</string>
-    <string name="saveLockReason">save.lockReason</string>
     <string name="topicLockedForReason">Sujet fermé : %1$s</string>
-    <string name="saveReasonOfLock">save.reasonOfLock</string>
     <string name="errorTopicIsLocked">Erreur, le topic est fermé.</string>
-    <string name="saveListOfSearchedForumShowed">save.listOfSearchedForumShowed</string>
-    <string name="saveSearchForumContent">save.searchForumContent</string>
     <string name="selectSticker">Sélectionner un sticker</string>
     <string name="transformStickerToSmileyDefault">false</string>
     <string name="settingsTransformStickerToSmiley">settings.transformStickerToSmiley</string>
@@ -152,13 +123,10 @@
     <string name="sendATopic">Poster un topic</string>
     <string name="topicTitlePlaceHolder">Titre…</string>
     <string name="topicIsSended">Le topic a été posté.</string>
-    <string name="saveRefreshNeededOnNextResume">save.refreshNeededOnNextResume</string>
     <string name="prefLastTopicTitleSended">pref.lastTopicTitleSended</string>
     <string name="prefLastTopicContentSended">pref.lastTopicContentSended</string>
     <string name="pastLastTopicSended">Coller le dernier topic envoyé</string>
     <string name="showMP">Consulter les MP</string>
-    <string name="saveUrlForNavigator">save.urlForNavigator</string>
-    <string name="saveTitleForNavigator">save.titleForNavigator</string>
     <string name="settingsLinkOpeningTitle">Ouverture des liens</string>
     <string name="useInternalNavigatorTitle">Navigateur interne par défaut</string>
     <string name="settingsUseInternalNavigator">settings.useInternalNavigator</string>
@@ -171,12 +139,10 @@
     <string name="showOverviewOnImageClickDefault">false</string>
     <string name="showOverviewOnImageClickTitle">Aperçu lors d\'un clique</string>
     <string name="openInBrowser">Ouvrir dans le navigateur</string>
-    <string name="saveSurveyTitle">save.surveyTitle</string>
     <string name="clickHereToSee">Cliquez ici pour le voir.</string>
     <string name="titleForSurvey">Sondage : %1$s</string>
     <string name="titleForClosedSurvey">Sondage fermé : %1$s</string>
     <string name="survey">Sondage</string>
-    <string name="saveContentForSurvey">save.contentForSurvey</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

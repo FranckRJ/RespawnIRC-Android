@@ -6,21 +6,24 @@ import android.os.Bundle;
 
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.ParcelableLongSparseStringArray;
-import com.franckrj.respawnirc.R;
 
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class JVCIRCMessageGetter extends AbsJVCMessageGetter {
+    private static final String SAVE_FIRST_TIME_GET_MESSAGES = "saveFirstTimeGetMessages";
+    private static final String SAVE_LIST_OF_EDIT_INFOS = "saveListOfEditInfos";
+
     private int timeBetweenRefreshTopic = 10000;
     private Timer timerForFetchUrl = new Timer();
     private boolean firstTimeGetMessages = true;
     private boolean messagesNeedToBeGet = false;
     private ParcelableLongSparseStringArray listOfEditInfos = new ParcelableLongSparseStringArray();
+    protected Activity parentActivity = null;
 
     public JVCIRCMessageGetter(Activity newParentActivity) {
-        super(newParentActivity);
+        parentActivity = newParentActivity;
     }
 
     public void setTimeBetweenRefreshTopic(int newTimeBetweenRefreshTopic) {
@@ -79,15 +82,15 @@ public class JVCIRCMessageGetter extends AbsJVCMessageGetter {
     @Override
     public void loadFromBundle(Bundle savedInstanceState) {
         super.loadFromBundle(savedInstanceState);
-        firstTimeGetMessages = savedInstanceState.getBoolean(parentActivity.getString(R.string.saveFirstTimeGetMessages), true);
-        listOfEditInfos = savedInstanceState.getParcelable(parentActivity.getString(R.string.saveListOfEditInfos));
+        firstTimeGetMessages = savedInstanceState.getBoolean(SAVE_FIRST_TIME_GET_MESSAGES, true);
+        listOfEditInfos = savedInstanceState.getParcelable(SAVE_LIST_OF_EDIT_INFOS);
     }
 
     @Override
     public void saveToBundle(Bundle savedInstanceState) {
         super.saveToBundle(savedInstanceState);
-        savedInstanceState.putBoolean(parentActivity.getString(R.string.saveFirstTimeGetMessages), firstTimeGetMessages);
-        savedInstanceState.putParcelable(parentActivity.getString(R.string.saveListOfEditInfos), listOfEditInfos);
+        savedInstanceState.putBoolean(SAVE_FIRST_TIME_GET_MESSAGES, firstTimeGetMessages);
+        savedInstanceState.putParcelable(SAVE_LIST_OF_EDIT_INFOS, listOfEditInfos);
     }
 
     private class LaunchGetJVCLastMessage extends TimerTask {
