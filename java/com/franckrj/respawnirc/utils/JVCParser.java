@@ -34,6 +34,7 @@ public final class JVCParser {
     private static final Pattern codeLinePattern = Pattern.compile("<code class=\"code-jv\">(.*?)</code>", Pattern.DOTALL);
     private static final Pattern spoilLinePattern = Pattern.compile("<span class=\"bloc-spoil-jv en-ligne\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
     private static final Pattern spoilBlockPattern = Pattern.compile("<span class=\"bloc-spoil-jv\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
+    private static final Pattern spoilOverlyPattern = Pattern.compile("(<span class=\"bloc-spoil-jv[^\"]*\">.*?<span class=\"contenu-spoil\">|</span></span>)", Pattern.DOTALL);
     private static final Pattern stickerPattern = Pattern.compile("<img class=\"img-stickers\" src=\"(http://jv.stkr.fr/p/([^\"]*))\"/>");
     private static final Pattern pageTopicLinkNumberPattern = Pattern.compile("^(http://www.jeuxvideo.com/forums/[0-9]*-([0-9]*)-([0-9]*)-)([0-9]*)(-[0-9]*-[0-9]*-[0-9]*-[^.]*.htm)");
     private static final Pattern pageForumLinkNumberPattern = Pattern.compile("^(http://www.jeuxvideo.com/forums/[0-9]*-([0-9]*)-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-[^.]*.htm)");
@@ -655,6 +656,7 @@ public final class JVCParser {
         }
 
         if (thisMessageInfo.containSpoil) {
+            tmpMessage = removeOverlySpoils(tmpMessage);
             if (!thisMessageInfo.showSpoil) {
                 tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilLinePattern, 1, "", "", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
                 tmpMessage = parseThisMessageWithThisPattern(tmpMessage, spoilBlockPattern, 1, "<p>", "</p>", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
@@ -703,6 +705,38 @@ public final class JVCParser {
         finalMessage = finalMessage.replaceAll("(<br /> *)*(<(/)?blockquote>)( *<br />)*", "$2");
 
         return finalMessage;
+    }
+
+    public static String removeOverlySpoils(String baseMessage) {
+        Matcher spoilOverlyMatcher = spoilOverlyPattern.matcher(baseMessage);
+        int currentSpoilTagDeepness = 0;
+        int lastOffsetOfTag = 0;
+
+        while (spoilOverlyMatcher.find(lastOffsetOfTag)) {
+            boolean itsEndingTag = spoilOverlyMatcher.group().equals("</span></span>");
+
+            if (!itsEndingTag) {
+                ++currentSpoilTagDeepness;
+            }
+
+            if (currentSpoilTagDeepness > 1) {
+                lastOffsetOfTag = spoilOverlyMatcher.start();
+                baseMessage = baseMessage.substring(0, spoilOverlyMatcher.start()) + baseMessage.substring(spoilOverlyMatcher.end());
+                spoilOverlyMatcher = spoilOverlyPattern.matcher(baseMessage);
+            } else {
+                lastOffsetOfTag = spoilOverlyMatcher.end();
+            }
+
+            if (itsEndingTag) {
+                --currentSpoilTagDeepness;
+
+                if (currentSpoilTagDeepness < 0) {
+                    currentSpoilTagDeepness = 0;
+                }
+            }
+        }
+
+        return baseMessage;
     }
 
     public static String removeOverlyQuoteInPrettyMessage(String prettyMessage, int maxNumberOfOverlyQuotes) {
@@ -1110,12 +1144,11 @@ public final class JVCParser {
     private static class RemoveFirstsAndLastsP implements StringModifier {
         @Override
         public String changeString(String baseString) {
-            baseString = baseString.trim();
             while (baseString.startsWith("<p>")) {
-                baseString = baseString.substring(3).trim();
+                baseString = baseString.substring(3);
             }
             while (baseString.endsWith("</p>")) {
-                baseString = baseString.substring(0, baseString.length() - 4).trim();
+                baseString = baseString.substring(0, baseString.length() - 4);
             }
             return baseString;
         }

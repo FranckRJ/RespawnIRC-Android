@@ -25,7 +25,7 @@ public class AddOrRemoveThingToFavs extends AsyncTask<String, Void, String> {
         String pageContent;
         String actionToDo;
         WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
-        currentWebInfos.followRedirects = true;
+        currentWebInfos.followRedirects = false;
 
         if (params.length == 3) {
             forumId = params[0];
