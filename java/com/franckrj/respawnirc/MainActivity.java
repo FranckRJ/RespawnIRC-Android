@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.webkit.WebView;
 
 import com.franckrj.respawnirc.jvcviewers.ShowForumActivity;
 import com.franckrj.respawnirc.jvcviewers.ShowTopicActivity;
@@ -23,6 +24,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         int lastActivityViewed = sharedPref.getInt(getString(R.string.prefLastActivityViewed), ACTIVITY_SELECT_FORUM);
+
+        //vider le cache des webviews
+        WebView obj = new WebView(this);
+        obj.clearCache(true);
 
         for (File thisFile : getCacheDir().listFiles()) {
             if (!thisFile.isDirectory() && thisFile.getName().startsWith("nlshck_")) {
