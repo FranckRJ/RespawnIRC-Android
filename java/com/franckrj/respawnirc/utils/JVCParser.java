@@ -619,8 +619,8 @@ public final class JVCParser {
         String finalMessage = settings.secondLineFormat;
         String tmpMessage = thisMessageInfo.messageNotParsed;
 
-        tmpMessage = parseThisMessageWithThisPattern(tmpMessage, codeBlockPattern, 1, "<p><font face=\"monospace\">", "</font></p>", new ConvertStringToString("\n", "<br />"), new ConvertStringToString(" ", " ")); //remplace les espaces par des alt+255
-        tmpMessage = parseThisMessageWithThisPattern(tmpMessage, codeLinePattern, 1, "<font face=\"monospace\">", "</font>", new ConvertStringToString(" ", " "), null); //remplace les espaces par des alt+255
+        tmpMessage = parseThisMessageWithThisPattern(tmpMessage, codeBlockPattern, 1, "<p><font face=\"monospace\">", "</font></p>", new ConvertStringToString("\n", "<br />"), new ConvertStringToString("  ", "  ")); //remplace les doubles espaces par des doubles alt+255
+        tmpMessage = parseThisMessageWithThisPattern(tmpMessage, codeLinePattern, 1, "<font face=\"monospace\">", "</font>", new ConvertStringToString("  ", "  "), null); //remplace les doubles espaces par des doubles alt+255
         tmpMessage = StickerConverter.convertStickerWithThisRule(tmpMessage, StickerConverter.ruleForNoLangageSticker);
         if (settings.transformStickerToSmiley) {
             tmpMessage = StickerConverter.convertStickerWithThisRule(tmpMessage, StickerConverter.ruleForStickerToSmiley);

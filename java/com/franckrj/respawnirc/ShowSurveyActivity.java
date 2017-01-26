@@ -28,6 +28,30 @@ public class ShowSurveyActivity extends AppCompatActivity {
     private DownloadInfosForSurvey currentTaskForSurvey = null;
     private String contentForSurvey = "";
 
+    private String addStyleToPercentage(String percentageToStyle) {
+        final int spaceToTake = ("100").length();
+        String numberOfPercentage = percentageToStyle.substring(0, percentageToStyle.indexOf(" "));
+        String redValueOfPercentage;
+
+        try {
+            int colorValueInNumber = (int)(Integer.parseInt(numberOfPercentage) * 2.5); //la couleur de l'int sera entre rouge 0 et rouge 250.
+            redValueOfPercentage = Integer.toHexString(colorValueInNumber);
+
+            while (redValueOfPercentage.length() < 2) {
+                redValueOfPercentage = "0" + redValueOfPercentage;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            redValueOfPercentage = "00";
+        }
+
+        while (numberOfPercentage.length() < spaceToTake) {
+            numberOfPercentage = " " + numberOfPercentage; //alt+255 pour l'espace
+        }
+
+        return "<font face=\"monospace\" color=\"#" + redValueOfPercentage + "0000\">" + numberOfPercentage + "</font>%";
+    }
+
     private void stopAllCurrentTasks() {
         if (currentTaskForSurvey != null) {
             currentTaskForSurvey.cancel(true);
@@ -60,13 +84,13 @@ public class ShowSurveyActivity extends AppCompatActivity {
             contentForSurvey = savedInstanceState.getString(SAVE_CONTENT_FOR_SURVEY, "");
             contentText.setText(Undeprecator.htmlFromHtml(contentForSurvey));
         }
-        if (contentForSurvey.isEmpty() && getIntent() != null) {
+        if (getIntent() != null) {
             if (getIntent().getStringExtra(EXTRA_SURVEY_TITLE) != null) {
                 if (myActionBar != null) {
                     myActionBar.setSubtitle(getIntent().getStringExtra(EXTRA_SURVEY_TITLE));
                 }
             }
-            if (getIntent().getStringExtra(EXTRA_TOPIC_ID) != null && getIntent().getStringExtra(EXTRA_AJAX_INFOS) != null && getIntent().getStringExtra(EXTRA_COOKIES) != null) {
+            if (contentForSurvey.isEmpty() && getIntent().getStringExtra(EXTRA_TOPIC_ID) != null && getIntent().getStringExtra(EXTRA_AJAX_INFOS) != null && getIntent().getStringExtra(EXTRA_COOKIES) != null) {
                 currentTaskForSurvey = new DownloadInfosForSurvey();
                 currentTaskForSurvey.execute(getIntent().getStringExtra(EXTRA_TOPIC_ID), getIntent().getStringExtra(EXTRA_AJAX_INFOS), getIntent().getStringExtra(EXTRA_COOKIES));
             }
@@ -129,14 +153,14 @@ public class ShowSurveyActivity extends AppCompatActivity {
                     StringBuilder newContentToShow = new StringBuilder();
 
                     if (infosForSurvey.isOpen) {
-                        newContentToShow.append(getString(R.string.titleForSurvey)).append(" ").append(infosForSurvey.htmlTitle);
+                        newContentToShow.append(getString(R.string.titleForSurvey));
                     } else {
-                        newContentToShow.append(getString(R.string.titleForClosedSurvey)).append(" ").append(infosForSurvey.htmlTitle);
+                        newContentToShow.append(getString(R.string.titleForClosedSurvey));
                     }
-                    newContentToShow.append("<br>");
+                    newContentToShow.append("<br><big><b>").append(infosForSurvey.htmlTitle).append("</b></big><br>");
 
                     for (JVCParser.SurveyInfos.SurveyReply currentReply : infosForSurvey.listOfReplys) {
-                        newContentToShow.append("<br>").append(currentReply.percentageOfVotes).append(" : ").append(currentReply.htmlTitle);
+                        newContentToShow.append("<br>").append(addStyleToPercentage(currentReply.percentageOfVotes)).append(" : ").append(currentReply.htmlTitle);
                     }
 
                     newContentToShow.append("<br><br>").append(infosForSurvey.numberOfVotes);
