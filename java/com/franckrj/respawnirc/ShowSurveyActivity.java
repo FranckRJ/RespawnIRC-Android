@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
@@ -57,7 +58,7 @@ public class ShowSurveyActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             contentForSurvey = savedInstanceState.getString(SAVE_CONTENT_FOR_SURVEY, "");
-            contentText.setText(contentForSurvey);
+            contentText.setText(Undeprecator.htmlFromHtml(contentForSurvey));
         }
         if (contentForSurvey.isEmpty() && getIntent() != null) {
             if (getIntent().getStringExtra(EXTRA_SURVEY_TITLE) != null) {
@@ -128,20 +129,20 @@ public class ShowSurveyActivity extends AppCompatActivity {
                     StringBuilder newContentToShow = new StringBuilder();
 
                     if (infosForSurvey.isOpen) {
-                        newContentToShow.append(getString(R.string.titleForSurvey)).append(" ").append(infosForSurvey.title);
+                        newContentToShow.append(getString(R.string.titleForSurvey)).append(" ").append(infosForSurvey.htmlTitle);
                     } else {
-                        newContentToShow.append(getString(R.string.titleForClosedSurvey)).append(" ").append(infosForSurvey.title);
+                        newContentToShow.append(getString(R.string.titleForClosedSurvey)).append(" ").append(infosForSurvey.htmlTitle);
                     }
-                    newContentToShow.append("\n");
+                    newContentToShow.append("<br>");
 
                     for (JVCParser.SurveyInfos.SurveyReply currentReply : infosForSurvey.listOfReplys) {
-                        newContentToShow.append("\n").append(currentReply.percentageOfVotes).append(" : ").append(currentReply.title);
+                        newContentToShow.append("<br>").append(currentReply.percentageOfVotes).append(" : ").append(currentReply.htmlTitle);
                     }
 
-                    newContentToShow.append("\n\n").append(infosForSurvey.numberOfVotes);
+                    newContentToShow.append("<br><br>").append(infosForSurvey.numberOfVotes);
 
                     contentForSurvey = newContentToShow.toString();
-                    contentText.setText(contentForSurvey);
+                    contentText.setText(Undeprecator.htmlFromHtml(contentForSurvey));
                 } else {
                     Toast.makeText(ShowSurveyActivity.this, errorContent, Toast.LENGTH_SHORT).show();
                 }

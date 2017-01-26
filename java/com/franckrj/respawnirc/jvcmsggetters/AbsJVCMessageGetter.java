@@ -21,7 +21,7 @@ public abstract class AbsJVCMessageGetter {
     protected static final String SAVE_LAST_ID_OF_MESSAGE = "saveLastIdOfMessage";
     protected static final String SAVE_TOPIC_ID = "saveTopicID";
     protected static final String SAVE_LOCK_REASON = "saveLockReason";
-    protected static final String SAVE_SURVEY_TITLE = "saveSurveyTitle";
+    protected static final String SAVE_HTML_SURVEY_TITLE = "saveHtmlSurveyTitle";
     protected static final String SAVE_TOPIC_IS_IN_FAV = "saveTopicIsInFav";
 
     protected String urlForTopic = "";
@@ -39,7 +39,7 @@ public abstract class AbsJVCMessageGetter {
     protected NewReasonForTopicLock listenerForNewReasonForTopicLock = null;
     protected String lockReason = "";
     protected NewSurveyForTopic listenerForNewSurveyForTopic = null;
-    protected String surveyTitle = null;
+    protected String htmlSurveyTitle = null;
 
     public String getUrlForTopic() {
         return urlForTopic;
@@ -65,8 +65,8 @@ public abstract class AbsJVCMessageGetter {
         return topicID;
     }
 
-    public String getSurveyTitle() {
-        return surveyTitle;
+    public String getSurveyTitleInHtml() {
+        return htmlSurveyTitle;
     }
 
     public void setIsInFavs(Boolean newVal) {
@@ -117,7 +117,7 @@ public abstract class AbsJVCMessageGetter {
         lastIdOfMessage = savedInstanceState.getLong(SAVE_LAST_ID_OF_MESSAGE, 0);
         topicID = savedInstanceState.getString(SAVE_TOPIC_ID, "");
         lockReason = savedInstanceState.getString(SAVE_LOCK_REASON, "");
-        surveyTitle = savedInstanceState.getString(SAVE_SURVEY_TITLE, "");
+        htmlSurveyTitle = savedInstanceState.getString(SAVE_HTML_SURVEY_TITLE, "");
         if (savedInstanceState.containsKey(SAVE_TOPIC_IS_IN_FAV)) {
             isInFavs = savedInstanceState.getBoolean(SAVE_TOPIC_IS_IN_FAV, false);
         } else {
@@ -134,7 +134,7 @@ public abstract class AbsJVCMessageGetter {
         savedInstanceState.putLong(SAVE_LAST_ID_OF_MESSAGE, lastIdOfMessage);
         savedInstanceState.putString(SAVE_TOPIC_ID, topicID);
         savedInstanceState.putString(SAVE_LOCK_REASON, lockReason);
-        savedInstanceState.putString(SAVE_SURVEY_TITLE, surveyTitle);
+        savedInstanceState.putString(SAVE_HTML_SURVEY_TITLE, htmlSurveyTitle);
         if (isInFavs != null) {
             savedInstanceState.putBoolean(SAVE_TOPIC_IS_IN_FAV, isInFavs);
         }
@@ -143,7 +143,7 @@ public abstract class AbsJVCMessageGetter {
     /* Je savais pas comment l'appeler, en gros ça reset les infos affichées dans la liste des messages
     * pour que lors d'un refresh qui efface les messages ces infos soient retransmisent via listener.*/
     public void resetDirectlyShowedInfos() {
-        surveyTitle = null;
+        htmlSurveyTitle = null;
     }
 
     protected TopicPageInfos downloadAndParseTopicPage(String topicLink, String cookies) {
@@ -164,7 +164,7 @@ public abstract class AbsJVCMessageGetter {
             newPageInfos.newIsInFavs = JVCParser.getIsInFavsFromPage(pageContent);
             newPageInfos.newTopicID = JVCParser.getTopicIDInThisTopicPage(pageContent);
             newPageInfos.newLockReason = JVCParser.getLockReasonFromPage(pageContent);
-            newPageInfos.newSurveyTitle = JVCParser.getSurveyTitleFromPage(pageContent);
+            newPageInfos.newHtmlSurveyTitle = JVCParser.getSurveyHTMLTitleFromPage(pageContent);
         }
 
         return newPageInfos;
@@ -194,10 +194,10 @@ public abstract class AbsJVCMessageGetter {
             }
         }
 
-        if (!Utils.compareStrings(infoOfCurrentPage.newSurveyTitle, surveyTitle)) {
-            surveyTitle = infoOfCurrentPage.newSurveyTitle;
+        if (!Utils.compareStrings(infoOfCurrentPage.newHtmlSurveyTitle, htmlSurveyTitle)) {
+            htmlSurveyTitle = infoOfCurrentPage.newHtmlSurveyTitle;
             if (listenerForNewSurveyForTopic != null) {
-                listenerForNewSurveyForTopic.getNewSurveyTitle(surveyTitle);
+                listenerForNewSurveyForTopic.getNewSurveyTitle(htmlSurveyTitle);
             }
         }
     }
@@ -215,7 +215,7 @@ public abstract class AbsJVCMessageGetter {
         Boolean newIsInFavs;
         String newTopicID;
         String newLockReason;
-        String newSurveyTitle;
+        String newHtmlSurveyTitle;
     }
 
     public interface NewForumAndTopicNameAvailable {

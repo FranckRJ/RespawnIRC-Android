@@ -237,7 +237,7 @@ public final class JVCParser {
         int lastOffset = 0;
 
         if (surveyTitleMatcher.find()) {
-            currentInfos.title = surveyTitleMatcher.group(1);
+            currentInfos.htmlTitle = surveyTitleMatcher.group(1);
         }
         if (surveyResultMatcher.find()) {
             currentInfos.numberOfVotes = surveyResultMatcher.group(1).replace("\n", "").replaceAll(" +", " ").trim();
@@ -248,7 +248,7 @@ public final class JVCParser {
             SurveyInfos.SurveyReply replyForSurvey = new SurveyInfos.SurveyReply();
 
             replyForSurvey.percentageOfVotes = surveyReplyMatcher.group(1);
-            replyForSurvey.title = surveyReplyMatcher.group(2);
+            replyForSurvey.htmlTitle = surveyReplyMatcher.group(2);
 
             currentInfos.listOfReplys.add(replyForSurvey);
             lastOffset = surveyReplyMatcher.end();
@@ -397,11 +397,11 @@ public final class JVCParser {
         }
     }
 
-    public static String getSurveyTitleFromPage(String pageSource) {
+    public static String getSurveyHTMLTitleFromPage(String pageSource) {
         Matcher surveyTitleMatcher = surveyTitlePattern.matcher(pageSource);
 
         if (surveyTitleMatcher.find()) {
-            return specialCharToNormalChar(surveyTitleMatcher.group(1));
+            return surveyTitleMatcher.group(1);
         } else {
             return "";
         }
@@ -431,7 +431,7 @@ public final class JVCParser {
         Matcher errorMatcher = errorInEditModePattern.matcher(pageSource);
 
         if (errorMatcher.find()) {
-            return "Erreur : " + parsingAjaxMessages(errorMatcher.group(1));
+            return "Erreur : " + specialCharToNormalChar(parsingAjaxMessages(errorMatcher.group(1)));
         } else {
             return null;
         }
@@ -441,7 +441,7 @@ public final class JVCParser {
         Matcher messageEditInfoMatcher = messageEditInfoPattern.matcher(pageSource);
 
         if (messageEditInfoMatcher.find()) {
-            return messageEditInfoMatcher.group(1);
+            return specialCharToNormalChar(messageEditInfoMatcher.group(1));
         } else {
             return "";
         }
@@ -469,8 +469,6 @@ public final class JVCParser {
             unicodeInTextMatcher = unicodeInTextPattern.matcher(ajaxMessage);
         }
 
-        ajaxMessage = specialCharToNormalChar(ajaxMessage);
-
         return ajaxMessage;
     }
 
@@ -478,7 +476,7 @@ public final class JVCParser {
         Matcher messageQuoteMatcher = messageQuotePattern.matcher(pageSource);
 
         if (messageQuoteMatcher.find()) {
-            return parsingAjaxMessages(messageQuoteMatcher.group(1)).replace("\n", "\n>");
+            return specialCharToNormalChar(parsingAjaxMessages(messageQuoteMatcher.group(1)).replace("\n", "\n>"));
         }
 
         return "";
@@ -856,7 +854,7 @@ public final class JVCParser {
         if (topicNameAndLinkMatcher.find() && topicNumberMessagesMatcher.find() && topicDateMatcher.find() && topicTypeMatcher.find()) {
             String topicNameAndLinkString = topicNameAndLinkMatcher.group(1);
             newTopicInfo.link = "http://www.jeuxvideo.com" + topicNameAndLinkString.substring(0, topicNameAndLinkString.indexOf("\""));
-            newTopicInfo.name = topicNameAndLinkString.substring(topicNameAndLinkString.indexOf("title=\"") + 7);
+            newTopicInfo.htmlName = topicNameAndLinkString.substring(topicNameAndLinkString.indexOf("title=\"") + 7);
             newTopicInfo.messages = topicNumberMessagesMatcher.group(1);
             newTopicInfo.wholeDate = topicDateMatcher.group(1);
             newTopicInfo.type = topicTypeMatcher.group(1);
@@ -979,7 +977,7 @@ public final class JVCParser {
         public String author = "";
         public String authorType = "";
         public String type = "";
-        public String name = "";
+        public String htmlName = "";
         public String link = "";
         public String wholeDate = "";
         public String messages = "";
@@ -1004,7 +1002,7 @@ public final class JVCParser {
             author = in.readString();
             authorType = in.readString();
             type = in.readString();
-            name = in.readString();
+            htmlName = in.readString();
             link = in.readString();
             wholeDate = in.readString();
             messages = in.readString();
@@ -1020,7 +1018,7 @@ public final class JVCParser {
             out.writeString(author);
             out.writeString(authorType);
             out.writeString(type);
-            out.writeString(name);
+            out.writeString(htmlName);
             out.writeString(link);
             out.writeString(wholeDate);
             out.writeString(messages);
@@ -1125,12 +1123,12 @@ public final class JVCParser {
 
     public static class SurveyInfos {
         public boolean isOpen = true;
-        public String title = "";
+        public String htmlTitle = "";
         public String numberOfVotes = "";
         public ArrayList<SurveyReply> listOfReplys = new ArrayList<>();
 
         public static class SurveyReply {
-            public String title = "";
+            public String htmlTitle = "";
             public String percentageOfVotes = "";
         }
     }

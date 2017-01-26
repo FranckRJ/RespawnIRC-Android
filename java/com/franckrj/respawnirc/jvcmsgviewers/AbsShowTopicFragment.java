@@ -64,7 +64,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         public void onClick(View view) {
             if (adapterForMessages.getShowSurvey()) {
                 if (getActivity() instanceof NewSurveyNeedToBeShown) {
-                    ((NewSurveyNeedToBeShown) getActivity()).getNewSurveyInfos(absGetterForMessages.getSurveyTitle(), absGetterForMessages.getTopicID(), absGetterForMessages.getLatestAjaxInfos().list);
+                    ((NewSurveyNeedToBeShown) getActivity()).getNewSurveyInfos(JVCParser.specialCharToNormalChar(absGetterForMessages.getSurveyTitleInHtml()), absGetterForMessages.getTopicID(), absGetterForMessages.getLatestAjaxInfos().list);
                 }
             }
         }
@@ -196,8 +196,8 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             ArrayList<JVCParser.MessageInfos> allCurrentMessagesShowed = savedInstanceState.getParcelableArrayList(SAVE_ALL_MESSAGES_SHOWED);
             absGetterForMessages.loadFromBundle(savedInstanceState);
 
-            if (!Utils.stringIsEmptyOrNull(absGetterForMessages.getSurveyTitle())) {
-                adapterForMessages.enableSurvey(absGetterForMessages.getSurveyTitle());
+            if (!Utils.stringIsEmptyOrNull(absGetterForMessages.getSurveyTitleInHtml())) {
+                adapterForMessages.enableSurvey(absGetterForMessages.getSurveyTitleInHtml());
             }
 
             if (allCurrentMessagesShowed != null) {

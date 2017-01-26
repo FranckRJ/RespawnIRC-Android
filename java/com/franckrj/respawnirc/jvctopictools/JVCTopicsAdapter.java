@@ -59,7 +59,7 @@ public class JVCTopicsAdapter extends BaseAdapter {
         String textForAuthor;
         ContentHolder thisHolder = new ContentHolder();
         thisHolder.firstLineContent = Undeprecator.htmlFromHtml("<b><font color=\"" + Utils.resColorToString(R.color.linkColor, parentActivity) +
-                                        "\">" + item.name + "</font> (" + item.messages + ")</b>");
+                                        "\">" + item.htmlName + "</font> (" + item.messages + ")</b>");
         switch (item.authorType) {
             case "modo":
                 textForAuthor = "<small><font color=\"" + Utils.resColorToString(R.color.colorPseudoModo, parentActivity) + "\">" + item.author + "</font></small>";
