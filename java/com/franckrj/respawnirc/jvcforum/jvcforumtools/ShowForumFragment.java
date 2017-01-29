@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc.jvctopictools;
+package com.franckrj.respawnirc.jvcforum.jvcforumtools;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -12,7 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.franckrj.respawnirc.jvcviewers.AbsShowSomethingFragment;
+import com.franckrj.respawnirc.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.JVCParser;
 
@@ -26,9 +26,9 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     private SharedPreferences sharedPref = null;
     private SwipeRefreshLayout swipeRefresh = null;
     private NewTopicWantRead listenerForNewTopicWantRead = null;
-    private JVCTopicGetter getterForTopics = null;
+    private JVCForumGetter getterForForum = null;
     private ListView jvcTopicList = null;
-    private JVCTopicsAdapter adapterForTopics;
+    private JVCForumAdapter adapterForForum;
     private boolean clearTopicsOnRefresh = true;
     private boolean isInErrorMode = false;
 
@@ -36,7 +36,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
             if (listenerForNewTopicWantRead != null) {
-                listenerForNewTopicWantRead.setReadNewTopic(adapterForTopics.getItem(position).link, JVCParser.specialCharToNormalChar(adapterForTopics.getItem(position).htmlName));
+                listenerForNewTopicWantRead.setReadNewTopic(adapterForForum.getItem(position).link, JVCParser.specialCharToNormalChar(adapterForForum.getItem(position).htmlName));
             }
         }
     };
@@ -45,40 +45,40 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         @Override
         public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
             if (listenerForNewTopicWantRead != null) {
-                String realPageToGo = JVCParser.setPageNumberForThisTopicLink(adapterForTopics.getItem(position).link, (Integer.parseInt(adapterForTopics.getItem(position).messages) / 20) + 1);
-                listenerForNewTopicWantRead.setReadNewTopic(realPageToGo, JVCParser.specialCharToNormalChar(adapterForTopics.getItem(position).htmlName));
+                String realPageToGo = JVCParser.setPageNumberForThisTopicLink(adapterForForum.getItem(position).link, (Integer.parseInt(adapterForForum.getItem(position).messages) / 20) + 1);
+                listenerForNewTopicWantRead.setReadNewTopic(realPageToGo, JVCParser.specialCharToNormalChar(adapterForForum.getItem(position).htmlName));
                 return true;
             }
             return false;
         }
     };
 
-    private final JVCTopicGetter.NewGetterStateListener listenerForNewGetterState = new JVCTopicGetter.NewGetterStateListener() {
+    private final JVCForumGetter.NewGetterStateListener listenerForNewGetterState = new JVCForumGetter.NewGetterStateListener() {
         @Override
         public void newStateSetted(int newState) {
-            if (newState == JVCTopicGetter.STATE_LOADING) {
+            if (newState == JVCForumGetter.STATE_LOADING) {
                 swipeRefresh.setRefreshing(true);
-            } else if (newState == JVCTopicGetter.STATE_NOT_LOADING) {
+            } else if (newState == JVCForumGetter.STATE_NOT_LOADING) {
                 swipeRefresh.setRefreshing(false);
             }
         }
     };
 
-    private final JVCTopicGetter.NewTopicsListener listenerForNewTopics = new JVCTopicGetter.NewTopicsListener() {
+    private final JVCForumGetter.NewTopicsListener listenerForNewTopics = new JVCForumGetter.NewTopicsListener() {
         @Override
         public void getNewTopics(ArrayList<JVCParser.TopicInfos> listOfNewTopics) {
             if (!listOfNewTopics.isEmpty()) {
                 isInErrorMode = false;
-                adapterForTopics.removeAllItems();
+                adapterForForum.removeAllItems();
 
                 for (JVCParser.TopicInfos thisTopicInfo : listOfNewTopics) {
-                    adapterForTopics.addItem(thisTopicInfo);
+                    adapterForForum.addItem(thisTopicInfo);
                 }
 
-                adapterForTopics.updateAllItems();
+                adapterForForum.updateAllItems();
             } else {
                 if (!isInErrorMode) {
-                    getterForTopics.reloadForum();
+                    getterForForum.reloadForum();
                     isInErrorMode = true;
                 } else {
                     Toast.makeText(getActivity(), R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
@@ -97,17 +97,17 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     };
 
     private void reloadSettings() {
-        getterForTopics.setCookieListInAString(sharedPref.getString(getString(R.string.prefCookiesList), ""));
+        getterForForum.setCookieListInAString(sharedPref.getString(getString(R.string.prefCookiesList), ""));
         clearTopicsOnRefresh = true;
     }
 
     private boolean reloadAllForum(boolean forceDontClear) {
         isInErrorMode = false;
         if (clearTopicsOnRefresh && !forceDontClear) {
-            adapterForTopics.removeAllItems();
-            adapterForTopics.updateAllItems();
+            adapterForForum.removeAllItems();
+            adapterForForum.updateAllItems();
         }
-        return getterForTopics.reloadForum();
+        return getterForForum.reloadForum();
     }
 
     public void refreshForum() {
@@ -121,33 +121,33 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
             newForumPageLink = JVCParser.formatThisUrl(newForumPageLink);
         }
 
-        getterForTopics.stopAllCurrentTask();
-        adapterForTopics.removeAllItems();
-        adapterForTopics.updateAllItems();
-        getterForTopics.startGetMessagesOfThisPage(newForumPageLink);
+        getterForForum.stopAllCurrentTask();
+        adapterForForum.removeAllItems();
+        adapterForForum.updateAllItems();
+        getterForForum.startGetMessagesOfThisPage(newForumPageLink);
     }
 
     public void clearContent() {
-        getterForTopics.stopAllCurrentTask();
-        adapterForTopics.removeAllItems();
-        adapterForTopics.updateAllItems();
-        getterForTopics.startGetMessagesOfThisPage("");
+        getterForForum.stopAllCurrentTask();
+        adapterForForum.removeAllItems();
+        adapterForForum.updateAllItems();
+        getterForForum.startGetMessagesOfThisPage("");
     }
 
     public JVCParser.AjaxInfos getLatestAjaxInfos() {
-        return getterForTopics.getLatestAjaxInfos();
+        return getterForForum.getLatestAjaxInfos();
     }
 
     public Boolean getIsInFavs() {
-        return getterForTopics.getIsInFavs();
+        return getterForForum.getIsInFavs();
     }
 
     public String getLatestListOfInputInAString() {
-        return getterForTopics.getLatestListOfInputInAString();
+        return getterForForum.getLatestListOfInputInAString();
     }
 
     public void setIsInFavs(Boolean newVal) {
-        getterForTopics.setIsInFavs(newVal);
+        getterForForum.setIsInFavs(newVal);
     }
 
     @Override
@@ -175,39 +175,39 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
 
         sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
-        getterForTopics = new JVCTopicGetter();
-        adapterForTopics = new JVCTopicsAdapter(getActivity());
+        getterForForum = new JVCForumGetter();
+        adapterForForum = new JVCForumAdapter(getActivity());
         reloadSettings();
-        getterForTopics.setListenerForNewGetterState(listenerForNewGetterState);
-        getterForTopics.setListenerForNewTopics(listenerForNewTopics);
-        adapterForTopics.setAlternateBackgroundColor(true);
+        getterForForum.setListenerForNewGetterState(listenerForNewGetterState);
+        getterForForum.setListenerForNewTopics(listenerForNewTopics);
+        adapterForForum.setAlternateBackgroundColor(true);
         jvcTopicList.setOnItemClickListener(listenerForItemClickedInListView);
         jvcTopicList.setOnItemLongClickListener(listenerForItemLongClickedInListView);
 
         if (getActivity() instanceof NewTopicWantRead) {
             listenerForNewTopicWantRead = (NewTopicWantRead) getActivity();
         }
-        if (getActivity() instanceof JVCTopicGetter.NewForumNameAvailable) {
-            getterForTopics.setListenerForNewForumName((JVCTopicGetter.NewForumNameAvailable) getActivity());
+        if (getActivity() instanceof JVCForumGetter.NewForumNameAvailable) {
+            getterForForum.setListenerForNewForumName((JVCForumGetter.NewForumNameAvailable) getActivity());
         }
-        if (getActivity() instanceof JVCTopicGetter.ForumLinkChanged) {
-            getterForTopics.setListenerForForumLinkChanged((JVCTopicGetter.ForumLinkChanged) getActivity());
+        if (getActivity() instanceof JVCForumGetter.ForumLinkChanged) {
+            getterForForum.setListenerForForumLinkChanged((JVCForumGetter.ForumLinkChanged) getActivity());
         }
 
         swipeRefresh.setColorSchemeResources(R.color.colorAccent);
-        jvcTopicList.setAdapter(adapterForTopics);
+        jvcTopicList.setAdapter(adapterForForum);
 
         if (savedInstanceState != null) {
             ArrayList<JVCParser.TopicInfos> allCurrentTopicsShowed = savedInstanceState.getParcelableArrayList(SAVE_ALL_TOPICS_SHOWED);
-            getterForTopics.loadFromBundle(savedInstanceState);
+            getterForForum.loadFromBundle(savedInstanceState);
 
             if (allCurrentTopicsShowed != null) {
                 for (JVCParser.TopicInfos thisTopicInfo : allCurrentTopicsShowed) {
-                    adapterForTopics.addItem(thisTopicInfo);
+                    adapterForForum.addItem(thisTopicInfo);
                 }
             }
 
-            adapterForTopics.updateAllItems();
+            adapterForForum.updateAllItems();
         } else {
             Bundle currentArgs = getArguments();
 
@@ -224,22 +224,22 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         reloadSettings();
         isInErrorMode = false;
 
-        if (adapterForTopics.getAllItems().isEmpty()) {
-            getterForTopics.reloadForum();
+        if (adapterForForum.getAllItems().isEmpty()) {
+            getterForForum.reloadForum();
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        getterForTopics.stopAllCurrentTask();
+        getterForForum.stopAllCurrentTask();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(SAVE_ALL_TOPICS_SHOWED, adapterForTopics.getAllItems());
-        getterForTopics.saveToBundle(outState);
+        outState.putParcelableArrayList(SAVE_ALL_TOPICS_SHOWED, adapterForForum.getAllItems());
+        getterForForum.saveToBundle(outState);
     }
 
     @Override

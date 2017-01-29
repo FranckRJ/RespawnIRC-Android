@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc;
+package com.franckrj.respawnirc.jvctopic;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;

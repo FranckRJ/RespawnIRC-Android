@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 import com.franckrj.respawnirc.ConnectActivity;
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.SelectForumActivity;
+import com.franckrj.respawnirc.jvcforumlist.SelectForumInListActivity;
 import com.franckrj.respawnirc.SettingsActivity;
 import com.franckrj.respawnirc.dialogs.RefreshFavDialogFragment;
 
@@ -192,7 +192,7 @@ public abstract class AbsNavigationViewActivity extends AppCompatActivity implem
                     switch (lastItemSelected) {
                         case R.id.action_home_navigation:
                             if (idOfBaseActivity != R.id.action_home_navigation) {
-                                Intent newShowForumIntent = new Intent(AbsNavigationViewActivity.this, SelectForumActivity.class);
+                                Intent newShowForumIntent = new Intent(AbsNavigationViewActivity.this, SelectForumInListActivity.class);
                                 newShowForumIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(newShowForumIntent);
                                 finish();

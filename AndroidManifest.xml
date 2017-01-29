@@ -21,22 +21,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SelectForumActivity"
+            android:name=".jvcforumlist.SelectForumInListActivity"
             android:launchMode="singleTop"
             android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
         <activity
-            android:name=".jvcviewers.ShowForumActivity"
+            android:name=".jvcforum.ShowForumActivity"
             android:launchMode="singleTop"
             android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
         <activity
-            android:name=".SendTopicActivity"
+            android:name=".jvcforum.SendTopicToForumActivity"
             android:label="@string/sendATopic"
             android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
         <activity
-            android:name=".jvcviewers.ShowTopicActivity"
+            android:name=".jvctopic.ShowTopicActivity"
             android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
         <activity
@@ -45,7 +45,7 @@
             android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
         <activity
-            android:name=".ShowSurveyActivity"
+            android:name=".jvctopic.ShowSurveyActivity"
             android:label="@string/survey">
         </activity>
         <activity

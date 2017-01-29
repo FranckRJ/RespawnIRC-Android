@@ -1,10 +1,10 @@
-package com.franckrj.respawnirc.jvcmsggetters;
+package com.franckrj.respawnirc.jvctopic.jvctopicgetters;
 
 import com.franckrj.respawnirc.utils.JVCParser;
 
 import java.util.ArrayList;
 
-public class JVCForumMessageGetter extends AbsJVCMessageGetter {
+public class JVCTopicModeForumGetter extends AbsJVCTopicGetter {
     private NewNumbersOfPagesListener listenerForNewNumbersOfPages = null;
 
     public void setListenerForNewNumbersOfPages(NewNumbersOfPagesListener thisListener) {

@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc.jvcmsgviewers;
+package com.franckrj.respawnirc.jvctopic.jvctopicviewers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,9 +9,9 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 
-import com.franckrj.respawnirc.jvcviewers.AbsShowSomethingFragment;
+import com.franckrj.respawnirc.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.jvcmsggetters.AbsJVCMessageGetter;
+import com.franckrj.respawnirc.jvctopic.jvctopicgetters.AbsJVCTopicGetter;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Utils;
 
@@ -24,47 +24,47 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
 
     protected static final String SAVE_ALL_MESSAGES_SHOWED = "saveAllCurrentMessagesShowed";
 
-    protected AbsJVCMessageGetter absGetterForMessages = null;
+    protected AbsJVCTopicGetter absGetterForTopic = null;
     protected ListView jvcMsgList = null;
     protected SharedPreferences sharedPref = null;
-    protected JVCMessagesAdapter adapterForMessages = null;
+    protected JVCTopicAdapter adapterForTopic = null;
     protected JVCParser.Settings currentSettings = new JVCParser.Settings();
     protected NewModeNeededListener listenerForNewModeNeeded = null;
     protected SwipeRefreshLayout swipeRefresh = null;
     protected boolean showRefreshWhenMessagesShowed = true;
     protected boolean isInErrorMode = false;
 
-    protected final AbsJVCMessageGetter.NewGetterStateListener listenerForNewGetterState = new AbsJVCMessageGetter.NewGetterStateListener() {
+    protected final AbsJVCTopicGetter.NewGetterStateListener listenerForNewGetterState = new AbsJVCTopicGetter.NewGetterStateListener() {
         @Override
         public void newStateSetted(int newState) {
-            if (showRefreshWhenMessagesShowed || adapterForMessages.getAllItems().isEmpty()) {
-                if (newState == AbsJVCMessageGetter.STATE_LOADING) {
+            if (showRefreshWhenMessagesShowed || adapterForTopic.getAllItems().isEmpty()) {
+                if (newState == AbsJVCTopicGetter.STATE_LOADING) {
                     swipeRefresh.setRefreshing(true);
-                } else if (newState == AbsJVCMessageGetter.STATE_NOT_LOADING) {
+                } else if (newState == AbsJVCTopicGetter.STATE_NOT_LOADING) {
                     swipeRefresh.setRefreshing(false);
                 }
             }
         }
     };
 
-    protected final AbsJVCMessageGetter.NewSurveyForTopic listenerForNewSurveyForTopic = new AbsJVCMessageGetter.NewSurveyForTopic() {
+    protected final AbsJVCTopicGetter.NewSurveyForTopic listenerForNewSurveyForTopic = new AbsJVCTopicGetter.NewSurveyForTopic() {
         @Override
         public void getNewSurveyTitle(String newTitle) {
             if (!newTitle.isEmpty()) {
-                adapterForMessages.enableSurvey(newTitle);
+                adapterForTopic.enableSurvey(newTitle);
             } else {
-                adapterForMessages.disableSurvey();
+                adapterForTopic.disableSurvey();
             }
-            adapterForMessages.updateAllItems();
+            adapterForTopic.updateAllItems();
         }
     };
 
     private final View.OnClickListener surveyItemClickedListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (adapterForMessages.getShowSurvey()) {
+            if (adapterForTopic.getShowSurvey()) {
                 if (getActivity() instanceof NewSurveyNeedToBeShown) {
-                    ((NewSurveyNeedToBeShown) getActivity()).getNewSurveyInfos(JVCParser.specialCharToNormalChar(absGetterForMessages.getSurveyTitleInHtml()), absGetterForMessages.getTopicID(), absGetterForMessages.getLatestAjaxInfos().list);
+                    ((NewSurveyNeedToBeShown) getActivity()).getNewSurveyInfos(JVCParser.specialCharToNormalChar(absGetterForTopic.getSurveyTitleInHtml()), absGetterForTopic.getTopicID(), absGetterForTopic.getLatestAjaxInfos().list);
                 }
             }
         }
@@ -75,35 +75,35 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         currentSettings.showNoelshackImages = sharedPref.getBoolean(getString(R.string.settingsShowNoelshackImage), Boolean.parseBoolean(getString(R.string.showNoelshackImageDefault)));
         currentSettings.transformStickerToSmiley = sharedPref.getBoolean(getString(R.string.settingsTransformStickerToSmiley), Boolean.parseBoolean(getString(R.string.transformStickerToSmileyDefault)));
         currentSettings.pseudoOfUser = sharedPref.getString(getString(R.string.prefPseudoUser), "");
-        absGetterForMessages.setCookieListInAString(sharedPref.getString(getString(R.string.prefCookiesList), ""));
+        absGetterForTopic.setCookieListInAString(sharedPref.getString(getString(R.string.prefCookiesList), ""));
     }
 
     public boolean onMenuItemClick(MenuItem item) {
         JVCParser.MessageInfos currentItem;
         switch (item.getItemId()) {
             case R.id.menu_show_spoil_message:
-                currentItem = adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected());
+                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
                 currentItem.showSpoil = true;
-                adapterForMessages.updateThisItem(currentItem);
-                adapterForMessages.updateAllItems();
+                adapterForTopic.updateThisItem(currentItem);
+                adapterForTopic.updateAllItems();
                 return true;
             case R.id.menu_hide_spoil_message:
-                currentItem = adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected());
+                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
                 currentItem.showSpoil = false;
-                adapterForMessages.updateThisItem(currentItem);
-                adapterForMessages.updateAllItems();
+                adapterForTopic.updateThisItem(currentItem);
+                adapterForTopic.updateAllItems();
                 return true;
             case R.id.menu_show_quote_message:
-                currentItem = adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected());
+                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
                 currentItem.showOverlyQuote = true;
-                adapterForMessages.updateThisItem(currentItem);
-                adapterForMessages.updateAllItems();
+                adapterForTopic.updateThisItem(currentItem);
+                adapterForTopic.updateAllItems();
                 return true;
             case R.id.menu_hide_quote_message:
-                currentItem = adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected());
+                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
                 currentItem.showOverlyQuote = false;
-                adapterForMessages.updateThisItem(currentItem);
-                adapterForMessages.updateAllItems();
+                adapterForTopic.updateThisItem(currentItem);
+                adapterForTopic.updateAllItems();
                 return true;
             default:
                 return false;
@@ -111,44 +111,44 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     }
 
     public void reloadTopic() {
-        absGetterForMessages.reloadTopic();
+        absGetterForTopic.reloadTopic();
     }
 
     public String getLatestListOfInputInAString() {
-        return absGetterForMessages.getLatestListOfInputInAString();
+        return absGetterForTopic.getLatestListOfInputInAString();
     }
 
     public JVCParser.AjaxInfos getLatestAjaxInfos() {
-        return absGetterForMessages.getLatestAjaxInfos();
+        return absGetterForTopic.getLatestAjaxInfos();
     }
 
     public JVCParser.MessageInfos getCurrentItemSelected() {
-        return adapterForMessages.getItem(adapterForMessages.getCurrentItemIDSelected());
+        return adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
     }
 
     public String getCurrentUrlOfTopic() {
-        return absGetterForMessages.getUrlForTopic();
+        return absGetterForTopic.getUrlForTopic();
     }
 
     public Boolean getIsInFavs() {
-        return absGetterForMessages.getIsInFavs();
+        return absGetterForTopic.getIsInFavs();
     }
 
     public String getTopicID() {
-        return absGetterForMessages.getTopicID();
+        return absGetterForTopic.getTopicID();
     }
 
     public void setIsInFavs(Boolean newVal) {
-        absGetterForMessages.setIsInFavs(newVal);
+        absGetterForTopic.setIsInFavs(newVal);
     }
 
     @Override
     public void clearContent() {
-        absGetterForMessages.stopAllCurrentTask();
-        absGetterForMessages.resetDirectlyShowedInfos();
-        adapterForMessages.disableSurvey();
-        adapterForMessages.removeAllItems();
-        adapterForMessages.updateAllItems();
+        absGetterForTopic.stopAllCurrentTask();
+        absGetterForTopic.resetDirectlyShowedInfos();
+        adapterForTopic.disableSurvey();
+        adapterForTopic.removeAllItems();
+        adapterForTopic.updateAllItems();
         setPageLink("");
     }
 
@@ -164,49 +164,49 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
 
         sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
-        adapterForMessages = new JVCMessagesAdapter(getActivity(), currentSettings);
+        adapterForTopic = new JVCTopicAdapter(getActivity(), currentSettings);
         initializeGetterForMessages();
         initializeAdapter();
         initializeSettings();
         reloadSettings();
-        absGetterForMessages.setListenerForNewGetterState(listenerForNewGetterState);
-        absGetterForMessages.setListenerForNewSurveyForTopic(listenerForNewSurveyForTopic);
-        adapterForMessages.setOnSurveyClickListener(surveyItemClickedListener);
+        absGetterForTopic.setListenerForNewGetterState(listenerForNewGetterState);
+        absGetterForTopic.setListenerForNewSurveyForTopic(listenerForNewSurveyForTopic);
+        adapterForTopic.setOnSurveyClickListener(surveyItemClickedListener);
 
         if (getActivity() instanceof NewModeNeededListener) {
             listenerForNewModeNeeded = (NewModeNeededListener) getActivity();
         }
-        if (getActivity() instanceof AbsJVCMessageGetter.NewForumAndTopicNameAvailable) {
-            absGetterForMessages.setListenerForNewForumAndTopicName((AbsJVCMessageGetter.NewForumAndTopicNameAvailable) getActivity());
+        if (getActivity() instanceof AbsJVCTopicGetter.NewForumAndTopicNameAvailable) {
+            absGetterForTopic.setListenerForNewForumAndTopicName((AbsJVCTopicGetter.NewForumAndTopicNameAvailable) getActivity());
         }
-        if (getActivity() instanceof AbsJVCMessageGetter.NewReasonForTopicLock) {
-            absGetterForMessages.setListenerForNewReasonForTopicLock((AbsJVCMessageGetter.NewReasonForTopicLock) getActivity());
+        if (getActivity() instanceof AbsJVCTopicGetter.NewReasonForTopicLock) {
+            absGetterForTopic.setListenerForNewReasonForTopicLock((AbsJVCTopicGetter.NewReasonForTopicLock) getActivity());
         }
         if (getActivity() instanceof PopupMenu.OnMenuItemClickListener) {
-            adapterForMessages.setActionWhenItemMenuClicked((PopupMenu.OnMenuItemClickListener) getActivity());
+            adapterForTopic.setActionWhenItemMenuClicked((PopupMenu.OnMenuItemClickListener) getActivity());
         }
-        if (getActivity() instanceof JVCMessagesAdapter.URLClicked) {
-            adapterForMessages.setUrlCLickedListener((JVCMessagesAdapter.URLClicked) getActivity());
+        if (getActivity() instanceof JVCTopicAdapter.URLClicked) {
+            adapterForTopic.setUrlCLickedListener((JVCTopicAdapter.URLClicked) getActivity());
         }
 
         swipeRefresh.setColorSchemeResources(R.color.colorAccent);
-        jvcMsgList.setAdapter(adapterForMessages);
+        jvcMsgList.setAdapter(adapterForTopic);
 
         if (savedInstanceState != null) {
             ArrayList<JVCParser.MessageInfos> allCurrentMessagesShowed = savedInstanceState.getParcelableArrayList(SAVE_ALL_MESSAGES_SHOWED);
-            absGetterForMessages.loadFromBundle(savedInstanceState);
+            absGetterForTopic.loadFromBundle(savedInstanceState);
 
-            if (!Utils.stringIsEmptyOrNull(absGetterForMessages.getSurveyTitleInHtml())) {
-                adapterForMessages.enableSurvey(absGetterForMessages.getSurveyTitleInHtml());
+            if (!Utils.stringIsEmptyOrNull(absGetterForTopic.getSurveyTitleInHtml())) {
+                adapterForTopic.enableSurvey(absGetterForTopic.getSurveyTitleInHtml());
             }
 
             if (allCurrentMessagesShowed != null) {
                 for (JVCParser.MessageInfos thisMessageInfo : allCurrentMessagesShowed) {
-                    adapterForMessages.addItem(thisMessageInfo);
+                    adapterForTopic.addItem(thisMessageInfo);
                 }
             }
 
-            adapterForMessages.updateAllItems();
+            adapterForTopic.updateAllItems();
         } else {
             Bundle currentArgs = getArguments();
 
@@ -226,14 +226,14 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     @Override
     public void onPause() {
         super.onPause();
-        absGetterForMessages.stopAllCurrentTask();
+        absGetterForTopic.stopAllCurrentTask();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(SAVE_ALL_MESSAGES_SHOWED, adapterForMessages.getAllItems());
-        absGetterForMessages.saveToBundle(outState);
+        outState.putParcelableArrayList(SAVE_ALL_MESSAGES_SHOWED, adapterForTopic.getAllItems());
+        absGetterForTopic.saveToBundle(outState);
     }
 
     public interface NewModeNeededListener {

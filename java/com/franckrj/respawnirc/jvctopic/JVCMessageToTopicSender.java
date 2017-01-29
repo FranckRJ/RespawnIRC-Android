@@ -1,14 +1,15 @@
-package com.franckrj.respawnirc;
+package com.franckrj.respawnirc.jvctopic;
 
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
-public class JVCMessageSender {
+public class JVCMessageToTopicSender {
     private static final String SAVE_OLD_AJAX_LIST_INFOS = "saveOldAjaxListInfos";
     private static final String SAVE_IS_IN_EDIT = "saveIsInEdit";
     private static final String SAVE_LAST_INFOS_FOR_EDIT = "saveLastInfosForEdit";
@@ -24,7 +25,7 @@ public class JVCMessageSender {
     private boolean lastMessageSendedIsAResend = false;
     private InfosOfSend infosOfLastSend = new InfosOfSend();
 
-    public JVCMessageSender(Activity newParentActivity) {
+    public JVCMessageToTopicSender(Activity newParentActivity) {
         parentActivity = newParentActivity;
     }
 

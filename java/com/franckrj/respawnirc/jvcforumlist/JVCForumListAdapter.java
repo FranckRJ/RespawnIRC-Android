@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc;
+package com.franckrj.respawnirc.jvcforumlist;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,12 +13,13 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Undeprecator;
 
 import java.util.ArrayList;
 
-public class JVCForumsAdapter extends BaseExpandableListAdapter implements ExpandableListView.OnGroupClickListener, ExpandableListView.OnChildClickListener {
+public class JVCForumListAdapter extends BaseExpandableListAdapter implements ExpandableListView.OnGroupClickListener, ExpandableListView.OnChildClickListener {
     private static final String SAVE_LIST_OF_SEARCHED_FORUM_SHOWED = "saveListOfSearchedForumShowed";
 
     private ArrayList<ForumInfo> currentListOfForums = null;
@@ -27,7 +28,7 @@ public class JVCForumsAdapter extends BaseExpandableListAdapter implements Expan
     private LayoutInflater serviceInflater;
     private Activity parentActivity = null;
 
-    public JVCForumsAdapter(Activity newParentActivity) {
+    public JVCForumListAdapter(Activity newParentActivity) {
         baseListOfForums = new ArrayList<>();
         parentActivity = newParentActivity;
         serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

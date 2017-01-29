@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc.jvcviewers;
+package com.franckrj.respawnirc;
 
 import android.app.Fragment;
 

@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc.jvcviewers;
+package com.franckrj.respawnirc.jvctopic;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,31 +18,31 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
-import com.franckrj.respawnirc.JVCMessageAction;
-import com.franckrj.respawnirc.JVCMessageSender;
 import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.ShowSurveyActivity;
 import com.franckrj.respawnirc.dialogs.ChoosePageNumberDialogFragment;
 import com.franckrj.respawnirc.dialogs.LinkContextMenuDialogFragment;
 import com.franckrj.respawnirc.dialogs.SelectStickerDialogFragment;
 import com.franckrj.respawnirc.dialogs.ShowImageDialogFragment;
-import com.franckrj.respawnirc.jvcmsggetters.AbsJVCMessageGetter;
-import com.franckrj.respawnirc.jvcmsggetters.JVCForumMessageGetter;
-import com.franckrj.respawnirc.jvcmsgviewers.AbsShowTopicFragment;
-import com.franckrj.respawnirc.jvcmsgviewers.JVCMessagesAdapter;
-import com.franckrj.respawnirc.jvcmsgviewers.ShowTopicForumFragment;
-import com.franckrj.respawnirc.jvcmsgviewers.ShowTopicIRCFragment;
+import com.franckrj.respawnirc.jvctopic.jvctopicgetters.AbsJVCTopicGetter;
+import com.franckrj.respawnirc.jvctopic.jvctopicgetters.JVCTopicModeForumGetter;
+import com.franckrj.respawnirc.jvctopic.jvctopicviewers.AbsShowTopicFragment;
+import com.franckrj.respawnirc.jvctopic.jvctopicviewers.JVCTopicAdapter;
+import com.franckrj.respawnirc.jvctopic.jvctopicviewers.ShowTopicModeForumFragment;
+import com.franckrj.respawnirc.jvctopic.jvctopicviewers.ShowTopicModeIRCFragment;
+import com.franckrj.respawnirc.AbsShowSomethingFragment;
+import com.franckrj.respawnirc.PageNavigationUtil;
+import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
 import com.franckrj.respawnirc.utils.AddOrRemoveThingToFavs;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
 
-public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCMessageGetter.NewForumAndTopicNameAvailable,
-                                                                    PopupMenu.OnMenuItemClickListener, JVCForumMessageGetter.NewNumbersOfPagesListener,
-                                                                    ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCMessagesAdapter.URLClicked,
-                                                                    AbsJVCMessageGetter.NewReasonForTopicLock, SelectStickerDialogFragment.StickerSelected,
-                                                                    PageNavigationUtil.PageNavigationFunctions, AddOrRemoveThingToFavs.ActionToFavsEnded,
+public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCTopicGetter.NewForumAndTopicNameAvailable,
+                                                                    PopupMenu.OnMenuItemClickListener, JVCTopicModeForumGetter.NewNumbersOfPagesListener,
+                                                                    ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCTopicAdapter.URLClicked,
+                                                                    AbsJVCTopicGetter.NewReasonForTopicLock, SelectStickerDialogFragment.StickerSelected,
+        PageNavigationUtil.PageNavigationFunctions, AddOrRemoveThingToFavs.ActionToFavsEnded,
                                                                     AbsShowTopicFragment.NewSurveyNeedToBeShown {
     public static final String EXTRA_TOPIC_LINK = "com.franckrj.respawnirc.EXTRA_TOPIC_LINK";
     public static final String EXTRA_TOPIC_NAME = "com.franckrj.respawnirc.EXTRA_TOPIC_NAME";
@@ -55,8 +55,8 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
 
     private SharedPreferences sharedPref = null;
     private JVCParser.ForumAndTopicName currentTitles = new JVCParser.ForumAndTopicName();
-    private JVCMessageSender senderForMessages = null;
-    private JVCMessageAction actionsForMessages = null;
+    private JVCMessageToTopicSender senderForMessages = null;
+    private JVCMessageInTopicAction actionsForMessages = null;
     private ImageButton messageSendButton = null;
     private EditText messageSendEdit = null;
     private View messageSendLayout = null;
@@ -71,7 +71,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     private boolean convertNoelshackLinkToDirectLink = false;
     private boolean showOverviewOnImageClick = false;
 
-    private final JVCMessageSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageSender.NewMessageWantEditListener() {
+    private final JVCMessageToTopicSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageToTopicSender.NewMessageWantEditListener() {
         @Override
         public void initializeEditMode(String newMessageToEdit) {
             if (reasonOfLock == null) {
@@ -87,7 +87,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         }
     };
 
-    private final JVCMessageSender.NewMessagePostedListener listenerForNewMessagePosted = new JVCMessageSender.NewMessagePostedListener() {
+    private final JVCMessageToTopicSender.NewMessagePostedListener listenerForNewMessagePosted = new JVCMessageToTopicSender.NewMessagePostedListener() {
         @Override
         public void lastMessageIsSended(String withThisError) {
             if (reasonOfLock == null) {
@@ -163,7 +163,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         }
     };
 
-    private final JVCMessageAction.NewMessageIsQuoted messageIsQuotedListener = new JVCMessageAction.NewMessageIsQuoted() {
+    private final JVCMessageInTopicAction.NewMessageIsQuoted messageIsQuotedListener = new JVCMessageInTopicAction.NewMessageIsQuoted() {
         @Override
         public void getNewMessageQuoted(String messageQuoted) {
             if (reasonOfLock == null) {
@@ -206,9 +206,9 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         int currentTopicMode = sharedPref.getInt(getString(R.string.prefCurrentTopicMode), AbsShowTopicFragment.MODE_FORUM);
 
         if (currentTopicMode == AbsShowTopicFragment.MODE_FORUM) {
-            pageNavigation.setShowNavigationButtons(ShowTopicForumFragment.getShowNavigationButtons());
+            pageNavigation.setShowNavigationButtons(ShowTopicModeForumFragment.getShowNavigationButtons());
         } else {
-            pageNavigation.setShowNavigationButtons(ShowTopicIRCFragment.getShowNavigationButtons());
+            pageNavigation.setShowNavigationButtons(ShowTopicModeIRCFragment.getShowNavigationButtons());
         }
     }
 
@@ -256,9 +256,9 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         pageNavigation.setDrawableForCurrentPageButton(arrowDrawable);
 
         pageNavigation.updateAdapterForPagerView();
-        actionsForMessages = new JVCMessageAction(this);
+        actionsForMessages = new JVCMessageInTopicAction(this);
         actionsForMessages.setNewMessageIsQuotedListener(messageIsQuotedListener);
-        senderForMessages = new JVCMessageSender(this);
+        senderForMessages = new JVCMessageToTopicSender(this);
         senderForMessages.setListenerForNewMessageWantEdit(listenerForNewMessageWantEdit);
         senderForMessages.setListenerForNewMessagePosted(listenerForNewMessagePosted);
         messageSendButton.setOnClickListener(sendMessageToTopicListener);
@@ -531,9 +531,9 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         AbsShowTopicFragment newFragment;
 
         if (currentTopicMode == AbsShowTopicFragment.MODE_FORUM) {
-            newFragment = new ShowTopicForumFragment();
+            newFragment = new ShowTopicModeForumFragment();
         } else {
-            newFragment = new ShowTopicIRCFragment();
+            newFragment = new ShowTopicModeIRCFragment();
         }
 
         if (possibleTopicLink != null) {

@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc.jvcviewers;
+package com.franckrj.respawnirc.jvcforum;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,16 +16,18 @@ import android.widget.Toast;
 
 import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.SendTopicActivity;
-import com.franckrj.respawnirc.jvctopictools.JVCTopicGetter;
-import com.franckrj.respawnirc.jvctopictools.ShowForumFragment;
+import com.franckrj.respawnirc.jvctopic.ShowTopicActivity;
+import com.franckrj.respawnirc.jvcforum.jvcforumtools.JVCForumGetter;
+import com.franckrj.respawnirc.jvcforum.jvcforumtools.ShowForumFragment;
+import com.franckrj.respawnirc.AbsShowSomethingFragment;
+import com.franckrj.respawnirc.PageNavigationUtil;
 import com.franckrj.respawnirc.utils.AddOrRemoveThingToFavs;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.AbsNavigationViewActivity;
 import com.franckrj.respawnirc.utils.Utils;
 
-public class ShowForumActivity extends AbsNavigationViewActivity implements ShowForumFragment.NewTopicWantRead, JVCTopicGetter.NewForumNameAvailable,
-                                                    JVCTopicGetter.ForumLinkChanged, PageNavigationUtil.PageNavigationFunctions,
+public class ShowForumActivity extends AbsNavigationViewActivity implements ShowForumFragment.NewTopicWantRead, JVCForumGetter.NewForumNameAvailable,
+                                                    JVCForumGetter.ForumLinkChanged, PageNavigationUtil.PageNavigationFunctions,
                                                     AddOrRemoveThingToFavs.ActionToFavsEnded {
     public static final String EXTRA_NEW_LINK = "com.franckrj.respawnirc.EXTRA_NEW_LINK";
 
@@ -218,10 +220,10 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
                 }
                 return true;
             case R.id.action_send_topic_showforum:
-                Intent newSendTopicIntent = new Intent(this, SendTopicActivity.class);
-                newSendTopicIntent.putExtra(SendTopicActivity.EXTRA_FORUM_NAME, currentTitle);
-                newSendTopicIntent.putExtra(SendTopicActivity.EXTRA_FORUM_LINK, pageNavigation.getCurrentLink());
-                newSendTopicIntent.putExtra(SendTopicActivity.EXTRA_INPUT_LIST, getCurrentFragment().getLatestListOfInputInAString());
+                Intent newSendTopicIntent = new Intent(this, SendTopicToForumActivity.class);
+                newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_FORUM_NAME, currentTitle);
+                newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_FORUM_LINK, pageNavigation.getCurrentLink());
+                newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_INPUT_LIST, getCurrentFragment().getLatestListOfInputInAString());
                 startActivity(newSendTopicIntent);
                 refreshNeededOnNextResume = true;
                 return true;

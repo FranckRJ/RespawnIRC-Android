@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc.jvcmsgviewers;
+package com.franckrj.respawnirc.jvctopic.jvctopicviewers;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,63 +13,63 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.jvcmsggetters.JVCIRCMessageGetter;
+import com.franckrj.respawnirc.jvctopic.jvctopicgetters.JVCTopicModeIRCGetter;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 
-public class ShowTopicIRCFragment extends AbsShowTopicFragment {
+public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
     private static final String SAVE_OLD_URL_FOR_TOPIC = "saveOldUrlForTopic";
     private static final String SAVE_OLD_LAST_ID_OF_MESSAGE = "saveOldLastIdOfMessage";
 
     private int maxNumberOfMessagesShowed = 40;
     private int initialNumberOfMessagesShowed = 10;
-    private JVCIRCMessageGetter getterForMessages = null;
+    private JVCTopicModeIRCGetter getterForTopic = null;
     private String oldUrlForTopic = "";
     private long oldLastIdOfMessage = 0;
 
-    private final JVCIRCMessageGetter.NewMessagesListener listenerForNewMessages = new JVCIRCMessageGetter.NewMessagesListener() {
+    private final JVCTopicModeIRCGetter.NewMessagesListener listenerForNewMessages = new JVCTopicModeIRCGetter.NewMessagesListener() {
         @Override
         public void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages) {
             if (!listOfNewMessages.isEmpty()) {
                 boolean scrolledAtTheEnd = true;
-                boolean firstTimeGetMessages = adapterForMessages.getAllItems().isEmpty();
+                boolean firstTimeGetMessages = adapterForTopic.getAllItems().isEmpty();
                 isInErrorMode = false;
 
-                if (jvcMsgList.getChildCount() > (adapterForMessages.getShowSurvey() ? 1 : 0)) {
+                if (jvcMsgList.getChildCount() > (adapterForTopic.getShowSurvey() ? 1 : 0)) {
                     scrolledAtTheEnd = (jvcMsgList.getLastVisiblePosition() == jvcMsgList.getCount() - 1) &&
                             (jvcMsgList.getChildAt(jvcMsgList.getChildCount() - 1).getBottom() <= jvcMsgList.getHeight());
                 }
 
                 for (JVCParser.MessageInfos thisMessageInfo : listOfNewMessages) {
                     if (!thisMessageInfo.isAnEdit) {
-                        adapterForMessages.addItem(thisMessageInfo);
+                        adapterForTopic.addItem(thisMessageInfo);
                     } else {
-                        adapterForMessages.updateThisItem(thisMessageInfo);
+                        adapterForTopic.updateThisItem(thisMessageInfo);
                     }
                 }
 
                 if (firstTimeGetMessages) {
-                    while (adapterForMessages.getCount() > initialNumberOfMessagesShowed) {
-                        adapterForMessages.removeFirstItem();
+                    while (adapterForTopic.getCount() > initialNumberOfMessagesShowed) {
+                        adapterForTopic.removeFirstItem();
                     }
                 }
 
-                while (adapterForMessages.getCount() > maxNumberOfMessagesShowed) {
-                    adapterForMessages.removeFirstItem();
+                while (adapterForTopic.getCount() > maxNumberOfMessagesShowed) {
+                    adapterForTopic.removeFirstItem();
                 }
 
-                adapterForMessages.updateAllItems();
+                adapterForTopic.updateAllItems();
 
                 if (scrolledAtTheEnd && jvcMsgList.getCount() > 0) {
                     jvcMsgList.setSelection(jvcMsgList.getCount() - 1);
                 }
             } else {
                 if (!isInErrorMode) {
-                    getterForMessages.reloadTopic();
+                    getterForTopic.reloadTopic();
                     isInErrorMode = true;
-                } else if (adapterForMessages.getAllItems().isEmpty()) {
+                } else if (adapterForTopic.getAllItems().isEmpty()) {
                     Toast.makeText(getActivity(), R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -81,36 +81,36 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
     }
 
     private void saveOldTopicInfos() {
-        if (!getterForMessages.getUrlForTopic().isEmpty()) {
+        if (!getterForTopic.getUrlForTopic().isEmpty()) {
             SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
-            sharedPrefEdit.putString(getString(R.string.prefOldUrlForTopic), getterForMessages.getUrlForTopic());
-            sharedPrefEdit.putLong(getString(R.string.prefOldLastIdOfMessage), getterForMessages.getLastIdOfMessage());
+            sharedPrefEdit.putString(getString(R.string.prefOldUrlForTopic), getterForTopic.getUrlForTopic());
+            sharedPrefEdit.putLong(getString(R.string.prefOldLastIdOfMessage), getterForTopic.getLastIdOfMessage());
             sharedPrefEdit.apply();
         }
     }
 
     private void loadFromOldTopicInfos() {
         isInErrorMode = false;
-        getterForMessages.stopAllCurrentTask();
-        getterForMessages.resetDirectlyShowedInfos();
-        adapterForMessages.disableSurvey();
-        adapterForMessages.removeAllItems();
-        adapterForMessages.updateAllItems();
-        getterForMessages.setOldTopic(oldUrlForTopic, oldLastIdOfMessage);
-        getterForMessages.reloadTopic();
+        getterForTopic.stopAllCurrentTask();
+        getterForTopic.resetDirectlyShowedInfos();
+        adapterForTopic.disableSurvey();
+        adapterForTopic.removeAllItems();
+        adapterForTopic.updateAllItems();
+        getterForTopic.setOldTopic(oldUrlForTopic, oldLastIdOfMessage);
+        getterForTopic.reloadTopic();
     }
 
     @Override
     public void setPageLink(String newTopicLink) {
         isInErrorMode = false;
 
-        getterForMessages.stopAllCurrentTask();
-        getterForMessages.resetDirectlyShowedInfos();
-        adapterForMessages.disableSurvey();
-        adapterForMessages.removeAllItems();
-        adapterForMessages.updateAllItems();
-        getterForMessages.setNewTopic(newTopicLink);
-        getterForMessages.reloadTopic();
+        getterForTopic.stopAllCurrentTask();
+        getterForTopic.resetDirectlyShowedInfos();
+        adapterForTopic.disableSurvey();
+        adapterForTopic.removeAllItems();
+        adapterForTopic.updateAllItems();
+        getterForTopic.setNewTopic(newTopicLink);
+        getterForTopic.reloadTopic();
     }
 
     @Override
@@ -121,8 +121,8 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
 
     @Override
     protected void initializeGetterForMessages() {
-        getterForMessages = new JVCIRCMessageGetter(getActivity());
-        absGetterForMessages = getterForMessages;
+        getterForTopic = new JVCTopicModeIRCGetter(getActivity());
+        absGetterForTopic = getterForTopic;
     }
 
     @Override
@@ -140,8 +140,8 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
 
     @Override
     protected void initializeAdapter() {
-        adapterForMessages.setIdOfLayoutToUse(R.layout.jvcmessages_rowirc);
-        adapterForMessages.setAlternateBackgroundColor(false);
+        adapterForTopic.setIdOfLayoutToUse(R.layout.jvcmessages_rowirc);
+        adapterForTopic.setAlternateBackgroundColor(false);
     }
 
     @Override
@@ -149,7 +149,7 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
         super.reloadSettings();
         maxNumberOfMessagesShowed = Integer.parseInt(sharedPref.getString(getString(R.string.settingsMaxNumberOfMessages), getString(R.string.maxNumberOfMessagesDefault)));
         initialNumberOfMessagesShowed = Integer.parseInt(sharedPref.getString(getString(R.string.settingsInitialNumberOfMessages), getString(R.string.initialNumberOfMessagesDefault)));
-        getterForMessages.setTimeBetweenRefreshTopic(Integer.parseInt(sharedPref.getString(getString(R.string.settingsRefreshTopicTime), getString(R.string.refreshTopicTimeDefault))));
+        getterForTopic.setTimeBetweenRefreshTopic(Integer.parseInt(sharedPref.getString(getString(R.string.settingsRefreshTopicTime), getString(R.string.refreshTopicTimeDefault))));
     }
 
     @Override
@@ -167,7 +167,7 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getterForMessages.setListenerForNewMessages(listenerForNewMessages);
+        getterForTopic.setListenerForNewMessages(listenerForNewMessages);
         swipeRefresh.setEnabled(false);
 
         if (savedInstanceState != null) {
@@ -183,7 +183,7 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
     public void onResume() {
         super.onResume();
         isInErrorMode = false;
-        getterForMessages.reloadTopic();
+        getterForTopic.reloadTopic();
     }
 
     @Override
@@ -208,7 +208,7 @@ public class ShowTopicIRCFragment extends AbsShowTopicFragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        menu.findItem(R.id.action_load_from_old_topic_info_showtopicirc).setEnabled(JVCParser.checkIfTopicAreSame(getterForMessages.getUrlForTopic(), oldUrlForTopic));
+        menu.findItem(R.id.action_load_from_old_topic_info_showtopicirc).setEnabled(JVCParser.checkIfTopicAreSame(getterForTopic.getUrlForTopic(), oldUrlForTopic));
     }
 
     @Override

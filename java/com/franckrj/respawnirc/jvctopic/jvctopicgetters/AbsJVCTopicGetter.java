@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc.jvcmsggetters;
+package com.franckrj.respawnirc.jvctopic.jvctopicgetters;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import com.franckrj.respawnirc.utils.WebManager;
 
 import java.util.ArrayList;
 
-public abstract class AbsJVCMessageGetter {
+public abstract class AbsJVCTopicGetter {
     public static final int STATE_LOADING = 0;
     public static final int STATE_NOT_LOADING = 1;
 

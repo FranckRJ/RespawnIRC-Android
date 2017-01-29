@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc;
+package com.franckrj.respawnirc.jvcforumlist;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,9 +22,11 @@ import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.franckrj.respawnirc.MainActivity;
+import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.dialogs.ChooseTopicOrForumLinkDialogFragment;
 import com.franckrj.respawnirc.dialogs.HelpFirstLaunchDialogFragment;
-import com.franckrj.respawnirc.jvcviewers.ShowForumActivity;
+import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.AbsNavigationViewActivity;
 import com.franckrj.respawnirc.utils.Utils;
@@ -32,11 +34,11 @@ import com.franckrj.respawnirc.utils.WebManager;
 
 import java.util.ArrayList;
 
-public class SelectForumActivity extends AbsNavigationViewActivity implements ChooseTopicOrForumLinkDialogFragment.NewTopicOrForumSelected,
-                                                                              JVCForumsAdapter.NewForumSelected {
+public class SelectForumInListActivity extends AbsNavigationViewActivity implements ChooseTopicOrForumLinkDialogFragment.NewTopicOrForumSelected,
+                                                                              JVCForumListAdapter.NewForumSelected {
     private static final String SAVE_SEARCH_FORUM_CONTENT = "saveSearchForumContent";
 
-    private JVCForumsAdapter adapterForForums = null;
+    private JVCForumListAdapter adapterForForumList = null;
     private EditText textForSearch = null;
     private MenuItem searchExpandableItem = null;
     private GetSearchedForums currentAsyncTaskForGetSearchedForums = null;
@@ -61,7 +63,7 @@ public class SelectForumActivity extends AbsNavigationViewActivity implements Ch
         }
     };
 
-    public SelectForumActivity() {
+    public SelectForumInListActivity() {
         idOfBaseActivity = R.id.action_home_navigation;
     }
 
@@ -69,13 +71,13 @@ public class SelectForumActivity extends AbsNavigationViewActivity implements Ch
         if (textForSearch != null) {
             if (textForSearch.getText().toString().isEmpty()) {
                 stopAllCurrentTasks();
-                adapterForForums.setNewListOfForums(null);
+                adapterForForumList.setNewListOfForums(null);
             } else if (currentAsyncTaskForGetSearchedForums == null) {
                 currentAsyncTaskForGetSearchedForums = new GetSearchedForums();
                 currentAsyncTaskForGetSearchedForums.execute(textForSearch.getText().toString());
             }
 
-            Utils.hideSoftKeyboard(SelectForumActivity.this);
+            Utils.hideSoftKeyboard(SelectForumInListActivity.this);
         }
     }
 
@@ -106,14 +108,14 @@ public class SelectForumActivity extends AbsNavigationViewActivity implements Ch
         swipeRefresh.setColorSchemeResources(R.color.colorAccent);
 
         ExpandableListView forumListView = (ExpandableListView) findViewById(R.id.forum_expendable_list_selectforum);
-        adapterForForums = new JVCForumsAdapter(this);
-        forumListView.setAdapter(adapterForForums);
-        forumListView.setOnGroupClickListener(adapterForForums);
-        forumListView.setOnChildClickListener(adapterForForums);
+        adapterForForumList = new JVCForumListAdapter(this);
+        forumListView.setAdapter(adapterForForumList);
+        forumListView.setOnGroupClickListener(adapterForForumList);
+        forumListView.setOnChildClickListener(adapterForForumList);
 
         if (savedInstanceState != null) {
             lastSearchedText = savedInstanceState.getString(SAVE_SEARCH_FORUM_CONTENT, null);
-            adapterForForums.loadFromBundle(savedInstanceState);
+            adapterForForumList.loadFromBundle(savedInstanceState);
         }
 
         if (sharedPref.getBoolean(getString(R.string.prefIsFirstLaunch), true)) {
@@ -129,7 +131,7 @@ public class SelectForumActivity extends AbsNavigationViewActivity implements Ch
     public void onResume() {
         super.onResume();
         SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
-        sharedPrefEdit.putInt(getString(R.string.prefLastActivityViewed), MainActivity.ACTIVITY_SELECT_FORUM);
+        sharedPrefEdit.putInt(getString(R.string.prefLastActivityViewed), MainActivity.ACTIVITY_SELECT_FORUM_IN_LIST);
         sharedPrefEdit.apply();
     }
 
@@ -142,7 +144,7 @@ public class SelectForumActivity extends AbsNavigationViewActivity implements Ch
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        adapterForForums.saveToBundle(outState);
+        adapterForForumList.saveToBundle(outState);
 
         outState.putString(SAVE_SEARCH_FORUM_CONTENT, null);
         if (textForSearch != null && searchExpandableItem != null) {
@@ -169,8 +171,8 @@ public class SelectForumActivity extends AbsNavigationViewActivity implements Ch
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 textForSearch.setText("");
                 stopAllCurrentTasks();
-                adapterForForums.setNewListOfForums(null);
-                Utils.hideSoftKeyboard(SelectForumActivity.this);
+                adapterForForumList.setNewListOfForums(null);
+                Utils.hideSoftKeyboard(SelectForumInListActivity.this);
                 return true;
             }
 
@@ -240,7 +242,7 @@ public class SelectForumActivity extends AbsNavigationViewActivity implements Ch
     private class GetSearchedForums extends AsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
-            adapterForForums.clearListOfForums();
+            adapterForForumList.clearListOfForums();
             swipeRefresh.setRefreshing(true);
         }
 
@@ -279,12 +281,12 @@ public class SelectForumActivity extends AbsNavigationViewActivity implements Ch
                         return;
                     }
                 } else {
-                    adapterForForums.setNewListOfForums(JVCParser.getListOfForumsInSearchPage(pageResult));
+                    adapterForForumList.setNewListOfForums(JVCParser.getListOfForumsInSearchPage(pageResult));
                     return;
                 }
             }
 
-            adapterForForums.setNewListOfForums(new ArrayList<JVCParser.NameAndLink>());
+            adapterForForumList.setNewListOfForums(new ArrayList<JVCParser.NameAndLink>());
         }
     }
 }

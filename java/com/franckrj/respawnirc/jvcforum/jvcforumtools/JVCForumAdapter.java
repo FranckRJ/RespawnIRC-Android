@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc.jvctopictools;
+package com.franckrj.respawnirc.jvcforum.jvcforumtools;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,7 +18,7 @@ import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 
-public class JVCTopicsAdapter extends BaseAdapter {
+public class JVCForumAdapter extends BaseAdapter {
     private ArrayList<JVCParser.TopicInfos> listOfTopics = new ArrayList<>();
     private ArrayList<ContentHolder> listOfContentForTopics = new ArrayList<>();
     private LayoutInflater serviceInflater;
@@ -31,7 +31,7 @@ public class JVCTopicsAdapter extends BaseAdapter {
     private Drawable iconResolu = null;
     private Drawable iconDossier1 = null;
 
-    public JVCTopicsAdapter(Activity newParentActivity) {
+    public JVCForumAdapter(Activity newParentActivity) {
         parentActivity = newParentActivity;
         serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         iconMarqueOn = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_marque_on);

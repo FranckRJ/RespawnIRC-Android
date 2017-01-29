@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc.jvcmsggetters;
+package com.franckrj.respawnirc.jvctopic.jvctopicgetters;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class JVCIRCMessageGetter extends AbsJVCMessageGetter {
+public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
     private static final String SAVE_FIRST_TIME_GET_MESSAGES = "saveFirstTimeGetMessages";
     private static final String SAVE_LIST_OF_EDIT_INFOS = "saveListOfEditInfos";
 
@@ -22,7 +22,7 @@ public class JVCIRCMessageGetter extends AbsJVCMessageGetter {
     private ParcelableLongSparseStringArray listOfEditInfos = new ParcelableLongSparseStringArray();
     protected Activity parentActivity = null;
 
-    public JVCIRCMessageGetter(Activity newParentActivity) {
+    public JVCTopicModeIRCGetter(Activity newParentActivity) {
         parentActivity = newParentActivity;
     }
 

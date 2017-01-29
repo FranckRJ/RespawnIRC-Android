@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc;
+package com.franckrj.respawnirc.jvctopic;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -6,10 +6,11 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.WebManager;
 
-public class JVCMessageAction {
+public class JVCMessageInTopicAction {
     private QuoteJVCMessage currentTaskQuoteMessage = null;
     private DeleteJVCMessage currentTaskDeleteMessage = null;
     private NewMessageIsQuoted messageIsQuotedListener = null;
@@ -27,7 +28,7 @@ public class JVCMessageAction {
         }
     };
 
-    public JVCMessageAction(Activity newParentActivity) {
+    public JVCMessageInTopicAction(Activity newParentActivity) {
         parentActivity = newParentActivity;
     }
 

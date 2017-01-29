@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc.jvctopictools;
+package com.franckrj.respawnirc.jvcforum.jvcforumtools;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,7 +8,7 @@ import com.franckrj.respawnirc.utils.WebManager;
 
 import java.util.ArrayList;
 
-public class JVCTopicGetter {
+public class JVCForumGetter {
     public static final int STATE_LOADING = 0;
     public static final int STATE_NOT_LOADING = 1;
 

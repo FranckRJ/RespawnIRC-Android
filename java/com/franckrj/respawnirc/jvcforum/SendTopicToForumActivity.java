@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc;
+package com.franckrj.respawnirc.jvcforum;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -12,12 +12,13 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.dialogs.SelectStickerDialogFragment;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
-public class SendTopicActivity extends AppCompatActivity implements SelectStickerDialogFragment.StickerSelected {
+public class SendTopicToForumActivity extends AppCompatActivity implements SelectStickerDialogFragment.StickerSelected {
     public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_FORUM_NAME";
     public static final String EXTRA_FORUM_LINK = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_FORUM_LINK";
     public static final String EXTRA_INPUT_LIST = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_INPUT_LIST";
@@ -46,7 +47,7 @@ public class SendTopicActivity extends AppCompatActivity implements SelectSticke
             sharedPrefEdit.putString(getString(R.string.prefLastTopicContentSended), lastTopicContentSended);
             sharedPrefEdit.apply();
         } else if (isAResend && lastSendIsAResend) {
-            Toast.makeText(SendTopicActivity.this, R.string.unknownErrorPleaseResend, Toast.LENGTH_SHORT).show();
+            Toast.makeText(SendTopicToForumActivity.this, R.string.unknownErrorPleaseResend, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -173,10 +174,10 @@ public class SendTopicActivity extends AppCompatActivity implements SelectSticke
                     sendNewTopic(true);
                     return;
                 } else {
-                    Toast.makeText(SendTopicActivity.this, JVCParser.getErrorMessage(pageResult), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SendTopicToForumActivity.this, JVCParser.getErrorMessage(pageResult), Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(SendTopicActivity.this, R.string.topicIsSended, Toast.LENGTH_SHORT).show();
+                Toast.makeText(SendTopicToForumActivity.this, R.string.topicIsSended, Toast.LENGTH_SHORT).show();
             }
 
             onBackPressed();

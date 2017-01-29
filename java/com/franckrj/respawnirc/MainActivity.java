@@ -7,8 +7,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebView;
 
-import com.franckrj.respawnirc.jvcviewers.ShowForumActivity;
-import com.franckrj.respawnirc.jvcviewers.ShowTopicActivity;
+import com.franckrj.respawnirc.jvcforumlist.SelectForumInListActivity;
+import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
+import com.franckrj.respawnirc.jvctopic.ShowTopicActivity;
 import com.franckrj.respawnirc.utils.StickerConverter;
 import com.franckrj.respawnirc.utils.WebManager;
 
@@ -17,13 +18,13 @@ import java.io.File;
 public class MainActivity extends AppCompatActivity {
     public static final int ACTIVITY_SHOW_FORUM = 0;
     public static final int ACTIVITY_SHOW_TOPIC = 1;
-    public static final int ACTIVITY_SELECT_FORUM = 2;
+    public static final int ACTIVITY_SELECT_FORUM_IN_LIST = 2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        int lastActivityViewed = sharedPref.getInt(getString(R.string.prefLastActivityViewed), ACTIVITY_SELECT_FORUM);
+        int lastActivityViewed = sharedPref.getInt(getString(R.string.prefLastActivityViewed), ACTIVITY_SELECT_FORUM_IN_LIST);
 
         //vider le cache des webviews
         WebView obj = new WebView(this);
@@ -40,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
         WebManager.generateNewUserAgent();
         StickerConverter.initializeBasesRules();
 
-        if (lastActivityViewed == ACTIVITY_SELECT_FORUM) {
-            startActivity(new Intent(this, SelectForumActivity.class));
+        if (lastActivityViewed == ACTIVITY_SELECT_FORUM_IN_LIST) {
+            startActivity(new Intent(this, SelectForumInListActivity.class));
         } else {
             startActivity(new Intent(this, ShowForumActivity.class));
             if (lastActivityViewed == ACTIVITY_SHOW_TOPIC) {

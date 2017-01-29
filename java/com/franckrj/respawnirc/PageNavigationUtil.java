@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc.jvcviewers;
+package com.franckrj.respawnirc;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -10,8 +10,6 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
-import com.franckrj.respawnirc.R;
 
 public class PageNavigationUtil {
     public static final int ID_BUTTON_CURRENT = 0;

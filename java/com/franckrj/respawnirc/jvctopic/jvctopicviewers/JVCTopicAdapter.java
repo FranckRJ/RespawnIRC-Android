@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc.jvcmsgviewers;
+package com.franckrj.respawnirc.jvctopic.jvctopicviewers;
 
 import android.app.Activity;
 import android.content.Context;
@@ -37,7 +37,7 @@ import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 
-public class JVCMessagesAdapter extends BaseAdapter {
+public class JVCTopicAdapter extends BaseAdapter {
     private ArrayList<JVCParser.MessageInfos> listOfMessages = new ArrayList<>();
     private ArrayList<ContentHolder> listOfContentForMessages = new ArrayList<>();
     private LayoutInflater serviceInflater;
@@ -101,7 +101,7 @@ public class JVCMessagesAdapter extends BaseAdapter {
         }
     };
 
-    public JVCMessagesAdapter(Activity newParentActivity, JVCParser.Settings newSettings) {
+    public JVCTopicAdapter(Activity newParentActivity, JVCParser.Settings newSettings) {
         Drawable deletedDrawable;
         Resources res;
 
