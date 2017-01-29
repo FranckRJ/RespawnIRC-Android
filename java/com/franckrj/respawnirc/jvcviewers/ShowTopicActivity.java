@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -19,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.franckrj.respawnirc.JVCMessageAction;
 import com.franckrj.respawnirc.JVCMessageSender;
 import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
@@ -37,7 +37,6 @@ import com.franckrj.respawnirc.utils.AddOrRemoveThingToFavs;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
-import com.franckrj.respawnirc.utils.WebManager;
 
 public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCMessageGetter.NewForumAndTopicNameAvailable,
                                                                     PopupMenu.OnMenuItemClickListener, JVCForumMessageGetter.NewNumbersOfPagesListener,
@@ -57,12 +56,10 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     private SharedPreferences sharedPref = null;
     private JVCParser.ForumAndTopicName currentTitles = new JVCParser.ForumAndTopicName();
     private JVCMessageSender senderForMessages = null;
+    private JVCMessageAction actionsForMessages = null;
     private ImageButton messageSendButton = null;
     private EditText messageSendEdit = null;
     private View messageSendLayout = null;
-    private QuoteJVCMessage currentTaskQuoteMessage = null;
-    private DeleteJVCMessage currentTaskDeleteMessage = null;
-    private String latestMessageQuotedInfo = null;
     private String pseudoOfUser = "";
     private String cookieListInAString = "";
     private String lastMessageSended = "";
@@ -166,24 +163,37 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         }
     };
 
+    private final JVCMessageAction.NewMessageIsQuoted messageIsQuotedListener = new JVCMessageAction.NewMessageIsQuoted() {
+        @Override
+        public void getNewMessageQuoted(String messageQuoted) {
+            if (reasonOfLock == null) {
+                String currentMessage = messageSendEdit.getText().toString();
+
+                if (!currentMessage.isEmpty() && !currentMessage.endsWith("\n\n")) {
+                    if (!currentMessage.endsWith("\n")) {
+                        currentMessage += "\n";
+                    }
+                    currentMessage += "\n";
+                }
+                currentMessage += messageQuoted;
+
+                messageSendEdit.setText(currentMessage);
+                messageSendEdit.setSelection(currentMessage.length());
+            }
+        }
+    };
+
     public ShowTopicActivity() {
         pageNavigation = new PageNavigationUtil(this);
     }
 
     private void stopAllCurrentTask() {
-        if (currentTaskQuoteMessage != null) {
-            currentTaskQuoteMessage.cancel(true);
-            currentTaskQuoteMessage = null;
-            latestMessageQuotedInfo = null;
-        }
-        if (currentTaskDeleteMessage != null) {
-            currentTaskDeleteMessage.cancel(true);
-            currentTaskDeleteMessage = null;
-        }
         if (currentTaskForFavs != null) {
             currentTaskForFavs.cancel(true);
             currentTaskForFavs = null;
         }
+        actionsForMessages.stopAllCurrentTasks();
+        senderForMessages.stopAllCurrentTask();
     }
 
     private void reloadSettings() {
@@ -246,6 +256,8 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         pageNavigation.setDrawableForCurrentPageButton(arrowDrawable);
 
         pageNavigation.updateAdapterForPagerView();
+        actionsForMessages = new JVCMessageAction(this);
+        actionsForMessages.setNewMessageIsQuotedListener(messageIsQuotedListener);
         senderForMessages = new JVCMessageSender(this);
         senderForMessages.setListenerForNewMessageWantEdit(listenerForNewMessageWantEdit);
         senderForMessages.setListenerForNewMessagePosted(listenerForNewMessagePosted);
@@ -315,7 +327,6 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     public void onPause() {
         super.onPause();
         stopAllCurrentTask();
-        senderForMessages.stopAllCurrentTask();
         if (!pageNavigation.getCurrentLink().isEmpty()) {
             SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
             sharedPrefEdit.putString(getString(R.string.prefTopicUrlToFetch), setShowedPageNumberForThisLink(pageNavigation.getCurrentLink(), pageNavigation.getCurrentItemIndex() + 1));
@@ -437,24 +448,13 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_quote_message:
-                if (getCurrentFragment().getLatestAjaxInfos().list != null && latestMessageQuotedInfo == null && currentTaskQuoteMessage == null && !pseudoOfUser.isEmpty() && reasonOfLock == null) {
-                    String idOfMessage = Long.toString(getCurrentFragment().getCurrentItemSelected().id);
-                    latestMessageQuotedInfo = JVCParser.buildMessageQuotedInfoFromThis(getCurrentFragment().getCurrentItemSelected());
-
-                    currentTaskQuoteMessage = new QuoteJVCMessage();
-                    currentTaskQuoteMessage.execute(idOfMessage, getCurrentFragment().getLatestAjaxInfos().list, cookieListInAString);
+                if (pseudoOfUser.isEmpty()) {
+                    Toast.makeText(this, R.string.errorConnectNeeded, Toast.LENGTH_SHORT).show();
+                } else if (reasonOfLock != null) {
+                    Toast.makeText(this, R.string.errorTopicIsLocked, Toast.LENGTH_SHORT).show();
                 } else {
-                    if (pseudoOfUser.isEmpty()) {
-                        Toast.makeText(this, R.string.errorConnectNeeded, Toast.LENGTH_SHORT).show();
-                    } else if (latestMessageQuotedInfo != null || currentTaskQuoteMessage != null) {
-                        Toast.makeText(this, R.string.errorQuoteAlreadyRunning, Toast.LENGTH_SHORT).show();
-                    } else if (reasonOfLock != null) {
-                        Toast.makeText(this, R.string.errorTopicIsLocked, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
-                    }
+                    actionsForMessages.startQuoteThisMessage(getCurrentFragment().getLatestAjaxInfos(), getCurrentFragment().getCurrentItemSelected(), cookieListInAString);
                 }
-
                 return true;
             case R.id.menu_edit_message:
                 if (reasonOfLock == null) {
@@ -486,21 +486,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
 
                 return true;
             case R.id.menu_delete_message:
-                if (getCurrentFragment().getLatestAjaxInfos().mod != null && currentTaskDeleteMessage == null && !pseudoOfUser.isEmpty()) {
-                    String idOfMessage = Long.toString(getCurrentFragment().getCurrentItemSelected().id);
-
-                    currentTaskDeleteMessage = new DeleteJVCMessage();
-                    currentTaskDeleteMessage.execute(idOfMessage, getCurrentFragment().getLatestAjaxInfos().mod, cookieListInAString);
-                } else {
-                    if (pseudoOfUser.isEmpty()) {
-                        Toast.makeText(this, R.string.errorConnectNeeded, Toast.LENGTH_SHORT).show();
-                    } else if (currentTaskDeleteMessage != null) {
-                        Toast.makeText(this, R.string.errorDeleteAlreadyRunning, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
-                    }
-                }
-
+                actionsForMessages.startDeleteThisMessage(getCurrentFragment().getLatestAjaxInfos(), getCurrentFragment().getCurrentItemSelected(), cookieListInAString);
                 return true;
             default:
                 return getCurrentFragment().onMenuItemClick(item);
@@ -664,78 +650,5 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         newShowSurveyIntent.putExtra(ShowSurveyActivity.EXTRA_AJAX_INFOS, ajaxInfos);
         newShowSurveyIntent.putExtra(ShowSurveyActivity.EXTRA_COOKIES, cookieListInAString);
         startActivity(newShowSurveyIntent);
-    }
-
-    private class QuoteJVCMessage extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... params) {
-            if (params.length > 2) {
-                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
-                String pageContent;
-                currentWebInfos.followRedirects = false;
-                pageContent = WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_citation.php", "POST", "id_message=" + params[0] + "&" + params[1], params[2], currentWebInfos);
-
-                if (pageContent != null) {
-                    return JVCParser.getMessageQuoted(pageContent);
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String messageQuoted) {
-            super.onPostExecute(messageQuoted);
-
-            if (messageQuoted != null && reasonOfLock == null) {
-                String currentMessage = messageSendEdit.getText().toString();
-
-                if (!currentMessage.isEmpty() && !currentMessage.endsWith("\n\n")) {
-                    if (!currentMessage.endsWith("\n")) {
-                        currentMessage += "\n";
-                    }
-                    currentMessage += "\n";
-                }
-                currentMessage += latestMessageQuotedInfo + "\n>" + messageQuoted + "\n\n";
-
-                messageSendEdit.setText(currentMessage);
-                messageSendEdit.setSelection(currentMessage.length());
-            } else {
-                Toast.makeText(ShowTopicActivity.this, R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
-            }
-
-            latestMessageQuotedInfo = null;
-            currentTaskQuoteMessage = null;
-        }
-    }
-
-    private class DeleteJVCMessage extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... params) {
-            if (params.length > 2) {
-                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
-                currentWebInfos.followRedirects = false;
-                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/modal_del_message.php", "GET", "tab_message[]=" + params[0] + "&type=delete&" + params[1], params[2], currentWebInfos);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String pageContent) {
-            super.onPostExecute(pageContent);
-
-            if (pageContent != null) {
-                String currentError = JVCParser.getErrorMessageInJSONMode(pageContent);
-
-                if (currentError == null) {
-                    Toast.makeText(ShowTopicActivity.this, R.string.supressSuccess, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(ShowTopicActivity.this, currentError, Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(ShowTopicActivity.this, R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
-            }
-
-            currentTaskDeleteMessage = null;
-        }
     }
 }
