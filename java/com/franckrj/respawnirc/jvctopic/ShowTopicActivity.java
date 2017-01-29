@@ -325,13 +325,13 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
 
     @Override
     public void onPause() {
-        super.onPause();
         stopAllCurrentTask();
         if (!pageNavigation.getCurrentLink().isEmpty()) {
             SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
             sharedPrefEdit.putString(getString(R.string.prefTopicUrlToFetch), setShowedPageNumberForThisLink(pageNavigation.getCurrentLink(), pageNavigation.getCurrentItemIndex() + 1));
             sharedPrefEdit.apply();
         }
+        super.onPause();
     }
 
     @Override

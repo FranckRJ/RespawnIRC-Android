@@ -188,8 +188,8 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
 
     @Override
     public void onPause() {
-        super.onPause();
         saveOldTopicInfos();
+        super.onPause();
     }
 
     @Override

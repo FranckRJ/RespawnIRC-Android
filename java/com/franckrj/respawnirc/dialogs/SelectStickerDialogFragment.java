@@ -298,8 +298,8 @@ public class SelectStickerDialogFragment extends DialogFragment {
 
     @Override
     public void onPause() {
-        super.onPause();
         dismiss();
+        super.onPause();
     }
 
     public interface StickerSelected {

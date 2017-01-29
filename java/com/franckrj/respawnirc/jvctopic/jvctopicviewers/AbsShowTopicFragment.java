@@ -225,8 +225,8 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
 
     @Override
     public void onPause() {
-        super.onPause();
         absGetterForTopic.stopAllCurrentTask();
+        super.onPause();
     }
 
     @Override

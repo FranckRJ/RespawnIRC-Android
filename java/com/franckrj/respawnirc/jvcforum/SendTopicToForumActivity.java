@@ -99,8 +99,8 @@ public class SendTopicToForumActivity extends AppCompatActivity implements Selec
 
     @Override
     public void onPause() {
-        super.onPause();
         stopAllCurrentTasks();
+        super.onPause();
     }
 
     @Override

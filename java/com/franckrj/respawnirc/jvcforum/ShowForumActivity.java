@@ -156,13 +156,13 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
 
     @Override
     public void onPause() {
-        super.onPause();
         stopAllCurrentTasks();
         if (!pageNavigation.getCurrentLink().isEmpty()) {
             SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
             sharedPrefEdit.putString(getString(R.string.prefForumUrlToFetch), setShowedPageNumberForThisLink(pageNavigation.getCurrentLink(), pageNavigation.getCurrentItemIndex() + 1));
             sharedPrefEdit.apply();
         }
+        super.onPause();
     }
 
     @Override

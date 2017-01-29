@@ -104,8 +104,8 @@ public class ShowSurveyActivity extends AppCompatActivity {
 
     @Override
     public void onPause() {
-        super.onPause();
         stopAllCurrentTasks();
+        super.onPause();
     }
 
     @Override

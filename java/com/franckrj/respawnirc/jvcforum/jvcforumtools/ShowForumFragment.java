@@ -234,8 +234,8 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
 
     @Override
     public void onPause() {
-        super.onPause();
         getterForForum.stopAllCurrentTask();
+        super.onPause();
     }
 
     @Override

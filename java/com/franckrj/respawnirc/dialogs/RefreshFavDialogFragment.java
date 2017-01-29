@@ -77,8 +77,8 @@ public class RefreshFavDialogFragment extends DialogFragment {
 
     @Override
     public void onPause() {
-        super.onPause();
         stopAllCurrentTask();
+        super.onPause();
     }
 
     private class GetFavsOfPseudo extends AsyncTask<String, Void, ArrayList<JVCParser.NameAndLink>> {

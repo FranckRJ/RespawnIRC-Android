@@ -113,7 +113,7 @@ public class ShowImageDialogFragment extends DialogFragment {
 
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
-        super.onDismiss(dialogInterface);
         downloaderForImage.stopAllCurrentTasks();
+        super.onDismiss(dialogInterface);
     }
 }

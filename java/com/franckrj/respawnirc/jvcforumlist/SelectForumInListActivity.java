@@ -137,8 +137,8 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
 
     @Override
     public void onPause() {
-        super.onPause();
         stopAllCurrentTasks();
+        super.onPause();
     }
 
     @Override
