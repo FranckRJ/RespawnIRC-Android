@@ -1,6 +1,8 @@
 package com.franckrj.respawnirc;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -12,7 +14,18 @@ public class JVCMessageAction {
     private DeleteJVCMessage currentTaskDeleteMessage = null;
     private NewMessageIsQuoted messageIsQuotedListener = null;
     private String latestMessageQuotedInfo = null;
+    private DeletesInfos lastDeleteInfos = new DeletesInfos();
     private Activity parentActivity = null;
+
+    private final DialogInterface.OnClickListener onClickInDeleteConfirmationPopupListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            if (which == DialogInterface.BUTTON_POSITIVE)  {
+                currentTaskDeleteMessage = new DeleteJVCMessage();
+                currentTaskDeleteMessage.execute(lastDeleteInfos.idOfMessage, lastDeleteInfos.latestAjaxInfosMod, lastDeleteInfos.cookieListInAString);
+            }
+        }
+    };
 
     public JVCMessageAction(Activity newParentActivity) {
         parentActivity = newParentActivity;
@@ -52,10 +65,13 @@ public class JVCMessageAction {
 
     public void startDeleteThisMessage(JVCParser.AjaxInfos latestAjaxInfos, JVCParser.MessageInfos currentMessageInfos, String cookieListInAString) {
         if (latestAjaxInfos.mod != null && currentTaskDeleteMessage == null) {
-            String idOfMessage = Long.toString(currentMessageInfos.id);
+            AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity);
 
-            currentTaskDeleteMessage = new DeleteJVCMessage();
-            currentTaskDeleteMessage.execute(idOfMessage, latestAjaxInfos.mod, cookieListInAString);
+            lastDeleteInfos.idOfMessage = Long.toString(currentMessageInfos.id);
+            lastDeleteInfos.latestAjaxInfosMod = latestAjaxInfos.mod;
+            lastDeleteInfos.cookieListInAString = cookieListInAString;
+
+            builder.setTitle(R.string.deleteMessage).setMessage(R.string.areYouSure).setPositiveButton(R.string.yes, onClickInDeleteConfirmationPopupListener).setNegativeButton(R.string.no, null).show();
         } else {
             if (currentTaskDeleteMessage != null) {
                 Toast.makeText(parentActivity, R.string.errorDeleteAlreadyRunning, Toast.LENGTH_SHORT).show();
@@ -127,6 +143,12 @@ public class JVCMessageAction {
 
             currentTaskDeleteMessage = null;
         }
+    }
+
+    private class DeletesInfos {
+        String idOfMessage = "";
+        String latestAjaxInfosMod = "";
+        String cookieListInAString = "";
     }
 
     public interface NewMessageIsQuoted {

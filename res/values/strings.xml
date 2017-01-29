@@ -143,6 +143,9 @@
     <string name="titleForSurvey">Sondage :</string>
     <string name="titleForClosedSurvey">Sondage fermé :</string>
     <string name="survey">Sondage</string>
+    <string name="areYouSure">Êtes-vous sûr ?</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
