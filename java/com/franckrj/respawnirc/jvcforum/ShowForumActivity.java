@@ -23,22 +23,24 @@ import com.franckrj.respawnirc.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.PageNavigationUtil;
 import com.franckrj.respawnirc.utils.AddOrRemoveThingToFavs;
 import com.franckrj.respawnirc.utils.JVCParser;
-import com.franckrj.respawnirc.utils.AbsNavigationViewActivity;
+import com.franckrj.respawnirc.AbsNavigationViewActivity;
 import com.franckrj.respawnirc.utils.Utils;
 
 public class ShowForumActivity extends AbsNavigationViewActivity implements ShowForumFragment.NewTopicWantRead, JVCForumGetter.NewForumNameAvailable,
                                                     JVCForumGetter.ForumLinkChanged, PageNavigationUtil.PageNavigationFunctions,
-                                                    AddOrRemoveThingToFavs.ActionToFavsEnded {
+                                                    AddOrRemoveThingToFavs.ActionToFavsEnded, JVCForumGetter.NewNumberOfMPSetted {
     public static final String EXTRA_NEW_LINK = "com.franckrj.respawnirc.EXTRA_NEW_LINK";
 
     private static final String SAVE_CURRENT_FORUM_TITLE = "saveCurrentForumTitle";
     private static final String SAVE_REFRESH_NEEDED_NEXT_RESUME = "saveRefreshNeededOnNextResume";
+    private static final String SAVE_CURRENT_NUMBER_OF_MP = "saveCurrentNumberOfMP";
 
     private String currentTitle = "";
     private AddOrRemoveThingToFavs currentTaskForFavs = null;
     private PageNavigationUtil pageNavigation = null;
     private boolean refreshNeededOnNextResume = false;
     private boolean useInternalNavigatorForDefaultOpening = false;
+    private String currentNumberOfMP = null;
 
     public ShowForumActivity() {
         idOfBaseActivity = R.id.action_forum_navigation;
@@ -119,6 +121,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         } else {
             currentTitle = savedInstanceState.getString(SAVE_CURRENT_FORUM_TITLE, getString(R.string.app_name));
             refreshNeededOnNextResume = savedInstanceState.getBoolean(SAVE_REFRESH_NEEDED_NEXT_RESUME, false);
+            getNewNumberOfMP(savedInstanceState.getString(SAVE_CURRENT_NUMBER_OF_MP, null));
             pageNavigation.updateNavigationButtons();
         }
         setTitle(currentTitle);
@@ -167,6 +170,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         super.onSaveInstanceState(outState);
         outState.putString(SAVE_CURRENT_FORUM_TITLE, currentTitle);
         outState.putBoolean(SAVE_REFRESH_NEEDED_NEXT_RESUME, refreshNeededOnNextResume);
+        outState.putString(SAVE_CURRENT_NUMBER_OF_MP, currentNumberOfMP);
     }
 
     @Override
@@ -323,5 +327,11 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
             getCurrentFragment().setIsInFavs(currentTaskForFavs.getAddToFavs());
         }
         currentTaskForFavs = null;
+    }
+
+    @Override
+    public void getNewNumberOfMP(String newNumber) {
+        currentNumberOfMP = newNumber;
+        updateMpNumberShowed(newNumber);
     }
 }

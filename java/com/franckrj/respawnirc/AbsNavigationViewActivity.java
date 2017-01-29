@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc.utils;
+package com.franckrj.respawnirc;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,11 +20,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.franckrj.respawnirc.ConnectActivity;
-import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.jvcforumlist.SelectForumInListActivity;
-import com.franckrj.respawnirc.SettingsActivity;
 import com.franckrj.respawnirc.dialogs.RefreshFavDialogFragment;
+import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.Undeprecator;
+import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -42,6 +42,7 @@ public abstract class AbsNavigationViewActivity extends AppCompatActivity implem
     protected MenuItem refreshForumFavExtern = null;
     protected SubMenu topicFavSubMenu = null;
     protected MenuItem refreshTopicFavExtern = null;
+    protected MenuItem showMpMenuItem = null;
     protected String newFavSelected = "";
     protected int idOfBaseActivity = -1;
 
@@ -118,7 +119,8 @@ public abstract class AbsNavigationViewActivity extends AppCompatActivity implem
             refreshTopicFavExtern = navigationForDrawer.getMenu().add(Menu.NONE, R.id.action_refresh_topic_fav_navigation, Menu.NONE, R.string.refresh);
             refreshTopicFavExtern.setIcon(R.drawable.ic_action_navigation_refresh);
             updateFavsInNavigationMenu();
-            navigationForDrawer.getMenu().findItem(R.id.action_showmp_navigation).setEnabled(!pseudoOfUser.isEmpty());
+            showMpMenuItem = navigationForDrawer.getMenu().findItem(R.id.action_showmp_navigation);
+            showMpMenuItem.setEnabled(!pseudoOfUser.isEmpty());
             navigationForDrawer.setCheckedItem(idOfBaseActivity);
 
             if (idOfBaseActivity != R.id.action_forum_navigation) {
@@ -166,6 +168,14 @@ public abstract class AbsNavigationViewActivity extends AppCompatActivity implem
             refreshTopicFavExtern.setVisible(false);
         } else {
             refreshTopicFavExtern.setVisible(true);
+        }
+    }
+
+    protected void updateMpNumberShowed(String newNumber) {
+        if (newNumber == null) {
+            showMpMenuItem.setTitle(R.string.showMP);
+        } else {
+            showMpMenuItem.setTitle(getString(R.string.showMPWithNumber, newNumber));
         }
     }
 

@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ public class JVCForumGetter {
     private JVCParser.AjaxInfos latestAjaxInfos = new JVCParser.AjaxInfos();
     private Boolean isInFavs = null;
     private String latestListOfInputInAString = null;
+    private String latestNumberOfMP = null;
+    private NewNumberOfMPSetted listenerForNewNumberOfMP = null;
 
     public JVCParser.AjaxInfos getLatestAjaxInfos() {
         return latestAjaxInfos;
@@ -63,6 +66,10 @@ public class JVCForumGetter {
 
     public void setListenerForForumLinkChanged(ForumLinkChanged thisListener) {
         listenerForForumLinkChanged = thisListener;
+    }
+
+    public void setListenerForNewNumberOfMP(NewNumberOfMPSetted thisListener) {
+        listenerForNewNumberOfMP = thisListener;
     }
 
     public boolean startGetMessagesOfThisPage(String newUrlOfPage) {
@@ -137,6 +144,7 @@ public class JVCForumGetter {
                     newPageInfos.newLatestAjaxInfos = JVCParser.getAllAjaxInfos(pageContent);
                     newPageInfos.newIsInFavs = JVCParser.getIsInFavsFromPage(pageContent);
                     newPageInfos.newListOfInputInAString = JVCParser.getListOfInputInAStringInTopicFormForThisPage(pageContent);
+                    newPageInfos.newNumberOfMp = JVCParser.getNumberOfMPFromPage(pageContent);
                 }
 
                 return newPageInfos;
@@ -177,6 +185,13 @@ public class JVCForumGetter {
                     }
                 }
 
+                if (!Utils.compareStrings(latestNumberOfMP, infoOfCurrentPage.newNumberOfMp)) {
+                    latestNumberOfMP = infoOfCurrentPage.newNumberOfMp;
+                    if (listenerForNewNumberOfMP != null) {
+                        listenerForNewNumberOfMP.getNewNumberOfMP(latestNumberOfMP);
+                    }
+                }
+
                 if (listenerForNewTopics != null) {
                     listenerForNewTopics.getNewTopics(infoOfCurrentPage.listOfTopics);
                 }
@@ -195,7 +210,7 @@ public class JVCForumGetter {
         JVCParser.AjaxInfos newLatestAjaxInfos;
         Boolean newIsInFavs;
         String newListOfInputInAString;
-
+        String newNumberOfMp;
     }
 
     public interface NewForumNameAvailable {
@@ -212,5 +227,9 @@ public class JVCForumGetter {
 
     public interface NewGetterStateListener {
         void newStateSetted(int newState);
+    }
+
+    public interface NewNumberOfMPSetted {
+        void getNewNumberOfMP(String newNumber);
     }
 }

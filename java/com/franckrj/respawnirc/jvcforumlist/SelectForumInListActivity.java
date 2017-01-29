@@ -28,7 +28,7 @@ import com.franckrj.respawnirc.dialogs.ChooseTopicOrForumLinkDialogFragment;
 import com.franckrj.respawnirc.dialogs.HelpFirstLaunchDialogFragment;
 import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
 import com.franckrj.respawnirc.utils.JVCParser;
-import com.franckrj.respawnirc.utils.AbsNavigationViewActivity;
+import com.franckrj.respawnirc.AbsNavigationViewActivity;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 

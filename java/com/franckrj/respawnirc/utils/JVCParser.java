@@ -61,6 +61,7 @@ public final class JVCParser {
     private static final Pattern surveyResultPattern = Pattern.compile("<div class=\"pied-result\">([^<]*)</div>");
     private static final Pattern surveyReplyPattern = Pattern.compile("<td class=\"result-pourcent\">[^<]*<div class=\"pourcent\">([^<]*)</div>.*?<td class=\"reponse\">([^<]*)</td>", Pattern.DOTALL);
     private static final Pattern realSurveyContentPattern = Pattern.compile("\"html\":\"(.*?)\"\\}");
+    private static final Pattern numberOfMpJVCPattern = Pattern.compile("<span[^c]*class=\"account-number-mp[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
 
     private JVCParser() {
@@ -376,6 +377,16 @@ public final class JVCParser {
         }
 
         return currentNames;
+    }
+
+    public static String getNumberOfMPFromPage(String pageSource) {
+        Matcher numberOfMpJVCMatcher = numberOfMpJVCPattern.matcher(pageSource);
+
+        if (numberOfMpJVCMatcher.find()) {
+            return numberOfMpJVCMatcher.group(1);
+        } else {
+            return null;
+        }
     }
 
     public static Boolean getIsInFavsFromPage(String pageSource) {

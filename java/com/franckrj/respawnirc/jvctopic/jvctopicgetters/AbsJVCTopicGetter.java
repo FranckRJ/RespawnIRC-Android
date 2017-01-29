@@ -20,7 +20,6 @@ public abstract class AbsJVCTopicGetter {
     protected static final String SAVE_LATEST_AJAX_INFO_PREF = "saveLatestAjaxInfoPref";
     protected static final String SAVE_LAST_ID_OF_MESSAGE = "saveLastIdOfMessage";
     protected static final String SAVE_TOPIC_ID = "saveTopicID";
-    protected static final String SAVE_LOCK_REASON = "saveLockReason";
     protected static final String SAVE_HTML_SURVEY_TITLE = "saveHtmlSurveyTitle";
     protected static final String SAVE_TOPIC_IS_IN_FAV = "saveTopicIsInFav";
 
@@ -116,7 +115,6 @@ public abstract class AbsJVCTopicGetter {
         latestAjaxInfos.pref = savedInstanceState.getString(SAVE_LATEST_AJAX_INFO_PREF, null);
         lastIdOfMessage = savedInstanceState.getLong(SAVE_LAST_ID_OF_MESSAGE, 0);
         topicID = savedInstanceState.getString(SAVE_TOPIC_ID, "");
-        lockReason = savedInstanceState.getString(SAVE_LOCK_REASON, "");
         htmlSurveyTitle = savedInstanceState.getString(SAVE_HTML_SURVEY_TITLE, "");
         if (savedInstanceState.containsKey(SAVE_TOPIC_IS_IN_FAV)) {
             isInFavs = savedInstanceState.getBoolean(SAVE_TOPIC_IS_IN_FAV, false);
@@ -133,7 +131,6 @@ public abstract class AbsJVCTopicGetter {
         savedInstanceState.putString(SAVE_LATEST_AJAX_INFO_PREF, latestAjaxInfos.pref);
         savedInstanceState.putLong(SAVE_LAST_ID_OF_MESSAGE, lastIdOfMessage);
         savedInstanceState.putString(SAVE_TOPIC_ID, topicID);
-        savedInstanceState.putString(SAVE_LOCK_REASON, lockReason);
         savedInstanceState.putString(SAVE_HTML_SURVEY_TITLE, htmlSurveyTitle);
         if (isInFavs != null) {
             savedInstanceState.putBoolean(SAVE_TOPIC_IS_IN_FAV, isInFavs);

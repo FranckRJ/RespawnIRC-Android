@@ -193,6 +193,9 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         if (getActivity() instanceof JVCForumGetter.ForumLinkChanged) {
             getterForForum.setListenerForForumLinkChanged((JVCForumGetter.ForumLinkChanged) getActivity());
         }
+        if (getActivity() instanceof JVCForumGetter.NewNumberOfMPSetted) {
+            getterForForum.setListenerForNewNumberOfMP((JVCForumGetter.NewNumberOfMPSetted) getActivity());
+        }
 
         swipeRefresh.setColorSchemeResources(R.color.colorAccent);
         jvcTopicList.setAdapter(adapterForForum);

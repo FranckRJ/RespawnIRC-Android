@@ -146,6 +146,7 @@
     <string name="areYouSure">Êtes-vous sûr ?</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
+    <string name="showMPWithNumber">Consulter les MP   (%1$s)</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
