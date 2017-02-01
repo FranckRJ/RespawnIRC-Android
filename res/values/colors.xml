@@ -12,4 +12,5 @@
     <color name="colorSelectedIconItem">#606060</color>
     <color name="defaultColorForBackground">#fafafa</color>
     <color name="darkerColorForBackground">#efefef</color>
+    <color name="moreDarkerColorForBackground">#d0d0d0</color>
 </resources>
