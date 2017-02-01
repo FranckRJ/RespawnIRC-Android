@@ -42,9 +42,11 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
 
                 adapterForTopic.updateAllItems();
 
-                if (scrolledAtTheEnd && jvcMsgList.getCount() > 0) {
+                if ((scrolledAtTheEnd || goToBottomAtPageLoading) && jvcMsgList.getCount() > 0) {
                     jvcMsgList.setSelection(jvcMsgList.getCount() - 1);
+                    goToBottomAtPageLoading = false;
                 }
+
             } else {
                 if (!isInErrorMode) {
                     getterForTopic.reloadTopic();

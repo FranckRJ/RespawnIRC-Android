@@ -59,7 +59,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         }
     }
 
-    private void setTopicOrForum(String link, boolean updateForumFragIfNeeded, String topicName) {
+    private void setTopicOrForum(String link, boolean updateForumFragIfNeeded, String topicName, boolean startToBottom) {
         if (link != null) {
             if (!link.isEmpty()) {
                 link = JVCParser.formatThisUrl(link);
@@ -82,6 +82,10 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
                 }
                 if (!currentTitle.equals(getString(R.string.app_name))) {
                     newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_FORUM_NAME, currentTitle);
+                }
+
+                if (startToBottom) {
+                    newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_GO_TO_BOTTOM, true);
                 }
 
                 newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_LINK, link);
@@ -133,7 +137,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         String newLinkToGo = newIntent.getStringExtra(EXTRA_NEW_LINK);
 
         if (newLinkToGo != null) {
-            setTopicOrForum(newLinkToGo, true, null);
+            setTopicOrForum(newLinkToGo, true, null, false);
         }
     }
 
@@ -256,15 +260,15 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     @Override
     protected void newForumOrTopicToRead(String link, boolean itsAForum, boolean isWhenDrawerIsClosed) {
         if (itsAForum && !isWhenDrawerIsClosed) {
-            setTopicOrForum(link, true, null);
+            setTopicOrForum(link, true, null, false);
         } else if (!itsAForum && isWhenDrawerIsClosed) {
-            setTopicOrForum(link, true, null);
+            setTopicOrForum(link, true, null, false);
         }
     }
 
     @Override
-    public void setReadNewTopic(String newTopicLink, String newTopicName) {
-        setTopicOrForum(newTopicLink, false, newTopicName);
+    public void setReadNewTopic(String newTopicLink, String newTopicName, boolean startAtBottom) {
+        setTopicOrForum(newTopicLink, false, newTopicName, startAtBottom);
     }
 
     @Override

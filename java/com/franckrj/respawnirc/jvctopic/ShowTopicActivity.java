@@ -47,6 +47,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     public static final String EXTRA_TOPIC_LINK = "com.franckrj.respawnirc.EXTRA_TOPIC_LINK";
     public static final String EXTRA_TOPIC_NAME = "com.franckrj.respawnirc.EXTRA_TOPIC_NAME";
     public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.EXTRA_FORUM_NAME";
+    public static final String EXTRA_GO_TO_BOTTOM = "com.franckrj.respawnirc.EXTRA_GO_TO_BOTTOM";
 
     private static final String SAVE_CURRENT_FORUM_TITLE_FOR_TOPIC = "saveCurrentForumTitleForTopic";
     private static final String SAVE_CURRENT_TOPIC_TITLE_FOR_TOPIC = "saveCurrentTopicTitleForTopic";
@@ -70,6 +71,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     private boolean useInternalNavigatorForDefaultOpening = false;
     private boolean convertNoelshackLinkToDirectLink = false;
     private boolean showOverviewOnImageClick = false;
+    private boolean goToBottomAtPageLoading = false;
 
     private final JVCMessageToTopicSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageToTopicSender.NewMessageWantEditListener() {
         @Override
@@ -82,6 +84,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
                     Toast.makeText(ShowTopicActivity.this, R.string.errorCantGetEditInfos, Toast.LENGTH_SHORT).show();
                 } else {
                     messageSendEdit.setText(newMessageToEdit);
+                    messageSendEdit.setSelection(newMessageToEdit.length());
                 }
             }
         }
@@ -269,6 +272,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         updateShowNavigationButtons();
         if (savedInstanceState == null) {
             if (getIntent() != null) {
+                goToBottomAtPageLoading = getIntent().getBooleanExtra(EXTRA_GO_TO_BOTTOM, false);
                 currentTitles.topic = getIntent().getStringExtra(EXTRA_TOPIC_NAME);
                 currentTitles.forum = getIntent().getStringExtra(EXTRA_FORUM_NAME);
 
@@ -539,7 +543,9 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         if (possibleTopicLink != null) {
             Bundle argForFrag = new Bundle();
             argForFrag.putString(AbsShowTopicFragment.ARG_TOPIC_LINK, possibleTopicLink);
+            argForFrag.putBoolean(AbsShowTopicFragment.ARG_GO_TO_BOTTOM, goToBottomAtPageLoading);
             newFragment.setArguments(argForFrag);
+            goToBottomAtPageLoading = false;
         }
 
         return newFragment;

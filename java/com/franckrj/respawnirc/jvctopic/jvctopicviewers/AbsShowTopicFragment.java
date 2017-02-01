@@ -19,10 +19,12 @@ import java.util.ArrayList;
 
 public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     public static final String ARG_TOPIC_LINK = "com.franckrj.respawnirc.showtopicfragment.topic_link";
+    public static final String ARG_GO_TO_BOTTOM = "com.franckrj.respawnirc.showtopicfragment.go_to_bottom";
     public static final int MODE_IRC = 0;
     public static final int MODE_FORUM = 1;
 
     protected static final String SAVE_ALL_MESSAGES_SHOWED = "saveAllCurrentMessagesShowed";
+    protected static final String SAVE_GO_TO_BOTTOM_PAGE_LOADING = "saveGoToBottomPageLoading";
 
     protected AbsJVCTopicGetter absGetterForTopic = null;
     protected ListView jvcMsgList = null;
@@ -33,6 +35,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected SwipeRefreshLayout swipeRefresh = null;
     protected boolean showRefreshWhenMessagesShowed = true;
     protected boolean isInErrorMode = false;
+    protected boolean goToBottomAtPageLoading = false;
 
     protected final AbsJVCTopicGetter.NewGetterStateListener listenerForNewGetterState = new AbsJVCTopicGetter.NewGetterStateListener() {
         @Override
@@ -194,6 +197,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
 
         if (savedInstanceState != null) {
             ArrayList<JVCParser.MessageInfos> allCurrentMessagesShowed = savedInstanceState.getParcelableArrayList(SAVE_ALL_MESSAGES_SHOWED);
+            goToBottomAtPageLoading = savedInstanceState.getBoolean(SAVE_GO_TO_BOTTOM_PAGE_LOADING);
             absGetterForTopic.loadFromBundle(savedInstanceState);
 
             if (!Utils.stringIsEmptyOrNull(absGetterForTopic.getSurveyTitleInHtml())) {
@@ -211,8 +215,8 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             Bundle currentArgs = getArguments();
 
             if (currentArgs != null) {
-                String topicLink = currentArgs.getString(ARG_TOPIC_LINK, "");
-                setPageLink(topicLink);
+                goToBottomAtPageLoading = currentArgs.getBoolean(ARG_GO_TO_BOTTOM, false);
+                setPageLink(currentArgs.getString(ARG_TOPIC_LINK, ""));
             }
         }
     }
@@ -233,6 +237,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(SAVE_ALL_MESSAGES_SHOWED, adapterForTopic.getAllItems());
+        outState.putBoolean(SAVE_GO_TO_BOTTOM_PAGE_LOADING, goToBottomAtPageLoading);
         absGetterForTopic.saveToBundle(outState);
     }
 
