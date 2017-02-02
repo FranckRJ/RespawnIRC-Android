@@ -127,7 +127,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:padding="8dp"
-                android:src="@drawable/sticker_1mir"
+                android:src="@drawable/sticker_1ltd"
                 android:scaleType="fitCenter"
                 android:contentDescription="@string/selectSticker"/>
             <ImageView
@@ -135,7 +135,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:padding="8dp"
-                android:src="@drawable/sticker_1n28"
+                android:src="@drawable/sticker_1mir"
                 android:scaleType="fitCenter"
                 android:contentDescription="@string/selectSticker"/>
             <ImageView
@@ -143,7 +143,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:padding="8dp"
-                android:src="@drawable/sticker_1n1p_fr"
+                android:src="@drawable/sticker_1n28"
                 android:scaleType="fitCenter"
                 android:contentDescription="@string/selectSticker"/>
             <ImageView
@@ -151,7 +151,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:padding="8dp"
-                android:src="@drawable/sticker_1n2c"
+                android:src="@drawable/sticker_1n1p_fr"
                 android:scaleType="fitCenter"
                 android:contentDescription="@string/selectSticker"/>
             <ImageView
@@ -159,7 +159,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:padding="8dp"
+                android:src="@drawable/sticker_1n2c"
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/selectSticker"/>
+            <ImageView
+                android:id="@+id/sticker_17_button_selectsticker"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:padding="8dp"
                 android:src="@drawable/sticker_1ntq"
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/selectSticker"/>
+            <ImageView
+                android:id="@+id/sticker_18_button_selectsticker"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:padding="8dp"
+                android:src="@drawable/sticker_1o33"
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/selectSticker"/>
+            <ImageView
+                android:id="@+id/sticker_19_button_selectsticker"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:padding="8dp"
+                android:src="@drawable/sticker_1ptd"
                 android:scaleType="fitCenter"
                 android:contentDescription="@string/selectSticker"/>
         </LinearLayout>

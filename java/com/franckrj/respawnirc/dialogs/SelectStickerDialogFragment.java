@@ -24,7 +24,7 @@ import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
 
 public class SelectStickerDialogFragment extends DialogFragment {
-    private static final int MAX_NUMBER_OF_ROW = 16;
+    private static final int MAX_NUMBER_OF_ROW = 19;
     private static Spanned[] listOfSpanForTextView = null;
 
     private TextView mainTextView = null;
@@ -230,6 +230,17 @@ public class SelectStickerDialogFragment extends DialogFragment {
                     appendAnotherSticker("sticker_1nub", textForShowAllStickers);
                     break;
                 case 11:
+                    //bureau
+                    appendAnotherSticker("sticker_1lt7", textForShowAllStickers);
+                    appendAnotherSticker("sticker_1lt8", textForShowAllStickers);
+                    appendAnotherSticker("sticker_1lt9", textForShowAllStickers);
+                    appendAnotherSticker("sticker_1lta", textForShowAllStickers);
+                    appendAnotherSticker("sticker_1ltb", textForShowAllStickers);
+                    appendAnotherSticker("sticker_1ltc", textForShowAllStickers);
+                    appendAnotherSticker("sticker_1ltd", textForShowAllStickers);
+                    appendAnotherSticker("sticker_1lte", textForShowAllStickers);
+                    break;
+                case 12:
                     //xmen
                     appendAnotherSticker("sticker_1mid_fr", textForShowAllStickers);
                     appendAnotherSticker("sticker_1mie_fr", textForShowAllStickers);
@@ -247,7 +258,7 @@ public class SelectStickerDialogFragment extends DialogFragment {
                     appendAnotherSticker("sticker_1miq", textForShowAllStickers);
                     appendAnotherSticker("sticker_1mir", textForShowAllStickers);
                     break;
-                case 12:
+                case 13:
                     //xbox
                     appendAnotherSticker("sticker_1my4", textForShowAllStickers);
                     appendAnotherSticker("sticker_1my5", textForShowAllStickers);
@@ -264,7 +275,7 @@ public class SelectStickerDialogFragment extends DialogFragment {
                     appendAnotherSticker("sticker_1myx", textForShowAllStickers);
                     appendAnotherSticker("sticker_1n28", textForShowAllStickers);
                     break;
-                case 13:
+                case 14:
                     //foot
                     appendAnotherSticker("sticker_1n1m_de", textForShowAllStickers);
                     appendAnotherSticker("sticker_1n1m_es", textForShowAllStickers);
@@ -296,7 +307,7 @@ public class SelectStickerDialogFragment extends DialogFragment {
                     appendAnotherSticker("sticker_1n1t_fr", textForShowAllStickers);
                     appendAnotherSticker("sticker_1n1t_it", textForShowAllStickers);
                     break;
-                case 14:
+                case 15:
                     //store
                     appendAnotherSticker("sticker_1n2c", textForShowAllStickers);
                     appendAnotherSticker("sticker_1n2d", textForShowAllStickers);
@@ -310,7 +321,7 @@ public class SelectStickerDialogFragment extends DialogFragment {
                     appendAnotherSticker("sticker_1n2n", textForShowAllStickers);
                     appendAnotherSticker("sticker_1n2o", textForShowAllStickers);
                     break;
-                case 15:
+                case 16:
                     //brice
                     appendAnotherSticker("sticker_1ntp", textForShowAllStickers);
                     appendAnotherSticker("sticker_1ntq", textForShowAllStickers);
@@ -324,6 +335,32 @@ public class SelectStickerDialogFragment extends DialogFragment {
                     appendAnotherSticker("sticker_1nty", textForShowAllStickers);
                     appendAnotherSticker("sticker_1ntz", textForShowAllStickers);
                     appendAnotherSticker("sticker_1nu0", textForShowAllStickers);
+                    break;
+                case 17:
+                    //pixel
+                    appendAnotherSticker("sticker_1o2k", textForShowAllStickers);
+                    appendAnotherSticker("sticker_1o33", textForShowAllStickers);
+                    appendAnotherSticker("sticker_1o3f", textForShowAllStickers);
+                    appendAnotherSticker("sticker_1o3g", textForShowAllStickers);
+                    appendAnotherSticker("sticker_1o3i", textForShowAllStickers);
+                    appendAnotherSticker("sticker_1o3k", textForShowAllStickers);
+                    appendAnotherSticker("sticker_1o66", textForShowAllStickers);
+                    appendAnotherSticker("sticker_1o67", textForShowAllStickers);
+                    break;
+                case 18:
+                    //gym
+                    appendAnotherSticker("sticker_1ptd", textForShowAllStickers);
+                    appendAnotherSticker("sticker_1rob", textForShowAllStickers);
+                    appendAnotherSticker("sticker_1ron", textForShowAllStickers);
+                    appendAnotherSticker("sticker_1rpa", textForShowAllStickers);
+                    appendAnotherSticker("sticker_1rpp", textForShowAllStickers);
+                    appendAnotherSticker("sticker_1rpp_fr", textForShowAllStickers);
+                    appendAnotherSticker("sticker_1rpt", textForShowAllStickers);
+                    appendAnotherSticker("sticker_1rpw", textForShowAllStickers);
+                    appendAnotherSticker("sticker_1rpw_fr", textForShowAllStickers);
+                    appendAnotherSticker("sticker_1rpy", textForShowAllStickers);
+                    appendAnotherSticker("sticker_1rpy_fr", textForShowAllStickers);
+                    break;
             }
             listOfSpanForTextView[row] = Undeprecator.htmlFromHtml(textForShowAllStickers.toString(), withThisImageGetter, null);
         }
@@ -387,6 +424,9 @@ public class SelectStickerDialogFragment extends DialogFragment {
         listOfStickersButtons[13] = (ImageView) mainView.findViewById(R.id.sticker_14_button_selectsticker);
         listOfStickersButtons[14] = (ImageView) mainView.findViewById(R.id.sticker_15_button_selectsticker);
         listOfStickersButtons[15] = (ImageView) mainView.findViewById(R.id.sticker_16_button_selectsticker);
+        listOfStickersButtons[16] = (ImageView) mainView.findViewById(R.id.sticker_17_button_selectsticker);
+        listOfStickersButtons[17] = (ImageView) mainView.findViewById(R.id.sticker_18_button_selectsticker);
+        listOfStickersButtons[18] = (ImageView) mainView.findViewById(R.id.sticker_19_button_selectsticker);
 
         for (int i = 0; i < listOfStickersButtons.length; ++i) {
             listOfStickersButtons[i].setTag(i);

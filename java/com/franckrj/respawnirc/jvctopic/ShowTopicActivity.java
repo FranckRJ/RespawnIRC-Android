@@ -625,7 +625,13 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     @Override
     public void getSelectedSticker(String newStickerToAdd) {
         if (reasonOfLock == null) {
-            messageSendEdit.append(newStickerToAdd);
+            int currentCursorPos = messageSendEdit.getSelectionStart();
+            if (currentCursorPos == -1) {
+                messageSendEdit.append(newStickerToAdd);
+            } else {
+                messageSendEdit.getText().insert(currentCursorPos, newStickerToAdd);
+                messageSendEdit.setSelection(currentCursorPos + newStickerToAdd.length());
+            }
         }
     }
 

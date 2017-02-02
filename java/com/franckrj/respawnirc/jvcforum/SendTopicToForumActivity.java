@@ -141,7 +141,13 @@ public class SendTopicToForumActivity extends AppCompatActivity implements Selec
 
     @Override
     public void getSelectedSticker(String newStickerToAdd) {
-        topicContentEdit.append(newStickerToAdd);
+        int currentCursorPos = topicContentEdit.getSelectionStart();
+        if (currentCursorPos == -1) {
+            topicContentEdit.append(newStickerToAdd);
+        } else {
+            topicContentEdit.getText().insert(currentCursorPos, newStickerToAdd);
+            topicContentEdit.setSelection(currentCursorPos + newStickerToAdd.length());
+        }
     }
 
     private class SendTopicToJVC extends AsyncTask<String, Void, String> {
