@@ -307,7 +307,10 @@ public final class JVCParser {
         while (favMatcher.find(lastOffset)) {
             NameAndLink newFav = new NameAndLink();
             newFav.name = favMatcher.group(2);
-            newFav.link = "http:" + favMatcher.group(1);
+            newFav.link = favMatcher.group(1);
+            if (!newFav.link.startsWith("http:")) {
+                newFav.link = "http:" + newFav.link;
+            }
             listOfFav.add(newFav);
             lastOffset = favMatcher.end();
         }
