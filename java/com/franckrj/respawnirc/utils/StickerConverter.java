@@ -74,10 +74,10 @@ public class StickerConverter {
         if (ruleToFollow != null) {
             for (InfoForConvert thisInfo : ruleToFollow.listOfConvert) {
                 if (!ruleToFollow.convertToSmiley) {
-                    messageToConvert = messageToConvert.replace("<img class=\"img-stickers\" src=\"http://jv.stkr.fr/p/" + thisInfo.base + "\"/>",
+                    messageToConvert = messageToConvert.replaceAll("<img class=\"img-stickers\" src=\"http://jv.stkr.fr/p[^/]*/" + thisInfo.base + "\"/>",
                                                                 "<img class=\"img-stickers\" src=\"http://jv.stkr.fr/p/" + thisInfo.replacement + "\"/>");
                 } else {
-                    messageToConvert = messageToConvert.replace("<img class=\"img-stickers\" src=\"http://jv.stkr.fr/p/" + thisInfo.base + "\"/>",
+                    messageToConvert = messageToConvert.replaceAll("<img class=\"img-stickers\" src=\"http://jv.stkr.fr/p[^/]*/" + thisInfo.base + "\"/>",
                             "<img src=\"//image.jeuxvideo.com/smileys_img/" + thisInfo.replacement + "\" alt=\"\" data-def=\"SMILEYS\" data-code=\"\" title=\"\" />");
                 }
             }

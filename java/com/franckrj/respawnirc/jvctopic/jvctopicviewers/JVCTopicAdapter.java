@@ -296,7 +296,7 @@ public class JVCTopicAdapter extends BaseAdapter {
                 }
             });
 
-            if (position % 2 == 0 || !alternateBackgroundColor) {
+            if (realPosition % 2 == 0 || !alternateBackgroundColor) {
                 convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.defaultColorForBackground));
             } else {
                 convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.altBackgroundMessageColor));
