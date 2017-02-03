@@ -191,6 +191,9 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         if (getActivity() instanceof JVCTopicAdapter.URLClicked) {
             adapterForTopic.setUrlCLickedListener((JVCTopicAdapter.URLClicked) getActivity());
         }
+        if (getActivity() instanceof JVCTopicAdapter.PseudoClicked) {
+            adapterForTopic.setPseudoClickedListener((JVCTopicAdapter.PseudoClicked) getActivity());
+        }
 
         swipeRefresh.setColorSchemeResources(R.color.colorAccent);
         jvcMsgList.setAdapter(adapterForTopic);

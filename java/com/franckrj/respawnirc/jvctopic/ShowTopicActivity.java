@@ -22,6 +22,7 @@ import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.dialogs.ChoosePageNumberDialogFragment;
 import com.franckrj.respawnirc.dialogs.LinkContextMenuDialogFragment;
+import com.franckrj.respawnirc.dialogs.MessageContextMenuDialogFragment;
 import com.franckrj.respawnirc.dialogs.SelectStickerDialogFragment;
 import com.franckrj.respawnirc.dialogs.ShowImageDialogFragment;
 import com.franckrj.respawnirc.jvctopic.jvctopicgetters.AbsJVCTopicGetter;
@@ -42,8 +43,8 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
                                                                     PopupMenu.OnMenuItemClickListener, JVCTopicModeForumGetter.NewNumbersOfPagesListener,
                                                                     ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCTopicAdapter.URLClicked,
                                                                     AbsJVCTopicGetter.NewReasonForTopicLock, SelectStickerDialogFragment.StickerSelected,
-        PageNavigationUtil.PageNavigationFunctions, AddOrRemoveThingToFavs.ActionToFavsEnded,
-                                                                    AbsShowTopicFragment.NewSurveyNeedToBeShown {
+                                                                    PageNavigationUtil.PageNavigationFunctions, AddOrRemoveThingToFavs.ActionToFavsEnded,
+                                                                    AbsShowTopicFragment.NewSurveyNeedToBeShown, JVCTopicAdapter.PseudoClicked {
     public static final String EXTRA_TOPIC_LINK = "com.franckrj.respawnirc.EXTRA_TOPIC_LINK";
     public static final String EXTRA_TOPIC_NAME = "com.franckrj.respawnirc.EXTRA_TOPIC_NAME";
     public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.EXTRA_FORUM_NAME";
@@ -662,5 +663,16 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         newShowSurveyIntent.putExtra(ShowSurveyActivity.EXTRA_AJAX_INFOS, ajaxInfos);
         newShowSurveyIntent.putExtra(ShowSurveyActivity.EXTRA_COOKIES, cookieListInAString);
         startActivity(newShowSurveyIntent);
+    }
+
+    @Override
+    public void getMessageOfPseudoClicked(JVCParser.MessageInfos messageClicked) {
+        Bundle argForFrag = new Bundle();
+        MessageContextMenuDialogFragment messageMenuDialogFragment = new MessageContextMenuDialogFragment();
+        argForFrag.putString(MessageContextMenuDialogFragment.ARG_PSEUDO, messageClicked.pseudo);
+        argForFrag.putString(MessageContextMenuDialogFragment.ARG_MESSAGE_ID, String.valueOf(messageClicked.id));
+        argForFrag.putBoolean(MessageContextMenuDialogFragment.ARG_USE_INTERNAL_BROWSER, useInternalNavigatorForDefaultOpening);
+        messageMenuDialogFragment.setArguments(argForFrag);
+        messageMenuDialogFragment.show(getFragmentManager(), "MessageContextMenuDialogFragment");
     }
 }

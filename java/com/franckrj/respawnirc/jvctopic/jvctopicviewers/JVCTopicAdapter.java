@@ -50,6 +50,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     private CustomTagHandler tagHandler = new CustomTagHandler();
     private ImageDownloader downloaderForImage = new ImageDownloader();
     private URLClicked urlCLickedListener = null;
+    private PseudoClicked pseudoCLickedListener = null;
     private Html.ImageGetter jvcImageGetter = null;
     private boolean showSurvey = false;
     private String surveyTitle = "";
@@ -135,6 +136,10 @@ public class JVCTopicAdapter extends BaseAdapter {
 
     public void setUrlCLickedListener(URLClicked newListener) {
         urlCLickedListener = newListener;
+    }
+
+    public void setPseudoClickedListener(PseudoClicked newListener) {
+        pseudoCLickedListener = newListener;
     }
 
     public void setActionWhenItemMenuClicked(PopupMenu.OnMenuItemClickListener newAction) {
@@ -274,14 +279,22 @@ public class JVCTopicAdapter extends BaseAdapter {
             holder.firstLine.setOnClickListener(onSurveyClickListener);
             convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.altBackgroundMessageColor));
         } else {
+            final int realPosition = position - (showSurvey ? 1 : 0);
             holder.showMenuButton.setTag(position);
-            position = position - (showSurvey ? 1 : 0);
             holder.showMenuButton.setVisibility(View.VISIBLE);
             holder.secondLine.setVisibility(View.VISIBLE);
-            holder.firstLine.setText(listOfContentForMessages.get(position).firstLineContent);
-            holder.secondLine.setText(listOfContentForMessages.get(position).secondLineContent);
+            holder.firstLine.setText(listOfContentForMessages.get(realPosition).firstLineContent);
+            holder.secondLine.setText(listOfContentForMessages.get(realPosition).secondLineContent);
             convertView.setOnClickListener(null);
-            holder.firstLine.setOnClickListener(null);
+            holder.firstLine.setOnClickListener(new View.OnClickListener() {
+                int messageNumberInList = realPosition;
+                @Override
+                public void onClick(View v) {
+                    if (pseudoCLickedListener != null) {
+                        pseudoCLickedListener.getMessageOfPseudoClicked(listOfMessages.get(messageNumberInList));
+                    }
+                }
+            });
 
             if (position % 2 == 0 || !alternateBackgroundColor) {
                 convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.defaultColorForBackground));
@@ -349,5 +362,9 @@ public class JVCTopicAdapter extends BaseAdapter {
 
     public interface URLClicked {
         void getClickedURL(String link, boolean itsLongClick);
+    }
+
+    public interface PseudoClicked {
+        void getMessageOfPseudoClicked(JVCParser.MessageInfos messageClicked);
     }
 }

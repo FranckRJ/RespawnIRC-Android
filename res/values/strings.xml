@@ -147,10 +147,18 @@
     <string name="yes">Oui</string>
     <string name="no">Non</string>
     <string name="showMPWithNumber">Consulter les MP   (%1$s)</string>
+    <string name="openCDV">Ouvrir la CDV</string>
+    <string name="copyPseudo">Copier le pseudo</string>
+    <string name="copyPermalink">Copier le lien permanent</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
         <item>@string/openInInternBrowser</item>
         <item>@string/copy</item>
+    </string-array>
+    <string-array name="choicesForMessageContextMenu">
+        <item>@string/openCDV</item>
+        <item>@string/copyPseudo</item>
+        <item>@string/copyPermalink</item>
     </string-array>
 </resources>
