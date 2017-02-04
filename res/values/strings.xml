@@ -150,6 +150,7 @@
     <string name="openCDV">Ouvrir la CDV</string>
     <string name="copyPseudo">Copier le pseudo</string>
     <string name="copyPermalink">Copier le lien permanent</string>
+    <string name="selectText">Sélectionner du texte</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
@@ -160,5 +161,6 @@
         <item>@string/openCDV</item>
         <item>@string/copyPseudo</item>
         <item>@string/copyPermalink</item>
+        <item>@string/selectText</item>
     </string-array>
 </resources>

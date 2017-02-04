@@ -1,6 +1,8 @@
 package com.franckrj.respawnirc.utils;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -76,5 +78,11 @@ public class Utils {
         Intent newNavigatorIntent = new Intent(parentActviity, WebNavigatorActivity.class);
         newNavigatorIntent.putExtra(WebNavigatorActivity.EXTRA_URL_LOAD, link);
         parentActviity.startActivity(newNavigatorIntent);
+    }
+
+    public static void putStringInClipboard(String textToCopy, Activity fromThisActivity) {
+        ClipboardManager clipboard = (ClipboardManager) fromThisActivity.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText(textToCopy, textToCopy);
+        clipboard.setPrimaryClip(clip);
     }
 }

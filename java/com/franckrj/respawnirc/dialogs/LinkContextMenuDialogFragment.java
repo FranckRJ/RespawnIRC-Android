@@ -3,9 +3,6 @@ package com.franckrj.respawnirc.dialogs;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -47,9 +44,7 @@ public class LinkContextMenuDialogFragment extends DialogFragment {
                         Utils.openLinkInInternalNavigator(urlOfLink, getActivity());
                         break;
                     case POS_COPY:
-                        ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                        ClipData clip = ClipData.newPlainText(urlOfLink, urlOfLink);
-                        clipboard.setPrimaryClip(clip);
+                        Utils.putStringInClipboard(urlOfLink, getActivity());
                         break;
                 }
                 dialog.dismiss();

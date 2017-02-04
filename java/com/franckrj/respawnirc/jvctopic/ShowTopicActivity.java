@@ -672,6 +672,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         argForFrag.putString(MessageContextMenuDialogFragment.ARG_PSEUDO, messageClicked.pseudo);
         argForFrag.putString(MessageContextMenuDialogFragment.ARG_MESSAGE_ID, String.valueOf(messageClicked.id));
         argForFrag.putBoolean(MessageContextMenuDialogFragment.ARG_USE_INTERNAL_BROWSER, useInternalNavigatorForDefaultOpening);
+        argForFrag.putString(MessageContextMenuDialogFragment.ARG_MESSAGE_CONTENT, messageClicked.messageNotParsed);
         messageMenuDialogFragment.setArguments(argForFrag);
         messageMenuDialogFragment.show(getFragmentManager(), "MessageContextMenuDialogFragment");
     }
