@@ -122,6 +122,9 @@ public class WebNavigatorActivity extends AppCompatActivity {
             case R.id.action_open_in_external_browser_webnavigator:
                 Utils.openLinkInExternalNavigator(currentUrl, this);
                 return true;
+            case R.id.action_copy_url_webnavigator:
+                Utils.putStringInClipboard(currentUrl, this);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

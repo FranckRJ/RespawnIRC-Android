@@ -62,6 +62,8 @@ public final class JVCParser {
     private static final Pattern surveyReplyPattern = Pattern.compile("<td class=\"result-pourcent\">[^<]*<div class=\"pourcent\">([^<]*)</div>.*?<td class=\"reponse\">([^<]*)</td>", Pattern.DOTALL);
     private static final Pattern realSurveyContentPattern = Pattern.compile("\"html\":\"(.*?)\"\\}");
     private static final Pattern numberOfMpJVCPattern = Pattern.compile("<span[^c]*class=\"account-number-mp[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
+    private static final Pattern overlyJVCQuotePattern = Pattern.compile("(<blockquote class=\"blockquote-jv\">|</blockquote>)");
+    private static final Pattern overlyBetterQuotePattern = Pattern.compile("<(/)?blockquote>");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
 
     private JVCParser() {
@@ -886,7 +888,7 @@ public final class JVCParser {
         }
 
         public static String removeOverlyQuoteInPrettyMessage(String prettyMessage, int maxNumberOfOverlyQuotes) {
-            Matcher htmlTagMatcher = htmlTagPattern.matcher(prettyMessage);
+            Matcher htmlTagMatcher = overlyBetterQuotePattern.matcher(prettyMessage);
             int lastOffsetOfTag = 0;
 
             maxNumberOfOverlyQuotes += 1;
@@ -902,7 +904,7 @@ public final class JVCParser {
                 lastOffsetOfTag = htmlTagMatcher.end();
 
                 if (maxNumberOfOverlyQuotes <= 0) {
-                    Matcher secHtmlTagMatcher = htmlTagPattern.matcher(prettyMessage);
+                    Matcher secHtmlTagMatcher = overlyBetterQuotePattern.matcher(prettyMessage);
                     int tmpNumberQuote = 0;
                     boolean hasMatched = false;
                     int secLastOffsetTag = htmlTagMatcher.end();
@@ -926,7 +928,7 @@ public final class JVCParser {
 
                     if (hasMatched) {
                         prettyMessage = prettyMessage.substring(0, htmlTagMatcher.end()) + "[...]" + prettyMessage.substring(secHtmlTagMatcher.start());
-                        htmlTagMatcher = htmlTagPattern.matcher(prettyMessage);
+                        htmlTagMatcher = overlyBetterQuotePattern.matcher(prettyMessage);
                     }
                 }
             }
@@ -935,7 +937,7 @@ public final class JVCParser {
         }
 
         public static int countNumberOfOverlyQuoteInNotPrettyMessage(String notPrettyMessage) {
-            Matcher htmlTagMatcher = htmlTagPattern.matcher(notPrettyMessage);
+            Matcher htmlTagMatcher = overlyJVCQuotePattern.matcher(notPrettyMessage);
             int maxNumberOfOverlyQuoteInMessage = 0;
             int currentNumberOfOverlyQuoteInMessage = 0;
             int lastOffsetOfTag = 0;

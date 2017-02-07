@@ -151,6 +151,7 @@
     <string name="copyPseudo">Copier le pseudo</string>
     <string name="copyPermalink">Copier le lien permanent</string>
     <string name="selectText">Sélectionner du texte</string>
+    <string name="copyUrl">Copier l\'URL</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
