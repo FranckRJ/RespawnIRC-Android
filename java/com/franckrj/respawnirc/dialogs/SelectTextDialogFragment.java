@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.Utils;
@@ -49,6 +50,9 @@ public class SelectTextDialogFragment extends DialogFragment {
                         final int max = Math.max(0, Math.max(selStart, selEnd));
                         if (min != max) {
                             Utils.putStringInClipboard(textShowed.getText().subSequence(min, max).toString(), getActivity());
+                            Toast.makeText(getActivity(), R.string.copyDone, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity(), R.string.noTextCopied, Toast.LENGTH_SHORT).show();
                         }
                         dialog.dismiss();
                     }

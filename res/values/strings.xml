@@ -152,6 +152,8 @@
     <string name="copyPermalink">Copier le lien permanent</string>
     <string name="selectText">Sélectionner du texte</string>
     <string name="copyUrl">Copier l\'URL</string>
+    <string name="copyDone">Copie effectuée</string>
+    <string name="noTextCopied">Aucun texte copié</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

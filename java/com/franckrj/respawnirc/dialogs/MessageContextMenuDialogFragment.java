@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.JVCParser;
@@ -62,10 +63,12 @@ public class MessageContextMenuDialogFragment extends DialogFragment {
                     }
                     case POS_COPY_PSEUDO: {
                         Utils.putStringInClipboard(pseudoOfMessage, getActivity());
+                        Toast.makeText(getActivity(), R.string.copyDone, Toast.LENGTH_SHORT).show();
                         break;
                     }
                     case POS_COPY_PERMALINK: {
                         Utils.putStringInClipboard("http://www.jeuxvideo.com/" + pseudoOfMessage.toLowerCase() + "/forums/message/" + idOfMessage, getActivity());
+                        Toast.makeText(getActivity(), R.string.copyDone, Toast.LENGTH_SHORT).show();
                         break;
                     }
                     case POS_SELECT_TEXT: {

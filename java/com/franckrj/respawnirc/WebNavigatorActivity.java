@@ -13,6 +13,7 @@ import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
@@ -124,6 +125,7 @@ public class WebNavigatorActivity extends AppCompatActivity {
                 return true;
             case R.id.action_copy_url_webnavigator:
                 Utils.putStringInClipboard(currentUrl, this);
+                Toast.makeText(this, R.string.copyDone, Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
