@@ -23,7 +23,7 @@ import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.dialogs.ChoosePageNumberDialogFragment;
 import com.franckrj.respawnirc.dialogs.LinkContextMenuDialogFragment;
 import com.franckrj.respawnirc.dialogs.MessageContextMenuDialogFragment;
-import com.franckrj.respawnirc.dialogs.SelectStickerDialogFragment;
+import com.franckrj.respawnirc.dialogs.InsertStuffDialogFragment;
 import com.franckrj.respawnirc.dialogs.ShowImageDialogFragment;
 import com.franckrj.respawnirc.jvctopic.jvctopicgetters.AbsJVCTopicGetter;
 import com.franckrj.respawnirc.jvctopic.jvctopicgetters.JVCTopicModeForumGetter;
@@ -42,7 +42,7 @@ import com.franckrj.respawnirc.utils.Utils;
 public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCTopicGetter.NewForumAndTopicNameAvailable,
                                                                     PopupMenu.OnMenuItemClickListener, JVCTopicModeForumGetter.NewNumbersOfPagesListener,
                                                                     ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCTopicAdapter.URLClicked,
-                                                                    AbsJVCTopicGetter.NewReasonForTopicLock, SelectStickerDialogFragment.StickerSelected,
+                                                                    AbsJVCTopicGetter.NewReasonForTopicLock, InsertStuffDialogFragment.StuffInserted,
                                                                     PageNavigationUtil.PageNavigationFunctions, AddOrRemoveThingToFavs.ActionToFavsEnded,
                                                                     AbsShowTopicFragment.NewSurveyNeedToBeShown, JVCTopicAdapter.PseudoClicked {
     public static final String EXTRA_TOPIC_LINK = "com.franckrj.respawnirc.EXTRA_TOPIC_LINK";
@@ -162,8 +162,8 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     private final Button.OnClickListener selectStickerClickedListener = new View.OnClickListener() {
         @Override
         public void onClick(View buttonView) {
-            SelectStickerDialogFragment selectStickerDialogFragment = new SelectStickerDialogFragment();
-            selectStickerDialogFragment.show(getFragmentManager(), "SelectStickerDialogFragment");
+            InsertStuffDialogFragment insertStuffDialogFragment = new InsertStuffDialogFragment();
+            insertStuffDialogFragment.show(getFragmentManager(), "InsertStuffDialogFragment");
         }
     };
 
@@ -624,15 +624,16 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     }
 
     @Override
-    public void getSelectedSticker(String newStickerToAdd) {
+    public void getStringInserted(String newStringToAdd, int posOfCenterFromEnd) {
         if (reasonOfLock == null) {
             int currentCursorPos = messageSendEdit.getSelectionStart();
             if (currentCursorPos == -1) {
-                messageSendEdit.append(newStickerToAdd);
+                currentCursorPos = 0;
+                messageSendEdit.append(newStringToAdd);
             } else {
-                messageSendEdit.getText().insert(currentCursorPos, newStickerToAdd);
-                messageSendEdit.setSelection(currentCursorPos + newStickerToAdd.length());
+                messageSendEdit.getText().insert(currentCursorPos, newStringToAdd);
             }
+            messageSendEdit.setSelection(currentCursorPos + newStringToAdd.length() - posOfCenterFromEnd);
         }
     }
 

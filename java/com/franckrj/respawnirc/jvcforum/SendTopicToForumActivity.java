@@ -13,12 +13,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.dialogs.SelectStickerDialogFragment;
+import com.franckrj.respawnirc.dialogs.InsertStuffDialogFragment;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
-public class SendTopicToForumActivity extends AppCompatActivity implements SelectStickerDialogFragment.StickerSelected {
+public class SendTopicToForumActivity extends AppCompatActivity implements InsertStuffDialogFragment.StuffInserted {
     public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_FORUM_NAME";
     public static final String EXTRA_FORUM_LINK = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_FORUM_LINK";
     public static final String EXTRA_INPUT_LIST = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_INPUT_LIST";
@@ -131,8 +131,8 @@ public class SendTopicToForumActivity extends AppCompatActivity implements Selec
                 topicContentEdit.setText(lastTopicContentSended);
                 return true;
             case R.id.action_select_sticker_sendtopic:
-                SelectStickerDialogFragment selectStickerDialogFragment = new SelectStickerDialogFragment();
-                selectStickerDialogFragment.show(getFragmentManager(), "SelectStickerDialogFragment");
+                InsertStuffDialogFragment insertStuffDialogFragment = new InsertStuffDialogFragment();
+                insertStuffDialogFragment.show(getFragmentManager(), "InsertStuffDialogFragment");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -140,14 +140,15 @@ public class SendTopicToForumActivity extends AppCompatActivity implements Selec
     }
 
     @Override
-    public void getSelectedSticker(String newStickerToAdd) {
+    public void getStringInserted(String newStringToAdd, int posOfCenterFromEnd) {
         int currentCursorPos = topicContentEdit.getSelectionStart();
         if (currentCursorPos == -1) {
-            topicContentEdit.append(newStickerToAdd);
+            currentCursorPos = 0;
+            topicContentEdit.append(newStringToAdd);
         } else {
-            topicContentEdit.getText().insert(currentCursorPos, newStickerToAdd);
-            topicContentEdit.setSelection(currentCursorPos + newStickerToAdd.length());
+            topicContentEdit.getText().insert(currentCursorPos, newStringToAdd);
         }
+        topicContentEdit.setSelection(currentCursorPos + newStringToAdd.length() - posOfCenterFromEnd);
     }
 
     private class SendTopicToJVC extends AsyncTask<String, Void, String> {

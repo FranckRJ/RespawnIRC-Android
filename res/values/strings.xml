@@ -154,6 +154,7 @@
     <string name="copyUrl">Copier l\'URL</string>
     <string name="copyDone">Copie effectuée</string>
     <string name="noTextCopied">Aucun texte copié</string>
+    <string name="insertStuff">Insérer…</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
