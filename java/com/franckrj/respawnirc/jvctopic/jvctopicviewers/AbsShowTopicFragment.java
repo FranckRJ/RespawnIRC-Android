@@ -77,6 +77,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         currentSettings.maxNumberOfOverlyQuotes = Integer.parseInt(sharedPref.getString(getString(R.string.settingsMaxNumberOfOverlyQuote), getString(R.string.maxNumberOfOverlyQuoteDefault)));
         currentSettings.showNoelshackImages = sharedPref.getBoolean(getString(R.string.settingsShowNoelshackImage), Boolean.parseBoolean(getString(R.string.showNoelshackImageDefault)));
         currentSettings.transformStickerToSmiley = sharedPref.getBoolean(getString(R.string.settingsTransformStickerToSmiley), Boolean.parseBoolean(getString(R.string.transformStickerToSmileyDefault)));
+        currentSettings.shortenLongLink = sharedPref.getBoolean(getString(R.string.settingsShortenLongLink), Boolean.parseBoolean(getString(R.string.shortenLongLinkDefault)));
         currentSettings.pseudoOfUser = sharedPref.getString(getString(R.string.prefPseudoUser), "");
         absGetterForTopic.setCookieListInAString(sharedPref.getString(getString(R.string.prefCookiesList), ""));
     }

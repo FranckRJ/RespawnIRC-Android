@@ -155,6 +155,9 @@
     <string name="copyDone">Copie effectuée</string>
     <string name="noTextCopied">Aucun texte copié</string>
     <string name="insertStuff">Insérer…</string>
+    <string name="settingsShortenLongLink">settings.shortenLongLink</string>
+    <string name="shortenLongLinkDefault">false</string>
+    <string name="shortenLongLinkTitle">Raccourcir les liens longs</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

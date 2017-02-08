@@ -64,6 +64,9 @@ public final class JVCParser {
     private static final Pattern numberOfMpJVCPattern = Pattern.compile("<span[^c]*class=\"account-number-mp[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
     private static final Pattern overlyJVCQuotePattern = Pattern.compile("(<blockquote class=\"blockquote-jv\">|</blockquote>)");
     private static final Pattern overlyBetterQuotePattern = Pattern.compile("<(/)?blockquote>");
+    private static final Pattern jvcLinkPattern = Pattern.compile("<a href=\"([^\"]*)\"( title=\"[^\"]*\")?>.*?</a>");
+    private static final Pattern shortLinkPattern = Pattern.compile("<span class=\"JvCare [^\"]*\" rel=\"nofollow[^\"]*\" target=\"_blank\">([^<]*)</span>");
+    private static final Pattern longLinkPattern = Pattern.compile("<span class=\"JvCare [^\"]*\"[^i]*itle=\"([^\"]*)\">[^<]*<i></i><span>[^<]*</span>[^<]*</span>");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
 
     private JVCParser() {
@@ -650,10 +653,17 @@ public final class JVCParser {
         tmpMessage = ToolForJVCParsing.parseListInMessageIfNeeded(tmpMessage);
 
         tmpMessage = tmpMessage.replaceAll("<img src=\"//image.jeuxvideo.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-def=\"SMILEYS\" data-code=\"([^\"]*)\" title=\"[^\"]*\" />", "<img src=\"smiley_$1\"/>")
-                .replaceAll("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe .*? src=\"http(s)?://www.youtube.com/embed/([^\"]*)\"[^>]*></iframe></div></div>", "<a href=\"http://youtu.be/$2\">http://youtu.be/$2</a>")
-                .replaceAll("<a href=\"([^\"]*)\"( title=\"[^\"]*\")?>.*?</a>", "<a href=\"$1\">$1</a>")
-                .replaceAll("<span class=\"JvCare [^\"]*\" rel=\"nofollow[^\"]*\" target=\"_blank\">([^<]*)</span>", "<a href=\"$1\">$1</a>")
-                .replaceAll("<span class=\"JvCare [^\"]*\"[^i]*itle=\"([^\"]*)\">[^<]*<i></i><span>[^<]*</span>[^<]*</span>", "<a href=\"$1\">$1</a>");
+                .replaceAll("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe .*? src=\"http(s)?://www.youtube.com/embed/([^\"]*)\"[^>]*></iframe></div></div>", "<a href=\"http://youtu.be/$2\">http://youtu.be/$2</a>");
+
+        if (settings.shortenLongLink) {
+            tmpMessage = ToolForJVCParsing.parseThisMessageWithThisPattern(tmpMessage, jvcLinkPattern, 1, "", "", new MakeShortenedLinkIfPossible(50, true), null);
+            tmpMessage = ToolForJVCParsing.parseThisMessageWithThisPattern(tmpMessage, shortLinkPattern, 1, "", "", new MakeShortenedLinkIfPossible(50, true), null);
+            tmpMessage = ToolForJVCParsing.parseThisMessageWithThisPattern(tmpMessage, longLinkPattern, 1, "", "", new MakeShortenedLinkIfPossible(50, true), null);
+        } else {
+            tmpMessage = tmpMessage.replaceAll(jvcLinkPattern.pattern(), "<a href=\"$1\">$1</a>")
+                    .replaceAll(shortLinkPattern.pattern(), "<a href=\"$1\">$1</a>")
+                    .replaceAll(longLinkPattern.pattern(), "<a href=\"$1\">$1</a>");
+        }
 
         if (settings.showNoelshackImages) {
             tmpMessage = tmpMessage.replaceAll("<a href=\"([^\"]*)\" data-def=\"NOELSHACK\" target=\"_blank\"><img class=\"img-shack\" .*? src=\"//([^\"]*)\" [^>]*></a>", "<a href=\"$1\"><img src=\"http://$2\"/></a>");
@@ -676,7 +686,7 @@ public final class JVCParser {
         tmpMessage = ToolForJVCParsing.removeDivAndAdaptParagraphInMessage(tmpMessage);
         tmpMessage = tmpMessage.replaceAll("(<br /> *)*(<(/)?blockquote>)( *<br />)*", "$2");
 
-        tmpMessage = ToolForJVCParsing.parseThisMessageWithThisPattern(tmpMessage, jvCarePattern, 1, "", "", new MakeLinkIfPossible(), null);
+        tmpMessage = ToolForJVCParsing.parseThisMessageWithThisPattern(tmpMessage, jvCarePattern, 1, "", "", new MakeShortenedLinkIfPossible((settings.shortenLongLink ? 50 : 0), false), null);
 
         tmpMessage = ToolForJVCParsing.removeFirstAndLastBrInMessage(tmpMessage);
 
@@ -705,9 +715,9 @@ public final class JVCParser {
         message = ToolForJVCParsing.parseListInMessageIfNeeded(message);
         message = message.replaceAll("<img src=\"//image.jeuxvideo.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-def=\"SMILEYS\" data-code=\"([^\"]*)\" title=\"[^\"]*\" />", "$2")
                 .replaceAll("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe .*? src=\"http(s)?://www.youtube.com/embed/([^\"]*)\"[^>]*></iframe></div></div>", "http://youtu.be/$2")
-                .replaceAll("<a href=\"([^\"]*)\"( title=\"[^\"]*\")?>.*?</a>", "$1")
-                .replaceAll("<span class=\"JvCare [^\"]*\" rel=\"nofollow[^\"]*\" target=\"_blank\">([^<]*)</span>", "$1")
-                .replaceAll("<span class=\"JvCare [^\"]*\"[^i]*itle=\"([^\"]*)\">[^<]*<i></i><span>[^<]*</span>[^<]*</span>", "$1");
+                .replaceAll(jvcLinkPattern.pattern(), "$1")
+                .replaceAll(shortLinkPattern.pattern(), "$1")
+                .replaceAll(longLinkPattern.pattern(), "$1");
         message = message.replace("<blockquote class=\"blockquote-jv\">", "<blockquote>");
         message = ToolForJVCParsing.removeDivAndAdaptParagraphInMessage(message);
         message = message.replaceAll("(<br /> *)*(<(/)?blockquote>)( *<br />)*", "<br /><br />");
@@ -962,10 +972,12 @@ public final class JVCParser {
 
         public static String parseThisMessageWithThisPattern(String messageToParse, Pattern patternToUse, int groupToUse, String stringBefore, String stringAfter, StringModifier firstModifier, StringModifier secondModifier) {
             Matcher matcherToUse = patternToUse.matcher(messageToParse);
+            int lastOffset = 0;
 
-            while (matcherToUse.find()) {
+            while (matcherToUse.find(lastOffset)) {
                 String newMessage = messageToParse.substring(0, matcherToUse.start()) + stringBefore;
                 String messageContent = matcherToUse.group(groupToUse);
+                lastOffset = matcherToUse.start() + 1;
 
                 if (firstModifier != null) {
                     messageContent = firstModifier.changeString(messageContent);
@@ -1186,16 +1198,6 @@ public final class JVCParser {
         }
     }
 
-    private static class MakeLinkIfPossible implements StringModifier {
-        @Override
-        public String changeString(String baseString) {
-            if ((baseString.startsWith("http://") || baseString.startsWith("https://")) && !baseString.contains(" ")) {
-                baseString = "<a href=\"" + baseString + "\">" + baseString + "</a>";
-            }
-            return baseString;
-        }
-    }
-
     private static class RemoveFirstsAndLastsP implements StringModifier {
         @Override
         public String changeString(String baseString) {
@@ -1204,6 +1206,28 @@ public final class JVCParser {
             }
             while (baseString.endsWith("</p>")) {
                 baseString = baseString.substring(0, baseString.length() - 4);
+            }
+            return baseString;
+        }
+    }
+
+    private static class MakeShortenedLinkIfPossible implements StringModifier {
+        final int maxStringSize;
+        final boolean forceLinkCreation;
+
+        MakeShortenedLinkIfPossible(int newMaxStringSize, boolean newForceLinkCreation) {
+            maxStringSize = newMaxStringSize;
+            forceLinkCreation = newForceLinkCreation;
+        }
+
+        @Override
+        public String changeString(String baseString) {
+            if (forceLinkCreation || ((baseString.startsWith("http://") || baseString.startsWith("https://")) && !baseString.contains(" "))) {
+                String linkShowed = baseString;
+                if (maxStringSize > 0 && linkShowed.length() > maxStringSize + 3) {
+                    linkShowed = linkShowed.substring(0, maxStringSize / 2) + "[…]" + linkShowed.substring(linkShowed.length() - (maxStringSize / 2));
+                }
+                baseString = "<a href=\"" + baseString + "\">" + linkShowed + "</a>";
             }
             return baseString;
         }
@@ -1245,6 +1269,7 @@ public final class JVCParser {
         public int maxNumberOfOverlyQuotes = 0;
         public boolean showNoelshackImages = false;
         public boolean transformStickerToSmiley = false;
+        public boolean shortenLongLink = false;
     }
 
     private interface StringModifier {

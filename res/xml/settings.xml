@@ -35,6 +35,10 @@
             android:key="@string/settingsUseInternalNavigator"
             android:title="@string/useInternalNavigatorTitle"
             android:defaultValue="@string/useInternalNavigatorDefault"/>
+        <CheckBoxPreference
+            android:key="@string/settingsShortenLongLink"
+            android:title="@string/shortenLongLinkTitle"
+            android:defaultValue="@string/shortenLongLinkDefault"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/settingsGeneralIRCTitle">
