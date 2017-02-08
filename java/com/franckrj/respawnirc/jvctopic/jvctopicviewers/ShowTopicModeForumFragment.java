@@ -24,7 +24,7 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
 
     private final JVCTopicModeForumGetter.NewMessagesListener listenerForNewMessages = new JVCTopicModeForumGetter.NewMessagesListener() {
         @Override
-        public void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages) {
+        public void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages, boolean itsReallyEmpty) {
             if (!listOfNewMessages.isEmpty()) {
                 boolean scrolledAtTheEnd = false;
                 isInErrorMode = false;

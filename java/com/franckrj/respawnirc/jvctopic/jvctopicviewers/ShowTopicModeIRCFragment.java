@@ -31,7 +31,7 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
 
     private final JVCTopicModeIRCGetter.NewMessagesListener listenerForNewMessages = new JVCTopicModeIRCGetter.NewMessagesListener() {
         @Override
-        public void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages) {
+        public void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages, boolean itsReallyEmpty) {
             if (!listOfNewMessages.isEmpty()) {
                 boolean scrolledAtTheEnd = true;
                 boolean firstTimeGetMessages = adapterForTopic.getAllItems().isEmpty();
@@ -65,7 +65,7 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
                 if (scrolledAtTheEnd && jvcMsgList.getCount() > 0) {
                     jvcMsgList.setSelection(jvcMsgList.getCount() - 1);
                 }
-            } else {
+            } else if (itsReallyEmpty) {
                 if (!isInErrorMode) {
                     getterForTopic.reloadTopic();
                     isInErrorMode = true;
@@ -127,7 +127,6 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
 
     @Override
     protected void initializeSettings() {
-        showRefreshWhenMessagesShowed = false;
         currentSettings.firstLineFormat = "[<%DATE_COLOR_START%><%DATE_TIME%><%DATE_COLOR_END%>] &lt;<%PSEUDO_COLOR_START%><%PSEUDO_PSEUDO%><%PSEUDO_COLOR_END%>&gt;";
         currentSettings.colorPseudoUser = Utils.resColorToString(R.color.colorPseudoUser, getActivity());
         currentSettings.colorPseudoOther = "#000025";
@@ -147,6 +146,7 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
     @Override
     protected void reloadSettings() {
         super.reloadSettings();
+        showRefreshWhenMessagesShowed = sharedPref.getBoolean(getString(R.string.settingsShowRefreshWhenMessagesShowedModeIRC), Boolean.parseBoolean(getString(R.string.showRefreshWhenMessagesShowedModeIRCDefault)));
         maxNumberOfMessagesShowed = Integer.parseInt(sharedPref.getString(getString(R.string.settingsMaxNumberOfMessages), getString(R.string.maxNumberOfMessagesDefault)));
         initialNumberOfMessagesShowed = Integer.parseInt(sharedPref.getString(getString(R.string.settingsInitialNumberOfMessages), getString(R.string.initialNumberOfMessagesDefault)));
         getterForTopic.setTimeBetweenRefreshTopic(Integer.parseInt(sharedPref.getString(getString(R.string.settingsRefreshTopicTime), getString(R.string.refreshTopicTimeDefault))));

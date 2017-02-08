@@ -158,6 +158,9 @@
     <string name="settingsShortenLongLink">settings.shortenLongLink</string>
     <string name="shortenLongLinkDefault">false</string>
     <string name="shortenLongLinkTitle">Raccourcir les liens longs</string>
+    <string name="settingsShowRefreshWhenMessagesShowedModeIRC">settings.showRefreshWhenMessagesShowedModeIRC</string>
+    <string name="showRefreshWhenMessagesShowedModeIRCDefault">false</string>
+    <string name="showRefreshWhenMessagesShowedModeIRCTitle">Toujours afficher l\'icône de refresh</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

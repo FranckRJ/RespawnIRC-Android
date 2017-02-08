@@ -63,6 +63,8 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
     public boolean reloadTopic() {
         if (currentAsyncTaskForGetMessage != null) {
             if (!currentAsyncTaskForGetMessage.getStatus().equals(AsyncTask.Status.RUNNING)) {
+                timerForFetchUrl.cancel();
+                timerForFetchUrl = new Timer();
                 stopAllCurrentTask();
                 return startGetMessages(0);
             } else {
@@ -170,7 +172,7 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
                         }
 
                         if (listenerForNewMessages != null) {
-                            listenerForNewMessages.getNewMessages(listOfNewMessages);
+                            listenerForNewMessages.getNewMessages(listOfNewMessages, infoOfCurrentPage.listOfMessages.isEmpty());
                         }
                     }
 
@@ -184,7 +186,7 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
                     }
                 } else {
                     if (listenerForNewMessages != null) {
-                        listenerForNewMessages.getNewMessages(new ArrayList<JVCParser.MessageInfos>());
+                        listenerForNewMessages.getNewMessages(new ArrayList<JVCParser.MessageInfos>(), true);
                     }
                 }
 

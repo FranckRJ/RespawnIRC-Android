@@ -47,6 +47,10 @@
             android:title="@string/refreshTopicTimeTitle"
             android:defaultValue="@string/refreshTopicTimeDefault"
             android:numeric="integer"/>
+        <CheckBoxPreference
+            android:key="@string/settingsShowRefreshWhenMessagesShowedModeIRC"
+            android:title="@string/showRefreshWhenMessagesShowedModeIRCTitle"
+            android:defaultValue="@string/showRefreshWhenMessagesShowedModeIRCDefault"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/settingsMaxMessagesNumberTitle">

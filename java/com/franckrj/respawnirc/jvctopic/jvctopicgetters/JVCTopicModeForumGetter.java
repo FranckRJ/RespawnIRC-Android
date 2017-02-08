@@ -62,14 +62,14 @@ public class JVCTopicModeForumGetter extends AbsJVCTopicGetter {
                 }
 
                 if (listenerForNewMessages != null) {
-                    listenerForNewMessages.getNewMessages(infoOfCurrentPage.listOfMessages);
+                    listenerForNewMessages.getNewMessages(infoOfCurrentPage.listOfMessages, true);
                 }
                 if (listenerForNewNumbersOfPages != null) {
                     listenerForNewNumbersOfPages.getNewLastPageNumber(JVCParser.getPageNumberForThisTopicLink(infoOfCurrentPage.lastPageLink));
                 }
             } else {
                 if (listenerForNewMessages != null) {
-                    listenerForNewMessages.getNewMessages(new ArrayList<JVCParser.MessageInfos>());
+                    listenerForNewMessages.getNewMessages(new ArrayList<JVCParser.MessageInfos>(), true);
                 }
             }
         }

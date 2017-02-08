@@ -220,7 +220,7 @@ public abstract class AbsJVCTopicGetter {
     }
 
     public interface NewMessagesListener {
-        void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages);
+        void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages, boolean itsReallyEmpty);
     }
 
     public interface NewGetterStateListener {
