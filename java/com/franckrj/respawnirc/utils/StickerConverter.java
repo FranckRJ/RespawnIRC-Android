@@ -67,6 +67,22 @@ public class StickerConverter {
         ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1lgb", "15.gif"));
         ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1lgh", "pf.gif"));
         ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1lga", "46.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1nu6", "56.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1kgu", "61.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1kl3", "68.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1kl5", "27.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1kl2", "46.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1li4", "26.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1kh1", "70.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1kl1", "2.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1lt7", "32.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1lt8", "30.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1ltb", "51.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1ptd", "36.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1kkt", "31.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1kl0", "19.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1kl9", "play.gif"));
+        ruleForStickerToSmiley.listOfConvert.add(new InfoForConvert("1kks", "21.gif"));
         ruleForStickerToSmiley.convertToSmiley = true;
     }
 
