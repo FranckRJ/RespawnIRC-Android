@@ -60,9 +60,9 @@
     <string name="topicOrForumLink">Lien du topic/forum…</string>
     <string name="openTopicOrForumLink">Ouvrir un lien de topic/forum</string>
     <string name="settingsStyleMessageForumTitle">Affichage des messages (forum)</string>
-    <string name="settingsForumAlternateBackgroundColor">settings.forumAlternateBackgroundColor</string>
-    <string name="forumAlternateBackgroundColorTitle">Alterner la couleur de fond</string>
-    <string name="forumAlternateBackgroundColorDefault">true</string>
+    <string name="settingsTopicAlternateBackgroundColorModeForum">settings.topicAlternateBackgroundColorModeForum</string>
+    <string name="topicAlternateBackgroundColorTitle">Alterner la couleur de fond</string>
+    <string name="topicAlternateBackgroundColorModeForumDefault">true</string>
     <string name="prefForumUrlToFetch">pref.forumUrlToFetch</string>
     <string name="topicIcon">Icone de topic</string>
     <string name="showQuoteMessage">Afficher les citations imbriquées</string>
@@ -161,6 +161,8 @@
     <string name="settingsShowRefreshWhenMessagesShowedModeIRC">settings.showRefreshWhenMessagesShowedModeIRC</string>
     <string name="showRefreshWhenMessagesShowedModeIRCDefault">false</string>
     <string name="showRefreshWhenMessagesShowedModeIRCTitle">Toujours afficher l\'icône de refresh</string>
+    <string name="settingsTopicAlternateBackgroundColorModeIRC">settings.topicAlternateBackgroundColorModeIRC</string>
+    <string name="topicAlternateBackgroundColorModeIRCDefault">false</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

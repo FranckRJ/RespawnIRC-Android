@@ -64,6 +64,10 @@
             android:title="@string/initialNumberOfMessagesTitle"
             android:defaultValue="@string/initialNumberOfMessagesDefault"
             android:numeric="integer"/>
+        <CheckBoxPreference
+            android:key="@string/settingsTopicAlternateBackgroundColorModeIRC"
+            android:title="@string/topicAlternateBackgroundColorTitle"
+            android:defaultValue="@string/topicAlternateBackgroundColorModeIRCDefault"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/settingsOnRefreshForumTitle">
@@ -75,8 +79,8 @@
     <PreferenceCategory
         android:title="@string/settingsStyleMessageForumTitle">
         <CheckBoxPreference
-            android:key="@string/settingsForumAlternateBackgroundColor"
-            android:title="@string/forumAlternateBackgroundColorTitle"
-            android:defaultValue="@string/forumAlternateBackgroundColorDefault"/>
+            android:key="@string/settingsTopicAlternateBackgroundColorModeForum"
+            android:title="@string/topicAlternateBackgroundColorTitle"
+            android:defaultValue="@string/topicAlternateBackgroundColorModeForumDefault"/>
     </PreferenceCategory>
 </PreferenceScreen>

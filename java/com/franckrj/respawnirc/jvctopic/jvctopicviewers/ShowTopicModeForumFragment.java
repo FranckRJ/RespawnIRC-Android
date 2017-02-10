@@ -122,7 +122,7 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
     protected void reloadSettings() {
         super.reloadSettings();
         clearMessagesOnRefresh = sharedPref.getBoolean(getString(R.string.settingsForumClearOnRefresh), Boolean.parseBoolean(getString(R.string.forumClearOnRefreshDefault)));
-        adapterForTopic.setAlternateBackgroundColor(sharedPref.getBoolean(getString(R.string.settingsForumAlternateBackgroundColor), Boolean.parseBoolean(getString(R.string.forumAlternateBackgroundColorDefault))));
+        adapterForTopic.setAlternateBackgroundColor(sharedPref.getBoolean(getString(R.string.settingsTopicAlternateBackgroundColorModeForum), Boolean.parseBoolean(getString(R.string.topicAlternateBackgroundColorModeForumDefault))));
         adapterForTopic.updateAllItems();
     }
 

@@ -9,7 +9,7 @@ import org.xml.sax.XMLReader;
 
 public class CustomTagHandler implements Html.TagHandler {
     public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
-        if(tag.equals("s")) {
+        if (tag.toLowerCase().equals("s")) {
             processStrike(opening, output);
         }
     }

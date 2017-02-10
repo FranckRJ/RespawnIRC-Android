@@ -140,7 +140,6 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
     @Override
     protected void initializeAdapter() {
         adapterForTopic.setIdOfLayoutToUse(R.layout.jvcmessages_rowirc);
-        adapterForTopic.setAlternateBackgroundColor(false);
     }
 
     @Override
@@ -150,6 +149,7 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
         maxNumberOfMessagesShowed = Integer.parseInt(sharedPref.getString(getString(R.string.settingsMaxNumberOfMessages), getString(R.string.maxNumberOfMessagesDefault)));
         initialNumberOfMessagesShowed = Integer.parseInt(sharedPref.getString(getString(R.string.settingsInitialNumberOfMessages), getString(R.string.initialNumberOfMessagesDefault)));
         getterForTopic.setTimeBetweenRefreshTopic(Integer.parseInt(sharedPref.getString(getString(R.string.settingsRefreshTopicTime), getString(R.string.refreshTopicTimeDefault))));
+        adapterForTopic.setAlternateBackgroundColor(sharedPref.getBoolean(getString(R.string.settingsTopicAlternateBackgroundColorModeIRC), Boolean.parseBoolean(getString(R.string.topicAlternateBackgroundColorModeIRCDefault))));
     }
 
     @Override
