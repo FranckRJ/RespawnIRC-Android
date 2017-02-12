@@ -36,6 +36,7 @@ import com.franckrj.respawnirc.PageNavigationUtil;
 import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
 import com.franckrj.respawnirc.utils.AddOrRemoveThingToFavs;
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
 
@@ -140,10 +141,9 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
                 messageSendLayout.requestFocus();
 
                 if (!tmpLastMessageSended.isEmpty()) {
-                    SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
                     lastMessageSended = tmpLastMessageSended;
-                    sharedPrefEdit.putString(getString(R.string.prefLastMessageSended), lastMessageSended);
-                    sharedPrefEdit.apply();
+                    PrefsManager.putString(PrefsManager.StringPref.Names.LAST_MESSAGE_SENDED, lastMessageSended);
+                    PrefsManager.applyChanges();
                 }
             } else {
                 Toast.makeText(ShowTopicActivity.this, R.string.errorMessageAlreadySending, Toast.LENGTH_SHORT).show();
@@ -201,13 +201,13 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     }
 
     private void reloadSettings() {
-        pseudoOfUser = sharedPref.getString(getString(R.string.prefPseudoUser), "");
-        cookieListInAString = sharedPref.getString(getString(R.string.prefCookiesList), "");
-        lastMessageSended = sharedPref.getString(getString(R.string.prefLastMessageSended), "");
+        pseudoOfUser = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER);
+        cookieListInAString = PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST);
+        lastMessageSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_MESSAGE_SENDED);
     }
 
     private void updateShowNavigationButtons() {
-        int currentTopicMode = sharedPref.getInt(getString(R.string.prefCurrentTopicMode), AbsShowTopicFragment.MODE_FORUM);
+        int currentTopicMode = PrefsManager.getInt(PrefsManager.IntPref.Names.CURRENT_TOPIC_MODE);
 
         if (currentTopicMode == AbsShowTopicFragment.MODE_FORUM) {
             pageNavigation.setShowNavigationButtons(ShowTopicModeForumFragment.getShowNavigationButtons());
@@ -269,7 +269,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         messageSendButton.setOnLongClickListener(refreshFromSendButton);
         selectStickerButton.setOnClickListener(selectStickerClickedListener);
 
-        pageNavigation.setCurrentLink(sharedPref.getString(getString(R.string.prefTopicUrlToFetch), ""));
+        pageNavigation.setCurrentLink(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_URL_TO_FETCH));
         updateShowNavigationButtons();
         if (savedInstanceState == null) {
             if (getIntent() != null) {
@@ -319,9 +319,8 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     @Override
     public void onResume() {
         super.onResume();
-        SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
-        sharedPrefEdit.putInt(getString(R.string.prefLastActivityViewed), MainActivity.ACTIVITY_SHOW_TOPIC);
-        sharedPrefEdit.apply();
+        PrefsManager.putInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED, MainActivity.ACTIVITY_SHOW_TOPIC);
+        PrefsManager.applyChanges();
 
         useInternalNavigatorForDefaultOpening = sharedPref.getBoolean(getString(R.string.settingsUseInternalNavigator), Boolean.valueOf(getString(R.string.useInternalNavigatorDefault)));
         convertNoelshackLinkToDirectLink = sharedPref.getBoolean(getString(R.string.settingsUseDirectNoelshackLink), Boolean.valueOf(getString(R.string.useDirectNoelshackLinkDefault)));
@@ -332,9 +331,8 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     public void onPause() {
         stopAllCurrentTask();
         if (!pageNavigation.getCurrentLink().isEmpty()) {
-            SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
-            sharedPrefEdit.putString(getString(R.string.prefTopicUrlToFetch), setShowedPageNumberForThisLink(pageNavigation.getCurrentLink(), pageNavigation.getCurrentItemIndex() + 1));
-            sharedPrefEdit.apply();
+            PrefsManager.putString(PrefsManager.StringPref.Names.TOPIC_URL_TO_FETCH, setShowedPageNumberForThisLink(pageNavigation.getCurrentLink(), pageNavigation.getCurrentItemIndex() + 1));
+            PrefsManager.applyChanges();
         }
         super.onPause();
     }
@@ -411,10 +409,8 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     @Override
     public void newModeRequested(int newMode) {
         if (newMode == AbsShowTopicFragment.MODE_IRC || newMode == AbsShowTopicFragment.MODE_FORUM) {
-            SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
-
-            sharedPrefEdit.putInt(getString(R.string.prefCurrentTopicMode), newMode);
-            sharedPrefEdit.apply();
+            PrefsManager.putInt(PrefsManager.IntPref.Names.CURRENT_TOPIC_MODE, newMode);
+            PrefsManager.applyChanges();
             updateShowNavigationButtons();
             pageNavigation.updateAdapterForPagerView();
 
@@ -532,7 +528,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
 
     @Override
     public AbsShowSomethingFragment createNewFragmentForRead(String possibleTopicLink) {
-        int currentTopicMode = sharedPref.getInt(getString(R.string.prefCurrentTopicMode), AbsShowTopicFragment.MODE_FORUM);
+        int currentTopicMode = PrefsManager.getInt(PrefsManager.IntPref.Names.CURRENT_TOPIC_MODE);
         AbsShowTopicFragment newFragment;
 
         if (currentTopicMode == AbsShowTopicFragment.MODE_FORUM) {

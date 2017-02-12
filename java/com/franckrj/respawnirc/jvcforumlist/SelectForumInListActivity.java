@@ -2,7 +2,6 @@ package com.franckrj.respawnirc.jvcforumlist;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -29,6 +28,7 @@ import com.franckrj.respawnirc.dialogs.HelpFirstLaunchDialogFragment;
 import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.AbsNavigationViewActivity;
+import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
@@ -118,21 +118,19 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
             adapterForForumList.loadFromBundle(savedInstanceState);
         }
 
-        if (sharedPref.getBoolean(getString(R.string.prefIsFirstLaunch), true)) {
-            SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
+        if (PrefsManager.getBool(PrefsManager.BoolPref.Names.IS_FIRST_LAUNCH)) {
             HelpFirstLaunchDialogFragment firstLaunchDialogFragment = new HelpFirstLaunchDialogFragment();
             firstLaunchDialogFragment.show(getFragmentManager(), "HelpFirstLaunchDialogFragment");
-            sharedPrefEdit.putBoolean(getString(R.string.prefIsFirstLaunch), false);
-            sharedPrefEdit.apply();
+            PrefsManager.putBool(PrefsManager.BoolPref.Names.IS_FIRST_LAUNCH, false);
+            PrefsManager.applyChanges();
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
-        sharedPrefEdit.putInt(getString(R.string.prefLastActivityViewed), MainActivity.ACTIVITY_SELECT_FORUM_IN_LIST);
-        sharedPrefEdit.apply();
+        PrefsManager.putInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED, MainActivity.ACTIVITY_SELECT_FORUM_IN_LIST);
+        PrefsManager.applyChanges();
     }
 
     @Override

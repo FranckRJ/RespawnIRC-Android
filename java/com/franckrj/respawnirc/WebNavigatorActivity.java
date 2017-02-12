@@ -15,6 +15,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
 
@@ -51,7 +52,7 @@ public class WebNavigatorActivity extends AppCompatActivity {
         }
 
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        String cookies = sharedPref.getString(getString(R.string.prefCookiesList), "");
+        String cookies = PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST);
 
         if (cookies.contains(";")) {
             String firstCookie = cookies.substring(0, cookies.indexOf(";"));

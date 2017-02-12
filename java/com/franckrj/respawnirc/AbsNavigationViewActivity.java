@@ -1,8 +1,6 @@
 package com.franckrj.respawnirc;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,6 +21,7 @@ import android.widget.Toast;
 import com.franckrj.respawnirc.jvcforumlist.SelectForumInListActivity;
 import com.franckrj.respawnirc.dialogs.RefreshFavDialogFragment;
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
 
@@ -35,7 +34,6 @@ public abstract class AbsNavigationViewActivity extends AppCompatActivity implem
     protected ImageView contextConnectImageNavigation = null;
     protected ActionBarDrawerToggle toggleForDrawer = null;
     protected int lastItemSelected = -1;
-    protected SharedPreferences sharedPref = null;
     protected String pseudoOfUser = "";
     protected boolean isInNavigationConnectMode = false;
     protected SubMenu forumFavSubMenu = null;
@@ -55,7 +53,7 @@ public abstract class AbsNavigationViewActivity extends AppCompatActivity implem
                     RefreshFavDialogFragment refreshFavsDialogFragment = new RefreshFavDialogFragment();
 
                     argForFrag.putString(RefreshFavDialogFragment.ARG_PSEUDO, pseudoOfUser);
-                    argForFrag.putString(RefreshFavDialogFragment.ARG_COOKIE_LIST, sharedPref.getString(getString(R.string.prefCookiesList), ""));
+                    argForFrag.putString(RefreshFavDialogFragment.ARG_COOKIE_LIST, PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
                     if (item.getItemId() == R.id.action_refresh_forum_fav_navigation) {
                         argForFrag.putInt(RefreshFavDialogFragment.ARG_FAV_TYPE, RefreshFavDialogFragment.FAV_FORUM);
                     } else {
@@ -70,13 +68,13 @@ public abstract class AbsNavigationViewActivity extends AppCompatActivity implem
                 return false;
             } else if (item.getGroupId() == R.id.group_forum_fav_navigation) {
                 lastItemSelected = R.id.action_forum_fav_selected;
-                newFavSelected = sharedPref.getString(getString(R.string.prefForumFavLink) + String.valueOf(item.getItemId()), "");
+                newFavSelected = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.FORUM_FAV_LINK, String.valueOf(item.getItemId()));
                 newForumOrTopicToRead(newFavSelected, true, false);
                 layoutForDrawer.closeDrawer(navigationForDrawer);
                 return true;
             } else if (item.getGroupId() == R.id.group_topic_fav_navigation) {
                 lastItemSelected = R.id.action_topic_fav_selected;
-                newFavSelected = sharedPref.getString(getString(R.string.prefTopicFavLink) + String.valueOf(item.getItemId()), "");
+                newFavSelected = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.TOPIC_FAV_LINK, String.valueOf(item.getItemId()));
                 newForumOrTopicToRead(newFavSelected, false, false);
                 layoutForDrawer.closeDrawer(navigationForDrawer);
                 return true;
@@ -140,18 +138,18 @@ public abstract class AbsNavigationViewActivity extends AppCompatActivity implem
     }
 
     private void updateFavsInNavigationMenu() {
-        int currentForumFavArraySize = sharedPref.getInt(getString(R.string.prefForumFavArraySize), 0);
-        int currentTopicFavArraySize = sharedPref.getInt(getString(R.string.prefTopicFavArraySize), 0);
+        int currentForumFavArraySize = PrefsManager.getInt(PrefsManager.IntPref.Names.FORUM_FAV_ARRAY_SIZE);
+        int currentTopicFavArraySize = PrefsManager.getInt(PrefsManager.IntPref.Names.TOPIC_FAV_ARRAY_SIZE);
 
         forumFavSubMenu.clear();
         for (int i = 0; i < currentForumFavArraySize; ++i) {
-            forumFavSubMenu.add(R.id.group_forum_fav_navigation, i, Menu.NONE, sharedPref.getString(getString(R.string.prefForumFavName) + String.valueOf(i), ""));
+            forumFavSubMenu.add(R.id.group_forum_fav_navigation, i, Menu.NONE, PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.FORUM_FAV_NAME, String.valueOf(i)));
         }
         forumFavSubMenu.setGroupCheckable(R.id.group_forum_fav_navigation, true, true);
 
         topicFavSubMenu.clear();
         for (int i = 0; i < currentTopicFavArraySize; ++i) {
-            topicFavSubMenu.add(R.id.group_topic_fav_navigation, i, Menu.NONE, sharedPref.getString(getString(R.string.prefTopicFavName) + String.valueOf(i), ""));
+            topicFavSubMenu.add(R.id.group_topic_fav_navigation, i, Menu.NONE, PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.TOPIC_FAV_NAME, String.valueOf(i)));
         }
         topicFavSubMenu.setGroupCheckable(R.id.group_topic_fav_navigation, true, true);
 
@@ -184,8 +182,7 @@ public abstract class AbsNavigationViewActivity extends AppCompatActivity implem
         super.onCreate(savedInstanceState);
         initializeViewAndToolbar();
 
-        sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        pseudoOfUser = sharedPref.getString(getString(R.string.prefPseudoUser), "");
+        pseudoOfUser = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER);
 
         toggleForDrawer = new ActionBarDrawerToggle(this, layoutForDrawer, R.string.openDrawerContentDescRes, R.string.closeDrawerContentDescRes) {
             @Override
@@ -269,7 +266,7 @@ public abstract class AbsNavigationViewActivity extends AppCompatActivity implem
     @Override
     public void onResume() {
         super.onResume();
-        String tmpPseudoOfUser = sharedPref.getString(getString(R.string.prefPseudoUser), "");
+        String tmpPseudoOfUser = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER);
 
         if (!tmpPseudoOfUser.equals(pseudoOfUser)) {
             pseudoOfUser = tmpPseudoOfUser;
@@ -305,37 +302,36 @@ public abstract class AbsNavigationViewActivity extends AppCompatActivity implem
     @Override
     public void getNewFavs(ArrayList<JVCParser.NameAndLink> listOfFavs, int typeOfFav) {
         if (listOfFavs != null) {
-            SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
-            String prefFavArrayize;
-            String prefFavName;
-            String prefFavLink;
+            PrefsManager.IntPref.Names prefFavArraySize;
+            PrefsManager.StringPref.Names prefFavName;
+            PrefsManager.StringPref.Names prefFavLink;
             int currentForumFavArraySize;
 
             if (typeOfFav == RefreshFavDialogFragment.FAV_FORUM) {
-                prefFavArrayize = getString(R.string.prefForumFavArraySize);
-                prefFavName = getString(R.string.prefForumFavName);
-                prefFavLink = getString(R.string.prefForumFavLink);
+                prefFavArraySize = PrefsManager.IntPref.Names.FORUM_FAV_ARRAY_SIZE;
+                prefFavName = PrefsManager.StringPref.Names.FORUM_FAV_NAME;
+                prefFavLink = PrefsManager.StringPref.Names.FORUM_FAV_LINK;
             } else {
-                prefFavArrayize = getString(R.string.prefTopicFavArraySize);
-                prefFavName = getString(R.string.prefTopicFavName);
-                prefFavLink = getString(R.string.prefTopicFavLink);
+                prefFavArraySize = PrefsManager.IntPref.Names.TOPIC_FAV_ARRAY_SIZE;
+                prefFavName = PrefsManager.StringPref.Names.TOPIC_FAV_NAME;
+                prefFavLink = PrefsManager.StringPref.Names.TOPIC_FAV_LINK;
             }
 
-            currentForumFavArraySize = sharedPref.getInt(prefFavArrayize, 0);
+            currentForumFavArraySize = PrefsManager.getInt(prefFavArraySize);
 
             for (int i = 0; i < currentForumFavArraySize; ++i) {
-                sharedPrefEdit.remove(prefFavName + String.valueOf(i));
-                sharedPrefEdit.remove(prefFavLink + String.valueOf(i));
+                PrefsManager.removeStringWithSufix(prefFavName, String.valueOf(i));
+                PrefsManager.removeStringWithSufix(prefFavLink, String.valueOf(i));
             }
 
-            sharedPrefEdit.putInt(prefFavArrayize, listOfFavs.size());
+            PrefsManager.putInt(prefFavArraySize, listOfFavs.size());
 
             for (int i = 0; i < listOfFavs.size(); ++i) {
-                sharedPrefEdit.putString(prefFavName + String.valueOf(i), listOfFavs.get(i).name);
-                sharedPrefEdit.putString(prefFavLink + String.valueOf(i), listOfFavs.get(i).link);
+                PrefsManager.putStringWithSufix(prefFavName, String.valueOf(i), listOfFavs.get(i).name);
+                PrefsManager.putStringWithSufix(prefFavLink, String.valueOf(i), listOfFavs.get(i).link);
             }
 
-            sharedPrefEdit.apply();
+            PrefsManager.applyChanges();
             updateFavsInNavigationMenu();
         } else {
             Toast.makeText(this, R.string.errorDuringFetchFavs, Toast.LENGTH_SHORT).show();

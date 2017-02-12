@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.jvctopic.jvctopicgetters.JVCTopicModeIRCGetter;
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
@@ -82,10 +83,9 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
 
     private void saveOldTopicInfos() {
         if (!getterForTopic.getUrlForTopic().isEmpty()) {
-            SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
-            sharedPrefEdit.putString(getString(R.string.prefOldUrlForTopic), getterForTopic.getUrlForTopic());
-            sharedPrefEdit.putLong(getString(R.string.prefOldLastIdOfMessage), getterForTopic.getLastIdOfMessage());
-            sharedPrefEdit.apply();
+            PrefsManager.putString(PrefsManager.StringPref.Names.OLD_URL_FOR_TOPIC, getterForTopic.getUrlForTopic());
+            PrefsManager.putLong(PrefsManager.LongPref.Names.OLD_LAST_ID_OF_MESSAGE, getterForTopic.getLastIdOfMessage());
+            PrefsManager.applyChanges();
         }
     }
 
@@ -174,8 +174,8 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
             oldUrlForTopic = savedInstanceState.getString(SAVE_OLD_URL_FOR_TOPIC, "");
             oldLastIdOfMessage = savedInstanceState.getLong(SAVE_OLD_LAST_ID_OF_MESSAGE, 0);
         } else {
-            oldUrlForTopic = sharedPref.getString(getString(R.string.prefOldUrlForTopic), "");
-            oldLastIdOfMessage = sharedPref.getLong(getString(R.string.prefOldLastIdOfMessage), 0);
+            oldUrlForTopic = PrefsManager.getString(PrefsManager.StringPref.Names.OLD_URL_FOR_TOPIC);
+            oldLastIdOfMessage = PrefsManager.getLong(PrefsManager.LongPref.Names.OLD_LAST_ID_OF_MESSAGE);
         }
     }
 

@@ -1,8 +1,6 @@
 package com.franckrj.respawnirc;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebView;
@@ -10,6 +8,7 @@ import android.webkit.WebView;
 import com.franckrj.respawnirc.jvcforumlist.SelectForumInListActivity;
 import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
 import com.franckrj.respawnirc.jvctopic.ShowTopicActivity;
+import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.StickerConverter;
 import com.franckrj.respawnirc.utils.WebManager;
 
@@ -23,8 +22,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        int lastActivityViewed = sharedPref.getInt(getString(R.string.prefLastActivityViewed), ACTIVITY_SELECT_FORUM_IN_LIST);
+        int lastActivityViewed;
+
+        PrefsManager.initializeSharedPrefs(getApplicationContext());
+        lastActivityViewed = PrefsManager.getInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED);
 
         //vider le cache des webviews
         WebView obj = new WebView(this);

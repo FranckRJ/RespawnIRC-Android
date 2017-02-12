@@ -9,30 +9,19 @@
     <string name="preference_file_key">com.franckrj.respawnirc.PREFERENCE_FILE_KEY</string>
     <string name="errorPseudoMissingConnect">Veuillez insérer le pseudo avec lequel vous vous êtes connecté dans le champ en haut.</string>
     <string name="errorCookiesMissingConnect">Vous n\'êtes pas connecté sur JVC.</string>
-    <string name="prefCookiesList">pref.cookiesList</string>
-    <string name="prefTopicUrlToFetch">pref.topicUrlToFetch</string>
     <string name="overflow_menu_desc">Menu déroulant</string>
     <string name="quoteMessage">Citer</string>
-    <string name="prefPseudoUser">pref.pseudoUser</string>
     <string name="errorConnectedNeededBeforePost">Erreur, veuillez vous connecter avant d\'envoyer un message.</string>
     <string name="editMessage">Editer</string>
     <string name="hideSpoilMessage">Cacher les spoil</string>
     <string name="showSpoilMessage">Afficher les spoil</string>
     <string name="preference">Préférences</string>
     <string name="settingsMaxMessagesNumberTitle">Nombre de messages affichés (IRC)</string>
-    <string name="settingsMaxNumberOfMessages">settings.maxNumberOfMessages</string>
     <string name="maxNumberOfMessagesTitle">Au maximum</string>
-    <string name="settingsInitialNumberOfMessages">settings.initialNumberOfMessages</string>
     <string name="initialNumberOfMessagesTitle">Au premier chargement</string>
-    <string name="maxNumberOfMessagesDefault">40</string>
-    <string name="initialNumberOfMessagesDefault">10</string>
     <string name="settingsGeneralTitle">Général</string>
     <string name="settingsGeneralIRCTitle">Général (IRC)</string>
-    <string name="settingsRefreshTopicTime">settings.refreshTopicTime</string>
     <string name="refreshTopicTimeTitle">Temps avant màj des messages</string>
-    <string name="refreshTopicTimeDefault">10000</string>
-    <string name="prefOldUrlForTopic">pref.oldUrlForTopic</string>
-    <string name="prefOldLastIdOfMessage">pref.oldLastIdOfMessage</string>
     <string name="loadTopicFromOldInfos">Poursuivre la lecture</string>
     <string name="help">Aide</string>
     <string name="ok">OK</string>
@@ -40,17 +29,13 @@
     <string name="welcome">Bienvenue !</string>
     <string name="later">Plus tard</string>
     <string name="help_firstlaunch">Bienvenue sur RespawnIRC !\n\nPour commencer il est conseillé de se connecter à JVC, mais vous pouvez très bien le faire plus tard.</string>
-    <string name="prefIsFirstLaunch">pref.isFirstLaunch</string>
     <string name="openDrawerContentDescRes">Ouverture du menu latéral</string>
     <string name="closeDrawerContentDescRes">Fermeture du menu latéral</string>
     <string name="switchToForumMode">Passer en mode forum</string>
     <string name="switchToIrcMode">Passer en mode IRC</string>
     <string name="refresh">Rafraichir</string>
-    <string name="prefCurrentTopicMode">pref.currentTopicMode</string>
     <string name="settingsOnRefreshForumTitle">Lors du rafraichissement (forum)</string>
-    <string name="settingsForumClearOnRefresh">settings.forumClearOnRefresh</string>
     <string name="forumClearOnRefreshTitle">Effacer les messages</string>
-    <string name="forumClearOnRefreshDefault">true</string>
     <string name="nextPageText"><![CDATA[>]]></string>
     <string name="previousPageText"><![CDATA[<]]></string>
     <string name="waitingText">…</string>
@@ -60,17 +45,11 @@
     <string name="topicOrForumLink">Lien du topic/forum…</string>
     <string name="openTopicOrForumLink">Ouvrir un lien de topic/forum</string>
     <string name="settingsStyleMessageForumTitle">Affichage des messages (forum)</string>
-    <string name="settingsTopicAlternateBackgroundColorModeForum">settings.topicAlternateBackgroundColorModeForum</string>
     <string name="topicAlternateBackgroundColorTitle">Alterner la couleur de fond</string>
-    <string name="topicAlternateBackgroundColorModeForumDefault">true</string>
-    <string name="prefForumUrlToFetch">pref.forumUrlToFetch</string>
     <string name="topicIcon">Icone de topic</string>
     <string name="showQuoteMessage">Afficher les citations imbriquées</string>
     <string name="hideQuoteMessage">Cacher les citations imbriquées</string>
-    <string name="maxNumberOfOverlyQuoteDefault">2</string>
-    <string name="settingsMaxNumberOfOverlyQuote">settings.maxNumberOfOverlyQuote</string>
     <string name="maxNumberOfOverlyQuoteTitle">Nb max de citations imbriquées</string>
-    <string name="prefLastActivityViewed">pref.lastActivityViewed</string>
     <string name="warningNotConnected">Vous ne vous êtes pas connecté</string>
     <string name="errorQuoteAlreadyRunning">Erreur, citation déjà en cours.</string>
     <string name="errorInfosMissings">Erreur, informations manquantes (rechargez la page ?).</string>
@@ -78,23 +57,14 @@
     <string name="errorCantGetEditInfos">Erreur, impossible de récupérer les informations d\'édition.</string>
     <string name="errorDownloadFailed">Erreur, la récupération des informations a échouée.</string>
     <string name="errorConnectNeeded">Erreur, vous devez vous connecter pour effectuer cette action.</string>
-    <string name="settingsShowNoelshackImage">settings.showNoelshackImage</string>
-    <string name="showNoelshackImageDefault">false</string>
     <string name="showNoelshackImageTitle">Afficher les miniatures</string>
     <string name="errorInvalidLink">Erreur, lien invalide.</string>
     <string name="pastLastMessageSended">Coller le dernier message envoyé</string>
-    <string name="prefLastMessageSended">pref.lastMessageSended</string>
     <string name="connectWithAnotherAccount">Changer de compte</string>
     <string name="loadingFavs">Chargement des favoris…</string>
     <string name="forumFav">Forums favoris</string>
-    <string name="prefForumFavArraySize">pref.forumFavArraySize</string>
-    <string name="prefForumFavName">pref.forumFavName.</string>
-    <string name="prefForumFavLink">pref.forumFavLink.</string>
     <string name="errorDuringFetchFavs">Erreur durant la récupération des favoris</string>
     <string name="topicFav">Topics favoris</string>
-    <string name="prefTopicFavArraySize">pref.topicFavArraySize</string>
-    <string name="prefTopicFavName">pref.topicFavName.</string>
-    <string name="prefTopicFavLink">pref.topicFavLink.</string>
     <string name="deleteMessage">Supprimer</string>
     <string name="supressSuccess">Message supprimé.</string>
     <string name="errorDeleteAlreadyRunning">Erreur, suppression déjà en cours.</string>
@@ -115,28 +85,18 @@
     <string name="topicLockedForReason">Sujet fermé : %1$s</string>
     <string name="errorTopicIsLocked">Erreur, le topic est fermé.</string>
     <string name="selectSticker">Sélectionner un sticker</string>
-    <string name="transformStickerToSmileyDefault">false</string>
-    <string name="settingsTransformStickerToSmiley">settings.transformStickerToSmiley</string>
     <string name="transformStickerToSmileyTitle">Changer les stickers en smiley</string>
     <string name="transformStickerToSmileySummary">(Tous les stickers ne sont pas changés)</string>
     <string name="unknownErrorPleaseResend">Erreur inconnue, essayez de ré-envoyer le message.</string>
     <string name="sendATopic">Poster un topic</string>
     <string name="topicTitlePlaceHolder">Titre…</string>
     <string name="topicIsSended">Le topic a été posté.</string>
-    <string name="prefLastTopicTitleSended">pref.lastTopicTitleSended</string>
-    <string name="prefLastTopicContentSended">pref.lastTopicContentSended</string>
     <string name="pastLastTopicSended">Coller le dernier topic envoyé</string>
     <string name="showMP">Consulter les MP</string>
     <string name="settingsLinkOpeningTitle">Ouverture des liens</string>
     <string name="useInternalNavigatorTitle">Navigateur interne par défaut</string>
-    <string name="settingsUseInternalNavigator">settings.useInternalNavigator</string>
-    <string name="useInternalNavigatorDefault">false</string>
-    <string name="settingsUseDirectNoelshackLink">settings.useDirectNoelshackLink</string>
-    <string name="useDirectNoelshackLinkDefault">false</string>
     <string name="noelshack">Noelshack</string>
     <string name="useDirectNoelshackLinkTitle">Utiliser les liens directs</string>
-    <string name="settingsShowOverviewOnImageClick">settings.showOverviewOnImageClick</string>
-    <string name="showOverviewOnImageClickDefault">false</string>
     <string name="showOverviewOnImageClickTitle">Aperçu lors d\'un clique</string>
     <string name="openInBrowser">Ouvrir dans le navigateur</string>
     <string name="clickHereToSee">Cliquez ici pour le voir.</string>
@@ -155,14 +115,37 @@
     <string name="copyDone">Copie effectuée</string>
     <string name="noTextCopied">Aucun texte copié</string>
     <string name="insertStuff">Insérer…</string>
-    <string name="settingsShortenLongLink">settings.shortenLongLink</string>
-    <string name="shortenLongLinkDefault">false</string>
     <string name="shortenLongLinkTitle">Raccourcir les liens longs</string>
-    <string name="settingsShowRefreshWhenMessagesShowedModeIRC">settings.showRefreshWhenMessagesShowedModeIRC</string>
-    <string name="showRefreshWhenMessagesShowedModeIRCDefault">false</string>
     <string name="showRefreshWhenMessagesShowedModeIRCTitle">Toujours afficher l\'icône de refresh</string>
-    <string name="settingsTopicAlternateBackgroundColorModeIRC">settings.topicAlternateBackgroundColorModeIRC</string>
-    <string name="topicAlternateBackgroundColorModeIRCDefault">false</string>
+
+    <string name="settingsMaxNumberOfMessages" translatable="false">settings.maxNumberOfMessages</string>
+    <string name="maxNumberOfMessagesDefault" translatable="false">40</string>
+    <string name="settingsInitialNumberOfMessages" translatable="false">settings.initialNumberOfMessages</string>
+    <string name="initialNumberOfMessagesDefault" translatable="false">10</string>
+    <string name="settingsRefreshTopicTime" translatable="false">settings.refreshTopicTime</string>
+    <string name="refreshTopicTimeDefault" translatable="false">10000</string>
+    <string name="settingsForumClearOnRefresh" translatable="false">settings.forumClearOnRefresh</string>
+    <string name="forumClearOnRefreshDefault" translatable="false">true</string>
+    <string name="settingsTopicAlternateBackgroundColorModeForum" translatable="false">settings.topicAlternateBackgroundColorModeForum</string>
+    <string name="topicAlternateBackgroundColorModeForumDefault" translatable="false">true</string>
+    <string name="settingsMaxNumberOfOverlyQuote" translatable="false">settings.maxNumberOfOverlyQuote</string>
+    <string name="maxNumberOfOverlyQuoteDefault" translatable="false">2</string>
+    <string name="settingsShowNoelshackImage" translatable="false">settings.showNoelshackImage</string>
+    <string name="showNoelshackImageDefault" translatable="false">false</string>
+    <string name="settingsTransformStickerToSmiley" translatable="false">settings.transformStickerToSmiley</string>
+    <string name="transformStickerToSmileyDefault" translatable="false">false</string>
+    <string name="settingsUseInternalNavigator" translatable="false">settings.useInternalNavigator</string>
+    <string name="useInternalNavigatorDefault" translatable="false">false</string>
+    <string name="settingsUseDirectNoelshackLink" translatable="false">settings.useDirectNoelshackLink</string>
+    <string name="useDirectNoelshackLinkDefault" translatable="false">false</string>
+    <string name="settingsShowOverviewOnImageClick" translatable="false">settings.showOverviewOnImageClick</string>
+    <string name="showOverviewOnImageClickDefault" translatable="false">false</string>
+    <string name="settingsShortenLongLink" translatable="false">settings.shortenLongLink</string>
+    <string name="shortenLongLinkDefault" translatable="false">false</string>
+    <string name="settingsShowRefreshWhenMessagesShowedModeIRC" translatable="false">settings.showRefreshWhenMessagesShowedModeIRC</string>
+    <string name="showRefreshWhenMessagesShowedModeIRCDefault" translatable="false">false</string>
+    <string name="settingsTopicAlternateBackgroundColorModeIRC" translatable="false">settings.topicAlternateBackgroundColorModeIRC</string>
+    <string name="topicAlternateBackgroundColorModeIRCDefault" translatable="false">false</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

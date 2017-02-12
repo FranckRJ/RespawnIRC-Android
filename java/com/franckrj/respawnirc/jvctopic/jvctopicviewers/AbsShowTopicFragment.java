@@ -13,6 +13,7 @@ import com.franckrj.respawnirc.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.jvctopic.jvctopicgetters.AbsJVCTopicGetter;
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
@@ -78,8 +79,8 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         currentSettings.showNoelshackImages = sharedPref.getBoolean(getString(R.string.settingsShowNoelshackImage), Boolean.parseBoolean(getString(R.string.showNoelshackImageDefault)));
         currentSettings.transformStickerToSmiley = sharedPref.getBoolean(getString(R.string.settingsTransformStickerToSmiley), Boolean.parseBoolean(getString(R.string.transformStickerToSmileyDefault)));
         currentSettings.shortenLongLink = sharedPref.getBoolean(getString(R.string.settingsShortenLongLink), Boolean.parseBoolean(getString(R.string.shortenLongLinkDefault)));
-        currentSettings.pseudoOfUser = sharedPref.getString(getString(R.string.prefPseudoUser), "");
-        absGetterForTopic.setCookieListInAString(sharedPref.getString(getString(R.string.prefCookiesList), ""));
+        currentSettings.pseudoOfUser = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER);
+        absGetterForTopic.setCookieListInAString(PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
     }
 
     public boolean onMenuItemClick(MenuItem item) {

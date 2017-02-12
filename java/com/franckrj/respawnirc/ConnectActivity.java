@@ -3,9 +3,7 @@ package com.franckrj.respawnirc;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
@@ -22,6 +20,7 @@ import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
 
 public class ConnectActivity extends AppCompatActivity {
@@ -56,12 +55,9 @@ public class ConnectActivity extends AppCompatActivity {
             }
 
             if (helloCookieValue != null && connectCookieValue != null) {
-                SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-                SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
-
-                sharedPrefEdit.putString(getString(R.string.prefCookiesList), "dlrowolleh=" + helloCookieValue + ";coniunctio=" + connectCookieValue);
-                sharedPrefEdit.putString(getString(R.string.prefPseudoUser), pseudoText.getText().toString().trim());
-                sharedPrefEdit.apply();
+                PrefsManager.putString(PrefsManager.StringPref.Names.COOKIES_LIST, "dlrowolleh=" + helloCookieValue + ";coniunctio=" + connectCookieValue);
+                PrefsManager.putString(PrefsManager.StringPref.Names.PSEUDO_OF_USER, pseudoText.getText().toString().trim());
+                PrefsManager.applyChanges();
 
                 super.onBackPressed();
                 return;

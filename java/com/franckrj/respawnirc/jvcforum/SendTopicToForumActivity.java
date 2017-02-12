@@ -1,7 +1,5 @@
 package com.franckrj.respawnirc.jvcforum;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -15,6 +13,7 @@ import android.widget.Toast;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.dialogs.InsertStuffDialogFragment;
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
@@ -23,7 +22,6 @@ public class SendTopicToForumActivity extends AppCompatActivity implements Inser
     public static final String EXTRA_FORUM_LINK = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_FORUM_LINK";
     public static final String EXTRA_INPUT_LIST = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_INPUT_LIST";
 
-    private SharedPreferences sharedPref = null;
     private SendTopicToJVC currentAsyncTaskForSendTopic = null;
     private String linkToSend = "";
     private String listOfInputsInAstring = "";
@@ -35,17 +33,16 @@ public class SendTopicToForumActivity extends AppCompatActivity implements Inser
 
     private void sendNewTopic(boolean isAResend) {
         if (currentAsyncTaskForSendTopic == null && (!isAResend || !lastSendIsAResend)) {
-            SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
             lastTopicTitleSended = topicTitleEdit.getText().toString();
             lastTopicContentSended = topicContentEdit.getText().toString();
 
             lastSendIsAResend = isAResend;
             currentAsyncTaskForSendTopic = new SendTopicToJVC();
-            currentAsyncTaskForSendTopic.execute(linkToSend, Utils.convertStringToUrlString(lastTopicTitleSended), Utils.convertStringToUrlString(lastTopicContentSended), listOfInputsInAstring, sharedPref.getString(getString(R.string.prefCookiesList), ""));
+            currentAsyncTaskForSendTopic.execute(linkToSend, Utils.convertStringToUrlString(lastTopicTitleSended), Utils.convertStringToUrlString(lastTopicContentSended), listOfInputsInAstring, PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
 
-            sharedPrefEdit.putString(getString(R.string.prefLastTopicTitleSended), lastTopicTitleSended);
-            sharedPrefEdit.putString(getString(R.string.prefLastTopicContentSended), lastTopicContentSended);
-            sharedPrefEdit.apply();
+            PrefsManager.putString(PrefsManager.StringPref.Names.LAST_TOPIC_TITLE_SENDED, lastTopicTitleSended);
+            PrefsManager.putString(PrefsManager.StringPref.Names.LAST_TOPIC_CONTENT_SENDED, lastTopicContentSended);
+            PrefsManager.applyChanges();
         } else if (isAResend && lastSendIsAResend) {
             Toast.makeText(SendTopicToForumActivity.this, R.string.unknownErrorPleaseResend, Toast.LENGTH_SHORT).show();
         }
@@ -72,8 +69,6 @@ public class SendTopicToForumActivity extends AppCompatActivity implements Inser
             myActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-
         topicTitleEdit = (EditText) findViewById(R.id.topic_title_edit_sendtopic);
         topicContentEdit = (EditText) findViewById(R.id.topic_content_edit_sendtopic);
 
@@ -93,8 +88,8 @@ public class SendTopicToForumActivity extends AppCompatActivity implements Inser
     @Override
     public void onResume() {
         super.onResume();
-        lastTopicTitleSended = sharedPref.getString(getString(R.string.prefLastTopicTitleSended), "");
-        lastTopicContentSended = sharedPref.getString(getString(R.string.prefLastTopicContentSended), "");
+        lastTopicTitleSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_TOPIC_TITLE_SENDED);
+        lastTopicContentSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_TOPIC_CONTENT_SENDED);
     }
 
     @Override

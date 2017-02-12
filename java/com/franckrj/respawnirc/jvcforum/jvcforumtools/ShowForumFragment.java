@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.franckrj.respawnirc.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.PrefsManager;
 
 import java.util.ArrayList;
 
@@ -97,7 +98,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     };
 
     private void reloadSettings() {
-        getterForForum.setCookieListInAString(sharedPref.getString(getString(R.string.prefCookiesList), ""));
+        getterForForum.setCookieListInAString(PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
         clearTopicsOnRefresh = true;
     }
 

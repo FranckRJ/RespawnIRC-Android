@@ -1,5 +1,6 @@
 package com.franckrj.respawnirc.jvcforum;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import com.franckrj.respawnirc.PageNavigationUtil;
 import com.franckrj.respawnirc.utils.AddOrRemoveThingToFavs;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.AbsNavigationViewActivity;
+import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Utils;
 
 public class ShowForumActivity extends AbsNavigationViewActivity implements ShowForumFragment.NewTopicWantRead, JVCForumGetter.NewForumNameAvailable,
@@ -35,6 +37,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     private static final String SAVE_REFRESH_NEEDED_NEXT_RESUME = "saveRefreshNeededOnNextResume";
     private static final String SAVE_CURRENT_NUMBER_OF_MP = "saveCurrentNumberOfMP";
 
+    private SharedPreferences sharedPref = null;
     private String currentTitle = "";
     private AddOrRemoveThingToFavs currentTaskForFavs = null;
     private PageNavigationUtil pageNavigation = null;
@@ -112,12 +115,14 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
         pageNavigation.initializePagerView((ViewPager) findViewById(R.id.pager_showforum));
         pageNavigation.initializeNavigationButtons((Button) findViewById(R.id.firstpage_button_showforum), (Button) findViewById(R.id.previouspage_button_showforum),
                         (Button) findViewById(R.id.currentpage_button_showforum), (Button) findViewById(R.id.nextpage_button_showforum), null);
         pageNavigation.updateAdapterForPagerView();
 
-        pageNavigation.setCurrentLink(sharedPref.getString(getString(R.string.prefForumUrlToFetch), ""));
+        pageNavigation.setCurrentLink(PrefsManager.getString(PrefsManager.StringPref.Names.FORUM_URL_TO_FETCH));
         if (savedInstanceState == null) {
             currentTitle = getString(R.string.app_name);
             onNewIntent(getIntent());
@@ -144,9 +149,8 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     @Override
     public void onResume() {
         super.onResume();
-        SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
-        sharedPrefEdit.putInt(getString(R.string.prefLastActivityViewed), MainActivity.ACTIVITY_SHOW_FORUM);
-        sharedPrefEdit.apply();
+        PrefsManager.putInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED, MainActivity.ACTIVITY_SHOW_FORUM);
+        PrefsManager.applyChanges();
 
         if (refreshNeededOnNextResume) {
             refreshNeededOnNextResume = false;
@@ -162,9 +166,8 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     public void onPause() {
         stopAllCurrentTasks();
         if (!pageNavigation.getCurrentLink().isEmpty()) {
-            SharedPreferences.Editor sharedPrefEdit = sharedPref.edit();
-            sharedPrefEdit.putString(getString(R.string.prefForumUrlToFetch), setShowedPageNumberForThisLink(pageNavigation.getCurrentLink(), pageNavigation.getCurrentItemIndex() + 1));
-            sharedPrefEdit.apply();
+            PrefsManager.putString(PrefsManager.StringPref.Names.FORUM_URL_TO_FETCH, setShowedPageNumberForThisLink(pageNavigation.getCurrentLink(), pageNavigation.getCurrentItemIndex() + 1));
+            PrefsManager.applyChanges();
         }
         super.onPause();
     }
@@ -214,7 +217,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
             case R.id.action_change_forum_fav_value_showforum:
                 if (currentTaskForFavs == null) {
                     currentTaskForFavs = new AddOrRemoveThingToFavs(!getCurrentFragment().getIsInFavs(), this);
-                    currentTaskForFavs.execute(JVCParser.getForumIDOfThisForum(pageNavigation.getCurrentLink()), getCurrentFragment().getLatestAjaxInfos().pref, sharedPref.getString(getString(R.string.prefCookiesList), ""));
+                    currentTaskForFavs.execute(JVCParser.getForumIDOfThisForum(pageNavigation.getCurrentLink()), getCurrentFragment().getLatestAjaxInfos().pref, PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
                 } else {
                     Toast.makeText(ShowForumActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
                 }
