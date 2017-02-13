@@ -40,4 +40,24 @@
         android:paddingLeft="4dp"
         android:textColorLink="@color/linkColor"/>
 
+    <View
+        android:id="@+id/item_separator_jvcmessages_text_row"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/item_two_jvcmessages_text_row"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginLeft="6dp"
+        android:background="@color/moreDarkerColorForBackground"/>
+
+    <TextView
+        android:id="@+id/item_three_jvcmessages_text_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_separator_jvcmessages_text_row"
+        android:paddingRight="4dp"
+        android:paddingLeft="4dp"
+        android:textColorLink="@color/linkColor"/>
+
 </RelativeLayout>

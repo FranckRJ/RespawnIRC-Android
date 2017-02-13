@@ -51,6 +51,15 @@
             android:key="@string/settingsShowRefreshWhenMessagesShowedModeIRC"
             android:title="@string/showRefreshWhenMessagesShowedModeIRCTitle"
             android:defaultValue="@string/showRefreshWhenMessagesShowedModeIRCDefault"/>
+        <CheckBoxPreference
+            android:key="@string/settingsTopicAlternateBackgroundColorModeIRC"
+            android:title="@string/topicAlternateBackgroundColorTitle"
+            android:defaultValue="@string/topicAlternateBackgroundColorModeIRCDefault"/>
+        <CheckBoxPreference
+            android:key="@string/settingsShowSignatureModeIRC"
+            android:title="@string/showSignatureTitle"
+            android:summary="@string/showSignatureSummary"
+            android:defaultValue="@string/showSignatureModeIRCDefault"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/settingsMaxMessagesNumberTitle">
@@ -64,10 +73,6 @@
             android:title="@string/initialNumberOfMessagesTitle"
             android:defaultValue="@string/initialNumberOfMessagesDefault"
             android:numeric="integer"/>
-        <CheckBoxPreference
-            android:key="@string/settingsTopicAlternateBackgroundColorModeIRC"
-            android:title="@string/topicAlternateBackgroundColorTitle"
-            android:defaultValue="@string/topicAlternateBackgroundColorModeIRCDefault"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/settingsOnRefreshForumTitle">
@@ -82,5 +87,10 @@
             android:key="@string/settingsTopicAlternateBackgroundColorModeForum"
             android:title="@string/topicAlternateBackgroundColorTitle"
             android:defaultValue="@string/topicAlternateBackgroundColorModeForumDefault"/>
+        <CheckBoxPreference
+            android:key="@string/settingsShowSignatureModeForum"
+            android:title="@string/showSignatureTitle"
+            android:summary="@string/showSignatureSummary"
+            android:defaultValue="@string/showSignatureModeForumDefault"/>
     </PreferenceCategory>
 </PreferenceScreen>

@@ -53,6 +53,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     private PseudoClicked pseudoCLickedListener = null;
     private Html.ImageGetter jvcImageGetter = null;
     private boolean showSurvey = false;
+    private boolean showSignatures = false;
     private String surveyTitle = "";
     private View.OnClickListener onSurveyClickListener = null;
 
@@ -154,6 +155,10 @@ public class JVCTopicAdapter extends BaseAdapter {
         alternateBackgroundColor = newVal;
     }
 
+    public void setShowSignatures(boolean newVal) {
+        showSignatures = newVal;
+    }
+
     public void setOnSurveyClickListener(View.OnClickListener newListener) {
         onSurveyClickListener = newListener;
     }
@@ -200,6 +205,13 @@ public class JVCTopicAdapter extends BaseAdapter {
     private ContentHolder updateHolderWithNewItem(ContentHolder holder, JVCParser.MessageInfos item) {
         holder.firstLineContent = replaceQuoteAndUrlSpans(Undeprecator.htmlFromHtml(JVCParser.createMessageFirstLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
         holder.secondLineContent = replaceQuoteAndUrlSpans(Undeprecator.htmlFromHtml(JVCParser.createMessageSecondLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
+
+        if (!showSignatures || item.signatureNotParsed.isEmpty()) {
+            holder.thirdLineContent = null;
+        } else {
+            holder.thirdLineContent = replaceQuoteAndUrlSpans(Undeprecator.htmlFromHtml(JVCParser.createSignatureFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
+        }
+
         return holder;
     }
 
@@ -261,6 +273,8 @@ public class JVCTopicAdapter extends BaseAdapter {
             convertView = serviceInflater.inflate(idOfLayoutToUse, parent, false);
             holder.firstLine = (TextView) convertView.findViewById(R.id.item_one_jvcmessages_text_row);
             holder.secondLine = (TextView) convertView.findViewById(R.id.item_two_jvcmessages_text_row);
+            holder.thirdLine = (TextView) convertView.findViewById(R.id.item_three_jvcmessages_text_row);
+            holder.separator = convertView.findViewById(R.id.item_separator_jvcmessages_text_row);
             holder.showMenuButton = (ImageButton) convertView.findViewById(R.id.menu_overflow_row);
 
             holder.secondLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
@@ -274,17 +288,31 @@ public class JVCTopicAdapter extends BaseAdapter {
             String advertiseForSurveyToShow = parentActivity.getString(R.string.titleForSurvey) + " <b>" + surveyTitle + "</b><br><small>" + parentActivity.getString(R.string.clickHereToSee) + "</small>";
             holder.showMenuButton.setVisibility(View.GONE);
             holder.secondLine.setVisibility(View.GONE);
+            holder.thirdLine.setVisibility(View.GONE);
+            holder.separator.setVisibility(View.GONE);
             holder.firstLine.setText(Undeprecator.htmlFromHtml(advertiseForSurveyToShow));
             convertView.setOnClickListener(onSurveyClickListener);
             holder.firstLine.setOnClickListener(onSurveyClickListener);
             convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.altBackgroundMessageColor));
         } else {
             final int realPosition = position - (showSurvey ? 1 : 0);
+            final ContentHolder currentContent = listOfContentForMessages.get(realPosition);
+
             holder.showMenuButton.setTag(position);
             holder.showMenuButton.setVisibility(View.VISIBLE);
             holder.secondLine.setVisibility(View.VISIBLE);
-            holder.firstLine.setText(listOfContentForMessages.get(realPosition).firstLineContent);
-            holder.secondLine.setText(listOfContentForMessages.get(realPosition).secondLineContent);
+            holder.firstLine.setText(currentContent.firstLineContent);
+            holder.secondLine.setText(currentContent.secondLineContent);
+
+            if (currentContent.thirdLineContent != null) {
+                holder.thirdLine.setVisibility(View.VISIBLE);
+                holder.separator.setVisibility(View.VISIBLE);
+                holder.thirdLine.setText(currentContent.thirdLineContent);
+            } else {
+                holder.thirdLine.setVisibility(View.GONE);
+                holder.separator.setVisibility(View.GONE);
+            }
+
             convertView.setOnClickListener(null);
             holder.firstLine.setOnClickListener(new View.OnClickListener() {
                 int messageNumberInList = realPosition;
@@ -352,12 +380,15 @@ public class JVCTopicAdapter extends BaseAdapter {
     private class ViewHolder {
         private TextView firstLine;
         private TextView secondLine;
+        private TextView thirdLine;
+        private View separator;
         private ImageButton showMenuButton;
     }
 
     private class ContentHolder {
         private Spannable firstLineContent;
         private Spannable secondLineContent;
+        private Spannable thirdLineContent;
     }
 
     public interface URLClicked {

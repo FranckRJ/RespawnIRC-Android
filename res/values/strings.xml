@@ -86,7 +86,7 @@
     <string name="errorTopicIsLocked">Erreur, le topic est fermé.</string>
     <string name="selectSticker">Sélectionner un sticker</string>
     <string name="transformStickerToSmileyTitle">Changer les stickers en smiley</string>
-    <string name="transformStickerToSmileySummary">(Tous les stickers ne sont pas changés)</string>
+    <string name="transformStickerToSmileySummary">(tous les stickers ne sont pas changés)</string>
     <string name="unknownErrorPleaseResend">Erreur inconnue, essayez de ré-envoyer le message.</string>
     <string name="sendATopic">Poster un topic</string>
     <string name="topicTitlePlaceHolder">Titre…</string>
@@ -117,6 +117,8 @@
     <string name="insertStuff">Insérer…</string>
     <string name="shortenLongLinkTitle">Raccourcir les liens longs</string>
     <string name="showRefreshWhenMessagesShowedModeIRCTitle">Toujours afficher l\'icône de refresh</string>
+    <string name="showSignatureTitle">Afficher les signatures</string>
+    <string name="showSignatureSummary">(doit être activé sur JVC)</string>
 
     <string name="settingsMaxNumberOfMessages" translatable="false">settings.maxNumberOfMessages</string>
     <string name="maxNumberOfMessagesDefault" translatable="false">40</string>
@@ -146,6 +148,10 @@
     <string name="showRefreshWhenMessagesShowedModeIRCDefault" translatable="false">false</string>
     <string name="settingsTopicAlternateBackgroundColorModeIRC" translatable="false">settings.topicAlternateBackgroundColorModeIRC</string>
     <string name="topicAlternateBackgroundColorModeIRCDefault" translatable="false">false</string>
+    <string name="settingsShowSignatureModeIRC" translatable="false">settings.showSignatureModeIRC</string>
+    <string name="showSignatureModeIRCDefault" translatable="false">false</string>
+    <string name="settingsShowSignatureModeForum" translatable="false">settings.showSignatureModeForum</string>
+    <string name="showSignatureModeForumDefault" translatable="false">false</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

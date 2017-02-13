@@ -18,6 +18,7 @@ public final class JVCParser {
     private static final Pattern ajaxPrefHashPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_hash_preference_user\" id=\"ajax_hash_preference_user\" value=\"([^\"]*)\" />");
     private static final Pattern messageQuotePattern = Pattern.compile("\"txt\":\"(.*)\"", Pattern.DOTALL);
     private static final Pattern entireMessagePattern = Pattern.compile("(<div class=\"bloc-message-forum \".*?)(<span id=\"post_[^\"]*\" class=\"bloc-message-forum-anchor\">|<div class=\"bloc-outils-plus-modo bloc-outils-bottom\">|<div class=\"bloc-pagi-default\">)", Pattern.DOTALL);
+    private static final Pattern signaturePattern = Pattern.compile("<div class=\"signature-msg[^\"]*\">(.*?)</div>", Pattern.DOTALL);
     private static final Pattern entireTopicPattern = Pattern.compile("<li class=\"\" data-id=\"[^\"]*\">[^<]*<span class=\"topic-subject\">.*?</li>", Pattern.DOTALL);
     private static final Pattern pseudoInfosPattern = Pattern.compile("<span class=\"JvCare [^ ]* bloc-pseudo-msg text-([^\"]*)\" target=\"_blank\">[^a-zA-Z0-9_\\[\\]-]*([a-zA-Z0-9_\\[\\]-]*)[^<]*</span>");
     private static final Pattern messagePattern = Pattern.compile("<div class=\"bloc-contenu\"><div class=\"txt-msg  text-[^-]*-forum \">((.*?)(?=<div class=\"info-edition-msg\">)|(.*?)(?=<div class=\"signature-msg)|(.*))", Pattern.DOTALL);
@@ -639,8 +640,23 @@ public final class JVCParser {
 
     public static String createMessageSecondLineFromInfos(MessageInfos thisMessageInfo, Settings settings) {
         String finalMessage = settings.secondLineFormat;
-        String tmpMessage = thisMessageInfo.messageNotParsed;
 
+        finalMessage = finalMessage.replace("<%MESSAGE_MESSAGE%>", parseMessageToPrettyMessage(thisMessageInfo.messageNotParsed, settings, thisMessageInfo.containSpoil, thisMessageInfo.showSpoil, thisMessageInfo.showOverlyQuote));
+        if (!thisMessageInfo.lastTimeEdit.isEmpty()) {
+            finalMessage = finalMessage.replace("<%EDIT_ALL%>", settings.addBeforeEdit + thisMessageInfo.lastTimeEdit.trim() + settings.addAfterEdit);
+        } else {
+            finalMessage = finalMessage.replace("<%EDIT_ALL%>", "");
+        }
+        finalMessage = finalMessage.replaceAll("(<br /> *)*(<(/)?blockquote>)( *<br />)*", "$2");
+
+        return finalMessage;
+    }
+
+    public static String createSignatureFromInfos(MessageInfos thisMessageInfo, Settings settings) {
+        return "<small>" + parseMessageToPrettyMessage(thisMessageInfo.signatureNotParsed, settings, true, false, true) + "</small>";
+    }
+
+    public static String parseMessageToPrettyMessage(String tmpMessage, Settings settings, boolean containSpoil, boolean showSpoil, boolean showOverlyQuote) {
         tmpMessage = ToolForJVCParsing.parseThisMessageWithThisPattern(tmpMessage, codeBlockPattern, 1, "<p><font face=\"monospace\">", "</font></p>", new ConvertStringToString("\n", "<br />"), new ConvertStringToString("  ", "  ")); //remplace les doubles espaces par des doubles alt+255
         tmpMessage = ToolForJVCParsing.parseThisMessageWithThisPattern(tmpMessage, codeLinePattern, 1, "<font face=\"monospace\">", "</font>", new ConvertStringToString("  ", "  "), null); //remplace les doubles espaces par des doubles alt+255
         tmpMessage = StickerConverter.convertStickerWithThisRule(tmpMessage, StickerConverter.ruleForNoLangageSticker);
@@ -671,9 +687,9 @@ public final class JVCParser {
             tmpMessage = tmpMessage.replaceAll("<a href=\"([^\"]*)\" data-def=\"NOELSHACK\" target=\"_blank\"><img class=\"img-shack\" .*? src=\"//([^\"]*)\" [^>]*></a>", "<a href=\"$1\">$1</a>");
         }
 
-        if (thisMessageInfo.containSpoil) {
+        if (containSpoil) {
             tmpMessage = ToolForJVCParsing.removeOverlySpoils(tmpMessage);
-            if (!thisMessageInfo.showSpoil) {
+            if (!showSpoil) {
                 tmpMessage = ToolForJVCParsing.parseThisMessageWithThisPattern(tmpMessage, spoilLinePattern, 1, "", "", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
                 tmpMessage = ToolForJVCParsing.parseThisMessageWithThisPattern(tmpMessage, spoilBlockPattern, 1, "<p>", "</p>", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
             } else {
@@ -690,7 +706,7 @@ public final class JVCParser {
 
         tmpMessage = ToolForJVCParsing.removeFirstAndLastBrInMessage(tmpMessage);
 
-        if (!thisMessageInfo.showOverlyQuote) {
+        if (!showOverlyQuote) {
             tmpMessage = ToolForJVCParsing.removeOverlyQuoteInPrettyMessage(tmpMessage, settings.maxNumberOfOverlyQuotes);
         }
 
@@ -698,15 +714,7 @@ public final class JVCParser {
             tmpMessage = tmpMessage.replaceAll("(?i)" + settings.pseudoOfUser.replace("[", "\\[").replace("]", "\\]") + "(?![^<>]*(>|</a>))", "<font color=\"" + settings.colorPseudoUser + "\">$0</font>");
         }
 
-        finalMessage = finalMessage.replace("<%MESSAGE_MESSAGE%>", tmpMessage);
-        if (!thisMessageInfo.lastTimeEdit.isEmpty()) {
-            finalMessage = finalMessage.replace("<%EDIT_ALL%>", settings.addBeforeEdit + thisMessageInfo.lastTimeEdit.trim() + settings.addAfterEdit);
-        } else {
-            finalMessage = finalMessage.replace("<%EDIT_ALL%>", "");
-        }
-        finalMessage = finalMessage.replaceAll("(<br /> *)*(<(/)?blockquote>)( *<br />)*", "$2");
-
-        return finalMessage;
+        return tmpMessage;
     }
 
     public static String parseMessageToSimpleMessage(String message) {
@@ -733,6 +741,7 @@ public final class JVCParser {
         MessageInfos newMessageInfo = new MessageInfos();
         Matcher pseudoInfosMatcher = pseudoInfosPattern.matcher(thisEntireMessage);
         Matcher messageMatcher = messagePattern.matcher(thisEntireMessage);
+        Matcher signatureMatcher = signaturePattern.matcher(thisEntireMessage);
         Matcher dateMessageMatcher = dateMessagePattern.matcher(thisEntireMessage);
         Matcher lastEditMessageMatcher = lastEditMessagePattern.matcher(thisEntireMessage);
         Matcher messageIDMatcher = messageIDPattern.matcher(thisEntireMessage);
@@ -749,6 +758,12 @@ public final class JVCParser {
             newMessageInfo.lastTimeEdit = lastEditMessageMatcher.group(1).replaceAll(htmlTagPattern.pattern(), "");
         } else {
             newMessageInfo.lastTimeEdit = "";
+        }
+
+        if (signatureMatcher.find()) {
+            newMessageInfo.signatureNotParsed = signatureMatcher.group(1);
+        } else {
+            newMessageInfo.signatureNotParsed = "";
         }
 
         if (messageMatcher.find() && messageIDMatcher.find() && dateMessageMatcher.find()) {
@@ -1000,6 +1015,7 @@ public final class JVCParser {
         public String pseudo = "";
         public String pseudoType = "";
         public String messageNotParsed = "";
+        public String signatureNotParsed = "";
         public String dateTime = "";
         public String wholeDate = "";
         public String lastTimeEdit = "";
@@ -1030,6 +1046,7 @@ public final class JVCParser {
             pseudo = in.readString();
             pseudoType = in.readString();
             messageNotParsed = in.readString();
+            signatureNotParsed = in.readString();
             dateTime = in.readString();
             wholeDate = in.readString();
             lastTimeEdit = in.readString();
@@ -1051,6 +1068,7 @@ public final class JVCParser {
             out.writeString(pseudo);
             out.writeString(pseudoType);
             out.writeString(messageNotParsed);
+            out.writeString(signatureNotParsed);
             out.writeString(dateTime);
             out.writeString(wholeDate);
             out.writeString(lastTimeEdit);

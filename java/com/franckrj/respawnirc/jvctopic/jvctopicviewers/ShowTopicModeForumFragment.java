@@ -116,14 +116,14 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
     @Override
     protected void initializeAdapter() {
         adapterForTopic.setIdOfLayoutToUse(R.layout.jvcmessages_rowforum);
+        adapterForTopic.setAlternateBackgroundColor(sharedPref.getBoolean(getString(R.string.settingsTopicAlternateBackgroundColorModeForum), Boolean.parseBoolean(getString(R.string.topicAlternateBackgroundColorModeForumDefault))));
+        adapterForTopic.setShowSignatures(sharedPref.getBoolean(getString(R.string.settingsShowSignatureModeForum), Boolean.parseBoolean(getString(R.string.showSignatureModeForumDefault))));
     }
 
     @Override
     protected void reloadSettings() {
         super.reloadSettings();
         clearMessagesOnRefresh = sharedPref.getBoolean(getString(R.string.settingsForumClearOnRefresh), Boolean.parseBoolean(getString(R.string.forumClearOnRefreshDefault)));
-        adapterForTopic.setAlternateBackgroundColor(sharedPref.getBoolean(getString(R.string.settingsTopicAlternateBackgroundColorModeForum), Boolean.parseBoolean(getString(R.string.topicAlternateBackgroundColorModeForumDefault))));
-        adapterForTopic.updateAllItems();
     }
 
     @Override
