@@ -19,6 +19,7 @@ public final class JVCParser {
     private static final Pattern messageQuotePattern = Pattern.compile("\"txt\":\"(.*)\"", Pattern.DOTALL);
     private static final Pattern entireMessagePattern = Pattern.compile("(<div class=\"bloc-message-forum \".*?)(<span id=\"post_[^\"]*\" class=\"bloc-message-forum-anchor\">|<div class=\"bloc-outils-plus-modo bloc-outils-bottom\">|<div class=\"bloc-pagi-default\">)", Pattern.DOTALL);
     private static final Pattern signaturePattern = Pattern.compile("<div class=\"signature-msg[^\"]*\">(.*?)</div>", Pattern.DOTALL);
+    private static final Pattern avatarPattern = Pattern.compile("<img src=\"[^\"]*\" data-srcset=\"(http:)?//([^\"]*)\" class=\"user-avatar-msg\"", Pattern.DOTALL);
     private static final Pattern entireTopicPattern = Pattern.compile("<li class=\"\" data-id=\"[^\"]*\">[^<]*<span class=\"topic-subject\">.*?</li>", Pattern.DOTALL);
     private static final Pattern pseudoInfosPattern = Pattern.compile("<span class=\"JvCare [^ ]* bloc-pseudo-msg text-([^\"]*)\" target=\"_blank\">[^a-zA-Z0-9_\\[\\]-]*([a-zA-Z0-9_\\[\\]-]*)[^<]*</span>");
     private static final Pattern messagePattern = Pattern.compile("<div class=\"bloc-contenu\"><div class=\"txt-msg  text-[^-]*-forum \">((.*?)(?=<div class=\"info-edition-msg\">)|(.*?)(?=<div class=\"signature-msg)|(.*))", Pattern.DOTALL);
@@ -68,7 +69,12 @@ public final class JVCParser {
     private static final Pattern jvcLinkPattern = Pattern.compile("<a href=\"([^\"]*)\"( title=\"[^\"]*\")?>.*?</a>");
     private static final Pattern shortLinkPattern = Pattern.compile("<span class=\"JvCare [^\"]*\" rel=\"nofollow[^\"]*\" target=\"_blank\">([^<]*)</span>");
     private static final Pattern longLinkPattern = Pattern.compile("<span class=\"JvCare [^\"]*\"[^i]*itle=\"([^\"]*)\">[^<]*<i></i><span>[^<]*</span>[^<]*</span>");
+    private static final Pattern smileyPattern = Pattern.compile("<img src=\"//image.jeuxvideo.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-def=\"SMILEYS\" data-code=\"([^\"]*)\" title=\"[^\"]*\" />");
+    private static final Pattern youtubeVideoPattern = Pattern.compile("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe .*? src=\"http(s)?://www.youtube.com/embed/([^\"]*)\"[^>]*></iframe></div></div>");
+    private static final Pattern surroundedBlockquotePattern = Pattern.compile("(<br /> *)*(<(/)?blockquote>)( *<br />)*");
+    private static final Pattern noelshackImagePattern = Pattern.compile("<a href=\"([^\"]*)\" data-def=\"NOELSHACK\" target=\"_blank\"><img class=\"img-shack\" .*? src=\"//([^\"]*)\" [^>]*></a>");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
+    private static final Pattern multipleSpacesPattern = Pattern.compile(" +");
 
     private JVCParser() {
         //rien
@@ -647,7 +653,7 @@ public final class JVCParser {
         } else {
             finalMessage = finalMessage.replace("<%EDIT_ALL%>", "");
         }
-        finalMessage = finalMessage.replaceAll("(<br /> *)*(<(/)?blockquote>)( *<br />)*", "$2");
+        finalMessage = surroundedBlockquotePattern.matcher(finalMessage).replaceAll("$2");
 
         return finalMessage;
     }
@@ -656,85 +662,93 @@ public final class JVCParser {
         return "<small>" + parseMessageToPrettyMessage(thisMessageInfo.signatureNotParsed, settings, true, false, true) + "</small>";
     }
 
-    public static String parseMessageToPrettyMessage(String tmpMessage, Settings settings, boolean containSpoil, boolean showSpoil, boolean showOverlyQuote) {
-        tmpMessage = ToolForJVCParsing.parseThisMessageWithThisPattern(tmpMessage, codeBlockPattern, 1, "<p><font face=\"monospace\">", "</font></p>", new ConvertStringToString("\n", "<br />"), new ConvertStringToString("  ", "  ")); //remplace les doubles espaces par des doubles alt+255
-        tmpMessage = ToolForJVCParsing.parseThisMessageWithThisPattern(tmpMessage, codeLinePattern, 1, "<font face=\"monospace\">", "</font>", new ConvertStringToString("  ", "  "), null); //remplace les doubles espaces par des doubles alt+255
-        tmpMessage = StickerConverter.convertStickerWithThisRule(tmpMessage, StickerConverter.ruleForNoLangageSticker);
+    public static String parseMessageToPrettyMessage(String messageInString, Settings settings, boolean containSpoil, boolean showSpoil, boolean showOverlyQuote) {
+        StringBuilder messageInBuilder = new StringBuilder(messageInString);
+
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeBlockPattern, 1, "<p><font face=\"monospace\">", "</font></p>", new ConvertStringToString("\n", "<br />"), new ConvertStringToString("  ", "  ")); //remplace les doubles espaces par des doubles alt+255
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeLinePattern, 1, "<font face=\"monospace\">", "</font>", new ConvertStringToString("  ", "  "), null); //remplace les doubles espaces par des doubles alt+255
+        StickerConverter.convertStickerWithThisRule(messageInBuilder, StickerConverter.ruleForNoLangageSticker);
         if (settings.transformStickerToSmiley) {
-            tmpMessage = StickerConverter.convertStickerWithThisRule(tmpMessage, StickerConverter.ruleForStickerToSmiley);
+            StickerConverter.convertStickerWithThisRule(messageInBuilder, StickerConverter.ruleForStickerToSmiley);
         }
-        tmpMessage = ToolForJVCParsing.parseThisMessageWithThisPattern(tmpMessage, stickerPattern, 2, "<img src=\"sticker_", ".png\"/>", new ConvertStringToString("-", "_"), null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, stickerPattern, 2, "<img src=\"sticker_", ".png\"/>", new ConvertStringToString("-", "_"), null);
 
-        tmpMessage = tmpMessage.replace("\n", "").replace("\r", "");
-        tmpMessage = ToolForJVCParsing.parseListInMessageIfNeeded(tmpMessage);
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "\n", "");
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "\r", "");
+        ToolForParsing.parseListInMessageIfNeeded(messageInBuilder);
 
-        tmpMessage = tmpMessage.replaceAll("<img src=\"//image.jeuxvideo.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-def=\"SMILEYS\" data-code=\"([^\"]*)\" title=\"[^\"]*\" />", "<img src=\"smiley_$1\"/>")
-                .replaceAll("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe .*? src=\"http(s)?://www.youtube.com/embed/([^\"]*)\"[^>]*></iframe></div></div>", "<a href=\"http://youtu.be/$2\">http://youtu.be/$2</a>");
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, smileyPattern, 1, "<img src=\"smiley_", "\"/>", null, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, youtubeVideoPattern, 2, "<a href=\"http://youtu.be/", "\">http://youtu.be/", 2, "</a>");
 
         if (settings.shortenLongLink) {
-            tmpMessage = ToolForJVCParsing.parseThisMessageWithThisPattern(tmpMessage, jvcLinkPattern, 1, "", "", new MakeShortenedLinkIfPossible(50, true), null);
-            tmpMessage = ToolForJVCParsing.parseThisMessageWithThisPattern(tmpMessage, shortLinkPattern, 1, "", "", new MakeShortenedLinkIfPossible(50, true), null);
-            tmpMessage = ToolForJVCParsing.parseThisMessageWithThisPattern(tmpMessage, longLinkPattern, 1, "", "", new MakeShortenedLinkIfPossible(50, true), null);
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcLinkPattern, 1, "", "", new MakeShortenedLinkIfPossible(50, true), null);
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", new MakeShortenedLinkIfPossible(50, true), null);
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longLinkPattern, 1, "", "", new MakeShortenedLinkIfPossible(50, true), null);
         } else {
-            tmpMessage = tmpMessage.replaceAll(jvcLinkPattern.pattern(), "<a href=\"$1\">$1</a>")
-                    .replaceAll(shortLinkPattern.pattern(), "<a href=\"$1\">$1</a>")
-                    .replaceAll(longLinkPattern.pattern(), "<a href=\"$1\">$1</a>");
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcLinkPattern, 1, "", "", new MakeShortenedLinkIfPossible(0, true), null);
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", new MakeShortenedLinkIfPossible(0, true), null);
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longLinkPattern, 1, "", "", new MakeShortenedLinkIfPossible(0, true), null);
         }
 
         if (settings.showNoelshackImages) {
-            tmpMessage = tmpMessage.replaceAll("<a href=\"([^\"]*)\" data-def=\"NOELSHACK\" target=\"_blank\"><img class=\"img-shack\" .*? src=\"//([^\"]*)\" [^>]*></a>", "<a href=\"$1\"><img src=\"http://$2\"/></a>");
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 1, "<a href=\"", "\"><img src=\"http://", 2, "\"/></a>");
         } else {
-            tmpMessage = tmpMessage.replaceAll("<a href=\"([^\"]*)\" data-def=\"NOELSHACK\" target=\"_blank\"><img class=\"img-shack\" .*? src=\"//([^\"]*)\" [^>]*></a>", "<a href=\"$1\">$1</a>");
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 1, "", "", new MakeShortenedLinkIfPossible(0, true), null);
         }
 
         if (containSpoil) {
-            tmpMessage = ToolForJVCParsing.removeOverlySpoils(tmpMessage);
+            ToolForParsing.removeOverlySpoils(messageInBuilder);
             if (!showSpoil) {
-                tmpMessage = ToolForJVCParsing.parseThisMessageWithThisPattern(tmpMessage, spoilLinePattern, 1, "", "", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
-                tmpMessage = ToolForJVCParsing.parseThisMessageWithThisPattern(tmpMessage, spoilBlockPattern, 1, "<p>", "</p>", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
+                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "", "", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
+                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p>", "</p>", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
             } else {
-                tmpMessage = ToolForJVCParsing.parseThisMessageWithThisPattern(tmpMessage, spoilLinePattern, 1, "<font color=\"#000000\">", "</font>", new RemoveFirstsAndLastsP(), null);
-                tmpMessage = ToolForJVCParsing.parseThisMessageWithThisPattern(tmpMessage, spoilBlockPattern, 1, "<p><font color=\"#000000\">", "</font></p>",  new RemoveFirstsAndLastsP(), null);
+                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "<font color=\"#000000\">", "</font>", new RemoveFirstsAndLastsP(), null);
+                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p><font color=\"#000000\">", "</font></p>",  new RemoveFirstsAndLastsP(), null);
             }
         }
 
-        tmpMessage = tmpMessage.replace("<blockquote class=\"blockquote-jv\">", "<blockquote>");
-        tmpMessage = ToolForJVCParsing.removeDivAndAdaptParagraphInMessage(tmpMessage);
-        tmpMessage = tmpMessage.replaceAll("(<br /> *)*(<(/)?blockquote>)( *<br />)*", "$2");
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "<blockquote class=\"blockquote-jv\">", "<blockquote>");
+        ToolForParsing.removeDivAndAdaptParagraphInMessage(messageInBuilder);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, surroundedBlockquotePattern, 2, "", "", null, null);
 
-        tmpMessage = ToolForJVCParsing.parseThisMessageWithThisPattern(tmpMessage, jvCarePattern, 1, "", "", new MakeShortenedLinkIfPossible((settings.shortenLongLink ? 50 : 0), false), null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvCarePattern, 1, "", "", new MakeShortenedLinkIfPossible((settings.shortenLongLink ? 50 : 0), false), null);
 
-        tmpMessage = ToolForJVCParsing.removeFirstAndLastBrInMessage(tmpMessage);
+        ToolForParsing.removeFirstAndLastBrInMessage(messageInBuilder);
 
         if (!showOverlyQuote) {
-            tmpMessage = ToolForJVCParsing.removeOverlyQuoteInPrettyMessage(tmpMessage, settings.maxNumberOfOverlyQuotes);
+            ToolForParsing.removeOverlyQuoteInPrettyMessage(messageInBuilder, settings.maxNumberOfOverlyQuotes);
         }
 
         if (!settings.pseudoOfUser.isEmpty()) {
-            tmpMessage = tmpMessage.replaceAll("(?i)" + settings.pseudoOfUser.replace("[", "\\[").replace("]", "\\]") + "(?![^<>]*(>|</a>))", "<font color=\"" + settings.colorPseudoUser + "\">$0</font>");
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, Pattern.compile("(?i)" + settings.pseudoOfUser.replace("[", "\\[").replace("]", "\\]") + "(?![^<>]*(>|</a>))"), 0, "<font color=\"" + settings.colorPseudoUser + "\">", "</font>", null, null);
         }
 
-        return tmpMessage;
+        return messageInBuilder.toString();
     }
 
-    public static String parseMessageToSimpleMessage(String message) {
-        message = message.replaceAll(stickerPattern.pattern(), "[[sticker:p/$2]]");
-        message = message.replace("\n", "").replace("\r", "");
-        message = ToolForJVCParsing.parseListInMessageIfNeeded(message);
-        message = message.replaceAll("<img src=\"//image.jeuxvideo.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-def=\"SMILEYS\" data-code=\"([^\"]*)\" title=\"[^\"]*\" />", "$2")
-                .replaceAll("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe .*? src=\"http(s)?://www.youtube.com/embed/([^\"]*)\"[^>]*></iframe></div></div>", "http://youtu.be/$2")
-                .replaceAll(jvcLinkPattern.pattern(), "$1")
-                .replaceAll(shortLinkPattern.pattern(), "$1")
-                .replaceAll(longLinkPattern.pattern(), "$1");
-        message = message.replace("<blockquote class=\"blockquote-jv\">", "<blockquote>");
-        message = ToolForJVCParsing.removeDivAndAdaptParagraphInMessage(message);
-        message = message.replaceAll("(<br /> *)*(<(/)?blockquote>)( *<br />)*", "<br /><br />");
-        message = message.replaceAll(jvCarePattern.pattern(), "$1");
-        message = message.replaceAll(" +", " ");
-        message = ToolForJVCParsing.removeFirstAndLastBrInMessage(message);
+    public static String parseMessageToSimpleMessage(String messageInString) {
+        StringBuilder messageInBuilder = new StringBuilder(messageInString);
 
-        message = message.replace("<br />", "\n").replaceAll(htmlTagPattern.pattern(), "");
-        return specialCharToNormalChar(message);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, stickerPattern, 2, "[[sticker:p/", "]]", null, null);
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "\n", "");
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "\r", "");
+        ToolForParsing.parseListInMessageIfNeeded(messageInBuilder);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, smileyPattern, 2, "", "", null, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, youtubeVideoPattern, 2, "http://youtu.be/", "", null, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcLinkPattern, 1, "", "", null, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", null, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longLinkPattern, 1, "", "", null, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 1, "", "", null, null);
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "<blockquote class=\"blockquote-jv\">", "<blockquote>");
+        ToolForParsing.removeDivAndAdaptParagraphInMessage(messageInBuilder);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, surroundedBlockquotePattern, -1, "<br /><br />", "", null, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvCarePattern, 1, "", "", null, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, multipleSpacesPattern, -1, " ", "", null, null);
+        ToolForParsing.removeFirstAndLastBrInMessage(messageInBuilder);
+
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "<br />", "\n");
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, htmlTagPattern, -1, "", "", null, null);
+        return specialCharToNormalChar(messageInBuilder.toString());
     }
 
     public static MessageInfos createMessageInfoFromEntireMessage(String thisEntireMessage) {
@@ -742,6 +756,7 @@ public final class JVCParser {
         Matcher pseudoInfosMatcher = pseudoInfosPattern.matcher(thisEntireMessage);
         Matcher messageMatcher = messagePattern.matcher(thisEntireMessage);
         Matcher signatureMatcher = signaturePattern.matcher(thisEntireMessage);
+        Matcher avatarMatcher = avatarPattern.matcher(thisEntireMessage);
         Matcher dateMessageMatcher = dateMessagePattern.matcher(thisEntireMessage);
         Matcher lastEditMessageMatcher = lastEditMessagePattern.matcher(thisEntireMessage);
         Matcher messageIDMatcher = messageIDPattern.matcher(thisEntireMessage);
@@ -766,12 +781,18 @@ public final class JVCParser {
             newMessageInfo.signatureNotParsed = "";
         }
 
+        if (avatarMatcher.find()) {
+            newMessageInfo.avatarLink = "http://" + avatarMatcher.group(2);
+        } else {
+            newMessageInfo.avatarLink = "";
+        }
+
         if (messageMatcher.find() && messageIDMatcher.find() && dateMessageMatcher.find()) {
             newMessageInfo.messageNotParsed = messageMatcher.group(1);
             newMessageInfo.dateTime = dateMessageMatcher.group(3);
             newMessageInfo.wholeDate = dateMessageMatcher.group(2);
             newMessageInfo.containSpoil = newMessageInfo.messageNotParsed.contains("<span class=\"contenu-spoil\">");
-            newMessageInfo.numberOfOverlyQuote = ToolForJVCParsing.countNumberOfOverlyQuoteInNotPrettyMessage(newMessageInfo.messageNotParsed);
+            newMessageInfo.numberOfOverlyQuote = ToolForParsing.countNumberOfOverlyQuoteInNotPrettyMessage(newMessageInfo.messageNotParsed);
             newMessageInfo.id = Long.parseLong(messageIDMatcher.group(1));
         }
 
@@ -838,49 +859,54 @@ public final class JVCParser {
         return baseMessage.replace("&amp;", "&").replace("&quot;", "\"").replace("&#039;", "\'").replace("&lt;", "<").replace("&gt;", ">");
     }
 
-    private static class ToolForJVCParsing {
-        public static String parseListInMessageIfNeeded(String message) {
-            if (message.contains("<li>")) {
-                message = message.replaceAll("<ul[^>]*>", "<p>")
-                        .replace("</ul>", "</p>")
-                        .replaceAll("<ol[^>]*>", "<p>")
-                        .replace("</ol>", "</p>")
-                        .replace("<li><p><li>", "<li><li>")
-                        .replace("<li><p><li>", "<li><li>")
-                        .replace("<li>", " • ")
-                        .replaceAll("</li></p></li>", "</li>")
-                        .replaceAll("</li></p></li>", "</li>")
-                        .replace("</li>", "<br />");
-            }
+    public static class ToolForParsing {
+        private static final Pattern uolistOpenTagPattern = Pattern.compile("<(ul|ol)[^>]*>");
+        private static final Pattern divOpenTagPattern = Pattern.compile("<div[^>]*>");
+        private static final Pattern largeParagraphePattern = Pattern.compile("(<br /> *){0,2}</p> *<p>( *<br />){0,2}");
+        private static final Pattern surroundedParagraphePattern = Pattern.compile("<br /> *<(/)?p> *<br />");
+        private static final Pattern leftParagraphePattern = Pattern.compile("(<br /> *){1,2}<(/)?p>");
+        private static final Pattern rightParagraphePattern = Pattern.compile("<(/)?p>(<br /> *){1,2}");
+        private static final Pattern smallParagraphePattern = Pattern.compile("<(/)?p>");
 
-            return message;
+        public static void parseListInMessageIfNeeded(StringBuilder message) {
+            if (message.indexOf("<li>") != -1) {
+                ToolForParsing.parseThisMessageWithThisPattern(message, uolistOpenTagPattern, -1, "<p>", "", null, null);
+                ToolForParsing.replaceStringByAnother(message, "</ul>", "</p>");
+                ToolForParsing.replaceStringByAnother(message, "</ol>", "</p>");
+                ToolForParsing.replaceStringByAnother(message, "<li><p><li>", "<li><li>");
+                ToolForParsing.replaceStringByAnother(message, "<li><p><li>", "<li><li>");
+                ToolForParsing.replaceStringByAnother(message, "<li>", " • ");
+                ToolForParsing.replaceStringByAnother(message, "</li></p></li>", "</li>");
+                ToolForParsing.replaceStringByAnother(message, "</li></p></li>", "</li>");
+                ToolForParsing.replaceStringByAnother(message, "</li>", "<br />");
+            }
         }
 
-        public static String removeDivAndAdaptParagraphInMessage(String message) {
-            return message.replaceAll("<div[^>]*>", "")
-                    .replace("</div>", "")
-                    .replaceAll("(<br /> *){0,2}</p> *<p>( *<br />){0,2}", "<br /><br />")
-                    .replaceAll("<br /> *<(/)?p> *<br />", "<br /><br />")
-                    .replaceAll("(<br /> *){1,2}<(/)?p>", "<br /><br />")
-                    .replaceAll("<(/)?p>(<br /> *){1,2}", "<br /><br />")
-                    .replaceAll("<(/)?p>", "<br /><br />");
+        public static void removeDivAndAdaptParagraphInMessage(StringBuilder message) {
+            ToolForParsing.parseThisMessageWithThisPattern(message, divOpenTagPattern, -1, "", "", null, null);
+            ToolForParsing.replaceStringByAnother(message, "</div>", "");
+            ToolForParsing.parseThisMessageWithThisPattern(message, largeParagraphePattern, -1, "<br /><br />", "", null, null);
+            ToolForParsing.parseThisMessageWithThisPattern(message, surroundedParagraphePattern, -1, "<br /><br />", "", null, null);
+            ToolForParsing.parseThisMessageWithThisPattern(message, leftParagraphePattern, -1, "<br /><br />", "", null, null);
+            ToolForParsing.parseThisMessageWithThisPattern(message, rightParagraphePattern, -1, "<br /><br />", "", null, null);
+            ToolForParsing.parseThisMessageWithThisPattern(message, smallParagraphePattern, -1, "<br /><br />", "", null, null);
         }
 
-        public static String removeFirstAndLastBrInMessage(String message) {
-            message = message.trim();
+        public static void removeFirstAndLastBrInMessage(StringBuilder message) {
+            trimStringBuilder(message);
 
-            while (message.startsWith("<br />")) {
-                message = message.substring(6).trim();
+            while (startsWithStringBuilder(message, "<br />")) {
+                message.delete(0, 6);
+                trimStringBuilder(message);
             }
 
-            while (message.endsWith("<br />")) {
-                message = message.substring(0, message.length() - 6).trim();
+            while (endsWithStringBuilder(message, "<br />")) {
+                message.delete(message.length() - 6, message.length());
+                trimStringBuilder(message);
             }
-
-            return message;
         }
 
-        public static String removeOverlySpoils(String baseMessage) {
+        public static void removeOverlySpoils(StringBuilder baseMessage) {
             Matcher spoilOverlyMatcher = spoilOverlyPattern.matcher(baseMessage);
             int currentSpoilTagDeepness = 0;
             int lastOffsetOfTag = 0;
@@ -894,7 +920,7 @@ public final class JVCParser {
 
                 if (currentSpoilTagDeepness > 1) {
                     lastOffsetOfTag = spoilOverlyMatcher.start();
-                    baseMessage = baseMessage.substring(0, spoilOverlyMatcher.start()) + baseMessage.substring(spoilOverlyMatcher.end());
+                    baseMessage.delete(spoilOverlyMatcher.start(), spoilOverlyMatcher.end());
                     spoilOverlyMatcher = spoilOverlyPattern.matcher(baseMessage);
                 } else {
                     lastOffsetOfTag = spoilOverlyMatcher.end();
@@ -908,11 +934,9 @@ public final class JVCParser {
                     }
                 }
             }
-
-            return baseMessage;
         }
 
-        public static String removeOverlyQuoteInPrettyMessage(String prettyMessage, int maxNumberOfOverlyQuotes) {
+        public static void removeOverlyQuoteInPrettyMessage(StringBuilder prettyMessage, int maxNumberOfOverlyQuotes) {
             Matcher htmlTagMatcher = overlyBetterQuotePattern.matcher(prettyMessage);
             int lastOffsetOfTag = 0;
 
@@ -952,13 +976,11 @@ public final class JVCParser {
                     }
 
                     if (hasMatched) {
-                        prettyMessage = prettyMessage.substring(0, htmlTagMatcher.end()) + "[...]" + prettyMessage.substring(secHtmlTagMatcher.start());
+                        prettyMessage.replace(htmlTagMatcher.end(), secHtmlTagMatcher.start(), "[...]");
                         htmlTagMatcher = overlyBetterQuotePattern.matcher(prettyMessage);
                     }
                 }
             }
-
-            return prettyMessage;
         }
 
         public static int countNumberOfOverlyQuoteInNotPrettyMessage(String notPrettyMessage) {
@@ -985,29 +1007,96 @@ public final class JVCParser {
             return maxNumberOfOverlyQuoteInMessage;
         }
 
-        public static String parseThisMessageWithThisPattern(String messageToParse, Pattern patternToUse, int groupToUse, String stringBefore, String stringAfter, StringModifier firstModifier, StringModifier secondModifier) {
+        public static void parseThisMessageWithThisPattern(StringBuilder messageToParse, Pattern patternToUse, int groupToUse, String stringBefore, String stringAfter, StringModifier firstModifier, StringModifier secondModifier) {
             Matcher matcherToUse = patternToUse.matcher(messageToParse);
             int lastOffset = 0;
 
             while (matcherToUse.find(lastOffset)) {
-                String newMessage = messageToParse.substring(0, matcherToUse.start()) + stringBefore;
-                String messageContent = matcherToUse.group(groupToUse);
-                lastOffset = matcherToUse.start() + 1;
+                StringBuilder newMessage = new StringBuilder(stringBefore);
+                String messageToUse = (groupToUse == -1 ? "" : matcherToUse.group(groupToUse));
 
                 if (firstModifier != null) {
-                    messageContent = firstModifier.changeString(messageContent);
+                    messageToUse = firstModifier.changeString(messageToUse);
                 }
-                if (secondModifier != null ) {
-                    messageContent = secondModifier.changeString(messageContent);
+                if (secondModifier != null) {
+                    messageToUse = secondModifier.changeString(messageToUse);
                 }
 
-                newMessage += messageContent + stringAfter + messageToParse.substring(matcherToUse.end());
+                newMessage.append(messageToUse).append(stringAfter);
 
-                messageToParse = newMessage;
+                messageToParse.replace(matcherToUse.start(), matcherToUse.end(), newMessage.toString());
+                lastOffset = matcherToUse.start() + newMessage.length();
                 matcherToUse = patternToUse.matcher(messageToParse);
             }
+        }
 
-            return messageToParse;
+        public static void parseThisMessageWithThisPattern(StringBuilder messageToParse, Pattern patternToUse, int groupToUse, String stringBefore, String stringAfter, int secondGroupToUse, String stringAfterAfter) {
+            Matcher matcherToUse = patternToUse.matcher(messageToParse);
+            int lastOffset = 0;
+
+            while (matcherToUse.find(lastOffset)) {
+                StringBuilder newMessage = new StringBuilder(stringBefore);
+
+                if (groupToUse != -1) {
+                    newMessage.append(matcherToUse.group(groupToUse));
+                }
+
+                newMessage.append(stringAfter);
+
+                if (secondGroupToUse != -1) {
+                    newMessage.append(matcherToUse.group(secondGroupToUse));
+                }
+
+                newMessage.append(stringAfterAfter);
+
+                messageToParse.replace(matcherToUse.start(), matcherToUse.end(), newMessage.toString());
+                lastOffset = matcherToUse.start() + newMessage.length();
+                matcherToUse = patternToUse.matcher(messageToParse);
+            }
+        }
+
+        public static void replaceStringByAnother(StringBuilder builder, String from, String to)
+        {
+            int index = builder.indexOf(from);
+            while (index != -1) {
+                builder.replace(index, index + from.length(), to);
+                index += to.length();
+                index = builder.indexOf(from, index);
+            }
+        }
+
+        public static void trimStringBuilder(StringBuilder builder) {
+            while (builder.length() > 0 && builder.charAt(0) == ' ') {
+                builder.delete(0, 1);
+            }
+
+            while (builder.length() > 0 && builder.charAt(builder.length() - 1) == ' ') {
+                builder.delete(builder.length() - 1, builder.length());
+            }
+        }
+
+        public static boolean startsWithStringBuilder(StringBuilder builder, String with) {
+            if (builder.length() >= with.length()) {
+                for (int indexStart = 0; indexStart < with.length(); ++indexStart) {
+                    if (builder.charAt(indexStart) != with.charAt(indexStart)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
+        public static boolean endsWithStringBuilder(StringBuilder builder, String with) {
+            if (builder.length() >= with.length()) {
+                for (int reverseIndexEnd = 0; reverseIndexEnd < with.length(); ++reverseIndexEnd) {
+                    if (builder.charAt(builder.length() - 1 - reverseIndexEnd) != with.charAt(with.length() - 1 - reverseIndexEnd)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
         }
     }
 
@@ -1016,6 +1105,7 @@ public final class JVCParser {
         public String pseudoType = "";
         public String messageNotParsed = "";
         public String signatureNotParsed = "";
+        public String avatarLink = "";
         public String dateTime = "";
         public String wholeDate = "";
         public String lastTimeEdit = "";
@@ -1047,6 +1137,7 @@ public final class JVCParser {
             pseudoType = in.readString();
             messageNotParsed = in.readString();
             signatureNotParsed = in.readString();
+            avatarLink = in.readString();
             dateTime = in.readString();
             wholeDate = in.readString();
             lastTimeEdit = in.readString();
@@ -1069,6 +1160,7 @@ public final class JVCParser {
             out.writeString(pseudoType);
             out.writeString(messageNotParsed);
             out.writeString(signatureNotParsed);
+            out.writeString(avatarLink);
             out.writeString(dateTime);
             out.writeString(wholeDate);
             out.writeString(lastTimeEdit);

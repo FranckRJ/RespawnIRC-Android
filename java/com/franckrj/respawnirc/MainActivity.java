@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         obj.clearCache(true);
 
         for (File thisFile : getCacheDir().listFiles()) {
-            if (!thisFile.isDirectory() && thisFile.getName().startsWith("nlshck_")) {
+            if (!thisFile.isDirectory() && (thisFile.getName().startsWith("nlshck_") || thisFile.getName().startsWith("vtr_"))) {
                 //noinspection ResultOfMethodCallIgnored
                 thisFile.delete();
             }

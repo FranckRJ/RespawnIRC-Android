@@ -1,6 +1,7 @@
 package com.franckrj.respawnirc.utils;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 public class StickerConverter {
     public static StickerConvertRule ruleForNoLangageSticker = null;
@@ -86,20 +87,18 @@ public class StickerConverter {
         ruleForStickerToSmiley.convertToSmiley = true;
     }
 
-    public static String convertStickerWithThisRule(String messageToConvert, StickerConvertRule ruleToFollow) {
+    public static void convertStickerWithThisRule(StringBuilder messageToConvert, StickerConvertRule ruleToFollow) {
         if (ruleToFollow != null) {
             for (InfoForConvert thisInfo : ruleToFollow.listOfConvert) {
                 if (!ruleToFollow.convertToSmiley) {
-                    messageToConvert = messageToConvert.replaceAll("<img class=\"img-stickers\" src=\"http://jv.stkr.fr/p[^/]*/" + thisInfo.base + "\"/>",
-                                                                "<img class=\"img-stickers\" src=\"http://jv.stkr.fr/p/" + thisInfo.replacement + "\"/>");
+                    JVCParser.ToolForParsing.parseThisMessageWithThisPattern(messageToConvert, Pattern.compile("<img class=\"img-stickers\" src=\"http://jv.stkr.fr/p[^/]*/" + thisInfo.base + "\"/>"), -1,
+                                                                "<img class=\"img-stickers\" src=\"http://jv.stkr.fr/p/" + thisInfo.replacement + "\"/>", "", null, null);
                 } else {
-                    messageToConvert = messageToConvert.replaceAll("<img class=\"img-stickers\" src=\"http://jv.stkr.fr/p[^/]*/" + thisInfo.base + "\"/>",
-                            "<img src=\"//image.jeuxvideo.com/smileys_img/" + thisInfo.replacement + "\" alt=\"\" data-def=\"SMILEYS\" data-code=\"\" title=\"\" />");
+                    JVCParser.ToolForParsing.parseThisMessageWithThisPattern(messageToConvert, Pattern.compile("<img class=\"img-stickers\" src=\"http://jv.stkr.fr/p[^/]*/" + thisInfo.base + "\"/>"), -1,
+                            "<img src=\"//image.jeuxvideo.com/smileys_img/" + thisInfo.replacement + "\" alt=\"\" data-def=\"SMILEYS\" data-code=\"\" title=\"\" />", "", null, null);
                 }
             }
         }
-
-        return messageToConvert;
     }
 
     public static class StickerConvertRule {

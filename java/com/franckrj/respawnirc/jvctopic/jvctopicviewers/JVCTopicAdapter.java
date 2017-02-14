@@ -203,7 +203,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     }
 
     private ContentHolder updateHolderWithNewItem(ContentHolder holder, JVCParser.MessageInfos item) {
-        holder.firstLineContent = replaceQuoteAndUrlSpans(Undeprecator.htmlFromHtml(JVCParser.createMessageFirstLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
+        holder.firstLineContent = new SpannableString(Undeprecator.htmlFromHtml(JVCParser.createMessageFirstLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
         holder.secondLineContent = replaceQuoteAndUrlSpans(Undeprecator.htmlFromHtml(JVCParser.createMessageSecondLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
 
         if (!showSignatures || item.signatureNotParsed.isEmpty()) {

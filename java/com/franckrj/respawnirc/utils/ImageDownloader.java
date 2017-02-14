@@ -67,7 +67,7 @@ public class ImageDownloader {
 
         if (drawable == null) {
             try {
-                File newFile = new File(imagesCacheDir, noelshackLinkToFileName(link));
+                File newFile = new File(imagesCacheDir, imageLinkToFileName(link));
                 if (newFile.exists()) {
                     FileInputStream inputStream = new FileInputStream(newFile);
                     drawable = new DrawableWrapper(new BitmapDrawable(parentActivity.getResources(), inputStream));
@@ -100,11 +100,13 @@ public class ImageDownloader {
         listOfCurrentsTasks.clear();
     }
 
-    private String noelshackLinkToFileName(String link) {
+    private String imageLinkToFileName(String link) {
         if (link.startsWith("http://image.noelshack.com/minis/")) {
             return "nlshck_mini_" + link.substring(("http://image.noelshack.com/minis/").length()).replace("/", "_");
         } else if (link.startsWith("http://image.noelshack.com/fichiers/")) {
             return "nlshck_big_" + link.substring(("http://image.noelshack.com/fichiers/").length()).replace("/", "_");
+        } else if (link.startsWith("http://image.jeuxvideo.com/avatar")) {
+            return "vtr_" + link.substring(("http://image.jeuxvideo.com/avatar").length()).replace("/", "_");
         } else {
             return "";
         }
@@ -138,7 +140,7 @@ public class ImageDownloader {
 
         public ImageGetterAsyncTask(DrawableWrapper newWrapper, String link) {
             wrapperForDrawable = newWrapper;
-            fileName = noelshackLinkToFileName(link);
+            fileName = imageLinkToFileName(link);
         }
 
         @Override
