@@ -120,10 +120,11 @@ public class ImageDownloader {
     }
 
     private void downloadOfAFileEnded(ImageGetterAsyncTask taskEnded) {
+        final int numberOfCurrentsTasks = listOfCurrentsTasks.size();
         --numberOfFilesDownloading;
 
-        for (int i = 0; i < listOfCurrentsTasks.size(); ++i) {
-            if (taskEnded == listOfCurrentsTasks.get(i)) {
+        for (int i = 0; i < numberOfCurrentsTasks; ++i) {
+            if (listOfCurrentsTasks.get(i) == taskEnded) {
                 listOfCurrentsTasks.remove(i);
                 break;
             }

@@ -72,7 +72,8 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     private void initSummary(Preference pref) {
         if (pref instanceof PreferenceGroup) {
             PreferenceGroup prefGroup = (PreferenceGroup) pref;
-            for (int i = 0; i < prefGroup.getPreferenceCount(); i++) {
+            final int currentPreferenceCount = prefGroup.getPreferenceCount();
+            for (int i = 0; i < currentPreferenceCount; i++) {
                 initSummary(prefGroup.getPreference(i));
             }
         } else {

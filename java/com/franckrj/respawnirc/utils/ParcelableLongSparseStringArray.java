@@ -39,9 +39,10 @@ public class ParcelableLongSparseStringArray extends LongSparseArray<String> imp
 
     @Override
     public void writeToParcel(Parcel out, int flags) {
-        out.writeInt(this.size());
+        final int currentSize = this.size();
+        out.writeInt(currentSize);
 
-        for (int i = 0; i < this.size(); ++i) {
+        for (int i = 0; i < currentSize; ++i) {
             out.writeLong(this.keyAt(i));
             out.writeString(this.valueAt(i));
         }

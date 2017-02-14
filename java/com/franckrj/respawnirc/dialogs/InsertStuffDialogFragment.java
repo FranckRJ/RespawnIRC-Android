@@ -61,7 +61,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
     private void initializeSpanForTextViewIfNeeded(Html.ImageGetter withThisImageGetter, int row) {
         if (listOfSpanForTextView == null) {
             listOfSpanForTextView = new Spanned[MAX_NUMBER_OF_ROW];
-            for (int i = 0; i < listOfSpanForTextView.length; ++i) {
+            for (int i = 0; i < MAX_NUMBER_OF_ROW; ++i) {
                 listOfSpanForTextView[i] = null;
             }
         }
@@ -480,7 +480,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
         listOfCategoryButtons[18] = (ImageView) mainView.findViewById(R.id.sticker_18_button_insertstuff);
         listOfCategoryButtons[19] = (ImageView) mainView.findViewById(R.id.sticker_19_button_insertstuff);
 
-        for (int i = 0; i < listOfCategoryButtons.length; ++i) {
+        for (int i = 0; i < MAX_NUMBER_OF_ROW; ++i) {
             listOfCategoryButtons[i].setTag(i);
             listOfCategoryButtons[i].setOnClickListener(categoryButtonClickedListener);
         }

@@ -302,6 +302,7 @@ public abstract class AbsNavigationViewActivity extends AppCompatActivity implem
     @Override
     public void getNewFavs(ArrayList<JVCParser.NameAndLink> listOfFavs, int typeOfFav) {
         if (listOfFavs != null) {
+            final int sizeOfListOfFavs = listOfFavs.size();
             PrefsManager.IntPref.Names prefFavArraySize;
             PrefsManager.StringPref.Names prefFavName;
             PrefsManager.StringPref.Names prefFavLink;
@@ -324,9 +325,9 @@ public abstract class AbsNavigationViewActivity extends AppCompatActivity implem
                 PrefsManager.removeStringWithSufix(prefFavLink, String.valueOf(i));
             }
 
-            PrefsManager.putInt(prefFavArraySize, listOfFavs.size());
+            PrefsManager.putInt(prefFavArraySize, sizeOfListOfFavs);
 
-            for (int i = 0; i < listOfFavs.size(); ++i) {
+            for (int i = 0; i < sizeOfListOfFavs; ++i) {
                 PrefsManager.putStringWithSufix(prefFavName, String.valueOf(i), listOfFavs.get(i).name);
                 PrefsManager.putStringWithSufix(prefFavLink, String.valueOf(i), listOfFavs.get(i).link);
             }

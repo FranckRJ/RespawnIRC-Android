@@ -189,7 +189,8 @@ public class JVCTopicAdapter extends BaseAdapter {
     }
 
     public void updateThisItem(JVCParser.MessageInfos item) {
-        for (int i = 0; i < listOfMessages.size(); ++i) {
+        final int sizeOfListOfMessages = listOfMessages.size();
+        for (int i = 0; i < sizeOfListOfMessages; ++i) {
             if (listOfMessages.get(i).id == item.id) {
                 updateHolderWithNewItem(listOfContentForMessages.get(i), item);
                 listOfMessages.set(i, item);
