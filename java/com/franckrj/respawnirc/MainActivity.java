@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        System.setProperty("http.keepAlive", "false");
+        System.setProperty("http.keepAlive", "true");
         WebManager.generateNewUserAgent();
         StickerConverter.initializeBasesRules();
 
