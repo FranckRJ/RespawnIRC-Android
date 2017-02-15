@@ -204,7 +204,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     }
 
     private ContentHolder updateHolderWithNewItem(ContentHolder holder, JVCParser.MessageInfos item) {
-        holder.firstLineContent = new SpannableString(Undeprecator.htmlFromHtml(JVCParser.createMessageFirstLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
+        holder.firstLineContent = new SpannableString(Undeprecator.htmlFromHtml(JVCParser.createMessageFirstLineFromInfos(item, currentSettings)));
         holder.secondLineContent = replaceQuoteAndUrlSpans(Undeprecator.htmlFromHtml(JVCParser.createMessageSecondLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
 
         if (!showSignatures || item.signatureNotParsed.isEmpty()) {
@@ -279,6 +279,7 @@ public class JVCTopicAdapter extends BaseAdapter {
             holder.showMenuButton = (ImageButton) convertView.findViewById(R.id.menu_overflow_row);
 
             holder.secondLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
+            holder.thirdLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
             holder.showMenuButton.setOnClickListener(menuButtonClicked);
             convertView.setTag(holder);
         } else {

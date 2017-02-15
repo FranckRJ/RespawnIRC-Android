@@ -31,10 +31,15 @@ public class MainActivity extends AppCompatActivity {
         WebView obj = new WebView(this);
         obj.clearCache(true);
 
-        for (File thisFile : getCacheDir().listFiles()) {
-            if (!thisFile.isDirectory() && (thisFile.getName().startsWith("nlshck_") || thisFile.getName().startsWith("vtr_"))) {
-                //noinspection ResultOfMethodCallIgnored
-                thisFile.delete();
+        File[] listOfImagesCached = getCacheDir().listFiles();
+        if (listOfImagesCached != null) {
+            if (listOfImagesCached.length > 50) {
+                for (File thisFile : listOfImagesCached) {
+                    if (!thisFile.isDirectory() && (thisFile.getName().startsWith("nlshck_") || thisFile.getName().startsWith("vtr_"))) {
+                        //noinspection ResultOfMethodCallIgnored
+                        thisFile.delete();
+                    }
+                }
             }
         }
 
