@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -54,6 +55,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     private Html.ImageGetter jvcImageGetter = null;
     private boolean showSurvey = false;
     private boolean showSignatures = false;
+    private boolean showAvatars = false;
     private String surveyTitle = "";
     private View.OnClickListener onSurveyClickListener = null;
 
@@ -159,6 +161,10 @@ public class JVCTopicAdapter extends BaseAdapter {
         showSignatures = newVal;
     }
 
+    public void setShowAvatars(boolean newVal) {
+        showAvatars = newVal;
+    }
+
     public void setOnSurveyClickListener(View.OnClickListener newListener) {
         onSurveyClickListener = newListener;
     }
@@ -206,6 +212,12 @@ public class JVCTopicAdapter extends BaseAdapter {
     private ContentHolder updateHolderWithNewItem(ContentHolder holder, JVCParser.MessageInfos item) {
         holder.firstLineContent = new SpannableString(Undeprecator.htmlFromHtml(JVCParser.createMessageFirstLineFromInfos(item, currentSettings)));
         holder.secondLineContent = replaceQuoteAndUrlSpans(Undeprecator.htmlFromHtml(JVCParser.createMessageSecondLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
+
+        if (showAvatars && !item.avatarLink.isEmpty()) {
+            holder.firstImageDrawable = downloaderForImage.getDrawableFromLink(item.avatarLink);
+        } else {
+            holder.firstImageDrawable = null;
+        }
 
         if (!showSignatures || item.signatureNotParsed.isEmpty()) {
             holder.thirdLineContent = null;
@@ -273,6 +285,7 @@ public class JVCTopicAdapter extends BaseAdapter {
 
             convertView = serviceInflater.inflate(idOfLayoutToUse, parent, false);
             holder.firstLine = (TextView) convertView.findViewById(R.id.item_one_jvcmessages_text_row);
+            holder.firstImage = (ImageView) convertView.findViewById(R.id.image_one_jvcmessages_text_row);
             holder.secondLine = (TextView) convertView.findViewById(R.id.item_two_jvcmessages_text_row);
             holder.thirdLine = (TextView) convertView.findViewById(R.id.item_three_jvcmessages_text_row);
             holder.separator = convertView.findViewById(R.id.item_separator_jvcmessages_text_row);
@@ -288,10 +301,15 @@ public class JVCTopicAdapter extends BaseAdapter {
 
         if (position == 0 && showSurvey) {
             String advertiseForSurveyToShow = parentActivity.getString(R.string.titleForSurvey) + " <b>" + surveyTitle + "</b><br><small>" + parentActivity.getString(R.string.clickHereToSee) + "</small>";
+
             holder.showMenuButton.setVisibility(View.GONE);
             holder.secondLine.setVisibility(View.GONE);
             holder.thirdLine.setVisibility(View.GONE);
             holder.separator.setVisibility(View.GONE);
+            if (holder.firstImage != null) {
+                holder.firstImage.setVisibility(View.GONE);
+            }
+
             holder.firstLine.setText(Undeprecator.htmlFromHtml(advertiseForSurveyToShow));
             convertView.setOnClickListener(onSurveyClickListener);
             holder.firstLine.setOnClickListener(onSurveyClickListener);
@@ -305,6 +323,16 @@ public class JVCTopicAdapter extends BaseAdapter {
             holder.secondLine.setVisibility(View.VISIBLE);
             holder.firstLine.setText(currentContent.firstLineContent);
             holder.secondLine.setText(currentContent.secondLineContent);
+
+            if (holder.firstImage != null) {
+                if (currentContent.firstImageDrawable != null) {
+                    holder.firstImage.setVisibility(View.VISIBLE);
+                    holder.firstImage.setImageDrawable(null);
+                    holder.firstImage.setImageDrawable(currentContent.firstImageDrawable);
+                } else {
+                    holder.firstImage.setVisibility(View.GONE);
+                }
+            }
 
             if (currentContent.thirdLineContent != null) {
                 holder.thirdLine.setVisibility(View.VISIBLE);
@@ -381,6 +409,7 @@ public class JVCTopicAdapter extends BaseAdapter {
 
     private class ViewHolder {
         private TextView firstLine;
+        private ImageView firstImage;
         private TextView secondLine;
         private TextView thirdLine;
         private View separator;
@@ -391,6 +420,7 @@ public class JVCTopicAdapter extends BaseAdapter {
         private Spannable firstLineContent;
         private Spannable secondLineContent;
         private Spannable thirdLineContent;
+        private Drawable firstImageDrawable;
     }
 
     public interface URLClicked {

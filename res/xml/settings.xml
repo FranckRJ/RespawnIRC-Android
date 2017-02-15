@@ -58,7 +58,7 @@
         <CheckBoxPreference
             android:key="@string/settingsShowSignatureModeIRC"
             android:title="@string/showSignatureTitle"
-            android:summary="@string/showSignatureSummary"
+            android:summary="@string/needToBeEnabledOnJVCFirstSummary"
             android:defaultValue="@string/showSignatureModeIRCDefault"/>
     </PreferenceCategory>
     <PreferenceCategory
@@ -90,7 +90,12 @@
         <CheckBoxPreference
             android:key="@string/settingsShowSignatureModeForum"
             android:title="@string/showSignatureTitle"
-            android:summary="@string/showSignatureSummary"
+            android:summary="@string/needToBeEnabledOnJVCFirstSummary"
             android:defaultValue="@string/showSignatureModeForumDefault"/>
+        <CheckBoxPreference
+            android:key="@string/settingsShowAvatarModeForum"
+            android:title="@string/showAvatarTitle"
+            android:summary="@string/needToBeEnabledOnJVCFirstSummary"
+            android:defaultValue="@string/showAvatarModeForumDefault"/>
     </PreferenceCategory>
 </PreferenceScreen>

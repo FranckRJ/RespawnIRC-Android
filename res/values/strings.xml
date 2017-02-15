@@ -118,7 +118,9 @@
     <string name="shortenLongLinkTitle">Raccourcir les liens longs</string>
     <string name="showRefreshWhenMessagesShowedModeIRCTitle">Toujours afficher l\'icône de refresh</string>
     <string name="showSignatureTitle">Afficher les signatures</string>
-    <string name="showSignatureSummary">(doit être activé sur JVC)</string>
+    <string name="needToBeEnabledOnJVCFirstSummary">(doit être activé sur JVC)</string>
+    <string name="avatar">Avatar</string>
+    <string name="showAvatarTitle">Afficher les avatars</string>
 
     <string name="settingsMaxNumberOfMessages" translatable="false">settings.maxNumberOfMessages</string>
     <string name="maxNumberOfMessagesDefault" translatable="false">40</string>
@@ -152,6 +154,8 @@
     <string name="showSignatureModeIRCDefault" translatable="false">false</string>
     <string name="settingsShowSignatureModeForum" translatable="false">settings.showSignatureModeForum</string>
     <string name="showSignatureModeForumDefault" translatable="false">false</string>
+    <string name="settingsShowAvatarModeForum" translatable="false">settings.showAvatarModeForum</string>
+    <string name="showAvatarModeForumDefault" translatable="false">false</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

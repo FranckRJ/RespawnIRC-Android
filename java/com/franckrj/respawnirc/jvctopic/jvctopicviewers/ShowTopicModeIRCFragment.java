@@ -142,6 +142,7 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
         adapterForTopic.setIdOfLayoutToUse(R.layout.jvcmessages_rowirc);
         adapterForTopic.setAlternateBackgroundColor(sharedPref.getBoolean(getString(R.string.settingsTopicAlternateBackgroundColorModeIRC), Boolean.parseBoolean(getString(R.string.topicAlternateBackgroundColorModeIRCDefault))));
         adapterForTopic.setShowSignatures(sharedPref.getBoolean(getString(R.string.settingsShowSignatureModeIRC), Boolean.parseBoolean(getString(R.string.showSignatureModeIRCDefault))));
+        adapterForTopic.setShowAvatars(false);
     }
 
     @Override
