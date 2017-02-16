@@ -93,9 +93,9 @@
     <string name="topicIsSended">Le topic a été posté.</string>
     <string name="pastLastTopicSended">Coller le dernier topic envoyé</string>
     <string name="showMP">Consulter les MP</string>
-    <string name="settingsLinkOpeningTitle">Ouverture des liens</string>
     <string name="useInternalNavigatorTitle">Navigateur interne par défaut</string>
     <string name="noelshack">Noelshack</string>
+    <string name="link">Liens</string>
     <string name="useDirectNoelshackLinkTitle">Utiliser les liens directs</string>
     <string name="showOverviewOnImageClickTitle">Aperçu lors d\'un clique</string>
     <string name="openInBrowser">Ouvrir dans le navigateur</string>
@@ -119,8 +119,12 @@
     <string name="showRefreshWhenMessagesShowedModeIRCTitle">Toujours afficher l\'icône de refresh</string>
     <string name="showSignatureTitle">Afficher les signatures</string>
     <string name="needToBeEnabledOnJVCFirstSummary">(doit être activé sur JVC)</string>
+    <string name="needToBeEnabledOnJVCFirstSummaryWithString">%s (doit être activé sur JVC)</string>
     <string name="avatar">Avatar</string>
     <string name="showAvatarTitle">Afficher les avatars</string>
+    <string name="always">Toujours</string>
+    <string name="wifiOnly">Uniquement en WiFi</string>
+    <string name="never">Jamais</string>
 
     <string name="settingsMaxNumberOfMessages" translatable="false">settings.maxNumberOfMessages</string>
     <string name="maxNumberOfMessagesDefault" translatable="false">40</string>
@@ -134,8 +138,8 @@
     <string name="topicAlternateBackgroundColorModeForumDefault" translatable="false">true</string>
     <string name="settingsMaxNumberOfOverlyQuote" translatable="false">settings.maxNumberOfOverlyQuote</string>
     <string name="maxNumberOfOverlyQuoteDefault" translatable="false">2</string>
-    <string name="settingsShowNoelshackImage" translatable="false">settings.showNoelshackImage</string>
-    <string name="showNoelshackImageDefault" translatable="false">false</string>
+    <string name="settingsShowNoelshackImage" translatable="false">settings.showNoelshackImageAdv</string>
+    <string name="showNoelshackImageDefault" translatable="false">1</string>
     <string name="settingsTransformStickerToSmiley" translatable="false">settings.transformStickerToSmiley</string>
     <string name="transformStickerToSmileyDefault" translatable="false">false</string>
     <string name="settingsUseInternalNavigator" translatable="false">settings.useInternalNavigator</string>
@@ -154,8 +158,8 @@
     <string name="showSignatureModeIRCDefault" translatable="false">false</string>
     <string name="settingsShowSignatureModeForum" translatable="false">settings.showSignatureModeForum</string>
     <string name="showSignatureModeForumDefault" translatable="false">false</string>
-    <string name="settingsShowAvatarModeForum" translatable="false">settings.showAvatarModeForum</string>
-    <string name="showAvatarModeForumDefault" translatable="false">false</string>
+    <string name="settingsShowAvatarModeForum" translatable="false">settings.showAvatarAdvModeForum</string>
+    <string name="showAvatarModeForumDefault" translatable="false">2</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
@@ -167,5 +171,15 @@
         <item>@string/copyPseudo</item>
         <item>@string/copyPermalink</item>
         <item>@string/selectText</item>
+    </string-array>
+    <string-array name="choicesForConnectionReadable">
+        <item>@string/always</item>
+        <item>@string/wifiOnly</item>
+        <item>@string/never</item>
+    </string-array>
+    <string-array name="choicesForConnectionValue">
+        <item>"0"</item>
+        <item>"1"</item>
+        <item>"2"</item>
     </string-array>
 </resources>

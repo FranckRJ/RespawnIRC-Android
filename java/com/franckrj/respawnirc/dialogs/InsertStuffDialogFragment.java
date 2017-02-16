@@ -44,7 +44,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
                     newRowNumber = MAX_NUMBER_OF_ROW - 1;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                //rien
             }
             selectThisRow(newRowNumber);
         }

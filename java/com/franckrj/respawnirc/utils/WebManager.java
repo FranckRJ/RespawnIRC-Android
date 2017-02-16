@@ -94,7 +94,6 @@ public class WebManager {
 
             return buffer.toString();
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         } finally {
             if (urlConnection != null) {
@@ -104,7 +103,7 @@ public class WebManager {
                 try {
                     reader.close();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    //rien
                 }
             }
         }

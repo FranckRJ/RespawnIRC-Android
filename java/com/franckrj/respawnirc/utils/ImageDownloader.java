@@ -73,7 +73,6 @@ public class ImageDownloader {
                     drawable = new DrawableWrapper(new BitmapDrawable(parentActivity.getResources(), inputStream));
                 }
             } catch (Exception e) {
-                e.printStackTrace();
                 drawable = null;
             }
 
@@ -166,7 +165,7 @@ public class ImageDownloader {
                         outputStream.flush();
                         outputStream.close();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        //rien
                     }
                 }
             } else {

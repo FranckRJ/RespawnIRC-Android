@@ -189,7 +189,7 @@ public class JVCMessageToTopicSender {
                 }
             }
 
-            if (isInEdit && !Utils.compareStrings(errorWhenSending, "respawnirc:resendneeded")) {
+            if (isInEdit && !Utils.stringsAreEquals(errorWhenSending, "respawnirc:resendneeded")) {
                 isInEdit = false;
                 lastInfosForEdit = null;
                 ajaxListInfos = null;

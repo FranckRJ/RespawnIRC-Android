@@ -19,7 +19,7 @@ public class Utils {
         return String.format("#%06X", 0xFFFFFF & Undeprecator.resourcesGetColor(baseActivity.getResources(), resID));
     }
 
-    public static boolean compareStrings(String str1, String str2) {
+    public static boolean stringsAreEquals(String str1, String str2) {
         return (str1 == null ? str2 == null : str1.equals(str2));
     }
 
@@ -60,7 +60,6 @@ public class Utils {
             baseString = URLEncoder.encode(baseString, "UTF-8");
         } catch (Exception e) {
             baseString = "";
-            e.printStackTrace();
         }
         return baseString;
     }
@@ -70,7 +69,7 @@ public class Utils {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
             parentActviity.startActivity(browserIntent);
         } catch (Exception e) {
-            e.printStackTrace();
+            //rien
         }
     }
 

@@ -42,7 +42,6 @@ public class ChoosePageNumberDialogFragment extends DialogFragment {
                         try {
                             newPageNumber = Integer.parseInt(pageNumberEdit.getText().toString());
                         } catch (Exception e) {
-                            e.printStackTrace();
                             newPageNumber = -1;
                         }
 

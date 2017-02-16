@@ -601,7 +601,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
 
     @Override
     public void getNewLockReason(String newReason) {
-        if (!Utils.compareStrings(reasonOfLock, newReason)) {
+        if (!Utils.stringsAreEquals(reasonOfLock, newReason)) {
             reasonOfLock = newReason;
             if (reasonOfLock == null) {
                 selectStickerButton.setVisibility(View.VISIBLE);

@@ -42,7 +42,6 @@ public class ShowSurveyActivity extends AppCompatActivity {
                 redValueOfPercentage = "0" + redValueOfPercentage;
             }
         } catch (Exception e) {
-            e.printStackTrace();
             redValueOfPercentage = "00";
         }
 

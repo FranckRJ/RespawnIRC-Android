@@ -185,7 +185,7 @@ public class JVCForumGetter {
                     }
                 }
 
-                if (!Utils.compareStrings(latestNumberOfMP, infoOfCurrentPage.newNumberOfMp)) {
+                if (!Utils.stringsAreEquals(latestNumberOfMP, infoOfCurrentPage.newNumberOfMp)) {
                     latestNumberOfMP = infoOfCurrentPage.newNumberOfMp;
                     if (listenerForNewNumberOfMP != null) {
                         listenerForNewNumberOfMP.getNewNumberOfMP(latestNumberOfMP);

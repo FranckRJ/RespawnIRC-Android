@@ -34,6 +34,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected JVCParser.Settings currentSettings = new JVCParser.Settings();
     protected NewModeNeededListener listenerForNewModeNeeded = null;
     protected SwipeRefreshLayout swipeRefresh = null;
+    protected int showNoelshackImageAdv = 1;
     protected boolean showRefreshWhenMessagesShowed = true;
     protected boolean isInErrorMode = false;
     protected boolean goToBottomAtPageLoading = false;
@@ -75,8 +76,14 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     };
 
     protected void reloadSettings() {
+        try {
+            showNoelshackImageAdv = Integer.valueOf(sharedPref.getString(getString(R.string.settingsShowNoelshackImage), getString(R.string.showNoelshackImageDefault)));
+        } catch (Exception e) {
+            showNoelshackImageAdv = 1;
+        }
+
         currentSettings.maxNumberOfOverlyQuotes = Integer.parseInt(sharedPref.getString(getString(R.string.settingsMaxNumberOfOverlyQuote), getString(R.string.maxNumberOfOverlyQuoteDefault)));
-        currentSettings.showNoelshackImages = sharedPref.getBoolean(getString(R.string.settingsShowNoelshackImage), Boolean.parseBoolean(getString(R.string.showNoelshackImageDefault)));
+        currentSettings.showNoelshackImages = (showNoelshackImageAdv < 2);
         currentSettings.transformStickerToSmiley = sharedPref.getBoolean(getString(R.string.settingsTransformStickerToSmiley), Boolean.parseBoolean(getString(R.string.transformStickerToSmileyDefault)));
         currentSettings.shortenLongLink = sharedPref.getBoolean(getString(R.string.settingsShortenLongLink), Boolean.parseBoolean(getString(R.string.shortenLongLinkDefault)));
         currentSettings.pseudoOfUser = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER);

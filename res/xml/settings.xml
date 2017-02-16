@@ -16,29 +16,58 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/noelshack">
-        <CheckBoxPreference
+        <com.franckrj.respawnirc.utils.ListPreferenceCompat
             android:key="@string/settingsShowNoelshackImage"
             android:title="@string/showNoelshackImageTitle"
+            android:summary="%s"
+            android:entries="@array/choicesForConnectionReadable"
+            android:entryValues="@array/choicesForConnectionValue"
             android:defaultValue="@string/showNoelshackImageDefault"/>
-        <CheckBoxPreference
-            android:key="@string/settingsUseDirectNoelshackLink"
-            android:title="@string/useDirectNoelshackLinkTitle"
-            android:defaultValue="@string/useDirectNoelshackLinkDefault"/>
         <CheckBoxPreference
             android:key="@string/settingsShowOverviewOnImageClick"
             android:title="@string/showOverviewOnImageClickTitle"
             android:defaultValue="@string/showOverviewOnImageClickDefault"/>
+        <CheckBoxPreference
+            android:key="@string/settingsUseDirectNoelshackLink"
+            android:title="@string/useDirectNoelshackLinkTitle"
+            android:defaultValue="@string/useDirectNoelshackLinkDefault"/>
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="@string/settingsLinkOpeningTitle">
-        <CheckBoxPreference
-            android:key="@string/settingsUseInternalNavigator"
-            android:title="@string/useInternalNavigatorTitle"
-            android:defaultValue="@string/useInternalNavigatorDefault"/>
+        android:title="@string/link">
         <CheckBoxPreference
             android:key="@string/settingsShortenLongLink"
             android:title="@string/shortenLongLinkTitle"
             android:defaultValue="@string/shortenLongLinkDefault"/>
+        <CheckBoxPreference
+            android:key="@string/settingsUseInternalNavigator"
+            android:title="@string/useInternalNavigatorTitle"
+            android:defaultValue="@string/useInternalNavigatorDefault"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/settingsStyleMessageForumTitle">
+        <com.franckrj.respawnirc.utils.ListPreferenceCompat
+            android:key="@string/settingsShowAvatarModeForum"
+            android:title="@string/showAvatarTitle"
+            android:summary="@string/needToBeEnabledOnJVCFirstSummaryWithString"
+            android:entries="@array/choicesForConnectionReadable"
+            android:entryValues="@array/choicesForConnectionValue"
+            android:defaultValue="@string/showAvatarModeForumDefault"/>
+        <CheckBoxPreference
+            android:key="@string/settingsShowSignatureModeForum"
+            android:title="@string/showSignatureTitle"
+            android:summary="@string/needToBeEnabledOnJVCFirstSummary"
+            android:defaultValue="@string/showSignatureModeForumDefault"/>
+        <CheckBoxPreference
+            android:key="@string/settingsTopicAlternateBackgroundColorModeForum"
+            android:title="@string/topicAlternateBackgroundColorTitle"
+            android:defaultValue="@string/topicAlternateBackgroundColorModeForumDefault"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/settingsOnRefreshForumTitle">
+        <CheckBoxPreference
+            android:key="@string/settingsForumClearOnRefresh"
+            android:title="@string/forumClearOnRefreshTitle"
+            android:defaultValue="@string/forumClearOnRefreshDefault"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/settingsGeneralIRCTitle">
@@ -48,13 +77,13 @@
             android:defaultValue="@string/refreshTopicTimeDefault"
             android:numeric="integer"/>
         <CheckBoxPreference
-            android:key="@string/settingsShowRefreshWhenMessagesShowedModeIRC"
-            android:title="@string/showRefreshWhenMessagesShowedModeIRCTitle"
-            android:defaultValue="@string/showRefreshWhenMessagesShowedModeIRCDefault"/>
-        <CheckBoxPreference
             android:key="@string/settingsTopicAlternateBackgroundColorModeIRC"
             android:title="@string/topicAlternateBackgroundColorTitle"
             android:defaultValue="@string/topicAlternateBackgroundColorModeIRCDefault"/>
+        <CheckBoxPreference
+            android:key="@string/settingsShowRefreshWhenMessagesShowedModeIRC"
+            android:title="@string/showRefreshWhenMessagesShowedModeIRCTitle"
+            android:defaultValue="@string/showRefreshWhenMessagesShowedModeIRCDefault"/>
         <CheckBoxPreference
             android:key="@string/settingsShowSignatureModeIRC"
             android:title="@string/showSignatureTitle"
@@ -73,29 +102,5 @@
             android:title="@string/initialNumberOfMessagesTitle"
             android:defaultValue="@string/initialNumberOfMessagesDefault"
             android:numeric="integer"/>
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/settingsOnRefreshForumTitle">
-        <CheckBoxPreference
-            android:key="@string/settingsForumClearOnRefresh"
-            android:title="@string/forumClearOnRefreshTitle"
-            android:defaultValue="@string/forumClearOnRefreshDefault"/>
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/settingsStyleMessageForumTitle">
-        <CheckBoxPreference
-            android:key="@string/settingsTopicAlternateBackgroundColorModeForum"
-            android:title="@string/topicAlternateBackgroundColorTitle"
-            android:defaultValue="@string/topicAlternateBackgroundColorModeForumDefault"/>
-        <CheckBoxPreference
-            android:key="@string/settingsShowSignatureModeForum"
-            android:title="@string/showSignatureTitle"
-            android:summary="@string/needToBeEnabledOnJVCFirstSummary"
-            android:defaultValue="@string/showSignatureModeForumDefault"/>
-        <CheckBoxPreference
-            android:key="@string/settingsShowAvatarModeForum"
-            android:title="@string/showAvatarTitle"
-            android:summary="@string/needToBeEnabledOnJVCFirstSummary"
-            android:defaultValue="@string/showAvatarModeForumDefault"/>
     </PreferenceCategory>
 </PreferenceScreen>

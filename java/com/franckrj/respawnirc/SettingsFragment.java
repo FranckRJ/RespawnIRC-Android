@@ -42,7 +42,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                 try {
                     prefValue = Integer.parseInt(editTextPref.getText());
                 } catch (Exception e) {
-                    e.printStackTrace();
                     prefValue = 999999999;
                 }
             }

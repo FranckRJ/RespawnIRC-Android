@@ -26,7 +26,6 @@ public class CustomImageGetter implements Html.ImageGetter {
             try {
                 drawable = Undeprecator.resourcesGetDrawable(res, resID);
             } catch (Exception e) {
-                e.printStackTrace();
                 drawable = deletedDrawable;
             }
             drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());

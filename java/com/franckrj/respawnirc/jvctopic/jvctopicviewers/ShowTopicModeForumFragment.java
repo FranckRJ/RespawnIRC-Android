@@ -115,9 +115,15 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
 
     @Override
     protected void initializeAdapter() {
-        boolean showAvatars = sharedPref.getBoolean(getString(R.string.settingsShowAvatarModeForum), Boolean.parseBoolean(getString(R.string.showAvatarModeForumDefault)));
+        int typeOfShowAvatars;
 
-        if (showAvatars) {
+        try {
+            typeOfShowAvatars = Integer.valueOf(sharedPref.getString(getString(R.string.settingsShowAvatarModeForum), getString(R.string.showAvatarModeForumDefault)));
+        } catch (Exception e) {
+            typeOfShowAvatars = 2;
+        }
+
+        if (typeOfShowAvatars < 2) {
             adapterForTopic.setIdOfLayoutToUse(R.layout.jvcmessages_avatars_rowforum);
             adapterForTopic.setShowAvatars(true);
         } else {

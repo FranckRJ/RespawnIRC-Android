@@ -184,14 +184,14 @@ public abstract class AbsJVCTopicGetter {
             }
         }
 
-        if (!Utils.compareStrings(infoOfCurrentPage.newLockReason, lockReason)) {
+        if (!Utils.stringsAreEquals(infoOfCurrentPage.newLockReason, lockReason)) {
             lockReason = infoOfCurrentPage.newLockReason;
             if (listenerForNewReasonForTopicLock != null) {
                 listenerForNewReasonForTopicLock.getNewLockReason(lockReason);
             }
         }
 
-        if (!Utils.compareStrings(infoOfCurrentPage.newHtmlSurveyTitle, htmlSurveyTitle)) {
+        if (!Utils.stringsAreEquals(infoOfCurrentPage.newHtmlSurveyTitle, htmlSurveyTitle)) {
             htmlSurveyTitle = infoOfCurrentPage.newHtmlSurveyTitle;
             if (listenerForNewSurveyForTopic != null) {
                 listenerForNewSurveyForTopic.getNewSurveyTitle(htmlSurveyTitle);
