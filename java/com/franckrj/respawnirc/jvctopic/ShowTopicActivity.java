@@ -122,7 +122,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
                         if (getCurrentFragment().getLatestListOfInputInAString() != null) {
                             messageSendButton.setEnabled(false);
                             tmpLastMessageSended = messageSendEdit.getText().toString();
-                            messageIsSended = senderForMessages.sendThisMessage(tmpLastMessageSended, getCurrentFragment().getCurrentUrlOfTopic(), getCurrentFragment().getLatestListOfInputInAString(), cookieListInAString, false);
+                            messageIsSended = senderForMessages.sendThisMessage(tmpLastMessageSended, getCurrentFragment().getCurrentUrlOfTopic(), getCurrentFragment().getLatestListOfInputInAString(), cookieListInAString);
                         }
 
                         if (!messageIsSended) {

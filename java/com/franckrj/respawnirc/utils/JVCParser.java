@@ -680,20 +680,14 @@ public final class JVCParser {
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, smileyPattern, 1, "<img src=\"smiley_", "\"/>", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, youtubeVideoPattern, 2, "<a href=\"http://youtu.be/", "\">http://youtu.be/", 2, "</a>");
 
-        if (settings.shortenLongLink) {
-            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcLinkPattern, 1, "", "", new MakeShortenedLinkIfPossible(50, true), null);
-            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", new MakeShortenedLinkIfPossible(50, true), null);
-            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longLinkPattern, 1, "", "", new MakeShortenedLinkIfPossible(50, true), null);
-        } else {
-            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcLinkPattern, 1, "", "", new MakeShortenedLinkIfPossible(0, true), null);
-            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", new MakeShortenedLinkIfPossible(0, true), null);
-            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longLinkPattern, 1, "", "", new MakeShortenedLinkIfPossible(0, true), null);
-        }
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcLinkPattern, 1, "", "", new MakeShortenedLinkIfPossible((settings.shortenLongLink ? 50 : 0), true), null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", new MakeShortenedLinkIfPossible((settings.shortenLongLink ? 50 : 0), true), null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longLinkPattern, 1, "", "", new MakeShortenedLinkIfPossible((settings.shortenLongLink ? 50 : 0), true), null);
 
         if (settings.showNoelshackImages) {
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 1, "<a href=\"", "\"><img src=\"http://", 2, "\"/></a>");
         } else {
-            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 1, "", "", new MakeShortenedLinkIfPossible(0, true), null);
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 1, "", "", new MakeShortenedLinkIfPossible((settings.shortenLongLink ? 50 : 0), true), null);
         }
 
         if (containSpoil) {
