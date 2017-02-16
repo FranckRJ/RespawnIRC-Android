@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.franckrj.respawnirc.NetworkBroadcastReceiver;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.jvctopic.jvctopicgetters.JVCTopicModeForumGetter;
 import com.franckrj.respawnirc.utils.JVCParser;
@@ -115,15 +116,15 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
 
     @Override
     protected void initializeAdapter() {
-        int typeOfShowAvatars;
+        int showAvatarAdv;
 
         try {
-            typeOfShowAvatars = Integer.valueOf(sharedPref.getString(getString(R.string.settingsShowAvatarModeForum), getString(R.string.showAvatarModeForumDefault)));
+            showAvatarAdv = Integer.valueOf(sharedPref.getString(getString(R.string.settingsShowAvatarModeForum), getString(R.string.showAvatarModeForumDefault)));
         } catch (Exception e) {
-            typeOfShowAvatars = 2;
+            showAvatarAdv = 2;
         }
 
-        if (typeOfShowAvatars < 2) {
+        if (showAvatarAdv == 0 || (showAvatarAdv == 1 && NetworkBroadcastReceiver.getIsConnectedToInternet() && NetworkBroadcastReceiver.getIsConnectedWithWifi())) {
             adapterForTopic.setIdOfLayoutToUse(R.layout.jvcmessages_avatars_rowforum);
             adapterForTopic.setShowAvatars(true);
         } else {

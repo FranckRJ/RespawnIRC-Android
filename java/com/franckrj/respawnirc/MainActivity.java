@@ -1,6 +1,8 @@
 package com.franckrj.respawnirc;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebView;
@@ -23,6 +25,9 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         int lastActivityViewed;
+
+        NetworkBroadcastReceiver.updateConnectionInfos(getApplicationContext());
+        getApplicationContext().registerReceiver(new NetworkBroadcastReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
         PrefsManager.initializeSharedPrefs(getApplicationContext());
         lastActivityViewed = PrefsManager.getInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED);

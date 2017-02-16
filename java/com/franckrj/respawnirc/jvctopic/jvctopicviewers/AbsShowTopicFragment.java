@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 
 import com.franckrj.respawnirc.AbsShowSomethingFragment;
+import com.franckrj.respawnirc.NetworkBroadcastReceiver;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.jvctopic.jvctopicgetters.AbsJVCTopicGetter;
 import com.franckrj.respawnirc.utils.JVCParser;
@@ -42,6 +43,10 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected final AbsJVCTopicGetter.NewGetterStateListener listenerForNewGetterState = new AbsJVCTopicGetter.NewGetterStateListener() {
         @Override
         public void newStateSetted(int newState) {
+            if (showNoelshackImageAdv == 1 && newState == AbsJVCTopicGetter.STATE_LOADING) {
+                updateSettingsDependingOnConnection();
+            }
+
             if (showRefreshWhenMessagesShowed || adapterForTopic.getAllItems().isEmpty()) {
                 if (newState == AbsJVCTopicGetter.STATE_LOADING) {
                     swipeRefresh.setRefreshing(true);
@@ -64,7 +69,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         }
     };
 
-    private final View.OnClickListener surveyItemClickedListener = new View.OnClickListener() {
+    protected final View.OnClickListener surveyItemClickedListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             if (adapterForTopic.getShowSurvey()) {
@@ -82,12 +87,20 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             showNoelshackImageAdv = 1;
         }
 
+        updateSettingsDependingOnConnection();
         currentSettings.maxNumberOfOverlyQuotes = Integer.parseInt(sharedPref.getString(getString(R.string.settingsMaxNumberOfOverlyQuote), getString(R.string.maxNumberOfOverlyQuoteDefault)));
-        currentSettings.showNoelshackImages = (showNoelshackImageAdv < 2);
         currentSettings.transformStickerToSmiley = sharedPref.getBoolean(getString(R.string.settingsTransformStickerToSmiley), Boolean.parseBoolean(getString(R.string.transformStickerToSmileyDefault)));
         currentSettings.shortenLongLink = sharedPref.getBoolean(getString(R.string.settingsShortenLongLink), Boolean.parseBoolean(getString(R.string.shortenLongLinkDefault)));
         currentSettings.pseudoOfUser = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER);
         absGetterForTopic.setCookieListInAString(PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
+    }
+
+    protected void updateSettingsDependingOnConnection() {
+        if (showNoelshackImageAdv != 1) {
+            currentSettings.showNoelshackImages = (showNoelshackImageAdv == 0);
+        } else {
+            currentSettings.showNoelshackImages = (NetworkBroadcastReceiver.getIsConnectedToInternet() && NetworkBroadcastReceiver.getIsConnectedWithWifi());
+        }
     }
 
     public boolean onMenuItemClick(MenuItem item) {
