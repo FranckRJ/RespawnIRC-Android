@@ -15,6 +15,7 @@ import com.franckrj.respawnirc.NetworkBroadcastReceiver;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.jvctopic.jvctopicgetters.JVCTopicModeForumGetter;
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
@@ -119,7 +120,7 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
         int showAvatarAdv;
 
         try {
-            showAvatarAdv = Integer.valueOf(sharedPref.getString(getString(R.string.settingsShowAvatarModeForum), getString(R.string.showAvatarModeForumDefault)));
+            showAvatarAdv = Integer.valueOf(PrefsManager.getString(PrefsManager.StringPref.Names.SHOW_AVATAR_MODE_FORUM));
         } catch (Exception e) {
             showAvatarAdv = 2;
         }
@@ -132,14 +133,14 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
             adapterForTopic.setShowAvatars(false);
         }
 
-        adapterForTopic.setAlternateBackgroundColor(sharedPref.getBoolean(getString(R.string.settingsTopicAlternateBackgroundColorModeForum), Boolean.parseBoolean(getString(R.string.topicAlternateBackgroundColorModeForumDefault))));
-        adapterForTopic.setShowSignatures(sharedPref.getBoolean(getString(R.string.settingsShowSignatureModeForum), Boolean.parseBoolean(getString(R.string.showSignatureModeForumDefault))));
+        adapterForTopic.setAlternateBackgroundColor(PrefsManager.getBool(PrefsManager.BoolPref.Names.TOPIC_ALTERNATE_BACKGROUND_MODE_FORUM));
+        adapterForTopic.setShowSignatures(PrefsManager.getBool(PrefsManager.BoolPref.Names.SHOW_SIGNATURE_MODE_FORUM));
     }
 
     @Override
     protected void reloadSettings() {
         super.reloadSettings();
-        clearMessagesOnRefresh = sharedPref.getBoolean(getString(R.string.settingsForumClearOnRefresh), Boolean.parseBoolean(getString(R.string.forumClearOnRefreshDefault)));
+        clearMessagesOnRefresh = PrefsManager.getBool(PrefsManager.BoolPref.Names.TOPIC_CLEAR_ON_REFRESH_MODE_FORUM);
     }
 
     @Override

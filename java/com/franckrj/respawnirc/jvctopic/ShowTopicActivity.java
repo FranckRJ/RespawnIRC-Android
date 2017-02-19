@@ -1,8 +1,6 @@
 package com.franckrj.respawnirc.jvctopic;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -56,7 +54,6 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
     private static final String SAVE_LAST_PAGE = "saveLastPage";
     private static final String SAVE_REASON_OF_LOCK = "saveReasonOfLock";
 
-    private SharedPreferences sharedPref = null;
     private JVCParser.ForumAndTopicName currentTitles = new JVCParser.ForumAndTopicName();
     private JVCMessageToTopicSender senderForMessages = null;
     private JVCMessageInTopicAction actionsForMessages = null;
@@ -245,8 +242,6 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
             myActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-
         messageSendLayout = findViewById(R.id.sendmessage_layout_showtopic);
         messageSendEdit = (EditText) findViewById(R.id.sendmessage_text_showtopic);
         messageSendButton = (ImageButton) findViewById(R.id.sendmessage_button_showtopic);
@@ -322,9 +317,9 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         PrefsManager.putInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED, MainActivity.ACTIVITY_SHOW_TOPIC);
         PrefsManager.applyChanges();
 
-        useInternalNavigatorForDefaultOpening = sharedPref.getBoolean(getString(R.string.settingsUseInternalNavigator), Boolean.valueOf(getString(R.string.useInternalNavigatorDefault)));
-        convertNoelshackLinkToDirectLink = sharedPref.getBoolean(getString(R.string.settingsUseDirectNoelshackLink), Boolean.valueOf(getString(R.string.useDirectNoelshackLinkDefault)));
-        showOverviewOnImageClick = sharedPref.getBoolean(getString(R.string.settingsShowOverviewOnImageClick), Boolean.valueOf(getString(R.string.showOverviewOnImageClickDefault)));
+        useInternalNavigatorForDefaultOpening = PrefsManager.getBool(PrefsManager.BoolPref.Names.USE_INTERNAL_NAVIGATOR);
+        convertNoelshackLinkToDirectLink = PrefsManager.getBool(PrefsManager.BoolPref.Names.USE_DIRECT_NOELSHACK_LINK);
+        showOverviewOnImageClick = PrefsManager.getBool(PrefsManager.BoolPref.Names.SHOW_OVERVIEW_ON_IMAGE_CLICK);
     }
 
     @Override

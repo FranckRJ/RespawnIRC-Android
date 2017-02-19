@@ -1,8 +1,6 @@
 package com.franckrj.respawnirc.jvcforum;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.ViewPager;
@@ -37,7 +35,6 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     private static final String SAVE_REFRESH_NEEDED_NEXT_RESUME = "saveRefreshNeededOnNextResume";
     private static final String SAVE_CURRENT_NUMBER_OF_MP = "saveCurrentNumberOfMP";
 
-    private SharedPreferences sharedPref = null;
     private String currentTitle = "";
     private AddOrRemoveThingToFavs currentTaskForFavs = null;
     private PageNavigationUtil pageNavigation = null;
@@ -115,8 +112,6 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-
         pageNavigation.initializePagerView((ViewPager) findViewById(R.id.pager_showforum));
         pageNavigation.initializeNavigationButtons((Button) findViewById(R.id.firstpage_button_showforum), (Button) findViewById(R.id.previouspage_button_showforum),
                         (Button) findViewById(R.id.currentpage_button_showforum), (Button) findViewById(R.id.nextpage_button_showforum), null);
@@ -159,7 +154,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
             }
         }
 
-        useInternalNavigatorForDefaultOpening = sharedPref.getBoolean(getString(R.string.settingsUseInternalNavigator), Boolean.valueOf(getString(R.string.useInternalNavigatorDefault)));
+        useInternalNavigatorForDefaultOpening = PrefsManager.getBool(PrefsManager.BoolPref.Names.USE_INTERNAL_NAVIGATOR);
     }
 
     @Override

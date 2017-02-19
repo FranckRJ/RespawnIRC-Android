@@ -29,6 +29,10 @@ public class PrefsManager {
         listOfStringPrefs.put(nameOfPref, new StringPref(prefStringValue, prefDefautlValue));
     }
 
+    private static void addStringPref(StringPref.Names nameOfPref, String prefStringValue, String prefDefautlValue, int newMinVal, int newMaxVal) {
+        listOfStringPrefs.put(nameOfPref, new StringPref(prefStringValue, prefDefautlValue, newMinVal, newMaxVal));
+    }
+
     private static void addLongPref(LongPref.Names nameOfPref, String prefStringValue, long prefDefautlValue) {
         listOfLongPrefs.put(nameOfPref, new LongPref(prefStringValue, prefDefautlValue));
     }
@@ -58,6 +62,25 @@ public class PrefsManager {
         addStringPref(StringPref.Names.LAST_TOPIC_CONTENT_SENDED, "pref.lastTopicContentSended", "");
 
         addLongPref(LongPref.Names.OLD_LAST_ID_OF_MESSAGE, "pref.oldLastIdOfMessage", 0);
+
+        addBoolPref(BoolPref.Names.TRANSFORM_STICKER_TO_SMILEY, currentContext.getString(R.string.settingsTransformStickerToSmiley), false);
+        addBoolPref(BoolPref.Names.SHOW_OVERVIEW_ON_IMAGE_CLICK, currentContext.getString(R.string.settingsShowOverviewOnImageClick), false);
+        addBoolPref(BoolPref.Names.USE_DIRECT_NOELSHACK_LINK, currentContext.getString(R.string.settingsUseDirectNoelshackLink), false);
+        addBoolPref(BoolPref.Names.SHORTEN_LONG_LINK, currentContext.getString(R.string.settingsShortenLongLink), false);
+        addBoolPref(BoolPref.Names.USE_INTERNAL_NAVIGATOR, currentContext.getString(R.string.settingsUseInternalNavigator), false);
+        addBoolPref(BoolPref.Names.SHOW_SIGNATURE_MODE_FORUM, currentContext.getString(R.string.settingsShowSignatureModeForum), false);
+        addBoolPref(BoolPref.Names.SHOW_SIGNATURE_MODE_IRC, currentContext.getString(R.string.settingsShowSignatureModeIRC), false);
+        addBoolPref(BoolPref.Names.TOPIC_ALTERNATE_BACKGROUND_MODE_FORUM, currentContext.getString(R.string.settingsTopicAlternateBackgroundColorModeForum), true);
+        addBoolPref(BoolPref.Names.TOPIC_ALTERNATE_BACKGROUND_MODE_IRC, currentContext.getString(R.string.settingsTopicAlternateBackgroundColorModeIRC), false);
+        addBoolPref(BoolPref.Names.TOPIC_CLEAR_ON_REFRESH_MODE_FORUM, currentContext.getString(R.string.settingsTopicClearOnRefresh), true);
+        addBoolPref(BoolPref.Names.TOPIC_SHOW_REFRESH_WHEN_MESSAGE_SHOWED_MODE_IRC, currentContext.getString(R.string.settingsShowRefreshWhenMessagesShowedModeIRC), false);
+
+        addStringPref(StringPref.Names.MAX_NUMBER_OF_OVERLY_QUOTE, currentContext.getString(R.string.settingsMaxNumberOfOverlyQuote), "2", 0, 15);
+        addStringPref(StringPref.Names.SHOW_AVATAR_MODE_FORUM, currentContext.getString(R.string.settingsShowAvatarModeForum), "2");
+        addStringPref(StringPref.Names.SHOW_NOELSHACK_IMAGE, currentContext.getString(R.string.settingsShowNoelshackImage), "1");
+        addStringPref(StringPref.Names.REFRESH_TOPIC_TIME, currentContext.getString(R.string.settingsRefreshTopicTime), "10000", 5000, 60000);
+        addStringPref(StringPref.Names.MAX_NUMBER_OF_MESSAGES, currentContext.getString(R.string.settingsMaxNumberOfMessages), "40", 1, 100);
+        addStringPref(StringPref.Names.INITIAL_NUMBER_OF_MESSAGES, currentContext.getString(R.string.settingsInitialNumberOfMessages), "10", 1, 20);
     }
 
     public static boolean getBool(BoolPref.Names prefName) {
@@ -69,6 +92,16 @@ public class PrefsManager {
         } else {
             return false;
         }
+    }
+
+    public static boolean getBool(String prefName) {
+        for (HashMap.Entry<BoolPref.Names, BoolPref> thisPref : listOfBoolPrefs.entrySet()) {
+            if (thisPref.getValue().stringName.equals(prefName)) {
+                return currentPrefs.getBoolean(thisPref.getValue().stringName, thisPref.getValue().defaultValue);
+            }
+        }
+
+        return false;
     }
 
     public static int getInt(IntPref.Names prefName) {
@@ -91,6 +124,16 @@ public class PrefsManager {
         }
     }
 
+    public static String getString(String prefName) {
+        for (HashMap.Entry<StringPref.Names, StringPref> thisPref : listOfStringPrefs.entrySet()) {
+            if (thisPref.getValue().stringName.equals(prefName)) {
+                return currentPrefs.getString(thisPref.getValue().stringName, thisPref.getValue().defaultValue);
+            }
+        }
+
+        return "";
+    }
+
     public static String getStringWithSufix(StringPref.Names prefName, String sufix) {
         StringPref prefInfo = listOfStringPrefs.get(prefName);
 
@@ -99,6 +142,16 @@ public class PrefsManager {
         } else {
             return "";
         }
+    }
+
+    public static StringPref getStringInfos(String prefName) {
+        for (HashMap.Entry<StringPref.Names, StringPref> thisPref : listOfStringPrefs.entrySet()) {
+            if (thisPref.getValue().stringName.equals(prefName)) {
+                return thisPref.getValue();
+            }
+        }
+
+        return new StringPref(prefName, "");
     }
 
     public static long getLong(LongPref.Names prefName) {
@@ -173,7 +226,16 @@ public class PrefsManager {
         }
 
         public enum Names {
-            IS_FIRST_LAUNCH
+            IS_FIRST_LAUNCH,
+            TRANSFORM_STICKER_TO_SMILEY,
+            SHOW_OVERVIEW_ON_IMAGE_CLICK,
+            USE_DIRECT_NOELSHACK_LINK,
+            SHORTEN_LONG_LINK,
+            USE_INTERNAL_NAVIGATOR,
+            SHOW_SIGNATURE_MODE_FORUM, SHOW_SIGNATURE_MODE_IRC,
+            TOPIC_ALTERNATE_BACKGROUND_MODE_FORUM, TOPIC_ALTERNATE_BACKGROUND_MODE_IRC,
+            TOPIC_CLEAR_ON_REFRESH_MODE_FORUM,
+            TOPIC_SHOW_REFRESH_WHEN_MESSAGE_SHOWED_MODE_IRC
         }
     }
 
@@ -196,10 +258,24 @@ public class PrefsManager {
     public static class StringPref {
         public final String stringName;
         public final String defaultValue;
+        public final boolean isInt;
+        public final int minVal;
+        public final int maxVal;
 
         StringPref(String newStringName, String newDefaultValue) {
             stringName = newStringName;
             defaultValue = newDefaultValue;
+            isInt = false;
+            minVal = 0;
+            maxVal = 0;
+        }
+
+        StringPref(String newStringName, String newDefaultValue, int newMinVal, int newMaxVal) {
+            stringName = newStringName;
+            defaultValue = newDefaultValue;
+            isInt = true;
+            minVal = newMinVal;
+            maxVal = newMaxVal;
         }
 
         public enum Names {
@@ -208,7 +284,12 @@ public class PrefsManager {
             FORUM_FAV_NAME, FORUM_FAV_LINK, TOPIC_FAV_NAME, TOPIC_FAV_LINK,
             TOPIC_URL_TO_FETCH, FORUM_URL_TO_FETCH,
             OLD_URL_FOR_TOPIC,
-            LAST_TOPIC_TITLE_SENDED, LAST_TOPIC_CONTENT_SENDED
+            LAST_TOPIC_TITLE_SENDED, LAST_TOPIC_CONTENT_SENDED,
+            MAX_NUMBER_OF_OVERLY_QUOTE,
+            SHOW_AVATAR_MODE_FORUM,
+            SHOW_NOELSHACK_IMAGE,
+            REFRESH_TOPIC_TIME,
+            MAX_NUMBER_OF_MESSAGES, INITIAL_NUMBER_OF_MESSAGES
         }
     }
 

@@ -34,8 +34,8 @@
     <string name="switchToForumMode">Passer en mode forum</string>
     <string name="switchToIrcMode">Passer en mode IRC</string>
     <string name="refresh">Rafraichir</string>
-    <string name="settingsOnRefreshForumTitle">Lors du rafraichissement (forum)</string>
-    <string name="forumClearOnRefreshTitle">Effacer les messages</string>
+    <string name="settingsOnRefreshTopicModeForumTitle">Lors du rafraichissement (forum)</string>
+    <string name="topicClearOnRefreshTitle">Effacer les messages</string>
     <string name="nextPageText"><![CDATA[>]]></string>
     <string name="previousPageText"><![CDATA[<]]></string>
     <string name="waitingText">…</string>
@@ -127,39 +127,22 @@
     <string name="never">Jamais</string>
 
     <string name="settingsMaxNumberOfMessages" translatable="false">settings.maxNumberOfMessages</string>
-    <string name="maxNumberOfMessagesDefault" translatable="false">40</string>
     <string name="settingsInitialNumberOfMessages" translatable="false">settings.initialNumberOfMessages</string>
-    <string name="initialNumberOfMessagesDefault" translatable="false">10</string>
     <string name="settingsRefreshTopicTime" translatable="false">settings.refreshTopicTime</string>
-    <string name="refreshTopicTimeDefault" translatable="false">10000</string>
-    <string name="settingsForumClearOnRefresh" translatable="false">settings.forumClearOnRefresh</string>
-    <string name="forumClearOnRefreshDefault" translatable="false">true</string>
+    <string name="settingsTopicClearOnRefresh" translatable="false">settings.topicClearOnRefresh</string>
     <string name="settingsTopicAlternateBackgroundColorModeForum" translatable="false">settings.topicAlternateBackgroundColorModeForum</string>
-    <string name="topicAlternateBackgroundColorModeForumDefault" translatable="false">true</string>
     <string name="settingsMaxNumberOfOverlyQuote" translatable="false">settings.maxNumberOfOverlyQuote</string>
-    <string name="maxNumberOfOverlyQuoteDefault" translatable="false">2</string>
     <string name="settingsShowNoelshackImage" translatable="false">settings.showNoelshackImageAdv</string>
-    <string name="showNoelshackImageDefault" translatable="false">1</string>
     <string name="settingsTransformStickerToSmiley" translatable="false">settings.transformStickerToSmiley</string>
-    <string name="transformStickerToSmileyDefault" translatable="false">false</string>
     <string name="settingsUseInternalNavigator" translatable="false">settings.useInternalNavigator</string>
-    <string name="useInternalNavigatorDefault" translatable="false">false</string>
     <string name="settingsUseDirectNoelshackLink" translatable="false">settings.useDirectNoelshackLink</string>
-    <string name="useDirectNoelshackLinkDefault" translatable="false">false</string>
     <string name="settingsShowOverviewOnImageClick" translatable="false">settings.showOverviewOnImageClick</string>
-    <string name="showOverviewOnImageClickDefault" translatable="false">false</string>
     <string name="settingsShortenLongLink" translatable="false">settings.shortenLongLink</string>
-    <string name="shortenLongLinkDefault" translatable="false">false</string>
     <string name="settingsShowRefreshWhenMessagesShowedModeIRC" translatable="false">settings.showRefreshWhenMessagesShowedModeIRC</string>
-    <string name="showRefreshWhenMessagesShowedModeIRCDefault" translatable="false">false</string>
     <string name="settingsTopicAlternateBackgroundColorModeIRC" translatable="false">settings.topicAlternateBackgroundColorModeIRC</string>
-    <string name="topicAlternateBackgroundColorModeIRCDefault" translatable="false">false</string>
     <string name="settingsShowSignatureModeIRC" translatable="false">settings.showSignatureModeIRC</string>
-    <string name="showSignatureModeIRCDefault" translatable="false">false</string>
     <string name="settingsShowSignatureModeForum" translatable="false">settings.showSignatureModeForum</string>
-    <string name="showSignatureModeForumDefault" translatable="false">false</string>
     <string name="settingsShowAvatarModeForum" translatable="false">settings.showAvatarAdvModeForum</string>
-    <string name="showAvatarModeForumDefault" translatable="false">2</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

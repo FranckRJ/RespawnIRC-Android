@@ -1,6 +1,5 @@
 package com.franckrj.respawnirc.jvctopic.jvctopicviewers;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -140,18 +139,18 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
     @Override
     protected void initializeAdapter() {
         adapterForTopic.setIdOfLayoutToUse(R.layout.jvcmessages_rowirc);
-        adapterForTopic.setAlternateBackgroundColor(sharedPref.getBoolean(getString(R.string.settingsTopicAlternateBackgroundColorModeIRC), Boolean.parseBoolean(getString(R.string.topicAlternateBackgroundColorModeIRCDefault))));
-        adapterForTopic.setShowSignatures(sharedPref.getBoolean(getString(R.string.settingsShowSignatureModeIRC), Boolean.parseBoolean(getString(R.string.showSignatureModeIRCDefault))));
+        adapterForTopic.setAlternateBackgroundColor(PrefsManager.getBool(PrefsManager.BoolPref.Names.TOPIC_ALTERNATE_BACKGROUND_MODE_IRC));
+        adapterForTopic.setShowSignatures(PrefsManager.getBool(PrefsManager.BoolPref.Names.SHOW_SIGNATURE_MODE_IRC));
         adapterForTopic.setShowAvatars(false);
     }
 
     @Override
     protected void reloadSettings() {
         super.reloadSettings();
-        showRefreshWhenMessagesShowed = sharedPref.getBoolean(getString(R.string.settingsShowRefreshWhenMessagesShowedModeIRC), Boolean.parseBoolean(getString(R.string.showRefreshWhenMessagesShowedModeIRCDefault)));
-        maxNumberOfMessagesShowed = Integer.parseInt(sharedPref.getString(getString(R.string.settingsMaxNumberOfMessages), getString(R.string.maxNumberOfMessagesDefault)));
-        initialNumberOfMessagesShowed = Integer.parseInt(sharedPref.getString(getString(R.string.settingsInitialNumberOfMessages), getString(R.string.initialNumberOfMessagesDefault)));
-        getterForTopic.setTimeBetweenRefreshTopic(Integer.parseInt(sharedPref.getString(getString(R.string.settingsRefreshTopicTime), getString(R.string.refreshTopicTimeDefault))));
+        showRefreshWhenMessagesShowed = PrefsManager.getBool(PrefsManager.BoolPref.Names.TOPIC_SHOW_REFRESH_WHEN_MESSAGE_SHOWED_MODE_IRC);
+        maxNumberOfMessagesShowed = Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MAX_NUMBER_OF_MESSAGES));
+        initialNumberOfMessagesShowed = Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.INITIAL_NUMBER_OF_MESSAGES));
+        getterForTopic.setTimeBetweenRefreshTopic(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.REFRESH_TOPIC_TIME)));
     }
 
     @Override

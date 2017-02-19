@@ -6,13 +6,11 @@
         <EditTextPreference
             android:key="@string/settingsMaxNumberOfOverlyQuote"
             android:title="@string/maxNumberOfOverlyQuoteTitle"
-            android:defaultValue="@string/maxNumberOfOverlyQuoteDefault"
             android:numeric="integer"/>
         <CheckBoxPreference
             android:key="@string/settingsTransformStickerToSmiley"
             android:title="@string/transformStickerToSmileyTitle"
-            android:summary="@string/transformStickerToSmileySummary"
-            android:defaultValue="@string/transformStickerToSmileyDefault"/>
+            android:summary="@string/transformStickerToSmileySummary"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/noelshack">
@@ -21,27 +19,22 @@
             android:title="@string/showNoelshackImageTitle"
             android:summary="%s"
             android:entries="@array/choicesForConnectionReadable"
-            android:entryValues="@array/choicesForConnectionValue"
-            android:defaultValue="@string/showNoelshackImageDefault"/>
+            android:entryValues="@array/choicesForConnectionValue"/>
         <CheckBoxPreference
             android:key="@string/settingsShowOverviewOnImageClick"
-            android:title="@string/showOverviewOnImageClickTitle"
-            android:defaultValue="@string/showOverviewOnImageClickDefault"/>
+            android:title="@string/showOverviewOnImageClickTitle"/>
         <CheckBoxPreference
             android:key="@string/settingsUseDirectNoelshackLink"
-            android:title="@string/useDirectNoelshackLinkTitle"
-            android:defaultValue="@string/useDirectNoelshackLinkDefault"/>
+            android:title="@string/useDirectNoelshackLinkTitle"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/link">
         <CheckBoxPreference
             android:key="@string/settingsShortenLongLink"
-            android:title="@string/shortenLongLinkTitle"
-            android:defaultValue="@string/shortenLongLinkDefault"/>
+            android:title="@string/shortenLongLinkTitle"/>
         <CheckBoxPreference
             android:key="@string/settingsUseInternalNavigator"
-            android:title="@string/useInternalNavigatorTitle"
-            android:defaultValue="@string/useInternalNavigatorDefault"/>
+            android:title="@string/useInternalNavigatorTitle"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/settingsStyleMessageForumTitle">
@@ -50,57 +43,47 @@
             android:title="@string/showAvatarTitle"
             android:summary="@string/needToBeEnabledOnJVCFirstSummaryWithString"
             android:entries="@array/choicesForConnectionReadable"
-            android:entryValues="@array/choicesForConnectionValue"
-            android:defaultValue="@string/showAvatarModeForumDefault"/>
+            android:entryValues="@array/choicesForConnectionValue"/>
         <CheckBoxPreference
             android:key="@string/settingsShowSignatureModeForum"
             android:title="@string/showSignatureTitle"
-            android:summary="@string/needToBeEnabledOnJVCFirstSummary"
-            android:defaultValue="@string/showSignatureModeForumDefault"/>
+            android:summary="@string/needToBeEnabledOnJVCFirstSummary"/>
         <CheckBoxPreference
             android:key="@string/settingsTopicAlternateBackgroundColorModeForum"
-            android:title="@string/topicAlternateBackgroundColorTitle"
-            android:defaultValue="@string/topicAlternateBackgroundColorModeForumDefault"/>
+            android:title="@string/topicAlternateBackgroundColorTitle"/>
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="@string/settingsOnRefreshForumTitle">
+        android:title="@string/settingsOnRefreshTopicModeForumTitle">
         <CheckBoxPreference
-            android:key="@string/settingsForumClearOnRefresh"
-            android:title="@string/forumClearOnRefreshTitle"
-            android:defaultValue="@string/forumClearOnRefreshDefault"/>
+            android:key="@string/settingsTopicClearOnRefresh"
+            android:title="@string/topicClearOnRefreshTitle"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/settingsGeneralIRCTitle">
         <EditTextPreference
             android:key="@string/settingsRefreshTopicTime"
             android:title="@string/refreshTopicTimeTitle"
-            android:defaultValue="@string/refreshTopicTimeDefault"
             android:numeric="integer"/>
         <CheckBoxPreference
             android:key="@string/settingsTopicAlternateBackgroundColorModeIRC"
-            android:title="@string/topicAlternateBackgroundColorTitle"
-            android:defaultValue="@string/topicAlternateBackgroundColorModeIRCDefault"/>
+            android:title="@string/topicAlternateBackgroundColorTitle"/>
         <CheckBoxPreference
             android:key="@string/settingsShowRefreshWhenMessagesShowedModeIRC"
-            android:title="@string/showRefreshWhenMessagesShowedModeIRCTitle"
-            android:defaultValue="@string/showRefreshWhenMessagesShowedModeIRCDefault"/>
+            android:title="@string/showRefreshWhenMessagesShowedModeIRCTitle"/>
         <CheckBoxPreference
             android:key="@string/settingsShowSignatureModeIRC"
             android:title="@string/showSignatureTitle"
-            android:summary="@string/needToBeEnabledOnJVCFirstSummary"
-            android:defaultValue="@string/showSignatureModeIRCDefault"/>
+            android:summary="@string/needToBeEnabledOnJVCFirstSummary"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/settingsMaxMessagesNumberTitle">
         <EditTextPreference
             android:key="@string/settingsMaxNumberOfMessages"
             android:title="@string/maxNumberOfMessagesTitle"
-            android:defaultValue="@string/maxNumberOfMessagesDefault"
             android:numeric="integer"/>
         <EditTextPreference
             android:key="@string/settingsInitialNumberOfMessages"
             android:title="@string/initialNumberOfMessagesTitle"
-            android:defaultValue="@string/initialNumberOfMessagesDefault"
             android:numeric="integer"/>
     </PreferenceCategory>
 </PreferenceScreen>

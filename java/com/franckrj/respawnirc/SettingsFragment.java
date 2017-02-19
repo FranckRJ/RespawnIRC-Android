@@ -2,11 +2,14 @@ package com.franckrj.respawnirc;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
-import android.widget.EditText;
+
+import com.franckrj.respawnirc.utils.PrefsManager;
 
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     @Override
@@ -14,8 +17,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         super.onCreate(savedInstanceState);
         getPreferenceManager().setSharedPreferencesName(getString(R.string.preference_file_key));
         addPreferencesFromResource(R.xml.settings);
-        initFilter(getPreferenceScreen());
-        initSummary(getPreferenceScreen());
+        initPrefsInfos(getPreferenceScreen());
     }
 
     @Override
@@ -37,46 +39,61 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         if (pref instanceof EditTextPreference) {
             EditTextPreference editTextPref = (EditTextPreference) pref;
             MinMaxInfos prefMinMax = (MinMaxInfos) editTextPref.getEditText().getTag();
-            int prefValue = 0;
-            if (!editTextPref.getText().isEmpty()) {
-                try {
-                    prefValue = Integer.parseInt(editTextPref.getText());
-                } catch (Exception e) {
-                    prefValue = 999999999;
+            if (prefMinMax != null) {
+                int prefValue = 0;
+                if (!editTextPref.getText().isEmpty()) {
+                    try {
+                        prefValue = Integer.parseInt(editTextPref.getText());
+                    } catch (Exception e) {
+                        prefValue = 999999999;
+                    }
                 }
+                if (prefValue < prefMinMax.min) {
+                    prefValue = prefMinMax.min;
+                } else if (prefValue > prefMinMax.max) {
+                    prefValue = prefMinMax.max;
+                }
+                editTextPref.setText(String.valueOf(prefValue));
             }
-            if (prefValue < prefMinMax.min) {
-                prefValue = prefMinMax.min;
-            } else if (prefValue > prefMinMax.max) {
-                prefValue = prefMinMax.max;
-            }
-            editTextPref.setText(String.valueOf(prefValue));
         }
 
         updatePrefSummary(pref);
     }
 
-    private void initFilter(PreferenceGroup pref) {
-        EditText maxNumberOfOverlyQuote = ((EditTextPreference) pref.findPreference(getActivity().getString(R.string.settingsMaxNumberOfOverlyQuote))).getEditText();
-        EditText refreshTopicTime = ((EditTextPreference) pref.findPreference(getActivity().getString(R.string.settingsRefreshTopicTime))).getEditText();
-        EditText maxNumberOfMessages = ((EditTextPreference) pref.findPreference(getActivity().getString(R.string.settingsMaxNumberOfMessages))).getEditText();
-        EditText initialNumberOfMessages = ((EditTextPreference) pref.findPreference(getActivity().getString(R.string.settingsInitialNumberOfMessages))).getEditText();
-
-        maxNumberOfOverlyQuote.setTag(new MinMaxInfos(0, 15));
-        refreshTopicTime.setTag(new MinMaxInfos(5000, 60000));
-        maxNumberOfMessages.setTag(new MinMaxInfos(1, 100));
-        initialNumberOfMessages.setTag(new MinMaxInfos(1, 20));
-    }
-
-    private void initSummary(Preference pref) {
+    private void initPrefsInfos(Preference pref) {
         if (pref instanceof PreferenceGroup) {
             PreferenceGroup prefGroup = (PreferenceGroup) pref;
             final int currentPreferenceCount = prefGroup.getPreferenceCount();
             for (int i = 0; i < currentPreferenceCount; i++) {
-                initSummary(prefGroup.getPreference(i));
+                initPrefsInfos(prefGroup.getPreference(i));
             }
         } else {
+            initFilterIfNeeded(pref);
+            updatePrefDefaultValue(pref);
             updatePrefSummary(pref);
+        }
+    }
+
+    private void initFilterIfNeeded(Preference pref) {
+        if (pref instanceof EditTextPreference) {
+            PrefsManager.StringPref currentPrefsInfos = PrefsManager.getStringInfos(pref.getKey());
+            if (currentPrefsInfos.isInt) {
+                EditTextPreference editTextPref = (EditTextPreference) pref;
+                editTextPref.getEditText().setTag(new MinMaxInfos(currentPrefsInfos.minVal, currentPrefsInfos.maxVal));
+            }
+        }
+    }
+
+    private void updatePrefDefaultValue(Preference pref) {
+        if (pref instanceof CheckBoxPreference) {
+            CheckBoxPreference checkBoxPref = (CheckBoxPreference) pref;
+            checkBoxPref.setChecked(PrefsManager.getBool(checkBoxPref.getKey()));
+        } else if (pref instanceof EditTextPreference) {
+            EditTextPreference editTextPref = (EditTextPreference) pref;
+            editTextPref.setText(PrefsManager.getString(editTextPref.getKey()));
+        } else if (pref instanceof ListPreference) {
+            ListPreference listPref = (ListPreference) pref;
+            listPref.setValue(PrefsManager.getString(listPref.getKey()));
         }
     }
 
@@ -84,7 +101,9 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         if (pref instanceof EditTextPreference) {
             EditTextPreference editTextPref = (EditTextPreference) pref;
             MinMaxInfos prefMinMax = (MinMaxInfos) editTextPref.getEditText().getTag();
-            editTextPref.setSummary("Entre " + String.valueOf(prefMinMax.min) + " et " + String.valueOf(prefMinMax.max) + " : " + editTextPref.getText());
+            if (prefMinMax != null) {
+                editTextPref.setSummary("Entre " + String.valueOf(prefMinMax.min) + " et " + String.valueOf(prefMinMax.max) + " : " + editTextPref.getText());
+            }
         }
     }
 
