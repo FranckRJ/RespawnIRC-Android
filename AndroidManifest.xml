@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
+        android:name=".MainApplication"
         android:supportsRtl="true"
         android:allowBackup="true"
         android:fullBackupContent="true"

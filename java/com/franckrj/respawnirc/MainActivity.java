@@ -1,8 +1,6 @@
 package com.franckrj.respawnirc;
 
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebView;
@@ -11,8 +9,6 @@ import com.franckrj.respawnirc.jvcforumlist.SelectForumInListActivity;
 import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
 import com.franckrj.respawnirc.jvctopic.ShowTopicActivity;
 import com.franckrj.respawnirc.utils.PrefsManager;
-import com.franckrj.respawnirc.utils.StickerConverter;
-import com.franckrj.respawnirc.utils.WebManager;
 
 import java.io.File;
 
@@ -24,13 +20,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int lastActivityViewed;
-
-        NetworkBroadcastReceiver.updateConnectionInfos(getApplicationContext());
-        getApplicationContext().registerReceiver(new NetworkBroadcastReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-
-        PrefsManager.initializeSharedPrefs(getApplicationContext());
-        lastActivityViewed = PrefsManager.getInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED);
+        int lastActivityViewed = PrefsManager.getInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED);
 
         //vider le cache des webviews
         WebView obj = new WebView(this);
@@ -47,10 +37,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-
-        System.setProperty("http.keepAlive", "true");
-        WebManager.generateNewUserAgent();
-        StickerConverter.initializeBasesRules();
 
         if (lastActivityViewed == ACTIVITY_SELECT_FORUM_IN_LIST) {
             startActivity(new Intent(this, SelectForumInListActivity.class));
