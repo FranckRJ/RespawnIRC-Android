@@ -2,9 +2,11 @@ package com.franckrj.respawnirc.jvctopic.jvctopicviewers;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.PopupMenu;
 
 import com.franckrj.respawnirc.AbsShowSomethingFragment;
@@ -27,8 +29,9 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected static final String SAVE_GO_TO_BOTTOM_PAGE_LOADING = "saveGoToBottomPageLoading";
 
     protected AbsJVCTopicGetter absGetterForTopic = null;
-    protected ListView jvcMsgList = null;
+    protected RecyclerView jvcMsgList = null;
     protected JVCTopicAdapter adapterForTopic = null;
+    protected LinearLayoutManager layoutManagerForMsgList = null;
     protected JVCParser.Settings currentSettings = new JVCParser.Settings();
     protected NewModeNeededListener listenerForNewModeNeeded = null;
     protected SwipeRefreshLayout swipeRefresh = null;
@@ -184,6 +187,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        layoutManagerForMsgList = new LinearLayoutManager(getActivity());
         adapterForTopic = new JVCTopicAdapter(getActivity(), currentSettings);
         initializeGetterForMessages();
         initializeAdapter();
@@ -213,6 +217,8 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         }
 
         swipeRefresh.setColorSchemeResources(R.color.colorAccent);
+        jvcMsgList.addItemDecoration(new DividerItemDecoration(getActivity(), layoutManagerForMsgList.getOrientation()));
+        jvcMsgList.setLayoutManager(layoutManagerForMsgList);
         jvcMsgList.setAdapter(adapterForTopic);
 
         if (savedInstanceState != null) {

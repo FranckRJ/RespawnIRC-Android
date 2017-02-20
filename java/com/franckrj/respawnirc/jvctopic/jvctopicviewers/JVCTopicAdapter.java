@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Layout;
 import android.text.Spannable;
@@ -20,7 +21,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -38,7 +38,7 @@ import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 
-public class JVCTopicAdapter extends BaseAdapter {
+public class JVCTopicAdapter extends RecyclerView.Adapter<JVCTopicAdapter.CustomViewHolder> {
     private ArrayList<JVCParser.MessageInfos> listOfMessages = new ArrayList<>();
     private ArrayList<ContentHolder> listOfContentForMessages = new ArrayList<>();
     private LayoutInflater serviceInflater;
@@ -258,12 +258,6 @@ public class JVCTopicAdapter extends BaseAdapter {
         return spannable;
     }
 
-    @Override
-    public int getCount() {
-        return listOfMessages.size() + (showSurvey ? 1 : 0);
-    }
-
-    @Override
     public JVCParser.MessageInfos getItem(int position) {
         position = position - (showSurvey ? 1 : 0);
         if (position < 0) {
@@ -273,32 +267,24 @@ public class JVCTopicAdapter extends BaseAdapter {
     }
 
     @Override
+    public int getItemCount() {
+        return listOfMessages.size() + (showSurvey ? 1 : 0);
+    }
+
+    @Override
     public long getItemId(int position) {
         return position;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-        if (convertView == null) {
-            holder = new ViewHolder();
+    public CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = serviceInflater.inflate(idOfLayoutToUse, parent, false);
 
-            convertView = serviceInflater.inflate(idOfLayoutToUse, parent, false);
-            holder.firstLine = (TextView) convertView.findViewById(R.id.item_one_jvcmessages_text_row);
-            holder.firstImage = (ImageView) convertView.findViewById(R.id.image_one_jvcmessages_text_row);
-            holder.secondLine = (TextView) convertView.findViewById(R.id.item_two_jvcmessages_text_row);
-            holder.thirdLine = (TextView) convertView.findViewById(R.id.item_three_jvcmessages_text_row);
-            holder.separator = convertView.findViewById(R.id.item_separator_jvcmessages_text_row);
-            holder.showMenuButton = (ImageButton) convertView.findViewById(R.id.menu_overflow_row);
+        return new CustomViewHolder(itemView);
+    }
 
-            holder.secondLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
-            holder.thirdLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
-            holder.showMenuButton.setOnClickListener(menuButtonClicked);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-
+    @Override
+    public void onBindViewHolder(CustomViewHolder holder, int position) {
         if (position == 0 && showSurvey) {
             String advertiseForSurveyToShow = parentActivity.getString(R.string.titleForSurvey) + " <b>" + surveyTitle + "</b><br><small>" + parentActivity.getString(R.string.clickHereToSee) + "</small>";
 
@@ -311,9 +297,9 @@ public class JVCTopicAdapter extends BaseAdapter {
             }
 
             holder.firstLine.setText(Undeprecator.htmlFromHtml(advertiseForSurveyToShow));
-            convertView.setOnClickListener(onSurveyClickListener);
+            holder.background.setOnClickListener(onSurveyClickListener);
             holder.firstLine.setOnClickListener(onSurveyClickListener);
-            convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.altBackgroundMessageColor));
+            holder.background.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.altBackgroundMessageColor));
         } else {
             final int realPosition = position - (showSurvey ? 1 : 0);
             final ContentHolder currentContent = listOfContentForMessages.get(realPosition);
@@ -343,7 +329,7 @@ public class JVCTopicAdapter extends BaseAdapter {
                 holder.separator.setVisibility(View.GONE);
             }
 
-            convertView.setOnClickListener(null);
+            holder.background.setOnClickListener(null);
             holder.firstLine.setOnClickListener(new View.OnClickListener() {
                 int messageNumberInList = realPosition;
                 @Override
@@ -355,13 +341,11 @@ public class JVCTopicAdapter extends BaseAdapter {
             });
 
             if (realPosition % 2 == 0 || !alternateBackgroundColor) {
-                convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.defaultColorForBackground));
+                holder.background.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.defaultColorForBackground));
             } else {
-                convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.altBackgroundMessageColor));
+                holder.background.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.altBackgroundMessageColor));
             }
         }
-
-        return convertView;
     }
 
     public class CustomQuoteSpan implements LeadingMarginSpan, LineBackgroundSpan {
@@ -407,13 +391,30 @@ public class JVCTopicAdapter extends BaseAdapter {
         }
     }
 
-    private class ViewHolder {
-        private TextView firstLine;
-        private ImageView firstImage;
-        private TextView secondLine;
-        private TextView thirdLine;
-        private View separator;
-        private ImageButton showMenuButton;
+    public class CustomViewHolder extends RecyclerView.ViewHolder {
+        public final TextView firstLine;
+        public final ImageView firstImage;
+        public final TextView secondLine;
+        public final TextView thirdLine;
+        public final View separator;
+        public final ImageButton showMenuButton;
+        public final View background;
+
+        public CustomViewHolder(View itemView) {
+            super(itemView);
+
+            firstLine = (TextView) itemView.findViewById(R.id.item_one_jvcmessages_text_row);
+            firstImage = (ImageView) itemView.findViewById(R.id.image_one_jvcmessages_text_row);
+            secondLine = (TextView) itemView.findViewById(R.id.item_two_jvcmessages_text_row);
+            thirdLine = (TextView) itemView.findViewById(R.id.item_three_jvcmessages_text_row);
+            separator = itemView.findViewById(R.id.item_separator_jvcmessages_text_row);
+            showMenuButton = (ImageButton) itemView.findViewById(R.id.menu_overflow_row);
+            background = itemView;
+
+            secondLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
+            thirdLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
+            showMenuButton.setOnClickListener(menuButtonClicked);
+        }
     }
 
     private class ContentHolder {

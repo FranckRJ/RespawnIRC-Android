@@ -2,13 +2,13 @@ package com.franckrj.respawnirc.jvctopic.jvctopicviewers;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
@@ -37,8 +37,8 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
                 boolean firstTimeGetMessages = adapterForTopic.getAllItems().isEmpty();
                 isInErrorMode = false;
 
-                if (jvcMsgList.getChildCount() > (adapterForTopic.getShowSurvey() ? 1 : 0)) {
-                    scrolledAtTheEnd = (jvcMsgList.getLastVisiblePosition() == jvcMsgList.getCount() - 1) &&
+                if (adapterForTopic.getItemCount() > (adapterForTopic.getShowSurvey() ? 1 : 0)) {
+                    scrolledAtTheEnd = (layoutManagerForMsgList.findLastVisibleItemPosition() == adapterForTopic.getItemCount() - 1) &&
                             (jvcMsgList.getChildAt(jvcMsgList.getChildCount() - 1).getBottom() <= jvcMsgList.getHeight());
                 }
 
@@ -51,19 +51,20 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
                 }
 
                 if (firstTimeGetMessages) {
-                    while (adapterForTopic.getCount() > initialNumberOfMessagesShowed) {
+                    while (adapterForTopic.getItemCount() > initialNumberOfMessagesShowed) {
                         adapterForTopic.removeFirstItem();
                     }
                 }
 
-                while (adapterForTopic.getCount() > maxNumberOfMessagesShowed) {
+                while (adapterForTopic.getItemCount() > maxNumberOfMessagesShowed) {
                     adapterForTopic.removeFirstItem();
                 }
 
                 adapterForTopic.updateAllItems();
 
-                if (scrolledAtTheEnd && jvcMsgList.getCount() > 0) {
-                    jvcMsgList.setSelection(jvcMsgList.getCount() - 1);
+                if (scrolledAtTheEnd && adapterForTopic.getItemCount() > 0) {
+                    jvcMsgList.scrollToPosition(adapterForTopic.getItemCount() - 1);
+                    jvcMsgList.scrollBy(0, 999999);
                 }
             } else if (itsReallyEmpty) {
                 if (!isInErrorMode) {
@@ -158,7 +159,7 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View mainView = inflater.inflate(R.layout.fragment_showtopicirc, container, false);
 
-        jvcMsgList = (ListView) mainView.findViewById(R.id.jvcmessage_view_showtopicirc);
+        jvcMsgList = (RecyclerView) mainView.findViewById(R.id.jvcmessage_view_showtopicirc);
         swipeRefresh = (SwipeRefreshLayout) mainView.findViewById(R.id.swiperefresh_showtopicirc);
 
         return mainView;

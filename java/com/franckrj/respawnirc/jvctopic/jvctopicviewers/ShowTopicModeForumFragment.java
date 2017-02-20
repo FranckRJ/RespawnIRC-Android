@@ -2,13 +2,13 @@ package com.franckrj.respawnirc.jvctopic.jvctopicviewers;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.NetworkBroadcastReceiver;
@@ -31,12 +31,12 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
                 boolean scrolledAtTheEnd = false;
                 isInErrorMode = false;
 
-                adapterForTopic.removeAllItems();
-
-                if (jvcMsgList.getChildCount() > (adapterForTopic.getShowSurvey() ? 1 : 0)) {
-                    scrolledAtTheEnd = (jvcMsgList.getLastVisiblePosition() == jvcMsgList.getCount() - 1) &&
+                if (adapterForTopic.getItemCount() > (adapterForTopic.getShowSurvey() ? 1 : 0)) {
+                    scrolledAtTheEnd = (layoutManagerForMsgList.findLastVisibleItemPosition() == adapterForTopic.getItemCount() - 1) &&
                             (jvcMsgList.getChildAt(jvcMsgList.getChildCount() - 1).getBottom() <= jvcMsgList.getHeight());
                 }
+
+                adapterForTopic.removeAllItems();
 
                 for (JVCParser.MessageInfos thisMessageInfo : listOfNewMessages) {
                     adapterForTopic.addItem(thisMessageInfo);
@@ -44,8 +44,9 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
 
                 adapterForTopic.updateAllItems();
 
-                if ((scrolledAtTheEnd || goToBottomAtPageLoading) && jvcMsgList.getCount() > 0) {
-                    jvcMsgList.setSelection(jvcMsgList.getCount() - 1);
+                if ((scrolledAtTheEnd || goToBottomAtPageLoading) && adapterForTopic.getItemCount() > 0) {
+                    jvcMsgList.scrollToPosition(adapterForTopic.getItemCount() - 1);
+                    jvcMsgList.scrollBy(0, 999999);
                     goToBottomAtPageLoading = false;
                 }
 
@@ -148,7 +149,7 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View mainView = inflater.inflate(R.layout.fragment_showtopicforum, container, false);
 
-        jvcMsgList = (ListView) mainView.findViewById(R.id.jvcmessage_view_showtopicforum);
+        jvcMsgList = (RecyclerView) mainView.findViewById(R.id.jvcmessage_view_showtopicforum);
         swipeRefresh = (SwipeRefreshLayout) mainView.findViewById(R.id.swiperefresh_showtopicforum);
 
         swipeRefresh.setOnRefreshListener(listenerForRefresh);
