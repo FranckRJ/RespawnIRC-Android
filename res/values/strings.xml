@@ -125,6 +125,7 @@
     <string name="always">Toujours</string>
     <string name="wifiOnly">Uniquement en WiFi</string>
     <string name="never">Jamais</string>
+    <string name="enableCardDesignTitle">Affichage avec des cartes</string>
 
     <string name="settingsMaxNumberOfMessages" translatable="false">settings.maxNumberOfMessages</string>
     <string name="settingsInitialNumberOfMessages" translatable="false">settings.initialNumberOfMessages</string>
@@ -143,6 +144,7 @@
     <string name="settingsShowSignatureModeIRC" translatable="false">settings.showSignatureModeIRC</string>
     <string name="settingsShowSignatureModeForum" translatable="false">settings.showSignatureModeForum</string>
     <string name="settingsShowAvatarModeForum" translatable="false">settings.showAvatarAdvModeForum</string>
+    <string name="settingsEnableCardDesignModeForum" translatable="false">settings.enableCardDesignModeForum</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

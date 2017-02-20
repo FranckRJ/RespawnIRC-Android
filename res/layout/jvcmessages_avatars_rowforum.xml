@@ -26,7 +26,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:padding="4dp"/>
+            android:paddingTop="8dp"
+            android:paddingBottom="4dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"/>
         <View
             android:layout_width="0dp"
             android:layout_height="wrap_content"

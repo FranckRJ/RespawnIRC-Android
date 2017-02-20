@@ -6,6 +6,8 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorRes;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Layout;
@@ -58,6 +60,7 @@ public class JVCTopicAdapter extends RecyclerView.Adapter<JVCTopicAdapter.Custom
     private boolean showAvatars = false;
     private String surveyTitle = "";
     private View.OnClickListener onSurveyClickListener = null;
+    private float multiplierOfLineSizeForFirstLine = 0;
 
     private final ImageDownloader.DownloadFinished listenerForDownloadFinished = new ImageDownloader.DownloadFinished() {
         @Override
@@ -165,6 +168,10 @@ public class JVCTopicAdapter extends RecyclerView.Adapter<JVCTopicAdapter.Custom
         showAvatars = newVal;
     }
 
+    public void setMultiplierOfLineSizeForFirstLine(float newVal) {
+        multiplierOfLineSizeForFirstLine = newVal;
+    }
+
     public void setOnSurveyClickListener(View.OnClickListener newListener) {
         onSurveyClickListener = newListener;
     }
@@ -258,6 +265,15 @@ public class JVCTopicAdapter extends RecyclerView.Adapter<JVCTopicAdapter.Custom
         return spannable;
     }
 
+    private void setColorBackgroundOfThisItem(View backrgoundView, @ColorRes int colorID) {
+        if (backrgoundView instanceof CardView) {
+            CardView currentBackgroundView = (CardView) backrgoundView;
+            currentBackgroundView.setCardBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), colorID));
+        } else {
+            backrgoundView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), colorID));
+        }
+    }
+
     public JVCParser.MessageInfos getItem(int position) {
         position = position - (showSurvey ? 1 : 0);
         if (position < 0) {
@@ -299,7 +315,7 @@ public class JVCTopicAdapter extends RecyclerView.Adapter<JVCTopicAdapter.Custom
             holder.firstLine.setText(Undeprecator.htmlFromHtml(advertiseForSurveyToShow));
             holder.background.setOnClickListener(onSurveyClickListener);
             holder.firstLine.setOnClickListener(onSurveyClickListener);
-            holder.background.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.altBackgroundMessageColor));
+            setColorBackgroundOfThisItem(holder.background, R.color.altBackgroundMessageColor);
         } else {
             final int realPosition = position - (showSurvey ? 1 : 0);
             final ContentHolder currentContent = listOfContentForMessages.get(realPosition);
@@ -341,9 +357,9 @@ public class JVCTopicAdapter extends RecyclerView.Adapter<JVCTopicAdapter.Custom
             });
 
             if (realPosition % 2 == 0 || !alternateBackgroundColor) {
-                holder.background.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.defaultColorForBackground));
+                setColorBackgroundOfThisItem(holder.background, R.color.defaultColorForBackground);
             } else {
-                holder.background.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.altBackgroundMessageColor));
+                setColorBackgroundOfThisItem(holder.background, R.color.altBackgroundMessageColor);
             }
         }
     }
@@ -411,6 +427,9 @@ public class JVCTopicAdapter extends RecyclerView.Adapter<JVCTopicAdapter.Custom
             showMenuButton = (ImageButton) itemView.findViewById(R.id.menu_overflow_row);
             background = itemView;
 
+            if (multiplierOfLineSizeForFirstLine != 0) {
+                firstLine.setLineSpacing(0, multiplierOfLineSizeForFirstLine);
+            }
             secondLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
             thirdLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
             showMenuButton.setOnClickListener(menuButtonClicked);

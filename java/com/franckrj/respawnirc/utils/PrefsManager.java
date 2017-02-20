@@ -74,6 +74,7 @@ public class PrefsManager {
         addBoolPref(BoolPref.Names.TOPIC_ALTERNATE_BACKGROUND_MODE_IRC, currentContext.getString(R.string.settingsTopicAlternateBackgroundColorModeIRC), false);
         addBoolPref(BoolPref.Names.TOPIC_CLEAR_ON_REFRESH_MODE_FORUM, currentContext.getString(R.string.settingsTopicClearOnRefresh), true);
         addBoolPref(BoolPref.Names.TOPIC_SHOW_REFRESH_WHEN_MESSAGE_SHOWED_MODE_IRC, currentContext.getString(R.string.settingsShowRefreshWhenMessagesShowedModeIRC), false);
+        addBoolPref(BoolPref.Names.ENABLE_CARD_DESIGN_MODE_FORUM, currentContext.getString(R.string.settingsEnableCardDesignModeForum), false);
 
         addStringPref(StringPref.Names.MAX_NUMBER_OF_OVERLY_QUOTE, currentContext.getString(R.string.settingsMaxNumberOfOverlyQuote), "2", 0, 15);
         addStringPref(StringPref.Names.SHOW_AVATAR_MODE_FORUM, currentContext.getString(R.string.settingsShowAvatarModeForum), "2");
@@ -235,7 +236,8 @@ public class PrefsManager {
             SHOW_SIGNATURE_MODE_FORUM, SHOW_SIGNATURE_MODE_IRC,
             TOPIC_ALTERNATE_BACKGROUND_MODE_FORUM, TOPIC_ALTERNATE_BACKGROUND_MODE_IRC,
             TOPIC_CLEAR_ON_REFRESH_MODE_FORUM,
-            TOPIC_SHOW_REFRESH_WHEN_MESSAGE_SHOWED_MODE_IRC
+            TOPIC_SHOW_REFRESH_WHEN_MESSAGE_SHOWED_MODE_IRC,
+            ENABLE_CARD_DESIGN_MODE_FORUM
         }
     }
 

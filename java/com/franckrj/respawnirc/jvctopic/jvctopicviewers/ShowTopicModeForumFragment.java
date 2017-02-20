@@ -126,11 +126,22 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
             showAvatarAdv = 2;
         }
 
+        cardDesignIsEnabled = PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_CARD_DESIGN_MODE_FORUM);
+
         if (showAvatarAdv == 0 || (showAvatarAdv == 1 && NetworkBroadcastReceiver.getIsConnectedToInternet() && NetworkBroadcastReceiver.getIsConnectedWithWifi())) {
-            adapterForTopic.setIdOfLayoutToUse(R.layout.jvcmessages_avatars_rowforum);
+            if (cardDesignIsEnabled) {
+                adapterForTopic.setIdOfLayoutToUse(R.layout.jvcmessages_avatars_card_rowforum);
+            } else {
+                adapterForTopic.setIdOfLayoutToUse(R.layout.jvcmessages_avatars_rowforum);
+            }
             adapterForTopic.setShowAvatars(true);
+            adapterForTopic.setMultiplierOfLineSizeForFirstLine(1.25f);
         } else {
-            adapterForTopic.setIdOfLayoutToUse(R.layout.jvcmessages_rowforum);
+            if (cardDesignIsEnabled) {
+                adapterForTopic.setIdOfLayoutToUse(R.layout.jvcmessages_card_rowforum);
+            } else {
+                adapterForTopic.setIdOfLayoutToUse(R.layout.jvcmessages_rowforum);
+            }
             adapterForTopic.setShowAvatars(false);
         }
 

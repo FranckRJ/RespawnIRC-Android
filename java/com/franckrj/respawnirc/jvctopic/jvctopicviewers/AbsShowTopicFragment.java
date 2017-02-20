@@ -39,6 +39,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected boolean showRefreshWhenMessagesShowed = true;
     protected boolean isInErrorMode = false;
     protected boolean goToBottomAtPageLoading = false;
+    protected boolean cardDesignIsEnabled = false;
 
     protected final AbsJVCTopicGetter.NewGetterStateListener listenerForNewGetterState = new AbsJVCTopicGetter.NewGetterStateListener() {
         @Override
@@ -217,7 +218,13 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         }
 
         swipeRefresh.setColorSchemeResources(R.color.colorAccent);
-        jvcMsgList.addItemDecoration(new DividerItemDecoration(getActivity(), layoutManagerForMsgList.getOrientation()));
+        if (!cardDesignIsEnabled) {
+            jvcMsgList.addItemDecoration(new DividerItemDecoration(getActivity(), layoutManagerForMsgList.getOrientation()));
+        } else {
+            int verticalPaddingForMsgList = getResources().getDimensionPixelSize(R.dimen.verticalPaddingOfMessageListView);
+            jvcMsgList.setPadding(0, verticalPaddingForMsgList, 0, verticalPaddingForMsgList);
+            jvcMsgList.setClipToPadding(false);
+        }
         jvcMsgList.setLayoutManager(layoutManagerForMsgList);
         jvcMsgList.setAdapter(adapterForTopic);
 

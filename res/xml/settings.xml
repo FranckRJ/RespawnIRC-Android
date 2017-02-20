@@ -49,6 +49,9 @@
             android:title="@string/showSignatureTitle"
             android:summary="@string/needToBeEnabledOnJVCFirstSummary"/>
         <CheckBoxPreference
+            android:key="@string/settingsEnableCardDesignModeForum"
+            android:title="@string/enableCardDesignTitle"/>
+        <CheckBoxPreference
             android:key="@string/settingsTopicAlternateBackgroundColorModeForum"
             android:title="@string/topicAlternateBackgroundColorTitle"/>
     </PreferenceCategory>
