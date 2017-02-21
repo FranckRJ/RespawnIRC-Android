@@ -109,7 +109,7 @@
             android:orientation="horizontal"
             android:gravity="center"
             android:layout_alignParentBottom="true"
-            android:background="#eee"
+            android:background="@color/defaultColorForBackground"
             android:focusable="true"
             android:focusableInTouchMode="true">
             <ImageButton
@@ -117,16 +117,19 @@
                 android:id="@+id/selectsticker_button_showtopic"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:scaleType="fitEnd"
                 android:src="@drawable/ic_action_content_add_dark"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:padding="6dp"
                 android:contentDescription="@string/selectSticker"/>
             <EditText
                 android:id="@+id/sendmessage_text_showtopic"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:padding="8dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 android:inputType="textMultiLine|textCapSentences"
                 android:maxLines="4"
                 android:hint="@string/messagePlaceHolder"
@@ -136,9 +139,9 @@
                 android:id="@+id/sendmessage_button_showtopic"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:scaleType="fitEnd"
                 android:src="@drawable/ic_action_content_send"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:padding="6dp"
                 android:contentDescription="@string/messagePost"/>
         </LinearLayout>
 

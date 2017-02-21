@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">RespawnIRC</string>
-    <string name="messagePlaceHolder">Message…</string>
+    <string name="messagePlaceHolder">Rédigez votre message</string>
     <string name="messagePost">Envoyer</string>
     <string name="connectToJVC">Se connecter à JVC</string>
     <string name="pseudoForConnect">Votre pseudo</string>
