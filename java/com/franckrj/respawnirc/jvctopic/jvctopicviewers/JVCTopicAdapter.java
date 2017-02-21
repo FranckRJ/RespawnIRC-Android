@@ -104,6 +104,14 @@ public class JVCTopicAdapter extends RecyclerView.Adapter<JVCTopicAdapter.Custom
                 }
             }
 
+            if (currentSettings.hideUglyImages && itemSelected.containUglyImages) {
+                if (itemSelected.showUglyImages) {
+                    popup.getMenu().add(Menu.NONE, R.id.menu_hide_ugly_images_message, Menu.NONE, R.string.hideUglyImagesMessage);
+                } else {
+                    popup.getMenu().add(Menu.NONE, R.id.menu_show_ugly_images_message, Menu.NONE, R.string.showUglyImagesMessage);
+                }
+            }
+
             popup.show();
         }
     };

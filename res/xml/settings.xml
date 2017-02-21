@@ -26,6 +26,9 @@
         <CheckBoxPreference
             android:key="@string/settingsUseDirectNoelshackLink"
             android:title="@string/useDirectNoelshackLinkTitle"/>
+        <CheckBoxPreference
+            android:key="@string/settingsHideUglyImages"
+            android:title="@string/hideUglyImagesTitle"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/link">

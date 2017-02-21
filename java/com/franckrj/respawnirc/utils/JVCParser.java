@@ -647,7 +647,7 @@ public final class JVCParser {
     public static String createMessageSecondLineFromInfos(MessageInfos thisMessageInfo, Settings settings) {
         String finalMessage = settings.secondLineFormat;
 
-        finalMessage = finalMessage.replace("<%MESSAGE_MESSAGE%>", parseMessageToPrettyMessage(thisMessageInfo.messageNotParsed, settings, thisMessageInfo.containSpoil, thisMessageInfo.showSpoil, thisMessageInfo.showOverlyQuote));
+        finalMessage = finalMessage.replace("<%MESSAGE_MESSAGE%>", parseMessageToPrettyMessage(thisMessageInfo.messageNotParsed, settings, thisMessageInfo.containSpoil, thisMessageInfo.showSpoil, thisMessageInfo.showOverlyQuote, thisMessageInfo.showUglyImages));
         if (!thisMessageInfo.lastTimeEdit.isEmpty()) {
             finalMessage = finalMessage.replace("<%EDIT_ALL%>", settings.addBeforeEdit + thisMessageInfo.lastTimeEdit.trim() + settings.addAfterEdit);
         } else {
@@ -659,11 +659,12 @@ public final class JVCParser {
     }
 
     public static String createSignatureFromInfos(MessageInfos thisMessageInfo, Settings settings) {
-        return "<small>" + parseMessageToPrettyMessage(thisMessageInfo.signatureNotParsed, settings, true, false, true) + "</small>";
+        return "<small>" + parseMessageToPrettyMessage(thisMessageInfo.signatureNotParsed, settings, true, false, true, true) + "</small>";
     }
 
-    public static String parseMessageToPrettyMessage(String messageInString, Settings settings, boolean containSpoil, boolean showSpoil, boolean showOverlyQuote) {
+    public static String parseMessageToPrettyMessage(String messageInString, Settings settings, boolean containSpoil, boolean showSpoil, boolean showOverlyQuote, boolean showUglyImages) {
         StringBuilder messageInBuilder = new StringBuilder(messageInString);
+        MakeShortenedLinkIfPossible makeLinkDependingOnSettingsAndForceMake = new MakeShortenedLinkIfPossible((settings.shortenLongLink ? 50 : 0), true);
 
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeBlockPattern, 1, "<p><font face=\"monospace\">", "</font></p>", new ConvertStringToString("\n", "<br />"), new ConvertStringToString("  ", "  ")); //remplace les doubles espaces par des doubles alt+255
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeLinePattern, 1, "<font face=\"monospace\">", "</font>", new ConvertStringToString("  ", "  "), null); //remplace les doubles espaces par des doubles alt+255
@@ -680,14 +681,18 @@ public final class JVCParser {
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, smileyPattern, 1, "<img src=\"smiley_", "\"/>", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, youtubeVideoPattern, 2, "<a href=\"http://youtu.be/", "\">http://youtu.be/", 2, "</a>");
 
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcLinkPattern, 1, "", "", new MakeShortenedLinkIfPossible((settings.shortenLongLink ? 50 : 0), true), null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", new MakeShortenedLinkIfPossible((settings.shortenLongLink ? 50 : 0), true), null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longLinkPattern, 1, "", "", new MakeShortenedLinkIfPossible((settings.shortenLongLink ? 50 : 0), true), null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
+
+        if (settings.hideUglyImages && !showUglyImages) {
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 0, "", "", new SuppressIfContainUglyNames(), null);
+        }
 
         if (settings.showNoelshackImages) {
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 1, "<a href=\"", "\"><img src=\"http://", 2, "\"/></a>");
         } else {
-            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 1, "", "", new MakeShortenedLinkIfPossible((settings.shortenLongLink ? 50 : 0), true), null);
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         }
 
         if (containSpoil) {
@@ -787,6 +792,7 @@ public final class JVCParser {
             newMessageInfo.wholeDate = dateMessageMatcher.group(2);
             newMessageInfo.containSpoil = newMessageInfo.messageNotParsed.contains("<span class=\"contenu-spoil\">");
             newMessageInfo.numberOfOverlyQuote = ToolForParsing.countNumberOfOverlyQuoteInNotPrettyMessage(newMessageInfo.messageNotParsed);
+            newMessageInfo.containUglyImages = ToolForParsing.hasUglyImagesInNotPrettyMessage(newMessageInfo.messageNotParsed);
             newMessageInfo.id = Long.parseLong(messageIDMatcher.group(1));
         }
 
@@ -1001,6 +1007,22 @@ public final class JVCParser {
             return maxNumberOfOverlyQuoteInMessage;
         }
 
+        public static boolean hasUglyImagesInNotPrettyMessage(String notPrettyMessage) {
+            Matcher noelshackImageMatcher = noelshackImagePattern.matcher(notPrettyMessage);
+            int lastOffsetOfTag = 0;
+
+            while (noelshackImageMatcher.find(lastOffsetOfTag)) {
+                String currentMatch = noelshackImageMatcher.group();
+                if (currentMatch.contains("risitas") || currentMatch.contains("jesus") || currentMatch.contains("issou")) {
+                    return true;
+                }
+
+                lastOffsetOfTag = noelshackImageMatcher.end();
+            }
+
+            return false;
+        }
+
         public static void parseThisMessageWithThisPattern(StringBuilder messageToParse, Pattern patternToUse, int groupToUse, String stringBefore, String stringAfter, StringModifier firstModifier, StringModifier secondModifier) {
             Matcher matcherToUse = patternToUse.matcher(messageToParse);
             int lastOffset = 0;
@@ -1108,6 +1130,8 @@ public final class JVCParser {
         public int numberOfOverlyQuote = 0;
         public boolean showOverlyQuote = false;
         public boolean isAnEdit = false;
+        public boolean containUglyImages = false;
+        public boolean showUglyImages = false;
         public long id = 0;
 
         public static final Parcelable.Creator<MessageInfos> CREATOR = new Parcelable.Creator<MessageInfos>() {
@@ -1140,6 +1164,8 @@ public final class JVCParser {
             numberOfOverlyQuote = in.readInt();
             showOverlyQuote = (in.readInt() == 1);
             isAnEdit = (in.readInt() == 1);
+            containUglyImages = (in.readInt() == 1);
+            showUglyImages = (in.readInt() == 1);
             id = in.readLong();
         }
 
@@ -1163,6 +1189,8 @@ public final class JVCParser {
             out.writeInt(numberOfOverlyQuote);
             out.writeInt(showOverlyQuote ? 1 : 0);
             out.writeInt(isAnEdit ? 1 : 0);
+            out.writeInt(containUglyImages ? 1 : 0);
+            out.writeInt(showUglyImages ? 1 : 0);
             out.writeLong(id);
         }
 
@@ -1315,6 +1343,16 @@ public final class JVCParser {
         }
     }
 
+    private static class SuppressIfContainUglyNames implements StringModifier {
+        @Override
+        public String changeString(String baseString) {
+            if (baseString.contains("jesus") || baseString.contains("risitas") || baseString.contains("issou")) {
+                return "";
+            }
+            return baseString;
+        }
+    }
+
     private static class MakeShortenedLinkIfPossible implements StringModifier {
         final int maxStringSize;
         final boolean forceLinkCreation;
@@ -1374,6 +1412,7 @@ public final class JVCParser {
         public boolean showNoelshackImages = false;
         public boolean transformStickerToSmiley = false;
         public boolean shortenLongLink = false;
+        public boolean hideUglyImages = false;
     }
 
     private interface StringModifier {

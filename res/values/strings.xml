@@ -126,6 +126,9 @@
     <string name="wifiOnly">Uniquement en WiFi</string>
     <string name="never">Jamais</string>
     <string name="enableCardDesignTitle">Affichage avec des cartes</string>
+    <string name="hideUglyImagesTitle">Cacher les images nuisibles</string>
+    <string name="hideUglyImagesMessage">Cacher les images nuisibles</string>
+    <string name="showUglyImagesMessage">Afficher les images nuisibles</string>
 
     <string name="settingsMaxNumberOfMessages" translatable="false">settings.maxNumberOfMessages</string>
     <string name="settingsInitialNumberOfMessages" translatable="false">settings.initialNumberOfMessages</string>
@@ -145,6 +148,7 @@
     <string name="settingsShowSignatureModeForum" translatable="false">settings.showSignatureModeForum</string>
     <string name="settingsShowAvatarModeForum" translatable="false">settings.showAvatarAdvModeForum</string>
     <string name="settingsEnableCardDesignModeForum" translatable="false">settings.enableCardDesignModeForum</string>
+    <string name="settingsHideUglyImages" translatable="false">settings.hideUglyImages</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

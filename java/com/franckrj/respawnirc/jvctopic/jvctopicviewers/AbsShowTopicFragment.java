@@ -94,6 +94,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         currentSettings.maxNumberOfOverlyQuotes = Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MAX_NUMBER_OF_OVERLY_QUOTE));
         currentSettings.transformStickerToSmiley = PrefsManager.getBool(PrefsManager.BoolPref.Names.TRANSFORM_STICKER_TO_SMILEY);
         currentSettings.shortenLongLink = PrefsManager.getBool(PrefsManager.BoolPref.Names.SHORTEN_LONG_LINK);
+        currentSettings.hideUglyImages = PrefsManager.getBool(PrefsManager.BoolPref.Names.HIDE_UGLY_IMAGES);
         currentSettings.pseudoOfUser = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER);
         absGetterForTopic.setCookieListInAString(PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
     }
@@ -139,6 +140,18 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             case R.id.menu_hide_quote_message:
                 currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
                 currentItem.showOverlyQuote = false;
+                adapterForTopic.updateThisItem(currentItem);
+                adapterForTopic.updateAllItems();
+                return true;
+            case R.id.menu_show_ugly_images_message:
+                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
+                currentItem.showUglyImages = true;
+                adapterForTopic.updateThisItem(currentItem);
+                adapterForTopic.updateAllItems();
+                return true;
+            case R.id.menu_hide_ugly_images_message:
+                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
+                currentItem.showUglyImages = false;
                 adapterForTopic.updateThisItem(currentItem);
                 adapterForTopic.updateAllItems();
                 return true;
