@@ -2,13 +2,9 @@ package com.franckrj.respawnirc.jvctopic.jvctopicviewers;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.NetworkBroadcastReceiver;
@@ -32,8 +28,7 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
                 isInErrorMode = false;
 
                 if (adapterForTopic.getItemCount() > (adapterForTopic.getShowSurvey() ? 1 : 0)) {
-                    scrolledAtTheEnd = (layoutManagerForMsgList.findLastVisibleItemPosition() == adapterForTopic.getItemCount() - 1) &&
-                            (jvcMsgList.getChildAt(jvcMsgList.getChildCount() - 1).getBottom() <= jvcMsgList.getHeight());
+                    scrolledAtTheEnd = listIsScrolledAtBottom();
                 }
 
                 adapterForTopic.removeAllItems();
@@ -156,22 +151,10 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        View mainView = inflater.inflate(R.layout.fragment_showtopicforum, container, false);
-
-        jvcMsgList = (RecyclerView) mainView.findViewById(R.id.jvcmessage_view_showtopicforum);
-        swipeRefresh = (SwipeRefreshLayout) mainView.findViewById(R.id.swiperefresh_showtopicforum);
-
-        swipeRefresh.setOnRefreshListener(listenerForRefresh);
-
-        return mainView;
-    }
-
-    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        swipeRefresh.setOnRefreshListener(listenerForRefresh);
         getterForTopic.setListenerForNewMessages(listenerForNewMessages);
 
         if (getActivity() instanceof JVCTopicModeForumGetter.NewNumbersOfPagesListener) {

@@ -5,8 +5,10 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.PopupMenu;
 
 import com.franckrj.respawnirc.AbsShowSomethingFragment;
@@ -104,6 +106,15 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         }
     }
 
+    protected boolean listIsScrolledAtBottom() {
+        //noinspection SimplifiableIfStatement
+        if (jvcMsgList.getChildCount() > 0) {
+            return (layoutManagerForMsgList.findLastVisibleItemPosition() == adapterForTopic.getItemCount() - 1) &&
+                    (jvcMsgList.getChildAt(jvcMsgList.getChildCount() - 1).getBottom() <= jvcMsgList.getHeight());
+        }
+        return true;
+    }
+
     public boolean onMenuItemClick(MenuItem item) {
         JVCParser.MessageInfos currentItem;
         switch (item.getItemId()) {
@@ -182,6 +193,17 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        View mainView = inflater.inflate(R.layout.fragment_showtopic, container, false);
+
+        jvcMsgList = (RecyclerView) mainView.findViewById(R.id.jvcmessage_view_showtopicfrag);
+        swipeRefresh = (SwipeRefreshLayout) mainView.findViewById(R.id.swiperefresh_showtopicfrag);
+
+        return mainView;
     }
 
     @Override

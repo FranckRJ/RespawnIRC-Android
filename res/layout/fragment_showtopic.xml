@@ -5,13 +5,13 @@
     android:layout_height="match_parent">
 
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swiperefresh_showtopicirc"
+        android:id="@+id/swiperefresh_showtopicfrag"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentTop="true">
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/jvcmessage_view_showtopicirc"
+            android:id="@+id/jvcmessage_view_showtopicfrag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbarStyle="outsideOverlay"

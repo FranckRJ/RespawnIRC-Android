@@ -1,14 +1,9 @@
 package com.franckrj.respawnirc.jvctopic.jvctopicviewers;
 
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
@@ -38,8 +33,7 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
                 isInErrorMode = false;
 
                 if (adapterForTopic.getItemCount() > (adapterForTopic.getShowSurvey() ? 1 : 0)) {
-                    scrolledAtTheEnd = (layoutManagerForMsgList.findLastVisibleItemPosition() == adapterForTopic.getItemCount() - 1) &&
-                            (jvcMsgList.getChildAt(jvcMsgList.getChildCount() - 1).getBottom() <= jvcMsgList.getHeight());
+                    scrolledAtTheEnd = listIsScrolledAtBottom();
                 }
 
                 for (JVCParser.MessageInfos thisMessageInfo : listOfNewMessages) {
@@ -152,17 +146,6 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
         maxNumberOfMessagesShowed = Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MAX_NUMBER_OF_MESSAGES));
         initialNumberOfMessagesShowed = Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.INITIAL_NUMBER_OF_MESSAGES));
         getterForTopic.setTimeBetweenRefreshTopic(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.REFRESH_TOPIC_TIME)));
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        View mainView = inflater.inflate(R.layout.fragment_showtopicirc, container, false);
-
-        jvcMsgList = (RecyclerView) mainView.findViewById(R.id.jvcmessage_view_showtopicirc);
-        swipeRefresh = (SwipeRefreshLayout) mainView.findViewById(R.id.swiperefresh_showtopicirc);
-
-        return mainView;
     }
 
     @Override
