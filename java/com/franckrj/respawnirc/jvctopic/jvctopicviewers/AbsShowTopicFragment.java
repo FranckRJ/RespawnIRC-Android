@@ -2,13 +2,11 @@ package com.franckrj.respawnirc.jvctopic.jvctopicviewers;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 
 import com.franckrj.respawnirc.AbsShowSomethingFragment;
@@ -31,9 +29,8 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected static final String SAVE_GO_TO_BOTTOM_PAGE_LOADING = "saveGoToBottomPageLoading";
 
     protected AbsJVCTopicGetter absGetterForTopic = null;
-    protected RecyclerView jvcMsgList = null;
+    protected ListView jvcMsgList = null;
     protected JVCTopicAdapter adapterForTopic = null;
-    protected LinearLayoutManager layoutManagerForMsgList = null;
     protected JVCParser.Settings currentSettings = new JVCParser.Settings();
     protected NewModeNeededListener listenerForNewModeNeeded = null;
     protected SwipeRefreshLayout swipeRefresh = null;
@@ -110,7 +107,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected boolean listIsScrolledAtBottom() {
         //noinspection SimplifiableIfStatement
         if (jvcMsgList.getChildCount() > 0) {
-            return (layoutManagerForMsgList.findLastVisibleItemPosition() == adapterForTopic.getItemCount() - 1) &&
+            return (jvcMsgList.getLastVisiblePosition() == jvcMsgList.getCount() - 1) &&
                     (jvcMsgList.getChildAt(jvcMsgList.getChildCount() - 1).getBottom() <= jvcMsgList.getHeight());
         }
         return true;
@@ -213,7 +210,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View mainView = inflater.inflate(R.layout.fragment_showtopic, container, false);
 
-        jvcMsgList = (RecyclerView) mainView.findViewById(R.id.jvcmessage_view_showtopicfrag);
+        jvcMsgList = (ListView) mainView.findViewById(R.id.jvcmessage_view_showtopicfrag);
         swipeRefresh = (SwipeRefreshLayout) mainView.findViewById(R.id.swiperefresh_showtopicfrag);
 
         return mainView;
@@ -223,7 +220,6 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        layoutManagerForMsgList = new LinearLayoutManager(getActivity());
         adapterForTopic = new JVCTopicAdapter(getActivity(), currentSettings);
         initializeGetterForMessages();
         initializeAdapter();
@@ -253,14 +249,12 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         }
 
         swipeRefresh.setColorSchemeResources(R.color.colorAccent);
-        if (!cardDesignIsEnabled) {
-            jvcMsgList.addItemDecoration(new DividerItemDecoration(getActivity(), layoutManagerForMsgList.getOrientation()));
-        } else {
-            int verticalPaddingForMsgList = getResources().getDimensionPixelSize(R.dimen.verticalPaddingOfMessageListView);
-            jvcMsgList.setPadding(0, verticalPaddingForMsgList, 0, verticalPaddingForMsgList);
+        if (cardDesignIsEnabled) {
+            int paddingForMsgList = getResources().getDimensionPixelSize(R.dimen.paddingOfMessageListView);
+            jvcMsgList.setPadding(paddingForMsgList, paddingForMsgList, paddingForMsgList, paddingForMsgList);
             jvcMsgList.setClipToPadding(false);
+            jvcMsgList.setDividerHeight(0);
         }
-        jvcMsgList.setLayoutManager(layoutManagerForMsgList);
         jvcMsgList.setAdapter(adapterForTopic);
 
         if (savedInstanceState != null) {

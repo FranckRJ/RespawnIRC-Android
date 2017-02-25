@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentTop="true">
-        <android.support.v7.widget.RecyclerView
+        <ListView
             android:id="@+id/jvcmessage_view_showtopicfrag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

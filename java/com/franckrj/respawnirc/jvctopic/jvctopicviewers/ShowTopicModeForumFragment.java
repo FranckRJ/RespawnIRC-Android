@@ -27,7 +27,7 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
                 boolean scrolledAtTheEnd = false;
                 isInErrorMode = false;
 
-                if (adapterForTopic.getItemCount() > (adapterForTopic.getShowSurvey() ? 1 : 0)) {
+                if (adapterForTopic.getCount() > (adapterForTopic.getShowSurvey() ? 1 : 0)) {
                     scrolledAtTheEnd = listIsScrolledAtBottom();
                 }
 
@@ -39,9 +39,9 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
 
                 adapterForTopic.updateAllItems();
 
-                if ((scrolledAtTheEnd || goToBottomAtPageLoading) && adapterForTopic.getItemCount() > 0) {
-                    jvcMsgList.scrollToPosition(adapterForTopic.getItemCount() - 1);
-                    jvcMsgList.scrollBy(0, 999999);
+                if ((scrolledAtTheEnd || goToBottomAtPageLoading) && adapterForTopic.getCount() > 0) {
+                    jvcMsgList.setSelection(adapterForTopic.getCount() - 1);
+                    //jvcMsgList.scrollBy(0, 999999); ne fonctionnait que pour les recyclerview
                     goToBottomAtPageLoading = false;
                 }
 

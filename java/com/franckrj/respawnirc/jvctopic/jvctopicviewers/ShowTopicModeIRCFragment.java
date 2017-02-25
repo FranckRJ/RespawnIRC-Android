@@ -32,7 +32,7 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
                 boolean firstTimeGetMessages = adapterForTopic.getAllItems().isEmpty();
                 isInErrorMode = false;
 
-                if (adapterForTopic.getItemCount() > (adapterForTopic.getShowSurvey() ? 1 : 0)) {
+                if (adapterForTopic.getCount() > (adapterForTopic.getShowSurvey() ? 1 : 0)) {
                     scrolledAtTheEnd = listIsScrolledAtBottom();
                 }
 
@@ -45,20 +45,20 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
                 }
 
                 if (firstTimeGetMessages) {
-                    while (adapterForTopic.getItemCount() > initialNumberOfMessagesShowed) {
+                    while (adapterForTopic.getCount() > initialNumberOfMessagesShowed) {
                         adapterForTopic.removeFirstItem();
                     }
                 }
 
-                while (adapterForTopic.getItemCount() > maxNumberOfMessagesShowed) {
+                while (adapterForTopic.getCount() > maxNumberOfMessagesShowed) {
                     adapterForTopic.removeFirstItem();
                 }
 
                 adapterForTopic.updateAllItems();
 
-                if (scrolledAtTheEnd && adapterForTopic.getItemCount() > 0) {
-                    jvcMsgList.scrollToPosition(adapterForTopic.getItemCount() - 1);
-                    jvcMsgList.scrollBy(0, 999999);
+                if (scrolledAtTheEnd && adapterForTopic.getCount() > 0) {
+                    jvcMsgList.setSelection(adapterForTopic.getCount() - 1);
+                    //jvcMsgList.scrollBy(0, 999999); ne fonctionnait que pour les recyclerview
                 }
             } else if (itsReallyEmpty) {
                 if (!isInErrorMode) {

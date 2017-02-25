@@ -5,5 +5,5 @@
     <dimen name="quoteStripGap">4dp</dimen>
     <dimen name="imagesWidth">102dp</dimen>
     <dimen name="imagesHeight">77dp</dimen>
-    <dimen name="verticalPaddingOfMessageListView">4dp</dimen>
+    <dimen name="paddingOfMessageListView">4dp</dimen>
 </resources>

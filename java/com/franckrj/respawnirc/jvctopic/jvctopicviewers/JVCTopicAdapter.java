@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Layout;
 import android.text.Spannable;
@@ -23,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -40,7 +40,7 @@ import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 
-public class JVCTopicAdapter extends RecyclerView.Adapter<JVCTopicAdapter.CustomViewHolder> {
+public class JVCTopicAdapter extends BaseAdapter {
     private ArrayList<JVCParser.MessageInfos> listOfMessages = new ArrayList<>();
     private ArrayList<ContentHolder> listOfContentForMessages = new ArrayList<>();
     private LayoutInflater serviceInflater;
@@ -291,7 +291,7 @@ public class JVCTopicAdapter extends RecyclerView.Adapter<JVCTopicAdapter.Custom
     }
 
     @Override
-    public int getItemCount() {
+    public int getCount() {
         return listOfMessages.size() + (showSurvey ? 1 : 0);
     }
 
@@ -301,60 +301,63 @@ public class JVCTopicAdapter extends RecyclerView.Adapter<JVCTopicAdapter.Custom
     }
 
     @Override
-    public CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = serviceInflater.inflate(idOfLayoutToUse, parent, false);
+    public View getView(int position, View convertView, ViewGroup parent) {
+        CustomViewHolder viewHolder;
 
-        return new CustomViewHolder(itemView);
-    }
+        if (convertView == null) {
+            convertView = serviceInflater.inflate(idOfLayoutToUse, parent, false);
+            viewHolder = new CustomViewHolder(convertView);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (CustomViewHolder) convertView.getTag();
+        }
 
-    @Override
-    public void onBindViewHolder(CustomViewHolder holder, int position) {
         if (position == 0 && showSurvey) {
             String advertiseForSurveyToShow = parentActivity.getString(R.string.titleForSurvey) + " <b>" + surveyTitle + "</b><br><small>" + parentActivity.getString(R.string.clickHereToSee) + "</small>";
 
-            holder.showMenuButton.setVisibility(View.GONE);
-            holder.secondLine.setVisibility(View.GONE);
-            holder.thirdLine.setVisibility(View.GONE);
-            holder.separator.setVisibility(View.GONE);
-            if (holder.firstImage != null) {
-                holder.firstImage.setVisibility(View.GONE);
+            viewHolder.showMenuButton.setVisibility(View.GONE);
+            viewHolder.secondLine.setVisibility(View.GONE);
+            viewHolder.thirdLine.setVisibility(View.GONE);
+            viewHolder.separator.setVisibility(View.GONE);
+            if (viewHolder.firstImage != null) {
+                viewHolder.firstImage.setVisibility(View.GONE);
             }
 
-            holder.firstLine.setText(Undeprecator.htmlFromHtml(advertiseForSurveyToShow));
-            holder.background.setOnClickListener(onSurveyClickListener);
-            holder.firstLine.setOnClickListener(onSurveyClickListener);
-            setColorBackgroundOfThisItem(holder.background, R.color.altBackgroundMessageColor);
+            viewHolder.firstLine.setText(Undeprecator.htmlFromHtml(advertiseForSurveyToShow));
+            convertView.setOnClickListener(onSurveyClickListener);
+            viewHolder.firstLine.setOnClickListener(onSurveyClickListener);
+            setColorBackgroundOfThisItem(convertView, R.color.altBackgroundMessageColor);
         } else {
             final int realPosition = position - (showSurvey ? 1 : 0);
             final ContentHolder currentContent = listOfContentForMessages.get(realPosition);
 
-            holder.showMenuButton.setTag(position);
-            holder.showMenuButton.setVisibility(View.VISIBLE);
-            holder.secondLine.setVisibility(View.VISIBLE);
-            holder.firstLine.setText(currentContent.firstLineContent);
-            holder.secondLine.setText(currentContent.secondLineContent);
+            viewHolder.showMenuButton.setTag(position);
+            viewHolder.showMenuButton.setVisibility(View.VISIBLE);
+            viewHolder.secondLine.setVisibility(View.VISIBLE);
+            viewHolder.firstLine.setText(currentContent.firstLineContent);
+            viewHolder.secondLine.setText(currentContent.secondLineContent);
 
-            if (holder.firstImage != null) {
+            if (viewHolder.firstImage != null) {
                 if (currentContent.firstImageDrawable != null) {
-                    holder.firstImage.setVisibility(View.VISIBLE);
-                    holder.firstImage.setImageDrawable(null);
-                    holder.firstImage.setImageDrawable(currentContent.firstImageDrawable);
+                    viewHolder.firstImage.setVisibility(View.VISIBLE);
+                    viewHolder.firstImage.setImageDrawable(null);
+                    viewHolder.firstImage.setImageDrawable(currentContent.firstImageDrawable);
                 } else {
-                    holder.firstImage.setVisibility(View.GONE);
+                    viewHolder.firstImage.setVisibility(View.GONE);
                 }
             }
 
             if (currentContent.thirdLineContent != null) {
-                holder.thirdLine.setVisibility(View.VISIBLE);
-                holder.separator.setVisibility(View.VISIBLE);
-                holder.thirdLine.setText(currentContent.thirdLineContent);
+                viewHolder.thirdLine.setVisibility(View.VISIBLE);
+                viewHolder.separator.setVisibility(View.VISIBLE);
+                viewHolder.thirdLine.setText(currentContent.thirdLineContent);
             } else {
-                holder.thirdLine.setVisibility(View.GONE);
-                holder.separator.setVisibility(View.GONE);
+                viewHolder.thirdLine.setVisibility(View.GONE);
+                viewHolder.separator.setVisibility(View.GONE);
             }
 
-            holder.background.setOnClickListener(null);
-            holder.firstLine.setOnClickListener(new View.OnClickListener() {
+            convertView.setOnClickListener(null);
+            viewHolder.firstLine.setOnClickListener(new View.OnClickListener() {
                 int messageNumberInList = realPosition;
                 @Override
                 public void onClick(View v) {
@@ -365,11 +368,13 @@ public class JVCTopicAdapter extends RecyclerView.Adapter<JVCTopicAdapter.Custom
             });
 
             if (realPosition % 2 == 0 || !alternateBackgroundColor) {
-                setColorBackgroundOfThisItem(holder.background, R.color.defaultColorForBackground);
+                setColorBackgroundOfThisItem(convertView, R.color.defaultColorForBackground);
             } else {
-                setColorBackgroundOfThisItem(holder.background, R.color.altBackgroundMessageColor);
+                setColorBackgroundOfThisItem(convertView, R.color.altBackgroundMessageColor);
             }
         }
+
+        return convertView;
     }
 
     public class CustomQuoteSpan implements LeadingMarginSpan, LineBackgroundSpan {
@@ -415,25 +420,21 @@ public class JVCTopicAdapter extends RecyclerView.Adapter<JVCTopicAdapter.Custom
         }
     }
 
-    public class CustomViewHolder extends RecyclerView.ViewHolder {
+    public class CustomViewHolder {
         public final TextView firstLine;
         public final ImageView firstImage;
         public final TextView secondLine;
         public final TextView thirdLine;
         public final View separator;
         public final ImageButton showMenuButton;
-        public final View background;
 
         public CustomViewHolder(View itemView) {
-            super(itemView);
-
             firstLine = (TextView) itemView.findViewById(R.id.item_one_jvcmessages_text_row);
             firstImage = (ImageView) itemView.findViewById(R.id.image_one_jvcmessages_text_row);
             secondLine = (TextView) itemView.findViewById(R.id.item_two_jvcmessages_text_row);
             thirdLine = (TextView) itemView.findViewById(R.id.item_three_jvcmessages_text_row);
             separator = itemView.findViewById(R.id.item_separator_jvcmessages_text_row);
             showMenuButton = (ImageButton) itemView.findViewById(R.id.menu_overflow_row);
-            background = itemView;
 
             if (multiplierOfLineSizeForFirstLine != 0) {
                 firstLine.setLineSpacing(0, multiplierOfLineSizeForFirstLine);
