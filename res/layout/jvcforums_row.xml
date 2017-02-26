@@ -11,7 +11,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/ic_action_communication_forum_dark"
+        android:src="?attr/themedForumIcon"
         android:contentDescription="@string/isForum"/>
 
     <TextView

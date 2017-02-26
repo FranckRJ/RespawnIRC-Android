@@ -105,7 +105,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
 
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swiperefresh_selectforum);
         swipeRefresh.setEnabled(false);
-        swipeRefresh.setColorSchemeResources(R.color.colorAccent);
+        swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
 
         ExpandableListView forumListView = (ExpandableListView) findViewById(R.id.forum_expendable_list_selectforum);
         adapterForForumList = new JVCForumListAdapter(this);

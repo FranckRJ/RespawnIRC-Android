@@ -83,6 +83,7 @@ public class PrefsManager {
         addStringPref(StringPref.Names.REFRESH_TOPIC_TIME, currentContext.getString(R.string.settingsRefreshTopicTime), "10000", 5000, 60000);
         addStringPref(StringPref.Names.MAX_NUMBER_OF_MESSAGES, currentContext.getString(R.string.settingsMaxNumberOfMessages), "40", 1, 100);
         addStringPref(StringPref.Names.INITIAL_NUMBER_OF_MESSAGES, currentContext.getString(R.string.settingsInitialNumberOfMessages), "10", 1, 20);
+        addStringPref(StringPref.Names.THEME_USED, currentContext.getString(R.string.settingsThemeUsed), "0");
     }
 
     public static boolean getBool(BoolPref.Names prefName) {
@@ -293,7 +294,8 @@ public class PrefsManager {
             SHOW_AVATAR_MODE_FORUM,
             SHOW_NOELSHACK_IMAGE,
             REFRESH_TOPIC_TIME,
-            MAX_NUMBER_OF_MESSAGES, INITIAL_NUMBER_OF_MESSAGES
+            MAX_NUMBER_OF_MESSAGES, INITIAL_NUMBER_OF_MESSAGES,
+            THEME_USED
         }
     }
 

@@ -248,7 +248,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             adapterForTopic.setPseudoClickedListener((JVCTopicAdapter.PseudoClicked) getActivity());
         }
 
-        swipeRefresh.setColorSchemeResources(R.color.colorAccent);
+        swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
         if (cardDesignIsEnabled) {
             int paddingForMsgList = getResources().getDimensionPixelSize(R.dimen.paddingOfMessageListView);
             jvcMsgList.setPadding(paddingForMsgList, paddingForMsgList, paddingForMsgList, paddingForMsgList);

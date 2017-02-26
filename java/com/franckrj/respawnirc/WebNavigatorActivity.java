@@ -1,11 +1,8 @@
 package com.franckrj.respawnirc;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,7 +16,7 @@ import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
 
-public class WebNavigatorActivity extends AppCompatActivity {
+public class WebNavigatorActivity extends ThemedActivity {
     public static final String EXTRA_URL_LOAD = "com.franckrj.respawnirc.webnavigatoractivity.EXTRA_URL_LOAD";
 
     private static final String SAVE_TITLE_FOR_NAVIGATOR = "saveTitleForNavigator";
@@ -51,7 +48,6 @@ public class WebNavigatorActivity extends AppCompatActivity {
             myActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         String cookies = PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST);
 
         if (cookies.contains(";")) {

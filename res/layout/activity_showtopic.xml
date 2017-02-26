@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/toolbar_showtopic"
-            android:background="#eee">
+            android:background="?attr/themedDarkerBackgroundColor">
             <Button
                 android:id="@+id/firstpage_button_showtopic"
                 android:layout_width="wrap_content"
@@ -87,20 +87,20 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:background="@drawable/shadow_top"
+            android:background="?attr/themedShadowTop"
             android:layout_below="@+id/toolbar_showtopic"/>
 
         <View
             android:id="@+id/shadow_header_showtopic"
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:background="@drawable/shadow_top"
+            android:background="?attr/themedShadowTop"
             android:layout_below="@+id/header_layout_showtopic"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:background="@drawable/shadow_bottom"
+            android:background="?attr/themedShadowBottom"
             android:layout_above="@+id/sendmessage_layout_showtopic"/>
         <LinearLayout
             android:id="@+id/sendmessage_layout_showtopic"
@@ -109,7 +109,7 @@
             android:orientation="horizontal"
             android:gravity="center"
             android:layout_alignParentBottom="true"
-            android:background="@color/defaultColorForBackground"
+            android:background="?attr/themedDefaultBackgroundColor"
             android:focusable="true"
             android:focusableInTouchMode="true">
             <ImageButton
@@ -118,7 +118,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:scaleType="fitEnd"
-                android:src="@drawable/ic_action_content_add_dark"
+                android:src="?attr/themedContentAdd"
                 android:padding="6dp"
                 android:contentDescription="@string/selectSticker"/>
             <EditText
@@ -140,7 +140,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:scaleType="fitEnd"
-                android:src="@drawable/ic_action_content_send"
+                android:src="?attr/themedContentSendIcon"
                 android:padding="6dp"
                 android:contentDescription="@string/messagePost"/>
         </LinearLayout>

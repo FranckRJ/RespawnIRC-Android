@@ -55,7 +55,7 @@
     <string name="errorInfosMissings">Erreur, informations manquantes (rechargez la page ?).</string>
     <string name="errorMessageAlreadySending">Erreur, envoie ou édition d\'un message actuellement en cours.</string>
     <string name="errorCantGetEditInfos">Erreur, impossible de récupérer les informations d\'édition.</string>
-    <string name="errorDownloadFailed">Erreur, la récupération des informations a échouée.</string>
+    <string name="errorDownloadFailed">Erreur, la récupération des informations a échoué.</string>
     <string name="errorConnectNeeded">Erreur, vous devez vous connecter pour effectuer cette action.</string>
     <string name="showNoelshackImageTitle">Afficher les miniatures</string>
     <string name="errorInvalidLink">Erreur, lien invalide.</string>
@@ -129,6 +129,8 @@
     <string name="hideUglyImagesTitle">Cacher les images nuisibles</string>
     <string name="hideUglyImagesMessage">Cacher les images nuisibles</string>
     <string name="showUglyImagesMessage">Afficher les images nuisibles</string>
+    <string name="light">Clair</string>
+    <string name="dark">Sombre</string>
 
     <string name="settingsMaxNumberOfMessages" translatable="false">settings.maxNumberOfMessages</string>
     <string name="settingsInitialNumberOfMessages" translatable="false">settings.initialNumberOfMessages</string>
@@ -149,6 +151,8 @@
     <string name="settingsShowAvatarModeForum" translatable="false">settings.showAvatarAdvModeForum</string>
     <string name="settingsEnableCardDesignModeForum" translatable="false">settings.enableCardDesignModeForum</string>
     <string name="settingsHideUglyImages" translatable="false">settings.hideUglyImages</string>
+    <string name="settingsThemeUsed" translatable="false">settings.themeUsed</string>
+    <string name="theme">Theme</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
@@ -170,5 +174,13 @@
         <item>"0"</item>
         <item>"1"</item>
         <item>"2"</item>
+    </string-array>
+    <string-array name="choicesForThemesReadable">
+        <item>@string/light</item>
+        <item>@string/dark</item>
+    </string-array>
+    <string-array name="choicesForThemesValue">
+        <item>"0"</item>
+        <item>"1"</item>
     </string-array>
 </resources>

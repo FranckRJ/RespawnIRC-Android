@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/toolbar_showforum"
-            android:background="#eee">
+            android:background="?attr/themedDarkerBackgroundColor">
             <Button
                 android:id="@+id/firstpage_button_showforum"
                 android:layout_width="wrap_content"
@@ -77,13 +77,13 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:background="@drawable/shadow_top"
+            android:background="?attr/themedShadowTop"
             android:layout_below="@+id/header_layout_showforum"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:background="@drawable/shadow_top"
+            android:background="?attr/themedShadowTop"
             android:layout_below="@+id/toolbar_showforum"/>
 
     </RelativeLayout>

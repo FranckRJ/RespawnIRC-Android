@@ -49,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="4dp"
             android:layout_below="@+id/toolbar_sendtopic"
-            android:background="@drawable/shadow_top"/>
+            android:background="?attr/themedShadowTop"/>
 
     </RelativeLayout>
 

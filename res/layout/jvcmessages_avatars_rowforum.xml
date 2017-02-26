@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="4dp"
-            android:src="@drawable/ic_action_navigation_more"
+            android:src="?attr/themedNavigationMore"
             android:contentDescription="@string/overflow_menu_desc"/>
     </LinearLayout>
 
@@ -49,7 +49,7 @@
         android:layout_marginTop="2dp"
         android:paddingRight="6dp"
         android:paddingLeft="6dp"
-        android:textColorLink="@color/linkColor"/>
+        android:textColorLink="?attr/themedLinkColor"/>
 
     <View
         android:id="@+id/item_separator_jvcmessages_text_row"
@@ -60,7 +60,7 @@
         android:layout_marginBottom="2dp"
         android:layout_marginRight="8dp"
         android:layout_marginLeft="8dp"
-        android:background="@color/moreDarkerColorForBackground"/>
+        android:background="?attr/themedMoreDarkerBackgroundColor"/>
 
     <TextView
         android:id="@+id/item_three_jvcmessages_text_row"
@@ -69,6 +69,6 @@
         android:layout_below="@+id/item_separator_jvcmessages_text_row"
         android:paddingRight="6dp"
         android:paddingLeft="6dp"
-        android:textColorLink="@color/linkColor"/>
+        android:textColorLink="?attr/themedLinkColor"/>
 
 </RelativeLayout>

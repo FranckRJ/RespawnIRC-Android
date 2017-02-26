@@ -9,7 +9,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -20,6 +19,7 @@ import android.widget.Toast;
 
 import com.franckrj.respawnirc.jvcforumlist.SelectForumInListActivity;
 import com.franckrj.respawnirc.dialogs.RefreshFavDialogFragment;
+import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
@@ -27,7 +27,7 @@ import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 
-public abstract class AbsNavigationViewActivity extends AppCompatActivity implements RefreshFavDialogFragment.NewFavsAvailable {
+public abstract class AbsNavigationViewActivity extends ThemedActivity implements RefreshFavDialogFragment.NewFavsAvailable {
     protected DrawerLayout layoutForDrawer = null;
     protected NavigationView navigationForDrawer = null;
     protected TextView pseudoTextNavigation = null;
@@ -128,12 +128,12 @@ public abstract class AbsNavigationViewActivity extends AppCompatActivity implem
             if (pseudoOfUser.isEmpty()) {
                 contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_action_content_add_circle_outline));
             } else {
-                contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_action_navigation_expand_more));
+                contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_action_navigation_expand_more_dark));
             }
         } else {
             navigationForDrawer.getMenu().clear();
             navigationForDrawer.inflateMenu(R.menu.menu_navigation_view_already_connected);
-            contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_action_navigation_expand_less));
+            contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_action_navigation_expand_less_dark));
         }
     }
 
@@ -243,17 +243,17 @@ public abstract class AbsNavigationViewActivity extends AppCompatActivity implem
         pseudoTextNavigation = (TextView) navigationHeader.findViewById(R.id.pseudo_text_navigation_header);
         contextConnectImageNavigation = (ImageView) navigationHeader.findViewById(R.id.context_connect_image_navigation_header);
         navigationForDrawer.setItemTextColor(null);
-        navigationForDrawer.setItemIconTintList(Undeprecator.resourcesGetColorStateList(getResources(), R.color.navigation_menu_item));
+        navigationForDrawer.setItemIconTintList(Undeprecator.resourcesGetColorStateList(getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.NAVIGATION_MENU_ITEM)));
         navigationForDrawer.setNavigationItemSelectedListener(itemInNavigationClickedListener);
         navigationHeader.setOnClickListener(headerClickedListener);
         layoutForDrawer.addDrawerListener(toggleForDrawer);
-        layoutForDrawer.setDrawerShadow(R.drawable.shadow_drawer, GravityCompat.START);
+        layoutForDrawer.setDrawerShadow(ThemeManager.getDrawableRes(ThemeManager.DrawableName.SHADOW_DRAWER), GravityCompat.START);
         updateNavigationMenu();
 
         if (Build.VERSION.SDK_INT > 15) {
             Undeprecator.viewSetBackgroundDrawable(navigationHeader, Undeprecator.resourcesGetDrawable(getResources(), R.drawable.navigation_header_background));
         } else {
-            navigationHeader.setBackgroundColor(Undeprecator.resourcesGetColor(getResources(), R.color.colorPrimaryDark));
+            navigationHeader.setBackgroundColor(Undeprecator.resourcesGetColor(getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PRIMARY_DARK)));
         }
     }
 

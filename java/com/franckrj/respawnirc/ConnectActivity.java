@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -23,7 +22,7 @@ import android.widget.Toast;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
 
-public class ConnectActivity extends AppCompatActivity {
+public class ConnectActivity extends ThemedActivity {
     private WebView jvcWebView = null;
     private EditText pseudoText = null;
     private HelpConnectDialogFragment helpDialogFragment = null;

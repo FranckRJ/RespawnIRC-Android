@@ -29,6 +29,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.CustomImageGetter;
 import com.franckrj.respawnirc.utils.CustomTagHandler;
 import com.franckrj.respawnirc.utils.ImageDownloader;
@@ -247,8 +248,8 @@ public class JVCTopicAdapter extends BaseAdapter {
         Spannable spannable = new SpannableString(spanToChange);
         QuoteSpan[] quoteSpanArray = spannable.getSpans(0, spannable.length(), QuoteSpan.class);
         for (QuoteSpan quoteSpan : quoteSpanArray) {
-            Utils.replaceSpanByAnotherSpan(spannable, quoteSpan, new CustomQuoteSpan(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.colorQuoteBackground),
-                    Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.colorPrimary),
+            Utils.replaceSpanByAnotherSpan(spannable, quoteSpan, new CustomQuoteSpan(Undeprecator.resourcesGetColor(parentActivity.getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_QUOTE_BACKGROUND)),
+                    Undeprecator.resourcesGetColor(parentActivity.getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PRIMARY)),
                     parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripSize),
                     parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripGap)));
         }
@@ -326,7 +327,7 @@ public class JVCTopicAdapter extends BaseAdapter {
             viewHolder.firstLine.setText(Undeprecator.htmlFromHtml(advertiseForSurveyToShow));
             convertView.setOnClickListener(onSurveyClickListener);
             viewHolder.firstLine.setOnClickListener(onSurveyClickListener);
-            setColorBackgroundOfThisItem(convertView, R.color.altBackgroundMessageColor);
+            setColorBackgroundOfThisItem(convertView, ThemeManager.getColorRes(ThemeManager.ColorName.ALT_BACKGROUND_COLOR));
         } else {
             final int realPosition = position - (showSurvey ? 1 : 0);
             final ContentHolder currentContent = listOfContentForMessages.get(realPosition);
@@ -368,9 +369,9 @@ public class JVCTopicAdapter extends BaseAdapter {
             });
 
             if (realPosition % 2 == 0 || !alternateBackgroundColor) {
-                setColorBackgroundOfThisItem(convertView, R.color.defaultColorForBackground);
+                setColorBackgroundOfThisItem(convertView, ThemeManager.getColorRes(ThemeManager.ColorName.DEFAULT_BACKGROUND_COLOR));
             } else {
-                setColorBackgroundOfThisItem(convertView, R.color.altBackgroundMessageColor);
+                setColorBackgroundOfThisItem(convertView, ThemeManager.getColorRes(ThemeManager.ColorName.ALT_BACKGROUND_COLOR));
             }
         }
 

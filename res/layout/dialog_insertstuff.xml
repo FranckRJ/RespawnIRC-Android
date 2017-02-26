@@ -22,7 +22,7 @@
         android:layout_toStartOf="@+id/list_scrollview_insertstuff"
         android:layout_width="2dp"
         android:layout_height="match_parent"
-        android:background="@color/moreDarkerColorForBackground"/>
+        android:background="?attr/themedMoreDarkerBackgroundColor"/>
     <ScrollView
         android:id="@+id/list_scrollview_insertstuff"
         android:layout_width="60dp"
@@ -39,7 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:padding="8dp"
-                android:src="@drawable/textformat_general"
+                android:src="?attr/themedTextFormatGeneral"
                 android:scaleType="fitCenter"
                 android:contentDescription="@string/insertStuff"/>
             <ImageView

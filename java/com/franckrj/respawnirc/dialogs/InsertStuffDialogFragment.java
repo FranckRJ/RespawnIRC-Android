@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.CustomImageGetter;
 import com.franckrj.respawnirc.utils.LongClickLinkMovementMethod;
 import com.franckrj.respawnirc.utils.LongClickableSpan;
@@ -26,6 +27,7 @@ import com.franckrj.respawnirc.utils.Utils;
 public class InsertStuffDialogFragment extends DialogFragment {
     private static final int MAX_NUMBER_OF_ROW = 20;
     private static Spanned[] listOfSpanForTextView = null;
+    private static ThemeManager.ThemeName themeUsedForGenerateTextDecorationRow = null;
 
     private TextView mainTextView = null;
     private Html.ImageGetter jvcImageGetter = null;
@@ -52,7 +54,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
 
     private void selectThisRow(int rowToUse) {
         listOfCategoryButtons[oldRowNumber].setBackgroundColor(Undeprecator.resourcesGetColor(getResources(), android.R.color.transparent));
-        listOfCategoryButtons[rowToUse].setBackgroundColor(Undeprecator.resourcesGetColor(getResources(), R.color.moreDarkerColorForBackground));
+        listOfCategoryButtons[rowToUse].setBackgroundColor(Undeprecator.resourcesGetColor(getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.MORE_DARKER_BACKGROUND_COLOR)));
         initializeSpanForTextViewIfNeeded(jvcImageGetter, rowToUse);
         mainTextView.setText(replaceUrlSpans(listOfSpanForTextView[rowToUse]));
         oldRowNumber = rowToUse;
@@ -65,21 +67,33 @@ public class InsertStuffDialogFragment extends DialogFragment {
                 listOfSpanForTextView[i] = null;
             }
         }
-        if (listOfSpanForTextView[row] == null)
-        {
+        if (listOfSpanForTextView[row] == null || (row == 0 && themeUsedForGenerateTextDecorationRow != null && themeUsedForGenerateTextDecorationRow != ThemeManager.getThemeUsed())) {
             StringBuilder textForShowAllStuff = new StringBuilder();
             switch (row) {
                 case 0:
                     //textformat
-                    appendAnotherStuff("textformat_bold", textForShowAllStuff);
-                    appendAnotherStuff("textformat_italic", textForShowAllStuff);
-                    appendAnotherStuff("textformat_underline", textForShowAllStuff);
-                    appendAnotherStuff("textformat_strike", textForShowAllStuff);
-                    appendAnotherStuff("textformat_ulist", textForShowAllStuff);
-                    appendAnotherStuff("textformat_olist", textForShowAllStuff);
-                    appendAnotherStuff("textformat_quote", textForShowAllStuff);
-                    appendAnotherStuff("textformat_code", textForShowAllStuff);
-                    appendAnotherStuff("textformat_spoil", textForShowAllStuff);
+                    themeUsedForGenerateTextDecorationRow = ThemeManager.getThemeUsed();
+                    if (themeUsedForGenerateTextDecorationRow == ThemeManager.ThemeName.DARK_THEME) {
+                        appendAnotherStuff("textformat_bold_dark", textForShowAllStuff);
+                        appendAnotherStuff("textformat_italic_dark", textForShowAllStuff);
+                        appendAnotherStuff("textformat_underline_dark", textForShowAllStuff);
+                        appendAnotherStuff("textformat_strike_dark", textForShowAllStuff);
+                        appendAnotherStuff("textformat_ulist_dark", textForShowAllStuff);
+                        appendAnotherStuff("textformat_olist_dark", textForShowAllStuff);
+                        appendAnotherStuff("textformat_quote_dark", textForShowAllStuff);
+                        appendAnotherStuff("textformat_code_dark", textForShowAllStuff);
+                        appendAnotherStuff("textformat_spoil_dark", textForShowAllStuff);
+                    } else {
+                        appendAnotherStuff("textformat_bold_light", textForShowAllStuff);
+                        appendAnotherStuff("textformat_italic_light", textForShowAllStuff);
+                        appendAnotherStuff("textformat_underline_light", textForShowAllStuff);
+                        appendAnotherStuff("textformat_strike_light", textForShowAllStuff);
+                        appendAnotherStuff("textformat_ulist_light", textForShowAllStuff);
+                        appendAnotherStuff("textformat_olist_light", textForShowAllStuff);
+                        appendAnotherStuff("textformat_quote_light", textForShowAllStuff);
+                        appendAnotherStuff("textformat_code_light", textForShowAllStuff);
+                        appendAnotherStuff("textformat_spoil_light", textForShowAllStuff);
+                    }
                     break;
                 case 1:
                     //ours

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
@@ -58,15 +59,15 @@ public class JVCForumAdapter extends BaseAdapter {
     public void addItem(JVCParser.TopicInfos item) {
         String textForAuthor;
         ContentHolder thisHolder = new ContentHolder();
-        thisHolder.firstLineContent = Undeprecator.htmlFromHtml("<b><font color=\"" + Utils.resColorToString(R.color.linkColor, parentActivity) +
+        thisHolder.firstLineContent = Undeprecator.htmlFromHtml("<b><font color=\"" + Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.LINK_COLOR), parentActivity) +
                                         "\">" + item.htmlName + "</font> (" + item.messages + ")</b>");
         switch (item.authorType) {
             case "modo":
-                textForAuthor = "<small><font color=\"" + Utils.resColorToString(R.color.colorPseudoModo, parentActivity) + "\">" + item.author + "</font></small>";
+                textForAuthor = "<small><font color=\"" + Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PSEUDO_MODO), parentActivity) + "\">" + item.author + "</font></small>";
                 break;
             case "admin":
             case "staff":
-                textForAuthor = "<small><font color=\"" + Utils.resColorToString(R.color.colorPseudoAdmin, parentActivity) + "\">" + item.author + "</font></small>";
+                textForAuthor = "<small><font color=\"" + Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PSEUDO_ADMIN), parentActivity) + "\">" + item.author + "</font></small>";
                 break;
             default:
                 textForAuthor = "<small>" + item.author + "</small>";
@@ -143,9 +144,9 @@ public class JVCForumAdapter extends BaseAdapter {
         }
 
         if (position % 2 == 0 && alternateBackgroundColor) {
-            convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.altBackgroundMessageColor));
+            convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.ALT_BACKGROUND_COLOR)));
         } else {
-            convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), R.color.defaultColorForBackground));
+            convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.DEFAULT_BACKGROUND_COLOR)));
         }
 
         return convertView;

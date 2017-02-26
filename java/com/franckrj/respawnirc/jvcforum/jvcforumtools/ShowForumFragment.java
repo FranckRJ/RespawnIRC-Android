@@ -1,7 +1,5 @@
 package com.franckrj.respawnirc.jvcforum.jvcforumtools;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -24,7 +22,6 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
 
     private static final String SAVE_ALL_TOPICS_SHOWED = "saveAllCurrentTopicsShowed";
 
-    private SharedPreferences sharedPref = null;
     private SwipeRefreshLayout swipeRefresh = null;
     private NewTopicWantRead listenerForNewTopicWantRead = null;
     private JVCForumGetter getterForForum = null;
@@ -174,8 +171,6 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-
         getterForForum = new JVCForumGetter();
         adapterForForum = new JVCForumAdapter(getActivity());
         reloadSettings();
@@ -198,7 +193,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
             getterForForum.setListenerForNewNumberOfMP((JVCForumGetter.NewNumberOfMPSetted) getActivity());
         }
 
-        swipeRefresh.setColorSchemeResources(R.color.colorAccent);
+        swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
         jvcTopicList.setAdapter(adapterForForum);
 
         if (savedInstanceState != null) {

@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +17,7 @@ import android.widget.Toast;
 
 import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.ThemedActivity;
 import com.franckrj.respawnirc.dialogs.ChoosePageNumberDialogFragment;
 import com.franckrj.respawnirc.dialogs.LinkContextMenuDialogFragment;
 import com.franckrj.respawnirc.dialogs.MessageContextMenuDialogFragment;
@@ -35,10 +35,11 @@ import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
 import com.franckrj.respawnirc.utils.AddOrRemoveThingToFavs;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
+import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
 
-public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCTopicGetter.NewForumAndTopicNameAvailable,
+public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCTopicGetter.NewForumAndTopicNameAvailable,
                                                                     PopupMenu.OnMenuItemClickListener, JVCTopicModeForumGetter.NewNumbersOfPagesListener,
                                                                     ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCTopicAdapter.URLClicked,
                                                                     AbsJVCTopicGetter.NewReasonForTopicLock, InsertStuffDialogFragment.StuffInserted,
@@ -79,7 +80,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
                 messageSendButton.setEnabled(true);
 
                 if (newMessageToEdit.isEmpty()) {
-                    messageSendButton.setImageResource(R.drawable.ic_action_content_send);
+                    messageSendButton.setImageResource(ThemeManager.getDrawableRes(ThemeManager.DrawableName.CONTENT_SEND));
                     Toast.makeText(ShowTopicActivity.this, R.string.errorCantGetEditInfos, Toast.LENGTH_SHORT).show();
                 } else {
                     messageSendEdit.setText(newMessageToEdit);
@@ -94,7 +95,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         public void lastMessageIsSended(String withThisError) {
             if (reasonOfLock == null) {
                 messageSendButton.setEnabled(true);
-                messageSendButton.setImageResource(R.drawable.ic_action_content_send);
+                messageSendButton.setImageResource(ThemeManager.getDrawableRes(ThemeManager.DrawableName.CONTENT_SEND));
 
                 if (withThisError != null) {
                     Toast.makeText(ShowTopicActivity.this, withThisError, Toast.LENGTH_LONG).show();
@@ -230,7 +231,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showtopic);
 
-        Drawable arrowDrawable = Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_action_navigation_arrow_drop_down);
+        Drawable arrowDrawable = Undeprecator.resourcesGetDrawable(getResources(), ThemeManager.getDrawableRes(ThemeManager.DrawableName.ARROW_DROP_DOWN));
         arrowDrawable.setBounds(0, 0, arrowDrawable.getIntrinsicWidth() / 2, arrowDrawable.getIntrinsicHeight() / 2);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_showtopic);
@@ -298,7 +299,7 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
             senderForMessages.loadFromBundle(savedInstanceState);
 
             if (senderForMessages.getIsInEdit()) {
-                messageSendButton.setImageResource(R.drawable.ic_action_content_edit);
+                messageSendButton.setImageResource(ThemeManager.getDrawableRes(ThemeManager.DrawableName.CONTENT_EDIT));
             }
 
             pageNavigation.updateNavigationButtons();
@@ -457,14 +458,14 @@ public class ShowTopicActivity extends AppCompatActivity implements AbsShowTopic
                     if (senderForMessages.getIsInEdit()) {
                         senderForMessages.cancelEdit();
                         messageSendButton.setEnabled(true);
-                        messageSendButton.setImageResource(R.drawable.ic_action_content_send);
+                        messageSendButton.setImageResource(ThemeManager.getDrawableRes(ThemeManager.DrawableName.CONTENT_SEND));
                         messageSendEdit.setText("");
                     } else {
                         boolean infoForEditAreGetted = false;
                         if (messageSendButton.isEnabled() && getCurrentFragment().getLatestAjaxInfos().list != null) {
                             String idOfMessage = Long.toString(getCurrentFragment().getCurrentItemSelected().id);
                             messageSendButton.setEnabled(false);
-                            messageSendButton.setImageResource(R.drawable.ic_action_content_edit);
+                            messageSendButton.setImageResource(ThemeManager.getDrawableRes(ThemeManager.DrawableName.CONTENT_EDIT));
                             infoForEditAreGetted = senderForMessages.getInfosForEditMessage(idOfMessage, getCurrentFragment().getLatestAjaxInfos().list, cookieListInAString);
                         }
 

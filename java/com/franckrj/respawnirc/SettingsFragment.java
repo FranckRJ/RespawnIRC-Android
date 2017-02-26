@@ -10,6 +10,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 
 import com.franckrj.respawnirc.utils.PrefsManager;
+import com.franckrj.respawnirc.utils.ThemeManager;
 
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     @Override
@@ -55,6 +56,9 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                 }
                 editTextPref.setText(String.valueOf(prefValue));
             }
+        } else if (key.equals(getString(R.string.settingsThemeUsed))) {
+            ThemeManager.updateThemeUsed();
+            getActivity().recreate();
         }
 
         updatePrefSummary(pref);

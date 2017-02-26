@@ -1,14 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme.Real" parent="AppTheme.Base"/>
-    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowBackground">@color/darkerColorForBackground</item>
+    <style name="AppTheme.Light.Real" parent="AppTheme.Light.Base"/>
+    <style name="AppTheme.Light.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="themedShadowBottom">@drawable/shadow_bottom_light</item>
+        <item name="themedShadowTop">@drawable/shadow_top_light</item>
+        <item name="colorPrimary">@color/colorPrimaryThemeLight</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerThemeLight</item>
+        <item name="colorAccent">@color/colorAccentThemeLight</item>
+        <item name="android:windowBackground">@color/darkerBackgroundColorThemeLight</item>
+        <item name="themedOverlayPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="themedDefaultBackgroundColor">@color/defaultBackgroundColorThemeLight</item>
+        <item name="themedDarkerBackgroundColor">@color/darkerBackgroundColorThemeLight</item>
+        <item name="themedMoreDarkerBackgroundColor">@color/moreDarkerBackgroundColorThemeLight</item>
+        <item name="themedLinkColor">@color/linkColorThemeLight</item>
+        <item name="themedNavigationMore">@drawable/ic_action_navigation_more_light</item>
+        <item name="themedForumIcon">@drawable/ic_action_communication_forum_light</item>
+        <item name="themedContentAdd">@drawable/ic_action_content_add_light</item>
+        <item name="themedTextFormatGeneral">@drawable/textformat_general_light</item>
+        <item name="themedContentSendIcon">@drawable/ic_action_content_send_light</item>
+    </style>
+    <style name="AppTheme.Dark.Real" parent="AppTheme.Dark.Base"/>
+    <style name="AppTheme.Dark.Base" parent="Theme.AppCompat.NoActionBar">
+        <item name="themedShadowBottom">@drawable/shadow_bottom_dark</item>
+        <item name="themedShadowTop">@drawable/shadow_top_dark</item>
+        <item name="colorPrimary">@color/colorPrimaryThemeDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerThemeDark</item>
+        <item name="colorAccent">@color/colorAccentThemeDark</item>
+        <item name="android:windowBackground">@color/darkerBackgroundColorThemeDark</item>
+        <item name="themedOverlayPopupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
+        <item name="themedDefaultBackgroundColor">@color/defaultBackgroundColorThemeDark</item>
+        <item name="themedDarkerBackgroundColor">@color/darkerBackgroundColorThemeDark</item>
+        <item name="themedMoreDarkerBackgroundColor">@color/moreDarkerBackgroundColorThemeDark</item>
+        <item name="themedLinkColor">@color/linkColorThemeDark</item>
+        <item name="themedNavigationMore">@drawable/ic_action_navigation_more_dark</item>
+        <item name="themedForumIcon">@drawable/ic_action_communication_forum_dark</item>
+        <item name="themedContentAdd">@drawable/ic_action_content_add_dark</item>
+        <item name="themedTextFormatGeneral">@drawable/textformat_general_dark</item>
+        <item name="themedContentSendIcon">@drawable/ic_action_content_send_dark</item>
     </style>
     <style name="SelectableItemTheme">
-        <item name="colorControlHighlight">@color/colorAccent</item>
+        <item name="colorControlHighlight">?attr/colorAccent</item>
     </style>
     <style name="SelectableItemBackground">
         <item name="android:theme">@style/SelectableItemTheme</item>

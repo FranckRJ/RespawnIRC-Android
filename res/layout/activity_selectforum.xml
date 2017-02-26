@@ -36,7 +36,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:background="@drawable/shadow_top"
+            android:background="?attr/themedShadowTop"
             android:layout_below="@+id/toolbar_selectforum"/>
 
     </RelativeLayout>

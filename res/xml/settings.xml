@@ -3,6 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
         android:title="@string/settingsGeneralTitle">
+        <com.franckrj.respawnirc.utils.ListPreferenceCompat
+            android:key="@string/settingsThemeUsed"
+            android:title="@string/theme"
+            android:summary="%s"
+            android:entries="@array/choicesForThemesReadable"
+            android:entryValues="@array/choicesForThemesValue"/>
         <EditTextPreference
             android:key="@string/settingsMaxNumberOfOverlyQuote"
             android:title="@string/maxNumberOfOverlyQuoteTitle"
