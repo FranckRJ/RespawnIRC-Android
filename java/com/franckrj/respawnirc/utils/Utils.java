@@ -19,6 +19,10 @@ public class Utils {
         return String.format("#%06X", 0xFFFFFF & Undeprecator.resourcesGetColor(baseActivity.getResources(), resID));
     }
 
+    public static String resColorToStringWithAlpha(int resID, Activity baseActivity) {
+        return String.format("#%08X", Undeprecator.resourcesGetColor(baseActivity.getResources(), resID));
+    }
+
     public static boolean stringsAreEquals(String str1, String str2) {
         return (str1 == null ? str2 == null : str1.equals(str2));
     }

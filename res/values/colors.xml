@@ -9,6 +9,8 @@
     <color name="altBackgroundColorThemeLight">#EEF5FC</color>
     <color name="linkColorThemeLight">#006BD7</color>
     <color name="colorPseudoUserThemeLight">#3399ff</color>
+    <color name="colorPseudoOtherModeForumThemeLight">#80000000</color>
+    <color name="colorPseudoOtherModeIRCThemeLight">#000025</color>
     <color name="colorPseudoModoThemeLight">#3A9D23</color>
     <color name="colorPseudoAdminThemeLight">#DB0F0F</color>
     <color name="colorSelectedIconItemThemeLight">#606060</color>
@@ -24,6 +26,8 @@
     <color name="altBackgroundColorThemeDark">#4A4A4A</color>
     <color name="linkColorThemeDark">#3399ff</color>
     <color name="colorPseudoUserThemeDark">#66b3ff</color>
+    <color name="colorPseudoOtherModeForumThemeDark">#00FFFFFF</color>
+    <color name="colorPseudoOtherModeIRCThemeDark">#EEEEFF</color>
     <color name="colorPseudoModoThemeDark">#4cd12e</color>
     <color name="colorPseudoAdminThemeDark">#f24040</color>
     <color name="colorSelectedIconItemThemeDark">#bbbbbb</color>

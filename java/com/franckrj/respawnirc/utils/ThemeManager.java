@@ -31,6 +31,10 @@ public class ThemeManager {
         return themeUsed;
     }
 
+    public static boolean getThemeUsedIsDark() {
+        return themeUsed == ThemeName.DARK_THEME;
+    }
+
     @ColorRes
     public static int getColorRes(ColorName thisColor) {
         if (themeUsed == ThemeName.DARK_THEME) {
@@ -55,6 +59,10 @@ public class ThemeManager {
                     return R.color.colorQuoteBackgroundThemeDark;
                 case COLOR_PSEUDO_USER:
                     return R.color.colorPseudoUserThemeDark;
+                case COLOR_PSEUDO_OTHER_MODE_FORUM:
+                    return R.color.colorPseudoOtherModeForumThemeDark;
+                case COLOR_PSEUDO_OTHER_MODE_IRC:
+                    return R.color.colorPseudoOtherModeIRCThemeDark;
                 case COLOR_PSEUDO_MODO:
                     return R.color.colorPseudoModoThemeDark;
                 case COLOR_PSEUDO_ADMIN:
@@ -86,6 +94,10 @@ public class ThemeManager {
                     return R.color.colorQuoteBackgroundThemeLight;
                 case COLOR_PSEUDO_USER:
                     return R.color.colorPseudoUserThemeLight;
+                case COLOR_PSEUDO_OTHER_MODE_FORUM:
+                    return R.color.colorPseudoOtherModeForumThemeLight;
+                case COLOR_PSEUDO_OTHER_MODE_IRC:
+                    return R.color.colorPseudoOtherModeIRCThemeLight;
                 case COLOR_PSEUDO_MODO:
                     return R.color.colorPseudoModoThemeLight;
                 case COLOR_PSEUDO_ADMIN:
@@ -141,7 +153,7 @@ public class ThemeManager {
         COLOR_PRIMARY, COLOR_PRIMARY_DARK, COLOR_ACCENT,
         DEFAULT_BACKGROUND_COLOR, DARKER_BACKGROUND_COLOR, MORE_DARKER_BACKGROUND_COLOR, ALT_BACKGROUND_COLOR,
         LINK_COLOR, COLOR_QUOTE_BACKGROUND,
-        COLOR_PSEUDO_USER, COLOR_PSEUDO_MODO, COLOR_PSEUDO_ADMIN,
+        COLOR_PSEUDO_USER, COLOR_PSEUDO_OTHER_MODE_FORUM, COLOR_PSEUDO_OTHER_MODE_IRC, COLOR_PSEUDO_MODO, COLOR_PSEUDO_ADMIN,
         NAVIGATION_MENU_ITEM
     }
 

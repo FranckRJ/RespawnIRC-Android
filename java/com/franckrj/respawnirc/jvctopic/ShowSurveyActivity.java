@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.ThemedActivity;
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
@@ -32,24 +33,33 @@ public class ShowSurveyActivity extends ThemedActivity {
     private String addStyleToPercentage(String percentageToStyle) {
         final int spaceToTake = ("100").length();
         String numberOfPercentage = percentageToStyle.substring(0, percentageToStyle.indexOf(" "));
-        String redValueOfPercentage;
+        String colorValueOfPercentage;
 
         try {
             int colorValueInNumber = (int)(Integer.parseInt(numberOfPercentage) * 2.5); //la couleur de l'int sera entre rouge 0 et rouge 250.
-            redValueOfPercentage = Integer.toHexString(colorValueInNumber);
 
-            while (redValueOfPercentage.length() < 2) {
-                redValueOfPercentage = "0" + redValueOfPercentage;
+            if (ThemeManager.getThemeUsedIsDark()) {
+                colorValueInNumber = 250 - colorValueInNumber; //inversion pour les thèmes sombres
+            }
+
+            colorValueOfPercentage = Integer.toHexString(colorValueInNumber);
+
+            while (colorValueOfPercentage.length() < 2) {
+                colorValueOfPercentage = "0" + colorValueOfPercentage;
             }
         } catch (Exception e) {
-            redValueOfPercentage = "00";
+            colorValueOfPercentage = "00";
         }
 
         while (numberOfPercentage.length() < spaceToTake) {
             numberOfPercentage = " " + numberOfPercentage; //alt+255 pour l'espace
         }
 
-        return "<font face=\"monospace\" color=\"#" + redValueOfPercentage + "0000\">" + numberOfPercentage + "</font>%";
+        if (ThemeManager.getThemeUsedIsDark()) {
+            return "<font face=\"monospace\" color=\"#FF" + colorValueOfPercentage + colorValueOfPercentage +"\">" + numberOfPercentage + "</font>%";
+        } else {
+            return "<font face=\"monospace\" color=\"#" + colorValueOfPercentage + "0000\">" + numberOfPercentage + "</font>%";
+        }
     }
 
     private void stopAllCurrentTasks() {

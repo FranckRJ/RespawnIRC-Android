@@ -27,7 +27,7 @@ import com.franckrj.respawnirc.utils.Utils;
 public class InsertStuffDialogFragment extends DialogFragment {
     private static final int MAX_NUMBER_OF_ROW = 20;
     private static Spanned[] listOfSpanForTextView = null;
-    private static ThemeManager.ThemeName themeUsedForGenerateTextDecorationRow = null;
+    private static boolean textDecorationRowGeneratedForDarkTheme = false;
 
     private TextView mainTextView = null;
     private Html.ImageGetter jvcImageGetter = null;
@@ -67,13 +67,13 @@ public class InsertStuffDialogFragment extends DialogFragment {
                 listOfSpanForTextView[i] = null;
             }
         }
-        if (listOfSpanForTextView[row] == null || (row == 0 && themeUsedForGenerateTextDecorationRow != null && themeUsedForGenerateTextDecorationRow != ThemeManager.getThemeUsed())) {
+        if (listOfSpanForTextView[row] == null || (row == 0 && textDecorationRowGeneratedForDarkTheme != ThemeManager.getThemeUsedIsDark())) {
             StringBuilder textForShowAllStuff = new StringBuilder();
             switch (row) {
                 case 0:
                     //textformat
-                    themeUsedForGenerateTextDecorationRow = ThemeManager.getThemeUsed();
-                    if (themeUsedForGenerateTextDecorationRow == ThemeManager.ThemeName.DARK_THEME) {
+                    textDecorationRowGeneratedForDarkTheme = ThemeManager.getThemeUsedIsDark();
+                    if (textDecorationRowGeneratedForDarkTheme) {
                         appendAnotherStuff("textformat_bold_dark", textForShowAllStuff);
                         appendAnotherStuff("textformat_italic_dark", textForShowAllStuff);
                         appendAnotherStuff("textformat_underline_dark", textForShowAllStuff);
