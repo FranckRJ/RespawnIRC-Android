@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.franckrj.respawnirc.dialogs.ChoosePageNumberDialogFragment;
 import com.franckrj.respawnirc.dialogs.LinkContextMenuDialogFragment;
 import com.franckrj.respawnirc.dialogs.MessageContextMenuDialogFragment;
 import com.franckrj.respawnirc.dialogs.InsertStuffDialogFragment;
+import com.franckrj.respawnirc.dialogs.SelectTextDialogFragment;
 import com.franckrj.respawnirc.dialogs.ShowImageDialogFragment;
 import com.franckrj.respawnirc.jvctopic.jvctopicgetters.AbsJVCTopicGetter;
 import com.franckrj.respawnirc.jvctopic.jvctopicgetters.JVCTopicModeForumGetter;
@@ -181,6 +183,19 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
 
                 messageSendEdit.setText(currentMessage);
                 messageSendEdit.setSelection(currentMessage.length());
+            }
+        }
+    };
+
+    private final View.OnClickListener lockReasonCLickedListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (reasonOfLock != null) {
+                Bundle argForFrag = new Bundle();
+                SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
+                argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.topicLockedForReason, reasonOfLock));
+                selectTextDialogFragment.setArguments(argForFrag);
+                selectTextDialogFragment.show(getFragmentManager(), "SelectTextDialogFragment");
             }
         }
     };
@@ -603,14 +618,22 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
                 selectStickerButton.setVisibility(View.VISIBLE);
                 messageSendButton.setVisibility(View.VISIBLE);
                 messageSendButton.setEnabled(true);
-                messageSendEdit.setEnabled(true);
+                messageSendEdit.setFocusable(true);
+                messageSendEdit.setFocusableInTouchMode(true);
+                messageSendEdit.setAlpha(1f);
+                messageSendEdit.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 messageSendEdit.setText("");
+                messageSendEdit.setOnClickListener(null);
             } else {
                 selectStickerButton.setVisibility(View.GONE);
                 messageSendButton.setVisibility(View.GONE);
                 messageSendButton.setEnabled(false);
-                messageSendEdit.setEnabled(false);
+                messageSendEdit.setFocusable(false);
+                messageSendEdit.setFocusableInTouchMode(false);
+                messageSendEdit.setAlpha(0.33f);
+                messageSendEdit.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 messageSendEdit.setText(getString(R.string.topicLockedForReason, Utils.truncateString(reasonOfLock, 80, getString(R.string.waitingText))));
+                messageSendEdit.setOnClickListener(lockReasonCLickedListener);
             }
         }
     }

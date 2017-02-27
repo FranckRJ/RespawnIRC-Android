@@ -701,8 +701,8 @@ public final class JVCParser {
                 ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "", "", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
                 ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p>", "</p>", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
             } else {
-                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "<font color=\"#000000\">", "</font>", new RemoveFirstsAndLastsP(), null);
-                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p><font color=\"#000000\">", "</font></p>",  new RemoveFirstsAndLastsP(), null);
+                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "<font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "FFFFFF" : "000000") + "\">", "</font>", new RemoveFirstsAndLastsP(), null);
+                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "FFFFFF" : "000000") + "\">", "</font></p>",  new RemoveFirstsAndLastsP(), null);
             }
         }
 

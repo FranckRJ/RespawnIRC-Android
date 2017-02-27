@@ -37,7 +37,7 @@ public class ThemeManager {
 
     @ColorRes
     public static int getColorRes(ColorName thisColor) {
-        if (themeUsed == ThemeName.DARK_THEME) {
+        if (getThemeUsedIsDark()) {
             switch (thisColor) {
                 case COLOR_PRIMARY:
                     return R.color.colorPrimaryThemeDark;
@@ -112,7 +112,7 @@ public class ThemeManager {
 
     @DrawableRes
     public static int getDrawableRes(DrawableName thisDrawable) {
-        if (themeUsed == ThemeName.DARK_THEME) {
+        if (getThemeUsedIsDark()) {
             switch (thisDrawable) {
                 case SHADOW_DRAWER:
                     return R.drawable.shadow_drawer_dark;
@@ -126,6 +126,8 @@ public class ThemeManager {
                     return R.drawable.ic_action_content_send_dark;
                 case CONTENT_EDIT:
                     return R.drawable.ic_action_content_edit_dark;
+                case TOPIC_LOCK_ICON:
+                    return R.drawable.icon_topic_lock_dark;
                 default:
                     return R.drawable.ic_action_navigation_arrow_drop_down_dark;
             }
@@ -143,6 +145,8 @@ public class ThemeManager {
                     return R.drawable.ic_action_content_send_light;
                 case CONTENT_EDIT:
                     return R.drawable.ic_action_content_edit_light;
+                case TOPIC_LOCK_ICON:
+                    return R.drawable.icon_topic_lock_light;
                 default:
                     return R.drawable.ic_action_navigation_arrow_drop_down_light;
             }
@@ -161,7 +165,8 @@ public class ThemeManager {
         SHADOW_DRAWER,
         EXPAND_MORE, EXPAND_LESS,
         ARROW_DROP_DOWN,
-        CONTENT_SEND, CONTENT_EDIT
+        CONTENT_SEND, CONTENT_EDIT,
+        TOPIC_LOCK_ICON
     }
 
     public enum ThemeName {

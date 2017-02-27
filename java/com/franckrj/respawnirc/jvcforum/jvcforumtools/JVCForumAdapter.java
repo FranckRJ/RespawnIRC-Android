@@ -38,7 +38,7 @@ public class JVCForumAdapter extends BaseAdapter {
         iconMarqueOn = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_marque_on);
         iconMarqueOff = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_marque_off);
         iconDossier2 = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_dossier2);
-        iconLock = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_lock);
+        iconLock = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), ThemeManager.getDrawableRes(ThemeManager.DrawableName.TOPIC_LOCK_ICON));
         iconResolu = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_resolu);
         iconDossier1 = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_dossier1);
     }
