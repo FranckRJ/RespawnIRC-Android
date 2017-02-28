@@ -64,9 +64,9 @@ public class PrefsManager {
         addLongPref(LongPref.Names.OLD_LAST_ID_OF_MESSAGE, "pref.oldLastIdOfMessage", 0);
 
         addBoolPref(BoolPref.Names.TRANSFORM_STICKER_TO_SMILEY, currentContext.getString(R.string.settingsTransformStickerToSmiley), false);
-        addBoolPref(BoolPref.Names.SHOW_OVERVIEW_ON_IMAGE_CLICK, currentContext.getString(R.string.settingsShowOverviewOnImageClick), false);
+        addBoolPref(BoolPref.Names.SHOW_OVERVIEW_ON_IMAGE_CLICK, currentContext.getString(R.string.settingsShowOverviewOnImageClick), true);
         addBoolPref(BoolPref.Names.USE_DIRECT_NOELSHACK_LINK, currentContext.getString(R.string.settingsUseDirectNoelshackLink), false);
-        addBoolPref(BoolPref.Names.SHORTEN_LONG_LINK, currentContext.getString(R.string.settingsShortenLongLink), false);
+        addBoolPref(BoolPref.Names.SHORTEN_LONG_LINK, currentContext.getString(R.string.settingsShortenLongLink), true);
         addBoolPref(BoolPref.Names.USE_INTERNAL_NAVIGATOR, currentContext.getString(R.string.settingsUseInternalNavigator), false);
         addBoolPref(BoolPref.Names.SHOW_SIGNATURE_MODE_FORUM, currentContext.getString(R.string.settingsShowSignatureModeForum), false);
         addBoolPref(BoolPref.Names.SHOW_SIGNATURE_MODE_IRC, currentContext.getString(R.string.settingsShowSignatureModeIRC), false);

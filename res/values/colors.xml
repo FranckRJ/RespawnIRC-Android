@@ -34,4 +34,12 @@
     <color name="defaultBackgroundColorThemeDark">#424242</color>
     <color name="darkerBackgroundColorThemeDark">#303030</color>
     <color name="moreDarkerBackgroundColorThemeDark">#151515</color>
+    <!-- Black Theme -->
+    <color name="colorPrimaryThemeBlack">#151515</color>
+    <color name="colorPrimaryDarkerThemeBlack">#000000</color>
+    <color name="colorQuoteBackgroundThemeBlack">#20FFFFFF</color>
+    <color name="altBackgroundColorThemeBlack">#000000</color>
+    <color name="defaultBackgroundColorThemeBlack">#000000</color>
+    <color name="darkerBackgroundColorThemeBlack">#000000</color>
+    <color name="moreDarkerBackgroundColorThemeBlack">#424242</color>
 </resources>

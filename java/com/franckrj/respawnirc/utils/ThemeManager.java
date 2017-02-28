@@ -12,18 +12,30 @@ public class ThemeManager {
     public static void updateThemeUsed() {
         String themeStringID = PrefsManager.getString(PrefsManager.StringPref.Names.THEME_USED);
 
-        if (themeStringID.equals("1")) {
-            themeUsed = ThemeName.DARK_THEME;
-        } else {
-            themeUsed = ThemeName.LIGHT_THEME;
+        switch (themeStringID) {
+            case "1":
+                themeUsed = ThemeName.DARK_THEME;
+                break;
+            case "2":
+                themeUsed = ThemeName.BLACK_THEME;
+                break;
+            default:
+                themeUsed = ThemeName.LIGHT_THEME;
+                break;
         }
     }
 
     public static void changeActivityTheme(Activity thisActivity) {
-        if (themeUsed == ThemeName.DARK_THEME) {
-            thisActivity.setTheme(R.style.AppTheme_Dark_Real);
-        } else {
-            thisActivity.setTheme(R.style.AppTheme_Light_Real);
+        switch (themeUsed) {
+            case DARK_THEME:
+                thisActivity.setTheme(R.style.AppTheme_Dark_Real);
+                break;
+            case BLACK_THEME:
+                thisActivity.setTheme(R.style.AppTheme_Black_Real);
+                break;
+            default:
+                thisActivity.setTheme(R.style.AppTheme_Light_Real);
+                break;
         }
     }
 
@@ -32,7 +44,7 @@ public class ThemeManager {
     }
 
     public static boolean getThemeUsedIsDark() {
-        return themeUsed == ThemeName.DARK_THEME;
+        return themeUsed == ThemeName.DARK_THEME || themeUsed == ThemeName.BLACK_THEME;
     }
 
     @ColorRes
@@ -46,17 +58,37 @@ public class ThemeManager {
                 case COLOR_ACCENT:
                     return R.color.colorAccentThemeDark;
                 case DEFAULT_BACKGROUND_COLOR:
-                    return R.color.defaultBackgroundColorThemeDark;
+                    if (themeUsed == ThemeName.BLACK_THEME) {
+                        return R.color.defaultBackgroundColorThemeBlack;
+                    } else {
+                        return R.color.defaultBackgroundColorThemeDark;
+                    }
                 case DARKER_BACKGROUND_COLOR:
-                    return R.color.darkerBackgroundColorThemeDark;
+                    if (themeUsed == ThemeName.BLACK_THEME) {
+                        return R.color.darkerBackgroundColorThemeBlack;
+                    } else {
+                        return R.color.darkerBackgroundColorThemeDark;
+                    }
                 case MORE_DARKER_BACKGROUND_COLOR:
-                    return R.color.moreDarkerBackgroundColorThemeDark;
+                    if (themeUsed == ThemeName.BLACK_THEME) {
+                        return R.color.moreDarkerBackgroundColorThemeBlack;
+                    } else {
+                        return R.color.moreDarkerBackgroundColorThemeDark;
+                    }
                 case ALT_BACKGROUND_COLOR:
-                    return R.color.altBackgroundColorThemeDark;
+                    if (themeUsed == ThemeName.BLACK_THEME) {
+                        return R.color.altBackgroundColorThemeBlack;
+                    } else {
+                        return R.color.altBackgroundColorThemeDark;
+                    }
                 case LINK_COLOR:
                     return R.color.linkColorThemeDark;
                 case COLOR_QUOTE_BACKGROUND:
-                    return R.color.colorQuoteBackgroundThemeDark;
+                    if (themeUsed == ThemeName.BLACK_THEME) {
+                        return R.color.colorQuoteBackgroundThemeBlack;
+                    } else {
+                        return R.color.colorQuoteBackgroundThemeDark;
+                    }
                 case COLOR_PSEUDO_USER:
                     return R.color.colorPseudoUserThemeDark;
                 case COLOR_PSEUDO_OTHER_MODE_FORUM:
@@ -170,6 +202,6 @@ public class ThemeManager {
     }
 
     public enum ThemeName {
-        LIGHT_THEME, DARK_THEME
+        LIGHT_THEME, DARK_THEME, BLACK_THEME
     }
 }

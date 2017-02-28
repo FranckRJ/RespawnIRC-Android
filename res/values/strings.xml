@@ -131,6 +131,8 @@
     <string name="showUglyImagesMessage">Afficher les images nuisibles</string>
     <string name="light">Clair</string>
     <string name="dark">Sombre</string>
+    <string name="theme">Theme</string>
+    <string name="black">Noir</string>
 
     <string name="settingsMaxNumberOfMessages" translatable="false">settings.maxNumberOfMessages</string>
     <string name="settingsInitialNumberOfMessages" translatable="false">settings.initialNumberOfMessages</string>
@@ -152,7 +154,6 @@
     <string name="settingsEnableCardDesignModeForum" translatable="false">settings.enableCardDesignModeForum</string>
     <string name="settingsHideUglyImages" translatable="false">settings.hideUglyImages</string>
     <string name="settingsThemeUsed" translatable="false">settings.themeUsed</string>
-    <string name="theme">Theme</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
@@ -178,9 +179,11 @@
     <string-array name="choicesForThemesReadable">
         <item>@string/light</item>
         <item>@string/dark</item>
+        <item>@string/black</item>
     </string-array>
     <string-array name="choicesForThemesValue">
         <item>"0"</item>
         <item>"1"</item>
+        <item>"2"</item>
     </string-array>
 </resources>
