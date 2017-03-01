@@ -27,6 +27,8 @@ public class PageNavigationUtil {
     private ScreenSlidePagerAdapter adapterForPagerView = null;
     private boolean showNavigationButtons = true;
     private Activity parentActivity = null;
+    private boolean loadNeedToBeDoneOnPageCreate = false;
+    private boolean goToBottomOnNextLoad = false;
     private int lastPage = 0;
 
     private final Button.OnClickListener changePageWithNavigationButtonListener = new View.OnClickListener() {
@@ -146,6 +148,7 @@ public class PageNavigationUtil {
     }
 
     public void updateAdapterForPagerView() {
+        loadNeedToBeDoneOnPageCreate = true;
         adapterForPagerView = new ScreenSlidePagerAdapter(parentActivity.getFragmentManager());
         pagerView.setAdapter(adapterForPagerView);
     }
@@ -161,7 +164,11 @@ public class PageNavigationUtil {
         if (!currentLink.isEmpty() && parentActivity instanceof PageNavigationFunctions) {
             AbsShowSomethingFragment currentFragment = adapterForPagerView.getFragment(position);
             if (currentFragment != null) {
+                currentFragment.setGoToBottomAtPageLoading(goToBottomOnNextLoad);
                 currentFragment.setPageLink(((PageNavigationFunctions) parentActivity).setShowedPageNumberForThisLink(currentLink, position + 1));
+                goToBottomOnNextLoad = false;
+            } else {
+                loadNeedToBeDoneOnPageCreate = true;
             }
         }
     }
@@ -213,6 +220,10 @@ public class PageNavigationUtil {
         currentLink = newLink;
     }
 
+    public void setGoToBottomOnNextLoad(boolean newVal) {
+        goToBottomOnNextLoad = newVal;
+    }
+
     public void setDrawableForCurrentPageButton(Drawable thisDrawable) {
         currentPageButton.setCompoundDrawables(null, null, thisDrawable, null);
         currentPageButton.setCompoundDrawablePadding(parentActivity.getResources().getDimensionPixelSize(R.dimen.sizeBetweenTextAndArrow));
@@ -253,8 +264,12 @@ public class PageNavigationUtil {
         @Override
         public Fragment getItem(int position) {
             if (parentActivity instanceof PageNavigationFunctions) {
-                if (position == pagerView.getCurrentItem() && !currentLink.isEmpty()) {
-                    return ((PageNavigationFunctions) parentActivity).createNewFragmentForRead(((PageNavigationFunctions) parentActivity).setShowedPageNumberForThisLink(currentLink, position + 1));
+                if (loadNeedToBeDoneOnPageCreate && position == pagerView.getCurrentItem() && !currentLink.isEmpty()) {
+                    AbsShowSomethingFragment tmpFragment = ((PageNavigationFunctions) parentActivity).createNewFragmentForRead(((PageNavigationFunctions) parentActivity).setShowedPageNumberForThisLink(currentLink, position + 1));
+                    tmpFragment.setGoToBottomAtPageLoading(goToBottomOnNextLoad);
+                    goToBottomOnNextLoad = false;
+                    loadNeedToBeDoneOnPageCreate = false;
+                    return tmpFragment;
                 } else {
                     return ((PageNavigationFunctions) parentActivity).createNewFragmentForRead(null);
                 }

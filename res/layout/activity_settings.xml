@@ -11,18 +11,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <FrameLayout
+            android:id="@+id/content_frame_settings"
+            android:layout_below="@+id/toolbar_settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
         <include
             android:id="@+id/toolbar_settings"
             layout="@layout/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"/>
-
-        <FrameLayout
-            android:id="@+id/content_frame_settings"
-            android:layout_below="@+id/toolbar_settings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
 
         <View
             android:layout_width="match_parent"

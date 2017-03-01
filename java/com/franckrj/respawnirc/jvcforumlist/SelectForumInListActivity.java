@@ -81,11 +81,12 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         }
     }
 
-    private void readNewTopicOrForum(String linkToTopicOrForum) {
+    private void readNewTopicOrForum(String linkToTopicOrForum, boolean goToLastPage) {
         if (linkToTopicOrForum != null) {
             Intent newShowForumIntent = new Intent(this, ShowForumActivity.class);
             newShowForumIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             newShowForumIntent.putExtra(ShowForumActivity.EXTRA_NEW_LINK, linkToTopicOrForum);
+            newShowForumIntent.putExtra(ShowForumActivity.EXTRA_GO_TO_LAST_PAGE, goToLastPage);
             startActivity(newShowForumIntent);
             finish();
         }
@@ -221,20 +222,20 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
     }
 
     @Override
-    public void newForumOrTopicToRead(String link, boolean itsAForum, boolean isWhenDrawerIsClosed) {
+    public void newForumOrTopicToRead(String link, boolean itsAForum, boolean isWhenDrawerIsClosed, boolean fromLongClick) {
         if (isWhenDrawerIsClosed) {
-            readNewTopicOrForum(link);
+            readNewTopicOrForum(link, fromLongClick);
         }
     }
 
     @Override
     public void getNewForumLink(String link) {
-        readNewTopicOrForum(link);
+        readNewTopicOrForum(link, false);
     }
 
     @Override
     public void newTopicOrForumAvailable(String newTopicOrForumLink) {
-        readNewTopicOrForum(newTopicOrForumLink);
+        readNewTopicOrForum(newTopicOrForumLink, false);
     }
 
     private class GetSearchedForums extends AsyncTask<String, Void, String> {
@@ -275,7 +276,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
                 if (pageResult.startsWith("respawnirc:redirect:")) {
                     String newLink = pageResult.substring(("respawnirc:redirect:").length());
                     if (!newLink.isEmpty()) {
-                        readNewTopicOrForum("http://www.jeuxvideo.com" + newLink);
+                        readNewTopicOrForum("http://www.jeuxvideo.com" + newLink, false);
                         return;
                     }
                 } else {

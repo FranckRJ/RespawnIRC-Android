@@ -10,13 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/toolbar_selectforum"
-            layout="@layout/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"/>
-
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swiperefresh_selectforum"
             android:layout_width="match_parent"
@@ -31,6 +24,13 @@
                 android:drawSelectorOnTop="true"
                 android:groupIndicator="@null"/>
         </android.support.v4.widget.SwipeRefreshLayout>
+
+        <include
+            android:id="@+id/toolbar_selectforum"
+            layout="@layout/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"/>
 
         <View
             android:layout_width="match_parent"

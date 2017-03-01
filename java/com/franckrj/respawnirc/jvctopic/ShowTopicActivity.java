@@ -51,6 +51,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
     public static final String EXTRA_TOPIC_NAME = "com.franckrj.respawnirc.EXTRA_TOPIC_NAME";
     public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.EXTRA_FORUM_NAME";
     public static final String EXTRA_GO_TO_BOTTOM = "com.franckrj.respawnirc.EXTRA_GO_TO_BOTTOM";
+    public static final String EXTRA_GO_TO_LAST_PAGE = "com.franckrj.respawnirc.EXTRA_GO_TO_LAST_PAGE";
 
     private static final String SAVE_CURRENT_FORUM_TITLE_FOR_TOPIC = "saveCurrentForumTitleForTopic";
     private static final String SAVE_CURRENT_TOPIC_TITLE_FOR_TOPIC = "saveCurrentTopicTitleForTopic";
@@ -73,7 +74,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
     private boolean useInternalNavigatorForDefaultOpening = false;
     private boolean convertNoelshackLinkToDirectLink = false;
     private boolean showOverviewOnImageClick = false;
-    private boolean goToBottomAtPageLoading = false;
+    private boolean goToLastPageAfterLoading = false;
 
     private final JVCMessageToTopicSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageToTopicSender.NewMessageWantEditListener() {
         @Override
@@ -284,10 +285,11 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         updateShowNavigationButtons();
         if (savedInstanceState == null) {
             if (getIntent() != null) {
-                goToBottomAtPageLoading = getIntent().getBooleanExtra(EXTRA_GO_TO_BOTTOM, false);
+                goToLastPageAfterLoading = getIntent().getBooleanExtra(EXTRA_GO_TO_LAST_PAGE, false);
                 currentTitles.topic = getIntent().getStringExtra(EXTRA_TOPIC_NAME);
                 currentTitles.forum = getIntent().getStringExtra(EXTRA_FORUM_NAME);
 
+                pageNavigation.setGoToBottomOnNextLoad(goToLastPageAfterLoading || getIntent().getBooleanExtra(EXTRA_GO_TO_BOTTOM, false));
                 if (currentTitles.topic == null) {
                     currentTitles.topic = "";
                 }
@@ -514,6 +516,12 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         }
         pageNavigation.notifyDataSetChanged();
         pageNavigation.updateNavigationButtons();
+
+        if (goToLastPageAfterLoading) {
+            pageNavigation.setGoToBottomOnNextLoad(true);
+            pageNavigation.setCurrentItemIndex(pageNavigation.getLastPage() - 1);
+            goToLastPageAfterLoading = false;
+        }
     }
 
     @Override
@@ -551,9 +559,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         if (possibleTopicLink != null) {
             Bundle argForFrag = new Bundle();
             argForFrag.putString(AbsShowTopicFragment.ARG_TOPIC_LINK, possibleTopicLink);
-            argForFrag.putBoolean(AbsShowTopicFragment.ARG_GO_TO_BOTTOM, goToBottomAtPageLoading);
             newFragment.setArguments(argForFrag);
-            goToBottomAtPageLoading = false;
         }
 
         return newFragment;

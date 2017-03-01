@@ -54,6 +54,7 @@ public abstract class AbsNavigationViewActivity extends ThemedActivity implement
     protected String pseudoOfUser = "";
     protected boolean isInNavigationConnectMode = false;
     protected String newFavSelected = "";
+    protected boolean newFavIsSelectedByLongClick = false;
     protected int idOfBaseActivity = -1;
     protected int currentNavigationMenuMode = -1;
     protected ArrayList<NavigationMenuAdapter.MenuItemInfo> currentListOfMenuItem = null;
@@ -84,14 +85,16 @@ public abstract class AbsNavigationViewActivity extends ThemedActivity implement
                 }
             } else if (currentGroupID == GROUP_ID_FORUM_FAV) {
                 lastItemSelected = ITEM_ID_FORUM_FAV_SELECTED;
+                newFavIsSelectedByLongClick = false;
                 newFavSelected = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.FORUM_FAV_LINK, String.valueOf(currentItemID));
-                newForumOrTopicToRead(newFavSelected, true, false);
+                newForumOrTopicToRead(newFavSelected, true, false, false);
                 layoutForDrawer.closeDrawer(GravityCompat.START);
                 adapterForNavigationMenu.setRowSelected((int) id);
             } else if (currentGroupID == GROUP_ID_TOPIC_FAV) {
                 lastItemSelected = ITEM_ID_TOPIC_FAV_SELECTED;
+                newFavIsSelectedByLongClick = false;
                 newFavSelected = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.TOPIC_FAV_LINK, String.valueOf(currentItemID));
-                newForumOrTopicToRead(newFavSelected, false, false);
+                newForumOrTopicToRead(newFavSelected, false, false, false);
                 layoutForDrawer.closeDrawer(GravityCompat.START);
                 adapterForNavigationMenu.setRowSelected((int) id);
             } else {
@@ -100,6 +103,27 @@ public abstract class AbsNavigationViewActivity extends ThemedActivity implement
                 adapterForNavigationMenu.setRowSelected((int) id);
             }
             adapterForNavigationMenu.updateList();
+        }
+    };
+
+    protected final AdapterView.OnItemLongClickListener itemInNavigationLongClickedListener = new AdapterView.OnItemLongClickListener() {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            int currentItemID = adapterForNavigationMenu.getItemIDOfRow((int) id);
+            int currentGroupID = adapterForNavigationMenu.getGroupIDOfRow((int) id);
+
+            if (currentGroupID == GROUP_ID_TOPIC_FAV) {
+                lastItemSelected = ITEM_ID_TOPIC_FAV_SELECTED;
+                newFavIsSelectedByLongClick = true;
+                newFavSelected = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.TOPIC_FAV_LINK, String.valueOf(currentItemID));
+                newForumOrTopicToRead(newFavSelected, false, false, true);
+                layoutForDrawer.closeDrawer(GravityCompat.START);
+                adapterForNavigationMenu.setRowSelected((int) id);
+                adapterForNavigationMenu.updateList();
+                return true;
+            }
+
+            return false;
         }
     };
 
@@ -358,11 +382,11 @@ public abstract class AbsNavigationViewActivity extends ThemedActivity implement
                             startActivity(new Intent(AbsNavigationViewActivity.this, SettingsActivity.class));
                             break;
                         case ITEM_ID_FORUM_FAV_SELECTED:
-                            newForumOrTopicToRead(newFavSelected, true, true);
+                            newForumOrTopicToRead(newFavSelected, true, true, newFavIsSelectedByLongClick);
                             newFavSelected = "";
                             break;
                         case ITEM_ID_TOPIC_FAV_SELECTED:
-                            newForumOrTopicToRead(newFavSelected, false, true);
+                            newForumOrTopicToRead(newFavSelected, false, true, newFavIsSelectedByLongClick);
                             newFavSelected = "";
                             break;
                     }
@@ -394,6 +418,7 @@ public abstract class AbsNavigationViewActivity extends ThemedActivity implement
         navigationMenuList.setHeaderView(navigationHeader);
         navigationMenuList.setAdapter(adapterForNavigationMenu);
         navigationMenuList.setOnItemClickListener(itemInNavigationClickedListener);
+        navigationMenuList.setOnItemLongClickListener(itemInNavigationLongClickedListener);
         navigationHeader.setOnClickListener(headerClickedListener);
         layoutForDrawer.addDrawerListener(toggleForDrawer);
         layoutForDrawer.setDrawerShadow(ThemeManager.getDrawableRes(ThemeManager.DrawableName.SHADOW_DRAWER), GravityCompat.START);
@@ -489,5 +514,5 @@ public abstract class AbsNavigationViewActivity extends ThemedActivity implement
     }
 
     protected abstract void initializeViewAndToolbar();
-    protected abstract void newForumOrTopicToRead(String link, boolean itsAForum, boolean isWhenDrawerIsClosed);
+    protected abstract void newForumOrTopicToRead(String link, boolean itsAForum, boolean isWhenDrawerIsClosed, boolean fromLongClick);
 }

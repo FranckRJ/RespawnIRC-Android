@@ -30,6 +30,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
                                                     JVCForumGetter.ForumLinkChanged, PageNavigationUtil.PageNavigationFunctions,
                                                     AddOrRemoveThingToFavs.ActionToFavsEnded, JVCForumGetter.NewNumberOfMPSetted {
     public static final String EXTRA_NEW_LINK = "com.franckrj.respawnirc.EXTRA_NEW_LINK";
+    public static final String EXTRA_GO_TO_LAST_PAGE = "com.franckrj.respawnirc.EXTRA_GO_TO_LAST_PAGE";
 
     private static final String SAVE_CURRENT_FORUM_TITLE = "saveCurrentForumTitle";
     private static final String SAVE_REFRESH_NEEDED_NEXT_RESUME = "saveRefreshNeededOnNextResume";
@@ -59,7 +60,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         }
     }
 
-    private void setTopicOrForum(String link, boolean updateForumFragIfNeeded, String topicName, boolean startToBottom) {
+    private void setTopicOrForum(String link, boolean updateForumFragIfNeeded, String topicName, boolean startToBottom, boolean goToLastPage) {
         if (link != null) {
             if (!link.isEmpty()) {
                 link = JVCParser.formatThisUrl(link);
@@ -83,10 +84,8 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
                 if (!currentTitle.equals(getString(R.string.app_name))) {
                     newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_FORUM_NAME, currentTitle);
                 }
-
-                if (startToBottom) {
-                    newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_GO_TO_BOTTOM, true);
-                }
+                newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_GO_TO_BOTTOM, startToBottom);
+                newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_GO_TO_LAST_PAGE, goToLastPage);
 
                 newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_LINK, link);
                 startActivity(newShowTopicIntent);
@@ -137,7 +136,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         String newLinkToGo = newIntent.getStringExtra(EXTRA_NEW_LINK);
 
         if (newLinkToGo != null) {
-            setTopicOrForum(newLinkToGo, true, null, false);
+            setTopicOrForum(newLinkToGo, true, null, false, newIntent.getBooleanExtra(EXTRA_GO_TO_LAST_PAGE, false));
         }
     }
 
@@ -256,17 +255,17 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     }
 
     @Override
-    protected void newForumOrTopicToRead(String link, boolean itsAForum, boolean isWhenDrawerIsClosed) {
+    protected void newForumOrTopicToRead(String link, boolean itsAForum, boolean isWhenDrawerIsClosed, boolean fromLongClick) {
         if (itsAForum && !isWhenDrawerIsClosed) {
-            setTopicOrForum(link, true, null, false);
+            setTopicOrForum(link, true, null, false, fromLongClick);
         } else if (!itsAForum && isWhenDrawerIsClosed) {
-            setTopicOrForum(link, true, null, false);
+            setTopicOrForum(link, true, null, false, fromLongClick);
         }
     }
 
     @Override
     public void setReadNewTopic(String newTopicLink, String newTopicName, boolean startAtBottom) {
-        setTopicOrForum(newTopicLink, false, newTopicName, startAtBottom);
+        setTopicOrForum(newTopicLink, false, newTopicName, startAtBottom, false);
     }
 
     @Override

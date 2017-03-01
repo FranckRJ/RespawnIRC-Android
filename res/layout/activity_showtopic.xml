@@ -9,6 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager_showtopic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/header_layout_showtopic"
+            android:layout_above="@+id/sendmessage_layout_showtopic"/>
+
         <include
             android:id="@+id/toolbar_showtopic"
             layout="@layout/toolbar"
@@ -76,13 +83,6 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"/>
         </RelativeLayout>
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/pager_showtopic"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/header_layout_showtopic"
-            android:layout_above="@+id/sendmessage_layout_showtopic"/>
 
         <View
             android:layout_width="match_parent"

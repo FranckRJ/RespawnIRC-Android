@@ -21,7 +21,6 @@ import java.util.ArrayList;
 
 public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     public static final String ARG_TOPIC_LINK = "com.franckrj.respawnirc.showtopicfragment.topic_link";
-    public static final String ARG_GO_TO_BOTTOM = "com.franckrj.respawnirc.showtopicfragment.go_to_bottom";
     public static final int MODE_IRC = 0;
     public static final int MODE_FORUM = 1;
 
@@ -37,7 +36,6 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected int showNoelshackImageAdv = 1;
     protected boolean showRefreshWhenMessagesShowed = true;
     protected boolean isInErrorMode = false;
-    protected boolean goToBottomAtPageLoading = false;
     protected boolean cardDesignIsEnabled = false;
 
     protected final AbsJVCTopicGetter.NewGetterStateListener listenerForNewGetterState = new AbsJVCTopicGetter.NewGetterStateListener() {
@@ -278,7 +276,6 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             Bundle currentArgs = getArguments();
 
             if (currentArgs != null) {
-                goToBottomAtPageLoading = currentArgs.getBoolean(ARG_GO_TO_BOTTOM, false);
                 setPageLink(currentArgs.getString(ARG_TOPIC_LINK, ""));
             }
         }
