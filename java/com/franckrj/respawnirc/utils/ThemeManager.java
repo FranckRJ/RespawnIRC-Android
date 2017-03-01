@@ -99,8 +99,8 @@ public class ThemeManager {
                     return R.color.colorPseudoModoThemeDark;
                 case COLOR_PSEUDO_ADMIN:
                     return R.color.colorPseudoAdminThemeDark;
-                case NAVIGATION_MENU_ITEM:
-                    return R.color.navigation_menu_item_dark;
+                case HEADER_TEXT_COLOR:
+                    return R.color.headerTextColorThemeDark;
                 default:
                     return R.color.colorPrimaryThemeDark;
             }
@@ -134,8 +134,8 @@ public class ThemeManager {
                     return R.color.colorPseudoModoThemeLight;
                 case COLOR_PSEUDO_ADMIN:
                     return R.color.colorPseudoAdminThemeLight;
-                case NAVIGATION_MENU_ITEM:
-                    return R.color.navigation_menu_item_light;
+                case HEADER_TEXT_COLOR:
+                    return R.color.headerTextColorThemeLight;
                 default:
                     return R.color.colorPrimaryThemeLight;
             }
@@ -190,7 +190,7 @@ public class ThemeManager {
         DEFAULT_BACKGROUND_COLOR, DARKER_BACKGROUND_COLOR, MORE_DARKER_BACKGROUND_COLOR, ALT_BACKGROUND_COLOR,
         LINK_COLOR, COLOR_QUOTE_BACKGROUND,
         COLOR_PSEUDO_USER, COLOR_PSEUDO_OTHER_MODE_FORUM, COLOR_PSEUDO_OTHER_MODE_IRC, COLOR_PSEUDO_MODO, COLOR_PSEUDO_ADMIN,
-        NAVIGATION_MENU_ITEM
+        HEADER_TEXT_COLOR
     }
 
     public enum DrawableName {

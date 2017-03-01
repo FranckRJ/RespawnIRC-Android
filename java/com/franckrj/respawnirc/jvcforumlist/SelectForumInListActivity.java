@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -22,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.franckrj.respawnirc.MainActivity;
+import com.franckrj.respawnirc.NavigationMenuListView;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.dialogs.ChooseTopicOrForumLinkDialogFragment;
 import com.franckrj.respawnirc.dialogs.HelpFirstLaunchDialogFragment;
@@ -64,7 +64,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
     };
 
     public SelectForumInListActivity() {
-        idOfBaseActivity = R.id.action_home_navigation;
+        idOfBaseActivity = ITEM_ID_HOME;
     }
 
     private void performSearch() {
@@ -217,7 +217,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         }
 
         layoutForDrawer = (DrawerLayout) findViewById(R.id.layout_drawer_selectforum);
-        navigationForDrawer = (NavigationView) findViewById(R.id.navigation_view_selectforum);
+        navigationMenuList = (NavigationMenuListView) findViewById(R.id.navigation_menu_selectforum);
     }
 
     @Override

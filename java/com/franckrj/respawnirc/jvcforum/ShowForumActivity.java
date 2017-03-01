@@ -2,7 +2,6 @@ package com.franckrj.respawnirc.jvcforum;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -14,6 +13,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.MainActivity;
+import com.franckrj.respawnirc.NavigationMenuListView;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.jvctopic.ShowTopicActivity;
 import com.franckrj.respawnirc.jvcforum.jvcforumtools.JVCForumGetter;
@@ -43,7 +43,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     private String currentNumberOfMP = null;
 
     public ShowForumActivity() {
-        idOfBaseActivity = R.id.action_forum_navigation;
+        idOfBaseActivity = ITEM_ID_FORUM;
         pageNavigation = new PageNavigationUtil(this);
         pageNavigation.setLastPageNumber(100);
     }
@@ -252,7 +252,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         }
 
         layoutForDrawer = (DrawerLayout) findViewById(R.id.layout_drawer_showforum);
-        navigationForDrawer = (NavigationView) findViewById(R.id.navigation_view_showforum);
+        navigationMenuList = (NavigationMenuListView) findViewById(R.id.navigation_menu_showforum);
     }
 
     @Override

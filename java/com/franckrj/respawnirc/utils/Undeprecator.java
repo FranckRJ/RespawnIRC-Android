@@ -1,6 +1,5 @@
 package com.franckrj.respawnirc.utils;
 
-import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -30,15 +29,6 @@ public class Undeprecator {
         } else {
             //noinspection deprecation
             return resources.getColor(colorId);
-        }
-    }
-
-    public static ColorStateList resourcesGetColorStateList(Resources resources, @ColorRes int colorId) {
-        if (Build.VERSION.SDK_INT >= 23) {
-            return resources.getColorStateList(colorId, null);
-        } else {
-            //noinspection deprecation
-            return resources.getColorStateList(colorId);
         }
     }
 

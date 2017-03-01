@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="lineSeparationColor">#50808080</color>
+    <color name="basicGreyColor">#90000000</color>
     <!-- Light Theme -->
     <color name="shadowColorThemeLight">#50000000</color>
     <color name="colorPrimaryThemeLight">#3F51B5</color>
@@ -13,10 +15,10 @@
     <color name="colorPseudoOtherModeIRCThemeLight">#000025</color>
     <color name="colorPseudoModoThemeLight">#3A9D23</color>
     <color name="colorPseudoAdminThemeLight">#DB0F0F</color>
-    <color name="colorSelectedIconItemThemeLight">#606060</color>
     <color name="defaultBackgroundColorThemeLight">#fafafa</color>
     <color name="darkerBackgroundColorThemeLight">#efefef</color>
     <color name="moreDarkerBackgroundColorThemeLight">#d0d0d0</color>
+    <color name="headerTextColorThemeLight">#90000000</color>
     <!-- Dark Theme -->
     <color name="shadowColorThemeDark">#80000000</color>
     <color name="colorPrimaryThemeDark">#212121</color>
@@ -30,10 +32,10 @@
     <color name="colorPseudoOtherModeIRCThemeDark">#EEEEFF</color>
     <color name="colorPseudoModoThemeDark">#4cd12e</color>
     <color name="colorPseudoAdminThemeDark">#f24040</color>
-    <color name="colorSelectedIconItemThemeDark">#bbbbbb</color>
     <color name="defaultBackgroundColorThemeDark">#424242</color>
     <color name="darkerBackgroundColorThemeDark">#303030</color>
     <color name="moreDarkerBackgroundColorThemeDark">#151515</color>
+    <color name="headerTextColorThemeDark">#90FFFFFF</color>
     <!-- Black Theme -->
     <color name="colorPrimaryThemeBlack">#151515</color>
     <color name="colorPrimaryDarkerThemeBlack">#000000</color>
