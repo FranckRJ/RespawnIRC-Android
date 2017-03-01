@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class JVCForumAdapter extends BaseAdapter {
     private ArrayList<JVCParser.TopicInfos> listOfTopics = new ArrayList<>();
     private ArrayList<ContentHolder> listOfContentForTopics = new ArrayList<>();
-    private LayoutInflater serviceInflater;
+    private LayoutInflater serviceInflater = null;
     private Activity parentActivity = null;
     private boolean alternateBackgroundColor = false;
     private Drawable iconMarqueOn = null;

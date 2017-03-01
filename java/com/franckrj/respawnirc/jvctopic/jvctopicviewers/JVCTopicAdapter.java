@@ -421,7 +421,7 @@ public class JVCTopicAdapter extends BaseAdapter {
         }
     }
 
-    public class CustomViewHolder {
+    private class CustomViewHolder {
         public final TextView firstLine;
         public final ImageView firstImage;
         public final TextView secondLine;

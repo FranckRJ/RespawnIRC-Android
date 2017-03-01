@@ -1013,7 +1013,7 @@ public final class JVCParser {
 
             while (noelshackImageMatcher.find(lastOffsetOfTag)) {
                 String currentMatch = noelshackImageMatcher.group();
-                if (currentMatch.contains("risitas") || currentMatch.contains("jesus") || currentMatch.contains("issou")) {
+                if (currentMatch.contains("risit") || currentMatch.contains("jesus") || currentMatch.contains("issou")) {
                     return true;
                 }
 
@@ -1346,7 +1346,7 @@ public final class JVCParser {
     private static class SuppressIfContainUglyNames implements StringModifier {
         @Override
         public String changeString(String baseString) {
-            if (baseString.contains("jesus") || baseString.contains("risitas") || baseString.contains("issou")) {
+            if (baseString.contains("jesus") || baseString.contains("risit") || baseString.contains("issou")) {
                 return "";
             }
             return baseString;

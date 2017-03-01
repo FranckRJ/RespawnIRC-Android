@@ -253,6 +253,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             int paddingForMsgList = getResources().getDimensionPixelSize(R.dimen.paddingOfMessageListView);
             jvcMsgList.setPadding(paddingForMsgList, paddingForMsgList, paddingForMsgList, paddingForMsgList);
             jvcMsgList.setClipToPadding(false);
+            jvcMsgList.setDivider(null);
             jvcMsgList.setDividerHeight(0);
         }
         jvcMsgList.setAdapter(adapterForTopic);
