@@ -41,8 +41,11 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
                 adapterForTopic.updateAllItems();
 
                 if ((scrolledAtTheEnd || goToBottomAtPageLoading) && adapterForTopic.getCount() > 0) {
-                    jvcMsgList.setSelection(adapterForTopic.getCount() - 1);
-                    //jvcMsgList.scrollBy(0, 999999); ne fonctionnait que pour les recyclerview
+                    if (scrolledAtTheEnd) { //s'il y avait des messages affichés avant et qu'on était en bas de page, smoothscroll
+                        jvcMsgList.smoothScrollToPosition(adapterForTopic.getCount() - 1);
+                    } else {
+                        jvcMsgList.setSelection(adapterForTopic.getCount() - 1);
+                    }
                     goToBottomAtPageLoading = false;
                 }
 

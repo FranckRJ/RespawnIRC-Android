@@ -30,11 +30,13 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
         public void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages, boolean itsReallyEmpty) {
             if (!listOfNewMessages.isEmpty()) {
                 boolean scrolledAtTheEnd = true;
+                boolean needASmoothScroll = false;
                 boolean firstTimeGetMessages = adapterForTopic.getAllItems().isEmpty();
                 isInErrorMode = false;
 
                 if (adapterForTopic.getCount() > (adapterForTopic.getShowSurvey() ? 1 : 0)) {
                     scrolledAtTheEnd = listIsScrolledAtBottom();
+                    needASmoothScroll = scrolledAtTheEnd;
                 }
 
                 for (JVCParser.MessageInfos thisMessageInfo : listOfNewMessages) {
@@ -58,8 +60,11 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
                 adapterForTopic.updateAllItems();
 
                 if (scrolledAtTheEnd && adapterForTopic.getCount() > 0) {
-                    jvcMsgList.setSelection(adapterForTopic.getCount() - 1);
-                    //jvcMsgList.scrollBy(0, 999999); ne fonctionnait que pour les recyclerview
+                    if (needASmoothScroll) { //s'il y avait des messages affichés avant et qu'on était en bas de page, smoothscroll
+                        jvcMsgList.smoothScrollToPosition(adapterForTopic.getCount() - 1);
+                    } else {
+                        jvcMsgList.setSelection(adapterForTopic.getCount() - 1);
+                    }
                 }
             } else if (itsReallyEmpty) {
                 if (!isInErrorMode) {

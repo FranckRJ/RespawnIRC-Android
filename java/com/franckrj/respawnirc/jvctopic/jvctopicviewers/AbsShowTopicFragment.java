@@ -250,10 +250,12 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         if (cardDesignIsEnabled) {
             int paddingForMsgList = getResources().getDimensionPixelSize(R.dimen.paddingOfMessageListView);
             jvcMsgList.setPadding(paddingForMsgList, paddingForMsgList, paddingForMsgList, paddingForMsgList);
-            jvcMsgList.setClipToPadding(false);
             jvcMsgList.setDivider(null);
             jvcMsgList.setDividerHeight(0);
+        } else {
+            jvcMsgList.setPadding(0, 0, 0, 2); //pour corriger un bug de smoothscroll
         }
+        jvcMsgList.setClipToPadding(false);
         jvcMsgList.setAdapter(adapterForTopic);
 
         if (savedInstanceState != null) {
