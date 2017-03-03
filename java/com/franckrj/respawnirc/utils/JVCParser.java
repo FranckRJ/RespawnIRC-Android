@@ -73,6 +73,7 @@ public final class JVCParser {
     private static final Pattern youtubeVideoPattern = Pattern.compile("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe .*? src=\"http(s)?://www.youtube.com/embed/([^\"]*)\"[^>]*></iframe></div></div>");
     private static final Pattern surroundedBlockquotePattern = Pattern.compile("(<br /> *)*(<(/)?blockquote>)( *<br />)*");
     private static final Pattern noelshackImagePattern = Pattern.compile("<a href=\"([^\"]*)\" data-def=\"NOELSHACK\" target=\"_blank\"><img class=\"img-shack\" .*? src=\"//([^\"]*)\" [^>]*></a>");
+    private static final Pattern emptySearchPattern = Pattern.compile("<span style=\"[^\"]*\">[ \\n\\r]*Aucune réponse pour votre recherche ![ \\n\\r]*</span>");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
     private static final Pattern multipleSpacesPattern = Pattern.compile(" +");
 
@@ -404,6 +405,12 @@ public final class JVCParser {
         } else {
             return null;
         }
+    }
+
+    public static boolean getSearchIsEmptyInPage(String pageSource) {
+        Matcher emptySearchMatcher = emptySearchPattern.matcher(pageSource);
+
+        return emptySearchMatcher.find();
     }
 
     public static Boolean getIsInFavsFromPage(String pageSource) {

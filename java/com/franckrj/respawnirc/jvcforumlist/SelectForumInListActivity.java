@@ -160,8 +160,9 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         searchExpandableItem = menu.findItem(R.id.action_search_selectforum);
 
         View rootView = searchExpandableItem.getActionView();
-        ImageButton buttonForSearch = (ImageButton) rootView.findViewById(R.id.searchforum_button_selectforum);
-        textForSearch = (EditText) rootView.findViewById(R.id.searchforum_text_selectforum);
+        ImageButton buttonForSearch = (ImageButton) rootView.findViewById(R.id.search_button_searchlayout);
+        textForSearch = (EditText) rootView.findViewById(R.id.search_text_searchlayout);
+        textForSearch.setHint(R.string.forumSearch);
         textForSearch.setOnEditorActionListener(actionInSearchEditTextListener);
         buttonForSearch.setOnClickListener(searchButtonClickedListener);
 

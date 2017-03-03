@@ -33,6 +33,10 @@
             android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
         <activity
+            android:name=".jvcforum.SearchTopicInForumActivity"
+            android:windowSoftInputMode="stateAlwaysHidden">
+        </activity>
+        <activity
             android:name=".jvcforum.SendTopicToForumActivity"
             android:label="@string/sendATopic"
             android:windowSoftInputMode="stateAlwaysHidden">

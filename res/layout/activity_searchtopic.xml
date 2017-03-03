@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_drawer_showforum"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/frame_searchtopic"
+            android:layout_below="@+id/header_layout_searchtopic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <include
+            android:id="@+id/toolbar_searchtopic"
+            layout="@layout/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"/>
+
+        <RadioGroup
+            android:id="@+id/header_layout_searchtopic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar_searchtopic"
+            android:orientation="horizontal"
+            android:background="?attr/themedDarkerBackgroundColor"
+            android:gravity="end">
+            <RadioButton
+                android:id="@+id/topicmode_radio_searchtopic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingEnd="8dp"
+                android:paddingRight="8dp"
+                android:paddingStart="4dp"
+                android:paddingLeft="4dp"
+                android:text="@string/topic"
+                android:checked="true"/>
+            <RadioButton
+                android:id="@+id/authormode_radio_searchtopic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingEnd="8dp"
+                android:paddingRight="8dp"
+                android:paddingStart="4dp"
+                android:paddingLeft="4dp"
+                android:text="@string/author"/>
+        </RadioGroup>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:background="?attr/themedShadowTop"
+            android:layout_below="@+id/header_layout_searchtopic"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:background="?attr/themedShadowTop"
+            android:layout_below="@+id/toolbar_searchtopic"/>
+
+    </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

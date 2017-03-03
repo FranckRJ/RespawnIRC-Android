@@ -185,6 +185,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
+        menu.findItem(R.id.action_search_topic_showforum).setEnabled(!pageNavigation.getCurrentLink().isEmpty());
         menu.findItem(R.id.action_change_forum_fav_value_showforum).setEnabled(false);
 
         if (getCurrentFragment() != null) {
@@ -216,6 +217,12 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
                     Toast.makeText(ShowForumActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
                 }
 
+                return true;
+            case R.id.action_search_topic_showforum:
+                Intent newSearchTopicIntent = new Intent(this, SearchTopicInForumActivity.class);
+                newSearchTopicIntent.putExtra(SearchTopicInForumActivity.EXTRA_FORUM_LINK, pageNavigation.getCurrentLink());
+                newSearchTopicIntent.putExtra(SearchTopicInForumActivity.EXTRA_FORUM_NAME, currentTitle);
+                startActivity(newSearchTopicIntent);
                 return true;
             case R.id.action_open_in_browser_showforum:
                 if (!useInternalNavigatorForDefaultOpening) {

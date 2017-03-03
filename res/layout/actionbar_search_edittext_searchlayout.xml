@@ -4,27 +4,27 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <EditText
-        android:id="@+id/searchforum_text_selectforum"
+        android:id="@+id/search_text_searchlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/searchforum_button_selectforum"
-        android:layout_toStartOf="@+id/searchforum_button_selectforum"
+        android:layout_toLeftOf="@+id/search_button_searchlayout"
+        android:layout_toStartOf="@+id/search_button_searchlayout"
         android:layout_centerVertical="true"
-        android:hint="@string/forumSearch"
+        android:hint="@string/search"
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:background="@android:color/transparent"
         android:textCursorDrawable="@drawable/custom_cursor"/>
     <ImageButton
         style="@style/SelectableItemBackground"
-        android:id="@+id/searchforum_button_selectforum"
+        android:id="@+id/search_button_searchlayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:src="@drawable/ic_action_action_search"
         android:padding="8dp"
-        android:contentDescription="@string/forumSearch"/>
+        android:contentDescription="@string/search"/>
 </RelativeLayout>

@@ -17,6 +17,8 @@ public class JVCForumGetter {
     private static final String SAVE_LATEST_AJAX_INFO_PREF = "saveLatestAjaxInfoPref";
     private static final String SAVE_LATEST_LIST_OF_INPUT = "saveLatestListOfInputInAString";
     private static final String SAVE_FORUM_IS_IN_FAV = "saveForumIsInFav";
+    private static final String SAVE_IS_IN_SEARCH_MODE = "saveIsInSearchMode";
+    private static final String SAVE_SEARCH_IS_EMPTY = "saveSearchIsEmpty";
 
     private String urlForForum = "";
     private GetJVCLastTopics currentAsyncTaskForGetTopic = null;
@@ -31,6 +33,8 @@ public class JVCForumGetter {
     private String latestListOfInputInAString = null;
     private String latestNumberOfMP = null;
     private NewNumberOfMPSetted listenerForNewNumberOfMP = null;
+    private boolean isInSearchMode = false;
+    private boolean searchIsEmptyAndItsNotAFail = false;
 
     public JVCParser.AjaxInfos getLatestAjaxInfos() {
         return latestAjaxInfos;
@@ -44,8 +48,20 @@ public class JVCForumGetter {
         return latestListOfInputInAString;
     }
 
+    public boolean getSearchIsEmptyAndItsNotAFail() {
+        return searchIsEmptyAndItsNotAFail;
+    }
+
+    public boolean getIsInSearchMode() {
+        return isInSearchMode;
+    }
+
     public void setIsInFavs(Boolean newVal) {
         isInFavs = newVal;
+    }
+
+    public void setIsInSearchMode(boolean newVal) {
+        isInSearchMode = newVal;
     }
 
     public void setCookieListInAString(String newCookieListInAString) {
@@ -75,7 +91,7 @@ public class JVCForumGetter {
     public boolean startGetMessagesOfThisPage(String newUrlOfPage) {
         if (currentAsyncTaskForGetTopic == null && !newUrlOfPage.isEmpty()) {
             urlForForum = newUrlOfPage;
-            currentAsyncTaskForGetTopic = new GetJVCLastTopics();
+            currentAsyncTaskForGetTopic = new GetJVCLastTopics(isInSearchMode);
             currentAsyncTaskForGetTopic.execute(urlForForum, cookieListInAString);
             return true;
         } else {
@@ -103,6 +119,8 @@ public class JVCForumGetter {
         urlForForum = savedInstanceState.getString(SAVE_FORUM_URL_TO_FETCH, "");
         latestAjaxInfos.pref = savedInstanceState.getString(SAVE_LATEST_AJAX_INFO_PREF, null);
         latestListOfInputInAString = savedInstanceState.getString(SAVE_LATEST_LIST_OF_INPUT, null);
+        isInSearchMode = savedInstanceState.getBoolean(SAVE_IS_IN_SEARCH_MODE, false);
+        searchIsEmptyAndItsNotAFail = savedInstanceState.getBoolean(SAVE_SEARCH_IS_EMPTY, false);
         if (savedInstanceState.containsKey(SAVE_FORUM_IS_IN_FAV)) {
             isInFavs = savedInstanceState.getBoolean(SAVE_FORUM_IS_IN_FAV, false);
         } else {
@@ -114,12 +132,20 @@ public class JVCForumGetter {
         savedInstanceState.putString(SAVE_FORUM_URL_TO_FETCH, urlForForum);
         savedInstanceState.putString(SAVE_LATEST_AJAX_INFO_PREF, latestAjaxInfos.pref);
         savedInstanceState.putString(SAVE_LATEST_LIST_OF_INPUT, latestListOfInputInAString);
+        savedInstanceState.putBoolean(SAVE_IS_IN_SEARCH_MODE, isInSearchMode);
+        savedInstanceState.putBoolean(SAVE_SEARCH_IS_EMPTY, searchIsEmptyAndItsNotAFail);
         if (isInFavs != null) {
             savedInstanceState.putBoolean(SAVE_FORUM_IS_IN_FAV, isInFavs);
         }
     }
 
     private class GetJVCLastTopics extends AsyncTask<String, Void, ForumPageInfos> {
+        boolean isInSearchMode = false;
+
+        GetJVCLastTopics(boolean newIsInSearchMode) {
+            isInSearchMode = newIsInSearchMode;
+        }
+
         @Override
         protected void onPreExecute() {
             if (listenerForNewGetterState != null) {
@@ -145,6 +171,9 @@ public class JVCForumGetter {
                     newPageInfos.newIsInFavs = JVCParser.getIsInFavsFromPage(pageContent);
                     newPageInfos.newListOfInputInAString = JVCParser.getListOfInputInAStringInTopicFormForThisPage(pageContent);
                     newPageInfos.newNumberOfMp = JVCParser.getNumberOfMPFromPage(pageContent);
+                    if (isInSearchMode) {
+                        newPageInfos.newSearchIsEmpty = JVCParser.getSearchIsEmptyInPage(pageContent);
+                    }
                 }
 
                 return newPageInfos;
@@ -166,15 +195,20 @@ public class JVCForumGetter {
                 latestAjaxInfos = infoOfCurrentPage.newLatestAjaxInfos;
                 isInFavs = infoOfCurrentPage.newIsInFavs;
                 latestListOfInputInAString = infoOfCurrentPage.newListOfInputInAString;
+                searchIsEmptyAndItsNotAFail = infoOfCurrentPage.newSearchIsEmpty;
 
                 if (!latestListOfInputInAString.isEmpty()) {
                     latestListOfInputInAString = latestListOfInputInAString + "&spotify_topic=&submit_sondage=0&question_sondage=&reponse_sondage[]=&form_alias_rang=1";
                 }
 
                 if (!infoOfCurrentPage.newUrlForForumPage.isEmpty()) {
-                    urlForForum = infoOfCurrentPage.newUrlForForumPage;
-                    if (listenerForForumLinkChanged != null) {
-                        listenerForForumLinkChanged.updateForumLink(urlForForum);
+                    if (!isInSearchMode) {
+                        urlForForum = infoOfCurrentPage.newUrlForForumPage;
+                        if (listenerForForumLinkChanged != null) {
+                            listenerForForumLinkChanged.updateForumLink(urlForForum);
+                        }
+                    } else {
+                        searchIsEmptyAndItsNotAFail = true;
                     }
                 }
 
@@ -196,6 +230,7 @@ public class JVCForumGetter {
                     listenerForNewTopics.getNewTopics(infoOfCurrentPage.listOfTopics);
                 }
             } else {
+                searchIsEmptyAndItsNotAFail = false;
                 if (listenerForNewTopics != null) {
                     listenerForNewTopics.getNewTopics(new ArrayList<JVCParser.TopicInfos>());
                 }
@@ -211,6 +246,7 @@ public class JVCForumGetter {
         Boolean newIsInFavs;
         String newListOfInputInAString;
         String newNumberOfMp;
+        boolean newSearchIsEmpty;
     }
 
     public interface NewForumNameAvailable {

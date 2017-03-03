@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 public class ShowForumFragment extends AbsShowSomethingFragment {
     public static final String ARG_FORUM_LINK = "com.franckrj.respawnirc.showtopicfragment.forum_link";
+    public static final String ARG_IS_IN_SEARCH_MODE = "com.franckrj.respawnirc.ARG_IS_IN_SEARCH_MODE";
 
     private static final String SAVE_ALL_TOPICS_SHOWED = "saveAllCurrentTopicsShowed";
 
@@ -65,7 +66,9 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     private final JVCForumGetter.NewTopicsListener listenerForNewTopics = new JVCForumGetter.NewTopicsListener() {
         @Override
         public void getNewTopics(ArrayList<JVCParser.TopicInfos> listOfNewTopics) {
-            if (!listOfNewTopics.isEmpty()) {
+            if (getterForForum.getIsInSearchMode() && getterForForum.getSearchIsEmptyAndItsNotAFail()) {
+                Toast.makeText(getActivity(), R.string.noResultFound, Toast.LENGTH_SHORT).show();
+            } else if (!listOfNewTopics.isEmpty()) {
                 isInErrorMode = false;
                 adapterForForum.removeAllItems();
 
@@ -199,6 +202,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         if (savedInstanceState != null) {
             ArrayList<JVCParser.TopicInfos> allCurrentTopicsShowed = savedInstanceState.getParcelableArrayList(SAVE_ALL_TOPICS_SHOWED);
             getterForForum.loadFromBundle(savedInstanceState);
+            swipeRefresh.setEnabled(!getterForForum.getIsInSearchMode());
 
             if (allCurrentTopicsShowed != null) {
                 for (JVCParser.TopicInfos thisTopicInfo : allCurrentTopicsShowed) {
@@ -211,8 +215,9 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
             Bundle currentArgs = getArguments();
 
             if (currentArgs != null) {
-                String forumLink = currentArgs.getString(ARG_FORUM_LINK, "");
-                setPageLink(forumLink);
+                setPageLink(currentArgs.getString(ARG_FORUM_LINK, ""));
+                getterForForum.setIsInSearchMode(currentArgs.getBoolean(ARG_IS_IN_SEARCH_MODE, false));
+                swipeRefresh.setEnabled(!getterForForum.getIsInSearchMode());
             }
         }
     }
@@ -223,7 +228,8 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         reloadSettings();
         isInErrorMode = false;
 
-        if (adapterForForum.getAllItems().isEmpty()) {
+        if (adapterForForum.getAllItems().isEmpty() &&
+                (!getterForForum.getIsInSearchMode() || (getterForForum.getIsInSearchMode() && !getterForForum.getSearchIsEmptyAndItsNotAFail()))) {
             getterForForum.reloadForum();
         }
     }

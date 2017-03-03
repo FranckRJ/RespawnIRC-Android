@@ -3,12 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_search_selectforum"
-        android:title="@string/forumSearch"
+        android:id="@+id/action_search_searchtopic"
+        android:title="@string/topicSearch"
         android:icon="@drawable/ic_action_action_search"
         app:showAsAction="collapseActionView|always"
         app:actionLayout="@layout/actionbar_search_edittext_searchlayout"/>
-    <item
-        android:id="@+id/action_select_topic_or_forum_selectforum"
-        android:title="@string/openTopicOrForumLink"/>
 </menu>
