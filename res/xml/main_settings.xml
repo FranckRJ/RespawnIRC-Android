@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/preference">
+        <Preference
+            android:key="@string/subScreenSettingsStyle"
+            android:persistent="false"
+            android:title="@string/style"/>
+        <Preference
+            android:key="@string/subScreenSettingsImageLink"
+            android:persistent="false"
+            android:title="@string/imageLink"/>
+        <Preference
+            android:key="@string/subScreenSettingsBehaviour"
+            android:persistent="false"
+            android:title="@string/behaviour"/>
+    </PreferenceCategory>
+</PreferenceScreen>

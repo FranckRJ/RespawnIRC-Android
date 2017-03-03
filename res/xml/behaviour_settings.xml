@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/settingsGeneralTitle">
+        <EditTextPreference
+            android:key="@string/settingsMaxNumberOfOverlyQuote"
+            android:title="@string/maxNumberOfOverlyQuoteTitle"
+            android:numeric="integer"/>
+        <CheckBoxPreference
+            android:key="@string/settingsTransformStickerToSmiley"
+            android:title="@string/transformStickerToSmileyTitle"
+            android:summary="@string/transformStickerToSmileySummary"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/settingsModeForumTitle">
+        <CheckBoxPreference
+            android:key="@string/settingsTopicClearOnRefresh"
+            android:title="@string/topicClearOnRefreshTitle"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/settingsModeIRCTitle">
+        <EditTextPreference
+            android:key="@string/settingsRefreshTopicTime"
+            android:title="@string/refreshTopicTimeTitle"
+            android:numeric="integer"/>
+        <EditTextPreference
+            android:key="@string/settingsMaxNumberOfMessages"
+            android:title="@string/maxNumberOfMessagesTitle"
+            android:numeric="integer"/>
+        <EditTextPreference
+            android:key="@string/settingsInitialNumberOfMessages"
+            android:title="@string/initialNumberOfMessagesTitle"
+            android:numeric="integer"/>
+    </PreferenceCategory>
+</PreferenceScreen>

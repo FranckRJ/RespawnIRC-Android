@@ -16,11 +16,9 @@
     <string name="hideSpoilMessage">Cacher les spoil</string>
     <string name="showSpoilMessage">Afficher les spoil</string>
     <string name="preference">Préférences</string>
-    <string name="settingsMaxMessagesNumberTitle">Nombre de messages affichés (IRC)</string>
-    <string name="maxNumberOfMessagesTitle">Au maximum</string>
-    <string name="initialNumberOfMessagesTitle">Au premier chargement</string>
+    <string name="maxNumberOfMessagesTitle">Nb de messages affichés au max</string>
+    <string name="initialNumberOfMessagesTitle">Nb de messages affichés au 1er chargement</string>
     <string name="settingsGeneralTitle">Général</string>
-    <string name="settingsGeneralIRCTitle">Général (IRC)</string>
     <string name="refreshTopicTimeTitle">Temps avant màj des messages</string>
     <string name="loadTopicFromOldInfos">Poursuivre la lecture</string>
     <string name="help">Aide</string>
@@ -34,8 +32,7 @@
     <string name="switchToForumMode">Passer en mode forum</string>
     <string name="switchToIrcMode">Passer en mode IRC</string>
     <string name="refresh">Rafraichir</string>
-    <string name="settingsOnRefreshTopicModeForumTitle">Lors du rafraichissement (forum)</string>
-    <string name="topicClearOnRefreshTitle">Effacer les messages</string>
+    <string name="topicClearOnRefreshTitle">Effacer les messages lors d\'un refresh</string>
     <string name="nextPageText"><![CDATA[>]]></string>
     <string name="previousPageText"><![CDATA[<]]></string>
     <string name="waitingText">…</string>
@@ -44,7 +41,6 @@
     <string name="choosePageNumber">Choisir un numéro de page</string>
     <string name="topicOrForumLink">Lien du topic/forum…</string>
     <string name="openTopicOrForumLink">Ouvrir un lien de topic/forum</string>
-    <string name="settingsStyleMessageForumTitle">Affichage des messages (forum)</string>
     <string name="topicAlternateBackgroundColorTitle">Alterner la couleur de fond</string>
     <string name="topicIcon">Icone de topic</string>
     <string name="showQuoteMessage">Afficher les citations imbriquées</string>
@@ -133,6 +129,11 @@
     <string name="dark">Sombre</string>
     <string name="theme">Theme</string>
     <string name="black">Noir</string>
+    <string name="style">Apparence</string>
+    <string name="settingsModeForumTitle">Mode forum</string>
+    <string name="settingsModeIRCTitle">Mode IRC</string>
+    <string name="imageLink">Images / Liens</string>
+    <string name="behaviour">Comportement</string>
 
     <string name="settingsMaxNumberOfMessages" translatable="false">settings.maxNumberOfMessages</string>
     <string name="settingsInitialNumberOfMessages" translatable="false">settings.initialNumberOfMessages</string>
@@ -154,6 +155,9 @@
     <string name="settingsEnableCardDesignModeForum" translatable="false">settings.enableCardDesignModeForum</string>
     <string name="settingsHideUglyImages" translatable="false">settings.hideUglyImages</string>
     <string name="settingsThemeUsed" translatable="false">settings.themeUsed</string>
+    <string name="subScreenSettingsStyle" translatable="false">subScreenSettings.style</string>
+    <string name="subScreenSettingsImageLink" translatable="false">subScreenSettings.imageLink</string>
+    <string name="subScreenSettingsBehaviour" translatable="false">subScreenSettings.behaviour</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

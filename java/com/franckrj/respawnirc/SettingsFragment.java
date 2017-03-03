@@ -13,11 +13,38 @@ import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.ThemeManager;
 
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+    public static final String ARG_FILE_TO_LOAD = "com.franckrj.respawnirc.settingsfragment.ARG_FILE_TO_LOAD";
+
+    private final Preference.OnPreferenceClickListener subScreenPreferenceClicked = new Preference.OnPreferenceClickListener() {
+        @Override
+        public boolean onPreferenceClick(Preference preference) {
+            if (getActivity() instanceof NewSettingsFileNeedALoad) {
+                if (preference.getKey().equals(getString(R.string.subScreenSettingsStyle))) {
+                    ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.style_settings);
+                    return true;
+                } else if (preference.getKey().equals(getString(R.string.subScreenSettingsImageLink))) {
+                    ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.imagelink_settings);
+                    return true;
+                } else if (preference.getKey().equals(getString(R.string.subScreenSettingsBehaviour))) {
+                    ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.behaviour_settings);
+                    return true;
+                }
+            }
+            return false;
+        }
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        int idOfFileToLoad = R.xml.main_settings;
+
+        if (getArguments() != null) {
+            idOfFileToLoad = getArguments().getInt(ARG_FILE_TO_LOAD, R.xml.main_settings);
+        }
+
         getPreferenceManager().setSharedPreferencesName(getString(R.string.preference_file_key));
-        addPreferencesFromResource(R.xml.settings);
+        addPreferencesFromResource(idOfFileToLoad);
         initPrefsInfos(getPreferenceScreen());
     }
 
@@ -72,9 +99,16 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                 initPrefsInfos(prefGroup.getPreference(i));
             }
         } else {
+            initClickedListenerIfNeeded(pref);
             initFilterIfNeeded(pref);
             updatePrefDefaultValue(pref);
             updatePrefSummary(pref);
+        }
+    }
+
+    private void initClickedListenerIfNeeded(Preference pref) {
+        if (!pref.isPersistent() && pref.getKey().startsWith("subScreenSettings.")) {
+            pref.setOnPreferenceClickListener(subScreenPreferenceClicked);
         }
     }
 
@@ -119,5 +153,9 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
             min = newMin;
             max = newMax;
         }
+    }
+
+    public interface NewSettingsFileNeedALoad {
+        void getNewSettingsFileId(int fileID);
     }
 }

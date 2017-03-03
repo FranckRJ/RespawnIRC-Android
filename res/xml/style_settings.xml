@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/settingsGeneralTitle">
+        <com.franckrj.respawnirc.utils.ListPreferenceCompat
+            android:key="@string/settingsThemeUsed"
+            android:title="@string/theme"
+            android:summary="%s"
+            android:entries="@array/choicesForThemesReadable"
+            android:entryValues="@array/choicesForThemesValue"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/settingsModeForumTitle">
+        <com.franckrj.respawnirc.utils.ListPreferenceCompat
+            android:key="@string/settingsShowAvatarModeForum"
+            android:title="@string/showAvatarTitle"
+            android:summary="@string/needToBeEnabledOnJVCFirstSummaryWithString"
+            android:entries="@array/choicesForConnectionReadable"
+            android:entryValues="@array/choicesForConnectionValue"/>
+        <CheckBoxPreference
+            android:key="@string/settingsShowSignatureModeForum"
+            android:title="@string/showSignatureTitle"
+            android:summary="@string/needToBeEnabledOnJVCFirstSummary"/>
+        <CheckBoxPreference
+            android:key="@string/settingsEnableCardDesignModeForum"
+            android:title="@string/enableCardDesignTitle"/>
+        <CheckBoxPreference
+            android:key="@string/settingsTopicAlternateBackgroundColorModeForum"
+            android:title="@string/topicAlternateBackgroundColorTitle"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/settingsModeIRCTitle">
+        <CheckBoxPreference
+            android:key="@string/settingsTopicAlternateBackgroundColorModeIRC"
+            android:title="@string/topicAlternateBackgroundColorTitle"/>
+        <CheckBoxPreference
+            android:key="@string/settingsShowRefreshWhenMessagesShowedModeIRC"
+            android:title="@string/showRefreshWhenMessagesShowedModeIRCTitle"/>
+        <CheckBoxPreference
+            android:key="@string/settingsShowSignatureModeIRC"
+            android:title="@string/showSignatureTitle"
+            android:summary="@string/needToBeEnabledOnJVCFirstSummary"/>
+    </PreferenceCategory>
+</PreferenceScreen>
