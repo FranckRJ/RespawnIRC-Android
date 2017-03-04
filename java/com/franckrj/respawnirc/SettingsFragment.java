@@ -1,5 +1,9 @@
 package com.franckrj.respawnirc;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -8,6 +12,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
+import android.support.annotation.NonNull;
 
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.ThemeManager;
@@ -27,6 +32,10 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                     return true;
                 } else if (preference.getKey().equals(getString(R.string.subScreenSettingsBehaviour))) {
                     ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.behaviour_settings);
+                    return true;
+                } else if (preference.getKey().equals(getString(R.string.subScreenSettingsHelp))) {
+                    HelpSettingsDialogFragment helpDialogFragment = new HelpSettingsDialogFragment();
+                    helpDialogFragment.show(getFragmentManager(), "HelpSettingsDialogFragment");
                     return true;
                 }
             }
@@ -157,5 +166,22 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
     public interface NewSettingsFileNeedALoad {
         void getNewSettingsFileId(int fileID);
+    }
+
+    public static class HelpSettingsDialogFragment extends DialogFragment {
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            super.onCreateDialog(savedInstanceState);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(R.string.help).setMessage(R.string.help_dialog_settings)
+                    .setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    });
+            return builder.create();
+        }
     }
 }

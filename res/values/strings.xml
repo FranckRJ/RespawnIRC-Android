@@ -145,6 +145,8 @@
     <string name="enableGoToBottomOnLoadSummary">(ne s\'applique qu\'aux topics favoris et de la liste de topics)</string>
     <string name="enableAutoScrollTitle">Activer l\'autoscroll</string>
     <string name="enableAutoScrollSummary">(scroll automatiquement après un refresh si déjà en bas de page)</string>
+    <string name="information">Information</string>
+    <string name="help_dialog_settings">Voici une liste de quelques fonctionnalités importantes que vous ne connaissez peut-être pas :\n\n• Un clique long sur un topic de la liste des topics ou des topics favoris vous permet d\'aller directement à la dernière page.\n• Un clique long sur le bouton d\'envoi de message vous permet de rafraichir la liste des messages sans les effacer.\n• Un clique normal sur le pseudo d\'un message vous permet d\'accéder à des options supplémentaires.\n• Un clique long sur une image ou un lien vous permet d\'accéder à des options supplémentaires.</string>
 
     <string name="settingsMaxNumberOfMessages" translatable="false">settings.maxNumberOfMessages</string>
     <string name="settingsInitialNumberOfMessages" translatable="false">settings.initialNumberOfMessages</string>
@@ -173,6 +175,7 @@
     <string name="settingsEnableSmoothScroll" translatable="false">settings.enableSmoothScroll</string>
     <string name="settingsEnableGoToBottomOnLoad" translatable="false">settings.enableGoToBottomOnLoad</string>
     <string name="settingsEnableAutoScrollModeForum" translatable="false">settings.enableAutoScrollModeForum</string>
+    <string name="subScreenSettingsHelp" translatable="false">subScreenSettings.help</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

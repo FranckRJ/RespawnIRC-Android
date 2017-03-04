@@ -16,4 +16,11 @@
             android:persistent="false"
             android:title="@string/behaviour"/>
     </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/information">
+        <Preference
+            android:key="@string/subScreenSettingsHelp"
+            android:persistent="false"
+            android:title="@string/help"/>
+    </PreferenceCategory>
 </PreferenceScreen>
