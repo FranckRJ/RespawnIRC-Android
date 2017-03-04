@@ -37,6 +37,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected boolean showRefreshWhenMessagesShowed = true;
     protected boolean isInErrorMode = false;
     protected boolean cardDesignIsEnabled = false;
+    protected boolean smoothScrollIsEnabled = true;
 
     protected final AbsJVCTopicGetter.NewGetterStateListener listenerForNewGetterState = new AbsJVCTopicGetter.NewGetterStateListener() {
         @Override
@@ -92,6 +93,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         currentSettings.hideUglyImages = PrefsManager.getBool(PrefsManager.BoolPref.Names.HIDE_UGLY_IMAGES);
         currentSettings.pseudoOfUser = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER);
         absGetterForTopic.setCookieListInAString(PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
+        smoothScrollIsEnabled = PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_SMOOTH_SCROLL);
     }
 
     protected void updateSettingsDependingOnConnection() {

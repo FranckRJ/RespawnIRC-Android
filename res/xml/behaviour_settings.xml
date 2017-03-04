@@ -8,6 +8,14 @@
             android:title="@string/maxNumberOfOverlyQuoteTitle"
             android:numeric="integer"/>
         <CheckBoxPreference
+            android:key="@string/settingsEnableSmoothScroll"
+            android:title="@string/enableSmoothScrollTitle"
+            android:summary="@string/whenPossibleSummary"/>
+        <CheckBoxPreference
+            android:key="@string/settingsEnableGoToBottomOnLoad"
+            android:title="@string/enableGoToBottomOnLoadTitle"
+            android:summary="@string/enableGoToBottomOnLoadSummary"/>
+        <CheckBoxPreference
             android:key="@string/settingsTransformStickerToSmiley"
             android:title="@string/transformStickerToSmileyTitle"
             android:summary="@string/transformStickerToSmileySummary"/>
@@ -17,6 +25,10 @@
         <CheckBoxPreference
             android:key="@string/settingsTopicClearOnRefresh"
             android:title="@string/topicClearOnRefreshTitle"/>
+        <CheckBoxPreference
+            android:key="@string/settingsEnableAutoScrollModeForum"
+            android:title="@string/enableAutoScrollTitle"
+            android:summary="@string/enableAutoScrollSummary"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/settingsModeIRCTitle">

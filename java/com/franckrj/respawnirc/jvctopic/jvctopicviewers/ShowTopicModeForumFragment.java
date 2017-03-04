@@ -20,6 +20,7 @@ import java.util.ArrayList;
 public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
     private JVCTopicModeForumGetter getterForTopic = null;
     private boolean clearMessagesOnRefresh = true;
+    private boolean autoScrollIsEnabled = true;
 
     private final JVCTopicModeForumGetter.NewMessagesListener listenerForNewMessages = new JVCTopicModeForumGetter.NewMessagesListener() {
         @Override
@@ -40,15 +41,14 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
 
                 adapterForTopic.updateAllItems();
 
-                if ((scrolledAtTheEnd || goToBottomAtPageLoading) && adapterForTopic.getCount() > 0) {
-                    if (scrolledAtTheEnd) { //s'il y avait des messages affichés avant et qu'on était en bas de page, smoothscroll
+                if (autoScrollIsEnabled && (scrolledAtTheEnd || goToBottomAtPageLoading) && adapterForTopic.getCount() > 0) {
+                    if (smoothScrollIsEnabled && scrolledAtTheEnd) { //s'il y avait des messages affichés avant et qu'on était en bas de page, smoothscroll
                         jvcMsgList.smoothScrollToPosition(adapterForTopic.getCount() - 1);
                     } else {
                         jvcMsgList.setSelection(adapterForTopic.getCount() - 1);
                     }
                     goToBottomAtPageLoading = false;
                 }
-
             } else {
                 if (!isInErrorMode) {
                     getterForTopic.reloadTopic();
@@ -152,6 +152,7 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
     protected void reloadSettings() {
         super.reloadSettings();
         clearMessagesOnRefresh = PrefsManager.getBool(PrefsManager.BoolPref.Names.TOPIC_CLEAR_ON_REFRESH_MODE_FORUM);
+        autoScrollIsEnabled = PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_AUTO_SCROLL_MODE_FORUM);
     }
 
     @Override

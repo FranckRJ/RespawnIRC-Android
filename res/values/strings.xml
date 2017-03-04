@@ -41,7 +41,7 @@
     <string name="choosePageNumber">Choisir un numéro de page</string>
     <string name="topicOrForumLink">Lien du topic/forum…</string>
     <string name="openTopicOrForumLink">Ouvrir un lien de topic/forum</string>
-    <string name="topicAlternateBackgroundColorTitle">Alterner la couleur de fond</string>
+    <string name="topicAlternateBackgroundColorTitle">Alterner le fond des messages</string>
     <string name="topicIcon">Icone de topic</string>
     <string name="showQuoteMessage">Afficher les citations imbriquées</string>
     <string name="hideQuoteMessage">Cacher les citations imbriquées</string>
@@ -138,6 +138,13 @@
     <string name="author">Auteur</string>
     <string name="search">Rechercher</string>
     <string name="errorSearchImpossible">Erreur, recherche impossible.</string>
+    <string name="forumAlternateBackgroundColorTitle">Alterner le fond des topics</string>
+    <string name="enableSmoothScrollTitle">Activer le smoothscroll</string>
+    <string name="whenPossibleSummary">(lorsque possible)</string>
+    <string name="enableGoToBottomOnLoadTitle">Fin de page lors d\'un clique long</string>
+    <string name="enableGoToBottomOnLoadSummary">(ne s\'applique qu\'aux topics favoris et de la liste de topics)</string>
+    <string name="enableAutoScrollTitle">Activer l\'autoscroll</string>
+    <string name="enableAutoScrollSummary">(scroll automatiquement après un refresh si déjà en bas de page)</string>
 
     <string name="settingsMaxNumberOfMessages" translatable="false">settings.maxNumberOfMessages</string>
     <string name="settingsInitialNumberOfMessages" translatable="false">settings.initialNumberOfMessages</string>
@@ -162,6 +169,10 @@
     <string name="subScreenSettingsStyle" translatable="false">subScreenSettings.style</string>
     <string name="subScreenSettingsImageLink" translatable="false">subScreenSettings.imageLink</string>
     <string name="subScreenSettingsBehaviour" translatable="false">subScreenSettings.behaviour</string>
+    <string name="settingsForumAlternateBackgroundColor" translatable="false">settings.forumAlternateBackgroundColor</string>
+    <string name="settingsEnableSmoothScroll" translatable="false">settings.enableSmoothScroll</string>
+    <string name="settingsEnableGoToBottomOnLoad" translatable="false">settings.enableGoToBottomOnLoad</string>
+    <string name="settingsEnableAutoScrollModeForum" translatable="false">settings.enableAutoScrollModeForum</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

@@ -98,6 +98,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     };
 
     private void reloadSettings() {
+        adapterForForum.setAlternateBackgroundColor(PrefsManager.getBool(PrefsManager.BoolPref.Names.FORUM_ALTERNATE_BACKGROUND));
         getterForForum.setCookieListInAString(PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
         clearTopicsOnRefresh = true;
     }
@@ -179,7 +180,6 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         reloadSettings();
         getterForForum.setListenerForNewGetterState(listenerForNewGetterState);
         getterForForum.setListenerForNewTopics(listenerForNewTopics);
-        adapterForForum.setAlternateBackgroundColor(true);
         jvcTopicList.setOnItemClickListener(listenerForItemClickedInListView);
         jvcTopicList.setOnItemLongClickListener(listenerForItemLongClickedInListView);
 
@@ -225,8 +225,13 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     @Override
     public void onResume() {
         super.onResume();
+        boolean oldAlternateBackgroundColor = adapterForForum.getAlternateBackgroundColor();
         reloadSettings();
         isInErrorMode = false;
+
+        if (oldAlternateBackgroundColor != adapterForForum.getAlternateBackgroundColor()) {
+            adapterForForum.updateAllItems();
+        }
 
         if (adapterForForum.getAllItems().isEmpty() &&
                 (!getterForForum.getIsInSearchMode() || (getterForForum.getIsInSearchMode() && !getterForForum.getSearchIsEmptyAndItsNotAFail()))) {

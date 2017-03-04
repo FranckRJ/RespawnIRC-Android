@@ -9,6 +9,9 @@
             android:summary="%s"
             android:entries="@array/choicesForThemesReadable"
             android:entryValues="@array/choicesForThemesValue"/>
+        <CheckBoxPreference
+            android:key="@string/settingsForumAlternateBackgroundColor"
+            android:title="@string/forumAlternateBackgroundColorTitle"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/settingsModeForumTitle">

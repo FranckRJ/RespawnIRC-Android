@@ -60,7 +60,7 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
                 adapterForTopic.updateAllItems();
 
                 if (scrolledAtTheEnd && adapterForTopic.getCount() > 0) {
-                    if (needASmoothScroll) { //s'il y avait des messages affichés avant et qu'on était en bas de page, smoothscroll
+                    if (smoothScrollIsEnabled && needASmoothScroll) { //s'il y avait des messages affichés avant et qu'on était en bas de page, smoothscroll
                         jvcMsgList.smoothScrollToPosition(adapterForTopic.getCount() - 1);
                     } else {
                         jvcMsgList.setSelection(adapterForTopic.getCount() - 1);

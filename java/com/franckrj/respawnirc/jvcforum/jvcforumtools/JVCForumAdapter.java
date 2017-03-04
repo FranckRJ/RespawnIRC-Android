@@ -47,6 +47,10 @@ public class JVCForumAdapter extends BaseAdapter {
         return listOfTopics;
     }
 
+    public boolean getAlternateBackgroundColor() {
+        return alternateBackgroundColor;
+    }
+
     public void setAlternateBackgroundColor(boolean newVal) {
         alternateBackgroundColor = newVal;
     }

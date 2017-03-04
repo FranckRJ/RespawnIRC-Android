@@ -75,6 +75,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
     private boolean convertNoelshackLinkToDirectLink = false;
     private boolean showOverviewOnImageClick = false;
     private boolean goToLastPageAfterLoading = false;
+    private boolean goToBottomOnLoadIsEnabled = true;
 
     private final JVCMessageToTopicSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageToTopicSender.NewMessageWantEditListener() {
         @Override
@@ -218,6 +219,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         pseudoOfUser = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER);
         cookieListInAString = PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST);
         lastMessageSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_MESSAGE_SENDED);
+        goToBottomOnLoadIsEnabled = PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_GO_TO_BOTTOM_ON_LOAD);
     }
 
     private void updateShowNavigationButtons() {
@@ -283,13 +285,16 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
 
         pageNavigation.setCurrentLink(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_URL_TO_FETCH));
         updateShowNavigationButtons();
+        reloadSettings();
         if (savedInstanceState == null) {
             if (getIntent() != null) {
                 goToLastPageAfterLoading = getIntent().getBooleanExtra(EXTRA_GO_TO_LAST_PAGE, false);
                 currentTitles.topic = getIntent().getStringExtra(EXTRA_TOPIC_NAME);
                 currentTitles.forum = getIntent().getStringExtra(EXTRA_FORUM_NAME);
 
-                pageNavigation.setGoToBottomOnNextLoad(goToLastPageAfterLoading || getIntent().getBooleanExtra(EXTRA_GO_TO_BOTTOM, false));
+                if (goToBottomOnLoadIsEnabled) {
+                    pageNavigation.setGoToBottomOnNextLoad(goToLastPageAfterLoading || getIntent().getBooleanExtra(EXTRA_GO_TO_BOTTOM, false));
+                }
                 if (currentTitles.topic == null) {
                     currentTitles.topic = "";
                 }
@@ -321,7 +326,6 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
 
             pageNavigation.updateNavigationButtons();
         }
-        reloadSettings();
 
         if (myActionBar != null) {
             myActionBar.setTitle(currentTitles.forum);
@@ -332,6 +336,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
     @Override
     public void onResume() {
         super.onResume();
+        reloadSettings();
         PrefsManager.putInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED, MainActivity.ACTIVITY_SHOW_TOPIC);
         PrefsManager.applyChanges();
 
@@ -518,7 +523,9 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         pageNavigation.updateNavigationButtons();
 
         if (goToLastPageAfterLoading) {
-            pageNavigation.setGoToBottomOnNextLoad(true);
+            if (goToBottomOnLoadIsEnabled) {
+                pageNavigation.setGoToBottomOnNextLoad(true);
+            }
             pageNavigation.setCurrentItemIndex(pageNavigation.getLastPage() - 1);
             goToLastPageAfterLoading = false;
         }

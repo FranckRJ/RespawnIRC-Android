@@ -76,6 +76,10 @@ public class PrefsManager {
         addBoolPref(BoolPref.Names.TOPIC_SHOW_REFRESH_WHEN_MESSAGE_SHOWED_MODE_IRC, currentContext.getString(R.string.settingsShowRefreshWhenMessagesShowedModeIRC), false);
         addBoolPref(BoolPref.Names.ENABLE_CARD_DESIGN_MODE_FORUM, currentContext.getString(R.string.settingsEnableCardDesignModeForum), true);
         addBoolPref(BoolPref.Names.HIDE_UGLY_IMAGES, currentContext.getString(R.string.settingsHideUglyImages), false);
+        addBoolPref(BoolPref.Names.FORUM_ALTERNATE_BACKGROUND, currentContext.getString(R.string.settingsForumAlternateBackgroundColor), true);
+        addBoolPref(BoolPref.Names.ENABLE_SMOOTH_SCROLL, currentContext.getString(R.string.settingsEnableSmoothScroll), true);
+        addBoolPref(BoolPref.Names.ENABLE_GO_TO_BOTTOM_ON_LOAD, currentContext.getString(R.string.settingsEnableGoToBottomOnLoad), true);
+        addBoolPref(BoolPref.Names.ENABLE_AUTO_SCROLL_MODE_FORUM, currentContext.getString(R.string.settingsEnableAutoScrollModeForum), true);
 
         addStringPref(StringPref.Names.MAX_NUMBER_OF_OVERLY_QUOTE, currentContext.getString(R.string.settingsMaxNumberOfOverlyQuote), "2", 0, 15);
         addStringPref(StringPref.Names.SHOW_AVATAR_MODE_FORUM, currentContext.getString(R.string.settingsShowAvatarModeForum), "2");
@@ -236,11 +240,13 @@ public class PrefsManager {
             SHORTEN_LONG_LINK,
             USE_INTERNAL_NAVIGATOR,
             SHOW_SIGNATURE_MODE_FORUM, SHOW_SIGNATURE_MODE_IRC,
-            TOPIC_ALTERNATE_BACKGROUND_MODE_FORUM, TOPIC_ALTERNATE_BACKGROUND_MODE_IRC,
+            TOPIC_ALTERNATE_BACKGROUND_MODE_FORUM, TOPIC_ALTERNATE_BACKGROUND_MODE_IRC, FORUM_ALTERNATE_BACKGROUND,
             TOPIC_CLEAR_ON_REFRESH_MODE_FORUM,
             TOPIC_SHOW_REFRESH_WHEN_MESSAGE_SHOWED_MODE_IRC,
             ENABLE_CARD_DESIGN_MODE_FORUM,
-            HIDE_UGLY_IMAGES
+            HIDE_UGLY_IMAGES,
+            ENABLE_SMOOTH_SCROLL, ENABLE_AUTO_SCROLL_MODE_FORUM,
+            ENABLE_GO_TO_BOTTOM_ON_LOAD
         }
     }
 
