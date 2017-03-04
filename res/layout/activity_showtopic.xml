@@ -114,13 +114,13 @@
             android:focusableInTouchMode="true">
             <ImageButton
                 style="@style/SelectableItemBackground"
-                android:id="@+id/selectsticker_button_showtopic"
+                android:id="@+id/insertstuff_button_showtopic"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:scaleType="fitEnd"
                 android:src="?attr/themedContentAdd"
                 android:padding="6dp"
-                android:contentDescription="@string/selectSticker"/>
+                android:contentDescription="@string/insertStuff"/>
             <EditText
                 android:id="@+id/sendmessage_text_showtopic"
                 android:layout_width="0dp"

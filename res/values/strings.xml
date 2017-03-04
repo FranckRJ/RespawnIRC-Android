@@ -81,7 +81,6 @@
     <string name="favRemoved">Favori retiré</string>
     <string name="topicLockedForReason">Sujet fermé : %1$s</string>
     <string name="errorTopicIsLocked">Erreur, le topic est fermé.</string>
-    <string name="selectSticker">Sélectionner un sticker</string>
     <string name="transformStickerToSmileyTitle">Changer les stickers en smiley</string>
     <string name="transformStickerToSmileySummary">(tous les stickers ne sont pas changés)</string>
     <string name="unknownErrorPleaseResend">Erreur inconnue, essayez de ré-envoyer le message.</string>

@@ -265,16 +265,16 @@ public abstract class AbsNavigationViewActivity extends ThemedActivity implement
             currentNavigationMenuMode = newNavigationMenuMode;
             switch (currentNavigationMenuMode) {
                 case MODE_HOME:
-                    currentListOfMenuItem = new ArrayList<>(listOfMenuItemInfoForHome);
+                    currentListOfMenuItem = listOfMenuItemInfoForHome;
                     break;
                 case MODE_FORUM:
-                    currentListOfMenuItem = new ArrayList<>(listOfMenuItemInfoForForum);
+                    currentListOfMenuItem = listOfMenuItemInfoForForum;
                     break;
                 case MODE_CONNECT:
-                    currentListOfMenuItem = new ArrayList<>(listOfMenuItemInfoForConnect);
+                    currentListOfMenuItem = listOfMenuItemInfoForConnect;
                     break;
                 default:
-                    currentListOfMenuItem = new ArrayList<>(listOfMenuItemInfoForHome);
+                    currentListOfMenuItem = listOfMenuItemInfoForHome;
                     break;
             }
             adapterForNavigationMenu.setListOfMenuItem(currentListOfMenuItem);
@@ -291,6 +291,7 @@ public abstract class AbsNavigationViewActivity extends ThemedActivity implement
                 contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_action_navigation_expand_more_dark));
             }
         } else {
+            adapterForNavigationMenu.setRowSelected(-1);
             contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_action_navigation_expand_less_dark));
         }
 

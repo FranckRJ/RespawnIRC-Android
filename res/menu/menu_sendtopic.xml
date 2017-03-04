@@ -12,5 +12,5 @@
         android:title="@string/pastLastTopicSended"/>
     <item
         android:id="@+id/action_select_sticker_sendtopic"
-        android:title="@string/selectSticker"/>
+        android:title="@string/insertStuff"/>
 </menu>

@@ -69,7 +69,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
     private String lastMessageSended = "";
     private AddOrRemoveThingToFavs currentTaskForFavs = null;
     private String reasonOfLock = null;
-    private ImageButton selectStickerButton = null;
+    private ImageButton insertStuffButton = null;
     private PageNavigationUtil pageNavigation = null;
     private boolean useInternalNavigatorForDefaultOpening = false;
     private boolean convertNoelshackLinkToDirectLink = false;
@@ -262,7 +262,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         messageSendLayout = findViewById(R.id.sendmessage_layout_showtopic);
         messageSendEdit = (EditText) findViewById(R.id.sendmessage_text_showtopic);
         messageSendButton = (ImageButton) findViewById(R.id.sendmessage_button_showtopic);
-        selectStickerButton = (ImageButton) findViewById(R.id.selectsticker_button_showtopic);
+        insertStuffButton = (ImageButton) findViewById(R.id.insertstuff_button_showtopic);
 
         pageNavigation.initializeLayoutForAllNavigationButtons(findViewById(R.id.header_layout_showtopic), findViewById(R.id.shadow_header_showtopic));
         pageNavigation.initializePagerView((ViewPager) findViewById(R.id.pager_showtopic));
@@ -279,7 +279,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         senderForMessages.setListenerForNewMessagePosted(listenerForNewMessagePosted);
         messageSendButton.setOnClickListener(sendMessageToTopicListener);
         messageSendButton.setOnLongClickListener(refreshFromSendButton);
-        selectStickerButton.setOnClickListener(selectStickerClickedListener);
+        insertStuffButton.setOnClickListener(selectStickerClickedListener);
 
         pageNavigation.setCurrentLink(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_URL_TO_FETCH));
         updateShowNavigationButtons();
@@ -621,7 +621,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         if (!Utils.stringsAreEquals(reasonOfLock, newReason)) {
             reasonOfLock = newReason;
             if (reasonOfLock == null) {
-                selectStickerButton.setVisibility(View.VISIBLE);
+                insertStuffButton.setVisibility(View.VISIBLE);
                 messageSendButton.setVisibility(View.VISIBLE);
                 messageSendButton.setEnabled(true);
                 messageSendEdit.setFocusable(true);
@@ -631,7 +631,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
                 messageSendEdit.setText("");
                 messageSendEdit.setOnClickListener(null);
             } else {
-                selectStickerButton.setVisibility(View.GONE);
+                insertStuffButton.setVisibility(View.GONE);
                 messageSendButton.setVisibility(View.GONE);
                 messageSendButton.setEnabled(false);
                 messageSendEdit.setFocusable(false);
