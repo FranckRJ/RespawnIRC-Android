@@ -397,37 +397,26 @@ public class InsertStuffDialogFragment extends DialogFragment {
     }
 
     private void sendWhichInsertIsNeeded(String thisUrl, StuffInserted toThisListener) {
-        switch (thisUrl) {
-            case "textformat_bold":
-                toThisListener.getStringInserted("\'\'\'\'\'\'", 3);
-                break;
-            case "textformat_italic":
-                toThisListener.getStringInserted("\'\'\'\'", 2);
-                break;
-            case "textformat_underline":
-                toThisListener.getStringInserted("<u></u>", 4);
-                break;
-            case "textformat_strike":
-                toThisListener.getStringInserted("<s></s>", 4);
-                break;
-            case "textformat_ulist":
-                toThisListener.getStringInserted("* ", 0);
-                break;
-            case "textformat_olist":
-                toThisListener.getStringInserted("# ", 0);
-                break;
-            case "textformat_quote":
-                toThisListener.getStringInserted("> ", 0);
-                break;
-            case "textformat_code":
-                toThisListener.getStringInserted("<code></code>", 7);
-                break;
-            case "textformat_spoil":
-                toThisListener.getStringInserted("<spoil></spoil>", 8);
-                break;
-            default:
-                toThisListener.getStringInserted("", 0);
-                break;
+        if (thisUrl.startsWith("textformat_bold")) {
+            toThisListener.getStringInserted("\'\'\'\'\'\'", 3);
+        } else if (thisUrl.startsWith("textformat_italic")) {
+            toThisListener.getStringInserted("\'\'\'\'", 2);
+        } else if (thisUrl.startsWith("textformat_underline")) {
+            toThisListener.getStringInserted("<u></u>", 4);
+        } else if (thisUrl.startsWith("textformat_strike")) {
+            toThisListener.getStringInserted("<s></s>", 4);
+        } else if (thisUrl.startsWith("textformat_ulist")) {
+            toThisListener.getStringInserted("* ", 0);
+        } else if (thisUrl.startsWith("textformat_olist")) {
+            toThisListener.getStringInserted("# ", 0);
+        } else if (thisUrl.startsWith("textformat_quote")) {
+            toThisListener.getStringInserted("> ", 0);
+        } else if (thisUrl.startsWith("textformat_code")) {
+            toThisListener.getStringInserted("<code></code>", 7);
+        } else if (thisUrl.startsWith("textformat_spoil")) {
+            toThisListener.getStringInserted("<spoil></spoil>", 8);
+        } else {
+            toThisListener.getStringInserted("", 0);
         }
     }
 

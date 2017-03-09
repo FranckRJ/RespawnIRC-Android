@@ -37,9 +37,9 @@ public final class JVCParser {
     private static final Pattern spoilLinePattern = Pattern.compile("<span class=\"bloc-spoil-jv en-ligne\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
     private static final Pattern spoilBlockPattern = Pattern.compile("<span class=\"bloc-spoil-jv\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
     private static final Pattern spoilOverlyPattern = Pattern.compile("(<span class=\"bloc-spoil-jv[^\"]*\">.*?<span class=\"contenu-spoil\">|</span></span>)", Pattern.DOTALL);
-    private static final Pattern stickerPattern = Pattern.compile("<img class=\"img-stickers\" src=\"(http://jv.stkr.fr/p[^/]*/([^\"]*))\"/>");
-    private static final Pattern pageTopicLinkNumberPattern = Pattern.compile("^(http://www.jeuxvideo.com/forums/[0-9]*-([0-9]*)-([0-9]*)-)([0-9]*)(-[0-9]*-[0-9]*-[0-9]*-[^.]*.htm)");
-    private static final Pattern pageForumLinkNumberPattern = Pattern.compile("^(http://www.jeuxvideo.com/forums/[0-9]*-([0-9]*)-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-[^.]*.htm)");
+    private static final Pattern stickerPattern = Pattern.compile("<img class=\"img-stickers\" src=\"(http://jv\\.stkr\\.fr/p[^/]*/([^\"]*))\"/>");
+    private static final Pattern pageTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/[0-9]*-([0-9]*)-([0-9]*)-)([0-9]*)(-[0-9]*-[0-9]*-[0-9]*-[^\\.]*\\.htm)");
+    private static final Pattern pageForumLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/[0-9]*-([0-9]*)-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-[^\\.]*\\.htm)");
     private static final Pattern jvCarePattern = Pattern.compile("<span class=\"JvCare [^\"]*\">([^<]*)</span>");
     private static final Pattern lastEditMessagePattern = Pattern.compile("<div class=\"info-edition-msg\">(Message édité le ([^ ]* [^ ]* [^ ]* [^ ]* [0-9:]*) par.*?)</div>");
     private static final Pattern messageEditInfoPattern = Pattern.compile("<textarea tabindex=\"3\" class=\"area-editor\" name=\"text_commentaire\" id=\"text_commentaire\" placeholder=\"[^\"]*\">(.*?)</textarea>", Pattern.DOTALL);
@@ -49,9 +49,9 @@ public final class JVCParser {
     private static final Pattern highlightInArianeStringPattern = Pattern.compile("<h1 class=\"highlight\">([^<]*)</h1>");
     private static final Pattern topicNameAndLinkPattern = Pattern.compile("<a class=\"lien-jv topic-title[^\"]*\" href=\"([^\"]*\" title=\"[^\"]*)\"[^>]*>");
     private static final Pattern topicNumberMessagesPattern = Pattern.compile("<span class=\"topic-count\">[^0-9]*([0-9]*)");
-    private static final Pattern topicAuthorPattern = Pattern.compile("<span class=\".*?text-([^ ]*) topic-author[^>]*>[^A-Za-z0-9\\[\\]_-]*([^<\n]*)");
+    private static final Pattern topicAuthorPattern = Pattern.compile("<span class=\".*?text-([^ ]*) topic-author[^>]*>[^A-Za-z0-9\\[\\]_-]*([^<\\n\\r]*)");
     private static final Pattern topicDatePattern = Pattern.compile("<span class=\"topic-date\">[^<]*<span[^>]*>[^0-9/:]*([0-9/:]*)");
-    private static final Pattern topicTypePattern = Pattern.compile("<img src=\"/img/forums/topic-(.*?).png\"");
+    private static final Pattern topicTypePattern = Pattern.compile("<img src=\"/img/forums/topic-(.*?)\\.png\"");
     private static final Pattern forumFavsBlocPattern = Pattern.compile("<h2>Mes forums favoris</h2>.*?<ul class=\"display-list-simple\">(.*?)</ul>", Pattern.DOTALL);
     private static final Pattern topicFavsBlocPattern = Pattern.compile("<h2>Mes sujets favoris</h2>.*?<ul class=\"display-list-simple\">(.*?)</ul>", Pattern.DOTALL);
     private static final Pattern favPattern = Pattern.compile("<li><a href=\"([^\"]*)\">([^<]*)</a></li>");
@@ -69,8 +69,8 @@ public final class JVCParser {
     private static final Pattern jvcLinkPattern = Pattern.compile("<a href=\"([^\"]*)\"( title=\"[^\"]*\")?>.*?</a>");
     private static final Pattern shortLinkPattern = Pattern.compile("<span class=\"JvCare [^\"]*\" rel=\"nofollow[^\"]*\" target=\"_blank\">([^<]*)</span>");
     private static final Pattern longLinkPattern = Pattern.compile("<span class=\"JvCare [^\"]*\"[^i]*itle=\"([^\"]*)\">[^<]*<i></i><span>[^<]*</span>[^<]*</span>");
-    private static final Pattern smileyPattern = Pattern.compile("<img src=\"//image.jeuxvideo.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-def=\"SMILEYS\" data-code=\"([^\"]*)\" title=\"[^\"]*\" />");
-    private static final Pattern youtubeVideoPattern = Pattern.compile("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe .*? src=\"http(s)?://www.youtube.com/embed/([^\"]*)\"[^>]*></iframe></div></div>");
+    private static final Pattern smileyPattern = Pattern.compile("<img src=\"//image\\.jeuxvideo\\.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-def=\"SMILEYS\" data-code=\"([^\"]*)\" title=\"[^\"]*\" />");
+    private static final Pattern youtubeVideoPattern = Pattern.compile("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe .*? src=\"http(s)?://www\\.youtube\\.com/embed/([^\"]*)\"[^>]*></iframe></div></div>");
     private static final Pattern surroundedBlockquotePattern = Pattern.compile("(<br /> *)*(<(/)?blockquote>)( *<br />)*");
     private static final Pattern noelshackImagePattern = Pattern.compile("<a href=\"([^\"]*)\" data-def=\"NOELSHACK\" target=\"_blank\"><img class=\"img-shack\" .*? src=\"//([^\"]*)\" [^>]*></a>");
     private static final Pattern emptySearchPattern = Pattern.compile("<span style=\"[^\"]*\">[ \\n\\r]*Aucune réponse pour votre recherche ![ \\n\\r]*</span>");
@@ -625,28 +625,28 @@ public final class JVCParser {
     public static String createMessageFirstLineFromInfos(MessageInfos thisMessageInfo, Settings settings) {
         String newFirstLine = settings.firstLineFormat;
 
-        newFirstLine = newFirstLine.replaceAll("<%DATE_TIME%>", thisMessageInfo.dateTime);
-        newFirstLine = newFirstLine.replaceAll("<%DATE_FULL%>", thisMessageInfo.wholeDate);
-        newFirstLine = newFirstLine.replaceAll("<%PSEUDO_PSEUDO%>", thisMessageInfo.pseudo);
+        newFirstLine = newFirstLine.replace("<%DATE_TIME%>", thisMessageInfo.dateTime);
+        newFirstLine = newFirstLine.replace("<%DATE_FULL%>", thisMessageInfo.wholeDate);
+        newFirstLine = newFirstLine.replace("<%PSEUDO_PSEUDO%>", thisMessageInfo.pseudo);
 
         if (thisMessageInfo.isAnEdit) {
-            newFirstLine = newFirstLine.replaceAll("<%DATE_COLOR_START%>", "<font color=\"#008000\">");
-            newFirstLine = newFirstLine.replaceAll("<%DATE_COLOR_END%>", "</font>");
+            newFirstLine = newFirstLine.replace("<%DATE_COLOR_START%>", "<font color=\"#008000\">");
+            newFirstLine = newFirstLine.replace("<%DATE_COLOR_END%>", "</font>");
         } else {
-            newFirstLine = newFirstLine.replaceAll("<%DATE_COLOR_START%>", "");
-            newFirstLine = newFirstLine.replaceAll("<%DATE_COLOR_END%>", "");
+            newFirstLine = newFirstLine.replace("<%DATE_COLOR_START%>", "");
+            newFirstLine = newFirstLine.replace("<%DATE_COLOR_END%>", "");
         }
 
         if (thisMessageInfo.pseudo.toLowerCase().equals(settings.pseudoOfUser.toLowerCase())) {
-            newFirstLine = newFirstLine.replaceAll("<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoUser + "\">");
+            newFirstLine = newFirstLine.replace("<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoUser + "\">");
         } else if (thisMessageInfo.pseudoType.equals("modo")){
-            newFirstLine = newFirstLine.replaceAll("<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoModo + "\">");
+            newFirstLine = newFirstLine.replace("<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoModo + "\">");
         } else if (thisMessageInfo.pseudoType.equals("admin") || thisMessageInfo.pseudoType.equals("staff")){
-            newFirstLine = newFirstLine.replaceAll("<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoAdmin + "\">");
+            newFirstLine = newFirstLine.replace("<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoAdmin + "\">");
         } else {
-            newFirstLine = newFirstLine.replaceAll("<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoOther + "\">");
+            newFirstLine = newFirstLine.replace("<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoOther + "\">");
         }
-        newFirstLine = newFirstLine.replaceAll("<%PSEUDO_COLOR_END%>", "</font>");
+        newFirstLine = newFirstLine.replace("<%PSEUDO_COLOR_END%>", "</font>");
 
         return newFirstLine;
     }
