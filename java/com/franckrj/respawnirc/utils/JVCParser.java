@@ -74,6 +74,7 @@ public final class JVCParser {
     private static final Pattern surroundedBlockquotePattern = Pattern.compile("(<br /> *)*(<(/)?blockquote>)( *<br />)*");
     private static final Pattern noelshackImagePattern = Pattern.compile("<a href=\"([^\"]*)\" data-def=\"NOELSHACK\" target=\"_blank\"><img class=\"img-shack\" .*? src=\"//([^\"]*)\" [^>]*></a>");
     private static final Pattern emptySearchPattern = Pattern.compile("<span style=\"[^\"]*\">[ \\n\\r]*Aucune réponse pour votre recherche ![ \\n\\r]*</span>");
+    private static final Pattern uglyImagesNamePattern = Pattern.compile("issou|risit|jesus|picsart|chancla");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
     private static final Pattern multipleSpacesPattern = Pattern.compile(" +");
 
@@ -1020,7 +1021,9 @@ public final class JVCParser {
 
             while (noelshackImageMatcher.find(lastOffsetOfTag)) {
                 String currentMatch = noelshackImageMatcher.group();
-                if (currentMatch.contains("risit") || currentMatch.contains("jesus") || currentMatch.contains("issou")) {
+                Matcher uglyImagesNameMatcher = uglyImagesNamePattern.matcher(currentMatch);
+
+                if (uglyImagesNameMatcher.find()) {
                     return true;
                 }
 
@@ -1353,7 +1356,8 @@ public final class JVCParser {
     private static class SuppressIfContainUglyNames implements StringModifier {
         @Override
         public String changeString(String baseString) {
-            if (baseString.contains("jesus") || baseString.contains("risit") || baseString.contains("issou")) {
+            Matcher uglyImagesNameMatcher = uglyImagesNamePattern.matcher(baseString);
+            if (uglyImagesNameMatcher.find()) {
                 return "";
             }
             return baseString;
