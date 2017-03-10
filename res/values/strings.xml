@@ -142,7 +142,7 @@
     <string name="enableSmoothScrollTitle">Activer le smoothscroll</string>
     <string name="whenPossibleSummary">(lorsque possible)</string>
     <string name="enableGoToBottomOnLoadTitle">Fin de page lors d\'un clique long</string>
-    <string name="enableGoToBottomOnLoadSummary">(ne s\'applique qu\'aux topics favoris et de la liste de topics)</string>
+    <string name="enableGoToBottomOnLoadSummary">(ne s\'applique qu\'aux topics favoris et de la liste des topics)</string>
     <string name="enableAutoScrollTitle">Activer l\'autoscroll</string>
     <string name="enableAutoScrollSummary">(scroll automatiquement après un refresh si déjà en bas de page)</string>
     <string name="information">Information</string>
