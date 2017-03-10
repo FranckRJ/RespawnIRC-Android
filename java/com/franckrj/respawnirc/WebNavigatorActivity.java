@@ -73,6 +73,10 @@ public class WebNavigatorActivity extends ThemedActivity {
                 updateTitleAndSubtitle();
             }
         });
+        navigatorWebView.getSettings().setUseWideViewPort(true);
+        navigatorWebView.getSettings().setSupportZoom(true);
+        navigatorWebView.getSettings().setBuiltInZoomControls(true);
+        navigatorWebView.getSettings().setDisplayZoomControls(false);
         navigatorWebView.getSettings().setJavaScriptEnabled(true);
         navigatorWebView.getSettings().setSaveFormData(false);
         Undeprecator.webSettingsSetSavePassword(navigatorWebView.getSettings(), false);

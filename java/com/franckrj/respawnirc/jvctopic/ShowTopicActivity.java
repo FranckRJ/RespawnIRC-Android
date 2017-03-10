@@ -118,7 +118,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
             if (messageSendButton.isEnabled() && reasonOfLock == null) {
                 String tmpLastMessageSended = "";
 
-                if (!pseudoOfUser.isEmpty()) {
+                if (!pseudoOfUser.isEmpty() && !messageSendEdit.getText().toString().isEmpty()) {
                     if (!senderForMessages.getIsInEdit()) {
                         boolean messageIsSended = false;
                         if (getCurrentFragment().getLatestListOfInputInAString() != null) {
@@ -136,7 +136,11 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
                         senderForMessages.sendEditMessage(tmpLastMessageSended, cookieListInAString);
                     }
                 } else {
-                    Toast.makeText(ShowTopicActivity.this, R.string.errorConnectedNeededBeforePost, Toast.LENGTH_LONG).show();
+                    if (pseudoOfUser.isEmpty()) {
+                        Toast.makeText(ShowTopicActivity.this, R.string.errorConnectedNeededBeforePost, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(ShowTopicActivity.this, R.string.errorMessageContentNeededForSend, Toast.LENGTH_LONG).show();
+                    }
                 }
 
                 Utils.hideSoftKeyboard(ShowTopicActivity.this);
