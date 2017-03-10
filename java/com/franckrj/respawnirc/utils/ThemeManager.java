@@ -83,6 +83,8 @@ public class ThemeManager {
                     }
                 case LINK_COLOR:
                     return R.color.linkColorThemeDark;
+                case TOPIC_NAME_COLOR:
+                    return R.color.topicNameColorThemeDark;
                 case COLOR_QUOTE_BACKGROUND:
                     if (themeUsed == ThemeName.BLACK_THEME) {
                         return R.color.colorQuoteBackgroundThemeBlack;
@@ -101,6 +103,8 @@ public class ThemeManager {
                     return R.color.colorPseudoAdminThemeDark;
                 case HEADER_TEXT_COLOR:
                     return R.color.headerTextColorThemeDark;
+                case NAVIGATION_ICON_COLOR:
+                    return R.color.navigationIconColorThemeDark;
                 default:
                     return R.color.colorPrimaryThemeDark;
             }
@@ -122,6 +126,8 @@ public class ThemeManager {
                     return R.color.altBackgroundColorThemeLight;
                 case LINK_COLOR:
                     return R.color.linkColorThemeLight;
+                case TOPIC_NAME_COLOR:
+                    return R.color.topicNameColorThemeLight;
                 case COLOR_QUOTE_BACKGROUND:
                     return R.color.colorQuoteBackgroundThemeLight;
                 case COLOR_PSEUDO_USER:
@@ -136,6 +142,8 @@ public class ThemeManager {
                     return R.color.colorPseudoAdminThemeLight;
                 case HEADER_TEXT_COLOR:
                     return R.color.headerTextColorThemeLight;
+                case NAVIGATION_ICON_COLOR:
+                    return R.color.navigationIconColorThemeLight;
                 default:
                     return R.color.colorPrimaryThemeLight;
             }
@@ -188,9 +196,9 @@ public class ThemeManager {
     public enum ColorName {
         COLOR_PRIMARY, COLOR_PRIMARY_DARK, COLOR_ACCENT,
         DEFAULT_BACKGROUND_COLOR, DARKER_BACKGROUND_COLOR, MORE_DARKER_BACKGROUND_COLOR, ALT_BACKGROUND_COLOR,
-        LINK_COLOR, COLOR_QUOTE_BACKGROUND,
+        LINK_COLOR, TOPIC_NAME_COLOR, COLOR_QUOTE_BACKGROUND,
         COLOR_PSEUDO_USER, COLOR_PSEUDO_OTHER_MODE_FORUM, COLOR_PSEUDO_OTHER_MODE_IRC, COLOR_PSEUDO_MODO, COLOR_PSEUDO_ADMIN,
-        HEADER_TEXT_COLOR
+        HEADER_TEXT_COLOR, NAVIGATION_ICON_COLOR
     }
 
     public enum DrawableName {

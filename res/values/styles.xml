@@ -18,6 +18,7 @@
         <item name="themedContentAdd">@drawable/ic_action_content_add_light</item>
         <item name="themedTextFormatGeneral">@drawable/textformat_general_light</item>
         <item name="themedContentSendIcon">@drawable/ic_action_content_send_light</item>
+        <item name="themedDividerColor">@color/dividerColorThemeLight</item>
     </style>
     <style name="AppTheme.Dark.Real" parent="AppTheme.Dark.Base"/>
     <style name="AppTheme.Dark.Base" parent="Theme.AppCompat.NoActionBar">
@@ -37,6 +38,7 @@
         <item name="themedContentAdd">@drawable/ic_action_content_add_dark</item>
         <item name="themedTextFormatGeneral">@drawable/textformat_general_dark</item>
         <item name="themedContentSendIcon">@drawable/ic_action_content_send_dark</item>
+        <item name="themedDividerColor">@color/dividerColorThemeDark</item>
     </style>
     <style name="AppTheme.Black.Real" parent="AppTheme.Black.Base"/>
     <style name="AppTheme.Black.Base" parent="Theme.AppCompat.NoActionBar">
@@ -56,6 +58,7 @@
         <item name="themedContentAdd">@drawable/ic_action_content_add_dark</item>
         <item name="themedTextFormatGeneral">@drawable/textformat_general_dark</item>
         <item name="themedContentSendIcon">@drawable/ic_action_content_send_dark</item>
+        <item name="themedDividerColor">@color/dividerColorThemeDark</item>
     </style>
     <style name="SelectableItemTheme">
         <item name="colorControlHighlight">?attr/colorAccent</item>

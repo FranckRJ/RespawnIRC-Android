@@ -412,8 +412,8 @@ public abstract class AbsNavigationViewActivity extends ThemedActivity implement
         contextConnectImageNavigation = (ImageView) navigationHeader.findViewById(R.id.context_connect_image_navigation_header);
         adapterForNavigationMenu = new NavigationMenuAdapter(this);
         adapterForNavigationMenu.setBackgroundColors(Undeprecator.resourcesGetColor(getResources(), (ThemeManager.getThemeUsedIsDark() ? android.R.color.white : android.R.color.black)),
-                Undeprecator.resourcesGetColor(getResources(), R.color.basicGreyColor), Undeprecator.resourcesGetColor(getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_ACCENT)) & 0x40FFFFFF,
-                Undeprecator.resourcesGetColor(getResources(), android.R.color.transparent));
+                Undeprecator.resourcesGetColor(getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.NAVIGATION_ICON_COLOR)),
+                Undeprecator.resourcesGetColor(getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_ACCENT)) & 0x40FFFFFF, Undeprecator.resourcesGetColor(getResources(), android.R.color.transparent));
         adapterForNavigationMenu.setFontColors(Undeprecator.resourcesGetColor(getResources(), (ThemeManager.getThemeUsedIsDark() ? android.R.color.white : android.R.color.black)),
                 Undeprecator.resourcesGetColor(getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.HEADER_TEXT_COLOR)));
         navigationMenuList.setHeaderView(navigationHeader);

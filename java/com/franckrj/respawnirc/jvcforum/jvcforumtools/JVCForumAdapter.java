@@ -63,7 +63,7 @@ public class JVCForumAdapter extends BaseAdapter {
     public void addItem(JVCParser.TopicInfos item) {
         String textForAuthor;
         ContentHolder thisHolder = new ContentHolder();
-        thisHolder.firstLineContent = Undeprecator.htmlFromHtml("<b><font color=\"" + Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.LINK_COLOR), parentActivity) +
+        thisHolder.firstLineContent = Undeprecator.htmlFromHtml("<b><font color=\"" + Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.TOPIC_NAME_COLOR), parentActivity) +
                                         "\">" + item.htmlName + "</font> (" + item.messages + ")</b>");
         switch (item.authorType) {
             case "modo":
