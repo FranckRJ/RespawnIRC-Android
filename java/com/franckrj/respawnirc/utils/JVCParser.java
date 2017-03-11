@@ -655,7 +655,7 @@ public final class JVCParser {
     public static String createMessageSecondLineFromInfos(MessageInfos thisMessageInfo, Settings settings) {
         String finalMessage = settings.secondLineFormat;
 
-        finalMessage = finalMessage.replace("<%MESSAGE_MESSAGE%>", parseMessageToPrettyMessage(thisMessageInfo.messageNotParsed, settings, thisMessageInfo.containSpoil, thisMessageInfo.showSpoil, thisMessageInfo.showOverlyQuote, thisMessageInfo.showUglyImages));
+        finalMessage = finalMessage.replace("<%MESSAGE_MESSAGE%>", parseMessageToPrettyMessage(thisMessageInfo.messageNotParsed, settings, thisMessageInfo.messageContentContainSpoil, thisMessageInfo.showSpoil, thisMessageInfo.showOverlyQuote, thisMessageInfo.showUglyImages));
         if (!thisMessageInfo.lastTimeEdit.isEmpty()) {
             finalMessage = finalMessage.replace("<%EDIT_ALL%>", settings.addBeforeEdit + thisMessageInfo.lastTimeEdit.trim() + settings.addAfterEdit);
         } else {
@@ -667,7 +667,7 @@ public final class JVCParser {
     }
 
     public static String createSignatureFromInfos(MessageInfos thisMessageInfo, Settings settings) {
-        return "<small>" + parseMessageToPrettyMessage(thisMessageInfo.signatureNotParsed, settings, true, false, true, true) + "</small>";
+        return "<small>" + parseMessageToPrettyMessage(thisMessageInfo.signatureNotParsed, settings, thisMessageInfo.signatureContainSpoil, thisMessageInfo.showSpoil, true, true) + "</small>";
     }
 
     public static String parseMessageToPrettyMessage(String messageInString, Settings settings, boolean containSpoil, boolean showSpoil, boolean showOverlyQuote, boolean showUglyImages) {
@@ -798,10 +798,12 @@ public final class JVCParser {
             newMessageInfo.messageNotParsed = messageMatcher.group(1);
             newMessageInfo.dateTime = dateMessageMatcher.group(3);
             newMessageInfo.wholeDate = dateMessageMatcher.group(2);
-            newMessageInfo.containSpoil = newMessageInfo.messageNotParsed.contains("<span class=\"contenu-spoil\">");
             newMessageInfo.numberOfOverlyQuote = ToolForParsing.countNumberOfOverlyQuoteInNotPrettyMessage(newMessageInfo.messageNotParsed);
             newMessageInfo.containUglyImages = ToolForParsing.hasUglyImagesInNotPrettyMessage(newMessageInfo.messageNotParsed);
             newMessageInfo.id = Long.parseLong(messageIDMatcher.group(1));
+
+            newMessageInfo.messageContentContainSpoil = newMessageInfo.messageNotParsed.contains("<span class=\"contenu-spoil\">");
+            newMessageInfo.signatureContainSpoil = newMessageInfo.signatureNotParsed.contains("<span class=\"contenu-spoil\">");
         }
 
         return newMessageInfo;
@@ -1135,7 +1137,8 @@ public final class JVCParser {
         public String dateTime = "";
         public String wholeDate = "";
         public String lastTimeEdit = "";
-        public boolean containSpoil = false;
+        public boolean messageContentContainSpoil = false;
+        public boolean signatureContainSpoil = false;
         public boolean showSpoil = false;
         public int numberOfOverlyQuote = 0;
         public boolean showOverlyQuote = false;
@@ -1169,7 +1172,8 @@ public final class JVCParser {
             dateTime = in.readString();
             wholeDate = in.readString();
             lastTimeEdit = in.readString();
-            containSpoil = (in.readInt() == 1);
+            messageContentContainSpoil = (in.readInt() == 1);
+            signatureContainSpoil = (in.readInt() == 1);
             showSpoil = (in.readInt() == 1);
             numberOfOverlyQuote = in.readInt();
             showOverlyQuote = (in.readInt() == 1);
@@ -1194,7 +1198,8 @@ public final class JVCParser {
             out.writeString(dateTime);
             out.writeString(wholeDate);
             out.writeString(lastTimeEdit);
-            out.writeInt(containSpoil ? 1 : 0);
+            out.writeInt(messageContentContainSpoil ? 1 : 0);
+            out.writeInt(signatureContainSpoil ? 1 : 0);
             out.writeInt(showSpoil ? 1 : 0);
             out.writeInt(numberOfOverlyQuote);
             out.writeInt(showOverlyQuote ? 1 : 0);

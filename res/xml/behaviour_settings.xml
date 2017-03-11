@@ -19,6 +19,9 @@
             android:key="@string/settingsTransformStickerToSmiley"
             android:title="@string/transformStickerToSmileyTitle"
             android:summary="@string/transformStickerToSmileySummary"/>
+        <CheckBoxPreference
+            android:key="@string/settingsDefaultShowSpoilVal"
+            android:title="@string/defaultShowSpoilValTitle"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/settingsModeForumTitle">

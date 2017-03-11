@@ -41,9 +41,9 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
 
                 for (JVCParser.MessageInfos thisMessageInfo : listOfNewMessages) {
                     if (!thisMessageInfo.isAnEdit) {
-                        adapterForTopic.addItem(thisMessageInfo);
+                        adapterForTopic.addItem(thisMessageInfo, true);
                     } else {
-                        adapterForTopic.updateThisItem(thisMessageInfo);
+                        adapterForTopic.updateThisItem(thisMessageInfo, true);
                     }
                 }
 

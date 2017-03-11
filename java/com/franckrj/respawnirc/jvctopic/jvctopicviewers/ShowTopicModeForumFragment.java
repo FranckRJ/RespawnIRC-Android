@@ -36,7 +36,7 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
                 adapterForTopic.removeAllItems();
 
                 for (JVCParser.MessageInfos thisMessageInfo : listOfNewMessages) {
-                    adapterForTopic.addItem(thisMessageInfo);
+                    adapterForTopic.addItem(thisMessageInfo, true);
                 }
 
                 adapterForTopic.updateAllItems();

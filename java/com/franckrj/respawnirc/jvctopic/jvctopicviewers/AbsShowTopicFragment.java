@@ -94,6 +94,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         currentSettings.pseudoOfUser = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER);
         absGetterForTopic.setCookieListInAString(PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
         smoothScrollIsEnabled = PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_SMOOTH_SCROLL);
+        adapterForTopic.setShowSpoilDefault(PrefsManager.getBool(PrefsManager.BoolPref.Names.DEFAULT_SHOW_SPOIL_VAL));
     }
 
     protected void updateSettingsDependingOnConnection() {
@@ -119,37 +120,37 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             case R.id.menu_show_spoil_message:
                 currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
                 currentItem.showSpoil = true;
-                adapterForTopic.updateThisItem(currentItem);
+                adapterForTopic.updateThisItem(currentItem, false);
                 adapterForTopic.updateAllItems();
                 return true;
             case R.id.menu_hide_spoil_message:
                 currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
                 currentItem.showSpoil = false;
-                adapterForTopic.updateThisItem(currentItem);
+                adapterForTopic.updateThisItem(currentItem, false);
                 adapterForTopic.updateAllItems();
                 return true;
             case R.id.menu_show_quote_message:
                 currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
                 currentItem.showOverlyQuote = true;
-                adapterForTopic.updateThisItem(currentItem);
+                adapterForTopic.updateThisItem(currentItem, false);
                 adapterForTopic.updateAllItems();
                 return true;
             case R.id.menu_hide_quote_message:
                 currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
                 currentItem.showOverlyQuote = false;
-                adapterForTopic.updateThisItem(currentItem);
+                adapterForTopic.updateThisItem(currentItem, false);
                 adapterForTopic.updateAllItems();
                 return true;
             case R.id.menu_show_ugly_images_message:
                 currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
                 currentItem.showUglyImages = true;
-                adapterForTopic.updateThisItem(currentItem);
+                adapterForTopic.updateThisItem(currentItem, false);
                 adapterForTopic.updateAllItems();
                 return true;
             case R.id.menu_hide_ugly_images_message:
                 currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
                 currentItem.showUglyImages = false;
-                adapterForTopic.updateThisItem(currentItem);
+                adapterForTopic.updateThisItem(currentItem, false);
                 adapterForTopic.updateAllItems();
                 return true;
             default:
@@ -271,7 +272,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
 
             if (allCurrentMessagesShowed != null) {
                 for (JVCParser.MessageInfos thisMessageInfo : allCurrentMessagesShowed) {
-                    adapterForTopic.addItem(thisMessageInfo);
+                    adapterForTopic.addItem(thisMessageInfo, false);
                 }
             }
 

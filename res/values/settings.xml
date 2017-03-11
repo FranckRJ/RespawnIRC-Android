@@ -28,4 +28,5 @@
     <string name="settingsEnableGoToBottomOnLoad" translatable="false">settings.enableGoToBottomOnLoad</string>
     <string name="settingsEnableAutoScrollModeForum" translatable="false">settings.enableAutoScrollModeForum</string>
     <string name="subScreenSettingsHelp" translatable="false">subScreenSettings.help</string>
+    <string name="settingsDefaultShowSpoilVal" translatable="false">settings.defaultShowSpoilVal</string>
 </resources>

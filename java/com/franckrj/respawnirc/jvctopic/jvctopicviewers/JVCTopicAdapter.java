@@ -59,6 +59,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     private boolean showSurvey = false;
     private boolean showSignatures = false;
     private boolean showAvatars = false;
+    private boolean showSpoilDefault = false;
     private String surveyTitle = "";
     private View.OnClickListener onSurveyClickListener = null;
     private float multiplierOfLineSizeForFirstLine = 0;
@@ -97,7 +98,7 @@ public class JVCTopicAdapter extends BaseAdapter {
                 }
             }
 
-            if (itemSelected.containSpoil) {
+            if (itemSelected.messageContentContainSpoil || (showSignatures && itemSelected.signatureContainSpoil)) {
                 if (itemSelected.showSpoil) {
                     popup.getMenu().add(Menu.NONE, R.id.menu_hide_spoil_message, Menu.NONE, R.string.hideSpoilMessage);
                 } else {
@@ -177,6 +178,10 @@ public class JVCTopicAdapter extends BaseAdapter {
         showAvatars = newVal;
     }
 
+    public void setShowSpoilDefault(boolean newVal) {
+        showSpoilDefault = newVal;
+    }
+
     public void setMultiplierOfLineSizeForFirstLine(float newVal) {
         multiplierOfLineSizeForFirstLine = newVal;
     }
@@ -205,16 +210,16 @@ public class JVCTopicAdapter extends BaseAdapter {
         listOfContentForMessages.remove(0);
     }
 
-    public void addItem(JVCParser.MessageInfos item) {
-        listOfContentForMessages.add(updateHolderWithNewItem(new ContentHolder(), item));
+    public void addItem(JVCParser.MessageInfos item, boolean isANewItem) {
+        listOfContentForMessages.add(updateHolderWithNewItem(new ContentHolder(), item, isANewItem));
         listOfMessages.add(item);
     }
 
-    public void updateThisItem(JVCParser.MessageInfos item) {
+    public void updateThisItem(JVCParser.MessageInfos item, boolean isANewItem) {
         final int sizeOfListOfMessages = listOfMessages.size();
         for (int i = 0; i < sizeOfListOfMessages; ++i) {
             if (listOfMessages.get(i).id == item.id) {
-                updateHolderWithNewItem(listOfContentForMessages.get(i), item);
+                updateHolderWithNewItem(listOfContentForMessages.get(i), item, isANewItem);
                 listOfMessages.set(i, item);
                 break;
             }
@@ -225,7 +230,11 @@ public class JVCTopicAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    private ContentHolder updateHolderWithNewItem(ContentHolder holder, JVCParser.MessageInfos item) {
+    private ContentHolder updateHolderWithNewItem(ContentHolder holder, JVCParser.MessageInfos item, boolean isARealNewItem) {
+        if (isARealNewItem) {
+            item.showSpoil = showSpoilDefault;
+        }
+
         holder.firstLineContent = new SpannableString(Undeprecator.htmlFromHtml(JVCParser.createMessageFirstLineFromInfos(item, currentSettings)));
         holder.secondLineContent = replaceQuoteAndUrlSpans(Undeprecator.htmlFromHtml(JVCParser.createMessageSecondLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
 

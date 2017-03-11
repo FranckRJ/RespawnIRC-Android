@@ -80,6 +80,7 @@ public class PrefsManager {
         addBoolPref(BoolPref.Names.ENABLE_SMOOTH_SCROLL, currentContext.getString(R.string.settingsEnableSmoothScroll), true);
         addBoolPref(BoolPref.Names.ENABLE_GO_TO_BOTTOM_ON_LOAD, currentContext.getString(R.string.settingsEnableGoToBottomOnLoad), true);
         addBoolPref(BoolPref.Names.ENABLE_AUTO_SCROLL_MODE_FORUM, currentContext.getString(R.string.settingsEnableAutoScrollModeForum), true);
+        addBoolPref(BoolPref.Names.DEFAULT_SHOW_SPOIL_VAL, currentContext.getString(R.string.settingsDefaultShowSpoilVal), false);
 
         addStringPref(StringPref.Names.MAX_NUMBER_OF_OVERLY_QUOTE, currentContext.getString(R.string.settingsMaxNumberOfOverlyQuote), "2", 0, 15);
         addStringPref(StringPref.Names.SHOW_AVATAR_MODE_FORUM, currentContext.getString(R.string.settingsShowAvatarModeForum), "2");
@@ -246,7 +247,8 @@ public class PrefsManager {
             ENABLE_CARD_DESIGN_MODE_FORUM,
             HIDE_UGLY_IMAGES,
             ENABLE_SMOOTH_SCROLL, ENABLE_AUTO_SCROLL_MODE_FORUM,
-            ENABLE_GO_TO_BOTTOM_ON_LOAD
+            ENABLE_GO_TO_BOTTOM_ON_LOAD,
+            DEFAULT_SHOW_SPOIL_VAL
         }
     }
 
