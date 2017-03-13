@@ -429,19 +429,11 @@ public class JVCForumListAdapter extends BaseExpandableListAdapter implements Ex
         } else {
             currentListOfForums = new ArrayList<>();
 
-            if (!lastListOfForumsShowed.isEmpty()) {
-                for (JVCParser.NameAndLink thisForum : lastListOfForumsShowed) {
-                    ForumInfo tmpForumInfo = new ForumInfo();
-                    tmpForumInfo.isTitle = false;
-                    tmpForumInfo.isForum = true;
-                    tmpForumInfo.forum = thisForum;
-                    currentListOfForums.add(tmpForumInfo);
-                }
-            } else {
+            for (JVCParser.NameAndLink thisForum : lastListOfForumsShowed) {
                 ForumInfo tmpForumInfo = new ForumInfo();
                 tmpForumInfo.isTitle = false;
-                tmpForumInfo.isForum = false;
-                tmpForumInfo.forum = new JVCParser.NameAndLink(parentActivity.getString(R.string.noResultFound), "");
+                tmpForumInfo.isForum = true;
+                tmpForumInfo.forum = thisForum;
                 currentListOfForums.add(tmpForumInfo);
             }
         }

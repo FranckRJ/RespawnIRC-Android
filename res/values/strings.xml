@@ -73,7 +73,7 @@
     <string name="isForum">Est un forum</string>
     <string name="forumSearch">Rechercher un forum</string>
     <string name="topicSearch">Rechercher un topic</string>
-    <string name="noResultFound">Pas de résultat</string>
+    <string name="noResultFound">Pas de résultat.</string>
     <string name="addToFavs">Ajouter aux favoris</string>
     <string name="removeOfFavs">Retirer des favoris</string>
     <string name="errorActionAlreadyRunning">Erreur, action déjà en cours.</string>

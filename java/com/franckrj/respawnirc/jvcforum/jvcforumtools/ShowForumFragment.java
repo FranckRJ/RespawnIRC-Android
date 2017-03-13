@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.AbsShowSomethingFragment;
@@ -24,6 +25,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     private static final String SAVE_ALL_TOPICS_SHOWED = "saveAllCurrentTopicsShowed";
 
     private SwipeRefreshLayout swipeRefresh = null;
+    private TextView noResultFoundTextView = null;
     private NewTopicWantRead listenerForNewTopicWantRead = null;
     private JVCForumGetter getterForForum = null;
     private ListView jvcTopicList = null;
@@ -57,6 +59,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         public void newStateSetted(int newState) {
             if (newState == JVCForumGetter.STATE_LOADING) {
                 swipeRefresh.setRefreshing(true);
+                noResultFoundTextView.setVisibility(View.GONE);
             } else if (newState == JVCForumGetter.STATE_NOT_LOADING) {
                 swipeRefresh.setRefreshing(false);
             }
@@ -67,7 +70,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         @Override
         public void getNewTopics(ArrayList<JVCParser.TopicInfos> listOfNewTopics) {
             if (getterForForum.getIsInSearchMode() && getterForForum.getSearchIsEmptyAndItsNotAFail()) {
-                Toast.makeText(getActivity(), R.string.noResultFound, Toast.LENGTH_SHORT).show();
+                noResultFoundTextView.setVisibility(View.VISIBLE);
             } else if (!listOfNewTopics.isEmpty()) {
                 isInErrorMode = false;
                 adapterForForum.removeAllItems();
@@ -165,6 +168,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
 
         jvcTopicList = (ListView) mainView.findViewById(R.id.jvctopic_view_showforum);
         swipeRefresh = (SwipeRefreshLayout) mainView.findViewById(R.id.swiperefresh_showforum);
+        noResultFoundTextView = (TextView) mainView.findViewById(R.id.text_noresultfound_showforum);
 
         swipeRefresh.setOnRefreshListener(listenerForRefresh);
 
@@ -196,6 +200,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
             getterForForum.setListenerForNewNumberOfMP((JVCForumGetter.NewNumberOfMPSetted) getActivity());
         }
 
+        noResultFoundTextView.setVisibility(View.GONE);
         swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
         jvcTopicList.setAdapter(adapterForForum);
 
@@ -211,6 +216,10 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
             }
 
             adapterForForum.updateAllItems();
+
+            if (getterForForum.getIsInSearchMode() && adapterForForum.getAllItems().isEmpty() && getterForForum.getSearchIsEmptyAndItsNotAFail()) {
+                noResultFoundTextView.setVisibility(View.VISIBLE);
+            }
         } else {
             Bundle currentArgs = getArguments();
 

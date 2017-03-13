@@ -43,6 +43,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
     private MenuItem searchExpandableItem = null;
     private GetSearchedForums currentAsyncTaskForGetSearchedForums = null;
     private SwipeRefreshLayout swipeRefresh = null;
+    private TextView noResultFoundTextView = null;
     private String lastSearchedText = null;
 
     private final View.OnClickListener searchButtonClickedListener = new View.OnClickListener() {
@@ -72,6 +73,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
             if (textForSearch.getText().toString().isEmpty()) {
                 stopAllCurrentTasks();
                 adapterForForumList.setNewListOfForums(null);
+                noResultFoundTextView.setVisibility(View.GONE);
             } else if (currentAsyncTaskForGetSearchedForums == null) {
                 currentAsyncTaskForGetSearchedForums = new GetSearchedForums();
                 currentAsyncTaskForGetSearchedForums.execute(textForSearch.getText().toString());
@@ -104,7 +106,9 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        noResultFoundTextView = (TextView) findViewById(R.id.text_noresultfound_selectforum);
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swiperefresh_selectforum);
+        noResultFoundTextView.setVisibility(View.GONE);
         swipeRefresh.setEnabled(false);
         swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
 
@@ -117,6 +121,9 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         if (savedInstanceState != null) {
             lastSearchedText = savedInstanceState.getString(SAVE_SEARCH_FORUM_CONTENT, null);
             adapterForForumList.loadFromBundle(savedInstanceState);
+            if (adapterForForumList.getGroupCount() == 0) {
+                noResultFoundTextView.setVisibility(View.VISIBLE);
+            }
         }
 
         if (PrefsManager.getBool(PrefsManager.BoolPref.Names.IS_FIRST_LAUNCH)) {
@@ -172,6 +179,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
                 textForSearch.setText("");
                 stopAllCurrentTasks();
                 adapterForForumList.setNewListOfForums(null);
+                noResultFoundTextView.setVisibility(View.GONE);
                 Utils.hideSoftKeyboard(SelectForumInListActivity.this);
                 return true;
             }
@@ -243,6 +251,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         @Override
         protected void onPreExecute() {
             adapterForForumList.clearListOfForums();
+            noResultFoundTextView.setVisibility(View.GONE);
             swipeRefresh.setRefreshing(true);
         }
 
@@ -269,6 +278,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         @Override
         protected void onPostExecute(String pageResult) {
             super.onPostExecute(pageResult);
+            ArrayList<JVCParser.NameAndLink> newListOfForums = null;
             swipeRefresh.setRefreshing(false);
 
             currentAsyncTaskForGetSearchedForums = null;
@@ -281,12 +291,20 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
                         return;
                     }
                 } else {
-                    adapterForForumList.setNewListOfForums(JVCParser.getListOfForumsInSearchPage(pageResult));
-                    return;
+                    newListOfForums = JVCParser.getListOfForumsInSearchPage(pageResult);
                 }
             }
 
-            adapterForForumList.setNewListOfForums(new ArrayList<JVCParser.NameAndLink>());
+            if (newListOfForums == null) {
+                newListOfForums = new ArrayList<>();
+            }
+
+            adapterForForumList.setNewListOfForums(newListOfForums);
+            if (!newListOfForums.isEmpty()) {
+                noResultFoundTextView.setVisibility(View.GONE);
+            } else {
+                noResultFoundTextView.setVisibility(View.VISIBLE);
+            }
         }
     }
 }
