@@ -342,6 +342,7 @@ public abstract class AbsNavigationViewActivity extends ThemedActivity implement
         } else {
             adapterForNavigationMenu.setRowText(adapterForNavigationMenu.getPositionDependingOfID(ITEM_ID_SHOWMP, GROUP_ID_BASIC), getString(R.string.showMPWithNumber, newNumber));
         }
+        adapterForNavigationMenu.updateList();
     }
 
     @Override
@@ -356,7 +357,6 @@ public abstract class AbsNavigationViewActivity extends ThemedActivity implement
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                super.onDrawerSlide(drawerView, 0);
                 lastItemSelected = -1;
             }
 
@@ -400,12 +400,8 @@ public abstract class AbsNavigationViewActivity extends ThemedActivity implement
                     updateNavigationMenu();
                 }
             }
-
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                super.onDrawerSlide(drawerView, 0);
-            }
         };
+        toggleForDrawer.setDrawerSlideAnimationEnabled(false);
 
         View navigationHeader = getLayoutInflater().inflate(R.layout.navigation_view_header, navigationMenuList, false);
         pseudoTextNavigation = (TextView) navigationHeader.findViewById(R.id.pseudo_text_navigation_header);
