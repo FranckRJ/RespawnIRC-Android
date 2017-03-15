@@ -21,6 +21,11 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <intent-filter>
+                <action android:name="com.franckrj.respawnirc.ACTION_OPEN_LINK"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="http"/>
+            </intent-filter>
         </activity>
         <activity
             android:name=".jvcforumlist.SelectForumInListActivity"

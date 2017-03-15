@@ -124,6 +124,14 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         return (ShowForumFragment) pageNavigation.getCurrentFragment();
     }
 
+    private void consumeIntent(Intent newIntent) {
+        String newLinkToGo = newIntent.getStringExtra(EXTRA_NEW_LINK);
+
+        if (newLinkToGo != null) {
+            readThisTopicOrForum(newLinkToGo, newIntent.getBooleanExtra(EXTRA_GO_TO_LAST_PAGE, false));
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,7 +144,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         pageNavigation.setCurrentLink(PrefsManager.getString(PrefsManager.StringPref.Names.FORUM_URL_TO_FETCH));
         if (savedInstanceState == null) {
             currentTitle = getString(R.string.app_name);
-            onNewIntent(getIntent());
+            consumeIntent(getIntent());
             pageNavigation.updateCurrentItemAndButtonsToCurrentLink();
         } else {
             currentTitle = savedInstanceState.getString(SAVE_CURRENT_FORUM_TITLE, getString(R.string.app_name));
@@ -150,11 +158,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     @Override
     public void onNewIntent(Intent newIntent) {
         super.onNewIntent(newIntent);
-        String newLinkToGo = newIntent.getStringExtra(EXTRA_NEW_LINK);
-
-        if (newLinkToGo != null) {
-            readThisTopicOrForum(newLinkToGo, newIntent.getBooleanExtra(EXTRA_GO_TO_LAST_PAGE, false));
-        }
+        consumeIntent(newIntent);
     }
 
     @Override

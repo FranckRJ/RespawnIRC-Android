@@ -1,18 +1,25 @@
 package com.franckrj.respawnirc.utils;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
+import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.text.Spannable;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.franckrj.respawnirc.MainActivity;
+import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.WebNavigatorActivity;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 public class Utils {
     public static String resColorToString(int resID, Activity baseActivity) {
@@ -87,5 +94,25 @@ public class Utils {
         ClipboardManager clipboard = (ClipboardManager) fromThisActivity.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText(textToCopy, textToCopy);
         clipboard.setPrimaryClip(clip);
+    }
+
+    @TargetApi(25)
+    public static void updateShortcuts(Activity parentActivity, ShortcutManager shortcutManager, int sizeOfForumFavArray) {
+        ArrayList<ShortcutInfo> listOfShortcuts = new ArrayList<>();
+        int sizeOfShortcutArray = (sizeOfForumFavArray > 4 ? 4 : sizeOfForumFavArray);
+
+        for (int i = 0; i < sizeOfShortcutArray; ++i) {
+            String currentShortcutLink = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.FORUM_FAV_LINK, String.valueOf(i));
+            String currentShortcutName = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.FORUM_FAV_NAME, String.valueOf(i));
+            ShortcutInfo newShortcut = new ShortcutInfo.Builder(parentActivity, currentShortcutLink)
+                    .setShortLabel(currentShortcutName)
+                    .setLongLabel(currentShortcutName)
+                    .setIcon(Icon.createWithResource(parentActivity, R.mipmap.ic_shortcut))
+                    .setIntent(new Intent(MainActivity.ACTION_OPEN_LINK, Uri.parse(currentShortcutLink))).build();
+
+            listOfShortcuts.add(newShortcut);
+        }
+
+        shortcutManager.setDynamicShortcuts(listOfShortcuts);
     }
 }

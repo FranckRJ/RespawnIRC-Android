@@ -1,6 +1,7 @@
 package com.franckrj.respawnirc;
 
 import android.content.Intent;
+import android.content.pm.ShortcutManager;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -477,7 +478,7 @@ public abstract class AbsNavigationViewActivity extends ThemedActivity implement
             PrefsManager.IntPref.Names prefFavArraySize;
             PrefsManager.StringPref.Names prefFavName;
             PrefsManager.StringPref.Names prefFavLink;
-            int currentForumFavArraySize;
+            int currentFavArraySize;
 
             if (typeOfFav == RefreshFavDialogFragment.FAV_FORUM) {
                 prefFavArraySize = PrefsManager.IntPref.Names.FORUM_FAV_ARRAY_SIZE;
@@ -489,9 +490,9 @@ public abstract class AbsNavigationViewActivity extends ThemedActivity implement
                 prefFavLink = PrefsManager.StringPref.Names.TOPIC_FAV_LINK;
             }
 
-            currentForumFavArraySize = PrefsManager.getInt(prefFavArraySize);
+            currentFavArraySize = PrefsManager.getInt(prefFavArraySize);
 
-            for (int i = 0; i < currentForumFavArraySize; ++i) {
+            for (int i = 0; i < currentFavArraySize; ++i) {
                 PrefsManager.removeStringWithSufix(prefFavName, String.valueOf(i));
                 PrefsManager.removeStringWithSufix(prefFavLink, String.valueOf(i));
             }
@@ -505,6 +506,11 @@ public abstract class AbsNavigationViewActivity extends ThemedActivity implement
 
             PrefsManager.applyChanges();
             updateFavsInNavigationMenu(true);
+
+            if (typeOfFav == RefreshFavDialogFragment.FAV_FORUM && Build.VERSION.SDK_INT >= 25) {
+                ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
+                Utils.updateShortcuts(this, shortcutManager, listOfFavs.size());
+            }
         } else {
             Toast.makeText(this, R.string.errorDuringFetchFavs, Toast.LENGTH_SHORT).show();
         }
