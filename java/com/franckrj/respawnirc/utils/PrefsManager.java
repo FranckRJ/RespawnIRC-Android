@@ -57,6 +57,7 @@ public class PrefsManager {
         addStringPref(StringPref.Names.TOPIC_FAV_LINK, "pref.topicFavLink.", "");
         addStringPref(StringPref.Names.TOPIC_URL_TO_FETCH, "pref.topicUrlToFetch", "");
         addStringPref(StringPref.Names.FORUM_URL_TO_FETCH, "pref.forumUrlToFetch", "");
+        addStringPref(StringPref.Names.PSEUDO_OF_AUTHOR_OF_TOPIC, "pref.pseudoOfAuthorOfTopic", "");
         addStringPref(StringPref.Names.OLD_URL_FOR_TOPIC, "pref.oldUrlForTopic", "");
         addStringPref(StringPref.Names.LAST_TOPIC_TITLE_SENDED, "pref.lastTopicTitleSended", "");
         addStringPref(StringPref.Names.LAST_TOPIC_CONTENT_SENDED, "pref.lastTopicContentSended", "");
@@ -81,6 +82,7 @@ public class PrefsManager {
         addBoolPref(BoolPref.Names.ENABLE_GO_TO_BOTTOM_ON_LOAD, currentContext.getString(R.string.settingsEnableGoToBottomOnLoad), true);
         addBoolPref(BoolPref.Names.ENABLE_AUTO_SCROLL_MODE_FORUM, currentContext.getString(R.string.settingsEnableAutoScrollModeForum), true);
         addBoolPref(BoolPref.Names.DEFAULT_SHOW_SPOIL_VAL, currentContext.getString(R.string.settingsDefaultShowSpoilVal), false);
+        addBoolPref(BoolPref.Names.MARK_AUTHOR_PSEUDO_MODE_FORUM, currentContext.getString(R.string.settingsMarkAuthorPseudoModeForum), false);
 
         addStringPref(StringPref.Names.MAX_NUMBER_OF_OVERLY_QUOTE, currentContext.getString(R.string.settingsMaxNumberOfOverlyQuote), "2", 0, 15);
         addStringPref(StringPref.Names.SHOW_AVATAR_MODE_FORUM, currentContext.getString(R.string.settingsShowAvatarModeForum), "2");
@@ -248,7 +250,8 @@ public class PrefsManager {
             HIDE_UGLY_IMAGES,
             ENABLE_SMOOTH_SCROLL, ENABLE_AUTO_SCROLL_MODE_FORUM,
             ENABLE_GO_TO_BOTTOM_ON_LOAD,
-            DEFAULT_SHOW_SPOIL_VAL
+            DEFAULT_SHOW_SPOIL_VAL,
+            MARK_AUTHOR_PSEUDO_MODE_FORUM
         }
     }
 
@@ -295,7 +298,7 @@ public class PrefsManager {
             PSEUDO_OF_USER, COOKIES_LIST,
             LAST_MESSAGE_SENDED,
             FORUM_FAV_NAME, FORUM_FAV_LINK, TOPIC_FAV_NAME, TOPIC_FAV_LINK,
-            TOPIC_URL_TO_FETCH, FORUM_URL_TO_FETCH,
+            TOPIC_URL_TO_FETCH, FORUM_URL_TO_FETCH, PSEUDO_OF_AUTHOR_OF_TOPIC,
             OLD_URL_FOR_TOPIC,
             LAST_TOPIC_TITLE_SENDED, LAST_TOPIC_CONTENT_SENDED,
             MAX_NUMBER_OF_OVERLY_QUOTE,

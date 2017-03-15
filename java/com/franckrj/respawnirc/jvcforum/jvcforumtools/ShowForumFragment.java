@@ -37,7 +37,8 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
             if (listenerForNewTopicWantRead != null) {
-                listenerForNewTopicWantRead.setReadNewTopic(adapterForForum.getItem(position).link, JVCParser.specialCharToNormalChar(adapterForForum.getItem(position).htmlName), false);
+                JVCParser.TopicInfos currentItem = adapterForForum.getItem(position);
+                listenerForNewTopicWantRead.setReadNewTopic(currentItem.link, JVCParser.specialCharToNormalChar(currentItem.htmlName), currentItem.author, false);
             }
         }
     };
@@ -46,8 +47,9 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         @Override
         public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
             if (listenerForNewTopicWantRead != null) {
-                String realPageToGo = JVCParser.setPageNumberForThisTopicLink(adapterForForum.getItem(position).link, (Integer.parseInt(adapterForForum.getItem(position).messages) / 20) + 1);
-                listenerForNewTopicWantRead.setReadNewTopic(realPageToGo, JVCParser.specialCharToNormalChar(adapterForForum.getItem(position).htmlName), true);
+                JVCParser.TopicInfos currentItem = adapterForForum.getItem(position);
+                String realPageToGo = JVCParser.setPageNumberForThisTopicLink(currentItem.link, (Integer.parseInt(currentItem.messages) / 20) + 1);
+                listenerForNewTopicWantRead.setReadNewTopic(realPageToGo, JVCParser.specialCharToNormalChar(currentItem.htmlName), currentItem.author, true);
                 return true;
             }
             return false;
@@ -273,6 +275,6 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     }
 
     public interface NewTopicWantRead {
-        void setReadNewTopic(String newTopicLink, String newTopicName, boolean startAtBottom);
+        void setReadNewTopic(String newTopicLink, String newTopicName, String pseudoOfAuthor, boolean startAtBottom);
     }
 }

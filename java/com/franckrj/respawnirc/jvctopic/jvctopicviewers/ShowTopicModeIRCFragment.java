@@ -132,6 +132,7 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
         currentSettings.colorPseudoOther = Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PSEUDO_OTHER_MODE_IRC), getActivity());
         currentSettings.colorPseudoModo = Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PSEUDO_MODO), getActivity());
         currentSettings.colorPseudoAdmin = Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PSEUDO_ADMIN), getActivity());
+        currentSettings.applyMarkToPseudoAuthor = false;
         currentSettings.secondLineFormat = "<%MESSAGE_MESSAGE%>";
         currentSettings.addBeforeEdit = "";
         currentSettings.addAfterEdit = "";

@@ -624,32 +624,38 @@ public final class JVCParser {
     }
 
     public static String createMessageFirstLineFromInfos(MessageInfos thisMessageInfo, Settings settings) {
-        String newFirstLine = settings.firstLineFormat;
+        StringBuilder newFirstLine = new StringBuilder(settings.firstLineFormat);
 
-        newFirstLine = newFirstLine.replace("<%DATE_TIME%>", thisMessageInfo.dateTime);
-        newFirstLine = newFirstLine.replace("<%DATE_FULL%>", thisMessageInfo.wholeDate);
-        newFirstLine = newFirstLine.replace("<%PSEUDO_PSEUDO%>", thisMessageInfo.pseudo);
+        ToolForParsing.replaceStringByAnother(newFirstLine, "<%DATE_TIME%>", thisMessageInfo.dateTime);
+        ToolForParsing.replaceStringByAnother(newFirstLine, "<%DATE_FULL%>", thisMessageInfo.wholeDate);
+        ToolForParsing.replaceStringByAnother(newFirstLine, "<%PSEUDO_PSEUDO%>", thisMessageInfo.pseudo);
 
         if (thisMessageInfo.isAnEdit) {
-            newFirstLine = newFirstLine.replace("<%DATE_COLOR_START%>", "<font color=\"#008000\">");
-            newFirstLine = newFirstLine.replace("<%DATE_COLOR_END%>", "</font>");
+            ToolForParsing.replaceStringByAnother(newFirstLine, "<%DATE_COLOR_START%>", "<font color=\"#008000\">");
+            ToolForParsing.replaceStringByAnother(newFirstLine, "<%DATE_COLOR_END%>", "</font>");
         } else {
-            newFirstLine = newFirstLine.replace("<%DATE_COLOR_START%>", "");
-            newFirstLine = newFirstLine.replace("<%DATE_COLOR_END%>", "");
+            ToolForParsing.replaceStringByAnother(newFirstLine, "<%DATE_COLOR_START%>", "");
+            ToolForParsing.replaceStringByAnother(newFirstLine, "<%DATE_COLOR_END%>", "");
         }
 
         if (thisMessageInfo.pseudo.toLowerCase().equals(settings.pseudoOfUser.toLowerCase())) {
-            newFirstLine = newFirstLine.replace("<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoUser + "\">");
+            ToolForParsing.replaceStringByAnother(newFirstLine, "<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoUser + "\">");
         } else if (thisMessageInfo.pseudoType.equals("modo")){
-            newFirstLine = newFirstLine.replace("<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoModo + "\">");
+            ToolForParsing.replaceStringByAnother(newFirstLine, "<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoModo + "\">");
         } else if (thisMessageInfo.pseudoType.equals("admin") || thisMessageInfo.pseudoType.equals("staff")){
-            newFirstLine = newFirstLine.replace("<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoAdmin + "\">");
+            ToolForParsing.replaceStringByAnother(newFirstLine, "<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoAdmin + "\">");
         } else {
-            newFirstLine = newFirstLine.replace("<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoOther + "\">");
+            ToolForParsing.replaceStringByAnother(newFirstLine, "<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoOther + "\">");
         }
-        newFirstLine = newFirstLine.replace("<%PSEUDO_COLOR_END%>", "</font>");
+        ToolForParsing.replaceStringByAnother(newFirstLine, "<%PSEUDO_COLOR_END%>", "</font>");
 
-        return newFirstLine;
+        if (settings.applyMarkToPseudoAuthor && thisMessageInfo.pseudo.toLowerCase().equals(settings.pseudoOfAuthor.toLowerCase())) {
+            ToolForParsing.replaceStringByAnother(newFirstLine, "<%MARK_FOR_PSEUDO%>", " [A]");
+        } else {
+            ToolForParsing.replaceStringByAnother(newFirstLine, "<%MARK_FOR_PSEUDO%>", "");
+        }
+
+        return newFirstLine.toString();
     }
 
     public static String createMessageSecondLineFromInfos(MessageInfos thisMessageInfo, Settings settings) {
@@ -1416,6 +1422,7 @@ public final class JVCParser {
 
     public static class Settings {
         public String pseudoOfUser = "";
+        public String pseudoOfAuthor = "";
         public String firstLineFormat;
         public String secondLineFormat;
         public String addBeforeEdit;
@@ -1425,6 +1432,7 @@ public final class JVCParser {
         public String colorPseudoModo;
         public String colorPseudoAdmin;
         public int maxNumberOfOverlyQuotes = 0;
+        public boolean applyMarkToPseudoAuthor = false;
         public boolean showNoelshackImages = false;
         public boolean transformStickerToSmiley = false;
         public boolean shortenLongLink = false;

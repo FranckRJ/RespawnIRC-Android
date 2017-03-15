@@ -164,6 +164,7 @@ public class PageNavigationUtil {
         if (!currentLink.isEmpty() && parentActivity instanceof PageNavigationFunctions) {
             AbsShowSomethingFragment currentFragment = adapterForPagerView.getFragment(position);
             if (currentFragment != null) {
+                ((PageNavigationFunctions) parentActivity).doThingsBeforeLoadOnFragment(currentFragment);
                 currentFragment.setGoToBottomAtPageLoading(goToBottomOnNextLoad);
                 currentFragment.setPageLink(((PageNavigationFunctions) parentActivity).setShowedPageNumberForThisLink(currentLink, position + 1));
                 goToBottomOnNextLoad = false;
@@ -266,6 +267,7 @@ public class PageNavigationUtil {
             if (parentActivity instanceof PageNavigationFunctions) {
                 if (loadNeedToBeDoneOnPageCreate && position == pagerView.getCurrentItem() && !currentLink.isEmpty()) {
                     AbsShowSomethingFragment tmpFragment = ((PageNavigationFunctions) parentActivity).createNewFragmentForRead(((PageNavigationFunctions) parentActivity).setShowedPageNumberForThisLink(currentLink, position + 1));
+                    ((PageNavigationFunctions) parentActivity).doThingsBeforeLoadOnFragment(tmpFragment);
                     tmpFragment.setGoToBottomAtPageLoading(goToBottomOnNextLoad);
                     goToBottomOnNextLoad = false;
                     loadNeedToBeDoneOnPageCreate = false;
@@ -298,6 +300,7 @@ public class PageNavigationUtil {
     public interface PageNavigationFunctions {
         void extendPageSelection(View buttonView);
         AbsShowSomethingFragment createNewFragmentForRead(String possibleLink);
+        void doThingsBeforeLoadOnFragment(AbsShowSomethingFragment thisFragment);
         int getShowablePageNumberForThisLink(String link);
         String setShowedPageNumberForThisLink(String link, int newPageNumber);
     }

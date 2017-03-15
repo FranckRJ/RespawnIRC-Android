@@ -29,4 +29,5 @@
     <string name="settingsEnableAutoScrollModeForum" translatable="false">settings.enableAutoScrollModeForum</string>
     <string name="subScreenSettingsHelp" translatable="false">subScreenSettings.help</string>
     <string name="settingsDefaultShowSpoilVal" translatable="false">settings.defaultShowSpoilVal</string>
+    <string name="settingsMarkAuthorPseudoModeForum" translatable="false">settings.markAuthorPseudoModeForum</string>
 </resources>

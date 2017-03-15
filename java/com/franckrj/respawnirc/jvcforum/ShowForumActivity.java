@@ -60,35 +60,52 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         }
     }
 
-    private void setTopicOrForum(String link, boolean updateForumFragIfNeeded, String topicName, boolean startToBottom, boolean goToLastPage) {
+    private boolean readThisTopic(String link, boolean updateForumFragIfNeeded, String topicName, String pseudoOfAuthor, boolean startToBottom, boolean goToLastPage) {
+        if (!JVCParser.getPageNumberForThisTopicLink(link).isEmpty()) {
+            Intent newShowTopicIntent = new Intent(this, ShowTopicActivity.class);
+
+            if (updateForumFragIfNeeded) {
+                setNewForumLink(JVCParser.getForumForTopicLink(link));
+            }
+
+            if (topicName != null) {
+                newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_NAME, topicName);
+            }
+            if (pseudoOfAuthor != null) {
+                newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_PSEUDO_OF_AUTHOR, pseudoOfAuthor);
+            }
+            if (!currentTitle.equals(getString(R.string.app_name))) {
+                newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_FORUM_NAME, currentTitle);
+            }
+            newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_GO_TO_BOTTOM, startToBottom);
+            newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_GO_TO_LAST_PAGE, goToLastPage);
+
+            newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_LINK, link);
+            startActivity(newShowTopicIntent);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean readThisForum(String link) {
+        if (!JVCParser.getPageNumberForThisForumLink(link).isEmpty()) {
+            setNewForumLink(link);
+            return true;
+        }
+        return false;
+    }
+
+    private void readThisTopicOrForum(String link, boolean goToLastPage) {
         if (link != null) {
             if (!link.isEmpty()) {
                 link = JVCParser.formatThisUrl(link);
             }
 
             if (JVCParser.checkIfItsForumLink(link)) {
-                if (!JVCParser.getPageNumberForThisForumLink(link).isEmpty()) {
-                    setNewForumLink(link);
+                if (readThisForum(link)) {
                     return;
                 }
-            } else if (!JVCParser.getPageNumberForThisTopicLink(link).isEmpty()) {
-                Intent newShowTopicIntent = new Intent(this, ShowTopicActivity.class);
-
-                if (updateForumFragIfNeeded) {
-                    setNewForumLink(JVCParser.getForumForTopicLink(link));
-                }
-
-                if (topicName != null) {
-                    newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_NAME, topicName);
-                }
-                if (!currentTitle.equals(getString(R.string.app_name))) {
-                    newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_FORUM_NAME, currentTitle);
-                }
-                newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_GO_TO_BOTTOM, startToBottom);
-                newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_GO_TO_LAST_PAGE, goToLastPage);
-
-                newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_LINK, link);
-                startActivity(newShowTopicIntent);
+            } else if (readThisTopic(link, true, null, null, false, goToLastPage)) {
                 return;
             }
         }
@@ -136,7 +153,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         String newLinkToGo = newIntent.getStringExtra(EXTRA_NEW_LINK);
 
         if (newLinkToGo != null) {
-            setTopicOrForum(newLinkToGo, true, null, false, newIntent.getBooleanExtra(EXTRA_GO_TO_LAST_PAGE, false));
+            readThisTopicOrForum(newLinkToGo, newIntent.getBooleanExtra(EXTRA_GO_TO_LAST_PAGE, false));
         }
     }
 
@@ -264,15 +281,15 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     @Override
     protected void newForumOrTopicToRead(String link, boolean itsAForum, boolean isWhenDrawerIsClosed, boolean fromLongClick) {
         if (itsAForum && !isWhenDrawerIsClosed) {
-            setTopicOrForum(link, true, null, false, fromLongClick);
+            readThisTopicOrForum(link, fromLongClick);
         } else if (!itsAForum && isWhenDrawerIsClosed) {
-            setTopicOrForum(link, true, null, false, fromLongClick);
+            readThisTopicOrForum(link, fromLongClick);
         }
     }
 
     @Override
-    public void setReadNewTopic(String newTopicLink, String newTopicName, boolean startAtBottom) {
-        setTopicOrForum(newTopicLink, false, newTopicName, startAtBottom, false);
+    public void setReadNewTopic(String newTopicLink, String newTopicName, String pseudoOfAuthor, boolean startAtBottom) {
+        readThisTopic(newTopicLink, false, newTopicName, pseudoOfAuthor, startAtBottom, false);
     }
 
     @Override
@@ -306,6 +323,11 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         }
 
         return currentFragment;
+    }
+
+    @Override
+    public void doThingsBeforeLoadOnFragment(AbsShowSomethingFragment thisFragment) {
+        //rien
     }
 
     @Override

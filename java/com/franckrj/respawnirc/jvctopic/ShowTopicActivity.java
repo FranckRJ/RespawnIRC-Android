@@ -46,10 +46,11 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
                                                                     ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCTopicAdapter.URLClicked,
                                                                     AbsJVCTopicGetter.NewReasonForTopicLock, InsertStuffDialogFragment.StuffInserted,
                                                                     PageNavigationUtil.PageNavigationFunctions, AddOrRemoveThingToFavs.ActionToFavsEnded,
-                                                                    AbsShowTopicFragment.NewSurveyNeedToBeShown, JVCTopicAdapter.PseudoClicked {
+                                                                    AbsShowTopicFragment.NewSurveyNeedToBeShown, JVCTopicAdapter.PseudoClicked, AbsJVCTopicGetter.NewPseudoOfAuthorAvailable {
     public static final String EXTRA_TOPIC_LINK = "com.franckrj.respawnirc.EXTRA_TOPIC_LINK";
     public static final String EXTRA_TOPIC_NAME = "com.franckrj.respawnirc.EXTRA_TOPIC_NAME";
     public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.EXTRA_FORUM_NAME";
+    public static final String EXTRA_PSEUDO_OF_AUTHOR = "com.franckrj.respawnirc.EXTRA_PSEUDO_OF_AUTHOR";
     public static final String EXTRA_GO_TO_BOTTOM = "com.franckrj.respawnirc.EXTRA_GO_TO_BOTTOM";
     public static final String EXTRA_GO_TO_LAST_PAGE = "com.franckrj.respawnirc.EXTRA_GO_TO_LAST_PAGE";
 
@@ -65,6 +66,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
     private EditText messageSendEdit = null;
     private View messageSendLayout = null;
     private String pseudoOfUser = "";
+    private String pseudoOfAuthor = "";
     private String cookieListInAString = "";
     private String lastMessageSended = "";
     private AddOrRemoveThingToFavs currentTaskForFavs = null;
@@ -288,6 +290,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         insertStuffButton.setOnClickListener(selectStickerClickedListener);
 
         pageNavigation.setCurrentLink(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_URL_TO_FETCH));
+        pseudoOfAuthor = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_AUTHOR_OF_TOPIC);
         updateShowNavigationButtons();
         reloadSettings();
         if (savedInstanceState == null) {
@@ -295,6 +298,10 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
                 goToLastPageAfterLoading = getIntent().getBooleanExtra(EXTRA_GO_TO_LAST_PAGE, false);
                 currentTitles.topic = getIntent().getStringExtra(EXTRA_TOPIC_NAME);
                 currentTitles.forum = getIntent().getStringExtra(EXTRA_FORUM_NAME);
+
+                if (getIntent().getStringExtra(EXTRA_PSEUDO_OF_AUTHOR) != null) {
+                    pseudoOfAuthor = getIntent().getStringExtra(EXTRA_PSEUDO_OF_AUTHOR);
+                }
 
                 if (goToBottomOnLoadIsEnabled) {
                     pageNavigation.setGoToBottomOnNextLoad(goToLastPageAfterLoading || getIntent().getBooleanExtra(EXTRA_GO_TO_BOTTOM, false));
@@ -354,6 +361,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         stopAllCurrentTask();
         if (!pageNavigation.getCurrentLink().isEmpty()) {
             PrefsManager.putString(PrefsManager.StringPref.Names.TOPIC_URL_TO_FETCH, setShowedPageNumberForThisLink(pageNavigation.getCurrentLink(), pageNavigation.getCurrentItemIndex() + 1));
+            PrefsManager.putString(PrefsManager.StringPref.Names.PSEUDO_OF_AUTHOR_OF_TOPIC, pseudoOfAuthor);
             PrefsManager.applyChanges();
         }
         super.onPause();
@@ -577,6 +585,11 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
     }
 
     @Override
+    public void doThingsBeforeLoadOnFragment(AbsShowSomethingFragment thisFragment) {
+        ((AbsShowTopicFragment) thisFragment).setPseudoOfAuthor(pseudoOfAuthor);
+    }
+
+    @Override
     public int getShowablePageNumberForThisLink(String link) {
         return Integer.parseInt(JVCParser.getPageNumberForThisTopicLink(link));
     }
@@ -708,5 +721,14 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         argForFrag.putString(MessageContextMenuDialogFragment.ARG_MESSAGE_CONTENT, messageClicked.messageNotParsed);
         messageMenuDialogFragment.setArguments(argForFrag);
         messageMenuDialogFragment.show(getFragmentManager(), "MessageContextMenuDialogFragment");
+    }
+
+    @Override
+    public void getNewPseudoOfAuthor(String newPseudoOfAuthor) {
+        AbsShowTopicFragment currentFrag = getCurrentFragment();
+        pseudoOfAuthor = newPseudoOfAuthor;
+        if (currentFrag != null) {
+            currentFrag.setPseudoOfAuthor(pseudoOfAuthor);
+        }
     }
 }

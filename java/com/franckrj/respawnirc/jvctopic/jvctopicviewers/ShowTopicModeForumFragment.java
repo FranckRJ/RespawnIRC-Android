@@ -105,7 +105,7 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
     @Override
     protected void initializeSettings() {
         showRefreshWhenMessagesShowed = true;
-        currentSettings.firstLineFormat = "<b><%PSEUDO_COLOR_START%><%PSEUDO_PSEUDO%><%PSEUDO_COLOR_END%></b><br><small>Le <%DATE_COLOR_START%><%DATE_FULL%><%DATE_COLOR_END%></small>";
+        currentSettings.firstLineFormat = "<b><%PSEUDO_COLOR_START%><%PSEUDO_PSEUDO%><%PSEUDO_COLOR_END%></b><small><%MARK_FOR_PSEUDO%><br>Le <%DATE_COLOR_START%><%DATE_FULL%><%DATE_COLOR_END%></small>";
         currentSettings.colorPseudoUser = Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PSEUDO_USER), getActivity());
         currentSettings.colorPseudoOther = Utils.resColorToStringWithAlpha(ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PSEUDO_OTHER_MODE_FORUM), getActivity());
         currentSettings.colorPseudoModo = Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PSEUDO_MODO), getActivity());
@@ -151,6 +151,7 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
     @Override
     protected void reloadSettings() {
         super.reloadSettings();
+        currentSettings.applyMarkToPseudoAuthor = PrefsManager.getBool(PrefsManager.BoolPref.Names.MARK_AUTHOR_PSEUDO_MODE_FORUM);
         clearMessagesOnRefresh = PrefsManager.getBool(PrefsManager.BoolPref.Names.TOPIC_CLEAR_ON_REFRESH_MODE_FORUM);
         autoScrollIsEnabled = PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_AUTO_SCROLL_MODE_FORUM);
     }

@@ -31,6 +31,9 @@
         <CheckBoxPreference
             android:key="@string/settingsTopicAlternateBackgroundColorModeForum"
             android:title="@string/topicAlternateBackgroundColorTitle"/>
+        <CheckBoxPreference
+            android:key="@string/settingsMarkAuthorPseudoModeForum"
+            android:title="@string/markAuthorPseudoTitle"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/settingsModeIRCTitle">

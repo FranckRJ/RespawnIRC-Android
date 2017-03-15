@@ -36,6 +36,7 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
         lastIdOfMessage = 0;
         listOfEditInfos.clear();
         urlForTopic = JVCParser.getFirstPageForThisTopicLink(newUrlForTopic);
+        isLoadingFirstPage = true;
     }
 
     public void setOldTopic(String oldUrlForTopic, long oldLastIdOfMessage) {
@@ -44,6 +45,7 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
         lastIdOfMessage = oldLastIdOfMessage - 1;
         listOfEditInfos.clear();
         urlForTopic = oldUrlForTopic;
+        isLoadingFirstPage = false;
     }
 
     public boolean startGetMessages(int timerBeforeStart) {
@@ -182,6 +184,7 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
                         } else {
                             urlForTopic = infoOfCurrentPage.nextPageLink;
                         }
+                        isLoadingFirstPage = false;
                         needToGetNewMessagesEarly = true;
                     }
                 } else {

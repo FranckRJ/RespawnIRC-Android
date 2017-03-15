@@ -20,12 +20,13 @@ import com.franckrj.respawnirc.utils.Utils;
 import java.util.ArrayList;
 
 public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
-    public static final String ARG_TOPIC_LINK = "com.franckrj.respawnirc.showtopicfragment.topic_link";
+    public static final String ARG_TOPIC_LINK = "com.franckrj.respawnirc.topic_link";
     public static final int MODE_IRC = 0;
     public static final int MODE_FORUM = 1;
 
     protected static final String SAVE_ALL_MESSAGES_SHOWED = "saveAllCurrentMessagesShowed";
     protected static final String SAVE_GO_TO_BOTTOM_PAGE_LOADING = "saveGoToBottomPageLoading";
+    protected static final String SAVE_SETTINGS_PSEUDO_OF_AUTHOR = "saveSettingsPseudoOfAuthor";
 
     protected AbsJVCTopicGetter absGetterForTopic = null;
     protected ListView jvcMsgList = null;
@@ -190,6 +191,10 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         absGetterForTopic.setIsInFavs(newVal);
     }
 
+    public void setPseudoOfAuthor(String newPseudoOfAuthor) {
+        currentSettings.pseudoOfAuthor = newPseudoOfAuthor;
+    }
+
     @Override
     public void clearContent() {
         absGetterForTopic.stopAllCurrentTask();
@@ -239,6 +244,9 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         if (getActivity() instanceof AbsJVCTopicGetter.NewReasonForTopicLock) {
             absGetterForTopic.setListenerForNewReasonForTopicLock((AbsJVCTopicGetter.NewReasonForTopicLock) getActivity());
         }
+        if (getActivity() instanceof AbsJVCTopicGetter.NewPseudoOfAuthorAvailable) {
+            absGetterForTopic.setListenerForNewPseudoOfAuthor((AbsJVCTopicGetter.NewPseudoOfAuthorAvailable) getActivity());
+        }
         if (getActivity() instanceof PopupMenu.OnMenuItemClickListener) {
             adapterForTopic.setActionWhenItemMenuClicked((PopupMenu.OnMenuItemClickListener) getActivity());
         }
@@ -263,7 +271,8 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
 
         if (savedInstanceState != null) {
             ArrayList<JVCParser.MessageInfos> allCurrentMessagesShowed = savedInstanceState.getParcelableArrayList(SAVE_ALL_MESSAGES_SHOWED);
-            goToBottomAtPageLoading = savedInstanceState.getBoolean(SAVE_GO_TO_BOTTOM_PAGE_LOADING);
+            goToBottomAtPageLoading = savedInstanceState.getBoolean(SAVE_GO_TO_BOTTOM_PAGE_LOADING, false);
+            currentSettings.pseudoOfAuthor = savedInstanceState.getString(SAVE_SETTINGS_PSEUDO_OF_AUTHOR, "");
             absGetterForTopic.loadFromBundle(savedInstanceState);
 
             if (!Utils.stringIsEmptyOrNull(absGetterForTopic.getSurveyTitleInHtml())) {
@@ -303,6 +312,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(SAVE_ALL_MESSAGES_SHOWED, adapterForTopic.getAllItems());
         outState.putBoolean(SAVE_GO_TO_BOTTOM_PAGE_LOADING, goToBottomAtPageLoading);
+        outState.putString(SAVE_SETTINGS_PSEUDO_OF_AUTHOR, currentSettings.pseudoOfAuthor);
         absGetterForTopic.saveToBundle(outState);
     }
 

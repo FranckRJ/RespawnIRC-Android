@@ -14,6 +14,7 @@ public abstract class AbsJVCTopicGetter {
     public static final int STATE_NOT_LOADING = 1;
 
     protected static final String SAVE_TOPIC_URL_TO_FETCH = "saveTopicUrlToFetch";
+    protected static final String SAVE_IS_LOADING_FIRST_PAGE = "saveIsLoadingFirstPage";
     protected static final String SAVE_LATEST_LIST_OF_INPUT = "saveLatestListOfInputInAString";
     protected static final String SAVE_LATEST_AJAX_INFO_LIST = "saveLatestAjaxInfoList";
     protected static final String SAVE_LATEST_AJAX_INFO_MOD = "saveLatestAjaxInfoMod";
@@ -24,6 +25,7 @@ public abstract class AbsJVCTopicGetter {
     protected static final String SAVE_TOPIC_IS_IN_FAV = "saveTopicIsInFav";
 
     protected String urlForTopic = "";
+    protected boolean isLoadingFirstPage = false;
     protected String latestListOfInputInAString = null;
     protected JVCParser.AjaxInfos latestAjaxInfos = new JVCParser.AjaxInfos();
     protected long lastIdOfMessage = 0;
@@ -39,6 +41,7 @@ public abstract class AbsJVCTopicGetter {
     protected String lockReason = "";
     protected NewSurveyForTopic listenerForNewSurveyForTopic = null;
     protected String htmlSurveyTitle = null;
+    protected NewPseudoOfAuthorAvailable listenerForNewPseudoOfAuthor = null;
 
     public String getUrlForTopic() {
         return urlForTopic;
@@ -96,6 +99,10 @@ public abstract class AbsJVCTopicGetter {
         listenerForNewSurveyForTopic = thisListener;
     }
 
+    public void setListenerForNewPseudoOfAuthor(NewPseudoOfAuthorAvailable thisListener) {
+        listenerForNewPseudoOfAuthor = thisListener;
+    }
+
     public void stopAllCurrentTask() {
         if (currentAsyncTaskForGetMessage != null) {
             currentAsyncTaskForGetMessage.cancel(true);
@@ -109,6 +116,7 @@ public abstract class AbsJVCTopicGetter {
 
     public void loadFromBundle(Bundle savedInstanceState) {
         urlForTopic = savedInstanceState.getString(SAVE_TOPIC_URL_TO_FETCH, "");
+        isLoadingFirstPage = savedInstanceState.getBoolean(SAVE_IS_LOADING_FIRST_PAGE, false);
         latestListOfInputInAString = savedInstanceState.getString(SAVE_LATEST_LIST_OF_INPUT, null);
         latestAjaxInfos.list = savedInstanceState.getString(SAVE_LATEST_AJAX_INFO_LIST, null);
         latestAjaxInfos.mod = savedInstanceState.getString(SAVE_LATEST_AJAX_INFO_MOD, null);
@@ -125,6 +133,7 @@ public abstract class AbsJVCTopicGetter {
 
     public void saveToBundle(Bundle savedInstanceState) {
         savedInstanceState.putString(SAVE_TOPIC_URL_TO_FETCH, urlForTopic);
+        savedInstanceState.putBoolean(SAVE_IS_LOADING_FIRST_PAGE, isLoadingFirstPage);
         savedInstanceState.putString(SAVE_LATEST_LIST_OF_INPUT, latestListOfInputInAString);
         savedInstanceState.putString(SAVE_LATEST_AJAX_INFO_LIST, latestAjaxInfos.list);
         savedInstanceState.putString(SAVE_LATEST_AJAX_INFO_MOD, latestAjaxInfos.mod);
@@ -197,6 +206,10 @@ public abstract class AbsJVCTopicGetter {
                 listenerForNewSurveyForTopic.getNewSurveyTitle(htmlSurveyTitle);
             }
         }
+
+        if (isLoadingFirstPage && infoOfCurrentPage.listOfMessages.size() > 0 && listenerForNewPseudoOfAuthor != null) {
+            listenerForNewPseudoOfAuthor.getNewPseudoOfAuthor(infoOfCurrentPage.listOfMessages.get(0).pseudo);
+        }
     }
 
     protected abstract class AbsGetJVCLastMessages extends AsyncTask<String, Void, TopicPageInfos> {
@@ -233,6 +246,10 @@ public abstract class AbsJVCTopicGetter {
 
     public interface NewSurveyForTopic {
         void getNewSurveyTitle(String newTitle);
+    }
+
+    public interface NewPseudoOfAuthorAvailable {
+        void getNewPseudoOfAuthor(String newPseudoOfAuthor);
     }
 
     public abstract boolean reloadTopic();

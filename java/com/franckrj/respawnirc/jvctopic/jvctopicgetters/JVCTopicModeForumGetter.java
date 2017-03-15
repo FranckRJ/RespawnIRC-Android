@@ -14,11 +14,13 @@ public class JVCTopicModeForumGetter extends AbsJVCTopicGetter {
     public boolean startGetMessagesOfThisPage(String newUrlOfPage) {
         if (currentAsyncTaskForGetMessage == null && !newUrlOfPage.isEmpty()) {
             urlForTopic = newUrlOfPage;
+            isLoadingFirstPage = JVCParser.getPageNumberForThisTopicLink(urlForTopic).equals("1");
             currentAsyncTaskForGetMessage = new GetJVCForumLastMessages();
             currentAsyncTaskForGetMessage.execute(urlForTopic, cookieListInAString);
             return true;
         } else {
             urlForTopic = newUrlOfPage;
+            isLoadingFirstPage = JVCParser.getPageNumberForThisTopicLink(urlForTopic).equals("1");
             return false;
         }
     }
