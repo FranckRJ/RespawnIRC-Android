@@ -104,7 +104,7 @@ public class Utils {
         for (int i = 0; i < sizeOfShortcutArray; ++i) {
             String currentShortcutLink = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.FORUM_FAV_LINK, String.valueOf(i));
             String currentShortcutName = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.FORUM_FAV_NAME, String.valueOf(i));
-            ShortcutInfo newShortcut = new ShortcutInfo.Builder(parentActivity, currentShortcutLink)
+            ShortcutInfo newShortcut = new ShortcutInfo.Builder(parentActivity, String.valueOf(i) + "_" + currentShortcutLink)
                     .setShortLabel(currentShortcutName)
                     .setLongLabel(currentShortcutName)
                     .setIcon(Icon.createWithResource(parentActivity, R.mipmap.ic_shortcut))
