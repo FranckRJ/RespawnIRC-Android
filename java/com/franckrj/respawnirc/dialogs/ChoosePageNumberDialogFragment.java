@@ -7,15 +7,47 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.franckrj.respawnirc.R;
 
 public class ChoosePageNumberDialogFragment extends DialogFragment {
     EditText pageNumberEdit = null;
+
+    private final TextView.OnEditorActionListener actionInEditTextListener = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                pageNumberChoosed();
+                return true;
+            }
+            return false;
+        }
+    };
+
+    private void pageNumberChoosed() {
+        if (!pageNumberEdit.getText().toString().isEmpty()) {
+            Activity currentActivity = getActivity();
+            int newPageNumber;
+
+            try {
+                newPageNumber = Integer.parseInt(pageNumberEdit.getText().toString());
+            } catch (Exception e) {
+                newPageNumber = -1;
+            }
+
+            if (currentActivity instanceof NewPageNumberSelected) {
+                ((NewPageNumberSelected) currentActivity).newPageNumberChoosen(newPageNumber);
+            }
+        }
+        dismiss();
+    }
 
     @NonNull
     @Override
@@ -26,6 +58,7 @@ public class ChoosePageNumberDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_choosepagenumber, null);
         pageNumberEdit = (EditText) mainView.findViewById(R.id.pagenumber_edit_choosepagenumber);
+        pageNumberEdit.setOnEditorActionListener(actionInEditTextListener);
         builder.setTitle(R.string.choosePageNumber).setView(mainView)
             .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                 @Override
@@ -34,22 +67,8 @@ public class ChoosePageNumberDialogFragment extends DialogFragment {
                 }
             }).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int i) {
-                    if (!pageNumberEdit.getText().toString().isEmpty()) {
-                        Activity currentActivity = getActivity();
-                        int newPageNumber;
-
-                        try {
-                            newPageNumber = Integer.parseInt(pageNumberEdit.getText().toString());
-                        } catch (Exception e) {
-                            newPageNumber = -1;
-                        }
-
-                        if (currentActivity instanceof NewPageNumberSelected) {
-                            ((NewPageNumberSelected) currentActivity).newPageNumberChoosen(newPageNumber);
-                        }
-                    }
-                    dialog.dismiss();
+                public void onClick(DialogInterface dialog, int id) {
+                    pageNumberChoosed();
                 }
             });
         alertToShow = builder.create();
