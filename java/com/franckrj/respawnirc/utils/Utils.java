@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.text.Spannable;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
@@ -94,6 +95,24 @@ public class Utils {
         ClipboardManager clipboard = (ClipboardManager) fromThisActivity.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText(textToCopy, textToCopy);
         clipboard.setPrimaryClip(clip);
+    }
+
+    public static void insertStringInEditText(EditText currentEditText, String stringToInsert, int posOfCenterFromEnd) {
+        int currentCursorPos = currentEditText.getSelectionStart();
+        int currentEndOfSelec = currentEditText.getSelectionEnd();
+        if (currentCursorPos == -1) {
+            currentCursorPos = 0;
+        }
+        if (currentEndOfSelec > currentCursorPos && posOfCenterFromEnd > 0) {
+            String firstStringToAdd = stringToInsert.substring(0, stringToInsert.length() - posOfCenterFromEnd);
+            String secondStringToAdd = stringToInsert.substring(stringToInsert.length() - posOfCenterFromEnd);
+            currentEditText.getText().insert(currentEndOfSelec, secondStringToAdd);
+            currentEditText.getText().insert(currentCursorPos, firstStringToAdd);
+            currentEditText.setSelection(currentEndOfSelec + stringToInsert.length() - posOfCenterFromEnd);
+        } else {
+            currentEditText.getText().insert(currentCursorPos, stringToInsert);
+            currentEditText.setSelection(currentCursorPos + stringToInsert.length() - posOfCenterFromEnd);
+        }
     }
 
     @TargetApi(25)

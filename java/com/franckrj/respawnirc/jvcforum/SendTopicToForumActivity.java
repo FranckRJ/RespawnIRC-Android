@@ -132,14 +132,7 @@ public class SendTopicToForumActivity extends ThemedActivity implements InsertSt
 
     @Override
     public void getStringInserted(String newStringToAdd, int posOfCenterFromEnd) {
-        int currentCursorPos = topicContentEdit.getSelectionStart();
-        if (currentCursorPos == -1) {
-            currentCursorPos = 0;
-            topicContentEdit.append(newStringToAdd);
-        } else {
-            topicContentEdit.getText().insert(currentCursorPos, newStringToAdd);
-        }
-        topicContentEdit.setSelection(currentCursorPos + newStringToAdd.length() - posOfCenterFromEnd);
+        Utils.insertStringInEditText(topicContentEdit, newStringToAdd, posOfCenterFromEnd);
     }
 
     private class SendTopicToJVC extends AsyncTask<String, Void, String> {

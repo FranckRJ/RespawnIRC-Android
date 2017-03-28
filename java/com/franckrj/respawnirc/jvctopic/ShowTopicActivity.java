@@ -671,14 +671,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
     @Override
     public void getStringInserted(String newStringToAdd, int posOfCenterFromEnd) {
         if (reasonOfLock == null) {
-            int currentCursorPos = messageSendEdit.getSelectionStart();
-            if (currentCursorPos == -1) {
-                currentCursorPos = 0;
-                messageSendEdit.append(newStringToAdd);
-            } else {
-                messageSendEdit.getText().insert(currentCursorPos, newStringToAdd);
-            }
-            messageSendEdit.setSelection(currentCursorPos + newStringToAdd.length() - posOfCenterFromEnd);
+            Utils.insertStringInEditText(messageSendEdit, newStringToAdd, posOfCenterFromEnd);
         }
     }
 

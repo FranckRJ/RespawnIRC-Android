@@ -742,6 +742,8 @@ public final class JVCParser {
     public static String parseMessageToSimpleMessage(String messageInString) {
         StringBuilder messageInBuilder = new StringBuilder(messageInString);
 
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeBlockPattern, 1, "<p>&lt;code&gt;", "&lt;/code&gt;</p>", new ConvertStringToString("\n", "<br />"), new ConvertStringToString("  ", "  ")); //remplace les doubles espaces par des doubles alt+255
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeLinePattern, 1, "&lt;code&gt;", "&lt;/code&gt;", new ConvertStringToString("  ", "  "), null); //remplace les doubles espaces par des doubles alt+255
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, stickerPattern, 2, "[[sticker:p/", "]]", null, null);
         ToolForParsing.replaceStringByAnother(messageInBuilder, "\n", "");
         ToolForParsing.replaceStringByAnother(messageInBuilder, "\r", "");
@@ -752,12 +754,23 @@ public final class JVCParser {
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longLinkPattern, 1, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 1, "", "", null, null);
+        ToolForParsing.removeOverlySpoils(messageInBuilder);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "&lt;spoil&gt;", "&lt;/spoil&gt;", new RemoveFirstsAndLastsP(), null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p>&lt;spoil&gt;", "&lt;/spoil&gt;</p>",  new RemoveFirstsAndLastsP(), null);
         ToolForParsing.replaceStringByAnother(messageInBuilder, "<blockquote class=\"blockquote-jv\">", "<blockquote>");
         ToolForParsing.removeDivAndAdaptParagraphInMessage(messageInBuilder);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, surroundedBlockquotePattern, -1, "<br /><br />", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvCarePattern, 1, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, multipleSpacesPattern, -1, " ", "", null, null);
         ToolForParsing.removeFirstAndLastBrInMessage(messageInBuilder);
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "<strong>", "\'\'\'");
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "</strong>", "\'\'\'");
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "<em>", "\'\'");
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "</em>", "\'\'");
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "<u>", "&lt;u&gt;");
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "</u>", "&lt;/u&gt;");
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "<s>", "&lt;s&gt;");
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "</s>", "&lt;/s&gt;");
 
         ToolForParsing.replaceStringByAnother(messageInBuilder, "<br />", "\n");
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, htmlTagPattern, -1, "", "", null, null);
