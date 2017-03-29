@@ -84,7 +84,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
                 adapterForForum.updateAllItems();
             } else {
                 if (!isInErrorMode) {
-                    getterForForum.reloadForum();
+                    getterForForum.reloadForum(true);
                     isInErrorMode = true;
                 } else {
                     Toast.makeText(getActivity(), R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();

@@ -49,10 +49,14 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
     }
 
     public boolean startGetMessages(int timerBeforeStart) {
+        return startGetMessages(timerBeforeStart, false);
+    }
+
+    public boolean startGetMessages(int timerBeforeStart, boolean useBiggerTimeoutTime) {
         if (!urlForTopic.isEmpty()) {
             messagesNeedToBeGet = true;
             if (currentAsyncTaskForGetMessage == null) {
-                currentAsyncTaskForGetMessage = new GetJVCIRCLastMessages();
+                currentAsyncTaskForGetMessage = new GetJVCIRCLastMessages(useBiggerTimeoutTime);
                 timerForFetchUrl.schedule(new LaunchGetJVCLastMessage(), timerBeforeStart);
             }
             return true;
@@ -63,17 +67,22 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
 
     @Override
     public boolean reloadTopic() {
+        return reloadTopic(false);
+    }
+
+    @Override
+    public boolean reloadTopic(boolean useBiggerTimeoutTime) {
         if (currentAsyncTaskForGetMessage != null) {
             if (!currentAsyncTaskForGetMessage.getStatus().equals(AsyncTask.Status.RUNNING)) {
                 timerForFetchUrl.cancel();
                 timerForFetchUrl = new Timer();
                 stopAllCurrentTask();
-                return startGetMessages(0);
+                return startGetMessages(0, useBiggerTimeoutTime);
             } else {
                 return true;
             }
         } else {
-            return startGetMessages(0);
+            return startGetMessages(0, useBiggerTimeoutTime);
         }
     }
 
@@ -114,6 +123,12 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
     }
 
     private class GetJVCIRCLastMessages extends AbsGetJVCLastMessages {
+        private boolean useBiggerTimeoutTime = false;
+
+        GetJVCIRCLastMessages(boolean newUseBiggerTimeoutTime) {
+            useBiggerTimeoutTime = newUseBiggerTimeoutTime;
+        }
+
         @Override
         protected void onPreExecute() {
             if (listenerForNewGetterState != null) {
@@ -124,7 +139,7 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
         @Override
         protected TopicPageInfos doInBackground(String... params) {
             if (params.length > 1) {
-                return downloadAndParseTopicPage(params[0], params[1]);
+                return downloadAndParseTopicPage(params[0], params[1], useBiggerTimeoutTime);
             } else {
                 return null;
             }

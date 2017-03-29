@@ -12,10 +12,14 @@ public class JVCTopicModeForumGetter extends AbsJVCTopicGetter {
     }
 
     public boolean startGetMessagesOfThisPage(String newUrlOfPage) {
+        return startGetMessagesOfThisPage(newUrlOfPage, false);
+    }
+
+    public boolean startGetMessagesOfThisPage(String newUrlOfPage, boolean useBiggerTimeoutTime) {
         if (currentAsyncTaskForGetMessage == null && !newUrlOfPage.isEmpty()) {
             urlForTopic = newUrlOfPage;
             isLoadingFirstPage = JVCParser.getPageNumberForThisTopicLink(urlForTopic).equals("1");
-            currentAsyncTaskForGetMessage = new GetJVCForumLastMessages();
+            currentAsyncTaskForGetMessage = new GetJVCForumLastMessages(useBiggerTimeoutTime);
             currentAsyncTaskForGetMessage.execute(urlForTopic, cookieListInAString);
             return true;
         } else {
@@ -27,10 +31,21 @@ public class JVCTopicModeForumGetter extends AbsJVCTopicGetter {
 
     @Override
     public boolean reloadTopic() {
-        return startGetMessagesOfThisPage(urlForTopic);
+        return reloadTopic(false);
+    }
+
+    @Override
+    public boolean reloadTopic(boolean useBiggerTimeoutTime) {
+        return startGetMessagesOfThisPage(urlForTopic, useBiggerTimeoutTime);
     }
 
     private class GetJVCForumLastMessages extends AbsGetJVCLastMessages {
+        private boolean useBiggerTimeoutTime = false;
+
+        GetJVCForumLastMessages(boolean newUseBiggerTimeoutTime) {
+            useBiggerTimeoutTime = newUseBiggerTimeoutTime;
+        }
+
         @Override
         protected void onPreExecute() {
             if (listenerForNewGetterState != null) {
@@ -41,7 +56,7 @@ public class JVCTopicModeForumGetter extends AbsJVCTopicGetter {
         @Override
         protected TopicPageInfos doInBackground(String... params) {
             if (params.length > 1) {
-                return downloadAndParseTopicPage(params[0], params[1]);
+                return downloadAndParseTopicPage(params[0], params[1], useBiggerTimeoutTime);
             } else {
                 return null;
             }

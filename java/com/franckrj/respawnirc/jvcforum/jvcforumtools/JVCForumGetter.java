@@ -89,9 +89,13 @@ public class JVCForumGetter {
     }
 
     public boolean startGetMessagesOfThisPage(String newUrlOfPage) {
+        return startGetMessagesOfThisPage(newUrlOfPage, false);
+    }
+
+    public boolean startGetMessagesOfThisPage(String newUrlOfPage, boolean useBiggerTimeoutTime) {
         if (currentAsyncTaskForGetTopic == null && !newUrlOfPage.isEmpty()) {
             urlForForum = newUrlOfPage;
-            currentAsyncTaskForGetTopic = new GetJVCLastTopics(isInSearchMode);
+            currentAsyncTaskForGetTopic = new GetJVCLastTopics(isInSearchMode, useBiggerTimeoutTime);
             currentAsyncTaskForGetTopic.execute(urlForForum, cookieListInAString);
             return true;
         } else {
@@ -101,7 +105,11 @@ public class JVCForumGetter {
     }
 
     public boolean reloadForum() {
-        return startGetMessagesOfThisPage(urlForForum);
+        return reloadForum(false);
+    }
+
+    public boolean reloadForum(boolean useBiggerTimeoutTime) {
+        return startGetMessagesOfThisPage(urlForForum, useBiggerTimeoutTime);
     }
 
     public void stopAllCurrentTask() {
@@ -141,9 +149,11 @@ public class JVCForumGetter {
 
     private class GetJVCLastTopics extends AsyncTask<String, Void, ForumPageInfos> {
         boolean isInSearchMode = false;
+        boolean useBiggerTimeoutTime = false;
 
-        GetJVCLastTopics(boolean newIsInSearchMode) {
+        GetJVCLastTopics(boolean newIsInSearchMode, boolean newUseBiggerTimeoutTime) {
             isInSearchMode = newIsInSearchMode;
+            useBiggerTimeoutTime = newUseBiggerTimeoutTime;
         }
 
         @Override
@@ -160,6 +170,7 @@ public class JVCForumGetter {
                 ForumPageInfos newPageInfos = null;
                 String pageContent;
                 currentWebInfos.followRedirects = true;
+                currentWebInfos.useBiggerTimeoutTime = useBiggerTimeoutTime;
                 pageContent = WebManager.sendRequest(params[0], "GET", "", params[1], currentWebInfos);
 
                 if (pageContent != null) {

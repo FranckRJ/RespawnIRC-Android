@@ -68,7 +68,7 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
                 }
             } else if (itsReallyEmpty) {
                 if (!isInErrorMode) {
-                    getterForTopic.reloadTopic();
+                    getterForTopic.reloadTopic(true);
                     isInErrorMode = true;
                 } else if (adapterForTopic.getAllItems().isEmpty()) {
                     Toast.makeText(getActivity(), R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();

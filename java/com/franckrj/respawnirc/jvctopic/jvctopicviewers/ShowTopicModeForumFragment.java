@@ -51,7 +51,7 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
                 }
             } else {
                 if (!isInErrorMode) {
-                    getterForTopic.reloadTopic();
+                    getterForTopic.reloadTopic(true);
                     isInErrorMode = true;
                 } else {
                     Toast.makeText(getActivity(), R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();

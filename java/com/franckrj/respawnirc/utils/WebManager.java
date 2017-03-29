@@ -43,8 +43,14 @@ public class WebManager {
             currentInfos.currentUrl = urlConnection.getURL().toString();
 
             urlConnection.setInstanceFollowRedirects(currentInfos.followRedirects);
-            urlConnection.setConnectTimeout(5000);
-            urlConnection.setReadTimeout(7500);
+
+            if (currentInfos.useBiggerTimeoutTime) {
+                urlConnection.setConnectTimeout(10000);
+                urlConnection.setReadTimeout(10000);
+            } else {
+                urlConnection.setConnectTimeout(5000);
+                urlConnection.setReadTimeout(5000);
+            }
 
             urlConnection.setRequestMethod(requestMethod);
             urlConnection.setRequestProperty("User-Agent", userAgentString);
@@ -112,5 +118,6 @@ public class WebManager {
     public static class WebInfos {
         public boolean followRedirects = false;
         public String currentUrl = "";
+        public boolean useBiggerTimeoutTime = true;
     }
 }

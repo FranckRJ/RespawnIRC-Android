@@ -147,16 +147,17 @@ public abstract class AbsJVCTopicGetter {
     }
 
     /* Je savais pas comment l'appeler, en gros ça reset les infos affichées dans la liste des messages
-    * pour que lors d'un refresh qui efface les messages ces infos soient retransmisent via listener.*/
+    ** pour que lors d'un refresh qui efface les messages ces infos soient retransmisent via listener.*/
     public void resetDirectlyShowedInfos() {
         htmlSurveyTitle = null;
     }
 
-    protected TopicPageInfos downloadAndParseTopicPage(String topicLink, String cookies) {
+    protected TopicPageInfos downloadAndParseTopicPage(String topicLink, String cookies, boolean useBiggerTimeoutTime) {
         WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
         TopicPageInfos newPageInfos = null;
         String pageContent;
         currentWebInfos.followRedirects = false;
+        currentWebInfos.useBiggerTimeoutTime = useBiggerTimeoutTime;
         pageContent = WebManager.sendRequest(topicLink, "GET", "", cookies, currentWebInfos);
 
         if (pageContent != null) {
@@ -253,4 +254,5 @@ public abstract class AbsJVCTopicGetter {
     }
 
     public abstract boolean reloadTopic();
+    public abstract boolean reloadTopic(boolean useBiggerTimeoutTime);
 }
