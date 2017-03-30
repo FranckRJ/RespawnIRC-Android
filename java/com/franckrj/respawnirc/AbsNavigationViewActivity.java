@@ -423,7 +423,7 @@ public abstract class AbsNavigationViewActivity extends ThemedActivity implement
         updateNavigationMenu();
 
         if (Build.VERSION.SDK_INT > 15) {
-            Undeprecator.viewSetBackgroundDrawable(navigationHeader, Undeprecator.resourcesGetDrawable(getResources(), R.drawable.navigation_header_background));
+            Undeprecator.viewSetBackgroundDrawable(navigationHeader, Undeprecator.resourcesGetDrawable(getResources(), ThemeManager.getDrawableRes(ThemeManager.DrawableName.NAVIGATION_HEADER_BACKGROUND)));
         } else {
             navigationHeader.setBackgroundColor(Undeprecator.resourcesGetColor(getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PRIMARY_DARK)));
         }

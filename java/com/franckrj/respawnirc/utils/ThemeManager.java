@@ -168,6 +168,8 @@ public class ThemeManager {
                     return R.drawable.ic_action_content_edit_dark;
                 case TOPIC_LOCK_ICON:
                     return R.drawable.icon_topic_lock_dark;
+                case NAVIGATION_HEADER_BACKGROUND:
+                    return R.drawable.navigation_header_background_dark;
                 default:
                     return R.drawable.ic_action_navigation_arrow_drop_down_dark;
             }
@@ -187,6 +189,8 @@ public class ThemeManager {
                     return R.drawable.ic_action_content_edit_light;
                 case TOPIC_LOCK_ICON:
                     return R.drawable.icon_topic_lock_light;
+                case NAVIGATION_HEADER_BACKGROUND:
+                    return R.drawable.navigation_header_background_light;
                 default:
                     return R.drawable.ic_action_navigation_arrow_drop_down_light;
             }
@@ -206,7 +210,8 @@ public class ThemeManager {
         EXPAND_MORE, EXPAND_LESS,
         ARROW_DROP_DOWN,
         CONTENT_SEND, CONTENT_EDIT,
-        TOPIC_LOCK_ICON
+        TOPIC_LOCK_ICON,
+        NAVIGATION_HEADER_BACKGROUND
     }
 
     public enum ThemeName {
