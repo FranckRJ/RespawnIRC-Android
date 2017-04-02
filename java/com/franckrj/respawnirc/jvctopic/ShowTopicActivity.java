@@ -41,6 +41,8 @@ import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
 
+import java.util.ArrayList;
+
 public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCTopicGetter.NewForumAndTopicNameAvailable,
                                                                     PopupMenu.OnMenuItemClickListener, JVCTopicModeForumGetter.NewNumbersOfPagesListener,
                                                                     ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCTopicAdapter.URLClicked,
@@ -695,9 +697,10 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
     }
 
     @Override
-    public void getNewSurveyInfos(String surveyTitle, String topicID, String ajaxInfos) {
+    public void getNewSurveyInfos(String surveyTitle, String topicID, String ajaxInfos, ArrayList<JVCParser.SurveyReplyInfos> listOfReplysWithInfos) {
         Intent newShowSurveyIntent = new Intent(ShowTopicActivity.this, ShowSurveyActivity.class);
         newShowSurveyIntent.putExtra(ShowSurveyActivity.EXTRA_SURVEY_TITLE, surveyTitle);
+        newShowSurveyIntent.putExtra(ShowSurveyActivity.EXTRA_SURVEY_REPLYS_WITH_INFOS, listOfReplysWithInfos);
         newShowSurveyIntent.putExtra(ShowSurveyActivity.EXTRA_TOPIC_ID, topicID);
         newShowSurveyIntent.putExtra(ShowSurveyActivity.EXTRA_AJAX_INFOS, ajaxInfos);
         newShowSurveyIntent.putExtra(ShowSurveyActivity.EXTRA_COOKIES, cookieListInAString);

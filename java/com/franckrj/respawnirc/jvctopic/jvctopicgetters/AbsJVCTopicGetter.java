@@ -22,6 +22,7 @@ public abstract class AbsJVCTopicGetter {
     protected static final String SAVE_LAST_ID_OF_MESSAGE = "saveLastIdOfMessage";
     protected static final String SAVE_TOPIC_ID = "saveTopicID";
     protected static final String SAVE_HTML_SURVEY_TITLE = "saveHtmlSurveyTitle";
+    protected static final String SAVE_SURVEY_REPLYS_WITH_INFOS = "saveSurveyReplysWithInfos";
     protected static final String SAVE_TOPIC_IS_IN_FAV = "saveTopicIsInFav";
 
     protected String urlForTopic = "";
@@ -41,6 +42,7 @@ public abstract class AbsJVCTopicGetter {
     protected String lockReason = "";
     protected NewSurveyForTopic listenerForNewSurveyForTopic = null;
     protected String htmlSurveyTitle = null;
+    protected ArrayList<JVCParser.SurveyReplyInfos> listOfSurveyReplyWithInfos = new ArrayList<>();
     protected NewPseudoOfAuthorAvailable listenerForNewPseudoOfAuthor = null;
 
     public String getUrlForTopic() {
@@ -69,6 +71,10 @@ public abstract class AbsJVCTopicGetter {
 
     public String getSurveyTitleInHtml() {
         return htmlSurveyTitle;
+    }
+
+    public ArrayList<JVCParser.SurveyReplyInfos> getListOfSurveyReplysWithInfos() {
+        return listOfSurveyReplyWithInfos;
     }
 
     public void setIsInFavs(Boolean newVal) {
@@ -124,6 +130,7 @@ public abstract class AbsJVCTopicGetter {
         lastIdOfMessage = savedInstanceState.getLong(SAVE_LAST_ID_OF_MESSAGE, 0);
         topicID = savedInstanceState.getString(SAVE_TOPIC_ID, "");
         htmlSurveyTitle = savedInstanceState.getString(SAVE_HTML_SURVEY_TITLE, "");
+        listOfSurveyReplyWithInfos = savedInstanceState.getParcelableArrayList(SAVE_SURVEY_REPLYS_WITH_INFOS);
         if (savedInstanceState.containsKey(SAVE_TOPIC_IS_IN_FAV)) {
             isInFavs = savedInstanceState.getBoolean(SAVE_TOPIC_IS_IN_FAV, false);
         } else {
@@ -141,6 +148,7 @@ public abstract class AbsJVCTopicGetter {
         savedInstanceState.putLong(SAVE_LAST_ID_OF_MESSAGE, lastIdOfMessage);
         savedInstanceState.putString(SAVE_TOPIC_ID, topicID);
         savedInstanceState.putString(SAVE_HTML_SURVEY_TITLE, htmlSurveyTitle);
+        savedInstanceState.putParcelableArrayList(SAVE_SURVEY_REPLYS_WITH_INFOS, listOfSurveyReplyWithInfos);
         if (isInFavs != null) {
             savedInstanceState.putBoolean(SAVE_TOPIC_IS_IN_FAV, isInFavs);
         }
@@ -172,6 +180,9 @@ public abstract class AbsJVCTopicGetter {
             newPageInfos.newTopicID = JVCParser.getTopicIDInThisTopicPage(pageContent);
             newPageInfos.newLockReason = JVCParser.getLockReasonFromPage(pageContent);
             newPageInfos.newHtmlSurveyTitle = JVCParser.getSurveyHTMLTitleFromPage(pageContent);
+            if (!newPageInfos.newHtmlSurveyTitle.isEmpty()) {
+                newPageInfos.newListOfSurveyReplyWithInfos = JVCParser.getListOfSurveyReplyWithInfos(pageContent);
+            }
         }
 
         return newPageInfos;
@@ -182,6 +193,7 @@ public abstract class AbsJVCTopicGetter {
         latestAjaxInfos = infoOfCurrentPage.ajaxInfosOfThisPage;
         isInFavs = infoOfCurrentPage.newIsInFavs;
         topicID = infoOfCurrentPage.newTopicID;
+        listOfSurveyReplyWithInfos = infoOfCurrentPage.newListOfSurveyReplyWithInfos;
 
         if (!latestListOfInputInAString.isEmpty()) {
             latestListOfInputInAString = latestListOfInputInAString + "&form_alias_rang=1";
@@ -227,6 +239,7 @@ public abstract class AbsJVCTopicGetter {
         String newTopicID;
         String newLockReason;
         String newHtmlSurveyTitle;
+        ArrayList<JVCParser.SurveyReplyInfos> newListOfSurveyReplyWithInfos = new ArrayList<>();
     }
 
     public interface NewForumAndTopicNameAvailable {

@@ -62,6 +62,7 @@ public final class JVCParser {
     private static final Pattern surveyTitlePattern = Pattern.compile("<div class=\"intitule-sondage\">([^<]*)</div>");
     private static final Pattern surveyResultPattern = Pattern.compile("<div class=\"pied-result\">([^<]*)</div>");
     private static final Pattern surveyReplyPattern = Pattern.compile("<td class=\"result-pourcent\">[^<]*<div class=\"pourcent\">([^<]*)</div>.*?<td class=\"reponse\">([^<]*)</td>", Pattern.DOTALL);
+    private static final Pattern surveyReplyWithInfosPattern = Pattern.compile("<a href=\"#\" class=\"btn-sondage-reponse\" data-id-sondage=\"([^\"]*)\" data-id-reponse=\"([^\"]*)\">(.*?)</a>", Pattern.DOTALL);
     private static final Pattern realSurveyContentPattern = Pattern.compile("\"html\":\"(.*?)\"\\}");
     private static final Pattern numberOfMpJVCPattern = Pattern.compile("<div class=\".*?account-mp.*?\">[^<]*<span[^c]*class=\"account-number-mp[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
     private static final Pattern overlyJVCQuotePattern = Pattern.compile("(<blockquote class=\"blockquote-jv\">|</blockquote>)");
@@ -272,6 +273,24 @@ public final class JVCParser {
         }
 
         return currentInfos;
+    }
+
+    public static ArrayList<SurveyReplyInfos> getListOfSurveyReplyWithInfos(String pageSource) {
+        ArrayList<SurveyReplyInfos> listOfReplys = new ArrayList<>();
+        Matcher replyWithInfosMatcher = surveyReplyWithInfosPattern.matcher(pageSource);
+        int lastOffset = 0;
+
+        while (replyWithInfosMatcher.find(lastOffset)) {
+            SurveyReplyInfos newSurveyReply = new SurveyReplyInfos();
+
+            newSurveyReply.infosForReply = "id_sondage=" + replyWithInfosMatcher.group(1) + "&id_sondage_reponse=" + replyWithInfosMatcher.group(2);
+            newSurveyReply.titleOfReply = specialCharToNormalChar(replyWithInfosMatcher.group(3).replace("\n", "").replace("\r", "").trim());
+
+            listOfReplys.add(newSurveyReply);
+            lastOffset = replyWithInfosMatcher.end();
+        }
+
+        return listOfReplys;
     }
 
     public static ArrayList<NameAndLink> getListOfForumsInSearchPage(String pageSource) {
@@ -1334,6 +1353,48 @@ public final class JVCParser {
         public void writeToParcel(Parcel out, int flags) {
             out.writeString(name);
             out.writeString(link);
+        }
+    }
+
+    public static class SurveyReplyInfos implements Parcelable {
+        public String infosForReply = "";
+        public String titleOfReply = "";
+
+        public static final Parcelable.Creator<SurveyReplyInfos> CREATOR = new Parcelable.Creator<SurveyReplyInfos>() {
+            @Override
+            public SurveyReplyInfos createFromParcel(Parcel in) {
+                return new SurveyReplyInfos(in);
+            }
+
+            @Override
+            public SurveyReplyInfos[] newArray(int size) {
+                return new SurveyReplyInfos[size];
+            }
+        };
+
+        public SurveyReplyInfos() {
+            //rien
+        }
+
+        public SurveyReplyInfos(String newInfos, String newTitle) {
+            infosForReply = newInfos;
+            titleOfReply = newTitle;
+        }
+
+        private SurveyReplyInfos(Parcel in) {
+            infosForReply = in.readString();
+            titleOfReply = in.readString();
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            out.writeString(infosForReply);
+            out.writeString(titleOfReply);
         }
     }
 

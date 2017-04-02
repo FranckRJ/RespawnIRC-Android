@@ -74,7 +74,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         public void onClick(View view) {
             if (adapterForTopic.getShowSurvey()) {
                 if (getActivity() instanceof NewSurveyNeedToBeShown) {
-                    ((NewSurveyNeedToBeShown) getActivity()).getNewSurveyInfos(JVCParser.specialCharToNormalChar(absGetterForTopic.getSurveyTitleInHtml()), absGetterForTopic.getTopicID(), absGetterForTopic.getLatestAjaxInfos().list);
+                    ((NewSurveyNeedToBeShown) getActivity()).getNewSurveyInfos(JVCParser.specialCharToNormalChar(absGetterForTopic.getSurveyTitleInHtml()), absGetterForTopic.getTopicID(), absGetterForTopic.getLatestAjaxInfos().list, absGetterForTopic.getListOfSurveyReplysWithInfos());
                 }
             }
         }
@@ -321,7 +321,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     }
 
     public interface NewSurveyNeedToBeShown {
-        void getNewSurveyInfos(String surveyTitle, String topicID, String ajaxInfos);
+        void getNewSurveyInfos(String surveyTitle, String topicID, String ajaxInfos, ArrayList<JVCParser.SurveyReplyInfos> listOfReplysWithInfos);
     }
 
     protected abstract void initializeGetterForMessages();

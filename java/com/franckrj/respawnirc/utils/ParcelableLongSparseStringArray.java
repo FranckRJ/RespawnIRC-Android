@@ -22,7 +22,7 @@ public class ParcelableLongSparseStringArray extends LongSparseArray<String> imp
     }
 
     private ParcelableLongSparseStringArray(Parcel in) {
-        int tmpSize = in.readInt();
+        final int tmpSize = in.readInt();
 
         for (int i = 0; i < tmpSize; ++i) {
             long tmpKey = in.readLong();

@@ -150,6 +150,10 @@
     <string name="errorMessageContentNeededForSend">Erreur : Le message doit se composer au minimum de 1 caractère.</string>
     <string name="defaultShowSpoilValTitle">Afficher les spoils par défaut</string>
     <string name="markAuthorPseudoTitle">Marquer l\'auteur du topic</string>
+    <string name="vote">Voter</string>
+    <string name="errorVoteInvalide">Erreur, vote invalide.</string>
+    <string name="errorVoteAlreadyRunning">Erreur, vote déjà en cours.</string>
+    <string name="voteRegistered">Vote enregistré !</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
