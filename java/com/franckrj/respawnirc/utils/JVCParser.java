@@ -517,6 +517,7 @@ public final class JVCParser {
                 .replaceAll("(?<!\\\\)\\\\\"", "\"")
                 .replaceAll("(?<!\\\\)\\\\/", "/")
                 .replaceAll("(?<!\\\\)\\\\n", "\n")
+                .replaceAll("(?<!\\\\)\\\\t", "\t")
                 .replace("\\\\", "\\");
 
         unicodeInTextMatcher = unicodeInTextPattern.matcher(ajaxMessage);
@@ -1374,11 +1375,6 @@ public final class JVCParser {
 
         public SurveyReplyInfos() {
             //rien
-        }
-
-        public SurveyReplyInfos(String newInfos, String newTitle) {
-            infosForReply = newInfos;
-            titleOfReply = newTitle;
         }
 
         private SurveyReplyInfos(Parcel in) {

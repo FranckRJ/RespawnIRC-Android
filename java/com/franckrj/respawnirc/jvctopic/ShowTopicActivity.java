@@ -419,14 +419,23 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
                 } else {
                     Toast.makeText(ShowTopicActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
                 }
-
                 return true;
             case R.id.action_open_in_browser_showtopic:
-                if (!useInternalNavigatorForDefaultOpening) {
-                    Utils.openLinkInExternalNavigator(pageNavigation.getCurrentLink(), this);
-                } else {
-                    Utils.openLinkInInternalNavigator(pageNavigation.getCurrentLink(), this);
+                String linkToUse = "";
+
+                if (getCurrentFragment() != null) {
+                    linkToUse = getCurrentFragment().getCurrentUrlOfTopic();
                 }
+                if (linkToUse.isEmpty()) {
+                    linkToUse = setShowedPageNumberForThisLink(pageNavigation.getCurrentLink(), pageNavigation.getCurrentItemIndex() + 1);
+                }
+
+                if (!useInternalNavigatorForDefaultOpening) {
+                    Utils.openLinkInExternalNavigator(linkToUse, this);
+                } else {
+                    Utils.openLinkInInternalNavigator(linkToUse, this);
+                }
+
                 return true;
             case R.id.action_past_last_message_sended_showtopic:
                 if (reasonOfLock == null) {
