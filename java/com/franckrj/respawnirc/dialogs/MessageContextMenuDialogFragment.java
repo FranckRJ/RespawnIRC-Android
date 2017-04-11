@@ -19,9 +19,10 @@ public class MessageContextMenuDialogFragment extends DialogFragment {
     public static final String ARG_MESSAGE_CONTENT = "com.franckrj.respawnirc.messagecontextmenudialogfragment.message_content";
 
     private static final int POS_OPEN_CDV = 0;
-    private static final int POS_COPY_PSEUDO = 1;
-    private static final int POS_COPY_PERMALINK = 2;
-    private static final int POS_SELECT_TEXT = 3;
+    private static final int POS_SEND_MP = 1;
+    private static final int POS_COPY_PSEUDO = 2;
+    private static final int POS_COPY_PERMALINK = 3;
+    private static final int POS_SELECT_TEXT = 4;
 
     private String pseudoOfMessage;
     private String idOfMessage;
@@ -59,6 +60,10 @@ public class MessageContextMenuDialogFragment extends DialogFragment {
                         } else {
                             Utils.openLinkInExternalNavigator(link, getActivity());
                         }
+                        break;
+                    }
+                    case POS_SEND_MP: {
+                        Utils.openLinkInInternalNavigator("http://www.jeuxvideo.com/messages-prives/nouveau.php?all_dest=" + pseudoOfMessage, getActivity());
                         break;
                     }
                     case POS_COPY_PSEUDO: {

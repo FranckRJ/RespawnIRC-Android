@@ -734,8 +734,9 @@ public final class JVCParser {
         if (containSpoil) {
             ToolForParsing.removeOverlySpoils(messageInBuilder);
             if (!showSpoil) {
-                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "", "", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
-                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p>", "</p>", new ConvertRegexpToString("<.+?>", " "), new ConvertRegexpToString("(?s).", "█"));
+                //alt+255 espace autour du spoil
+                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, -1, "<bg_closed_spoil><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "000000" : "FFFFFF") + "\"> SPOIL </font></bg_closed_spoil>", "", null, null);
+                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, -1, "<p><bg_closed_spoil><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "000000" : "FFFFFF") + "\"> SPOIL </font></bg_closed_spoil></p>", "", null, null);
             } else {
                 ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "<font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "FFFFFF" : "000000") + "\">", "</font>", new RemoveFirstsAndLastsP(), null);
                 ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "FFFFFF" : "000000") + "\">", "</font></p>",  new RemoveFirstsAndLastsP(), null);
@@ -1406,21 +1407,6 @@ public final class JVCParser {
         @Override
         public String changeString(String baseString) {
             return baseString.replace(stringToRemplace, stringNew);
-        }
-    }
-
-    private static class ConvertRegexpToString implements StringModifier {
-        private final String regexpToRemplace;
-        private final String stringNew;
-
-        ConvertRegexpToString(String newRegexpToRemplace, String newStringNew) {
-            regexpToRemplace = newRegexpToRemplace;
-            stringNew = newStringNew;
-        }
-
-        @Override
-        public String changeString(String baseString) {
-            return baseString.replaceAll(regexpToRemplace, stringNew);
         }
     }
 

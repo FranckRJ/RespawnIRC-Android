@@ -154,6 +154,7 @@
     <string name="errorVoteInvalide">Erreur, vote invalide.</string>
     <string name="errorVoteAlreadyRunning">Erreur, vote déjà en cours.</string>
     <string name="voteRegistered">Vote enregistré !</string>
+    <string name="sendMP">Envoyer un MP</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
@@ -162,6 +163,7 @@
     </string-array>
     <string-array name="choicesForMessageContextMenu">
         <item>@string/openCDV</item>
+        <item>@string/sendMP</item>
         <item>@string/copyPseudo</item>
         <item>@string/copyPermalink</item>
         <item>@string/selectText</item>
