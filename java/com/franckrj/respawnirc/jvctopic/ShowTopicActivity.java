@@ -116,7 +116,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         }
     };
 
-    private final Button.OnClickListener sendMessageToTopicListener = new View.OnClickListener() {
+    private final View.OnClickListener sendMessageToTopicListener = new View.OnClickListener() {
         @Override
         public void onClick(View buttonView) {
             if (messageSendButton.isEnabled() && reasonOfLock == null) {
@@ -161,7 +161,19 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         }
     };
 
-    private final Button.OnLongClickListener refreshFromSendButton = new View.OnLongClickListener() {
+    private final View.OnLongClickListener showForumAndTopicTitleListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            Bundle argForFrag = new Bundle();
+            SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
+            argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumAndTopicNames, currentTitles.forum, currentTitles.topic));
+            selectTextDialogFragment.setArguments(argForFrag);
+            selectTextDialogFragment.show(getFragmentManager(), "SelectTextDialogFragment");
+            return true;
+        }
+    };
+
+    private final View.OnLongClickListener refreshFromSendButton = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
             getCurrentFragment().reloadTopic();
@@ -169,7 +181,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         }
     };
 
-    private final Button.OnClickListener selectStickerClickedListener = new View.OnClickListener() {
+    private final View.OnClickListener selectStickerClickedListener = new View.OnClickListener() {
         @Override
         public void onClick(View buttonView) {
             InsertStuffDialogFragment insertStuffDialogFragment = new InsertStuffDialogFragment();
@@ -261,6 +273,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         arrowDrawable.setBounds(0, 0, arrowDrawable.getIntrinsicWidth() / 2, arrowDrawable.getIntrinsicHeight() / 2);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_showtopic);
+        myToolbar.setOnLongClickListener(showForumAndTopicTitleListener);
         setSupportActionBar(myToolbar);
 
         ActionBar myActionBar = getSupportActionBar();

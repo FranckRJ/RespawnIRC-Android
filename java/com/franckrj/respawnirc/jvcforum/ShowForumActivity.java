@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.NavigationMenuListView;
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.dialogs.SelectTextDialogFragment;
 import com.franckrj.respawnirc.jvctopic.ShowTopicActivity;
 import com.franckrj.respawnirc.jvcforum.jvcforumtools.JVCForumGetter;
 import com.franckrj.respawnirc.jvcforum.jvcforumtools.ShowForumFragment;
@@ -42,6 +43,18 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     private boolean refreshNeededOnNextResume = false;
     private boolean useInternalNavigatorForDefaultOpening = false;
     private String currentNumberOfMP = null;
+
+    private final View.OnLongClickListener showForumTitleListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            Bundle argForFrag = new Bundle();
+            SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
+            argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumNames, currentTitle));
+            selectTextDialogFragment.setArguments(argForFrag);
+            selectTextDialogFragment.show(getFragmentManager(), "SelectTextDialogFragment");
+            return true;
+        }
+    };
 
     public ShowForumActivity() {
         idOfBaseActivity = ITEM_ID_FORUM;
@@ -270,6 +283,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         setContentView(R.layout.activity_showforum);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_showforum);
+        myToolbar.setOnLongClickListener(showForumTitleListener);
         setSupportActionBar(myToolbar);
 
         ActionBar myActionBar = getSupportActionBar();
