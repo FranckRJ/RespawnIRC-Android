@@ -83,13 +83,16 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
 
     private final JVCMessageToTopicSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageToTopicSender.NewMessageWantEditListener() {
         @Override
-        public void initializeEditMode(String newMessageToEdit) {
+        public void initializeEditMode(String newMessageToEdit, boolean messageIsAnError) {
             if (reasonOfLock == null) {
                 messageSendButton.setEnabled(true);
 
-                if (newMessageToEdit.isEmpty()) {
+                if (newMessageToEdit.isEmpty() || messageIsAnError) {
+                    if (newMessageToEdit.isEmpty()) {
+                        newMessageToEdit = getString(R.string.errorCantGetEditInfos);
+                    }
                     messageSendButton.setImageResource(ThemeManager.getDrawableRes(ThemeManager.DrawableName.CONTENT_SEND));
-                    Toast.makeText(ShowTopicActivity.this, R.string.errorCantGetEditInfos, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ShowTopicActivity.this, newMessageToEdit, Toast.LENGTH_SHORT).show();
                 } else {
                     messageSendEdit.setText(newMessageToEdit);
                     messageSendEdit.setSelection(newMessageToEdit.length());

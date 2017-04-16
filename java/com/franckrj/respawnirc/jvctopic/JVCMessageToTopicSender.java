@@ -124,22 +124,31 @@ public class JVCMessageToTopicSender {
         protected void onPostExecute(String pageResult) {
             super.onPostExecute(pageResult);
             String newMessageEdit = "";
+            boolean messageIsAnError = false;
 
             if (!Utils.stringIsEmptyOrNull(pageResult)) {
+                String pageResultParsed = JVCParser.parsingAjaxMessages(pageResult);
                 lastInfosForEdit += ajaxListInfos + "&action=post";
-                pageResult = JVCParser.parsingAjaxMessages(pageResult);
-                lastInfosForEdit += JVCParser.getListOfInputInAStringInTopicFormForThisPage(pageResult);
-                newMessageEdit = JVCParser.getMessageEdit(pageResult);
+                lastInfosForEdit += JVCParser.getListOfInputInAStringInTopicFormForThisPage(pageResultParsed);
+                newMessageEdit = JVCParser.getMessageEdit(pageResultParsed);
+
+                if (newMessageEdit.isEmpty()) {
+                    messageIsAnError = true;
+                    newMessageEdit = JVCParser.getErrorMessageInJSONMode(pageResult);
+                    if (newMessageEdit == null) {
+                        newMessageEdit = "";
+                    }
+                }
             }
 
-            if (newMessageEdit.isEmpty()) {
+            if (newMessageEdit.isEmpty() || messageIsAnError) {
                 isInEdit = false;
                 lastInfosForEdit = null;
                 ajaxListInfos = null;
             }
 
             if (listenerForNewMessageWantEdit != null) {
-                listenerForNewMessageWantEdit.initializeEditMode(newMessageEdit);
+                listenerForNewMessageWantEdit.initializeEditMode(newMessageEdit, messageIsAnError);
             }
 
             currentAsyncTaskForGetEditInfos = null;
@@ -203,7 +212,7 @@ public class JVCMessageToTopicSender {
     }
 
     public interface NewMessageWantEditListener {
-        void initializeEditMode(String newMessageToEdit);
+        void initializeEditMode(String newMessageToEdit, boolean messageIsAnError);
     }
 
     public interface NewMessagePostedListener {
