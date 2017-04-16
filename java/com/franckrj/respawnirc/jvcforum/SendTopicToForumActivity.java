@@ -140,14 +140,10 @@ public class SendTopicToForumActivity extends ThemedActivity implements InsertSt
         protected String doInBackground(String... params) {
             if (params.length > 4) {
                 WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
-                int numberOfTrys = 0;
                 String pageContent;
                 currentWebInfos.followRedirects = false;
 
-                do {
-                    ++numberOfTrys;
-                    pageContent = WebManager.sendRequest(params[0], "POST", "titre_topic=" + params[1] + "&message_topic=" + params[2] + params[3], params[4], currentWebInfos);
-                } while (params[0].equals(currentWebInfos.currentUrl) && numberOfTrys < 2);
+                pageContent = WebManager.sendRequestWithMultipleTrys(params[0], "POST", "titre_topic=" + params[1] + "&message_topic=" + params[2] + params[3], params[4], currentWebInfos, 2);
 
                 if (params[0].equals(currentWebInfos.currentUrl)) {
                     pageContent = "respawnirc:resendneeded";

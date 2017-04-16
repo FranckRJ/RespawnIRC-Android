@@ -59,10 +59,10 @@
     <string name="connectWithAnotherAccount">Changer de compte</string>
     <string name="loadingFavs">Chargement des favoris…</string>
     <string name="forumFav">Forums favoris</string>
-    <string name="errorDuringFetchFavs">Erreur durant la récupération des favoris</string>
+    <string name="errorDuringFetchFavs">Erreur durant la récupération des favoris.</string>
     <string name="topicFav">Topics favoris</string>
     <string name="deleteMessage">Supprimer</string>
-    <string name="supressSuccess">Message supprimé.</string>
+    <string name="supressSuccess">Message supprimé</string>
     <string name="errorDeleteAlreadyRunning">Erreur, suppression déjà en cours.</string>
     <string name="openInExternalBrowser">Ouvrir dans le navigateur externe</string>
     <string name="openInInternBrowser">Ouvrir dans le navigateur interne</string>
@@ -86,7 +86,7 @@
     <string name="unknownErrorPleaseResend">Erreur inconnue, essayez de ré-envoyer le message.</string>
     <string name="sendATopic">Poster un topic</string>
     <string name="topicTitlePlaceHolder">Titre…</string>
-    <string name="topicIsSended">Le topic a été posté.</string>
+    <string name="topicIsSended">Le topic a été posté</string>
     <string name="pastLastTopicSended">Coller le dernier topic envoyé</string>
     <string name="showMP">Consulter les MP</string>
     <string name="useInternalNavigatorTitle">Navigateur interne par défaut</string>
@@ -157,6 +157,10 @@
     <string name="sendMP">Envoyer un MP</string>
     <string name="showForumAndTopicNames">Forum : %1$s\n\nTopic : %2$s</string>
     <string name="showForumNames">Forum : %1$s</string>
+    <string name="modoPassword">Mot de passe de modération</string>
+    <string name="validate">Valider</string>
+    <string name="connnectAsModoText">Se connecter en tant que modo</string>
+    <string name="connectionSucessful">Connexion réussie</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

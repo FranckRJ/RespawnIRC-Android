@@ -56,7 +56,10 @@ public class ConnectActivity extends ThemedActivity {
             if (helloCookieValue != null && connectCookieValue != null) {
                 PrefsManager.putString(PrefsManager.StringPref.Names.COOKIES_LIST, "dlrowolleh=" + helloCookieValue + ";coniunctio=" + connectCookieValue);
                 PrefsManager.putString(PrefsManager.StringPref.Names.PSEUDO_OF_USER, pseudoText.getText().toString().trim());
+                PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, false);
                 PrefsManager.applyChanges();
+
+                Toast.makeText(this, R.string.connectionSucessful, Toast.LENGTH_SHORT).show();
 
                 super.onBackPressed();
                 return;
@@ -99,7 +102,7 @@ public class ConnectActivity extends ThemedActivity {
         jvcWebView.clearCache(true);
         jvcWebView.clearHistory();
 
-        jvcWebView.loadUrl("http://www.jeuxvideo.com/login");
+        jvcWebView.loadUrl("https://www.jeuxvideo.com/login");
     }
 
     @Override

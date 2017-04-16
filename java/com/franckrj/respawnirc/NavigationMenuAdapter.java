@@ -134,6 +134,7 @@ public class NavigationMenuAdapter extends BaseAdapter {
             holder.contentTextView = (TextView) convertView.findViewById(R.id.content_text_navigationmenu);
             holder.upperLineView = convertView.findViewById(R.id.upper_line_navigationmenu);
 
+            holder.contentTextView.setCompoundDrawablePadding(parentActivity.getResources().getDimensionPixelSize(R.dimen.paddingForCompoundDrawableNavigationMenu));
             convertView.setTag(holder);
         } else {
             holder = (CustomViewHolder) convertView.getTag();
@@ -164,7 +165,6 @@ public class NavigationMenuAdapter extends BaseAdapter {
             }
 
             holder.contentTextView.setCompoundDrawablesWithIntrinsicBounds(compoundDrawable, null, null, null);
-            holder.contentTextView.setCompoundDrawablePadding(parentActivity.getResources().getDimensionPixelSize(R.dimen.paddingForCompoundDrawableNavigationMenu));
         } else {
             holder.contentTextView.setCompoundDrawables(null, null, null, null);
         }

@@ -86,6 +86,8 @@ public class JVCTopicAdapter extends BaseAdapter {
 
             if (itemSelected.pseudo.toLowerCase().equals(currentSettings.pseudoOfUser.toLowerCase())) {
                 inflater.inflate(R.menu.menu_message_user, popup.getMenu());
+            } else if (currentSettings.userIsModo) {
+                inflater.inflate(R.menu.menu_message_moderable, popup.getMenu());
             } else {
                 inflater.inflate(R.menu.menu_message_others, popup.getMenu());
             }

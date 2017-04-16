@@ -42,6 +42,7 @@ public class PrefsManager {
         currentPrefsEdit = currentPrefs.edit();
 
         addBoolPref(BoolPref.Names.IS_FIRST_LAUNCH, "pref.isFirstLaunch", true);
+        addBoolPref(BoolPref.Names.USER_IS_MODO, "pref.userIsModo", false);
 
         addIntPref(IntPref.Names.LAST_ACTIVITY_VIEWED, "pref.lastActivityViewed", MainActivity.ACTIVITY_SELECT_FORUM_IN_LIST);
         addIntPref(IntPref.Names.CURRENT_TOPIC_MODE, "pref.currentTopicMode", AbsShowTopicFragment.MODE_FORUM);
@@ -251,7 +252,8 @@ public class PrefsManager {
             ENABLE_SMOOTH_SCROLL, ENABLE_AUTO_SCROLL_MODE_FORUM,
             ENABLE_GO_TO_BOTTOM_ON_LOAD,
             DEFAULT_SHOW_SPOIL_VAL,
-            MARK_AUTHOR_PSEUDO_MODE_FORUM
+            MARK_AUTHOR_PSEUDO_MODE_FORUM,
+            USER_IS_MODO
         }
     }
 

@@ -38,6 +38,7 @@ public abstract class AbsNavigationViewActivity extends ThemedActivity implement
     protected static final int ITEM_ID_TOPIC_FAV_SELECTED = 6;
     protected static final int ITEM_ID_REFRESH_TOPIC_FAV = 7;
     protected static final int ITEM_ID_CONNECT = 8;
+    protected static final int ITEM_ID_CONNECT_AS_MODO = 9;
     protected static final int MODE_HOME = 0;
     protected static final int MODE_FORUM = 1;
     protected static final int MODE_CONNECT = 2;
@@ -243,6 +244,16 @@ public abstract class AbsNavigationViewActivity extends ThemedActivity implement
                 tmpItemInfo.groupID = GROUP_ID_BASIC;
                 listOfMenuItemInfoForConnect.add(tmpItemInfo);
             }
+            {
+                NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
+                tmpItemInfo.textContent = getString(R.string.connnectAsModoText);
+                tmpItemInfo.drawableResID = R.drawable.ic_action_action_empty;
+                tmpItemInfo.isHeader = false;
+                tmpItemInfo.isEnabled = true;
+                tmpItemInfo.itemID = ITEM_ID_CONNECT_AS_MODO;
+                tmpItemInfo.groupID = GROUP_ID_BASIC;
+                listOfMenuItemInfoForConnect.add(tmpItemInfo);
+            }
         }
     }
 
@@ -376,6 +387,9 @@ public abstract class AbsNavigationViewActivity extends ThemedActivity implement
                             break;
                         case ITEM_ID_CONNECT:
                             startActivity(new Intent(AbsNavigationViewActivity.this, ConnectActivity.class));
+                            break;
+                        case ITEM_ID_CONNECT_AS_MODO:
+                            startActivity(new Intent(AbsNavigationViewActivity.this, ConnectAsModoActivity.class));
                             break;
                         case ITEM_ID_SHOWMP:
                             Utils.openLinkInInternalNavigator("http://www.jeuxvideo.com/messages-prives/boite-reception.php", AbsNavigationViewActivity.this);

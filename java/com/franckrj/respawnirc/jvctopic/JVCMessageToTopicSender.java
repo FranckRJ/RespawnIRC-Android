@@ -151,14 +151,10 @@ public class JVCMessageToTopicSender {
         protected String doInBackground(final InfosOfSend... info) {
             if (info.length == 1) {
                 WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
-                int numberOfTrys = 0;
                 String pageContent;
                 currentWebInfos.followRedirects = false;
 
-                do {
-                    ++numberOfTrys;
-                    pageContent = WebManager.sendRequest(info[0].urlUsed, "POST", "message_topic=" + Utils.convertStringToUrlString(info[0].messageSended) + info[0].listOfInputUsed, info[0].cookiesUsed, currentWebInfos);
-                } while (info[0].urlUsed.equals(currentWebInfos.currentUrl) && numberOfTrys < 2);
+                pageContent = WebManager.sendRequestWithMultipleTrys(info[0].urlUsed, "POST", "message_topic=" + Utils.convertStringToUrlString(info[0].messageSended) + info[0].listOfInputUsed, info[0].cookiesUsed, currentWebInfos, 2);
 
                 if (info[0].urlUsed.equals(currentWebInfos.currentUrl)) {
                     pageContent = "respawnirc:resendneeded";

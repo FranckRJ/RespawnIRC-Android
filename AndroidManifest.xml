@@ -56,6 +56,11 @@
             android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
         <activity
+            android:name=".ConnectAsModoActivity"
+            android:label="@string/connnectAsModoText"
+            android:windowSoftInputMode="stateAlwaysHidden">
+        </activity>
+        <activity
             android:name=".jvctopic.ShowSurveyActivity"
             android:label="@string/survey">
         </activity>

@@ -26,11 +26,13 @@ public final class JVCParser {
     private static final Pattern currentPagePattern = Pattern.compile("<span class=\"page-active\">([^<]*)</span>");
     private static final Pattern pageLinkPattern = Pattern.compile("<span><a href=\"([^\"]*)\" class=\"lien-jv\">([0-9]*)</a></span>");
     private static final Pattern topicFormPattern = Pattern.compile("(<form role=\"form\" class=\"form-post-topic[^\"]*\" method=\"post\" action=\"\".*?>.*?</form>)", Pattern.DOTALL);
+    private static final Pattern modoConnectFormPattern = Pattern.compile("(<form role=\"form\" action=\"\" method=\"post\" id=\"form_connexion\" class=\"form-connect-jv\" autocomplete=\"off\">.*?</form>)", Pattern.DOTALL);
     private static final Pattern inputFormPattern = Pattern.compile("<input (type|name|value)=\"([^\"]*)\" (type|name|value)=\"([^\"]*)\" (type|name|value)=\"([^\"]*)\"/>");
     private static final Pattern dateMessagePattern = Pattern.compile("<div class=\"bloc-date-msg\">([^<]*<span class=\"JvCare [^ ]* lien-jv\" target=\"_blank\">)?[^a-zA-Z0-9]*([^ ]* [^ ]* [^ ]* [^ ]* ([0-9:]*))");
     private static final Pattern messageIDPattern = Pattern.compile("<div class=\"bloc-message-forum \" data-id=\"([^\"]*)\">");
     private static final Pattern unicodeInTextPattern = Pattern.compile("\\\\u([a-zA-Z0-9]{4})");
-    private static final Pattern errorPattern = Pattern.compile("<div class=\"alert-row\">([^<]*)</div>");
+    private static final Pattern alertPattern = Pattern.compile("<div class=\"alert-row\">([^<]*)</div>");
+    private static final Pattern errorBlocPattern = Pattern.compile("<div class=\"bloc-erreur\">([^<]*)</div>");
     private static final Pattern errorInEditModePattern = Pattern.compile("\"erreur\":\\[\"([^\"]*)\"");
     private static final Pattern codeBlockPattern = Pattern.compile("<pre class=\"pre-jv\"><code class=\"code-jv\">([^<]*)</code></pre>");
     private static final Pattern codeLinePattern = Pattern.compile("<code class=\"code-jv\">(.*?)</code>", Pattern.DOTALL);
@@ -475,13 +477,31 @@ public final class JVCParser {
     }
 
     public static String getErrorMessage(String pageSource) {
-        Matcher errorMatcher = errorPattern.matcher(pageSource);
+        Matcher errorMatcher = alertPattern.matcher(pageSource);
 
         if (errorMatcher.find()) {
             return "Erreur : " + errorMatcher.group(1);
         } else {
             return "Erreur : le message n'a pas été envoyé.";
         }
+    }
+
+    public static String getErrorMessageWhenModoConnect(String pageSource) {
+        Matcher errorMatcher = errorBlocPattern.matcher(pageSource);
+
+        if (errorMatcher.find()) {
+            return "Erreur : " + errorMatcher.group(1);
+        } else {
+            Matcher alertMatcher = alertPattern.matcher(pageSource);
+
+            if (alertMatcher.find()) {
+                if (!alertMatcher.group(1).trim().isEmpty()) {
+                    return "";
+                }
+            }
+        }
+
+        return "Erreur : la connexion à échouée.";
     }
 
     public static String getErrorMessageInJSONMode(String pageSource) {
@@ -570,6 +590,16 @@ public final class JVCParser {
 
         if (topicFormMatcher.find()) {
             return getListOfInputInAStringInThisForm(topicFormMatcher.group(1));
+        }
+
+        return "";
+    }
+
+    public static String getListOfInputInAStringInModoConnectFormForThisPage(String pageSource) {
+        Matcher modoConnectFormMatcher = modoConnectFormPattern.matcher(pageSource);
+
+        if (modoConnectFormMatcher.find()) {
+            return getListOfInputInAStringInThisForm(modoConnectFormMatcher.group(1));
         }
 
         return "";
@@ -1481,6 +1511,7 @@ public final class JVCParser {
 
     public static class Settings {
         public String pseudoOfUser = "";
+        public boolean userIsModo = false;
         public String pseudoOfAuthor = "";
         public String firstLineFormat;
         public String secondLineFormat;

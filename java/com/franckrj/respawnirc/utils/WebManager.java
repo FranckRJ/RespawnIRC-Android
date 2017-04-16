@@ -24,6 +24,18 @@ public class WebManager {
         userAgentString = newUserAgent;
     }
 
+    public static String sendRequestWithMultipleTrys(String linkToPage, String requestMethod, String requestParameters, String cookiesInAString, WebInfos currentInfos, int maxNumberOfTrys) {
+        int numberOfTrys = 0;
+        String pageContent;
+
+        do {
+            ++numberOfTrys;
+            pageContent = sendRequest(linkToPage, requestMethod, requestParameters, cookiesInAString, currentInfos);
+        } while (currentInfos.currentUrl.equals(linkToPage) && numberOfTrys < maxNumberOfTrys);
+
+        return pageContent;
+    }
+
     public static String sendRequest(String linkToPage, String requestMethod, String requestParameters, String cookiesInAString, WebInfos currentInfos) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;

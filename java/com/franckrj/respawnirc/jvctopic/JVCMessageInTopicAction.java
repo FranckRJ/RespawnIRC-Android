@@ -87,14 +87,10 @@ public class JVCMessageInTopicAction {
         protected String doInBackground(String... params) {
             if (params.length > 2) {
                 WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
-                int numberOfTrys = 0;
                 String pageContent;
                 currentWebInfos.followRedirects = false;
 
-                do {
-                    ++numberOfTrys;
-                    pageContent = WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_citation.php", "POST", "id_message=" + params[0] + "&" + params[1], params[2], currentWebInfos);
-                } while (currentWebInfos.currentUrl.equals("http://www.jeuxvideo.com/forums/ajax_citation.php") && numberOfTrys < 2);
+                pageContent = WebManager.sendRequestWithMultipleTrys("http://www.jeuxvideo.com/forums/ajax_citation.php", "POST", "id_message=" + params[0] + "&" + params[1], params[2], currentWebInfos, 2);
 
                 if (pageContent != null) {
                     return JVCParser.getMessageQuoted(pageContent);
