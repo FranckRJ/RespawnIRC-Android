@@ -20,7 +20,7 @@ public final class JVCParser {
     private static final Pattern entireMessagePattern = Pattern.compile("(<div class=\"bloc-message-forum \".*?)(<span id=\"post_[^\"]*\" class=\"bloc-message-forum-anchor\">|<div class=\"bloc-outils-plus-modo bloc-outils-bottom\">|<div class=\"bloc-pagi-default\">)", Pattern.DOTALL);
     private static final Pattern signaturePattern = Pattern.compile("<div class=\"signature-msg[^\"]*\">(.*?)</div>", Pattern.DOTALL);
     private static final Pattern avatarPattern = Pattern.compile("<img src=\"[^\"]*\" data-srcset=\"(http:)?//([^\"]*)\" class=\"user-avatar-msg\"", Pattern.DOTALL);
-    private static final Pattern entireTopicPattern = Pattern.compile("<li class=\"\" data-id=\"[^\"]*\">[^<]*<span class=\"topic-subject\">.*?</li>", Pattern.DOTALL);
+    private static final Pattern entireTopicPattern = Pattern.compile("<li class=\"[^\"]*\" data-id=\"[^\"]*\">.*?<span class=\"topic-subject\">.*?</li>", Pattern.DOTALL);
     private static final Pattern pseudoInfosPattern = Pattern.compile("<span class=\"JvCare [^ ]* bloc-pseudo-msg text-([^\"]*)\" target=\"_blank\">[^a-zA-Z0-9_\\[\\]-]*([a-zA-Z0-9_\\[\\]-]*)[^<]*</span>");
     private static final Pattern messagePattern = Pattern.compile("<div class=\"bloc-contenu\"><div class=\"txt-msg  text-[^-]*-forum \">((.*?)(?=<div class=\"info-edition-msg\">)|(.*?)(?=<div class=\"signature-msg)|(.*))", Pattern.DOTALL);
     private static final Pattern currentPagePattern = Pattern.compile("<span class=\"page-active\">([^<]*)</span>");
@@ -51,9 +51,9 @@ public final class JVCParser {
     private static final Pattern highlightInArianeStringPattern = Pattern.compile("<h1 class=\"highlight\">([^<]*)</h1>");
     private static final Pattern topicNameAndLinkPattern = Pattern.compile("<a class=\"lien-jv topic-title[^\"]*\" href=\"([^\"]*\" title=\"[^\"]*)\"[^>]*>");
     private static final Pattern topicNumberMessagesPattern = Pattern.compile("<span class=\"topic-count\">[^0-9]*([0-9]*)");
-    private static final Pattern topicAuthorPattern = Pattern.compile("<span class=\".*?text-([^ ]*) topic-author[^>]*>[^A-Za-z0-9\\[\\]_-]*([^<\\n\\r]*)");
+    private static final Pattern topicAuthorPattern = Pattern.compile("<span class=\".*?text-([^ ]*) topic-author[^>]*>[^A-Za-z0-9\\[\\]_-]*([^<\\n\\r ]*)");
     private static final Pattern topicDatePattern = Pattern.compile("<span class=\"topic-date\">[^<]*<span[^>]*>[^0-9/:]*([0-9/:]*)");
-    private static final Pattern topicTypePattern = Pattern.compile("<img src=\"/img/forums/topic-(.*?)\\.png\"");
+    private static final Pattern topicTypePattern = Pattern.compile("<img src=\"/img/forums/topic-(.*?)\\.png\" alt=\"[^\"]*\" title=\"[^\"]*\" class=\"topic-img\"");
     private static final Pattern forumFavsBlocPattern = Pattern.compile("<h2>Mes forums favoris</h2>.*?<ul class=\"display-list-simple\">(.*?)</ul>", Pattern.DOTALL);
     private static final Pattern topicFavsBlocPattern = Pattern.compile("<h2>Mes sujets favoris</h2>.*?<ul class=\"display-list-simple\">(.*?)</ul>", Pattern.DOTALL);
     private static final Pattern favPattern = Pattern.compile("<li><a href=\"([^\"]*)\">([^<]*)</a></li>");
@@ -915,9 +915,7 @@ public final class JVCParser {
         Matcher entireMessageMatcher = entireMessagePattern.matcher(sourcePage);
 
         while (entireMessageMatcher.find()) {
-            String thisMessage = entireMessageMatcher.group(1);
-
-            listOfParsedMessage.add(createMessageInfoFromEntireMessage(thisMessage));
+            listOfParsedMessage.add(createMessageInfoFromEntireMessage(entireMessageMatcher.group(1)));
         }
 
         Collections.sort(listOfParsedMessage);
@@ -930,9 +928,7 @@ public final class JVCParser {
         Matcher entireTopicMatcher = entireTopicPattern.matcher(sourcePage);
 
         while (entireTopicMatcher.find()) {
-            String thisTopic = entireTopicMatcher.group(0);
-
-            listOfParsedTopic.add(createTopicInfoFromEntireTopic(thisTopic));
+            listOfParsedTopic.add(createTopicInfoFromEntireTopic(entireTopicMatcher.group(0)));
         }
 
         return listOfParsedTopic;
