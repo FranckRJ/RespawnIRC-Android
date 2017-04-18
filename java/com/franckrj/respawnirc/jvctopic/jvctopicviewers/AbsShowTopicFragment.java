@@ -39,6 +39,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected boolean isInErrorMode = false;
     protected boolean cardDesignIsEnabled = false;
     protected boolean smoothScrollIsEnabled = true;
+    protected boolean userIsConnectedAsModo = false;
 
     protected final AbsJVCTopicGetter.NewGetterStateListener listenerForNewGetterState = new AbsJVCTopicGetter.NewGetterStateListener() {
         @Override
@@ -69,6 +70,17 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         }
     };
 
+    protected final AbsJVCTopicGetter.NewListOfModosAvailable listenerForNewListOfModos = new AbsJVCTopicGetter.NewListOfModosAvailable() {
+        @Override
+        public void getNewListOfModos(ArrayList<String> newListOfModos) {
+            if (userIsConnectedAsModo) {
+                adapterForTopic.setUserIsModo(newListOfModos.contains(currentSettings.pseudoOfUser.toLowerCase()));
+            } else {
+                adapterForTopic.setUserIsModo(false);
+            }
+        }
+    };
+
     protected final View.OnClickListener surveyItemClickedListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -80,7 +92,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         }
     };
 
-    protected void reloadSettings() {
+    protected void initializeSettings() {
         try {
             showNoelshackImageAdv = Integer.valueOf(PrefsManager.getString(PrefsManager.StringPref.Names.SHOW_NOELSHACK_IMAGE));
         } catch (Exception e) {
@@ -93,10 +105,10 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         currentSettings.shortenLongLink = PrefsManager.getBool(PrefsManager.BoolPref.Names.SHORTEN_LONG_LINK);
         currentSettings.hideUglyImages = PrefsManager.getBool(PrefsManager.BoolPref.Names.HIDE_UGLY_IMAGES);
         currentSettings.pseudoOfUser = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER);
-        currentSettings.userIsModo = PrefsManager.getBool(PrefsManager.BoolPref.Names.USER_IS_MODO);
         absGetterForTopic.setCookieListInAString(PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
         smoothScrollIsEnabled = PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_SMOOTH_SCROLL);
         adapterForTopic.setShowSpoilDefault(PrefsManager.getBool(PrefsManager.BoolPref.Names.DEFAULT_SHOW_SPOIL_VAL));
+        userIsConnectedAsModo = PrefsManager.getBool(PrefsManager.BoolPref.Names.USER_IS_MODO);
     }
 
     protected void updateSettingsDependingOnConnection() {
@@ -231,9 +243,9 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         initializeGetterForMessages();
         initializeAdapter();
         initializeSettings();
-        reloadSettings();
         absGetterForTopic.setListenerForNewGetterState(listenerForNewGetterState);
         absGetterForTopic.setListenerForNewSurveyForTopic(listenerForNewSurveyForTopic);
+        absGetterForTopic.setListenerForNewListOfModos(listenerForNewListOfModos);
         adapterForTopic.setOnSurveyClickListener(surveyItemClickedListener);
 
         if (getActivity() instanceof NewModeNeededListener) {
@@ -276,6 +288,10 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             currentSettings.pseudoOfAuthor = savedInstanceState.getString(SAVE_SETTINGS_PSEUDO_OF_AUTHOR, "");
             absGetterForTopic.loadFromBundle(savedInstanceState);
 
+            if (userIsConnectedAsModo) {
+                adapterForTopic.setUserIsModo(absGetterForTopic.getListOfModos().contains(currentSettings.pseudoOfUser.toLowerCase()));
+            }
+
             if (!Utils.stringIsEmptyOrNull(absGetterForTopic.getSurveyTitleInHtml())) {
                 adapterForTopic.enableSurvey(absGetterForTopic.getSurveyTitleInHtml());
             }
@@ -299,7 +315,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     @Override
     public void onResume() {
         super.onResume();
-        reloadSettings();
+        updateSettingsDependingOnConnection();
     }
 
     @Override
@@ -326,6 +342,5 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     }
 
     protected abstract void initializeGetterForMessages();
-    protected abstract void initializeSettings();
     protected abstract void initializeAdapter();
 }

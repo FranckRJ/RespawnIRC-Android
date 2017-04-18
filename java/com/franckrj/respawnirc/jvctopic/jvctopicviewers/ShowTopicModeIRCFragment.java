@@ -126,7 +126,16 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
     }
 
     @Override
+    protected void initializeAdapter() {
+        adapterForTopic.setIdOfLayoutToUse(R.layout.jvcmessages_rowirc);
+        adapterForTopic.setAlternateBackgroundColor(PrefsManager.getBool(PrefsManager.BoolPref.Names.TOPIC_ALTERNATE_BACKGROUND_MODE_IRC));
+        adapterForTopic.setShowSignatures(PrefsManager.getBool(PrefsManager.BoolPref.Names.SHOW_SIGNATURE_MODE_IRC));
+        adapterForTopic.setShowAvatars(false);
+    }
+
+    @Override
     protected void initializeSettings() {
+        super.initializeSettings();
         currentSettings.firstLineFormat = "[<%DATE_COLOR_START%><%DATE_TIME%><%DATE_COLOR_END%>] &lt;<%PSEUDO_COLOR_START%><%PSEUDO_PSEUDO%><%PSEUDO_COLOR_END%>&gt;";
         currentSettings.colorPseudoUser = Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PSEUDO_USER), getActivity());
         currentSettings.colorPseudoOther = Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PSEUDO_OTHER_MODE_IRC), getActivity());
@@ -136,19 +145,6 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
         currentSettings.secondLineFormat = "<%MESSAGE_MESSAGE%>";
         currentSettings.addBeforeEdit = "";
         currentSettings.addAfterEdit = "";
-    }
-
-    @Override
-    protected void initializeAdapter() {
-        adapterForTopic.setIdOfLayoutToUse(R.layout.jvcmessages_rowirc);
-        adapterForTopic.setAlternateBackgroundColor(PrefsManager.getBool(PrefsManager.BoolPref.Names.TOPIC_ALTERNATE_BACKGROUND_MODE_IRC));
-        adapterForTopic.setShowSignatures(PrefsManager.getBool(PrefsManager.BoolPref.Names.SHOW_SIGNATURE_MODE_IRC));
-        adapterForTopic.setShowAvatars(false);
-    }
-
-    @Override
-    protected void reloadSettings() {
-        super.reloadSettings();
         showRefreshWhenMessagesShowed = PrefsManager.getBool(PrefsManager.BoolPref.Names.TOPIC_SHOW_REFRESH_WHEN_MESSAGE_SHOWED_MODE_IRC);
         maxNumberOfMessagesShowed = Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MAX_NUMBER_OF_MESSAGES));
         initialNumberOfMessagesShowed = Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.INITIAL_NUMBER_OF_MESSAGES));

@@ -157,15 +157,15 @@ public class JVCForumAdapter extends BaseAdapter {
     }
 
     private class ViewHolder {
-        private TextView firstLine;
-        private TextView secondLine;
-        private TextView thirdLine;
-        private ImageView topicIcon;
+        public TextView firstLine;
+        public TextView secondLine;
+        public TextView thirdLine;
+        public ImageView topicIcon;
     }
 
     private class ContentHolder {
-        private Spanned firstLineContent;
-        private Spanned secondLineContent;
-        private Spanned thirdLineContent;
+        public Spanned firstLineContent;
+        public Spanned secondLineContent;
+        public Spanned thirdLineContent;
     }
 }

@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -77,6 +78,7 @@ public final class JVCParser {
     private static final Pattern surroundedBlockquotePattern = Pattern.compile("(<br /> *)*(<(/)?blockquote>)( *<br />)*");
     private static final Pattern noelshackImagePattern = Pattern.compile("<a href=\"([^\"]*)\" data-def=\"NOELSHACK\" target=\"_blank\"><img class=\"img-shack\" .*? src=\"//([^\"]*)\" [^>]*></a>");
     private static final Pattern emptySearchPattern = Pattern.compile("<span style=\"[^\"]*\">[ \\n\\r]*Aucune réponse pour votre recherche ![ \\n\\r]*</span>");
+    private static final Pattern listOfModoPattern = Pattern.compile("<span class=\"liste-modo-fofo\">(.*?)</span>", Pattern.DOTALL);
     private static final Pattern uglyImagesNamePattern = Pattern.compile("issou|risit|jesus|picsart|chancla");
     private static final Pattern adPattern = Pattern.compile("<ins[^>]*></ins>");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
@@ -293,6 +295,23 @@ public final class JVCParser {
         }
 
         return listOfReplys;
+    }
+
+    public static ArrayList<String> getListOfModosInPage(String pageSource, boolean listHasToBeLowerCased) {
+        ArrayList<String> listOfModos = new ArrayList<>();
+        Matcher listOfModoMatcher = listOfModoPattern.matcher(pageSource);
+
+        if (listOfModoMatcher.find()) {
+            String tmpListOfModo = listOfModoMatcher.group(1).replace("<!--", "").replace("-->", "").replace(" ", "").replace("\n", "").replace("\r", "");
+
+            if (listHasToBeLowerCased) {
+                tmpListOfModo = tmpListOfModo.toLowerCase();
+            }
+
+            listOfModos = new ArrayList<>(Arrays.asList(tmpListOfModo.split(",")));
+        }
+
+        return listOfModos;
     }
 
     public static ArrayList<NameAndLink> getListOfForumsInSearchPage(String pageSource) {
@@ -1507,7 +1526,6 @@ public final class JVCParser {
 
     public static class Settings {
         public String pseudoOfUser = "";
-        public boolean userIsModo = false;
         public String pseudoOfAuthor = "";
         public String firstLineFormat;
         public String secondLineFormat;

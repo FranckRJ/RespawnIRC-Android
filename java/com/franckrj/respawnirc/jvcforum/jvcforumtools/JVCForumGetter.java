@@ -151,7 +151,7 @@ public class JVCForumGetter {
         boolean isInSearchMode = false;
         boolean useBiggerTimeoutTime = false;
 
-        GetJVCLastTopics(boolean newIsInSearchMode, boolean newUseBiggerTimeoutTime) {
+        public GetJVCLastTopics(boolean newIsInSearchMode, boolean newUseBiggerTimeoutTime) {
             isInSearchMode = newIsInSearchMode;
             useBiggerTimeoutTime = newUseBiggerTimeoutTime;
         }
@@ -250,14 +250,14 @@ public class JVCForumGetter {
     }
 
     private static class ForumPageInfos {
-        ArrayList<JVCParser.TopicInfos> listOfTopics;
-        String newUrlForForumPage;
-        String newForumName;
-        JVCParser.AjaxInfos newLatestAjaxInfos;
-        Boolean newIsInFavs;
-        String newListOfInputInAString;
-        String newNumberOfMp;
-        boolean newSearchIsEmpty;
+        public ArrayList<JVCParser.TopicInfos> listOfTopics;
+        public String newUrlForForumPage;
+        public String newForumName;
+        public JVCParser.AjaxInfos newLatestAjaxInfos;
+        public Boolean newIsInFavs;
+        public String newListOfInputInAString;
+        public String newNumberOfMp;
+        public boolean newSearchIsEmpty;
     }
 
     public interface NewForumNameAvailable {

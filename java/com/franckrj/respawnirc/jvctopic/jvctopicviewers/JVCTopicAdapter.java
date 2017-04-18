@@ -63,6 +63,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     private String surveyTitle = "";
     private View.OnClickListener onSurveyClickListener = null;
     private float multiplierOfLineSizeForFirstLine = 0;
+    private boolean userIsModo = false;
 
     private final ImageDownloader.DownloadFinished listenerForDownloadFinished = new ImageDownloader.DownloadFinished() {
         @Override
@@ -86,7 +87,7 @@ public class JVCTopicAdapter extends BaseAdapter {
 
             if (itemSelected.pseudo.toLowerCase().equals(currentSettings.pseudoOfUser.toLowerCase())) {
                 inflater.inflate(R.menu.menu_message_user, popup.getMenu());
-            } else if (currentSettings.userIsModo) {
+            } else if (userIsModo) {
                 inflater.inflate(R.menu.menu_message_moderable, popup.getMenu());
             } else {
                 inflater.inflate(R.menu.menu_message_others, popup.getMenu());
@@ -190,6 +191,10 @@ public class JVCTopicAdapter extends BaseAdapter {
 
     public void setOnSurveyClickListener(View.OnClickListener newListener) {
         onSurveyClickListener = newListener;
+    }
+
+    public void setUserIsModo(boolean newVal) {
+        userIsModo = newVal;
     }
 
     public void enableSurvey(String newSurveyTitle) {

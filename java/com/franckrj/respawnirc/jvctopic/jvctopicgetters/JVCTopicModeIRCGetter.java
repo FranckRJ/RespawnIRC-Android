@@ -125,7 +125,7 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
     private class GetJVCIRCLastMessages extends AbsGetJVCLastMessages {
         private boolean useBiggerTimeoutTime = false;
 
-        GetJVCIRCLastMessages(boolean newUseBiggerTimeoutTime) {
+        public GetJVCIRCLastMessages(boolean newUseBiggerTimeoutTime) {
             useBiggerTimeoutTime = newUseBiggerTimeoutTime;
         }
 

@@ -608,16 +608,16 @@ public class JVCForumListAdapter extends BaseExpandableListAdapter implements Ex
     }
 
     private class ForumInfo {
-        boolean isTitle = false;
-        boolean isForum = true;
-        JVCParser.NameAndLink forum = null;
-        ArrayList<JVCParser.NameAndLink> subForumList = new ArrayList<>();
+        public boolean isTitle = false;
+        public boolean isForum = true;
+        public JVCParser.NameAndLink forum = null;
+        public ArrayList<JVCParser.NameAndLink> subForumList = new ArrayList<>();
     }
 
     private class ViewHolder {
-        private TextView itemOne;
-        private ImageView imageButtonExpand;
-        private ImageView isForumImage;
+        public TextView itemOne;
+        public ImageView imageButtonExpand;
+        public ImageView isForumImage;
     }
 
     public interface NewForumSelected {
