@@ -739,7 +739,7 @@ public final class JVCParser {
         }
         finalMessage = surroundedBlockquotePattern.matcher(finalMessage).replaceAll("$2");
 
-        return finalMessage;
+        return "<span>" + finalMessage + "</span>"; //pour corriger un bug de BackgroundSpan qui se ferme jamais si ouvert tout au début
     }
 
     public static String createSignatureFromInfos(MessageInfos thisMessageInfo, Settings settings) {
