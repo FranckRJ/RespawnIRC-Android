@@ -25,6 +25,7 @@ public abstract class AbsJVCTopicGetter {
     protected static final String SAVE_SURVEY_REPLYS_WITH_INFOS = "saveSurveyReplysWithInfos";
     protected static final String SAVE_TOPIC_IS_IN_FAV = "saveTopicIsInFav";
     protected static final String SAVE_LIST_OF_MODOS = "saveListOfModos";
+    protected static final String SAVE_USER_CAN_POST_AS_MODO = "saveUserCanPostAsModo";
 
     protected String urlForTopic = "";
     protected boolean isLoadingFirstPage = false;
@@ -47,13 +48,18 @@ public abstract class AbsJVCTopicGetter {
     protected NewPseudoOfAuthorAvailable listenerForNewPseudoOfAuthor = null;
     protected ArrayList<String> listOfModos = new ArrayList<>();
     protected NewListOfModosAvailable listenerForNewListOfModos = null;
+    protected boolean userCanPostAsModo = false;
 
     public String getUrlForTopic() {
         return urlForTopic;
     }
 
-    public String getLatestListOfInputInAString() {
-        return latestListOfInputInAString;
+    public String getLatestListOfInputInAString(boolean tryToPostAsModo) {
+        if (!Utils.stringIsEmptyOrNull(latestListOfInputInAString)) {
+            return latestListOfInputInAString + (tryToPostAsModo && userCanPostAsModo ? "&form_alias_rang=2" : "&form_alias_rang=1");
+        } else {
+            return latestListOfInputInAString;
+        }
     }
 
     public JVCParser.AjaxInfos getLatestAjaxInfos() {
@@ -143,6 +149,7 @@ public abstract class AbsJVCTopicGetter {
         htmlSurveyTitle = savedInstanceState.getString(SAVE_HTML_SURVEY_TITLE, "");
         listOfSurveyReplyWithInfos = savedInstanceState.getParcelableArrayList(SAVE_SURVEY_REPLYS_WITH_INFOS);
         listOfModos = savedInstanceState.getStringArrayList(SAVE_LIST_OF_MODOS);
+        userCanPostAsModo = savedInstanceState.getBoolean(SAVE_USER_CAN_POST_AS_MODO);
         if (savedInstanceState.containsKey(SAVE_TOPIC_IS_IN_FAV)) {
             isInFavs = savedInstanceState.getBoolean(SAVE_TOPIC_IS_IN_FAV, false);
         } else {
@@ -162,6 +169,7 @@ public abstract class AbsJVCTopicGetter {
         savedInstanceState.putString(SAVE_HTML_SURVEY_TITLE, htmlSurveyTitle);
         savedInstanceState.putParcelableArrayList(SAVE_SURVEY_REPLYS_WITH_INFOS, listOfSurveyReplyWithInfos);
         savedInstanceState.putStringArrayList(SAVE_LIST_OF_MODOS, listOfModos);
+        savedInstanceState.putBoolean(SAVE_USER_CAN_POST_AS_MODO, userCanPostAsModo);
         if (isInFavs != null) {
             savedInstanceState.putBoolean(SAVE_TOPIC_IS_IN_FAV, isInFavs);
         }
@@ -197,6 +205,7 @@ public abstract class AbsJVCTopicGetter {
                 newPageInfos.newListOfSurveyReplyWithInfos = JVCParser.getListOfSurveyReplyWithInfos(pageContent);
             }
             newPageInfos.newListOfModos = JVCParser.getListOfModosInPage(pageContent, true);
+            newPageInfos.newUserCanPostAsModo = JVCParser.getUserCanPostAsModo(pageContent);
         }
 
         return newPageInfos;
@@ -208,10 +217,7 @@ public abstract class AbsJVCTopicGetter {
         isInFavs = infoOfCurrentPage.newIsInFavs;
         topicID = infoOfCurrentPage.newTopicID;
         listOfSurveyReplyWithInfos = infoOfCurrentPage.newListOfSurveyReplyWithInfos;
-
-        if (!latestListOfInputInAString.isEmpty()) {
-            latestListOfInputInAString = latestListOfInputInAString + "&form_alias_rang=1";
-        }
+        userCanPostAsModo = infoOfCurrentPage.newUserCanPostAsModo;
 
         if (!infoOfCurrentPage.newListOfModos.isEmpty() && !listOfModos.equals(infoOfCurrentPage.newListOfModos)) {
             listOfModos = infoOfCurrentPage.newListOfModos;
@@ -262,6 +268,7 @@ public abstract class AbsJVCTopicGetter {
         public String newHtmlSurveyTitle;
         public ArrayList<JVCParser.SurveyReplyInfos> newListOfSurveyReplyWithInfos = new ArrayList<>();
         public ArrayList<String> newListOfModos;
+        public boolean newUserCanPostAsModo;
     }
 
     public interface NewForumAndTopicNameAvailable {

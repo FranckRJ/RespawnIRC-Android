@@ -149,8 +149,8 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         return getterForForum.getIsInFavs();
     }
 
-    public String getLatestListOfInputInAString() {
-        return getterForForum.getLatestListOfInputInAString();
+    public String getLatestListOfInputInAString(boolean tryToPostAsModo) {
+        return getterForForum.getLatestListOfInputInAString(tryToPostAsModo);
     }
 
     public void setIsInFavs(Boolean newVal) {

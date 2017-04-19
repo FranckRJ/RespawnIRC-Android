@@ -80,6 +80,7 @@ public final class JVCParser {
     private static final Pattern noelshackImagePattern = Pattern.compile("<a href=\"([^\"]*)\" data-def=\"NOELSHACK\" target=\"_blank\"><img class=\"img-shack\" .*? src=\"//([^\"]*)\" [^>]*></a>");
     private static final Pattern emptySearchPattern = Pattern.compile("<span style=\"[^\"]*\">[ \\n\\r]*Aucune réponse pour votre recherche ![ \\n\\r]*</span>");
     private static final Pattern listOfModoPattern = Pattern.compile("<span class=\"liste-modo-fofo\">(.*?)</span>", Pattern.DOTALL);
+    private static final Pattern userCanPostAsModoPattern = Pattern.compile("<select class=\"select-user-post\" id=\"form_alias_rang\" name=\"form_alias_rang\">((.*?)(?=<option value=\"2\">)|(.*?)(?=</select>))<option value=\"2\">", Pattern.DOTALL);
     private static final Pattern uglyImagesNamePattern = Pattern.compile("issou|risit|jesus|picsart|chancla");
     private static final Pattern adPattern = Pattern.compile("<ins[^>]*></ins>");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
@@ -500,7 +501,7 @@ public final class JVCParser {
         Matcher errorMatcher = alertPattern.matcher(pageSource);
 
         if (errorMatcher.find()) {
-            return "Erreur : " + errorMatcher.group(1);
+            return "Erreur : " + specialCharToNormalChar(errorMatcher.group(1));
         } else {
             return "Erreur : le message n'a pas été envoyé.";
         }
@@ -510,7 +511,7 @@ public final class JVCParser {
         Matcher errorMatcher = errorBlocPattern.matcher(pageSource);
 
         if (errorMatcher.find()) {
-            return "Erreur : " + errorMatcher.group(1);
+            return "Erreur : " + specialCharToNormalChar(errorMatcher.group(1));
         } else {
             Matcher alertMatcher = alertPattern.matcher(pageSource);
 
@@ -603,6 +604,12 @@ public final class JVCParser {
         }
 
         return newAjaxInfos;
+    }
+
+    public static boolean getUserCanPostAsModo(String pageSource) {
+        Matcher userCanPostAsModo = userCanPostAsModoPattern.matcher(pageSource);
+
+        return userCanPostAsModo.find();
     }
 
     public static String getListOfInputInAStringInTopicFormForThisPage(String pageSource) {

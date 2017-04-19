@@ -182,8 +182,8 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         absGetterForTopic.reloadTopic();
     }
 
-    public String getLatestListOfInputInAString() {
-        return absGetterForTopic.getLatestListOfInputInAString();
+    public String getLatestListOfInputInAString(boolean tryToPostAsModo) {
+        return absGetterForTopic.getLatestListOfInputInAString(tryToPostAsModo);
     }
 
     public JVCParser.AjaxInfos getLatestAjaxInfos() {

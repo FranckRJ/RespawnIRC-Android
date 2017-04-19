@@ -80,6 +80,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
     private boolean showOverviewOnImageClick = false;
     private boolean goToLastPageAfterLoading = false;
     private boolean goToBottomOnLoadIsEnabled = true;
+    private boolean postAsModoWhenPossible = true;
 
     private final JVCMessageToTopicSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageToTopicSender.NewMessageWantEditListener() {
         @Override
@@ -128,10 +129,10 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
                 if (!pseudoOfUser.isEmpty() && !messageSendEdit.getText().toString().isEmpty()) {
                     if (!senderForMessages.getIsInEdit()) {
                         boolean messageIsSended = false;
-                        if (getCurrentFragment().getLatestListOfInputInAString() != null) {
+                        if (getCurrentFragment().getLatestListOfInputInAString(false) != null) {
                             messageSendButton.setEnabled(false);
                             tmpLastMessageSended = messageSendEdit.getText().toString();
-                            messageIsSended = senderForMessages.sendThisMessage(tmpLastMessageSended, getCurrentFragment().getCurrentUrlOfTopic(), getCurrentFragment().getLatestListOfInputInAString(), cookieListInAString);
+                            messageIsSended = senderForMessages.sendThisMessage(tmpLastMessageSended, getCurrentFragment().getCurrentUrlOfTopic(), getCurrentFragment().getLatestListOfInputInAString(postAsModoWhenPossible), cookieListInAString);
                         }
 
                         if (!messageIsSended) {
@@ -238,11 +239,15 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         senderForMessages.stopAllCurrentTask();
     }
 
-    private void reloadSettings() {
+    private void initializeSettings() {
         pseudoOfUser = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER);
         cookieListInAString = PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST);
         lastMessageSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_MESSAGE_SENDED);
         goToBottomOnLoadIsEnabled = PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_GO_TO_BOTTOM_ON_LOAD);
+        useInternalNavigatorForDefaultOpening = PrefsManager.getBool(PrefsManager.BoolPref.Names.USE_INTERNAL_NAVIGATOR);
+        convertNoelshackLinkToDirectLink = PrefsManager.getBool(PrefsManager.BoolPref.Names.USE_DIRECT_NOELSHACK_LINK);
+        showOverviewOnImageClick = PrefsManager.getBool(PrefsManager.BoolPref.Names.SHOW_OVERVIEW_ON_IMAGE_CLICK);
+        postAsModoWhenPossible = PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE);
     }
 
     private void updateShowNavigationButtons() {
@@ -310,7 +315,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         pageNavigation.setCurrentLink(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_URL_TO_FETCH));
         pseudoOfAuthor = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_AUTHOR_OF_TOPIC);
         updateShowNavigationButtons();
-        reloadSettings();
+        initializeSettings();
         if (savedInstanceState == null) {
             if (getIntent() != null) {
                 goToLastPageAfterLoading = getIntent().getBooleanExtra(EXTRA_GO_TO_LAST_PAGE, false);
@@ -365,13 +370,8 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
     @Override
     public void onResume() {
         super.onResume();
-        reloadSettings();
         PrefsManager.putInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED, MainActivity.ACTIVITY_SHOW_TOPIC);
         PrefsManager.applyChanges();
-
-        useInternalNavigatorForDefaultOpening = PrefsManager.getBool(PrefsManager.BoolPref.Names.USE_INTERNAL_NAVIGATOR);
-        convertNoelshackLinkToDirectLink = PrefsManager.getBool(PrefsManager.BoolPref.Names.USE_DIRECT_NOELSHACK_LINK);
-        showOverviewOnImageClick = PrefsManager.getBool(PrefsManager.BoolPref.Names.SHOW_OVERVIEW_ON_IMAGE_CLICK);
     }
 
     @Override

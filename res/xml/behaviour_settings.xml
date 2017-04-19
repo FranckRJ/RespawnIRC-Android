@@ -22,6 +22,10 @@
         <CheckBoxPreference
             android:key="@string/settingsDefaultShowSpoilVal"
             android:title="@string/defaultShowSpoilValTitle"/>
+        <CheckBoxPreference
+            android:key="@string/settingsPostAsModoWhenPossible"
+            android:title="@string/postAsModoWhenPossibleTitle"
+            android:summary="@string/postAsModoWhenPossibleSummary"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/settingsModeForumTitle">

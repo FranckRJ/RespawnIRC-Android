@@ -19,6 +19,7 @@ public class JVCForumGetter {
     private static final String SAVE_FORUM_IS_IN_FAV = "saveForumIsInFav";
     private static final String SAVE_IS_IN_SEARCH_MODE = "saveIsInSearchMode";
     private static final String SAVE_SEARCH_IS_EMPTY = "saveSearchIsEmpty";
+    private static final String SAVE_USER_CAN_POST_AS_MODO = "saveUserCanPostAsModo";
 
     private String urlForForum = "";
     private GetJVCLastTopics currentAsyncTaskForGetTopic = null;
@@ -35,6 +36,7 @@ public class JVCForumGetter {
     private NewNumberOfMPSetted listenerForNewNumberOfMP = null;
     private boolean isInSearchMode = false;
     private boolean searchIsEmptyAndItsNotAFail = false;
+    private boolean userCanPostAsModo = false;
 
     public JVCParser.AjaxInfos getLatestAjaxInfos() {
         return latestAjaxInfos;
@@ -44,8 +46,12 @@ public class JVCForumGetter {
         return isInFavs;
     }
 
-    public String getLatestListOfInputInAString() {
-        return latestListOfInputInAString;
+    public String getLatestListOfInputInAString(boolean tryToPostAsModo) {
+        if (!Utils.stringIsEmptyOrNull(latestListOfInputInAString)) {
+            return latestListOfInputInAString + (tryToPostAsModo && userCanPostAsModo ? "&form_alias_rang=2" : "&form_alias_rang=1");
+        } else {
+            return latestListOfInputInAString;
+        }
     }
 
     public boolean getSearchIsEmptyAndItsNotAFail() {
@@ -129,6 +135,7 @@ public class JVCForumGetter {
         latestListOfInputInAString = savedInstanceState.getString(SAVE_LATEST_LIST_OF_INPUT, null);
         isInSearchMode = savedInstanceState.getBoolean(SAVE_IS_IN_SEARCH_MODE, false);
         searchIsEmptyAndItsNotAFail = savedInstanceState.getBoolean(SAVE_SEARCH_IS_EMPTY, false);
+        userCanPostAsModo = savedInstanceState.getBoolean(SAVE_USER_CAN_POST_AS_MODO);
         if (savedInstanceState.containsKey(SAVE_FORUM_IS_IN_FAV)) {
             isInFavs = savedInstanceState.getBoolean(SAVE_FORUM_IS_IN_FAV, false);
         } else {
@@ -142,6 +149,7 @@ public class JVCForumGetter {
         savedInstanceState.putString(SAVE_LATEST_LIST_OF_INPUT, latestListOfInputInAString);
         savedInstanceState.putBoolean(SAVE_IS_IN_SEARCH_MODE, isInSearchMode);
         savedInstanceState.putBoolean(SAVE_SEARCH_IS_EMPTY, searchIsEmptyAndItsNotAFail);
+        savedInstanceState.putBoolean(SAVE_USER_CAN_POST_AS_MODO, userCanPostAsModo);
         if (isInFavs != null) {
             savedInstanceState.putBoolean(SAVE_FORUM_IS_IN_FAV, isInFavs);
         }
@@ -185,6 +193,7 @@ public class JVCForumGetter {
                     if (isInSearchMode) {
                         newPageInfos.newSearchIsEmpty = JVCParser.getSearchIsEmptyInPage(pageContent);
                     }
+                    newPageInfos.newUserCanPostAsModo = JVCParser.getUserCanPostAsModo(pageContent);
                 }
 
                 return newPageInfos;
@@ -207,9 +216,10 @@ public class JVCForumGetter {
                 isInFavs = infoOfCurrentPage.newIsInFavs;
                 latestListOfInputInAString = infoOfCurrentPage.newListOfInputInAString;
                 searchIsEmptyAndItsNotAFail = infoOfCurrentPage.newSearchIsEmpty;
+                userCanPostAsModo = infoOfCurrentPage.newUserCanPostAsModo;
 
                 if (!latestListOfInputInAString.isEmpty()) {
-                    latestListOfInputInAString = latestListOfInputInAString + "&spotify_topic=&submit_sondage=0&question_sondage=&reponse_sondage[]=&form_alias_rang=1";
+                    latestListOfInputInAString = latestListOfInputInAString + "&spotify_topic=&submit_sondage=0&question_sondage=&reponse_sondage[]=";
                 }
 
                 if (!infoOfCurrentPage.newUrlForForumPage.isEmpty()) {
@@ -258,6 +268,7 @@ public class JVCForumGetter {
         public String newListOfInputInAString;
         public String newNumberOfMp;
         public boolean newSearchIsEmpty;
+        public boolean newUserCanPostAsModo;
     }
 
     public interface NewForumNameAvailable {

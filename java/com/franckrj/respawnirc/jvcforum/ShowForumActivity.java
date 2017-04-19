@@ -43,6 +43,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     private boolean refreshNeededOnNextResume = false;
     private boolean useInternalNavigatorForDefaultOpening = false;
     private String currentNumberOfMP = null;
+    private boolean postAsModoWhenPossible = true;
 
     private final View.OnLongClickListener showForumTitleListener = new View.OnLongClickListener() {
         @Override
@@ -188,6 +189,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         }
 
         useInternalNavigatorForDefaultOpening = PrefsManager.getBool(PrefsManager.BoolPref.Names.USE_INTERNAL_NAVIGATOR);
+        postAsModoWhenPossible = PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE);
     }
 
     @Override
@@ -223,7 +225,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         menu.findItem(R.id.action_change_forum_fav_value_showforum).setEnabled(false);
 
         if (getCurrentFragment() != null) {
-            menu.findItem(R.id.action_send_topic_showforum).setEnabled(!Utils.stringIsEmptyOrNull(getCurrentFragment().getLatestListOfInputInAString()) && !pageNavigation.getCurrentLink().isEmpty());
+            menu.findItem(R.id.action_send_topic_showforum).setEnabled(!Utils.stringIsEmptyOrNull(getCurrentFragment().getLatestListOfInputInAString(false)) && !pageNavigation.getCurrentLink().isEmpty());
 
             if (!pseudoOfUser.isEmpty() && getCurrentFragment().getIsInFavs() != null) {
                 menu.findItem(R.id.action_change_forum_fav_value_showforum).setEnabled(true);
@@ -269,7 +271,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
                 Intent newSendTopicIntent = new Intent(this, SendTopicToForumActivity.class);
                 newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_FORUM_NAME, currentTitle);
                 newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_FORUM_LINK, pageNavigation.getCurrentLink());
-                newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_INPUT_LIST, getCurrentFragment().getLatestListOfInputInAString());
+                newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_INPUT_LIST, getCurrentFragment().getLatestListOfInputInAString(postAsModoWhenPossible));
                 startActivity(newSendTopicIntent);
                 refreshNeededOnNextResume = true;
                 return true;
