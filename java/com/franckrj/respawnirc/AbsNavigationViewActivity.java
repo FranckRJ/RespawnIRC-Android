@@ -60,6 +60,7 @@ public abstract class AbsNavigationViewActivity extends ThemedActivity implement
     protected int idOfBaseActivity = -1;
     protected int currentNavigationMenuMode = -1;
     protected ArrayList<NavigationMenuAdapter.MenuItemInfo> currentListOfMenuItem = null;
+    protected String showMpStringContent = "";
 
     protected final AdapterView.OnItemClickListener itemInNavigationClickedListener = new AdapterView.OnItemClickListener() {
         @Override
@@ -293,9 +294,15 @@ public abstract class AbsNavigationViewActivity extends ThemedActivity implement
         }
 
         if (!isInNavigationConnectMode) {
+            int positionOfShowMpItem = adapterForNavigationMenu.getPositionDependingOfID(ITEM_ID_SHOWMP, GROUP_ID_BASIC);
+
             updateFavsInNavigationMenu(false);
-            adapterForNavigationMenu.setRowEnabled(adapterForNavigationMenu.getPositionDependingOfID(ITEM_ID_SHOWMP, GROUP_ID_BASIC), !pseudoOfUser.isEmpty());
+            adapterForNavigationMenu.setRowEnabled(positionOfShowMpItem, !pseudoOfUser.isEmpty());
             adapterForNavigationMenu.setRowSelected(adapterForNavigationMenu.getPositionDependingOfID(idOfBaseActivity, GROUP_ID_BASIC));
+
+            if (!showMpStringContent.isEmpty()) {
+                adapterForNavigationMenu.setRowText(positionOfShowMpItem, showMpStringContent);
+            }
 
             if (pseudoOfUser.isEmpty()) {
                 contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_action_content_add_circle_outline));
@@ -349,12 +356,18 @@ public abstract class AbsNavigationViewActivity extends ThemedActivity implement
     }
 
     protected void updateMpNumberShowed(String newNumber) {
+        int positionOfShowMpItem = adapterForNavigationMenu.getPositionDependingOfID(ITEM_ID_SHOWMP, GROUP_ID_BASIC);
+
         if (newNumber == null) {
-            adapterForNavigationMenu.setRowText(adapterForNavigationMenu.getPositionDependingOfID(ITEM_ID_SHOWMP, GROUP_ID_BASIC), getString(R.string.showMP));
+            showMpStringContent = getString(R.string.showMP);
         } else {
-            adapterForNavigationMenu.setRowText(adapterForNavigationMenu.getPositionDependingOfID(ITEM_ID_SHOWMP, GROUP_ID_BASIC), getString(R.string.showMPWithNumber, newNumber));
+            showMpStringContent = getString(R.string.showMPWithNumber, newNumber);
         }
-        adapterForNavigationMenu.updateList();
+
+        if (positionOfShowMpItem != -1) {
+            adapterForNavigationMenu.setRowText(positionOfShowMpItem, showMpStringContent);
+            adapterForNavigationMenu.updateList();
+        }
     }
 
     @Override
