@@ -161,6 +161,7 @@
     <string name="validate">Valider</string>
     <string name="connnectAsModoText">Se connecter en tant que modo</string>
     <string name="connectionSucessful">Connexion réussie</string>
+    <string name="showBlacklistedMessage">Afficher le message</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

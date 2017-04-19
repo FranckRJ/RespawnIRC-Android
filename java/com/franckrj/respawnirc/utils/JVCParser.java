@@ -18,10 +18,11 @@ public final class JVCParser {
     private static final Pattern ajaxPrefTimestampPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_timestamp_preference_user\" id=\"ajax_timestamp_preference_user\" value=\"([^\"]*)\" />");
     private static final Pattern ajaxPrefHashPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_hash_preference_user\" id=\"ajax_hash_preference_user\" value=\"([^\"]*)\" />");
     private static final Pattern messageQuotePattern = Pattern.compile("\"txt\":\"(.*)\"", Pattern.DOTALL);
-    private static final Pattern entireMessagePattern = Pattern.compile("(<div class=\"bloc-message-forum \".*?)(<span id=\"post_[^\"]*\" class=\"bloc-message-forum-anchor\">|<div class=\"bloc-outils-plus-modo bloc-outils-bottom\">|<div class=\"bloc-pagi-default\">)", Pattern.DOTALL);
+    private static final Pattern entireMessagePattern = Pattern.compile("(<div class=\"bloc-message-forum[^\"]*\".*?)(<span id=\"post_[^\"]*\" class=\"bloc-message-forum-anchor\">|<div class=\"bloc-outils-plus-modo bloc-outils-bottom\">|<div class=\"bloc-pagi-default\">)", Pattern.DOTALL);
     private static final Pattern signaturePattern = Pattern.compile("<div class=\"signature-msg[^\"]*\">(.*?)</div>", Pattern.DOTALL);
     private static final Pattern avatarPattern = Pattern.compile("<img src=\"[^\"]*\" data-srcset=\"(http:)?//([^\"]*)\" class=\"user-avatar-msg\"", Pattern.DOTALL);
     private static final Pattern entireTopicPattern = Pattern.compile("<li class=\"[^\"]*\" data-id=\"[^\"]*\">.*?<span class=\"topic-subject\">.*?</li>", Pattern.DOTALL);
+    private static final Pattern pseudoIsBlacklistedPattern = Pattern.compile("<div class=\"bloc-message-forum msg-pseudo-blacklist \" data-id=\"");
     private static final Pattern pseudoInfosPattern = Pattern.compile("<span class=\"JvCare [^ ]* bloc-pseudo-msg text-([^\"]*)\" target=\"_blank\">[^a-zA-Z0-9_\\[\\]-]*([a-zA-Z0-9_\\[\\]-]*)[^<]*</span>");
     private static final Pattern messagePattern = Pattern.compile("<div class=\"bloc-contenu\"><div class=\"txt-msg  text-[^-]*-forum \">((.*?)(?=<div class=\"info-edition-msg\">)|(.*?)(?=<div class=\"signature-msg)|(.*))", Pattern.DOTALL);
     private static final Pattern currentPagePattern = Pattern.compile("<span class=\"page-active\">([^<]*)</span>");
@@ -30,7 +31,7 @@ public final class JVCParser {
     private static final Pattern modoConnectFormPattern = Pattern.compile("(<form role=\"form\" action=\"\" method=\"post\" id=\"form_connexion\" class=\"form-connect-jv\" autocomplete=\"off\">.*?</form>)", Pattern.DOTALL);
     private static final Pattern inputFormPattern = Pattern.compile("<input (type|name|value)=\"([^\"]*)\" (type|name|value)=\"([^\"]*)\" (type|name|value)=\"([^\"]*)\"/>");
     private static final Pattern dateMessagePattern = Pattern.compile("<div class=\"bloc-date-msg\">([^<]*<span class=\"JvCare [^ ]* lien-jv\" target=\"_blank\">)?[^a-zA-Z0-9]*([^ ]* [^ ]* [^ ]* [^ ]* ([0-9:]*))");
-    private static final Pattern messageIDPattern = Pattern.compile("<div class=\"bloc-message-forum \" data-id=\"([^\"]*)\">");
+    private static final Pattern messageIDPattern = Pattern.compile("<div class=\"bloc-message-forum[^\"]*\" data-id=\"([^\"]*)\">");
     private static final Pattern unicodeInTextPattern = Pattern.compile("\\\\u([a-zA-Z0-9]{4})");
     private static final Pattern alertPattern = Pattern.compile("<div class=\"alert-row\">([^<]*)</div>");
     private static final Pattern errorBlocPattern = Pattern.compile("<div class=\"bloc-erreur\">([^<]*)</div>");
@@ -698,7 +699,7 @@ public final class JVCParser {
 
         ToolForParsing.replaceStringByAnother(newFirstLine, "<%DATE_TIME%>", thisMessageInfo.dateTime);
         ToolForParsing.replaceStringByAnother(newFirstLine, "<%DATE_FULL%>", thisMessageInfo.wholeDate);
-        ToolForParsing.replaceStringByAnother(newFirstLine, "<%PSEUDO_PSEUDO%>", thisMessageInfo.pseudo);
+        ToolForParsing.replaceStringByAnother(newFirstLine, "<%PSEUDO_PSEUDO%>", (thisMessageInfo.pseudoIsBlacklisted ? "Auteur blacklisté" : thisMessageInfo.pseudo));
 
         if (thisMessageInfo.isAnEdit) {
             ToolForParsing.replaceStringByAnother(newFirstLine, "<%DATE_COLOR_START%>", "<font color=\"#008000\">");
@@ -852,6 +853,7 @@ public final class JVCParser {
 
     public static MessageInfos createMessageInfoFromEntireMessage(String thisEntireMessage) {
         MessageInfos newMessageInfo = new MessageInfos();
+        Matcher pseudoIsBlacklistedMatcher = pseudoIsBlacklistedPattern.matcher(thisEntireMessage);
         Matcher pseudoInfosMatcher = pseudoInfosPattern.matcher(thisEntireMessage);
         Matcher messageMatcher = messagePattern.matcher(thisEntireMessage);
         Matcher signatureMatcher = signaturePattern.matcher(thisEntireMessage);
@@ -859,6 +861,8 @@ public final class JVCParser {
         Matcher dateMessageMatcher = dateMessagePattern.matcher(thisEntireMessage);
         Matcher lastEditMessageMatcher = lastEditMessagePattern.matcher(thisEntireMessage);
         Matcher messageIDMatcher = messageIDPattern.matcher(thisEntireMessage);
+
+        newMessageInfo.pseudoIsBlacklisted = pseudoIsBlacklistedMatcher.find();
 
         if (pseudoInfosMatcher.find()) {
             newMessageInfo.pseudo = pseudoInfosMatcher.group(2);
@@ -1225,6 +1229,7 @@ public final class JVCParser {
         public String dateTime = "";
         public String wholeDate = "";
         public String lastTimeEdit = "";
+        public boolean pseudoIsBlacklisted = false;
         public boolean messageContentContainSpoil = false;
         public boolean signatureContainSpoil = false;
         public boolean showSpoil = false;
@@ -1260,6 +1265,7 @@ public final class JVCParser {
             dateTime = in.readString();
             wholeDate = in.readString();
             lastTimeEdit = in.readString();
+            pseudoIsBlacklisted = (in.readInt() == 1);
             messageContentContainSpoil = (in.readInt() == 1);
             signatureContainSpoil = (in.readInt() == 1);
             showSpoil = (in.readInt() == 1);
@@ -1286,6 +1292,7 @@ public final class JVCParser {
             out.writeString(dateTime);
             out.writeString(wholeDate);
             out.writeString(lastTimeEdit);
+            out.writeInt(pseudoIsBlacklisted ? 1 : 0);
             out.writeInt(messageContentContainSpoil ? 1 : 0);
             out.writeInt(signatureContainSpoil ? 1 : 0);
             out.writeInt(showSpoil ? 1 : 0);

@@ -6,4 +6,5 @@
     <item name="menu_show_spoil_message" type="id">menu_show_spoil_message</item>
     <item name="menu_hide_ugly_images_message" type="id">menu_hide_ugly_images_message</item>
     <item name="menu_show_ugly_images_message" type="id">menu_show_ugly_images_message</item>
+    <item name="menu_show_blacklisted_message" type="id">menu_show_blacklisted_message</item>
 </resources>

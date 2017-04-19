@@ -85,36 +85,40 @@ public class JVCTopicAdapter extends BaseAdapter {
             itemSelected = getItem(currentItemIDSelected);
             popup.setOnMenuItemClickListener(actionWhenItemMenuClicked);
 
-            if (itemSelected.pseudo.toLowerCase().equals(currentSettings.pseudoOfUser.toLowerCase())) {
-                inflater.inflate(R.menu.menu_message_user, popup.getMenu());
-            } else if (userIsModo) {
-                inflater.inflate(R.menu.menu_message_moderable, popup.getMenu());
+            if (!itemSelected.pseudoIsBlacklisted) {
+                if (itemSelected.pseudo.toLowerCase().equals(currentSettings.pseudoOfUser.toLowerCase())) {
+                    inflater.inflate(R.menu.menu_message_user, popup.getMenu());
+                } else if (userIsModo) {
+                    inflater.inflate(R.menu.menu_message_moderable, popup.getMenu());
+                } else {
+                    inflater.inflate(R.menu.menu_message_others, popup.getMenu());
+                }
+
+                if (itemSelected.numberOfOverlyQuote > currentSettings.maxNumberOfOverlyQuotes) {
+                    if (itemSelected.showOverlyQuote) {
+                        popup.getMenu().add(Menu.NONE, R.id.menu_hide_quote_message, Menu.NONE, R.string.hideQuoteMessage);
+                    } else {
+                        popup.getMenu().add(Menu.NONE, R.id.menu_show_quote_message, Menu.NONE, R.string.showQuoteMessage);
+                    }
+                }
+
+                if (itemSelected.messageContentContainSpoil || (showSignatures && itemSelected.signatureContainSpoil)) {
+                    if (itemSelected.showSpoil) {
+                        popup.getMenu().add(Menu.NONE, R.id.menu_hide_spoil_message, Menu.NONE, R.string.hideSpoilMessage);
+                    } else {
+                        popup.getMenu().add(Menu.NONE, R.id.menu_show_spoil_message, Menu.NONE, R.string.showSpoilMessage);
+                    }
+                }
+
+                if (currentSettings.hideUglyImages && itemSelected.containUglyImages) {
+                    if (itemSelected.showUglyImages) {
+                        popup.getMenu().add(Menu.NONE, R.id.menu_hide_ugly_images_message, Menu.NONE, R.string.hideUglyImagesMessage);
+                    } else {
+                        popup.getMenu().add(Menu.NONE, R.id.menu_show_ugly_images_message, Menu.NONE, R.string.showUglyImagesMessage);
+                    }
+                }
             } else {
-                inflater.inflate(R.menu.menu_message_others, popup.getMenu());
-            }
-
-            if (itemSelected.numberOfOverlyQuote > currentSettings.maxNumberOfOverlyQuotes) {
-                if (itemSelected.showOverlyQuote) {
-                    popup.getMenu().add(Menu.NONE, R.id.menu_hide_quote_message, Menu.NONE, R.string.hideQuoteMessage);
-                } else {
-                    popup.getMenu().add(Menu.NONE, R.id.menu_show_quote_message, Menu.NONE, R.string.showQuoteMessage);
-                }
-            }
-
-            if (itemSelected.messageContentContainSpoil || (showSignatures && itemSelected.signatureContainSpoil)) {
-                if (itemSelected.showSpoil) {
-                    popup.getMenu().add(Menu.NONE, R.id.menu_hide_spoil_message, Menu.NONE, R.string.hideSpoilMessage);
-                } else {
-                    popup.getMenu().add(Menu.NONE, R.id.menu_show_spoil_message, Menu.NONE, R.string.showSpoilMessage);
-                }
-            }
-
-            if (currentSettings.hideUglyImages && itemSelected.containUglyImages) {
-                if (itemSelected.showUglyImages) {
-                    popup.getMenu().add(Menu.NONE, R.id.menu_hide_ugly_images_message, Menu.NONE, R.string.hideUglyImagesMessage);
-                } else {
-                    popup.getMenu().add(Menu.NONE, R.id.menu_show_ugly_images_message, Menu.NONE, R.string.showUglyImagesMessage);
-                }
+                popup.getMenu().add(Menu.NONE, R.id.menu_show_blacklisted_message, Menu.NONE, R.string.showBlacklistedMessage);
             }
 
             popup.show();
@@ -243,15 +247,19 @@ public class JVCTopicAdapter extends BaseAdapter {
         }
 
         holder.firstLineContent = new SpannableString(Undeprecator.htmlFromHtml(JVCParser.createMessageFirstLineFromInfos(item, currentSettings)));
-        holder.secondLineContent = replaceQuoteAndUrlSpans(Undeprecator.htmlFromHtml(JVCParser.createMessageSecondLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
+        if (!item.pseudoIsBlacklisted) {
+            holder.secondLineContent = replaceQuoteAndUrlSpans(Undeprecator.htmlFromHtml(JVCParser.createMessageSecondLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
+        } else {
+            holder.secondLineContent = null;
+        }
 
-        if (showAvatars && !item.avatarLink.isEmpty()) {
+        if (showAvatars && !item.avatarLink.isEmpty() && !item.pseudoIsBlacklisted) {
             holder.firstImageDrawable = downloaderForImage.getDrawableFromLink(item.avatarLink);
         } else {
             holder.firstImageDrawable = null;
         }
 
-        if (!showSignatures || item.signatureNotParsed.isEmpty()) {
+        if (!showSignatures || item.signatureNotParsed.isEmpty() || item.pseudoIsBlacklisted) {
             holder.thirdLineContent = null;
         } else {
             holder.thirdLineContent = replaceQuoteAndUrlSpans(Undeprecator.htmlFromHtml(JVCParser.createSignatureFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
@@ -350,9 +358,26 @@ public class JVCTopicAdapter extends BaseAdapter {
 
             viewHolder.showMenuButton.setTag(position);
             viewHolder.showMenuButton.setVisibility(View.VISIBLE);
-            viewHolder.secondLine.setVisibility(View.VISIBLE);
             viewHolder.firstLine.setText(currentContent.firstLineContent);
-            viewHolder.secondLine.setText(currentContent.secondLineContent);
+
+            convertView.setOnClickListener(null);
+            if (currentContent.secondLineContent != null) {
+                viewHolder.secondLine.setVisibility(View.VISIBLE);
+                viewHolder.secondLine.setText(currentContent.secondLineContent);
+
+                viewHolder.firstLine.setOnClickListener(new View.OnClickListener() {
+                    int messageNumberInList = realPosition;
+                    @Override
+                    public void onClick(View v) {
+                        if (pseudoCLickedListener != null) {
+                            pseudoCLickedListener.getMessageOfPseudoClicked(listOfMessages.get(messageNumberInList));
+                        }
+                    }
+                });
+            } else {
+                viewHolder.secondLine.setVisibility(View.GONE);
+                viewHolder.firstLine.setOnClickListener(null);
+            }
 
             if (viewHolder.firstImage != null) {
                 if (currentContent.firstImageDrawable != null) {
@@ -372,17 +397,6 @@ public class JVCTopicAdapter extends BaseAdapter {
                 viewHolder.thirdLine.setVisibility(View.GONE);
                 viewHolder.separator.setVisibility(View.GONE);
             }
-
-            convertView.setOnClickListener(null);
-            viewHolder.firstLine.setOnClickListener(new View.OnClickListener() {
-                int messageNumberInList = realPosition;
-                @Override
-                public void onClick(View v) {
-                    if (pseudoCLickedListener != null) {
-                        pseudoCLickedListener.getMessageOfPseudoClicked(listOfMessages.get(messageNumberInList));
-                    }
-                }
-            });
 
             if (realPosition % 2 == 0 || !alternateBackgroundColor) {
                 setColorBackgroundOfThisItem(convertView, ThemeManager.getColorRes(ThemeManager.ColorName.DEFAULT_BACKGROUND_COLOR));
@@ -463,10 +477,10 @@ public class JVCTopicAdapter extends BaseAdapter {
     }
 
     private class ContentHolder {
-        private Spannable firstLineContent;
-        private Spannable secondLineContent;
-        private Spannable thirdLineContent;
-        private Drawable firstImageDrawable;
+        public Spannable firstLineContent;
+        public Spannable secondLineContent;
+        public Spannable thirdLineContent;
+        public Drawable firstImageDrawable;
     }
 
     public interface URLClicked {

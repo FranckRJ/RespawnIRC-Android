@@ -167,6 +167,12 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
                 adapterForTopic.updateThisItem(currentItem, false);
                 adapterForTopic.updateAllItems();
                 return true;
+            case R.id.menu_show_blacklisted_message:
+                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
+                currentItem.pseudoIsBlacklisted = false;
+                adapterForTopic.updateThisItem(currentItem, false);
+                adapterForTopic.updateAllItems();
+                return true;
             default:
                 return false;
         }
