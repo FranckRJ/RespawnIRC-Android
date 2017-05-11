@@ -133,7 +133,18 @@ public final class JVCParser {
     }
 
     public static boolean checkIfItsNoelshackLink(String linkToCheck) {
-        if (!linkToCheck.contains(".php")) {
+        int endOfLink = linkToCheck.indexOf("?");
+        if (endOfLink != -1) {
+            linkToCheck = linkToCheck.substring(0, endOfLink);
+        }
+
+        endOfLink = linkToCheck.indexOf("#");
+        if (endOfLink != -1) {
+            linkToCheck = linkToCheck.substring(0, endOfLink);
+        }
+
+        linkToCheck = linkToCheck.toLowerCase();
+        if (!linkToCheck.endsWith(".php") && !linkToCheck.endsWith(".com/") && !linkToCheck.endsWith(".json")) {
             if (linkToCheck.startsWith("http://") || linkToCheck.startsWith("https://")) {
                 linkToCheck = linkToCheck.substring(linkToCheck.indexOf("://") + 3);
             }
