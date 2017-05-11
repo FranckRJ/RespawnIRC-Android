@@ -1,5 +1,7 @@
 package com.franckrj.respawnirc.jvcforum;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -21,6 +23,7 @@ public class SendTopicToForumActivity extends ThemedActivity implements InsertSt
     public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_FORUM_NAME";
     public static final String EXTRA_FORUM_LINK = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_FORUM_LINK";
     public static final String EXTRA_INPUT_LIST = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_INPUT_LIST";
+    public static final String RESULT_EXTRA_TOPIC_LINK_TO_MOVE = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_TOPIC_LINK_TO_MOVE";
 
     private SendTopicToJVC currentAsyncTaskForSendTopic = null;
     private String linkToSend = "";
@@ -149,6 +152,10 @@ public class SendTopicToForumActivity extends ThemedActivity implements InsertSt
                     pageContent = "respawnirc:resendneeded";
                 }
 
+                if (Utils.stringIsEmptyOrNull(pageContent)) {
+                    pageContent = "respawnirc:move:" + currentWebInfos.currentUrl;
+                }
+
                 return pageContent;
             } else {
                 return null;
@@ -161,18 +168,30 @@ public class SendTopicToForumActivity extends ThemedActivity implements InsertSt
 
             currentAsyncTaskForSendTopic = null;
 
-            if (!Utils.stringIsEmptyOrNull(pageResult)) {
-                if (pageResult.equals("respawnirc:resendneeded")) {
-                    Toast.makeText(SendTopicToForumActivity.this, R.string.unknownErrorPleaseResend, Toast.LENGTH_SHORT).show();
-                    return;
-                } else {
-                    Toast.makeText(SendTopicToForumActivity.this, JVCParser.getErrorMessage(pageResult), Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(SendTopicToForumActivity.this, R.string.topicIsSended, Toast.LENGTH_SHORT).show();
+            if (Utils.stringIsEmptyOrNull(pageResult)) {
+                pageResult = "error";
             }
 
-            onBackPressed();
+            if (pageResult.equals("respawnirc:resendneeded")) {
+                Toast.makeText(SendTopicToForumActivity.this, R.string.unknownErrorPleaseResend, Toast.LENGTH_SHORT).show();
+                return;
+            } else if (pageResult.startsWith("respawnirc:move:")) {
+                Intent data = new Intent();
+                pageResult = pageResult.substring(("respawnirc:move:").length());
+
+                if (pageResult.startsWith("/forums/")) {
+                    pageResult = "http://www.jeuxvideo.com" + pageResult;
+                } else if (!pageResult.startsWith("http:")) {
+                    pageResult = "http:" + pageResult;
+                }
+
+                data.putExtra(RESULT_EXTRA_TOPIC_LINK_TO_MOVE, pageResult);
+                setResult(Activity.RESULT_OK, data);
+            } else {
+                Toast.makeText(SendTopicToForumActivity.this, JVCParser.getErrorMessage(pageResult), Toast.LENGTH_SHORT).show();
+            }
+
+            finish();
         }
     }
 }

@@ -86,7 +86,6 @@
     <string name="unknownErrorPleaseResend">Erreur inconnue, essayez de ré-envoyer le message.</string>
     <string name="sendATopic">Poster un topic</string>
     <string name="topicTitlePlaceHolder">Titre…</string>
-    <string name="topicIsSended">Le topic a été posté</string>
     <string name="pastLastTopicSended">Coller le dernier topic envoyé</string>
     <string name="showMP">Consulter les MP</string>
     <string name="useInternalNavigatorTitle">Navigateur interne par défaut</string>

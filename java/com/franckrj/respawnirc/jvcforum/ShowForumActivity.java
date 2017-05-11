@@ -1,5 +1,6 @@
 package com.franckrj.respawnirc.jvcforum;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -33,6 +34,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     public static final String EXTRA_NEW_LINK = "com.franckrj.respawnirc.EXTRA_NEW_LINK";
     public static final String EXTRA_GO_TO_LAST_PAGE = "com.franckrj.respawnirc.EXTRA_GO_TO_LAST_PAGE";
 
+    private static final int SEND_TOPIC_REQUEST_CODE = 156;
     private static final String SAVE_CURRENT_FORUM_TITLE = "saveCurrentForumTitle";
     private static final String SAVE_REFRESH_NEEDED_NEXT_RESUME = "saveRefreshNeededOnNextResume";
     private static final String SAVE_CURRENT_NUMBER_OF_MP = "saveCurrentNumberOfMP";
@@ -41,6 +43,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     private AddOrRemoveThingToFavs currentTaskForFavs = null;
     private PageNavigationUtil pageNavigation = null;
     private boolean refreshNeededOnNextResume = false;
+    private boolean dontConsumeRefreshOnNextResume = false;
     private boolean useInternalNavigatorForDefaultOpening = false;
     private String currentNumberOfMP = null;
     private boolean postAsModoWhenPossible = true;
@@ -181,12 +184,13 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         PrefsManager.putInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED, MainActivity.ACTIVITY_SHOW_FORUM);
         PrefsManager.applyChanges();
 
-        if (refreshNeededOnNextResume) {
+        if (refreshNeededOnNextResume && !dontConsumeRefreshOnNextResume) {
             refreshNeededOnNextResume = false;
             if (getCurrentFragment() != null) {
                 getCurrentFragment().refreshForum();
             }
         }
+        dontConsumeRefreshOnNextResume = false;
 
         useInternalNavigatorForDefaultOpening = PrefsManager.getBool(PrefsManager.BoolPref.Names.USE_INTERNAL_NAVIGATOR);
         postAsModoWhenPossible = PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE);
@@ -272,11 +276,29 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
                 newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_FORUM_NAME, currentTitle);
                 newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_FORUM_LINK, pageNavigation.getCurrentLink());
                 newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_INPUT_LIST, getCurrentFragment().getLatestListOfInputInAString(postAsModoWhenPossible));
-                startActivity(newSendTopicIntent);
+                startActivityForResult(newSendTopicIntent, SEND_TOPIC_REQUEST_CODE);
                 refreshNeededOnNextResume = true;
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SEND_TOPIC_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                String newTopicLink = data.getStringExtra(SendTopicToForumActivity.RESULT_EXTRA_TOPIC_LINK_TO_MOVE);
+
+                if (newTopicLink != null) {
+                    readThisTopic(newTopicLink, false, null, null, false, false);
+                    //onActivityResult est appelé avant onResume, donc il faut contourner le fait que
+                    //onResume sera forcément appelé après cette fonction mais avant que ShowTopicActivity soit lancé
+                    if (refreshNeededOnNextResume) {
+                        dontConsumeRefreshOnNextResume = true;
+                    }
+                }
+            }
         }
     }
 
