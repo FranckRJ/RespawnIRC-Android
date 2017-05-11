@@ -170,7 +170,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         public boolean onLongClick(View v) {
             Bundle argForFrag = new Bundle();
             SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
-            argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumAndTopicNames, currentTitles.forum, currentTitles.topic));
+            argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumAndTopicNames, currentTitles.forum, currentTitles.topic, pageNavigation.getCurrentLink()));
             selectTextDialogFragment.setArguments(argForFrag);
             selectTextDialogFragment.show(getFragmentManager(), "SelectTextDialogFragment");
             return true;

@@ -50,7 +50,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         public boolean onLongClick(View v) {
             Bundle argForFrag = new Bundle();
             SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
-            argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumNames, currentTitle));
+            argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumNames, currentTitle, pageNavigation.getCurrentLink()));
             selectTextDialogFragment.setArguments(argForFrag);
             selectTextDialogFragment.show(getFragmentManager(), "SelectTextDialogFragment");
             return true;
