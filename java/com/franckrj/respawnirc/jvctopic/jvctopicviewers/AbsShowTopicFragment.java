@@ -257,6 +257,9 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         if (getActivity() instanceof NewModeNeededListener) {
             listenerForNewModeNeeded = (NewModeNeededListener) getActivity();
         }
+        if (getActivity() instanceof AbsJVCTopicGetter.TopicLinkChanged) {
+            absGetterForTopic.setListenerForTopicLinkChanged((AbsJVCTopicGetter.TopicLinkChanged) getActivity());
+        }
         if (getActivity() instanceof AbsJVCTopicGetter.NewForumAndTopicNameAvailable) {
             absGetterForTopic.setListenerForNewForumAndTopicName((AbsJVCTopicGetter.NewForumAndTopicNameAvailable) getActivity());
         }

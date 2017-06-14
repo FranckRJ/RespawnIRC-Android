@@ -38,6 +38,7 @@ public abstract class AbsJVCTopicGetter {
     protected NewGetterStateListener listenerForNewGetterState = null;
     protected NewForumAndTopicNameAvailable listenerForNewForumAndTopicName = null;
     protected JVCParser.ForumAndTopicName currentNames = new JVCParser.ForumAndTopicName();
+    protected TopicLinkChanged listenerForTopicLinkChanged = null;
     protected Boolean isInFavs = null;
     protected String topicID = "";
     protected NewReasonForTopicLock listenerForNewReasonForTopicLock = null;
@@ -96,6 +97,10 @@ public abstract class AbsJVCTopicGetter {
 
     public void setCookieListInAString(String newCookieListInAString) {
         cookieListInAString = newCookieListInAString;
+    }
+
+    public void setListenerForTopicLinkChanged(TopicLinkChanged thisListener) {
+        listenerForTopicLinkChanged = thisListener;
     }
 
     public void setListenerForNewMessages(NewMessagesListener thisListener) {
@@ -185,12 +190,13 @@ public abstract class AbsJVCTopicGetter {
         WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
         TopicPageInfos newPageInfos = null;
         String pageContent;
-        currentWebInfos.followRedirects = false;
+        currentWebInfos.followRedirects = true;
         currentWebInfos.useBiggerTimeoutTime = useBiggerTimeoutTime;
         pageContent = WebManager.sendRequest(topicLink, "GET", "", cookies, currentWebInfos);
 
         if (pageContent != null) {
             newPageInfos = new TopicPageInfos();
+            newPageInfos.newUrlForTopicPage = currentWebInfos.currentUrl;
             newPageInfos.lastPageLink = JVCParser.getLastPageOfTopic(pageContent);
             newPageInfos.nextPageLink = JVCParser.getNextPageOfTopic(pageContent);
             newPageInfos.listOfMessages = JVCParser.getMessagesOfThisPage(pageContent);
@@ -218,6 +224,13 @@ public abstract class AbsJVCTopicGetter {
         topicID = infoOfCurrentPage.newTopicID;
         listOfSurveyReplyWithInfos = infoOfCurrentPage.newListOfSurveyReplyWithInfos;
         userCanPostAsModo = infoOfCurrentPage.newUserCanPostAsModo;
+
+        if (!infoOfCurrentPage.newUrlForTopicPage.isEmpty()) {
+            urlForTopic = infoOfCurrentPage.newUrlForTopicPage;
+            if (listenerForTopicLinkChanged != null) {
+                listenerForTopicLinkChanged.updateTopicLink(urlForTopic);
+            }
+        }
 
         if (!infoOfCurrentPage.newListOfModos.isEmpty() && !listOfModos.equals(infoOfCurrentPage.newListOfModos)) {
             listOfModos = infoOfCurrentPage.newListOfModos;
@@ -257,6 +270,7 @@ public abstract class AbsJVCTopicGetter {
 
     protected static class TopicPageInfos {
         public ArrayList<JVCParser.MessageInfos> listOfMessages;
+        public String newUrlForTopicPage;
         public String lastPageLink;
         public String nextPageLink;
         public String listOfInputInAString;
@@ -269,6 +283,10 @@ public abstract class AbsJVCTopicGetter {
         public ArrayList<JVCParser.SurveyReplyInfos> newListOfSurveyReplyWithInfos = new ArrayList<>();
         public ArrayList<String> newListOfModos;
         public boolean newUserCanPostAsModo;
+    }
+
+    public interface TopicLinkChanged {
+        void updateTopicLink(String newTopicLink);
     }
 
     public interface NewForumAndTopicNameAvailable {

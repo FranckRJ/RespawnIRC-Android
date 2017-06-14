@@ -47,7 +47,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
                                                                     PopupMenu.OnMenuItemClickListener, JVCTopicModeForumGetter.NewNumbersOfPagesListener,
                                                                     ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCTopicAdapter.URLClicked,
                                                                     AbsJVCTopicGetter.NewReasonForTopicLock, InsertStuffDialogFragment.StuffInserted,
-                                                                    PageNavigationUtil.PageNavigationFunctions, AddOrRemoveThingToFavs.ActionToFavsEnded,
+                                                                    PageNavigationUtil.PageNavigationFunctions, AddOrRemoveThingToFavs.ActionToFavsEnded, AbsJVCTopicGetter.TopicLinkChanged,
                                                                     AbsShowTopicFragment.NewSurveyNeedToBeShown, JVCTopicAdapter.PseudoClicked, AbsJVCTopicGetter.NewPseudoOfAuthorAvailable {
     public static final String EXTRA_TOPIC_LINK = "com.franckrj.respawnirc.EXTRA_TOPIC_LINK";
     public static final String EXTRA_TOPIC_NAME = "com.franckrj.respawnirc.EXTRA_TOPIC_NAME";
@@ -500,6 +500,11 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
             myActionBar.setTitle(currentTitles.forum);
             myActionBar.setSubtitle(currentTitles.topic);
         }
+    }
+
+    @Override
+    public void updateTopicLink(String newTopicLink) {
+        pageNavigation.setCurrentLink(newTopicLink);
     }
 
     @Override
