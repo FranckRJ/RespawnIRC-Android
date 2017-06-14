@@ -62,7 +62,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     private boolean showSpoilDefault = false;
     private String surveyTitle = "";
     private View.OnClickListener onSurveyClickListener = null;
-    private float multiplierOfLineSizeForFirstLine = 0;
+    private float multiplierOfLineSizeForInfoLineIfAvatarIsShowed = 0;
     private boolean userIsModo = false;
 
     private final ImageDownloader.DownloadFinished listenerForDownloadFinished = new ImageDownloader.DownloadFinished() {
@@ -189,8 +189,8 @@ public class JVCTopicAdapter extends BaseAdapter {
         showSpoilDefault = newVal;
     }
 
-    public void setMultiplierOfLineSizeForFirstLine(float newVal) {
-        multiplierOfLineSizeForFirstLine = newVal;
+    public void setMultiplierOfLineSizeForInfoLineIfAvatarIsShowed(float newVal) {
+        multiplierOfLineSizeForInfoLineIfAvatarIsShowed = newVal;
     }
 
     public void setOnSurveyClickListener(View.OnClickListener newListener) {
@@ -246,23 +246,23 @@ public class JVCTopicAdapter extends BaseAdapter {
             item.showSpoil = showSpoilDefault;
         }
 
-        holder.firstLineContent = new SpannableString(Undeprecator.htmlFromHtml(JVCParser.createMessageFirstLineFromInfos(item, currentSettings)));
+        holder.infoLineContent = new SpannableString(Undeprecator.htmlFromHtml(JVCParser.createMessageInfoLineFromInfos(item, currentSettings)));
         if (!item.pseudoIsBlacklisted) {
-            holder.secondLineContent = replaceQuoteAndUrlSpans(Undeprecator.htmlFromHtml(JVCParser.createMessageSecondLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
+            holder.messageLineContent = replaceQuoteAndUrlSpans(Undeprecator.htmlFromHtml(JVCParser.createMessageMessageLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
         } else {
-            holder.secondLineContent = null;
+            holder.messageLineContent = null;
         }
 
         if (showAvatars && !item.avatarLink.isEmpty() && !item.pseudoIsBlacklisted) {
-            holder.firstImageDrawable = downloaderForImage.getDrawableFromLink(item.avatarLink);
+            holder.avatarImageDrawable = downloaderForImage.getDrawableFromLink(item.avatarLink);
         } else {
-            holder.firstImageDrawable = null;
+            holder.avatarImageDrawable = null;
         }
 
         if (!showSignatures || item.signatureNotParsed.isEmpty() || item.pseudoIsBlacklisted) {
-            holder.thirdLineContent = null;
+            holder.signatureLineContent = null;
         } else {
-            holder.thirdLineContent = replaceQuoteAndUrlSpans(Undeprecator.htmlFromHtml(JVCParser.createSignatureFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
+            holder.signatureLineContent = replaceQuoteAndUrlSpans(Undeprecator.htmlFromHtml(JVCParser.createSignatureFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
         }
 
         return holder;
@@ -341,16 +341,16 @@ public class JVCTopicAdapter extends BaseAdapter {
             String advertiseForSurveyToShow = parentActivity.getString(R.string.titleForSurvey) + " <b>" + surveyTitle + "</b><br><small>" + parentActivity.getString(R.string.clickHereToSee) + "</small>";
 
             viewHolder.showMenuButton.setVisibility(View.GONE);
-            viewHolder.secondLine.setVisibility(View.GONE);
-            viewHolder.thirdLine.setVisibility(View.GONE);
+            viewHolder.messageLine.setVisibility(View.GONE);
+            viewHolder.signatureLine.setVisibility(View.GONE);
             viewHolder.separator.setVisibility(View.GONE);
-            if (viewHolder.firstImage != null) {
-                viewHolder.firstImage.setVisibility(View.GONE);
+            if (viewHolder.avatarImage != null) {
+                viewHolder.avatarImage.setVisibility(View.GONE);
             }
 
-            viewHolder.firstLine.setText(Undeprecator.htmlFromHtml(advertiseForSurveyToShow));
+            viewHolder.infoLine.setText(Undeprecator.htmlFromHtml(advertiseForSurveyToShow));
             convertView.setOnClickListener(onSurveyClickListener);
-            viewHolder.firstLine.setOnClickListener(onSurveyClickListener);
+            viewHolder.infoLine.setOnClickListener(onSurveyClickListener);
             setColorBackgroundOfThisItem(convertView, ThemeManager.getColorRes(ThemeManager.ColorName.ALT_BACKGROUND_COLOR));
         } else {
             final int realPosition = position - (showSurvey ? 1 : 0);
@@ -358,14 +358,14 @@ public class JVCTopicAdapter extends BaseAdapter {
 
             viewHolder.showMenuButton.setTag(position);
             viewHolder.showMenuButton.setVisibility(View.VISIBLE);
-            viewHolder.firstLine.setText(currentContent.firstLineContent);
+            viewHolder.infoLine.setText(currentContent.infoLineContent);
 
             convertView.setOnClickListener(null);
-            if (currentContent.secondLineContent != null) {
-                viewHolder.secondLine.setVisibility(View.VISIBLE);
-                viewHolder.secondLine.setText(currentContent.secondLineContent);
+            if (currentContent.messageLineContent != null) {
+                viewHolder.messageLine.setVisibility(View.VISIBLE);
+                viewHolder.messageLine.setText(currentContent.messageLineContent);
 
-                viewHolder.firstLine.setOnClickListener(new View.OnClickListener() {
+                viewHolder.infoLine.setOnClickListener(new View.OnClickListener() {
                     int messageNumberInList = realPosition;
                     @Override
                     public void onClick(View v) {
@@ -375,26 +375,32 @@ public class JVCTopicAdapter extends BaseAdapter {
                     }
                 });
             } else {
-                viewHolder.secondLine.setVisibility(View.GONE);
-                viewHolder.firstLine.setOnClickListener(null);
+                viewHolder.messageLine.setVisibility(View.GONE);
+                viewHolder.infoLine.setOnClickListener(null);
             }
 
-            if (viewHolder.firstImage != null) {
-                if (currentContent.firstImageDrawable != null) {
-                    viewHolder.firstImage.setVisibility(View.VISIBLE);
-                    viewHolder.firstImage.setImageDrawable(null);
-                    viewHolder.firstImage.setImageDrawable(currentContent.firstImageDrawable);
+            viewHolder.infoLine.setLineSpacing(0, 1);
+
+            if (viewHolder.avatarImage != null) {
+                if (currentContent.avatarImageDrawable != null) {
+                    viewHolder.avatarImage.setVisibility(View.VISIBLE);
+                    viewHolder.avatarImage.setImageDrawable(null);
+                    viewHolder.avatarImage.setImageDrawable(currentContent.avatarImageDrawable);
+
+                    if (multiplierOfLineSizeForInfoLineIfAvatarIsShowed != 0) {
+                        viewHolder.infoLine.setLineSpacing(0, multiplierOfLineSizeForInfoLineIfAvatarIsShowed);
+                    }
                 } else {
-                    viewHolder.firstImage.setVisibility(View.GONE);
+                    viewHolder.avatarImage.setVisibility(View.GONE);
                 }
             }
 
-            if (currentContent.thirdLineContent != null) {
-                viewHolder.thirdLine.setVisibility(View.VISIBLE);
+            if (currentContent.signatureLineContent != null) {
+                viewHolder.signatureLine.setVisibility(View.VISIBLE);
                 viewHolder.separator.setVisibility(View.VISIBLE);
-                viewHolder.thirdLine.setText(currentContent.thirdLineContent);
+                viewHolder.signatureLine.setText(currentContent.signatureLineContent);
             } else {
-                viewHolder.thirdLine.setVisibility(View.GONE);
+                viewHolder.signatureLine.setVisibility(View.GONE);
                 viewHolder.separator.setVisibility(View.GONE);
             }
 
@@ -452,35 +458,32 @@ public class JVCTopicAdapter extends BaseAdapter {
     }
 
     private class CustomViewHolder {
-        public final TextView firstLine;
-        public final ImageView firstImage;
-        public final TextView secondLine;
-        public final TextView thirdLine;
+        public final TextView infoLine;
+        public final ImageView avatarImage;
+        public final TextView messageLine;
+        public final TextView signatureLine;
         public final View separator;
         public final ImageButton showMenuButton;
 
         public CustomViewHolder(View itemView) {
-            firstLine = (TextView) itemView.findViewById(R.id.item_one_jvcmessages_text_row);
-            firstImage = (ImageView) itemView.findViewById(R.id.image_one_jvcmessages_text_row);
-            secondLine = (TextView) itemView.findViewById(R.id.item_two_jvcmessages_text_row);
-            thirdLine = (TextView) itemView.findViewById(R.id.item_three_jvcmessages_text_row);
+            infoLine = (TextView) itemView.findViewById(R.id.item_one_jvcmessages_text_row);
+            avatarImage = (ImageView) itemView.findViewById(R.id.image_one_jvcmessages_text_row);
+            messageLine = (TextView) itemView.findViewById(R.id.item_two_jvcmessages_text_row);
+            signatureLine = (TextView) itemView.findViewById(R.id.item_three_jvcmessages_text_row);
             separator = itemView.findViewById(R.id.item_separator_jvcmessages_text_row);
             showMenuButton = (ImageButton) itemView.findViewById(R.id.menu_overflow_row);
 
-            if (multiplierOfLineSizeForFirstLine != 0) {
-                firstLine.setLineSpacing(0, multiplierOfLineSizeForFirstLine);
-            }
-            secondLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
-            thirdLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
+            messageLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
+            signatureLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
             showMenuButton.setOnClickListener(menuButtonClicked);
         }
     }
 
     private class ContentHolder {
-        public Spannable firstLineContent;
-        public Spannable secondLineContent;
-        public Spannable thirdLineContent;
-        public Drawable firstImageDrawable;
+        public Spannable infoLineContent;
+        public Spannable messageLineContent;
+        public Spannable signatureLineContent;
+        public Drawable avatarImageDrawable;
     }
 
     public interface URLClicked {

@@ -121,7 +121,7 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
                 adapterForTopic.setIdOfLayoutToUse(R.layout.jvcmessages_avatars_rowforum);
             }
             adapterForTopic.setShowAvatars(true);
-            adapterForTopic.setMultiplierOfLineSizeForFirstLine(1.25f);
+            adapterForTopic.setMultiplierOfLineSizeForInfoLineIfAvatarIsShowed(1.25f);
         } else {
             if (cardDesignIsEnabled) {
                 adapterForTopic.setIdOfLayoutToUse(R.layout.jvcmessages_card_rowforum);

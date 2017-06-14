@@ -726,7 +726,7 @@ public final class JVCParser {
         return "";
     }
 
-    public static String createMessageFirstLineFromInfos(MessageInfos thisMessageInfo, Settings settings) {
+    public static String createMessageInfoLineFromInfos(MessageInfos thisMessageInfo, Settings settings) {
         StringBuilder newFirstLine = new StringBuilder(settings.firstLineFormat);
 
         ToolForParsing.replaceStringByAnother(newFirstLine, "<%DATE_TIME%>", thisMessageInfo.dateTime);
@@ -761,7 +761,7 @@ public final class JVCParser {
         return newFirstLine.toString();
     }
 
-    public static String createMessageSecondLineFromInfos(MessageInfos thisMessageInfo, Settings settings) {
+    public static String createMessageMessageLineFromInfos(MessageInfos thisMessageInfo, Settings settings) {
         String finalMessage = settings.secondLineFormat;
 
         finalMessage = finalMessage.replace("<%MESSAGE_MESSAGE%>", parseMessageToPrettyMessage(thisMessageInfo.messageNotParsed, settings, thisMessageInfo.messageContentContainSpoil, thisMessageInfo.showSpoil, thisMessageInfo.showOverlyQuote, thisMessageInfo.showUglyImages));
