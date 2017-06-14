@@ -129,6 +129,20 @@ public final class JVCParser {
             baseLink = baseLink.replaceFirst("-", "/").replaceFirst("-", "/");
         }
 
+        //moyen dégueulasse pour checker si le lien utilise le nouveau format (deux nombres entre l'année et le timestamp au lieu d'un)
+        //TODO: à changer
+        if (baseLink.contains("/")) {
+            String checkForNewStringType = baseLink.substring(baseLink.lastIndexOf("/") + 1);
+
+            if (checkForNewStringType.contains("-")) {
+                checkForNewStringType = checkForNewStringType.substring(0, checkForNewStringType.indexOf("-"));
+
+                if (checkForNewStringType.matches("[0-9]{1,8}")) {
+                    baseLink = baseLink.replaceFirst("-", "/");
+                }
+            }
+        }
+
         return "http://image.noelshack.com/fichiers/" + baseLink;
     }
 
