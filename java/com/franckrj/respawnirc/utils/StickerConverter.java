@@ -95,7 +95,7 @@ public class StickerConverter {
                                                                 "<img class=\"img-stickers\" src=\"http://jv.stkr.fr/p/" + thisInfo.replacement + "\"/>", "", null, null);
                 } else {
                     JVCParser.ToolForParsing.parseThisMessageWithThisPattern(messageToConvert, Pattern.compile("<img class=\"img-stickers\" src=\"http://jv\\.stkr\\.fr/p[^/]*/" + thisInfo.base + "\"/>"), -1,
-                            "<img src=\"//image.jeuxvideo.com/smileys_img/" + thisInfo.replacement + "\" alt=\"\" data-def=\"SMILEYS\" data-code=\"\" title=\"\" />", "", null, null);
+                            "<img src=\"http://image.jeuxvideo.com/smileys_img/" + thisInfo.replacement + "\" alt=\"\" data-code=\"\" title=\"\" />", "", null, null);
                 }
             }
         }
