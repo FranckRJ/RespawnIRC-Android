@@ -74,10 +74,10 @@ public final class JVCParser {
     private static final Pattern jvcLinkPattern = Pattern.compile("<a href=\"([^\"]*)\"( title=\"[^\"]*\")?>.*?</a>");
     private static final Pattern shortLinkPattern = Pattern.compile("<span class=\"JvCare [^\"]*\" rel=\"nofollow[^\"]*\" target=\"_blank\">([^<]*)</span>");
     private static final Pattern longLinkPattern = Pattern.compile("<span class=\"JvCare [^\"]*\"[^i]*itle=\"([^\"]*)\">[^<]*<i></i><span>[^<]*</span>[^<]*</span>");
-    private static final Pattern smileyPattern = Pattern.compile("<img src=\"//image\\.jeuxvideo\\.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-def=\"SMILEYS\" data-code=\"([^\"]*)\" title=\"[^\"]*\" />");
+    private static final Pattern smileyPattern = Pattern.compile("<img src=\"http(s)?://image\\.jeuxvideo\\.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-code=\"([^\"]*)\" title=\"[^\"]*\" [^>]*>");
     private static final Pattern youtubeVideoPattern = Pattern.compile("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe .*? src=\"http(s)?://www\\.youtube\\.com/embed/([^\"]*)\"[^>]*></iframe></div></div>");
     private static final Pattern surroundedBlockquotePattern = Pattern.compile("(<br /> *)*(<(/)?blockquote>)( *<br />)*");
-    private static final Pattern noelshackImagePattern = Pattern.compile("<a href=\"([^\"]*)\" data-def=\"NOELSHACK\" target=\"_blank\"><img class=\"img-shack\" .*? src=\"//([^\"]*)\" [^>]*></a>");
+    private static final Pattern noelshackImagePattern = Pattern.compile("<a href=\"([^\"]*)\" target=\"_blank\"><img class=\"img-shack\" .*? src=\"http(s)?://([^\"]*)\" [^>]*></a>");
     private static final Pattern emptySearchPattern = Pattern.compile("<span style=\"[^\"]*\">[ \\n\\r]*Aucune réponse pour votre recherche ![ \\n\\r]*</span>");
     private static final Pattern listOfModoPattern = Pattern.compile("<span class=\"liste-modo-fofo\">(.*?)</span>", Pattern.DOTALL);
     private static final Pattern userCanPostAsModoPattern = Pattern.compile("<select class=\"select-user-post\" id=\"form_alias_rang\" name=\"form_alias_rang\">((.*?)(?=<option value=\"2\">)|(.*?)(?=</select>))<option value=\"2\">", Pattern.DOTALL);
@@ -796,7 +796,7 @@ public final class JVCParser {
         ToolForParsing.replaceStringByAnother(messageInBuilder, "\r", "");
         ToolForParsing.parseListInMessageIfNeeded(messageInBuilder);
 
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, smileyPattern, 1, "<img src=\"smiley_", "\"/>", null, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, smileyPattern, 2, "<img src=\"smiley_", "\"/>", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, youtubeVideoPattern, 2, "<a href=\"http://youtu.be/", "\">http://youtu.be/", 2, "</a>");
 
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
@@ -808,7 +808,7 @@ public final class JVCParser {
         }
 
         if (settings.showNoelshackImages) {
-            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 1, "<a href=\"", "\"><img src=\"http://", 2, "\"/></a>");
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 1, "<a href=\"", "\"><img src=\"http://", 3, "\"/></a>");
         } else {
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         }
@@ -854,7 +854,7 @@ public final class JVCParser {
         ToolForParsing.replaceStringByAnother(messageInBuilder, "\n", "");
         ToolForParsing.replaceStringByAnother(messageInBuilder, "\r", "");
         ToolForParsing.parseListInMessageIfNeeded(messageInBuilder);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, smileyPattern, 2, "", "", null, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, smileyPattern, 3, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, youtubeVideoPattern, 2, "http://youtu.be/", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcLinkPattern, 1, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", null, null);
