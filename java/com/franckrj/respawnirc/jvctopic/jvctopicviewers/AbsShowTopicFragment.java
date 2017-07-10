@@ -70,11 +70,11 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         }
     };
 
-    protected final AbsJVCTopicGetter.NewListOfModosAvailable listenerForNewListOfModos = new AbsJVCTopicGetter.NewListOfModosAvailable() {
+    protected final AbsJVCTopicGetter.NewUserCanPostAsModoInfoAvailable listenerForNewUserCanPostAsModo = new AbsJVCTopicGetter.NewUserCanPostAsModoInfoAvailable() {
         @Override
-        public void getNewListOfModos(ArrayList<String> newListOfModos) {
+        public void getNewUserCanPostAsModo(boolean newUserCanPostAsModo) {
             if (userIsConnectedAsModo) {
-                adapterForTopic.setUserIsModo(newListOfModos.contains(currentSettings.pseudoOfUser.toLowerCase()));
+                adapterForTopic.setUserIsModo(newUserCanPostAsModo);
             } else {
                 adapterForTopic.setUserIsModo(false);
             }
@@ -251,7 +251,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         initializeSettings();
         absGetterForTopic.setListenerForNewGetterState(listenerForNewGetterState);
         absGetterForTopic.setListenerForNewSurveyForTopic(listenerForNewSurveyForTopic);
-        absGetterForTopic.setListenerForNewListOfModos(listenerForNewListOfModos);
+        absGetterForTopic.setListenerForNewUserCanPostAsModo(listenerForNewUserCanPostAsModo);
         adapterForTopic.setOnSurveyClickListener(surveyItemClickedListener);
 
         if (getActivity() instanceof NewModeNeededListener) {
@@ -298,7 +298,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             absGetterForTopic.loadFromBundle(savedInstanceState);
 
             if (userIsConnectedAsModo) {
-                adapterForTopic.setUserIsModo(absGetterForTopic.getListOfModos().contains(currentSettings.pseudoOfUser.toLowerCase()));
+                adapterForTopic.setUserIsModo(absGetterForTopic.getUserCanPostAsModo());
             }
 
             if (!Utils.stringIsEmptyOrNull(absGetterForTopic.getSurveyTitleInHtml())) {

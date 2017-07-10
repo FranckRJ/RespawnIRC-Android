@@ -324,23 +324,6 @@ public final class JVCParser {
         return listOfReplys;
     }
 
-    public static ArrayList<String> getListOfModosInPage(String pageSource, boolean listHasToBeLowerCased) {
-        ArrayList<String> listOfModos = new ArrayList<>();
-        Matcher listOfModoMatcher = listOfModoPattern.matcher(pageSource);
-
-        if (listOfModoMatcher.find()) {
-            String tmpListOfModo = listOfModoMatcher.group(1).replace("<!--", "").replace("-->", "").replace(" ", "").replace("\n", "").replace("\r", "");
-
-            if (listHasToBeLowerCased) {
-                tmpListOfModo = tmpListOfModo.toLowerCase();
-            }
-
-            listOfModos = new ArrayList<>(Arrays.asList(tmpListOfModo.split(",")));
-        }
-
-        return listOfModos;
-    }
-
     public static ArrayList<NameAndLink> getListOfForumsInSearchPage(String pageSource) {
         ArrayList<NameAndLink> listOfForums = new ArrayList<>();
         Matcher forumInSearchPageMatcher = forumInSearchPagePattern.matcher(pageSource);
