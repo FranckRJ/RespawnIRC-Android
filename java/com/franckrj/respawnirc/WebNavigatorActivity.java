@@ -128,6 +128,8 @@ public class WebNavigatorActivity extends ThemedActivity {
                 Utils.putStringInClipboard(currentUrl, this);
                 Toast.makeText(this, R.string.copyDone, Toast.LENGTH_SHORT).show();
                 return true;
+            case R.id.action_reload_page_webnavigator:
+                navigatorWebView.reload();
             default:
                 return super.onOptionsItemSelected(item);
         }

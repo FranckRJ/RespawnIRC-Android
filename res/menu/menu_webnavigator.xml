@@ -7,4 +7,7 @@
     <item
         android:id="@+id/action_copy_url_webnavigator"
         android:title="@string/copyUrl"/>
+    <item
+        android:id="@+id/action_reload_page_webnavigator"
+        android:title="@string/refresh"/>
 </menu>
