@@ -11,10 +11,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
 
 public class SelectTextDialogFragment extends DialogFragment {
     public static final String ARG_TEXT_CONTENT = "com.franckrj.respawnirc.selecttextdialogfragment.text_content";
+    public static final String ARG_TEXT_IS_HTML = "com.franckrj.respawnirc.selecttextdialogfragment.text_is_html";
 
     private TextView textShowed = null;
 
@@ -24,15 +26,22 @@ public class SelectTextDialogFragment extends DialogFragment {
         super.onCreateDialog(savedInstanceState);
         Bundle currentArgs = getArguments();
         String textContent = "";
+        boolean textIsHtml = false;
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         if (currentArgs != null) {
             textContent = currentArgs.getString(ARG_TEXT_CONTENT, "");
+            textIsHtml = currentArgs.getBoolean(ARG_TEXT_IS_HTML, false);
         }
 
         View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_selecttext, null);
         textShowed = (TextView) mainView.findViewById(R.id.text_selecttext);
-        textShowed.setText(textContent);
+
+        if (textIsHtml) {
+            textShowed.setText(Undeprecator.htmlFromHtml(textContent));
+        } else {
+            textShowed.setText(textContent);
+        }
 
         builder.setTitle(R.string.selectText).setView(mainView)
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -52,7 +61,8 @@ public class SelectTextDialogFragment extends DialogFragment {
                             Utils.putStringInClipboard(textShowed.getText().subSequence(min, max).toString(), getActivity());
                             Toast.makeText(getActivity(), R.string.copyDone, Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getActivity(), R.string.noTextCopied, Toast.LENGTH_SHORT).show();
+                            Utils.putStringInClipboard(textShowed.getText().toString(), getActivity());
+                            Toast.makeText(getActivity(), R.string.allTextCopied, Toast.LENGTH_SHORT).show();
                         }
                         dialog.dismiss();
                     }

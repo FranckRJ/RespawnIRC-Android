@@ -5,7 +5,6 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -79,7 +78,6 @@ public final class JVCParser {
     private static final Pattern surroundedBlockquotePattern = Pattern.compile("(<br /> *)*(<(/)?blockquote>)( *<br />)*");
     private static final Pattern noelshackImagePattern = Pattern.compile("<a href=\"([^\"]*)\" target=\"_blank\"><img class=\"img-shack\" .*? src=\"http(s)?://([^\"]*)\" [^>]*></a>");
     private static final Pattern emptySearchPattern = Pattern.compile("<span style=\"[^\"]*\">[ \\n\\r]*Aucune réponse pour votre recherche ![ \\n\\r]*</span>");
-    private static final Pattern listOfModoPattern = Pattern.compile("<span class=\"liste-modo-fofo\">(.*?)</span>", Pattern.DOTALL);
     private static final Pattern userCanPostAsModoPattern = Pattern.compile("<select class=\"select-user-post\" id=\"form_alias_rang\" name=\"form_alias_rang\">((.*?)(?=<option value=\"2\">)|(.*?)(?=</select>))<option value=\"2\">", Pattern.DOTALL);
     private static final Pattern uglyImagesNamePattern = Pattern.compile("issou|risi|rizi|jesus|picsart|chancla");
     private static final Pattern adPattern = Pattern.compile("<ins[^>]*></ins>");
@@ -852,10 +850,10 @@ public final class JVCParser {
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvCarePattern, 1, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, multipleSpacesPattern, -1, " ", "", null, null);
         ToolForParsing.removeFirstAndLastBrInMessage(messageInBuilder);
-        ToolForParsing.replaceStringByAnother(messageInBuilder, "<strong>", "\'\'\'");
-        ToolForParsing.replaceStringByAnother(messageInBuilder, "</strong>", "\'\'\'");
-        ToolForParsing.replaceStringByAnother(messageInBuilder, "<em>", "\'\'");
-        ToolForParsing.replaceStringByAnother(messageInBuilder, "</em>", "\'\'");
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "<strong>", "&#039;&#039;&#039;");
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "</strong>", "&#039;&#039;&#039;");
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "<em>", "&#039;&#039;");
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "</em>", "&#039;&#039;");
         ToolForParsing.replaceStringByAnother(messageInBuilder, "<u>", "&lt;u&gt;");
         ToolForParsing.replaceStringByAnother(messageInBuilder, "</u>", "&lt;/u&gt;");
         ToolForParsing.replaceStringByAnother(messageInBuilder, "<s>", "&lt;s&gt;");
@@ -863,7 +861,8 @@ public final class JVCParser {
 
         ToolForParsing.replaceStringByAnother(messageInBuilder, "<br />", "\n");
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, htmlTagPattern, -1, "", "", null, null);
-        return specialCharToNormalChar(messageInBuilder.toString());
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "\n", "<br />");
+        return messageInBuilder.toString();
     }
 
     public static MessageInfos createMessageInfoFromEntireMessage(String thisEntireMessage) {

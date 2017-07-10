@@ -108,7 +108,7 @@
     <string name="selectText">Sélectionner du texte</string>
     <string name="copyUrl">Copier l\'URL</string>
     <string name="copyDone">Copie effectuée</string>
-    <string name="noTextCopied">Aucun texte copié</string>
+    <string name="allTextCopied">Copie de l\'intégralité du texte</string>
     <string name="insertStuff">Insérer…</string>
     <string name="shortenLongLinkTitle">Raccourcir les liens longs</string>
     <string name="showRefreshWhenMessagesShowedModeIRCTitle">Toujours afficher l\'icône de refresh</string>

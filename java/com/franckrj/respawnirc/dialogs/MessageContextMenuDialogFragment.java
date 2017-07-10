@@ -80,6 +80,7 @@ public class MessageContextMenuDialogFragment extends DialogFragment {
                         Bundle argForFrag = new Bundle();
                         SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
                         argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, JVCParser.parseMessageToSimpleMessage(messageNotParsed));
+                        argForFrag.putBoolean(SelectTextDialogFragment.ARG_TEXT_IS_HTML, true);
                         selectTextDialogFragment.setArguments(argForFrag);
                         selectTextDialogFragment.show(getFragmentManager(), "SelectTextDialogFragment");
                         break;
