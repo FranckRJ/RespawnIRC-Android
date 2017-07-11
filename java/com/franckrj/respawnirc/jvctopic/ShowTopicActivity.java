@@ -613,7 +613,11 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
 
     @Override
     public int getShowablePageNumberForThisLink(String link) {
-        return Integer.parseInt(JVCParser.getPageNumberForThisTopicLink(link));
+        try {
+            return Integer.parseInt(JVCParser.getPageNumberForThisTopicLink(link));
+        } catch (Exception e) {
+            return 1;
+        }
     }
 
     @Override

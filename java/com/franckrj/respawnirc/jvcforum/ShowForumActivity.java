@@ -374,7 +374,11 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
 
     @Override
     public int getShowablePageNumberForThisLink(String link) {
-        return ((Integer.parseInt(JVCParser.getPageNumberForThisForumLink(link)) - 1) / 25) + 1;
+        try {
+            return ((Integer.parseInt(JVCParser.getPageNumberForThisForumLink(link)) - 1) / 25) + 1;
+        } catch (Exception e) {
+            return 1;
+        }
     }
 
     @Override
