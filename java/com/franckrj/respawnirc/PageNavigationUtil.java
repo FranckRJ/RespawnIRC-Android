@@ -205,8 +205,29 @@ public class PageNavigationUtil {
         return lastPage;
     }
 
-    public final String getCurrentLink() {
+    public final boolean getCurrentLinkIsEmpty() {
+        return currentLink.isEmpty();
+    }
+
+    public final String getCurrentPageLink() {
+        if (parentActivity instanceof PageNavigationFunctions) {
+            return ((PageNavigationFunctions) parentActivity).setShowedPageNumberForThisLink(currentLink, pagerView.getCurrentItem() + 1);
+        }
         return currentLink;
+    }
+
+    public final String getFirstPageLink() {
+        if (parentActivity instanceof PageNavigationFunctions) {
+            return ((PageNavigationFunctions) parentActivity).setShowedPageNumberForThisLink(currentLink, 1);
+        }
+        return currentLink;
+    }
+
+    public final int getLastSupposedPageNumber() {
+        if (parentActivity instanceof PageNavigationFunctions) {
+            return ((PageNavigationFunctions) parentActivity).getShowablePageNumberForThisLink(currentLink);
+        }
+        return 1;
     }
 
     public void setCurrentItemIndex(int newItemIndex) {

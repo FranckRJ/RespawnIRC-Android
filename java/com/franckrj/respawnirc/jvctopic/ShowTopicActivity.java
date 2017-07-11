@@ -132,7 +132,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
                         if (getCurrentFragment().getLatestListOfInputInAString(false) != null) {
                             messageSendButton.setEnabled(false);
                             tmpLastMessageSended = messageSendEdit.getText().toString();
-                            messageIsSended = senderForMessages.sendThisMessage(tmpLastMessageSended, getCurrentFragment().getCurrentUrlOfTopic(), getCurrentFragment().getLatestListOfInputInAString(postAsModoWhenPossible), cookieListInAString);
+                            messageIsSended = senderForMessages.sendThisMessage(tmpLastMessageSended, pageNavigation.getCurrentPageLink(), getCurrentFragment().getLatestListOfInputInAString(postAsModoWhenPossible), cookieListInAString);
                         }
 
                         if (!messageIsSended) {
@@ -170,7 +170,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         public boolean onLongClick(View v) {
             Bundle argForFrag = new Bundle();
             SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
-            argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumAndTopicNames, currentTitles.forum, currentTitles.topic, pageNavigation.getCurrentLink()));
+            argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumAndTopicNames, currentTitles.forum, currentTitles.topic, pageNavigation.getCurrentPageLink()));
             selectTextDialogFragment.setArguments(argForFrag);
             selectTextDialogFragment.show(getFragmentManager(), "SelectTextDialogFragment");
             return true;
@@ -261,8 +261,8 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
     }
 
     private void updateLastPageAndCurrentItemAndButtonsToCurrentLink() {
-        if (!pageNavigation.getCurrentLink().isEmpty()) {
-            pageNavigation.setLastPageNumber(getShowablePageNumberForThisLink(pageNavigation.getCurrentLink()));
+        if (!pageNavigation.getCurrentLinkIsEmpty()) {
+            pageNavigation.setLastPageNumber(pageNavigation.getLastSupposedPageNumber());
             pageNavigation.notifyDataSetChanged();
             pageNavigation.updateCurrentItemAndButtonsToCurrentLink();
         }
@@ -377,8 +377,8 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
     @Override
     public void onPause() {
         stopAllCurrentTask();
-        if (!pageNavigation.getCurrentLink().isEmpty()) {
-            PrefsManager.putString(PrefsManager.StringPref.Names.TOPIC_URL_TO_FETCH, setShowedPageNumberForThisLink(pageNavigation.getCurrentLink(), pageNavigation.getCurrentItemIndex() + 1));
+        if (!pageNavigation.getCurrentLinkIsEmpty()) {
+            PrefsManager.putString(PrefsManager.StringPref.Names.TOPIC_URL_TO_FETCH, pageNavigation.getCurrentPageLink());
             PrefsManager.putString(PrefsManager.StringPref.Names.PSEUDO_OF_AUTHOR_OF_TOPIC, pseudoOfAuthor);
             PrefsManager.applyChanges();
         }
@@ -431,27 +431,17 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
             case R.id.action_change_topic_fav_value_showtopic:
                 if (currentTaskForFavs == null) {
                     currentTaskForFavs = new AddOrRemoveThingToFavs(!getCurrentFragment().getIsInFavs(), this);
-                    currentTaskForFavs.execute(JVCParser.getForumIDOfThisTopic(pageNavigation.getCurrentLink()), getCurrentFragment().getTopicID(), getCurrentFragment().getLatestAjaxInfos().pref, cookieListInAString);
+                    currentTaskForFavs.execute(JVCParser.getForumIDOfThisTopic(pageNavigation.getCurrentPageLink()), getCurrentFragment().getTopicID(), getCurrentFragment().getLatestAjaxInfos().pref, cookieListInAString);
                 } else {
                     Toast.makeText(ShowTopicActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
                 }
                 return true;
             case R.id.action_open_in_browser_showtopic:
-                String linkToUse = "";
-
-                if (getCurrentFragment() != null) {
-                    linkToUse = getCurrentFragment().getCurrentUrlOfTopic();
-                }
-                if (linkToUse.isEmpty()) {
-                    linkToUse = setShowedPageNumberForThisLink(pageNavigation.getCurrentLink(), pageNavigation.getCurrentItemIndex() + 1);
-                }
-
                 if (!useInternalNavigatorForDefaultOpening) {
-                    Utils.openLinkInExternalNavigator(linkToUse, this);
+                    Utils.openLinkInExternalNavigator(pageNavigation.getCurrentPageLink(), this);
                 } else {
-                    Utils.openLinkInInternalNavigator(linkToUse, this);
+                    Utils.openLinkInInternalNavigator(pageNavigation.getCurrentPageLink(), this);
                 }
-
                 return true;
             case R.id.action_past_last_message_sended_showtopic:
                 if (reasonOfLock == null) {
@@ -577,7 +567,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
 
     @Override
     public void newPageNumberChoosen(int newPageNumber) {
-        if (!pageNavigation.getCurrentLink().isEmpty()) {
+        if (!pageNavigation.getCurrentLinkIsEmpty()) {
             if (newPageNumber > pageNavigation.getLastPage() || newPageNumber < 0) {
                 newPageNumber = pageNavigation.getLastPage();
             } else if (newPageNumber < 1) {
@@ -642,7 +632,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         if (!itsLongClick) {
             String possibleNewLink = JVCParser.formatThisUrl(link);
 
-            if (JVCParser.checkIfTopicAreSame(pageNavigation.getCurrentLink(), possibleNewLink)) {
+            if (JVCParser.checkIfTopicAreSame(pageNavigation.getFirstPageLink(), possibleNewLink)) {
                 pageNavigation.setCurrentItemIndex(getShowablePageNumberForThisLink(possibleNewLink) - 1);
             } else if (JVCParser.checkIfItsJVCLink(possibleNewLink)) {
                 Intent newShowForumIntent = new Intent(this, ShowForumActivity.class);

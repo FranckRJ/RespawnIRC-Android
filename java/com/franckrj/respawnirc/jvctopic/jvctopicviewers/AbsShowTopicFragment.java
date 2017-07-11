@@ -194,10 +194,6 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         return adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
     }
 
-    public String getCurrentUrlOfTopic() {
-        return absGetterForTopic.getUrlForTopic();
-    }
-
     public Boolean getIsInFavs() {
         return absGetterForTopic.getIsInFavs();
     }

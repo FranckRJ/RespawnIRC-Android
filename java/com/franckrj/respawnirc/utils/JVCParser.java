@@ -239,7 +239,7 @@ public final class JVCParser {
             return pageTopicLinkNumberMatcher.group(4);
         }
         else {
-            return "";
+            return "1";
         }
     }
 
@@ -261,7 +261,7 @@ public final class JVCParser {
             return pageForumLinkNumberMatcher.group(3);
         }
         else {
-            return "";
+            return "1";
         }
     }
 

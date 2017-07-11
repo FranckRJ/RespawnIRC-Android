@@ -53,7 +53,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         public boolean onLongClick(View v) {
             Bundle argForFrag = new Bundle();
             SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
-            argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumNames, currentTitle, pageNavigation.getCurrentLink()));
+            argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumNames, currentTitle, pageNavigation.getCurrentPageLink()));
             selectTextDialogFragment.setArguments(argForFrag);
             selectTextDialogFragment.show(getFragmentManager(), "SelectTextDialogFragment");
             return true;
@@ -199,8 +199,8 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     @Override
     public void onPause() {
         stopAllCurrentTasks();
-        if (!pageNavigation.getCurrentLink().isEmpty()) {
-            PrefsManager.putString(PrefsManager.StringPref.Names.FORUM_URL_TO_FETCH, setShowedPageNumberForThisLink(pageNavigation.getCurrentLink(), pageNavigation.getCurrentItemIndex() + 1));
+        if (!pageNavigation.getCurrentLinkIsEmpty()) {
+            PrefsManager.putString(PrefsManager.StringPref.Names.FORUM_URL_TO_FETCH, pageNavigation.getCurrentPageLink());
             PrefsManager.applyChanges();
         }
         super.onPause();
@@ -225,11 +225,11 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
-        menu.findItem(R.id.action_search_topic_showforum).setEnabled(!pageNavigation.getCurrentLink().isEmpty());
+        menu.findItem(R.id.action_search_topic_showforum).setEnabled(!pageNavigation.getCurrentLinkIsEmpty());
         menu.findItem(R.id.action_change_forum_fav_value_showforum).setEnabled(false);
 
         if (getCurrentFragment() != null) {
-            menu.findItem(R.id.action_send_topic_showforum).setEnabled(!Utils.stringIsEmptyOrNull(getCurrentFragment().getLatestListOfInputInAString(false)) && !pageNavigation.getCurrentLink().isEmpty());
+            menu.findItem(R.id.action_send_topic_showforum).setEnabled(!Utils.stringIsEmptyOrNull(getCurrentFragment().getLatestListOfInputInAString(false)) && !pageNavigation.getCurrentLinkIsEmpty());
 
             if (!pseudoOfUser.isEmpty() && getCurrentFragment().getIsInFavs() != null) {
                 menu.findItem(R.id.action_change_forum_fav_value_showforum).setEnabled(true);
@@ -252,7 +252,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
             case R.id.action_change_forum_fav_value_showforum:
                 if (currentTaskForFavs == null) {
                     currentTaskForFavs = new AddOrRemoveThingToFavs(!getCurrentFragment().getIsInFavs(), this);
-                    currentTaskForFavs.execute(JVCParser.getForumIDOfThisForum(pageNavigation.getCurrentLink()), getCurrentFragment().getLatestAjaxInfos().pref, PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
+                    currentTaskForFavs.execute(JVCParser.getForumIDOfThisForum(pageNavigation.getCurrentPageLink()), getCurrentFragment().getLatestAjaxInfos().pref, PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
                 } else {
                     Toast.makeText(ShowForumActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
                 }
@@ -260,21 +260,21 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
                 return true;
             case R.id.action_search_topic_showforum:
                 Intent newSearchTopicIntent = new Intent(this, SearchTopicInForumActivity.class);
-                newSearchTopicIntent.putExtra(SearchTopicInForumActivity.EXTRA_FORUM_LINK, pageNavigation.getCurrentLink());
+                newSearchTopicIntent.putExtra(SearchTopicInForumActivity.EXTRA_FORUM_LINK, pageNavigation.getFirstPageLink());
                 newSearchTopicIntent.putExtra(SearchTopicInForumActivity.EXTRA_FORUM_NAME, currentTitle);
                 startActivity(newSearchTopicIntent);
                 return true;
             case R.id.action_open_in_browser_showforum:
                 if (!useInternalNavigatorForDefaultOpening) {
-                    Utils.openLinkInExternalNavigator(pageNavigation.getCurrentLink(), this);
+                    Utils.openLinkInExternalNavigator(pageNavigation.getCurrentPageLink(), this);
                 } else {
-                    Utils.openLinkInInternalNavigator(pageNavigation.getCurrentLink(), this);
+                    Utils.openLinkInInternalNavigator(pageNavigation.getCurrentPageLink(), this);
                 }
                 return true;
             case R.id.action_send_topic_showforum:
                 Intent newSendTopicIntent = new Intent(this, SendTopicToForumActivity.class);
                 newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_FORUM_NAME, currentTitle);
-                newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_FORUM_LINK, pageNavigation.getCurrentLink());
+                newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_FORUM_LINK, pageNavigation.getCurrentPageLink());
                 newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_INPUT_LIST, getCurrentFragment().getLatestListOfInputInAString(postAsModoWhenPossible));
                 startActivityForResult(newSendTopicIntent, SEND_TOPIC_REQUEST_CODE);
                 refreshNeededOnNextResume = true;
