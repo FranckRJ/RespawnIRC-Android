@@ -259,11 +259,10 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         protected String doInBackground(String... params) {
             if (params.length > 0) {
                 String pageResult;
-                String searchToDo = params[0].replace(" ", "+");
                 WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
                 currentWebInfos.followRedirects = false;
 
-                pageResult = WebManager.sendRequest("http://www.jeuxvideo.com/forums/recherche.php", "GET", "q=" + Utils.convertStringToUrlString(searchToDo), "", currentWebInfos);
+                pageResult = WebManager.sendRequest("http://www.jeuxvideo.com/forums/recherche.php", "GET", "q=" + Utils.convertStringToUrlString(params[0]), "", currentWebInfos);
 
                 if (!currentWebInfos.currentUrl.isEmpty() && !currentWebInfos.currentUrl.startsWith("http://www.jeuxvideo.com/forums/recherche.php")) {
                     return "respawnirc:redirect:" + currentWebInfos.currentUrl;
