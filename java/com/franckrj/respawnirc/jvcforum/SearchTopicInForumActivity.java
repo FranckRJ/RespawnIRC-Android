@@ -1,8 +1,10 @@
 package com.franckrj.respawnirc.jvcforum;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -10,29 +12,35 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.franckrj.respawnirc.AbsShowSomethingFragment;
+import com.franckrj.respawnirc.PageNavigationUtil;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.ThemedActivity;
 import com.franckrj.respawnirc.jvcforum.jvcforumtools.ShowForumFragment;
 import com.franckrj.respawnirc.jvctopic.ShowTopicActivity;
+import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Utils;
 
-public class SearchTopicInForumActivity extends ThemedActivity implements ShowForumFragment.NewTopicWantRead {
+public class SearchTopicInForumActivity extends ThemedActivity implements ShowForumFragment.NewTopicWantRead, PageNavigationUtil.PageNavigationFunctions {
     public static final String EXTRA_FORUM_LINK = "com.franckrj.respawnirc.EXTRA_FORUM_LINK";
     public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.EXTRA_FORUM_NAME";
 
     private static final String SAVE_SEARCH_FORUM_CONTENT = "saveSearchForumContent";
+    private static final String SAVE_CURRENT_SEARCH_LINK = "saveCurrentSearchLink";
 
     private EditText textForSearch = null;
     private MenuItem searchExpandableItem = null;
     private RadioButton topicModeSearchRadioButton = null;
     private String lastSearchedText = null;
-    private ShowForumFragment fragForShowForum = null;
+    private PageNavigationUtil pageNavigation = null;
     private String currentSearchLink = "";
     private String currentForumName = "";
 
@@ -54,11 +62,18 @@ public class SearchTopicInForumActivity extends ThemedActivity implements ShowFo
         }
     };
 
+    public SearchTopicInForumActivity() {
+        pageNavigation = new PageNavigationUtil(this);
+        pageNavigation.setLastPageNumber(100);
+    }
+
     public void performSearch() {
         if (textForSearch != null) {
             if (!textForSearch.getText().toString().isEmpty()) {
-                fragForShowForum.setPageLink(currentSearchLink + "?search_in_forum=" + Utils.convertStringToUrlString(textForSearch.getText().toString()) +
+                pageNavigation.setCurrentLink(currentSearchLink + "?search_in_forum=" + Utils.convertStringToUrlString(textForSearch.getText().toString()) +
                         "&type_search_in_forum=" + (topicModeSearchRadioButton.isChecked() ? "titre_topic" : "auteur_topic"));
+                pageNavigation.updateAdapterForPagerView();
+                pageNavigation.updateCurrentItemAndButtonsToCurrentLink();
             }
         }
 
@@ -79,6 +94,11 @@ public class SearchTopicInForumActivity extends ThemedActivity implements ShowFo
             myActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        pageNavigation.initializePagerView((ViewPager) findViewById(R.id.pager_searchtopic));
+        pageNavigation.initializeNavigationButtons((Button) findViewById(R.id.firstpage_button_searchtopic), (Button) findViewById(R.id.previouspage_button_searchtopic),
+                        (Button) findViewById(R.id.currentpage_button_searchtopic), (Button) findViewById(R.id.nextpage_button_searchtopic), null);
+        pageNavigation.updateAdapterForPagerView();
+
         topicModeSearchRadioButton = (RadioButton) findViewById(R.id.topicmode_radio_searchtopic);
 
         if (getIntent() != null) {
@@ -97,14 +117,10 @@ public class SearchTopicInForumActivity extends ThemedActivity implements ShowFo
 
         if (savedInstanceState != null) {
             lastSearchedText = savedInstanceState.getString(SAVE_SEARCH_FORUM_CONTENT, null);
-            fragForShowForum = (ShowForumFragment) getFragmentManager().findFragmentById(R.id.frame_searchtopic);
-        } else {
-            Bundle argForFrag = new Bundle();
-            fragForShowForum = new ShowForumFragment();
-            argForFrag.putBoolean(ShowForumFragment.ARG_IS_IN_SEARCH_MODE, true);
-            fragForShowForum.setArguments(argForFrag);
-            getFragmentManager().beginTransaction().replace(R.id.frame_searchtopic, fragForShowForum).commit();
+            pageNavigation.setCurrentLink(savedInstanceState.getString(SAVE_CURRENT_SEARCH_LINK, ""));
         }
+
+        pageNavigation.updateNavigationButtons();
 
         if (currentSearchLink.isEmpty()) {
             Toast.makeText(this, R.string.errorSearchImpossible, Toast.LENGTH_SHORT).show();
@@ -115,6 +131,7 @@ public class SearchTopicInForumActivity extends ThemedActivity implements ShowFo
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
+        outState.putString(SAVE_CURRENT_SEARCH_LINK, pageNavigation.getCurrentPageLink());
         outState.putString(SAVE_SEARCH_FORUM_CONTENT, null);
         if (textForSearch != null && searchExpandableItem != null) {
             if (MenuItemCompat.isActionViewExpanded(searchExpandableItem)) {
@@ -145,6 +162,9 @@ public class SearchTopicInForumActivity extends ThemedActivity implements ShowFo
 
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
+                InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                textForSearch.requestFocus();
+                inputManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
                 return true;
             }
         });
@@ -185,5 +205,45 @@ public class SearchTopicInForumActivity extends ThemedActivity implements ShowFo
 
         newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_LINK, newTopicLink);
         startActivity(newShowTopicIntent);
+    }
+
+    @Override
+    public void extendPageSelection(View buttonView) {
+        //rien
+    }
+
+    @Override
+    public AbsShowSomethingFragment createNewFragmentForRead(String possibleSearchTopicLink) {
+        Bundle argForFrag = new Bundle();
+        ShowForumFragment currentFragment = new ShowForumFragment();
+
+        argForFrag.putBoolean(ShowForumFragment.ARG_IS_IN_SEARCH_MODE, true);
+
+        if (possibleSearchTopicLink != null) {
+            argForFrag.putString(ShowForumFragment.ARG_FORUM_LINK, possibleSearchTopicLink);
+        }
+
+        currentFragment.setArguments(argForFrag);
+
+        return currentFragment;
+    }
+
+    @Override
+    public void doThingsBeforeLoadOnFragment(AbsShowSomethingFragment thisFragment) {
+        //rien
+    }
+
+    @Override
+    public int getShowablePageNumberForThisLink(String link) {
+        try {
+            return ((Integer.parseInt(JVCParser.getPageNumberForThisSearchTopicLink(link)) - 1) / 25) + 1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+
+    @Override
+    public String setShowedPageNumberForThisLink(String link, int newPageNumber) {
+        return JVCParser.setPageNumberForThisSearchTopicLink(link, ((newPageNumber - 1) * 25) + 1);
     }
 }

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout_drawer_showforum"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout
-            android:id="@+id/frame_searchtopic"
-            android:layout_below="@+id/header_layout_searchtopic"
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager_searchtopic"
+            android:layout_below="@+id/radiogroup_layout_searchtopic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -22,11 +22,61 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"/>
 
-        <RadioGroup
-            android:id="@+id/header_layout_searchtopic"
+        <RelativeLayout
+            android:id="@+id/navigation_layout_searchtopic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/toolbar_searchtopic"
+            android:background="?attr/themedDarkerBackgroundColor">
+            <Button
+                android:id="@+id/firstpage_button_searchtopic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"/>
+            <Button
+                android:id="@+id/previouspage_button_searchtopic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:layout_toLeftOf="@+id/currentpage_button_searchtopic"
+                android:layout_toStartOf="@+id/currentpage_button_searchtopic"
+                android:layout_alignParentTop="true"
+                android:text="@string/previousPageText"/>
+            <Button
+                android:id="@+id/currentpage_button_searchtopic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentTop="true"
+                android:text="@string/waitingText"/>
+            <Button
+                android:id="@+id/nextpage_button_searchtopic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:layout_toRightOf="@+id/currentpage_button_searchtopic"
+                android:layout_toEndOf="@+id/currentpage_button_searchtopic"
+                android:layout_alignParentTop="true"
+                android:text="@string/nextPageText"/>
+        </RelativeLayout>
+
+        <RadioGroup
+            android:id="@+id/radiogroup_layout_searchtopic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/navigation_layout_searchtopic"
             android:orientation="horizontal"
             android:background="?attr/themedDarkerBackgroundColor"
             android:gravity="end">
@@ -63,7 +113,7 @@
             android:layout_width="match_parent"
             android:layout_height="4dp"
             android:background="?attr/themedShadowTop"
-            android:layout_below="@+id/header_layout_searchtopic"/>
+            android:layout_below="@+id/radiogroup_layout_searchtopic"/>
 
         <View
             android:layout_width="match_parent"
@@ -72,4 +122,5 @@
             android:layout_below="@+id/toolbar_searchtopic"/>
 
     </RelativeLayout>
+
 </android.support.design.widget.CoordinatorLayout>

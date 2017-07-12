@@ -221,12 +221,6 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View mainView = inflater.inflate(R.layout.fragment_showtopic, container, false);
@@ -315,6 +309,8 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
                 setPageLink(currentArgs.getString(ARG_TOPIC_LINK, ""));
             }
         }
+
+        setHasOptionsMenu(true);
     }
 
     @Override

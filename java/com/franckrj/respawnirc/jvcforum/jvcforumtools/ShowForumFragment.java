@@ -158,12 +158,6 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View mainView = inflater.inflate(R.layout.fragment_showforum, container, false);
@@ -226,11 +220,13 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
             Bundle currentArgs = getArguments();
 
             if (currentArgs != null) {
-                setPageLink(currentArgs.getString(ARG_FORUM_LINK, ""));
                 getterForForum.setIsInSearchMode(currentArgs.getBoolean(ARG_IS_IN_SEARCH_MODE, false));
+                setPageLink(currentArgs.getString(ARG_FORUM_LINK, ""));
                 swipeRefresh.setEnabled(!getterForForum.getIsInSearchMode());
             }
         }
+
+        setHasOptionsMenu(!getterForForum.getIsInSearchMode());
     }
 
     @Override

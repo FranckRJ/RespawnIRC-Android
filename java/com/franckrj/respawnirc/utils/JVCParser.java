@@ -43,6 +43,7 @@ public final class JVCParser {
     private static final Pattern stickerPattern = Pattern.compile("<img class=\"img-stickers\" src=\"(http://jv\\.stkr\\.fr/p[^/]*/([^\"]*))\"/>");
     private static final Pattern pageTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/[0-9]*-([0-9]*)-([0-9]*)-)([0-9]*)(-[0-9]*-[0-9]*-[0-9]*-[^\\.]*\\.htm)");
     private static final Pattern pageForumLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/[0-9]*-([0-9]*)-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-[^\\.]*\\.htm)");
+    private static final Pattern pageSearchTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/recherche/forums/[0-9]*-[0-9]*-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-.*)");
     private static final Pattern jvCarePattern = Pattern.compile("<span class=\"JvCare [^\"]*\">([^<]*)</span>");
     private static final Pattern lastEditMessagePattern = Pattern.compile("<div class=\"info-edition-msg\">(Message édité le ([^ ]* [^ ]* [^ ]* [^ ]* [0-9:]*) par.*?)</div>");
     private static final Pattern messageEditInfoPattern = Pattern.compile("<textarea tabindex=\"3\" class=\"area-editor\" name=\"text_commentaire\" id=\"text_commentaire\" placeholder=\"[^\"]*\">(.*?)</textarea>", Pattern.DOTALL);
@@ -270,6 +271,28 @@ public final class JVCParser {
 
         if (pageForumLinkNumberMatcher.find()) {
             return pageForumLinkNumberMatcher.group(1) + String.valueOf(newPageNumber) + pageForumLinkNumberMatcher.group(4);
+        }
+        else {
+            return "";
+        }
+    }
+
+    public static String getPageNumberForThisSearchTopicLink(String forumLink) {
+        Matcher pageSearchTopicLinkNumberMatcher = pageSearchTopicLinkNumberPattern.matcher(forumLink);
+
+        if (pageSearchTopicLinkNumberMatcher.find()) {
+            return pageSearchTopicLinkNumberMatcher.group(2);
+        }
+        else {
+            return "";
+        }
+    }
+
+    public static String setPageNumberForThisSearchTopicLink(String forumLink, int newPageNumber) {
+        Matcher pageSearchTopicLinkNumberMatcher = pageSearchTopicLinkNumberPattern.matcher(forumLink);
+
+        if (pageSearchTopicLinkNumberMatcher.find()) {
+            return pageSearchTopicLinkNumberMatcher.group(1) + String.valueOf(newPageNumber) + pageSearchTopicLinkNumberMatcher.group(3);
         }
         else {
             return "";
