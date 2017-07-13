@@ -37,6 +37,7 @@ import java.util.ArrayList;
 public class SelectForumInListActivity extends AbsNavigationViewActivity implements ChooseTopicOrForumLinkDialogFragment.NewTopicOrForumSelected,
                                                                               JVCForumListAdapter.NewForumSelected {
     private static final String SAVE_SEARCH_FORUM_CONTENT = "saveSearchForumContent";
+    private static final String SAVE_SEARCH_TEXT_IS_OPENED = "saveSearchTextIsOpened";
 
     private JVCForumListAdapter adapterForForumList = null;
     private EditText textForSearch = null;
@@ -45,6 +46,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
     private SwipeRefreshLayout swipeRefresh = null;
     private TextView noResultFoundTextView = null;
     private String lastSearchedText = null;
+    private boolean searchTextIsOpened = false;
 
     private final View.OnClickListener searchButtonClickedListener = new View.OnClickListener() {
         @Override
@@ -120,6 +122,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
 
         if (savedInstanceState != null) {
             lastSearchedText = savedInstanceState.getString(SAVE_SEARCH_FORUM_CONTENT, null);
+            searchTextIsOpened = savedInstanceState.getBoolean(SAVE_SEARCH_TEXT_IS_OPENED, false);
             adapterForForumList.loadFromBundle(savedInstanceState);
             if (adapterForForumList.getGroupCount() == 0) {
                 noResultFoundTextView.setVisibility(View.VISIBLE);
@@ -152,6 +155,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         super.onSaveInstanceState(outState);
         adapterForForumList.saveToBundle(outState);
 
+        outState.putBoolean(SAVE_SEARCH_TEXT_IS_OPENED, searchTextIsOpened);
         outState.putString(SAVE_SEARCH_FORUM_CONTENT, null);
         if (textForSearch != null && searchExpandableItem != null) {
             if (MenuItemCompat.isActionViewExpanded(searchExpandableItem)) {
@@ -176,6 +180,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         MenuItemCompat.setOnActionExpandListener(searchExpandableItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
+                searchTextIsOpened = false;
                 textForSearch.setText("");
                 stopAllCurrentTasks();
                 adapterForForumList.setNewListOfForums(null);
@@ -186,9 +191,12 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
 
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                textForSearch.requestFocus();
-                inputManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+                if (!searchTextIsOpened) {
+                    searchTextIsOpened = true;
+                    InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    textForSearch.requestFocus();
+                    inputManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+                }
                 return true;
             }
         });

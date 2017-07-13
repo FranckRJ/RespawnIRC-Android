@@ -35,6 +35,7 @@ public class SearchTopicInForumActivity extends ThemedActivity implements ShowFo
 
     private static final String SAVE_SEARCH_FORUM_CONTENT = "saveSearchForumContent";
     private static final String SAVE_CURRENT_SEARCH_LINK = "saveCurrentSearchLink";
+    private static final String SAVE_SEARCH_TEXT_IS_OPENED = "saveSearchTextIsOpened";
 
     private EditText textForSearch = null;
     private MenuItem searchExpandableItem = null;
@@ -43,6 +44,7 @@ public class SearchTopicInForumActivity extends ThemedActivity implements ShowFo
     private PageNavigationUtil pageNavigation = null;
     private String currentSearchLink = "";
     private String currentForumName = "";
+    private boolean searchTextIsOpened = false;
 
     private final View.OnClickListener searchButtonClickedListener = new View.OnClickListener() {
         @Override
@@ -117,6 +119,7 @@ public class SearchTopicInForumActivity extends ThemedActivity implements ShowFo
 
         if (savedInstanceState != null) {
             lastSearchedText = savedInstanceState.getString(SAVE_SEARCH_FORUM_CONTENT, null);
+            searchTextIsOpened = savedInstanceState.getBoolean(SAVE_SEARCH_TEXT_IS_OPENED, false);
             pageNavigation.setCurrentLink(savedInstanceState.getString(SAVE_CURRENT_SEARCH_LINK, ""));
         }
 
@@ -131,6 +134,7 @@ public class SearchTopicInForumActivity extends ThemedActivity implements ShowFo
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
+        outState.putBoolean(SAVE_SEARCH_TEXT_IS_OPENED, searchTextIsOpened);
         outState.putString(SAVE_CURRENT_SEARCH_LINK, pageNavigation.getCurrentPageLink());
         outState.putString(SAVE_SEARCH_FORUM_CONTENT, null);
         if (textForSearch != null && searchExpandableItem != null) {
@@ -156,15 +160,19 @@ public class SearchTopicInForumActivity extends ThemedActivity implements ShowFo
         MenuItemCompat.setOnActionExpandListener(searchExpandableItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
+                searchTextIsOpened = false;
                 onBackPressed();
                 return false;
             }
 
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                textForSearch.requestFocus();
-                inputManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+                if (!searchTextIsOpened) {
+                    searchTextIsOpened = true;
+                    InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    textForSearch.requestFocus();
+                    inputManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+                }
                 return true;
             }
         });
