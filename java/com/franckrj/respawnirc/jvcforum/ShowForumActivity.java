@@ -3,9 +3,11 @@ package com.franckrj.respawnirc.jvcforum;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,6 +44,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     private String currentTitle = "";
     private AddOrRemoveThingToFavs currentTaskForFavs = null;
     private PageNavigationUtil pageNavigation = null;
+    private ShareActionProvider shareAction = null;
     private boolean refreshNeededOnNextResume = false;
     private boolean dontConsumeRefreshOnNextResume = false;
     private boolean useInternalNavigatorForDefaultOpening = false;
@@ -53,7 +56,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         public boolean onLongClick(View v) {
             Bundle argForFrag = new Bundle();
             SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
-            argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumNames, currentTitle, pageNavigation.getCurrentPageLink()));
+            argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumNames, currentTitle));
             selectTextDialogFragment.setArguments(argForFrag);
             selectTextDialogFragment.show(getFragmentManager(), "SelectTextDialogFragment");
             return true;
@@ -149,6 +152,16 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         }
     }
 
+    private void updateShareAction() {
+        if (shareAction != null) {
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, pageNavigation.getCurrentPageLink());
+            shareIntent.setType("text/plain");
+            shareAction.setShareIntent(shareIntent);
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -218,6 +231,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_showforum, menu);
+        shareAction = (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share_showforum));
         return true;
     }
 
@@ -227,6 +241,8 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
 
         menu.findItem(R.id.action_search_topic_showforum).setEnabled(!pageNavigation.getCurrentLinkIsEmpty());
         menu.findItem(R.id.action_change_forum_fav_value_showforum).setEnabled(false);
+        menu.findItem(R.id.action_share_showforum).setEnabled(!pageNavigation.getCurrentLinkIsEmpty());
+        updateShareAction();
 
         if (getCurrentFragment() != null) {
             menu.findItem(R.id.action_send_topic_showforum).setEnabled(!Utils.stringIsEmptyOrNull(getCurrentFragment().getLatestListOfInputInAString(false)) && !pageNavigation.getCurrentLinkIsEmpty());

@@ -1,6 +1,8 @@
 package com.franckrj.respawnirc.jvctopic.jvctopicviewers;
 
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -190,12 +192,15 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_showtopicirc, menu);
+        shareAction = (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share_showtopicboth));
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.action_load_from_old_topic_info_showtopicirc).setEnabled(JVCParser.checkIfTopicAreSame(getterForTopic.getUrlForTopic(), oldUrlForTopic));
+        menu.findItem(R.id.action_share_showtopicboth).setEnabled(!getterForTopic.getUrlForTopic().isEmpty());
+        updateShareAction();
     }
 
     @Override

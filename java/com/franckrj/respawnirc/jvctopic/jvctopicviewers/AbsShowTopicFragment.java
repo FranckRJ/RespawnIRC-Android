@@ -1,7 +1,9 @@
 package com.franckrj.respawnirc.jvctopic.jvctopicviewers;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +39,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected JVCParser.Settings currentSettings = new JVCParser.Settings();
     protected NewModeNeededListener listenerForNewModeNeeded = null;
     protected SwipeRefreshLayout swipeRefresh = null;
+    protected ShareActionProvider shareAction = null;
     protected int showNoelshackImageAdv = 1;
     protected boolean showRefreshWhenMessagesShowed = true;
     protected boolean isInErrorMode = false;
@@ -152,6 +155,16 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             errorBackgroundMessage.setVisibility(View.VISIBLE);
         } else {
             Toast.makeText(getActivity(), idOfErrorTextToShow, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    protected void updateShareAction() {
+        if (shareAction != null && absGetterForTopic != null) {
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, absGetterForTopic.getUrlForTopic());
+            shareIntent.setType("text/plain");
+            shareAction.setShareIntent(shareIntent);
         }
     }
 

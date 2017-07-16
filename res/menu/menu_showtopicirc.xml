@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_load_from_old_topic_info_showtopicirc"
         android:title="@string/loadTopicFromOldInfos"/>
     <item
         android:id="@+id/action_switch_to_forum_mode_showtopicirc"
         android:title="@string/switchToForumMode"/>
+    <item
+        android:id="@+id/action_share_showtopicboth"
+        android:title="@string/share"
+        app:actionProviderClass="android.support.v7.widget.ShareActionProvider"/>
 </menu>
