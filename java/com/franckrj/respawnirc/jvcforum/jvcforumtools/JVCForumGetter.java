@@ -263,15 +263,13 @@ public class JVCForumGetter {
                     if (listenerForNewTopics != null) {
                         listenerForNewTopics.getNewTopics(infoOfCurrentPage.listOfTopics);
                     }
-                } else {
-                    if (listenerForNewTopics != null) {
-                        listenerForNewTopics.getNewTopics(new ArrayList<JVCParser.TopicInfos>());
-                    }
+
+                    return;
                 }
-            } else {
-                if (listenerForNewTopics != null) {
-                    listenerForNewTopics.getNewTopics(new ArrayList<JVCParser.TopicInfos>());
-                }
+            }
+
+            if (listenerForNewTopics != null) {
+                listenerForNewTopics.getNewTopics(new ArrayList<JVCParser.TopicInfos>());
             }
         }
     }

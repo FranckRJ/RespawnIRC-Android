@@ -48,6 +48,7 @@ public abstract class AbsJVCTopicGetter {
     protected NewPseudoOfAuthorAvailable listenerForNewPseudoOfAuthor = null;
     protected boolean userCanPostAsModo = false;
     protected NewUserCanPostAsModoInfoAvailable listenerForNewUserCanPostAsModo = null;
+    protected ErrorType lastTypeOfError = ErrorType.NONE_OR_UNKNOWN;
 
     public String getUrlForTopic() {
         return urlForTopic;
@@ -87,6 +88,10 @@ public abstract class AbsJVCTopicGetter {
 
     public boolean getUserCanPostAsModo() {
         return userCanPostAsModo;
+    }
+
+    public ErrorType getLastTypeOfError() {
+        return lastTypeOfError;
     }
 
     public void setIsInFavs(Boolean newVal) {
@@ -212,54 +217,74 @@ public abstract class AbsJVCTopicGetter {
         return newPageInfos;
     }
 
-    protected void fillBaseClassInfoFromPageInfo(TopicPageInfos infoOfCurrentPage) {
-        latestListOfInputInAString = infoOfCurrentPage.listOfInputInAString;
-        latestAjaxInfos = infoOfCurrentPage.ajaxInfosOfThisPage;
-        isInFavs = infoOfCurrentPage.newIsInFavs;
-        topicID = infoOfCurrentPage.newTopicID;
-        listOfSurveyReplyWithInfos = infoOfCurrentPage.newListOfSurveyReplyWithInfos;
+    protected boolean fillBaseClassInfoFromPageInfo(TopicPageInfos infoOfCurrentPage) {
+        boolean pageDownloadedIsAnalysable = true;
 
         if (!infoOfCurrentPage.newUrlForTopicPage.isEmpty()) {
-            urlForTopic = infoOfCurrentPage.newUrlForTopicPage;
-            if (listenerForTopicLinkChanged != null) {
-                listenerForTopicLinkChanged.updateTopicLink(urlForTopic);
+            if (JVCParser.checkIfTopicAreSame(urlForTopic, infoOfCurrentPage.newUrlForTopicPage)) {
+                if (JVCParser.getPageNumberForThisTopicLink(urlForTopic).equals(JVCParser.getPageNumberForThisTopicLink(infoOfCurrentPage.newUrlForTopicPage))) {
+                    urlForTopic = infoOfCurrentPage.newUrlForTopicPage;
+                    if (listenerForTopicLinkChanged != null) {
+                        listenerForTopicLinkChanged.updateTopicLink(urlForTopic);
+                    }
+                } else {
+                    lastTypeOfError = ErrorType.PAGE_DOES_NOT_EXIST;
+                    pageDownloadedIsAnalysable = false;
+                }
+            } else {
+                lastTypeOfError = ErrorType.TOPIC_DOES_NOT_EXIST;
+                pageDownloadedIsAnalysable = false;
             }
         }
 
-        if (infoOfCurrentPage.newUserCanPostAsModo != userCanPostAsModo) {
-            userCanPostAsModo = infoOfCurrentPage.newUserCanPostAsModo;
-            if (listenerForNewUserCanPostAsModo != null) {
-                listenerForNewUserCanPostAsModo.getNewUserCanPostAsModo(userCanPostAsModo);
+        if (pageDownloadedIsAnalysable) {
+            latestListOfInputInAString = infoOfCurrentPage.listOfInputInAString;
+            latestAjaxInfos = infoOfCurrentPage.ajaxInfosOfThisPage;
+            isInFavs = infoOfCurrentPage.newIsInFavs;
+            topicID = infoOfCurrentPage.newTopicID;
+            listOfSurveyReplyWithInfos = infoOfCurrentPage.newListOfSurveyReplyWithInfos;
+
+            if (infoOfCurrentPage.newUserCanPostAsModo != userCanPostAsModo) {
+                userCanPostAsModo = infoOfCurrentPage.newUserCanPostAsModo;
+                if (listenerForNewUserCanPostAsModo != null) {
+                    listenerForNewUserCanPostAsModo.getNewUserCanPostAsModo(userCanPostAsModo);
+                }
+            }
+
+            if (!infoOfCurrentPage.newNames.equals(currentNames)) {
+                currentNames = infoOfCurrentPage.newNames;
+                if (listenerForNewForumAndTopicName != null) {
+                    listenerForNewForumAndTopicName.getNewForumAndTopicName(currentNames);
+                }
+            }
+
+            if (!Utils.stringsAreEquals(infoOfCurrentPage.newLockReason, lockReason)) {
+                lockReason = infoOfCurrentPage.newLockReason;
+                if (listenerForNewReasonForTopicLock != null) {
+                    listenerForNewReasonForTopicLock.getNewLockReason(lockReason);
+                }
+            }
+
+            if (!Utils.stringsAreEquals(infoOfCurrentPage.newHtmlSurveyTitle, htmlSurveyTitle)) {
+                htmlSurveyTitle = infoOfCurrentPage.newHtmlSurveyTitle;
+                if (listenerForNewSurveyForTopic != null) {
+                    listenerForNewSurveyForTopic.getNewSurveyTitle(htmlSurveyTitle);
+                }
+            }
+
+            if (isLoadingFirstPage && infoOfCurrentPage.listOfMessages.size() > 0 && listenerForNewPseudoOfAuthor != null) {
+                listenerForNewPseudoOfAuthor.getNewPseudoOfAuthor(infoOfCurrentPage.listOfMessages.get(0).pseudo);
             }
         }
 
-        if (!infoOfCurrentPage.newNames.equals(currentNames)) {
-            currentNames = infoOfCurrentPage.newNames;
-            if (listenerForNewForumAndTopicName != null) {
-                listenerForNewForumAndTopicName.getNewForumAndTopicName(currentNames);
-            }
-        }
-
-        if (!Utils.stringsAreEquals(infoOfCurrentPage.newLockReason, lockReason)) {
-            lockReason = infoOfCurrentPage.newLockReason;
-            if (listenerForNewReasonForTopicLock != null) {
-                listenerForNewReasonForTopicLock.getNewLockReason(lockReason);
-            }
-        }
-
-        if (!Utils.stringsAreEquals(infoOfCurrentPage.newHtmlSurveyTitle, htmlSurveyTitle)) {
-            htmlSurveyTitle = infoOfCurrentPage.newHtmlSurveyTitle;
-            if (listenerForNewSurveyForTopic != null) {
-                listenerForNewSurveyForTopic.getNewSurveyTitle(htmlSurveyTitle);
-            }
-        }
-
-        if (isLoadingFirstPage && infoOfCurrentPage.listOfMessages.size() > 0 && listenerForNewPseudoOfAuthor != null) {
-            listenerForNewPseudoOfAuthor.getNewPseudoOfAuthor(infoOfCurrentPage.listOfMessages.get(0).pseudo);
-        }
+        return pageDownloadedIsAnalysable;
     }
 
     protected abstract class AbsGetJVCLastMessages extends AsyncTask<String, Void, TopicPageInfos> {
+    }
+
+    public enum ErrorType {
+        NONE_OR_UNKNOWN, TOPIC_DOES_NOT_EXIST, PAGE_DOES_NOT_EXIST
     }
 
     protected static class TopicPageInfos {

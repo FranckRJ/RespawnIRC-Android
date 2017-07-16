@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.jvctopic.jvctopicgetters.JVCTopicModeIRCGetter;
@@ -71,7 +70,7 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
                     getterForTopic.reloadTopic(true);
                     isInErrorMode = true;
                 } else if (adapterForTopic.getAllItems().isEmpty()) {
-                    Toast.makeText(getActivity(), R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
+                    setErrorBackgroundMessageDependingOnLastError();
                 }
             }
         }

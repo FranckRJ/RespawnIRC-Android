@@ -5,20 +5,20 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/text_errorbackgroundmessage_showforum"
+        android:id="@+id/text_errorbackgroundmessage_showforumfrag"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
         android:textStyle="bold"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swiperefresh_showforum"
+        android:id="@+id/swiperefresh_showforumfrag"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentTop="true">
         <ListView
-            android:id="@+id/jvctopic_view_showforum"
+            android:id="@+id/jvctopic_view_showforumfrag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:divider="?attr/themedDividerColor"

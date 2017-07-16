@@ -66,28 +66,31 @@ public class JVCTopicModeForumGetter extends AbsJVCTopicGetter {
         protected void onPostExecute(TopicPageInfos infoOfCurrentPage) {
             super.onPostExecute(infoOfCurrentPage);
             currentAsyncTaskForGetMessage = null;
+            lastTypeOfError = ErrorType.NONE_OR_UNKNOWN;
 
             if (listenerForNewGetterState != null) {
                 listenerForNewGetterState.newStateSetted(STATE_NOT_LOADING);
             }
 
             if (infoOfCurrentPage != null) {
-                fillBaseClassInfoFromPageInfo(infoOfCurrentPage);
+                if (fillBaseClassInfoFromPageInfo(infoOfCurrentPage)) {
+                    if (!infoOfCurrentPage.listOfMessages.isEmpty()) {
+                        lastIdOfMessage = infoOfCurrentPage.listOfMessages.get(infoOfCurrentPage.listOfMessages.size() - 1).id;
+                    }
 
-                if (!infoOfCurrentPage.listOfMessages.isEmpty()) {
-                    lastIdOfMessage = infoOfCurrentPage.listOfMessages.get(infoOfCurrentPage.listOfMessages.size() - 1).id;
-                }
+                    if (listenerForNewMessages != null) {
+                        listenerForNewMessages.getNewMessages(infoOfCurrentPage.listOfMessages, true);
+                    }
+                    if (listenerForNewNumbersOfPages != null) {
+                        listenerForNewNumbersOfPages.getNewLastPageNumber(JVCParser.getPageNumberForThisTopicLink(infoOfCurrentPage.lastPageLink));
+                    }
 
-                if (listenerForNewMessages != null) {
-                    listenerForNewMessages.getNewMessages(infoOfCurrentPage.listOfMessages, true);
+                    return;
                 }
-                if (listenerForNewNumbersOfPages != null) {
-                    listenerForNewNumbersOfPages.getNewLastPageNumber(JVCParser.getPageNumberForThisTopicLink(infoOfCurrentPage.lastPageLink));
-                }
-            } else {
-                if (listenerForNewMessages != null) {
-                    listenerForNewMessages.getNewMessages(new ArrayList<JVCParser.MessageInfos>(), true);
-                }
+            }
+
+            if (listenerForNewMessages != null) {
+                listenerForNewMessages.getNewMessages(new ArrayList<JVCParser.MessageInfos>(), true);
             }
         }
     }

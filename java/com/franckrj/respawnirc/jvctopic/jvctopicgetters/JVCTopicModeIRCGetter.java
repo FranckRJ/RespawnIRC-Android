@@ -151,6 +151,7 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
             boolean needToGetNewMessagesEarly = false;
             ArrayList<JVCParser.MessageInfos> listOfNewMessages = new ArrayList<>();
             currentAsyncTaskForGetMessage = null;
+            lastTypeOfError = ErrorType.NONE_OR_UNKNOWN;
 
             if (listenerForNewGetterState != null) {
                 listenerForNewGetterState.newStateSetted(STATE_NOT_LOADING);
@@ -158,49 +159,53 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
 
             if (messagesNeedToBeGet) {
                 if (infoOfCurrentPage != null) {
-                    fillBaseClassInfoFromPageInfo(infoOfCurrentPage);
+                    if (fillBaseClassInfoFromPageInfo(infoOfCurrentPage)) {
+                        if (infoOfCurrentPage.lastPageLink.isEmpty() || !firstTimeGetMessages) {
+                            if (!infoOfCurrentPage.listOfMessages.isEmpty()) {
+                                for (JVCParser.MessageInfos thisMessageInfo : infoOfCurrentPage.listOfMessages) {
+                                    String lastEditInfosForThisMessage = listOfEditInfos.get(thisMessageInfo.id);
 
-                    if (infoOfCurrentPage.lastPageLink.isEmpty() || !firstTimeGetMessages) {
-                        if (!infoOfCurrentPage.listOfMessages.isEmpty()) {
-                            for (JVCParser.MessageInfos thisMessageInfo : infoOfCurrentPage.listOfMessages) {
-                                String lastEditInfosForThisMessage = listOfEditInfos.get(thisMessageInfo.id);
-
-                                if (lastEditInfosForThisMessage == null) {
-                                    lastEditInfosForThisMessage = thisMessageInfo.lastTimeEdit;
-                                }
-
-                                if (thisMessageInfo.id > lastIdOfMessage || !lastEditInfosForThisMessage.equals(thisMessageInfo.lastTimeEdit)) {
-                                    if (!lastEditInfosForThisMessage.equals(thisMessageInfo.lastTimeEdit)) {
-                                        thisMessageInfo.isAnEdit = true;
-                                    } else {
-                                        thisMessageInfo.isAnEdit = false;
-                                        lastIdOfMessage = thisMessageInfo.id;
+                                    if (lastEditInfosForThisMessage == null) {
+                                        lastEditInfosForThisMessage = thisMessageInfo.lastTimeEdit;
                                     }
-                                    listOfNewMessages.add(thisMessageInfo);
-                                    listOfEditInfos.put(thisMessageInfo.id, thisMessageInfo.lastTimeEdit);
+
+                                    if (thisMessageInfo.id > lastIdOfMessage || !lastEditInfosForThisMessage.equals(thisMessageInfo.lastTimeEdit)) {
+                                        if (!lastEditInfosForThisMessage.equals(thisMessageInfo.lastTimeEdit)) {
+                                            thisMessageInfo.isAnEdit = true;
+                                        } else {
+                                            thisMessageInfo.isAnEdit = false;
+                                            lastIdOfMessage = thisMessageInfo.id;
+                                        }
+                                        listOfNewMessages.add(thisMessageInfo);
+                                        listOfEditInfos.put(thisMessageInfo.id, thisMessageInfo.lastTimeEdit);
+                                    }
                                 }
+
+                                while (listOfEditInfos.size() > 20) {
+                                    listOfEditInfos.removeAt(0);
+                                }
+
+                                firstTimeGetMessages = false;
                             }
 
-                            while (listOfEditInfos.size() > 20) {
-                                listOfEditInfos.removeAt(0);
+                            if (listenerForNewMessages != null) {
+                                listenerForNewMessages.getNewMessages(listOfNewMessages, infoOfCurrentPage.listOfMessages.isEmpty());
                             }
-
-                            firstTimeGetMessages = false;
                         }
 
+                        if (!infoOfCurrentPage.lastPageLink.isEmpty()) {
+                            if (firstTimeGetMessages) {
+                                urlForTopic = infoOfCurrentPage.lastPageLink;
+                            } else {
+                                urlForTopic = infoOfCurrentPage.nextPageLink;
+                            }
+                            isLoadingFirstPage = false;
+                            needToGetNewMessagesEarly = true;
+                        }
+                    } else {
                         if (listenerForNewMessages != null) {
-                            listenerForNewMessages.getNewMessages(listOfNewMessages, infoOfCurrentPage.listOfMessages.isEmpty());
+                            listenerForNewMessages.getNewMessages(new ArrayList<JVCParser.MessageInfos>(), true);
                         }
-                    }
-
-                    if (!infoOfCurrentPage.lastPageLink.isEmpty()) {
-                        if (firstTimeGetMessages) {
-                            urlForTopic = infoOfCurrentPage.lastPageLink;
-                        } else {
-                            urlForTopic = infoOfCurrentPage.nextPageLink;
-                        }
-                        isLoadingFirstPage = false;
-                        needToGetNewMessagesEarly = true;
                     }
                 } else {
                     if (listenerForNewMessages != null) {

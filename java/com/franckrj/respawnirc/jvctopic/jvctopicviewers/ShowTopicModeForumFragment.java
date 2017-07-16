@@ -5,7 +5,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.franckrj.respawnirc.NetworkBroadcastReceiver;
 import com.franckrj.respawnirc.R;
@@ -54,7 +53,7 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
                     getterForTopic.reloadTopic(true);
                     isInErrorMode = true;
                 } else {
-                    Toast.makeText(getActivity(), R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
+                    setErrorBackgroundMessageDependingOnLastError();
                 }
             }
         }

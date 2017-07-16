@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.franckrj.respawnirc.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.NetworkBroadcastReceiver;
@@ -29,6 +31,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected static final String SAVE_SETTINGS_PSEUDO_OF_AUTHOR = "saveSettingsPseudoOfAuthor";
 
     protected AbsJVCTopicGetter absGetterForTopic = null;
+    protected TextView errorBackgroundMessage = null;
     protected ListView jvcMsgList = null;
     protected JVCTopicAdapter adapterForTopic = null;
     protected JVCParser.Settings currentSettings = new JVCParser.Settings();
@@ -51,6 +54,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             if (showRefreshWhenMessagesShowed || adapterForTopic.getAllItems().isEmpty()) {
                 if (newState == AbsJVCTopicGetter.STATE_LOADING) {
                     swipeRefresh.setRefreshing(true);
+                    errorBackgroundMessage.setVisibility(View.GONE);
                 } else if (newState == AbsJVCTopicGetter.STATE_NOT_LOADING) {
                     swipeRefresh.setRefreshing(false);
                 }
@@ -126,6 +130,29 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
                     (jvcMsgList.getChildAt(jvcMsgList.getChildCount() - 1).getBottom() <= jvcMsgList.getHeight());
         }
         return true;
+    }
+
+    protected void setErrorBackgroundMessageDependingOnLastError() {
+        int idOfErrorTextToShow;
+
+        switch (absGetterForTopic.getLastTypeOfError()) {
+            case TOPIC_DOES_NOT_EXIST:
+                idOfErrorTextToShow = R.string.errorTopicDoesNotExist;
+                break;
+            case PAGE_DOES_NOT_EXIST:
+                idOfErrorTextToShow = R.string.errorPageDoesNotExist;
+                break;
+            default:
+                idOfErrorTextToShow = R.string.errorDownloadFailed;
+                break;
+        }
+
+        if (adapterForTopic.getAllItems().isEmpty()) {
+            errorBackgroundMessage.setText(idOfErrorTextToShow);
+            errorBackgroundMessage.setVisibility(View.VISIBLE);
+        } else {
+            Toast.makeText(getActivity(), idOfErrorTextToShow, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public boolean onMenuItemClick(MenuItem item) {
@@ -225,6 +252,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View mainView = inflater.inflate(R.layout.fragment_showtopic, container, false);
 
+        errorBackgroundMessage = (TextView) mainView.findViewById(R.id.text_errorbackgroundmessage_showtopicfrag);
         jvcMsgList = (ListView) mainView.findViewById(R.id.jvcmessage_view_showtopicfrag);
         swipeRefresh = (SwipeRefreshLayout) mainView.findViewById(R.id.swiperefresh_showtopicfrag);
 
@@ -269,6 +297,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             adapterForTopic.setPseudoClickedListener((JVCTopicAdapter.PseudoClicked) getActivity());
         }
 
+        errorBackgroundMessage.setVisibility(View.GONE);
         swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
         if (cardDesignIsEnabled) {
             int paddingForMsgList = getResources().getDimensionPixelSize(R.dimen.paddingOfMessageListView);

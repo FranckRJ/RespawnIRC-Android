@@ -165,6 +165,8 @@
     <string name="postAsModoWhenPossibleTitle">Poster en tant que modérateur</string>
     <string name="postAsModoWhenPossibleSummary">(uniquement lorsque vous êtes connecté en tant que modo sur les forums que vous modérez)</string>
     <string name="errorForumDoesNotExist">Erreur, le forum ne semble pas exister.</string>
+    <string name="errorTopicDoesNotExist">Erreur, le topic ne semble pas exister.</string>
+    <string name="errorPageDoesNotExist">Erreur, la page ne semble pas exister.</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
