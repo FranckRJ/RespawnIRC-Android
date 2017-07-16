@@ -18,7 +18,7 @@ public class JVCForumGetter {
     private static final String SAVE_LATEST_LIST_OF_INPUT = "saveLatestListOfInputInAString";
     private static final String SAVE_FORUM_IS_IN_FAV = "saveForumIsInFav";
     private static final String SAVE_IS_IN_SEARCH_MODE = "saveIsInSearchMode";
-    private static final String SAVE_SEARCH_IS_EMPTY = "saveSearchIsEmpty";
+    private static final String SAVE_LAST_TYPE_OF_ERROR = "saveLastTypeOfError";
     private static final String SAVE_USER_CAN_POST_AS_MODO = "saveUserCanPostAsModo";
 
     private String urlForForum = "";
@@ -35,7 +35,7 @@ public class JVCForumGetter {
     private String latestNumberOfMP = null;
     private NewNumberOfMPSetted listenerForNewNumberOfMP = null;
     private boolean isInSearchMode = false;
-    private boolean searchIsEmptyAndItsNotAFail = false;
+    private ErrorType lastTypeOfError = ErrorType.NONE_OR_UNKNOWN;
     private boolean userCanPostAsModo = false;
 
     public JVCParser.AjaxInfos getLatestAjaxInfos() {
@@ -54,8 +54,8 @@ public class JVCForumGetter {
         }
     }
 
-    public boolean getSearchIsEmptyAndItsNotAFail() {
-        return searchIsEmptyAndItsNotAFail;
+    public ErrorType getLastTypeOfError() {
+        return lastTypeOfError;
     }
 
     public boolean getIsInSearchMode() {
@@ -134,7 +134,7 @@ public class JVCForumGetter {
         latestAjaxInfos.pref = savedInstanceState.getString(SAVE_LATEST_AJAX_INFO_PREF, null);
         latestListOfInputInAString = savedInstanceState.getString(SAVE_LATEST_LIST_OF_INPUT, null);
         isInSearchMode = savedInstanceState.getBoolean(SAVE_IS_IN_SEARCH_MODE, false);
-        searchIsEmptyAndItsNotAFail = savedInstanceState.getBoolean(SAVE_SEARCH_IS_EMPTY, false);
+        lastTypeOfError = (ErrorType) savedInstanceState.getSerializable(SAVE_LAST_TYPE_OF_ERROR);
         userCanPostAsModo = savedInstanceState.getBoolean(SAVE_USER_CAN_POST_AS_MODO);
         if (savedInstanceState.containsKey(SAVE_FORUM_IS_IN_FAV)) {
             isInFavs = savedInstanceState.getBoolean(SAVE_FORUM_IS_IN_FAV, false);
@@ -148,7 +148,7 @@ public class JVCForumGetter {
         savedInstanceState.putString(SAVE_LATEST_AJAX_INFO_PREF, latestAjaxInfos.pref);
         savedInstanceState.putString(SAVE_LATEST_LIST_OF_INPUT, latestListOfInputInAString);
         savedInstanceState.putBoolean(SAVE_IS_IN_SEARCH_MODE, isInSearchMode);
-        savedInstanceState.putBoolean(SAVE_SEARCH_IS_EMPTY, searchIsEmptyAndItsNotAFail);
+        savedInstanceState.putSerializable(SAVE_LAST_TYPE_OF_ERROR, lastTypeOfError);
         savedInstanceState.putBoolean(SAVE_USER_CAN_POST_AS_MODO, userCanPostAsModo);
         if (isInFavs != null) {
             savedInstanceState.putBoolean(SAVE_FORUM_IS_IN_FAV, isInFavs);
@@ -206,57 +206,78 @@ public class JVCForumGetter {
         protected void onPostExecute(ForumPageInfos infoOfCurrentPage) {
             super.onPostExecute(infoOfCurrentPage);
             currentAsyncTaskForGetTopic = null;
+            lastTypeOfError = ErrorType.NONE_OR_UNKNOWN;
 
             if (listenerForNewGetterState != null) {
                 listenerForNewGetterState.newStateSetted(STATE_NOT_LOADING);
             }
 
             if (infoOfCurrentPage != null) {
-                latestAjaxInfos = infoOfCurrentPage.newLatestAjaxInfos;
-                isInFavs = infoOfCurrentPage.newIsInFavs;
-                latestListOfInputInAString = infoOfCurrentPage.newListOfInputInAString;
-                searchIsEmptyAndItsNotAFail = infoOfCurrentPage.newSearchIsEmpty;
-                userCanPostAsModo = infoOfCurrentPage.newUserCanPostAsModo;
-
-                if (!latestListOfInputInAString.isEmpty()) {
-                    latestListOfInputInAString = latestListOfInputInAString + "&spotify_topic=&submit_sondage=0&question_sondage=&reponse_sondage[]=";
-                }
+                boolean pageDownloadedIsAnalysable = true;
 
                 if (!infoOfCurrentPage.newUrlForForumPage.isEmpty()) {
                     if (!isInSearchMode) {
-                        urlForForum = infoOfCurrentPage.newUrlForForumPage;
-                        if (listenerForForumLinkChanged != null) {
-                            listenerForForumLinkChanged.updateForumLink(urlForForum);
+                        if (JVCParser.checkIfForumAreSame(urlForForum, infoOfCurrentPage.newUrlForForumPage)) {
+                            urlForForum = infoOfCurrentPage.newUrlForForumPage;
+                            if (listenerForForumLinkChanged != null) {
+                                listenerForForumLinkChanged.updateForumLink(urlForForum);
+                            }
+                        } else {
+                            lastTypeOfError = ErrorType.FORUM_DOES_NOT_EXIST;
+                            pageDownloadedIsAnalysable = false;
                         }
                     } else {
-                        searchIsEmptyAndItsNotAFail = true;
+                        lastTypeOfError = ErrorType.SEARCH_IS_EMPTY_AND_ITS_NOT_A_FAIL;
+                        pageDownloadedIsAnalysable = false;
                     }
                 }
 
-                if (!infoOfCurrentPage.newForumName.equals(forumName)) {
-                    forumName = infoOfCurrentPage.newForumName;
-                    if (listenerForNewForumName != null) {
-                        listenerForNewForumName.getNewForumName(forumName);
-                    }
-                }
+                if (pageDownloadedIsAnalysable) {
+                    latestAjaxInfos = infoOfCurrentPage.newLatestAjaxInfos;
+                    isInFavs = infoOfCurrentPage.newIsInFavs;
+                    latestListOfInputInAString = infoOfCurrentPage.newListOfInputInAString;
+                    userCanPostAsModo = infoOfCurrentPage.newUserCanPostAsModo;
 
-                if (!Utils.stringsAreEquals(latestNumberOfMP, infoOfCurrentPage.newNumberOfMp)) {
-                    latestNumberOfMP = infoOfCurrentPage.newNumberOfMp;
-                    if (listenerForNewNumberOfMP != null) {
-                        listenerForNewNumberOfMP.getNewNumberOfMP(latestNumberOfMP);
+                    if (infoOfCurrentPage.newSearchIsEmpty) {
+                        lastTypeOfError = ErrorType.SEARCH_IS_EMPTY_AND_ITS_NOT_A_FAIL;
                     }
-                }
 
-                if (listenerForNewTopics != null) {
-                    listenerForNewTopics.getNewTopics(infoOfCurrentPage.listOfTopics);
+                    if (!latestListOfInputInAString.isEmpty()) {
+                        latestListOfInputInAString = latestListOfInputInAString + "&spotify_topic=&submit_sondage=0&question_sondage=&reponse_sondage[]=";
+                    }
+
+                    if (!infoOfCurrentPage.newForumName.equals(forumName)) {
+                        forumName = infoOfCurrentPage.newForumName;
+                        if (listenerForNewForumName != null) {
+                            listenerForNewForumName.getNewForumName(forumName);
+                        }
+                    }
+
+                    if (!Utils.stringsAreEquals(latestNumberOfMP, infoOfCurrentPage.newNumberOfMp)) {
+                        latestNumberOfMP = infoOfCurrentPage.newNumberOfMp;
+                        if (listenerForNewNumberOfMP != null) {
+                            listenerForNewNumberOfMP.getNewNumberOfMP(latestNumberOfMP);
+                        }
+                    }
+
+                    if (listenerForNewTopics != null) {
+                        listenerForNewTopics.getNewTopics(infoOfCurrentPage.listOfTopics);
+                    }
+                } else {
+                    if (listenerForNewTopics != null) {
+                        listenerForNewTopics.getNewTopics(new ArrayList<JVCParser.TopicInfos>());
+                    }
                 }
             } else {
-                searchIsEmptyAndItsNotAFail = false;
                 if (listenerForNewTopics != null) {
                     listenerForNewTopics.getNewTopics(new ArrayList<JVCParser.TopicInfos>());
                 }
             }
         }
+    }
+
+    public enum ErrorType {
+        NONE_OR_UNKNOWN, SEARCH_IS_EMPTY_AND_ITS_NOT_A_FAIL, FORUM_DOES_NOT_EXIST
     }
 
     private static class ForumPageInfos {

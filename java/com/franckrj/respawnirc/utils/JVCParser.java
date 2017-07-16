@@ -182,6 +182,18 @@ public final class JVCParser {
         }
     }
 
+    public static boolean checkIfForumAreSame(String firstForumLink, String secondForumLink) {
+        Matcher firstPageForumLinkNumberMatcher = pageForumLinkNumberPattern.matcher(firstForumLink);
+        Matcher secondPageForumLinkNumberMatcher = pageForumLinkNumberPattern.matcher(secondForumLink);
+
+        //noinspection SimplifiableIfStatement
+        if (firstPageForumLinkNumberMatcher.find() && secondPageForumLinkNumberMatcher.find()) {
+            return firstPageForumLinkNumberMatcher.group(2).equals(secondPageForumLinkNumberMatcher.group(2));
+        } else {
+            return false;
+        }
+    }
+
     public static boolean checkIfItsForumLink(String linkToCheck) {
         return linkToCheck.startsWith("http://www.jeuxvideo.com/forums/0-");
     }

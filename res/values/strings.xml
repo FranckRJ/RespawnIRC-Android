@@ -52,6 +52,7 @@
     <string name="errorMessageAlreadySending">Erreur, envoie ou édition d\'un message actuellement en cours.</string>
     <string name="errorCantGetEditInfos">Erreur, impossible de récupérer les informations d\'édition.</string>
     <string name="errorDownloadFailed">Erreur, la récupération des informations a échoué.</string>
+    <string name="errorForumPageDownloadFailed">Erreur, la récupération des informations a échoué, la page n\'existe peut-être pas.</string>
     <string name="errorConnectNeeded">Erreur, vous devez vous connecter pour effectuer cette action.</string>
     <string name="showNoelshackImageTitle">Afficher les miniatures</string>
     <string name="errorInvalidLink">Erreur, lien invalide.</string>
@@ -163,6 +164,7 @@
     <string name="showBlacklistedMessage">Afficher le message</string>
     <string name="postAsModoWhenPossibleTitle">Poster en tant que modérateur</string>
     <string name="postAsModoWhenPossibleSummary">(uniquement lorsque vous êtes connecté en tant que modo sur les forums que vous modérez)</string>
+    <string name="errorForumDoesNotExist">Erreur, le forum ne semble pas exister.</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

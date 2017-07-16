@@ -25,7 +25,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     private static final String SAVE_ALL_TOPICS_SHOWED = "saveAllCurrentTopicsShowed";
 
     private SwipeRefreshLayout swipeRefresh = null;
-    private TextView noResultFoundTextView = null;
+    private TextView errorBackgroundMessage = null;
     private NewTopicWantRead listenerForNewTopicWantRead = null;
     private JVCForumGetter getterForForum = null;
     private ListView jvcTopicList = null;
@@ -61,7 +61,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         public void newStateSetted(int newState) {
             if (newState == JVCForumGetter.STATE_LOADING) {
                 swipeRefresh.setRefreshing(true);
-                noResultFoundTextView.setVisibility(View.GONE);
+                errorBackgroundMessage.setVisibility(View.GONE);
             } else if (newState == JVCForumGetter.STATE_NOT_LOADING) {
                 swipeRefresh.setRefreshing(false);
             }
@@ -71,8 +71,9 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     private final JVCForumGetter.NewTopicsListener listenerForNewTopics = new JVCForumGetter.NewTopicsListener() {
         @Override
         public void getNewTopics(ArrayList<JVCParser.TopicInfos> listOfNewTopics) {
-            if (getterForForum.getIsInSearchMode() && getterForForum.getSearchIsEmptyAndItsNotAFail()) {
-                noResultFoundTextView.setVisibility(View.VISIBLE);
+            if (getterForForum.getIsInSearchMode() && getterForForum.getLastTypeOfError() == JVCForumGetter.ErrorType.SEARCH_IS_EMPTY_AND_ITS_NOT_A_FAIL) {
+                errorBackgroundMessage.setText(R.string.noResultFound);
+                errorBackgroundMessage.setVisibility(View.VISIBLE);
             } else if (!listOfNewTopics.isEmpty()) {
                 isInErrorMode = false;
                 adapterForForum.removeAllItems();
@@ -87,7 +88,23 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
                     getterForForum.reloadForum(true);
                     isInErrorMode = true;
                 } else {
-                    Toast.makeText(getActivity(), R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
+                    int idOfErrorTextToShow;
+
+                    switch (getterForForum.getLastTypeOfError()) {
+                        case FORUM_DOES_NOT_EXIST:
+                            idOfErrorTextToShow = R.string.errorForumDoesNotExist;
+                            break;
+                        default:
+                            idOfErrorTextToShow = R.string.errorForumPageDownloadFailed;
+                            break;
+                    }
+
+                    if (adapterForForum.getAllItems().isEmpty()) {
+                        errorBackgroundMessage.setText(idOfErrorTextToShow);
+                        errorBackgroundMessage.setVisibility(View.VISIBLE);
+                    } else {
+                        Toast.makeText(getActivity(), idOfErrorTextToShow, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         }
@@ -164,7 +181,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
 
         jvcTopicList = (ListView) mainView.findViewById(R.id.jvctopic_view_showforum);
         swipeRefresh = (SwipeRefreshLayout) mainView.findViewById(R.id.swiperefresh_showforum);
-        noResultFoundTextView = (TextView) mainView.findViewById(R.id.text_noresultfound_showforum);
+        errorBackgroundMessage = (TextView) mainView.findViewById(R.id.text_errorbackgroundmessage_showforum);
 
         swipeRefresh.setOnRefreshListener(listenerForRefresh);
 
@@ -196,7 +213,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
             getterForForum.setListenerForNewNumberOfMP((JVCForumGetter.NewNumberOfMPSetted) getActivity());
         }
 
-        noResultFoundTextView.setVisibility(View.GONE);
+        errorBackgroundMessage.setVisibility(View.GONE);
         swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
         jvcTopicList.setAdapter(adapterForForum);
 
@@ -213,8 +230,9 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
 
             adapterForForum.updateAllItems();
 
-            if (getterForForum.getIsInSearchMode() && adapterForForum.getAllItems().isEmpty() && getterForForum.getSearchIsEmptyAndItsNotAFail()) {
-                noResultFoundTextView.setVisibility(View.VISIBLE);
+            if (getterForForum.getIsInSearchMode() && adapterForForum.getAllItems().isEmpty() && getterForForum.getLastTypeOfError() == JVCForumGetter.ErrorType.SEARCH_IS_EMPTY_AND_ITS_NOT_A_FAIL) {
+                errorBackgroundMessage.setText(R.string.noResultFound);
+                errorBackgroundMessage.setVisibility(View.VISIBLE);
             }
         } else {
             Bundle currentArgs = getArguments();
@@ -241,7 +259,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         }
 
         if (adapterForForum.getAllItems().isEmpty() &&
-                (!getterForForum.getIsInSearchMode() || (getterForForum.getIsInSearchMode() && !getterForForum.getSearchIsEmptyAndItsNotAFail()))) {
+                (!getterForForum.getIsInSearchMode() || (getterForForum.getIsInSearchMode() && getterForForum.getLastTypeOfError() != JVCForumGetter.ErrorType.SEARCH_IS_EMPTY_AND_ITS_NOT_A_FAIL))) {
             getterForForum.reloadForum();
         }
     }
