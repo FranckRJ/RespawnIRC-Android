@@ -115,7 +115,7 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
 
         cardDesignIsEnabled = PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_CARD_DESIGN_MODE_FORUM);
 
-        if (showAvatarAdv == 0 || (showAvatarAdv == 1 && NetworkBroadcastReceiver.getIsConnectedToInternet() && NetworkBroadcastReceiver.getIsConnectedWithWifi())) {
+        if (showAvatarAdv == 0 || (showAvatarAdv == 1 && NetworkBroadcastReceiver.getIsConnectedWithWifi())) {
             if (cardDesignIsEnabled) {
                 adapterForTopic.setIdOfLayoutToUse(R.layout.jvcmessages_avatars_card_rowforum);
             } else {

@@ -122,7 +122,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         if (showNoelshackImageAdv != 1) {
             currentSettings.showNoelshackImages = (showNoelshackImageAdv == 0);
         } else {
-            currentSettings.showNoelshackImages = (NetworkBroadcastReceiver.getIsConnectedToInternet() && NetworkBroadcastReceiver.getIsConnectedWithWifi());
+            currentSettings.showNoelshackImages = NetworkBroadcastReceiver.getIsConnectedWithWifi();
         }
     }
 
