@@ -168,6 +168,7 @@
     <string name="errorTopicDoesNotExist">Erreur, le topic ne semble pas exister.</string>
     <string name="errorPageDoesNotExist">Erreur, la page ne semble pas exister.</string>
     <string name="share">Partager</string>
+    <string name="enableCardDesignSummary">(pas disponible pour le thème noir)</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

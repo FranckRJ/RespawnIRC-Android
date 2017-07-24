@@ -113,7 +113,7 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
             showAvatarAdv = 2;
         }
 
-        cardDesignIsEnabled = PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_CARD_DESIGN_MODE_FORUM);
+        cardDesignIsEnabled = (PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_CARD_DESIGN_MODE_FORUM) && ThemeManager.getThemeUsed() != ThemeManager.ThemeName.BLACK_THEME);
 
         if (showAvatarAdv == 0 || (showAvatarAdv == 1 && NetworkBroadcastReceiver.getIsConnectedWithWifi())) {
             if (cardDesignIsEnabled) {

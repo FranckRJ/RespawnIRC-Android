@@ -27,7 +27,8 @@
             android:summary="@string/needToBeEnabledOnJVCFirstSummary"/>
         <CheckBoxPreference
             android:key="@string/settingsEnableCardDesignModeForum"
-            android:title="@string/enableCardDesignTitle"/>
+            android:title="@string/enableCardDesignTitle"
+            android:summary="@string/enableCardDesignSummary"/>
         <CheckBoxPreference
             android:key="@string/settingsTopicAlternateBackgroundColorModeForum"
             android:title="@string/topicAlternateBackgroundColorTitle"/>
