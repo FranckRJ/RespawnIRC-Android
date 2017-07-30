@@ -346,6 +346,7 @@ public class JVCTopicAdapter extends BaseAdapter {
             viewHolder.separator.setVisibility(View.GONE);
             if (viewHolder.avatarImage != null) {
                 viewHolder.avatarImage.setVisibility(View.GONE);
+                viewHolder.avatarImage.setOnClickListener(null);
             }
 
             viewHolder.infoLine.setText(Undeprecator.htmlFromHtml(advertiseForSurveyToShow));
@@ -362,10 +363,7 @@ public class JVCTopicAdapter extends BaseAdapter {
 
             convertView.setOnClickListener(null);
             if (currentContent.messageLineContent != null) {
-                viewHolder.messageLine.setVisibility(View.VISIBLE);
-                viewHolder.messageLine.setText(currentContent.messageLineContent);
-
-                viewHolder.infoLine.setOnClickListener(new View.OnClickListener() {
+                View.OnClickListener infoClickedListener = new View.OnClickListener() {
                     int messageNumberInList = realPosition;
                     @Override
                     public void onClick(View v) {
@@ -373,10 +371,21 @@ public class JVCTopicAdapter extends BaseAdapter {
                             pseudoCLickedListener.getMessageOfPseudoClicked(listOfMessages.get(messageNumberInList));
                         }
                     }
-                });
+                };
+
+                viewHolder.messageLine.setVisibility(View.VISIBLE);
+                viewHolder.messageLine.setText(currentContent.messageLineContent);
+
+                viewHolder.infoLine.setOnClickListener(infoClickedListener);
+                if (viewHolder.avatarImage != null) {
+                    viewHolder.avatarImage.setOnClickListener(infoClickedListener);
+                }
             } else {
                 viewHolder.messageLine.setVisibility(View.GONE);
                 viewHolder.infoLine.setOnClickListener(null);
+                if (viewHolder.avatarImage != null) {
+                    viewHolder.avatarImage.setOnClickListener(null);
+                }
             }
 
             viewHolder.infoLine.setLineSpacing(0, 1);
