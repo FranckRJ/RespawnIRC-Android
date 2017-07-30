@@ -800,8 +800,9 @@ public final class JVCParser {
         MakeShortenedLinkIfPossible makeLinkDependingOnSettingsAndForceMake = new MakeShortenedLinkIfPossible((settings.shortenLongLink ? 50 : 0), true);
 
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, adPattern, -1, "", "", null, null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeBlockPattern, 1, "<p><font face=\"monospace\">", "</font></p>", new ConvertStringToString("\n", "<br />"), new ConvertStringToString("  ", "  ")); //remplace les doubles espaces par des doubles alt+255
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeLinePattern, 1, "<font face=\"monospace\">", "</font>", new ConvertStringToString("  ", "  "), null); //remplace les doubles espaces par des doubles alt+255
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "\r", "");
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeBlockPattern, 1, "<p><font face=\"monospace\">", "</font></p>", new MakeCodeTagGreatAgain(true), null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeLinePattern, 1, " <font face=\"monospace\">", "</font> ", new MakeCodeTagGreatAgain(false), null);
         StickerConverter.convertStickerWithThisRule(messageInBuilder, StickerConverter.ruleForNoLangageSticker);
         if (settings.transformStickerToSmiley) {
             StickerConverter.convertStickerWithThisRule(messageInBuilder, StickerConverter.ruleForStickerToSmiley);
@@ -809,7 +810,6 @@ public final class JVCParser {
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, stickerPattern, 2, "<img src=\"sticker_", ".png\"/>", new ConvertStringToString("-", "_"), null);
 
         ToolForParsing.replaceStringByAnother(messageInBuilder, "\n", "");
-        ToolForParsing.replaceStringByAnother(messageInBuilder, "\r", "");
         ToolForParsing.parseListInMessageIfNeeded(messageInBuilder);
 
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, smileyPattern, 2, "<img src=\"smiley_", "\"/>", null, null);
@@ -832,9 +832,8 @@ public final class JVCParser {
         if (containSpoil) {
             ToolForParsing.removeOverlySpoils(messageInBuilder);
             if (!showSpoil) {
-                //alt+255 espace autour du spoil
-                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, -1, "<bg_closed_spoil><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "000000" : "FFFFFF") + "\"> SPOIL </font></bg_closed_spoil>", "", null, null);
-                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, -1, "<p><bg_closed_spoil><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "000000" : "FFFFFF") + "\"> SPOIL </font></bg_closed_spoil></p>", "", null, null);
+                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, -1, "<bg_closed_spoil><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "000000" : "FFFFFF") + "\">&nbsp;SPOIL&nbsp;</font></bg_closed_spoil>", "", null, null);
+                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, -1, "<p><bg_closed_spoil><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "000000" : "FFFFFF") + "\">&nbsp;SPOIL&nbsp;</font></bg_closed_spoil></p>", "", null, null);
             } else {
                 ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "<font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "FFFFFF" : "000000") + "\">", "</font>", new RemoveFirstsAndLastsP(), null);
                 ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "FFFFFF" : "000000") + "\">", "</font></p>",  new RemoveFirstsAndLastsP(), null);
@@ -864,8 +863,8 @@ public final class JVCParser {
         StringBuilder messageInBuilder = new StringBuilder(messageInString);
 
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, adPattern, -1, "", "", null, null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeBlockPattern, 1, "<p>&lt;code&gt;", "&lt;/code&gt;</p>", new ConvertStringToString("\n", "<br />"), new ConvertStringToString("  ", "  ")); //remplace les doubles espaces par des doubles alt+255
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeLinePattern, 1, "&lt;code&gt;", "&lt;/code&gt;", new ConvertStringToString("  ", "  "), null); //remplace les doubles espaces par des doubles alt+255
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeBlockPattern, 1, "<p>&lt;code&gt;", "&lt;/code&gt;</p>", new ConvertStringToString("\n", "<br />"), new ConvertStringToString("  ", "&nbsp;&nbsp;"));
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeLinePattern, 1, "&lt;code&gt;", "&lt;/code&gt;", new ConvertStringToString("  ", "&nbsp;&nbsp;"), null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, stickerPattern, 2, "[[sticker:p/", "]]", null, null);
         ToolForParsing.replaceStringByAnother(messageInBuilder, "\n", "");
         ToolForParsing.replaceStringByAnother(messageInBuilder, "\r", "");
@@ -1532,6 +1531,36 @@ public final class JVCParser {
                 return "";
             }
             return baseString;
+        }
+    }
+
+    private static class MakeCodeTagGreatAgain implements StringModifier {
+        private final boolean isCodeBlock;
+
+        MakeCodeTagGreatAgain(boolean newIsCodeBlock) {
+            isCodeBlock = newIsCodeBlock;
+        }
+
+        @Override
+        public String changeString(String baseString) {
+            if (isCodeBlock) {
+                while (baseString.startsWith("\n")) {
+                    baseString = baseString.substring(1, baseString.length());
+                }
+                while (baseString.endsWith("\n")) {
+                    baseString = baseString.substring(0, baseString.length() - 1);
+                }
+                baseString = baseString.replace("\n", "<br />");
+            } else {
+                if (baseString.startsWith(" ")) {
+                    baseString = "&nbsp;" + baseString.substring(1, baseString.length());
+                }
+                if (baseString.endsWith(" ")) {
+                    baseString = baseString.substring(0, baseString.length() - 1) + "&nbsp;";
+                }
+            }
+
+            return baseString.replace("  ", "&nbsp;&nbsp;");
         }
     }
 
