@@ -541,6 +541,17 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
             case R.id.menu_delete_message:
                 actionsForMessages.startDeleteThisMessage(getCurrentFragment().getLatestAjaxInfos(), getCurrentFragment().getCurrentItemSelected(), cookieListInAString);
                 return true;
+            case R.id.menu_kick_pseudo_message:
+                JVCParser.MessageInfos currentMessage = getCurrentFragment().getCurrentItemSelected();
+                Intent newKickPseudoIntent = new Intent(ShowTopicActivity.this, KickPseudoActivity.class);
+                newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_PSEUDO, currentMessage.pseudo);
+                newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_ID_ALIAS, currentMessage.idAlias);
+                newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_ID_FORUM, JVCParser.getForumIDOfThisTopic(pageNavigation.getCurrentPageLink()));
+                newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_ID_MESSAGE, String.valueOf(currentMessage.id));
+                newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_AJAX_MOD, getCurrentFragment().getLatestAjaxInfos().mod);
+                newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_COOKIES, cookieListInAString);
+                startActivity(newKickPseudoIntent);
+                return true;
             default:
                 return getCurrentFragment().onMenuItemClick(item);
         }

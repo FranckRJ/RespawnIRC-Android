@@ -23,6 +23,7 @@ public final class JVCParser {
     private static final Pattern entireTopicPattern = Pattern.compile("<li class=\"[^\"]*\" data-id=\"[^\"]*\">.*?<span class=\"topic-subject\">.*?</li>", Pattern.DOTALL);
     private static final Pattern pseudoIsBlacklistedPattern = Pattern.compile("<div class=\"bloc-message-forum msg-pseudo-blacklist \" data-id=\"");
     private static final Pattern pseudoInfosPattern = Pattern.compile("<span class=\"JvCare [^ ]* bloc-pseudo-msg text-([^\"]*)\" target=\"_blank\">[^a-zA-Z0-9_\\[\\]-]*([a-zA-Z0-9_\\[\\]-]*)[^<]*</span>");
+    private static final Pattern idAliasPattern = Pattern.compile("data-id-alias=\"([0-9]+)\">");
     private static final Pattern messagePattern = Pattern.compile("<div class=\"bloc-contenu\"><div class=\"txt-msg  text-[^-]*-forum \">((.*?)(?=<div class=\"info-edition-msg\">)|(.*?)(?=<div class=\"signature-msg)|(.*))", Pattern.DOTALL);
     private static final Pattern currentPagePattern = Pattern.compile("<span class=\"page-active\">([^<]*)</span>");
     private static final Pattern pageLinkPattern = Pattern.compile("<span><a href=\"([^\"]*)\" class=\"lien-jv\">([0-9]*)</a></span>");
@@ -34,7 +35,7 @@ public final class JVCParser {
     private static final Pattern unicodeInTextPattern = Pattern.compile("\\\\u([a-zA-Z0-9]{4})");
     private static final Pattern alertPattern = Pattern.compile("<div class=\"alert-row\">([^<]*)</div>");
     private static final Pattern errorBlocPattern = Pattern.compile("<div class=\"bloc-erreur\">([^<]*)</div>");
-    private static final Pattern errorInEditModePattern = Pattern.compile("\"erreur\":\\[\"([^\"]*)\"");
+    private static final Pattern errorInJSONModePattern = Pattern.compile("\"erreur\":\\[\"([^\"]*)\"");
     private static final Pattern codeBlockPattern = Pattern.compile("<pre class=\"pre-jv\"><code class=\"code-jv\">([^<]*)</code></pre>");
     private static final Pattern codeLinePattern = Pattern.compile("<code class=\"code-jv\">(.*?)</code>", Pattern.DOTALL);
     private static final Pattern spoilLinePattern = Pattern.compile("<span class=\"bloc-spoil-jv en-ligne\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
@@ -567,7 +568,7 @@ public final class JVCParser {
     }
 
     public static String getErrorMessageInJSONMode(String pageSource) {
-        Matcher errorMatcher = errorInEditModePattern.matcher(pageSource);
+        Matcher errorMatcher = errorInJSONModePattern.matcher(pageSource);
 
         if (errorMatcher.find()) {
             return "Erreur : " + specialCharToNormalChar(parsingAjaxMessages(errorMatcher.group(1)));
@@ -903,6 +904,7 @@ public final class JVCParser {
         MessageInfos newMessageInfo = new MessageInfos();
         Matcher pseudoIsBlacklistedMatcher = pseudoIsBlacklistedPattern.matcher(thisEntireMessage);
         Matcher pseudoInfosMatcher = pseudoInfosPattern.matcher(thisEntireMessage);
+        Matcher idAliasMatcher = idAliasPattern.matcher(thisEntireMessage);
         Matcher messageMatcher = messagePattern.matcher(thisEntireMessage);
         Matcher signatureMatcher = signaturePattern.matcher(thisEntireMessage);
         Matcher avatarMatcher = avatarPattern.matcher(thisEntireMessage);
@@ -915,27 +917,22 @@ public final class JVCParser {
         if (pseudoInfosMatcher.find()) {
             newMessageInfo.pseudo = pseudoInfosMatcher.group(2);
             newMessageInfo.pseudoType = pseudoInfosMatcher.group(1);
-        } else {
-            newMessageInfo.pseudo = "Pseudo supprimé";
-            newMessageInfo.pseudoType = "user";
+        }
+
+        if (idAliasMatcher.find()) {
+            newMessageInfo.idAlias = idAliasMatcher.group(1);
         }
 
         if (lastEditMessageMatcher.find()) {
             newMessageInfo.lastTimeEdit = lastEditMessageMatcher.group(1).replaceAll(htmlTagPattern.pattern(), "");
-        } else {
-            newMessageInfo.lastTimeEdit = "";
         }
 
         if (signatureMatcher.find()) {
             newMessageInfo.signatureNotParsed = signatureMatcher.group(1);
-        } else {
-            newMessageInfo.signatureNotParsed = "";
         }
 
         if (avatarMatcher.find()) {
             newMessageInfo.avatarLink = "http://" + avatarMatcher.group(2);
-        } else {
-            newMessageInfo.avatarLink = "";
         }
 
         if (messageMatcher.find() && messageIDMatcher.find() && dateMessageMatcher.find()) {
@@ -1269,8 +1266,9 @@ public final class JVCParser {
     }
 
     public static class MessageInfos implements Parcelable, Comparable<MessageInfos> {
-        public String pseudo = "";
-        public String pseudoType = "";
+        public String pseudo = "Pseudo supprimé";
+        public String pseudoType = "user";
+        public String idAlias = "0";
         public String messageNotParsed = "";
         public String signatureNotParsed = "";
         public String avatarLink = "";
@@ -1307,6 +1305,7 @@ public final class JVCParser {
         private MessageInfos(Parcel in) {
             pseudo = in.readString();
             pseudoType = in.readString();
+            idAlias = in.readString();
             messageNotParsed = in.readString();
             signatureNotParsed = in.readString();
             avatarLink = in.readString();
@@ -1334,6 +1333,7 @@ public final class JVCParser {
         public void writeToParcel(Parcel out, int flags) {
             out.writeString(pseudo);
             out.writeString(pseudoType);
+            out.writeString(idAlias);
             out.writeString(messageNotParsed);
             out.writeString(signatureNotParsed);
             out.writeString(avatarLink);

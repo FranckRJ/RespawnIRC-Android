@@ -84,7 +84,7 @@
     <string name="errorTopicIsLocked">Erreur, le topic est fermé.</string>
     <string name="transformStickerToSmileyTitle">Changer les stickers en smiley</string>
     <string name="transformStickerToSmileySummary">(tous les stickers ne sont pas changés)</string>
-    <string name="unknownErrorPleaseResend">Erreur inconnue, essayez de ré-envoyer le message.</string>
+    <string name="unknownErrorPleaseRetry">Erreur inconnue, veuillez ré-essayer.</string>
     <string name="sendATopic">Poster un topic</string>
     <string name="topicTitlePlaceHolder">Titre…</string>
     <string name="pastLastTopicSended">Coller le dernier topic envoyé</string>
@@ -169,6 +169,12 @@
     <string name="errorPageDoesNotExist">Erreur, la page ne semble pas exister.</string>
     <string name="share">Partager</string>
     <string name="enableCardDesignSummary">(pas disponible pour le thème noir)</string>
+    <string name="kick">Kicker</string>
+    <string name="kickPseudo">Kicker %1$s</string>
+    <string name="motive">Motif :</string>
+    <string name="reasonOfKick">Raison du kick…</string>
+    <string name="errorActionNotPossible">Erreur, action impossible.</string>
+    <string name="selectMotive">Sélectionnez un motif…</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
@@ -201,5 +207,24 @@
         <item>"0"</item>
         <item>"1"</item>
         <item>"2"</item>
+    </string-array>
+    <string-array name="kickMotives">
+        <item>@string/selectMotive</item>
+        <item>"1 : Pédopornographie"</item>
+        <item>"2 : Incitation à la haine, discrimination"</item>
+        <item>"3 : Mise en danger des personnes"</item>
+        <item>"4 : Diffamation, menaces"</item>
+        <item>"5 : Piratage, non respect des droits d\'auteurs"</item>
+        <item>"6 : Apologie de comportements illégaux"</item>
+        <item>"9 : Données personnelles"</item>
+        <item>"7 : Pornographie"</item>
+        <item>"8 : Insultes"</item>
+        <item>"10 : Flood de masse"</item>
+        <item>"11 : Raids, mass-dislikes et attaques de sites"</item>
+        <item>"16 : Spoilers"</item>
+        <item>"12 : Message inopportun"</item>
+        <item>"13 : Doublons"</item>
+        <item>"14 : Publicité"</item>
+        <item>"18 : Règles spécifiques à chaque forum"</item>
     </string-array>
 </resources>

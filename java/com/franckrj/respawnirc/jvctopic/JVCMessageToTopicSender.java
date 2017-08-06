@@ -184,7 +184,7 @@ public class JVCMessageToTopicSender {
 
             if (!Utils.stringIsEmptyOrNull(pageResult)) {
                 if (pageResult.equals("respawnirc:resendneeded")) {
-                    errorWhenSending = parentActivity.getString(R.string.unknownErrorPleaseResend);
+                    errorWhenSending = parentActivity.getString(R.string.unknownErrorPleaseRetry);
                 } else if (!isInEdit) {
                     errorWhenSending = JVCParser.getErrorMessage(pageResult);
                 } else {

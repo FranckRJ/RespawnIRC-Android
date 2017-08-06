@@ -166,10 +166,8 @@ public class ShowSurveyActivity extends ThemedActivity implements VoteInSurveyDi
             contentText.setText(Undeprecator.htmlFromHtml(contentForSurvey));
         }
         if (getIntent() != null) {
-            if (getIntent().getStringExtra(EXTRA_SURVEY_TITLE) != null) {
-                if (myActionBar != null) {
-                    myActionBar.setSubtitle(getIntent().getStringExtra(EXTRA_SURVEY_TITLE));
-                }
+            if (getIntent().getStringExtra(EXTRA_SURVEY_TITLE) != null && myActionBar != null) {
+                myActionBar.setSubtitle(getIntent().getStringExtra(EXTRA_SURVEY_TITLE));
             }
             if (getIntent().getParcelableArrayListExtra(EXTRA_SURVEY_REPLYS_WITH_INFOS) != null) {
                 listOfReplysWithInfos = getIntent().getParcelableArrayListExtra(EXTRA_SURVEY_REPLYS_WITH_INFOS);
@@ -267,7 +265,7 @@ public class ShowSurveyActivity extends ThemedActivity implements VoteInSurveyDi
             if (params.length > 3) {
                 WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
                 currentWebInfos.followRedirects = false;
-                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_topic_sondage_vote.php", "GET", "id_topic=" + params[0] + "&" + params[1] + params[2], params[3], currentWebInfos);
+                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_topic_sondage_vote.php", "GET", "id_topic=" + params[0] + "&" + params[1] + "&" + params[2], params[3], currentWebInfos);
             }
             return null;
         }

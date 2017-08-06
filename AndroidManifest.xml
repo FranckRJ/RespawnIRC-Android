@@ -65,6 +65,10 @@
             android:label="@string/survey">
         </activity>
         <activity
+            android:name=".jvctopic.KickPseudoActivity"
+            android:label="@string/kick">
+        </activity>
+        <activity
             android:name=".SettingsActivity"
             android:label="@string/preference">
         </activity>

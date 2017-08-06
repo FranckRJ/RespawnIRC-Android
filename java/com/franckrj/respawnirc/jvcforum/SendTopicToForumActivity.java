@@ -173,7 +173,7 @@ public class SendTopicToForumActivity extends ThemedActivity implements InsertSt
             }
 
             if (pageResult.equals("respawnirc:resendneeded")) {
-                Toast.makeText(SendTopicToForumActivity.this, R.string.unknownErrorPleaseResend, Toast.LENGTH_SHORT).show();
+                Toast.makeText(SendTopicToForumActivity.this, R.string.unknownErrorPleaseRetry, Toast.LENGTH_SHORT).show();
                 return;
             } else if (pageResult.startsWith("respawnirc:move:")) {
                 Intent data = new Intent();
