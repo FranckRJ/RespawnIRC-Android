@@ -159,18 +159,21 @@ public class KickPseudoActivity extends ThemedActivity {
         @Override
         protected void onPostExecute(String kickResponse) {
             super.onPostExecute(kickResponse);
+            currentTaskForKick = null;
 
             if (kickResponse != null) {
                 String potentialError = JVCParser.getErrorMessageInJSONMode(kickResponse);
 
                 if (potentialError != null) {
                     Toast.makeText(KickPseudoActivity.this, potentialError, Toast.LENGTH_SHORT).show();
+                    return;
                 } else if (!kickResponse.startsWith("{") && !kickResponse.isEmpty()) {
                     Toast.makeText(KickPseudoActivity.this, R.string.unknownErrorPleaseRetry, Toast.LENGTH_SHORT).show();
+                    return;
                 }
             }
 
-            currentTaskForKick = null;
+            Toast.makeText(KickPseudoActivity.this, R.string.noKnownResponseFromJVC, Toast.LENGTH_SHORT).show();
         }
     }
 

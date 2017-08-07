@@ -175,6 +175,7 @@
     <string name="reasonOfKick">Raison du kick…</string>
     <string name="errorReasonOrMotiveMissingForKick">Erreur, raison ou motif manquant.</string>
     <string name="selectMotive">Sélectionnez un motif…</string>
+    <string name="noKnownResponseFromJVC">La réponse ne peut pas être analysée, veuillez ré-essayer.</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
