@@ -173,7 +173,7 @@
     <string name="kickPseudo">Kicker %1$s</string>
     <string name="motive">Motif :</string>
     <string name="reasonOfKick">Raison du kick…</string>
-    <string name="errorActionNotPossible">Erreur, action impossible.</string>
+    <string name="errorReasonOrMotiveMissingForKick">Erreur, raison ou motif manquant.</string>
     <string name="selectMotive">Sélectionnez un motif…</string>
 
     <string-array name="choicesForLinkContextMenu">

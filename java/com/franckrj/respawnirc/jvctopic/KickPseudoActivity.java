@@ -2,7 +2,6 @@ package com.franckrj.respawnirc.jvctopic;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -26,7 +25,6 @@ public class KickPseudoActivity extends ThemedActivity {
     public static final String EXTRA_COOKIES = "com.franckrj.respawnirc.kickpseudoactivity.EXTRA_COOKIES";
 
     private ApplyKickToPseudo currentTaskForKick = null;
-    private SwipeRefreshLayout swipeRefresh = null;
     private Spinner motiveSpinner = null;
     private EditText reasonEdit = null;
     private KickInfos infosForKick = new KickInfos();
@@ -49,13 +47,17 @@ public class KickPseudoActivity extends ThemedActivity {
                 }
             }
 
-            if (currentTaskForKick == null && motiveValue != null && !reasonEdit.getText().toString().isEmpty()) {
-                currentTaskForKick = new ApplyKickToPseudo();
-                infosForKick.motive = motiveValue;
-                infosForKick.reason = reasonEdit.getText().toString();
-                currentTaskForKick.execute(infosForKick);
+            if (currentTaskForKick == null) {
+                if (motiveValue != null && !reasonEdit.getText().toString().isEmpty()) {
+                    currentTaskForKick = new ApplyKickToPseudo();
+                    infosForKick.motive = motiveValue;
+                    infosForKick.reason = reasonEdit.getText().toString();
+                    currentTaskForKick.execute(infosForKick);
+                } else {
+                    Toast.makeText(KickPseudoActivity.this, R.string.errorReasonOrMotiveMissingForKick, Toast.LENGTH_SHORT).show();
+                }
             } else {
-                Toast.makeText(KickPseudoActivity.this, R.string.errorActionNotPossible, Toast.LENGTH_SHORT).show();
+                Toast.makeText(KickPseudoActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -65,7 +67,6 @@ public class KickPseudoActivity extends ThemedActivity {
             currentTaskForKick.cancel(true);
             currentTaskForKick = null;
         }
-        swipeRefresh.setRefreshing(false);
     }
 
     @Override
@@ -87,9 +88,7 @@ public class KickPseudoActivity extends ThemedActivity {
         Button applyKickButton = (Button) findViewById(R.id.kick_button_kickpseudo);
         motiveSpinner = (Spinner) findViewById(R.id.motives_spinner_kickpseudo);
         reasonEdit = (EditText) findViewById(R.id.reason_edit_kickpseudo);
-        swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swiperefresh_kickpseudo);
         applyKickButton.setOnClickListener(kickButtonClickedListener);
-        swipeRefresh.setEnabled(false);
 
         if (getIntent() != null) {
             if (getIntent().getStringExtra(EXTRA_PSEUDO) != null && myActionBar != null) {
@@ -148,11 +147,6 @@ public class KickPseudoActivity extends ThemedActivity {
 
     private class ApplyKickToPseudo extends AsyncTask<KickInfos, Void, String> {
         @Override
-        protected void onPreExecute() {
-            swipeRefresh.setRefreshing(true);
-        }
-
-        @Override
         protected String doInBackground(KickInfos... infoOfKick) {
             if (infoOfKick.length == 1) {
                 WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
@@ -165,7 +159,6 @@ public class KickPseudoActivity extends ThemedActivity {
         @Override
         protected void onPostExecute(String kickResponse) {
             super.onPostExecute(kickResponse);
-            swipeRefresh.setRefreshing(false);
 
             if (kickResponse != null) {
                 String potentialError = JVCParser.getErrorMessageInJSONMode(kickResponse);

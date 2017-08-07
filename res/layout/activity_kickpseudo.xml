@@ -51,12 +51,6 @@
             android:text="@string/kick"
             android:layout_margin="16dp"/>
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swiperefresh_kickpseudo"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar_kickpseudo"/>
-
         <include
             android:id="@+id/toolbar_kickpseudo"
             layout="@layout/toolbar"
