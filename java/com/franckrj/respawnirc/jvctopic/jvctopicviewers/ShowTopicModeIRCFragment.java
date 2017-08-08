@@ -30,17 +30,26 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
         @Override
         public void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages, boolean itsReallyEmpty) {
             if (!listOfNewMessages.isEmpty()) {
+                String pseudoOfUserInLC = currentSettings.pseudoOfUser.toLowerCase();
                 boolean scrolledAtTheEnd = true;
                 boolean needASmoothScroll = false;
                 boolean firstTimeGetMessages = adapterForTopic.getAllItems().isEmpty();
                 isInErrorMode = false;
 
-                if (adapterForTopic.getCount() > (adapterForTopic.getShowSurvey() ? 1 : 0)) {
+                if (!adapterForTopic.getAllItems().isEmpty()) {
                     scrolledAtTheEnd = listIsScrolledAtBottom();
                     needASmoothScroll = scrolledAtTheEnd;
                 }
 
                 for (JVCParser.MessageInfos thisMessageInfo : listOfNewMessages) {
+                    String pseudoOfMessageInLC = thisMessageInfo.pseudo.toLowerCase();
+
+                    if (!listOfIgnoredPseudosInLC.isEmpty() && !pseudoOfMessageInLC.equals(pseudoOfUserInLC)) {
+                        if (listOfIgnoredPseudosInLC.contains(pseudoOfMessageInLC)) {
+                            continue;
+                        }
+                    }
+
                     if (!thisMessageInfo.isAnEdit) {
                         adapterForTopic.addItem(thisMessageInfo, true);
                     } else {
@@ -60,20 +69,30 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
 
                 adapterForTopic.updateAllItems();
 
-                if (scrolledAtTheEnd && adapterForTopic.getCount() > 0) {
-                    if (smoothScrollIsEnabled && needASmoothScroll) { //s'il y avait des messages affichés avant et qu'on était en bas de page, smoothscroll
-                        jvcMsgList.smoothScrollToPosition(adapterForTopic.getCount() - 1);
-                    } else {
-                        jvcMsgList.setSelection(adapterForTopic.getCount() - 1);
+                if (adapterForTopic.getAllItems().isEmpty()) {
+                    setErrorBackgroundMessageForAllMessageIgnored();
+                } else {
+                    allMessagesShowedAreFromIgnoredPseudos = false;
+
+                    if (scrolledAtTheEnd) {
+                        if (smoothScrollIsEnabled && needASmoothScroll) { //s'il y avait des messages affichés avant et qu'on était en bas de page, smoothscroll
+                            jvcMsgList.smoothScrollToPosition(adapterForTopic.getCount() - 1);
+                        } else {
+                            jvcMsgList.setSelection(adapterForTopic.getCount() - 1);
+                        }
                     }
                 }
             } else if (itsReallyEmpty) {
+                allMessagesShowedAreFromIgnoredPseudos = false;
+
                 if (!isInErrorMode) {
                     getterForTopic.reloadTopic(true);
                     isInErrorMode = true;
                 } else if (adapterForTopic.getAllItems().isEmpty()) {
                     setErrorBackgroundMessageDependingOnLastError();
                 }
+            } else if (adapterForTopic.getAllItems().isEmpty() && allMessagesShowedAreFromIgnoredPseudos) {
+                setErrorBackgroundMessageForAllMessageIgnored();
             }
         }
     };

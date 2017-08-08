@@ -22,6 +22,7 @@ import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     public static final String ARG_TOPIC_LINK = "com.franckrj.respawnirc.topic_link";
@@ -31,6 +32,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected static final String SAVE_ALL_MESSAGES_SHOWED = "saveAllCurrentMessagesShowed";
     protected static final String SAVE_GO_TO_BOTTOM_PAGE_LOADING = "saveGoToBottomPageLoading";
     protected static final String SAVE_SETTINGS_PSEUDO_OF_AUTHOR = "saveSettingsPseudoOfAuthor";
+    protected static final String SAVE_MESSAGES_ARE_FROM_IGNORED_PSEUDOS = "saveMessagesAreFromIgnoredPseudos";
 
     protected AbsJVCTopicGetter absGetterForTopic = null;
     protected TextView errorBackgroundMessage = null;
@@ -40,6 +42,8 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected NewModeNeededListener listenerForNewModeNeeded = null;
     protected SwipeRefreshLayout swipeRefresh = null;
     protected ShareActionProvider shareAction = null;
+    protected HashSet<String> listOfIgnoredPseudosInLC = new HashSet<>();
+    protected boolean allMessagesShowedAreFromIgnoredPseudos = false;
     protected int showNoelshackImageAdv = 1;
     protected boolean showRefreshWhenMessagesShowed = true;
     protected boolean isInErrorMode = false;
@@ -54,10 +58,13 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
                 updateSettingsDependingOnConnection();
             }
 
+            if (newState == AbsJVCTopicGetter.STATE_LOADING) {
+                errorBackgroundMessage.setVisibility(View.GONE);
+            }
+
             if (showRefreshWhenMessagesShowed || adapterForTopic.getAllItems().isEmpty()) {
                 if (newState == AbsJVCTopicGetter.STATE_LOADING) {
                     swipeRefresh.setRefreshing(true);
-                    errorBackgroundMessage.setVisibility(View.GONE);
                 } else if (newState == AbsJVCTopicGetter.STATE_NOT_LOADING) {
                     swipeRefresh.setRefreshing(false);
                 }
@@ -156,6 +163,12 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         } else {
             Toast.makeText(getActivity(), idOfErrorTextToShow, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    protected void setErrorBackgroundMessageForAllMessageIgnored() {
+        allMessagesShowedAreFromIgnoredPseudos = true;
+        errorBackgroundMessage.setText(R.string.allMessagesAreFromIgnoredPseudo);
+        errorBackgroundMessage.setVisibility(View.VISIBLE);
     }
 
     protected void updateShareAction() {
@@ -327,6 +340,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             ArrayList<JVCParser.MessageInfos> allCurrentMessagesShowed = savedInstanceState.getParcelableArrayList(SAVE_ALL_MESSAGES_SHOWED);
             goToBottomAtPageLoading = savedInstanceState.getBoolean(SAVE_GO_TO_BOTTOM_PAGE_LOADING, false);
             currentSettings.pseudoOfAuthor = savedInstanceState.getString(SAVE_SETTINGS_PSEUDO_OF_AUTHOR, "");
+            allMessagesShowedAreFromIgnoredPseudos = savedInstanceState.getBoolean(SAVE_MESSAGES_ARE_FROM_IGNORED_PSEUDOS, false);
             absGetterForTopic.loadFromBundle(savedInstanceState);
 
             if (userIsConnectedAsModo) {
@@ -344,6 +358,10 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             }
 
             adapterForTopic.updateAllItems();
+
+            if (adapterForTopic.getAllItems().isEmpty() && allMessagesShowedAreFromIgnoredPseudos) {
+                setErrorBackgroundMessageForAllMessageIgnored();
+            }
         } else {
             Bundle currentArgs = getArguments();
 
@@ -373,6 +391,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         outState.putParcelableArrayList(SAVE_ALL_MESSAGES_SHOWED, adapterForTopic.getAllItems());
         outState.putBoolean(SAVE_GO_TO_BOTTOM_PAGE_LOADING, goToBottomAtPageLoading);
         outState.putString(SAVE_SETTINGS_PSEUDO_OF_AUTHOR, currentSettings.pseudoOfAuthor);
+        outState.putBoolean(SAVE_MESSAGES_ARE_FROM_IGNORED_PSEUDOS, allMessagesShowedAreFromIgnoredPseudos);
         absGetterForTopic.saveToBundle(outState);
     }
 

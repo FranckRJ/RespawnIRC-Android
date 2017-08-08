@@ -27,30 +27,47 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
         @Override
         public void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages, boolean itsReallyEmpty) {
             if (!listOfNewMessages.isEmpty()) {
+                String pseudoOfUserInLC = currentSettings.pseudoOfUser.toLowerCase();
                 boolean scrolledAtTheEnd = false;
                 isInErrorMode = false;
 
-                if (adapterForTopic.getCount() > (adapterForTopic.getShowSurvey() ? 1 : 0)) {
+                if (!adapterForTopic.getAllItems().isEmpty()) {
                     scrolledAtTheEnd = listIsScrolledAtBottom();
                 }
 
                 adapterForTopic.removeAllItems();
 
                 for (JVCParser.MessageInfos thisMessageInfo : listOfNewMessages) {
+                    String pseudoOfMessageInLC = thisMessageInfo.pseudo.toLowerCase();
+
+                    if (!listOfIgnoredPseudosInLC.isEmpty() && !pseudoOfMessageInLC.equals(pseudoOfUserInLC)) {
+                        if (listOfIgnoredPseudosInLC.contains(pseudoOfMessageInLC)) {
+                            continue;
+                        }
+                    }
+
                     adapterForTopic.addItem(thisMessageInfo, true);
                 }
 
                 adapterForTopic.updateAllItems();
 
-                if (autoScrollIsEnabled && (scrolledAtTheEnd || goToBottomAtPageLoading) && adapterForTopic.getCount() > 0) {
-                    if (smoothScrollIsEnabled && scrolledAtTheEnd) { //s'il y avait des messages affichés avant et qu'on était en bas de page, smoothscroll
-                        jvcMsgList.smoothScrollToPosition(adapterForTopic.getCount() - 1);
-                    } else {
-                        jvcMsgList.setSelection(adapterForTopic.getCount() - 1);
+                if (adapterForTopic.getAllItems().isEmpty()) {
+                    setErrorBackgroundMessageForAllMessageIgnored();
+                } else {
+                    allMessagesShowedAreFromIgnoredPseudos = false;
+
+                    if (autoScrollIsEnabled && (scrolledAtTheEnd || goToBottomAtPageLoading)) {
+                        if (smoothScrollIsEnabled && scrolledAtTheEnd) { //s'il y avait des messages affichés avant et qu'on était en bas de page, smoothscroll
+                            jvcMsgList.smoothScrollToPosition(adapterForTopic.getCount() - 1);
+                        } else {
+                            jvcMsgList.setSelection(adapterForTopic.getCount() - 1);
+                        }
                     }
-                    goToBottomAtPageLoading = false;
                 }
+                goToBottomAtPageLoading = false;
             } else {
+                allMessagesShowedAreFromIgnoredPseudos = false;
+
                 if (!isInErrorMode) {
                     getterForTopic.reloadTopic(true);
                     isInErrorMode = true;
@@ -170,7 +187,7 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
         super.onResume();
         isInErrorMode = false;
 
-        if (adapterForTopic.getAllItems().isEmpty()) {
+        if (adapterForTopic.getAllItems().isEmpty() && !allMessagesShowedAreFromIgnoredPseudos) {
             getterForTopic.reloadTopic();
         }
     }

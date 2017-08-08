@@ -149,6 +149,7 @@ public class JVCTopicAdapter extends BaseAdapter {
         return currentItemIDSelected;
     }
 
+    //pas d'intérêt que tout le monde puisse accéder aux messages, seul le .isEmpty() est important sur cette liste.
     public ArrayList<JVCParser.MessageInfos> getAllItems() {
         return listOfMessages;
     }
