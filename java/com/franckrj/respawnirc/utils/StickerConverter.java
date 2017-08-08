@@ -91,10 +91,10 @@ public class StickerConverter {
         if (ruleToFollow != null) {
             for (InfoForConvert thisInfo : ruleToFollow.listOfConvert) {
                 if (!ruleToFollow.convertToSmiley) {
-                    JVCParser.ToolForParsing.parseThisMessageWithThisPattern(messageToConvert, Pattern.compile("<img class=\"img-stickers\" src=\"http://jv\\.stkr\\.fr/p[^/]*/" + thisInfo.base + "\"/>"), -1,
+                    JVCParser.ToolForParsing.parseThisMessageWithThisPattern(messageToConvert, Pattern.compile("<img class=\"img-stickers\" src=\"http://jv\\.stkr\\.fr/p[^/]*/" + thisInfo.base + "\".*?/>"), -1,
                                                                 "<img class=\"img-stickers\" src=\"http://jv.stkr.fr/p/" + thisInfo.replacement + "\"/>", "", null, null);
                 } else {
-                    JVCParser.ToolForParsing.parseThisMessageWithThisPattern(messageToConvert, Pattern.compile("<img class=\"img-stickers\" src=\"http://jv\\.stkr\\.fr/p[^/]*/" + thisInfo.base + "\"/>"), -1,
+                    JVCParser.ToolForParsing.parseThisMessageWithThisPattern(messageToConvert, Pattern.compile("<img class=\"img-stickers\" src=\"http://jv\\.stkr\\.fr/p[^/]*/" + thisInfo.base + "\".*?/>"), -1,
                             "<img src=\"http://image.jeuxvideo.com/smileys_img/" + thisInfo.replacement + "\" alt=\"\" data-code=\"\" title=\"\" />", "", null, null);
                 }
             }
