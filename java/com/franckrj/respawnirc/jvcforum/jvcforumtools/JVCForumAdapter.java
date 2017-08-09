@@ -30,6 +30,7 @@ public class JVCForumAdapter extends BaseAdapter {
     private Drawable iconDossier2 = null;
     private Drawable iconLock = null;
     private Drawable iconResolu = null;
+    private Drawable iconGhost = null;
     private Drawable iconDossier1 = null;
 
     public JVCForumAdapter(Activity newParentActivity) {
@@ -40,6 +41,7 @@ public class JVCForumAdapter extends BaseAdapter {
         iconDossier2 = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_dossier2);
         iconLock = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), ThemeManager.getDrawableRes(ThemeManager.DrawableName.TOPIC_LOCK_ICON));
         iconResolu = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_resolu);
+        iconGhost = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_ghost);
         iconDossier1 = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_dossier1);
     }
 
@@ -140,6 +142,9 @@ public class JVCForumAdapter extends BaseAdapter {
                 break;
             case "resolu":
                 holder.topicIcon.setImageDrawable(iconResolu);
+                break;
+            case "ghost":
+                holder.topicIcon.setImageDrawable(iconGhost);
                 break;
             case "dossier1":
             default:
