@@ -33,6 +33,9 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                 } else if (preference.getKey().equals(getString(R.string.subScreenSettingsBehaviour))) {
                     ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.behaviour_settings);
                     return true;
+                } else if (preference.getKey().equals(getString(R.string.subScreenSettingsAdvanced))) {
+                    ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.advanced_settings);
+                    return true;
                 } else if (preference.getKey().equals(getString(R.string.subScreenSettingsHelp))) {
                     HelpSettingsDialogFragment helpDialogFragment = new HelpSettingsDialogFragment();
                     helpDialogFragment.show(getFragmentManager(), "HelpSettingsDialogFragment");

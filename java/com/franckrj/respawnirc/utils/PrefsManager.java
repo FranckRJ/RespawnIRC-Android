@@ -77,6 +77,7 @@ public class PrefsManager {
         addBoolPref(BoolPref.Names.TOPIC_CLEAR_ON_REFRESH_MODE_FORUM, currentContext.getString(R.string.settingsTopicClearOnRefresh), true);
         addBoolPref(BoolPref.Names.TOPIC_SHOW_REFRESH_WHEN_MESSAGE_SHOWED_MODE_IRC, currentContext.getString(R.string.settingsShowRefreshWhenMessagesShowedModeIRC), false);
         addBoolPref(BoolPref.Names.ENABLE_CARD_DESIGN_MODE_FORUM, currentContext.getString(R.string.settingsEnableCardDesignModeForum), true);
+        addBoolPref(BoolPref.Names.SEPARATION_BETWEEN_MESSAGES_BLACK_THEM_MODE_FORUM, currentContext.getString(R.string.settingsSeparationBetweenMessagesBlackThemeModeForum), true);
         addBoolPref(BoolPref.Names.HIDE_UGLY_IMAGES, currentContext.getString(R.string.settingsHideUglyImages), false);
         addBoolPref(BoolPref.Names.FORUM_ALTERNATE_BACKGROUND, currentContext.getString(R.string.settingsForumAlternateBackgroundColor), true);
         addBoolPref(BoolPref.Names.ENABLE_SMOOTH_SCROLL, currentContext.getString(R.string.settingsEnableSmoothScroll), true);
@@ -248,7 +249,7 @@ public class PrefsManager {
             TOPIC_ALTERNATE_BACKGROUND_MODE_FORUM, TOPIC_ALTERNATE_BACKGROUND_MODE_IRC, FORUM_ALTERNATE_BACKGROUND,
             TOPIC_CLEAR_ON_REFRESH_MODE_FORUM,
             TOPIC_SHOW_REFRESH_WHEN_MESSAGE_SHOWED_MODE_IRC,
-            ENABLE_CARD_DESIGN_MODE_FORUM,
+            ENABLE_CARD_DESIGN_MODE_FORUM, SEPARATION_BETWEEN_MESSAGES_BLACK_THEM_MODE_FORUM,
             HIDE_UGLY_IMAGES,
             ENABLE_SMOOTH_SCROLL, ENABLE_AUTO_SCROLL_MODE_FORUM,
             ENABLE_GO_TO_BOTTOM_ON_LOAD,

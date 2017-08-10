@@ -168,7 +168,7 @@
     <string name="errorTopicDoesNotExist">Erreur, le topic ne semble pas exister.</string>
     <string name="errorPageDoesNotExist">Erreur, la page ne semble pas exister.</string>
     <string name="share">Partager</string>
-    <string name="enableCardDesignSummary">(pas disponible pour le thème noir)</string>
+    <string name="notAvailableForBlackThemeSummary">(pas disponible pour le thème noir)</string>
     <string name="kick">Kicker</string>
     <string name="kickPseudo">Kicker %1$s</string>
     <string name="motive">Motif :</string>
@@ -177,6 +177,10 @@
     <string name="selectMotive">Sélectionnez un motif…</string>
     <string name="noKnownResponseFromJVC">La réponse ne peut pas être analysée, veuillez ré-essayer.</string>
     <string name="allMessagesAreFromIgnoredPseudo">Tous les messages de cette page proviennent de pseudos ignorés.</string>
+    <string name="separationBetweenMessagesTitle">Séparation entre les messages</string>
+    <string name="blackThemeOnlySummary">(uniquement pour le thème noir)</string>
+    <string name="styleModeForum">Apparence (mode forum)</string>
+    <string name="advanced">Avancé</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

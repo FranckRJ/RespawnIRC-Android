@@ -18,11 +18,13 @@
     <string name="settingsShowSignatureModeForum" translatable="false">settings.showSignatureModeForum</string>
     <string name="settingsShowAvatarModeForum" translatable="false">settings.showAvatarAdvModeForum</string>
     <string name="settingsEnableCardDesignModeForum" translatable="false">settings.enableCardDesignModeForum</string>
+    <string name="settingsSeparationBetweenMessagesBlackThemeModeForum" translatable="false">settings.separationBetweenMessagesBlackThemeModeForum</string>
     <string name="settingsHideUglyImages" translatable="false">settings.hideUglyImages</string>
     <string name="settingsThemeUsed" translatable="false">settings.themeUsed</string>
     <string name="subScreenSettingsStyle" translatable="false">subScreenSettings.style</string>
     <string name="subScreenSettingsImageLink" translatable="false">subScreenSettings.imageLink</string>
     <string name="subScreenSettingsBehaviour" translatable="false">subScreenSettings.behaviour</string>
+    <string name="subScreenSettingsAdvanced" translatable="false">subScreenSettings.advanced</string>
     <string name="settingsForumAlternateBackgroundColor" translatable="false">settings.forumAlternateBackgroundColor</string>
     <string name="settingsEnableSmoothScroll" translatable="false">settings.enableSmoothScroll</string>
     <string name="settingsEnableGoToBottomOnLoad" translatable="false">settings.enableGoToBottomOnLoad</string>

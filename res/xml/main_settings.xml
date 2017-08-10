@@ -15,6 +15,10 @@
             android:key="@string/subScreenSettingsBehaviour"
             android:persistent="false"
             android:title="@string/behaviour"/>
+        <Preference
+            android:key="@string/subScreenSettingsAdvanced"
+            android:persistent="false"
+            android:title="@string/advanced"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/information">

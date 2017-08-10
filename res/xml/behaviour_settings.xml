@@ -16,10 +16,6 @@
             android:title="@string/enableGoToBottomOnLoadTitle"
             android:summary="@string/enableGoToBottomOnLoadSummary"/>
         <CheckBoxPreference
-            android:key="@string/settingsTransformStickerToSmiley"
-            android:title="@string/transformStickerToSmileyTitle"
-            android:summary="@string/transformStickerToSmileySummary"/>
-        <CheckBoxPreference
             android:key="@string/settingsDefaultShowSpoilVal"
             android:title="@string/defaultShowSpoilValTitle"/>
         <CheckBoxPreference
