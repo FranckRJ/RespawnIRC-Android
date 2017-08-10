@@ -746,7 +746,8 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
     public void getMessageOfPseudoClicked(JVCParser.MessageInfos messageClicked) {
         Bundle argForFrag = new Bundle();
         MessageContextMenuDialogFragment messageMenuDialogFragment = new MessageContextMenuDialogFragment();
-        argForFrag.putString(MessageContextMenuDialogFragment.ARG_PSEUDO, messageClicked.pseudo);
+        argForFrag.putString(MessageContextMenuDialogFragment.ARG_PSEUDO_MESSAGE, messageClicked.pseudo);
+        argForFrag.putString(MessageContextMenuDialogFragment.ARG_PSEUDO_USER, pseudoOfUser);
         argForFrag.putString(MessageContextMenuDialogFragment.ARG_MESSAGE_ID, String.valueOf(messageClicked.id));
         argForFrag.putBoolean(MessageContextMenuDialogFragment.ARG_USE_INTERNAL_BROWSER, useInternalNavigatorForDefaultOpening);
         argForFrag.putString(MessageContextMenuDialogFragment.ARG_MESSAGE_CONTENT, messageClicked.messageNotParsed);

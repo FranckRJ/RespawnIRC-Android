@@ -181,6 +181,10 @@
     <string name="blackThemeOnlySummary">(uniquement pour le thème noir)</string>
     <string name="styleModeForum">Apparence (mode forum)</string>
     <string name="advanced">Avancé</string>
+    <string name="ignore">Ignorer</string>
+    <string name="errorYouCantIgnoreYourself">Erreur, vous ne pouvez pas vous ignorer.</string>
+    <string name="pseudoIgnored">%1$s ignoré !</string>
+    <string name="pseudoIsAlreadyIgnored">Erreur, le pseudo est déjà ignoré.</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
@@ -190,6 +194,7 @@
     <string-array name="choicesForMessageContextMenu">
         <item>@string/openCDV</item>
         <item>@string/sendMP</item>
+        <item>@string/ignore</item>
         <item>@string/copyPseudo</item>
         <item>@string/copyPermalink</item>
         <item>@string/selectText</item>

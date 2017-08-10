@@ -62,6 +62,7 @@ public class PrefsManager {
         addStringPref(StringPref.Names.OLD_URL_FOR_TOPIC, "pref.oldUrlForTopic", "");
         addStringPref(StringPref.Names.LAST_TOPIC_TITLE_SENDED, "pref.lastTopicTitleSended", "");
         addStringPref(StringPref.Names.LAST_TOPIC_CONTENT_SENDED, "pref.lastTopicContentSended", "");
+        addStringPref(StringPref.Names.IGNORED_PSEUDOS_IN_LC_LIST, "pref.ignoredPseudosInLCList", "");
 
         addLongPref(LongPref.Names.OLD_LAST_ID_OF_MESSAGE, "pref.oldLastIdOfMessage", 0);
 
@@ -310,7 +311,8 @@ public class PrefsManager {
             SHOW_NOELSHACK_IMAGE,
             REFRESH_TOPIC_TIME,
             MAX_NUMBER_OF_MESSAGES, INITIAL_NUMBER_OF_MESSAGES,
-            THEME_USED
+            THEME_USED,
+            IGNORED_PSEUDOS_IN_LC_LIST
         }
     }
 

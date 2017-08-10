@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.franckrj.respawnirc.utils.IgnoreListTool;
 import com.franckrj.respawnirc.NetworkBroadcastReceiver;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.jvctopic.jvctopicgetters.JVCTopicModeForumGetter;
@@ -40,10 +41,8 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
                 for (JVCParser.MessageInfos thisMessageInfo : listOfNewMessages) {
                     String pseudoOfMessageInLC = thisMessageInfo.pseudo.toLowerCase();
 
-                    if (!listOfIgnoredPseudosInLC.isEmpty() && !pseudoOfMessageInLC.equals(pseudoOfUserInLC)) {
-                        if (listOfIgnoredPseudosInLC.contains(pseudoOfMessageInLC)) {
-                            continue;
-                        }
+                    if (!pseudoOfMessageInLC.equals(pseudoOfUserInLC) && IgnoreListTool.pseudoInLCIsIgnored(pseudoOfMessageInLC)) {
+                        continue;
                     }
 
                     adapterForTopic.addItem(thisMessageInfo, true);

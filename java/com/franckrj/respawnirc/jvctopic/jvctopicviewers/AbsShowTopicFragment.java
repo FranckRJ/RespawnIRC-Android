@@ -22,7 +22,6 @@ import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     public static final String ARG_TOPIC_LINK = "com.franckrj.respawnirc.topic_link";
@@ -42,7 +41,6 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected NewModeNeededListener listenerForNewModeNeeded = null;
     protected SwipeRefreshLayout swipeRefresh = null;
     protected ShareActionProvider shareAction = null;
-    protected HashSet<String> listOfIgnoredPseudosInLC = new HashSet<>();
     protected boolean allMessagesShowedAreFromIgnoredPseudos = false;
     protected int showNoelshackImageAdv = 1;
     protected boolean showRefreshWhenMessagesShowed = true;

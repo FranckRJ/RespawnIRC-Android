@@ -9,22 +9,26 @@ import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.utils.IgnoreListTool;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Utils;
 
 public class MessageContextMenuDialogFragment extends DialogFragment {
-    public static final String ARG_PSEUDO = "com.franckrj.respawnirc.messagecontextmenudialogfragment.pseudo";
+    public static final String ARG_PSEUDO_MESSAGE = "com.franckrj.respawnirc.messagecontextmenudialogfragment.pseudo_message";
+    public static final String ARG_PSEUDO_USER = "com.franckrj.respawnirc.messagecontextmenudialogfragment.pseudo_user";
     public static final String ARG_MESSAGE_ID = "com.franckrj.respawnirc.messagecontextmenudialogfragment.message_id";
     public static final String ARG_USE_INTERNAL_BROWSER = "com.franckrj.respawnirc.messagecontextmenudialogfragment.use_internal_browser";
     public static final String ARG_MESSAGE_CONTENT = "com.franckrj.respawnirc.messagecontextmenudialogfragment.message_content";
 
     private static final int POS_OPEN_CDV = 0;
     private static final int POS_SEND_MP = 1;
-    private static final int POS_COPY_PSEUDO = 2;
-    private static final int POS_COPY_PERMALINK = 3;
-    private static final int POS_SELECT_TEXT = 4;
+    private static final int POS_IGNORE = 2;
+    private static final int POS_COPY_PSEUDO = 3;
+    private static final int POS_COPY_PERMALINK = 4;
+    private static final int POS_SELECT_TEXT = 5;
 
     private String pseudoOfMessage;
+    private String pseudoOfUser;
     private String idOfMessage;
     private boolean useInternalBrowser;
     private String messageNotParsed;
@@ -37,12 +41,14 @@ public class MessageContextMenuDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         if (currentArgs != null) {
-            pseudoOfMessage = currentArgs.getString(ARG_PSEUDO, getString(R.string.waitingText));
+            pseudoOfMessage = currentArgs.getString(ARG_PSEUDO_MESSAGE, getString(R.string.waitingText));
+            pseudoOfUser = currentArgs.getString(ARG_PSEUDO_USER, "");
             idOfMessage = currentArgs.getString(ARG_MESSAGE_ID, "0");
             useInternalBrowser = currentArgs.getBoolean(ARG_USE_INTERNAL_BROWSER, false);
             messageNotParsed = currentArgs.getString(ARG_MESSAGE_CONTENT, "");
         } else {
             pseudoOfMessage = getString(R.string.waitingText);
+            pseudoOfUser = "";
             idOfMessage = "0";
             useInternalBrowser = false;
             messageNotParsed = "";
@@ -64,6 +70,19 @@ public class MessageContextMenuDialogFragment extends DialogFragment {
                     }
                     case POS_SEND_MP: {
                         Utils.openLinkInInternalNavigator("http://www.jeuxvideo.com/messages-prives/nouveau.php?all_dest=" + pseudoOfMessage, getActivity());
+                        break;
+                    }
+                    case POS_IGNORE: {
+                        if (!pseudoOfUser.toLowerCase().equals(pseudoOfMessage.toLowerCase())) {
+                            if (IgnoreListTool.addPseudoToIgnoredList(pseudoOfMessage)) {
+                                IgnoreListTool.saveListOfIgnoredPseudos();
+                                Toast.makeText(getActivity(), getString(R.string.pseudoIgnored, pseudoOfMessage), Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getActivity(), R.string.pseudoIsAlreadyIgnored, Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(getActivity(), R.string.errorYouCantIgnoreYourself, Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     }
                     case POS_COPY_PSEUDO: {
