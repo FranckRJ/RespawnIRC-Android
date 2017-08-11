@@ -263,6 +263,13 @@ public class JVCForumListAdapter extends BaseExpandableListAdapter implements Ex
             ForumInfo tmpForumInfo = new ForumInfo();
             tmpForumInfo.isTitle = false;
             tmpForumInfo.isForum = true;
+            tmpForumInfo.forum = new JVCParser.NameAndLink("Nintendo Switch", "http://www.jeuxvideo.com/forums/0-3007199-0-1-0-1-0-nintendo-switch.htm");
+            baseListOfForums.add(tmpForumInfo);
+        }
+        {
+            ForumInfo tmpForumInfo = new ForumInfo();
+            tmpForumInfo.isTitle = false;
+            tmpForumInfo.isForum = true;
             tmpForumInfo.forum = new JVCParser.NameAndLink("Wii U", "http://www.jeuxvideo.com/forums/0-1000011-0-1-0-1-0-wii-u.htm");
             baseListOfForums.add(tmpForumInfo);
         }
@@ -279,13 +286,6 @@ public class JVCForumListAdapter extends BaseExpandableListAdapter implements Ex
             tmpForumInfo.isTitle = false;
             tmpForumInfo.isForum = true;
             tmpForumInfo.forum = new JVCParser.NameAndLink("3DS", "http://www.jeuxvideo.com/forums/0-1000039-0-1-0-1-0-nintendo-3ds.htm");
-            baseListOfForums.add(tmpForumInfo);
-        }
-        {
-            ForumInfo tmpForumInfo = new ForumInfo();
-            tmpForumInfo.isTitle = false;
-            tmpForumInfo.isForum = true;
-            tmpForumInfo.forum = new JVCParser.NameAndLink("Nintendo Switch", "http://www.jeuxvideo.com/forums/0-3007199-0-1-0-1-0-nintendo-switch.htm");
             baseListOfForums.add(tmpForumInfo);
         }
         {
@@ -364,6 +364,13 @@ public class JVCForumListAdapter extends BaseExpandableListAdapter implements Ex
             tmpForumInfo.subForumList.add(new JVCParser.NameAndLink("Philosophie", "http://www.jeuxvideo.com/forums/0-68-0-1-0-1-0-philosophie.htm"));
             tmpForumInfo.subForumList.add(new JVCParser.NameAndLink("Politique", "http://www.jeuxvideo.com/forums/0-55-0-1-0-1-0-politique.htm"));
             tmpForumInfo.subForumList.add(new JVCParser.NameAndLink("Environnement & Nature", "http://www.jeuxvideo.com/forums/0-1000001-0-1-0-1-0-environnement-nature.htm"));
+            baseListOfForums.add(tmpForumInfo);
+        }
+        {
+            ForumInfo tmpForumInfo = new ForumInfo();
+            tmpForumInfo.isTitle = false;
+            tmpForumInfo.isForum = true;
+            tmpForumInfo.forum = new JVCParser.NameAndLink("Finance", "http://www.jeuxvideo.com/forums/0-3011927-0-1-0-1-0-finance.htm");
             baseListOfForums.add(tmpForumInfo);
         }
         {
