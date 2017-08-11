@@ -78,7 +78,7 @@ public final class JVCParser {
     private static final Pattern smileyPattern = Pattern.compile("<img src=\"http(s)?://image\\.jeuxvideo\\.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-code=\"([^\"]*)\" title=\"[^\"]*\" [^>]*>");
     private static final Pattern youtubeVideoPattern = Pattern.compile("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe .*? src=\"http(s)?://www\\.youtube\\.com/embed/([^\"]*)\"[^>]*></iframe></div></div>");
     private static final Pattern surroundedBlockquotePattern = Pattern.compile("(<br /> *)*(<(/)?blockquote>)( *<br />)*");
-    private static final Pattern noelshackImagePattern = Pattern.compile("<a href=\"([^\"]*)\" target=\"_blank\"><img class=\"img-shack\" .*? src=\"http(s)?://([^\"]*)\" [^>]*></a>");
+    private static final Pattern noelshackImagePattern = Pattern.compile("<span class=\"JvCare[^>]*><img class=\"img-shack\".*?src=\"http(s)?://([^\"]*)\" alt=\"([^\"]*)\"[^>]*></span>");
     private static final Pattern emptySearchPattern = Pattern.compile("<span style=\"[^\"]*\">[ \\n\\r]*Aucune réponse pour votre recherche ![ \\n\\r]*</span>");
     private static final Pattern userCanPostAsModoPattern = Pattern.compile("<select class=\"select-user-post\" id=\"form_alias_rang\" name=\"form_alias_rang\">((.*?)(?=<option value=\"2\">)|(.*?)(?=</select>))<option value=\"2\">", Pattern.DOTALL);
     private static final Pattern uglyImagesNamePattern = Pattern.compile("issou|risi|rizi|jesus|picsart|chancla|larry");
@@ -825,9 +825,9 @@ public final class JVCParser {
         }
 
         if (settings.showNoelshackImages) {
-            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 1, "<a href=\"", "\"><img src=\"http://", 3, "\"/></a>");
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 3, "<a href=\"", "\"><img src=\"http://", 2, "\"/></a>");
         } else {
-            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 3, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         }
 
         if (containSpoil) {
@@ -875,7 +875,7 @@ public final class JVCParser {
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcLinkPattern, 1, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longLinkPattern, 1, "", "", null, null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 1, "", "", null, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 3, "", "", null, null);
         ToolForParsing.removeOverlySpoils(messageInBuilder);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "&lt;spoil&gt;", "&lt;/spoil&gt;", new RemoveFirstsAndLastsP(), null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p>&lt;spoil&gt;", "&lt;/spoil&gt;</p>",  new RemoveFirstsAndLastsP(), null);
