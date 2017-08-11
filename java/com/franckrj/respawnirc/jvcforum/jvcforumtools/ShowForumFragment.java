@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.franckrj.respawnirc.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.utils.IgnoreListTool;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
 
@@ -23,13 +24,17 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     public static final String ARG_IS_IN_SEARCH_MODE = "com.franckrj.respawnirc.ARG_IS_IN_SEARCH_MODE";
 
     private static final String SAVE_ALL_TOPICS_SHOWED = "saveAllCurrentTopicsShowed";
+    private static final String SAVE_TOPICS_ARE_FROM_IGNORED_PSEUDOS = "saveTopicsAreFromIgnoredPseudos";
 
+    private String pseudoOfUserInLC = "";
     private SwipeRefreshLayout swipeRefresh = null;
     private TextView errorBackgroundMessage = null;
     private NewTopicWantRead listenerForNewTopicWantRead = null;
     private JVCForumGetter getterForForum = null;
     private ListView jvcTopicList = null;
     private JVCForumAdapter adapterForForum;
+    private boolean allTopicsShowedAreFromIgnoredPseudos = false;
+    private boolean ignoreTopicToo = true;
     private boolean clearTopicsOnRefresh = true;
     private boolean isInErrorMode = false;
 
@@ -72,6 +77,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         @Override
         public void getNewTopics(ArrayList<JVCParser.TopicInfos> listOfNewTopics) {
             if (getterForForum.getIsInSearchMode() && getterForForum.getLastTypeOfError() == JVCForumGetter.ErrorType.SEARCH_IS_EMPTY_AND_ITS_NOT_A_FAIL) {
+                allTopicsShowedAreFromIgnoredPseudos = false;
                 errorBackgroundMessage.setText(R.string.noResultFound);
                 errorBackgroundMessage.setVisibility(View.VISIBLE);
             } else if (!listOfNewTopics.isEmpty()) {
@@ -79,11 +85,29 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
                 adapterForForum.removeAllItems();
 
                 for (JVCParser.TopicInfos thisTopicInfo : listOfNewTopics) {
+                    if (ignoreTopicToo) {
+                        String pseudoOfTopicInLC = thisTopicInfo.author.toLowerCase();
+
+                        if (!pseudoOfTopicInLC.equals(pseudoOfUserInLC) && IgnoreListTool.pseudoInLCIsIgnored(pseudoOfTopicInLC)) {
+                            continue;
+                        }
+                    }
+
                     adapterForForum.addItem(thisTopicInfo);
                 }
 
                 adapterForForum.updateAllItems();
+
+                if (adapterForForum.getAllItems().isEmpty()) {
+                    allTopicsShowedAreFromIgnoredPseudos = true;
+                    errorBackgroundMessage.setText(R.string.allTopicsAreFromIgnoredPseudo);
+                    errorBackgroundMessage.setVisibility(View.VISIBLE);
+                } else {
+                    allTopicsShowedAreFromIgnoredPseudos = false;
+                }
             } else {
+                allTopicsShowedAreFromIgnoredPseudos = false;
+
                 if (!isInErrorMode) {
                     getterForForum.reloadForum(true);
                     isInErrorMode = true;
@@ -122,6 +146,8 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     private void reloadSettings() {
         adapterForForum.setAlternateBackgroundColor(PrefsManager.getBool(PrefsManager.BoolPref.Names.FORUM_ALTERNATE_BACKGROUND));
         getterForForum.setCookieListInAString(PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
+        pseudoOfUserInLC = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER).toLowerCase();
+        ignoreTopicToo = PrefsManager.getBool(PrefsManager.BoolPref.Names.IGNORE_TOPIC_TOO);
         clearTopicsOnRefresh = true;
     }
 
@@ -219,6 +245,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
 
         if (savedInstanceState != null) {
             ArrayList<JVCParser.TopicInfos> allCurrentTopicsShowed = savedInstanceState.getParcelableArrayList(SAVE_ALL_TOPICS_SHOWED);
+            allTopicsShowedAreFromIgnoredPseudos = savedInstanceState.getBoolean(SAVE_TOPICS_ARE_FROM_IGNORED_PSEUDOS, false);
             getterForForum.loadFromBundle(savedInstanceState);
             swipeRefresh.setEnabled(!getterForForum.getIsInSearchMode());
 
@@ -230,9 +257,14 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
 
             adapterForForum.updateAllItems();
 
-            if (getterForForum.getIsInSearchMode() && adapterForForum.getAllItems().isEmpty() && getterForForum.getLastTypeOfError() == JVCForumGetter.ErrorType.SEARCH_IS_EMPTY_AND_ITS_NOT_A_FAIL) {
-                errorBackgroundMessage.setText(R.string.noResultFound);
-                errorBackgroundMessage.setVisibility(View.VISIBLE);
+            if (adapterForForum.getAllItems().isEmpty()) {
+                if (getterForForum.getIsInSearchMode() && getterForForum.getLastTypeOfError() == JVCForumGetter.ErrorType.SEARCH_IS_EMPTY_AND_ITS_NOT_A_FAIL) {
+                    errorBackgroundMessage.setText(R.string.noResultFound);
+                    errorBackgroundMessage.setVisibility(View.VISIBLE);
+                } else if (!getterForForum.getIsInSearchMode() && allTopicsShowedAreFromIgnoredPseudos) {
+                    errorBackgroundMessage.setText(R.string.allTopicsAreFromIgnoredPseudo);
+                    errorBackgroundMessage.setVisibility(View.VISIBLE);
+                }
             }
         } else {
             Bundle currentArgs = getArguments();
@@ -258,7 +290,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
             adapterForForum.updateAllItems();
         }
 
-        if (adapterForForum.getAllItems().isEmpty() &&
+        if (adapterForForum.getAllItems().isEmpty() && !allTopicsShowedAreFromIgnoredPseudos &&
                 (!getterForForum.getIsInSearchMode() || (getterForForum.getIsInSearchMode() && getterForForum.getLastTypeOfError() != JVCForumGetter.ErrorType.SEARCH_IS_EMPTY_AND_ITS_NOT_A_FAIL))) {
             getterForForum.reloadForum();
         }
@@ -274,6 +306,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(SAVE_ALL_TOPICS_SHOWED, adapterForForum.getAllItems());
+        outState.putBoolean(SAVE_TOPICS_ARE_FROM_IGNORED_PSEUDOS, allTopicsShowedAreFromIgnoredPseudos);
         getterForForum.saveToBundle(outState);
     }
 

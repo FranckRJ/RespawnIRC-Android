@@ -87,6 +87,7 @@ public class PrefsManager {
         addBoolPref(BoolPref.Names.DEFAULT_SHOW_SPOIL_VAL, currentContext.getString(R.string.settingsDefaultShowSpoilVal), false);
         addBoolPref(BoolPref.Names.MARK_AUTHOR_PSEUDO_MODE_FORUM, currentContext.getString(R.string.settingsMarkAuthorPseudoModeForum), false);
         addBoolPref(BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE, currentContext.getString(R.string.settingsPostAsModoWhenPossible), true);
+        addBoolPref(BoolPref.Names.IGNORE_TOPIC_TOO, currentContext.getString(R.string.settingsIgnoreTopicToo), true);
 
         addStringPref(StringPref.Names.MAX_NUMBER_OF_OVERLY_QUOTE, currentContext.getString(R.string.settingsMaxNumberOfOverlyQuote), "2", 0, 15);
         addStringPref(StringPref.Names.SHOW_AVATAR_MODE_FORUM, currentContext.getString(R.string.settingsShowAvatarModeForum), "1");
@@ -256,7 +257,8 @@ public class PrefsManager {
             ENABLE_GO_TO_BOTTOM_ON_LOAD,
             DEFAULT_SHOW_SPOIL_VAL,
             MARK_AUTHOR_PSEUDO_MODE_FORUM,
-            USER_IS_MODO, POST_AS_MODO_WHEN_POSSIBLE
+            USER_IS_MODO, POST_AS_MODO_WHEN_POSSIBLE,
+            IGNORE_TOPIC_TOO
         }
     }
 

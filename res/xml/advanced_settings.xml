@@ -7,6 +7,9 @@
             android:key="@string/settingsTransformStickerToSmiley"
             android:title="@string/transformStickerToSmileyTitle"
             android:summary="@string/transformStickerToSmileySummary"/>
+        <CheckBoxPreference
+            android:key="@string/settingsIgnoreTopicToo"
+            android:title="@string/ignoreTopicTooTitle"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/styleModeForum">

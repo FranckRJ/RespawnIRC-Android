@@ -177,6 +177,7 @@
     <string name="selectMotive">Sélectionnez un motif…</string>
     <string name="noKnownResponseFromJVC">La réponse ne peut pas être analysée, veuillez ré-essayer.</string>
     <string name="allMessagesAreFromIgnoredPseudo">Tous les messages de cette page proviennent de pseudos ignorés.</string>
+    <string name="allTopicsAreFromIgnoredPseudo">Tous les topics de cette page proviennent de pseudos ignorés.</string>
     <string name="separationBetweenMessagesTitle">Séparation entre les messages</string>
     <string name="blackThemeOnlySummary">(uniquement pour le thème noir)</string>
     <string name="styleModeForum">Apparence (mode forum)</string>
@@ -185,6 +186,7 @@
     <string name="errorYouCantIgnoreYourself">Erreur, vous ne pouvez pas vous ignorer.</string>
     <string name="pseudoIgnored">%1$s ignoré !</string>
     <string name="pseudoIsAlreadyIgnored">Erreur, le pseudo est déjà ignoré.</string>
+    <string name="ignoreTopicTooTitle">Cacher les topics des pseudos ignorés</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
