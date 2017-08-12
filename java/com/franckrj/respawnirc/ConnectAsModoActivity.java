@@ -141,6 +141,11 @@ public class ConnectAsModoActivity extends ThemedActivity {
                         modoPasswordText.setVisibility(View.VISIBLE);
                         validateButton.setVisibility(View.VISIBLE);
                         return;
+                    } else if (JVCParser.getErrorMessageWhenModoConnect(pageContent).isEmpty()) {
+                        PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, true);
+                        PrefsManager.applyChanges();
+                        Toast.makeText(ConnectAsModoActivity.this, R.string.youAreAlreadyConnectedAsModo, Toast.LENGTH_SHORT).show();
+                        finish();
                     }
                 } else {
                     String errorWhenConnecting = JVCParser.getErrorMessageWhenModoConnect(pageContent);

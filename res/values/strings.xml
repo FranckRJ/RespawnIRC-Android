@@ -189,6 +189,7 @@
     <string name="ignoreTopicTooTitle">Cacher les topics des pseudos ignorés</string>
     <string name="ignoreList">Liste des ignorés</string>
     <string name="delete">Supprimer</string>
+    <string name="youAreAlreadyConnectedAsModo">Vous êtes déjà connecté à la modération.</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
