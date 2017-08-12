@@ -24,12 +24,12 @@ public class HelpFirstLaunchDialogFragment extends DialogFragment {
                         dialog.dismiss();
                     }
                 }).setPositiveButton(R.string.connectToJVC, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int i) {
-                dialog.dismiss();
-                startActivity(new Intent(getActivity(), ConnectActivity.class));
-            }
-        });
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        dialog.dismiss();
+                        startActivity(new Intent(getActivity(), ConnectActivity.class));
+                    }
+                });
         return builder.create();
     }
 }

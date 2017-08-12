@@ -425,16 +425,14 @@ public class InsertStuffDialogFragment extends DialogFragment {
         URLSpan[] urlSpanArray = spannable.getSpans(0, spannable.length(), URLSpan.class);
         for (final URLSpan urlSpan : urlSpanArray) {
             Utils.replaceSpanByAnotherSpan(spannable, urlSpan, new LongClickableSpan() {
-                private String url = urlSpan.getURL();
-
                 @Override
                 public void onLongClick(View view) {
                     if (getActivity() instanceof StuffInserted) {
-                        if (url.startsWith("sticker_")) {
-                            String newSticker = "[[sticker:p/" + url.replace("sticker_", "").replace("_", "-") + "]]";
+                        if (urlSpan.getURL().startsWith("sticker_")) {
+                            String newSticker = "[[sticker:p/" + urlSpan.getURL().replace("sticker_", "").replace("_", "-") + "]]";
                             ((StuffInserted) getActivity()).getStringInserted(newSticker, 0);
                         } else {
-                            sendWhichInsertIsNeeded(url, (StuffInserted) getActivity());
+                            sendWhichInsertIsNeeded(urlSpan.getURL(), (StuffInserted) getActivity());
                         }
                     }
                 }

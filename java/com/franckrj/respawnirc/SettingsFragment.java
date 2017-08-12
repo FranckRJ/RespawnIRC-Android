@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -35,6 +36,9 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                     return true;
                 } else if (preference.getKey().equals(getString(R.string.subScreenSettingsAdvanced))) {
                     ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.advanced_settings);
+                    return true;
+                } else if (preference.getKey().equals(getString(R.string.subScreenSettingsIgnoreList))) {
+                    startActivity(new Intent(getActivity(), ManageIgnoreListActivity.class));
                     return true;
                 } else if (preference.getKey().equals(getString(R.string.subScreenSettingsHelp))) {
                     HelpSettingsDialogFragment helpDialogFragment = new HelpSettingsDialogFragment();

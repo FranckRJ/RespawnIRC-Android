@@ -281,17 +281,16 @@ public class JVCTopicAdapter extends BaseAdapter {
         URLSpan[] urlSpanArray = spannable.getSpans(0, spannable.length(), URLSpan.class);
         for (final URLSpan urlSpan : urlSpanArray) {
             Utils.replaceSpanByAnotherSpan(spannable, urlSpan, new LongClickableSpan() {
-                private String url = urlSpan.getURL();
                 @Override
                 public void onClick(View view) {
                     if (urlCLickedListener != null) {
-                        urlCLickedListener.getClickedURL(url, false);
+                        urlCLickedListener.getClickedURL(urlSpan.getURL(), false);
                     }
                 }
                 @Override
                 public void onLongClick(View v) {
                     if (urlCLickedListener != null) {
-                        urlCLickedListener.getClickedURL(url, true);
+                        urlCLickedListener.getClickedURL(urlSpan.getURL(), true);
                     }
                 }
             });
@@ -365,11 +364,10 @@ public class JVCTopicAdapter extends BaseAdapter {
             convertView.setOnClickListener(null);
             if (currentContent.messageLineContent != null) {
                 View.OnClickListener infoClickedListener = new View.OnClickListener() {
-                    int messageNumberInList = realPosition;
                     @Override
                     public void onClick(View v) {
                         if (pseudoCLickedListener != null) {
-                            pseudoCLickedListener.getMessageOfPseudoClicked(listOfMessages.get(messageNumberInList));
+                            pseudoCLickedListener.getMessageOfPseudoClicked(listOfMessages.get(realPosition));
                         }
                     }
                 };

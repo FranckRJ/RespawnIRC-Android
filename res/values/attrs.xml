@@ -13,4 +13,5 @@
     <attr name="themedTextFormatGeneral" format="reference"/>
     <attr name="themedContentSendIcon" format="reference"/>
     <attr name="themedDividerColor" format="reference"/>
+    <attr name="themedClearIcon" format="reference"/>
 </resources>

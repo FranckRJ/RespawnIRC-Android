@@ -187,6 +187,8 @@
     <string name="pseudoIgnored">%1$s ignoré !</string>
     <string name="pseudoIsAlreadyIgnored">Erreur, le pseudo est déjà ignoré.</string>
     <string name="ignoreTopicTooTitle">Cacher les topics des pseudos ignorés</string>
+    <string name="ignoreList">Liste des ignorés</string>
+    <string name="delete">Supprimer</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

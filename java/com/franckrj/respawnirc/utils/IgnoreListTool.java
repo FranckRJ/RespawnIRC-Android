@@ -22,6 +22,10 @@ public class IgnoreListTool {
         return listOfIgnoredPseudosInLC.add(pseudoToAdd.toLowerCase());
     }
 
+    public static boolean removePseudoFromIgnoredList(String pseudoToRemove) {
+        return listOfIgnoredPseudosInLC.remove(pseudoToRemove.toLowerCase());
+    }
+
     public static void loadListOfIgnoredPseudos() {
         String listOfIgnoredPseudosInLCInAString = PrefsManager.getString(PrefsManager.StringPref.Names.IGNORED_PSEUDOS_IN_LC_LIST);
 
@@ -36,5 +40,9 @@ public class IgnoreListTool {
         String listOfIgnoredPseudosInLCInAString = TextUtils.join(",", listOfIgnoredPseudosInLC);
         PrefsManager.putString(PrefsManager.StringPref.Names.IGNORED_PSEUDOS_IN_LC_LIST, listOfIgnoredPseudosInLCInAString);
         PrefsManager.applyChanges();
+    }
+
+    public static String[] getListOfIgnoredPseudosInLCAsArray() {
+        return listOfIgnoredPseudosInLC.toArray(new String[listOfIgnoredPseudosInLC.size()]);
     }
 }

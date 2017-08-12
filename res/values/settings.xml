@@ -25,6 +25,7 @@
     <string name="subScreenSettingsImageLink" translatable="false">subScreenSettings.imageLink</string>
     <string name="subScreenSettingsBehaviour" translatable="false">subScreenSettings.behaviour</string>
     <string name="subScreenSettingsAdvanced" translatable="false">subScreenSettings.advanced</string>
+    <string name="subScreenSettingsIgnoreList" translatable="false">subScreenSettings.ignoreList</string>
     <string name="settingsForumAlternateBackgroundColor" translatable="false">settings.forumAlternateBackgroundColor</string>
     <string name="settingsEnableSmoothScroll" translatable="false">settings.enableSmoothScroll</string>
     <string name="settingsEnableGoToBottomOnLoad" translatable="false">settings.enableGoToBottomOnLoad</string>

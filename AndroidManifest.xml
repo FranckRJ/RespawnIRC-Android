@@ -73,6 +73,10 @@
             android:label="@string/preference">
         </activity>
         <activity
+            android:name=".ManageIgnoreListActivity"
+            android:label="@string/ignoreList">
+        </activity>
+        <activity
             android:name=".WebNavigatorActivity"
             android:label="@string/app_name">
         </activity>
