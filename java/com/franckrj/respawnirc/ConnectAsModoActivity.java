@@ -146,6 +146,7 @@ public class ConnectAsModoActivity extends ThemedActivity {
                         PrefsManager.applyChanges();
                         Toast.makeText(ConnectAsModoActivity.this, R.string.youAreAlreadyConnectedAsModo, Toast.LENGTH_SHORT).show();
                         finish();
+                        return;
                     }
                 } else {
                     String errorWhenConnecting = JVCParser.getErrorMessageWhenModoConnect(pageContent);
