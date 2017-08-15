@@ -165,9 +165,11 @@ public class PageNavigationUtil {
             AbsShowSomethingFragment currentFragment = adapterForPagerView.getFragment(position);
             if (currentFragment != null) {
                 ((PageNavigationFunctions) parentActivity).doThingsBeforeLoadOnFragment(currentFragment);
-                currentFragment.setGoToBottomAtPageLoading(goToBottomOnNextLoad);
+                if (goToBottomOnNextLoad) {
+                    currentFragment.goToBottomAtPageLoading();
+                    goToBottomOnNextLoad = false;
+                }
                 currentFragment.setPageLink(((PageNavigationFunctions) parentActivity).setShowedPageNumberForThisLink(currentLink, position + 1));
-                goToBottomOnNextLoad = false;
             } else {
                 loadNeedToBeDoneOnPageCreate = true;
             }
@@ -289,8 +291,10 @@ public class PageNavigationUtil {
                 if (loadNeedToBeDoneOnPageCreate && position == pagerView.getCurrentItem() && !currentLink.isEmpty()) {
                     AbsShowSomethingFragment tmpFragment = ((PageNavigationFunctions) parentActivity).createNewFragmentForRead(((PageNavigationFunctions) parentActivity).setShowedPageNumberForThisLink(currentLink, position + 1));
                     ((PageNavigationFunctions) parentActivity).doThingsBeforeLoadOnFragment(tmpFragment);
-                    tmpFragment.setGoToBottomAtPageLoading(goToBottomOnNextLoad);
-                    goToBottomOnNextLoad = false;
+                    if (goToBottomOnNextLoad) {
+                        tmpFragment.goToBottomAtPageLoading();
+                        goToBottomOnNextLoad = false;
+                    }
                     loadNeedToBeDoneOnPageCreate = false;
                     return tmpFragment;
                 } else {

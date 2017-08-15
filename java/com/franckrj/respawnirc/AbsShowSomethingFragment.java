@@ -5,8 +5,8 @@ import android.app.Fragment;
 public abstract class AbsShowSomethingFragment extends Fragment {
     protected boolean goToBottomAtPageLoading = false;
 
-    public void setGoToBottomAtPageLoading(boolean newVal) {
-        goToBottomAtPageLoading = newVal;
+    public void goToBottomAtPageLoading() {
+        goToBottomAtPageLoading = true;
     }
 
     public abstract void setPageLink(String newForumPageLink);
