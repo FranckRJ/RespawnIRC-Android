@@ -11,6 +11,9 @@
             android:key="@string/settingsIgnoreTopicToo"
             android:title="@string/ignoreTopicTooTitle"/>
         <CheckBoxPreference
+            android:key="@string/settingsHideTotallyMessagesOfIgnoredPseudos"
+            android:title="@string/hideTotallyMessagesOfIgnoredPseudosTitle"/>
+        <CheckBoxPreference
             android:key="@string/settingsEnableFastRefreshOfImages"
             android:title="@string/enableFastRefreshOfImagesTitle"
             android:summary="@string/enableFastRefreshOfImagesSummary"/>

@@ -42,7 +42,11 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
                     String pseudoOfMessageInLC = thisMessageInfo.pseudo.toLowerCase();
 
                     if (!pseudoOfMessageInLC.equals(pseudoOfUserInLC) && IgnoreListTool.pseudoInLCIsIgnored(pseudoOfMessageInLC)) {
-                        continue;
+                        if (hideTotallyMessagesOfIgnoredPseudos) {
+                            continue;
+                        } else {
+                            thisMessageInfo.pseudoIsBlacklisted = true;
+                        }
                     }
 
                     adapterForTopic.addItem(thisMessageInfo, true);
