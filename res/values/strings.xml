@@ -193,6 +193,7 @@
     <string name="enableFastRefreshOfImagesTitle">Activer l\'affichage rapide des images</string>
     <string name="enableFastRefreshOfImagesSummary">(augmente l\'utilisation des ressources CPU)</string>
     <string name="hideTotallyMessagesOfIgnoredPseudosTitle">Cacher totalement les messages des ignorés</string>
+    <string name="noPseudoIgnoredInList">La liste des pseudos ignorés est vide.</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

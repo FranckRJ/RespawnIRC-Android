@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class ManageIgnoreListActivity extends ThemedActivity {
+    private TextView emptyListMessageText = null;
     private IgnoreListAdapter adapterForIgnoreList = null;
     private ArrayList<String> listOfIgnoredPseudos = new ArrayList<>();
     private boolean listHasChanged = false;
@@ -38,6 +39,10 @@ public class ManageIgnoreListActivity extends ThemedActivity {
             listOfIgnoredPseudos.remove(position);
             adapterForIgnoreList.notifyDataSetChanged();
             listHasChanged = true;
+
+            if (listOfIgnoredPseudos.isEmpty()) {
+                emptyListMessageText.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -58,7 +63,14 @@ public class ManageIgnoreListActivity extends ThemedActivity {
         genrateListOfIgnoredPseudos();
         adapterForIgnoreList = new IgnoreListAdapter(this, listOfIgnoredPseudos);
         ListView ignoreListView = (ListView) findViewById(R.id.ignore_list_manageignorelist);
+        emptyListMessageText = (TextView) findViewById(R.id.text_emptylist_manageignorelist);
         ignoreListView.setAdapter(adapterForIgnoreList);
+
+        if (listOfIgnoredPseudos.isEmpty()) {
+            emptyListMessageText.setVisibility(View.VISIBLE);
+        } else {
+            emptyListMessageText.setVisibility(View.GONE);
+        }
     }
 
     @Override
