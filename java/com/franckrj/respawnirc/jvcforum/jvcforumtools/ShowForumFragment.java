@@ -322,6 +322,6 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     }
 
     public interface NewTopicWantRead {
-        void setReadNewTopic(String newTopicLink, String newTopicName, String pseudoOfAuthor, boolean startAtBottom);
+        void setReadNewTopic(String newTopicLink, String newTopicName, String pseudoOfAuthor, boolean fromLongClick);
     }
 }

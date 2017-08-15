@@ -53,13 +53,13 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
     public static final String EXTRA_TOPIC_NAME = "com.franckrj.respawnirc.EXTRA_TOPIC_NAME";
     public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.EXTRA_FORUM_NAME";
     public static final String EXTRA_PSEUDO_OF_AUTHOR = "com.franckrj.respawnirc.EXTRA_PSEUDO_OF_AUTHOR";
-    public static final String EXTRA_GO_TO_BOTTOM = "com.franckrj.respawnirc.EXTRA_GO_TO_BOTTOM";
     public static final String EXTRA_GO_TO_LAST_PAGE = "com.franckrj.respawnirc.EXTRA_GO_TO_LAST_PAGE";
 
     private static final String SAVE_CURRENT_FORUM_TITLE_FOR_TOPIC = "saveCurrentForumTitleForTopic";
     private static final String SAVE_CURRENT_TOPIC_TITLE_FOR_TOPIC = "saveCurrentTopicTitleForTopic";
     private static final String SAVE_LAST_PAGE = "saveLastPage";
     private static final String SAVE_REASON_OF_LOCK = "saveReasonOfLock";
+    private static final String SAVE_GO_TO_LAST_PAGE_AFTER_LOADING = "saveGoToLastPageAfterLoading";
 
     private JVCParser.ForumAndTopicName currentTitles = new JVCParser.ForumAndTopicName();
     private JVCMessageToTopicSender senderForMessages = null;
@@ -327,7 +327,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
                 }
 
                 if (goToBottomOnLoadIsEnabled) {
-                    pageNavigation.setGoToBottomOnNextLoad(goToLastPageAfterLoading || getIntent().getBooleanExtra(EXTRA_GO_TO_BOTTOM, false));
+                    pageNavigation.setGoToBottomOnNextLoad(goToLastPageAfterLoading);
                 }
                 if (currentTitles.topic == null) {
                     currentTitles.topic = "";
@@ -350,6 +350,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
             currentTitles.topic = savedInstanceState.getString(SAVE_CURRENT_TOPIC_TITLE_FOR_TOPIC, "");
             pageNavigation.setLastPageNumber(savedInstanceState.getInt(SAVE_LAST_PAGE, pageNavigation.getCurrentItemIndex() + 1));
             getNewLockReason(savedInstanceState.getString(SAVE_REASON_OF_LOCK, null));
+            goToLastPageAfterLoading = savedInstanceState.getBoolean(SAVE_GO_TO_LAST_PAGE_AFTER_LOADING, false);
             pageNavigation.notifyDataSetChanged();
 
             senderForMessages.loadFromBundle(savedInstanceState);
@@ -392,6 +393,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         outState.putString(SAVE_CURRENT_TOPIC_TITLE_FOR_TOPIC, currentTitles.topic);
         outState.putInt(SAVE_LAST_PAGE, pageNavigation.getLastPage());
         outState.putString(SAVE_REASON_OF_LOCK, reasonOfLock);
+        outState.putBoolean(SAVE_GO_TO_LAST_PAGE_AFTER_LOADING, goToLastPageAfterLoading);
         senderForMessages.saveToBundle(outState);
     }
 
@@ -568,10 +570,12 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         pageNavigation.updateNavigationButtons();
 
         if (goToLastPageAfterLoading) {
-            if (goToBottomOnLoadIsEnabled) {
-                pageNavigation.setGoToBottomOnNextLoad(true);
+            if (pageNavigation.getCurrentItemIndex() < pageNavigation.getLastPage() - 1) {
+                if (goToBottomOnLoadIsEnabled) {
+                    pageNavigation.setGoToBottomOnNextLoad(true);
+                }
+                pageNavigation.setCurrentItemIndex(pageNavigation.getLastPage() - 1);
             }
-            pageNavigation.setCurrentItemIndex(pageNavigation.getLastPage() - 1);
             goToLastPageAfterLoading = false;
         }
     }

@@ -197,7 +197,7 @@ public class SearchTopicInForumActivity extends ThemedActivity implements ShowFo
     }
 
     @Override
-    public void setReadNewTopic(String newTopicLink, String newTopicName, String pseudoOfAuthor, boolean startAtBottom) {
+    public void setReadNewTopic(String newTopicLink, String newTopicName, String pseudoOfAuthor, boolean fromLongClick) {
         Intent newShowTopicIntent = new Intent(this, ShowTopicActivity.class);
 
         if (newTopicName != null) {
@@ -209,7 +209,7 @@ public class SearchTopicInForumActivity extends ThemedActivity implements ShowFo
         if (!currentForumName.isEmpty() && !currentForumName.equals(getString(R.string.app_name))) {
             newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_FORUM_NAME, currentForumName);
         }
-        newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_GO_TO_BOTTOM, startAtBottom);
+        newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_GO_TO_LAST_PAGE, fromLongClick);
 
         newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_LINK, newTopicLink);
         startActivity(newShowTopicIntent);

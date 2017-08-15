@@ -80,7 +80,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         }
     }
 
-    private boolean readThisTopic(String link, boolean updateForumFragIfNeeded, String topicName, String pseudoOfAuthor, boolean startToBottom, boolean goToLastPage) {
+    private boolean readThisTopic(String link, boolean updateForumFragIfNeeded, String topicName, String pseudoOfAuthor, boolean goToLastPage) {
         if (!JVCParser.getPageNumberForThisTopicLink(link).isEmpty()) {
             Intent newShowTopicIntent = new Intent(this, ShowTopicActivity.class);
 
@@ -97,7 +97,6 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
             if (!currentTitle.equals(getString(R.string.app_name))) {
                 newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_FORUM_NAME, currentTitle);
             }
-            newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_GO_TO_BOTTOM, startToBottom);
             newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_GO_TO_LAST_PAGE, goToLastPage);
 
             newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_LINK, link);
@@ -125,7 +124,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
                 if (readThisForum(link)) {
                     return;
                 }
-            } else if (readThisTopic(link, true, null, null, false, goToLastPage)) {
+            } else if (readThisTopic(link, true, null, null, goToLastPage)) {
                 return;
             }
         }
@@ -307,7 +306,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
                 String newTopicLink = data.getStringExtra(SendTopicToForumActivity.RESULT_EXTRA_TOPIC_LINK_TO_MOVE);
 
                 if (newTopicLink != null) {
-                    readThisTopic(newTopicLink, false, null, null, false, false);
+                    readThisTopic(newTopicLink, false, null, null, false);
                     //onActivityResult est appelé avant onResume, donc il faut contourner le fait que
                     //onResume sera forcément appelé après cette fonction mais avant que ShowTopicActivity soit lancé
                     if (refreshNeededOnNextResume) {
@@ -346,8 +345,8 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     }
 
     @Override
-    public void setReadNewTopic(String newTopicLink, String newTopicName, String pseudoOfAuthor, boolean startAtBottom) {
-        readThisTopic(newTopicLink, false, newTopicName, pseudoOfAuthor, startAtBottom, false);
+    public void setReadNewTopic(String newTopicLink, String newTopicName, String pseudoOfAuthor, boolean fromLongClick) {
+        readThisTopic(newTopicLink, false, newTopicName, pseudoOfAuthor, fromLongClick);
     }
 
     @Override
