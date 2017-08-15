@@ -35,4 +35,5 @@
     <string name="settingsMarkAuthorPseudoModeForum" translatable="false">settings.markAuthorPseudoModeForum</string>
     <string name="settingsPostAsModoWhenPossible" translatable="false">settings.postAsModoWhenPossible</string>
     <string name="settingsIgnoreTopicToo" translatable="false">settings.ignoreTopicToo</string>
+    <string name="settingsEnableFastRefreshOfImages" translatable="false">settings.enableFastRefreshOfImages</string>
 </resources>

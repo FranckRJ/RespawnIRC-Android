@@ -190,6 +190,8 @@
     <string name="ignoreList">Liste des ignorés</string>
     <string name="delete">Supprimer</string>
     <string name="youAreAlreadyConnectedAsModo">Vous êtes déjà connecté à la modération.</string>
+    <string name="enableFastRefreshOfImagesTitle">Activer l\'affichage rapide des images</string>
+    <string name="enableFastRefreshOfImagesSummary">(augmente l\'utilisation des ressources CPU)</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

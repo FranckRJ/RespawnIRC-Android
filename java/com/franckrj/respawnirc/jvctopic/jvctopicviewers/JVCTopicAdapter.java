@@ -60,6 +60,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     private boolean showSignatures = false;
     private boolean showAvatars = false;
     private boolean showSpoilDefault = false;
+    private boolean fastRefreshOfImages = false;
     private String surveyTitle = "";
     private View.OnClickListener onSurveyClickListener = null;
     private float multiplierOfLineSizeForInfoLineIfAvatarIsShowed = 0;
@@ -68,7 +69,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     private final ImageDownloader.DownloadFinished listenerForDownloadFinished = new ImageDownloader.DownloadFinished() {
         @Override
         public void newDownloadFinished(int numberOfDownloadRemaining) {
-            if (numberOfDownloadRemaining == 0) {
+            if (numberOfDownloadRemaining == 0 || fastRefreshOfImages) {
                 notifyDataSetChanged();
             }
         }
@@ -188,6 +189,10 @@ public class JVCTopicAdapter extends BaseAdapter {
 
     public void setShowSpoilDefault(boolean newVal) {
         showSpoilDefault = newVal;
+    }
+
+    public void setFastRefreshOfImages(boolean newVal) {
+        fastRefreshOfImages = newVal;
     }
 
     public void setMultiplierOfLineSizeForInfoLineIfAvatarIsShowed(float newVal) {
