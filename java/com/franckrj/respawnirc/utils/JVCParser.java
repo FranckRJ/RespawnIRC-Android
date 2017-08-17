@@ -54,6 +54,7 @@ public final class JVCParser {
     private static final Pattern highlightInArianeStringPattern = Pattern.compile("<h1 class=\"highlight\">([^<]*)</h1>");
     private static final Pattern topicNameAndLinkPattern = Pattern.compile("<a class=\"lien-jv topic-title[^\"]*\" href=\"([^\"]*\" title=\"[^\"]*)\"[^>]*>");
     private static final Pattern topicNumberMessagesPattern = Pattern.compile("<span class=\"topic-count\">[^0-9]*([0-9]*)");
+    private static final Pattern topicNumberMessagesAdmPattern = Pattern.compile("<span class=\"topic-count-adm\">[^0-9]*([0-9]*)");
     private static final Pattern topicAuthorPattern = Pattern.compile("<span class=\".*?text-([^ ]*) topic-author[^>]*>[^A-Za-z0-9\\[\\]_-]*([^<\\n\\r ]*)");
     private static final Pattern topicDatePattern = Pattern.compile("<span class=\"topic-date\">[^<]*<span[^>]*>[^0-9/:]*([0-9/:]*)");
     private static final Pattern topicTypePattern = Pattern.compile("<img src=\"/img/forums/topic-(.*?)\\.png\" alt=\"[^\"]*\" title=\"[^\"]*\" class=\"topic-img\"");
@@ -954,6 +955,7 @@ public final class JVCParser {
         TopicInfos newTopicInfo = new TopicInfos();
         Matcher topicNameAndLinkMatcher = topicNameAndLinkPattern.matcher(thisEntireTopic);
         Matcher topicNumberMessagesMatcher = topicNumberMessagesPattern.matcher(thisEntireTopic);
+        Matcher topicNumberMessagesAdmMatcher = topicNumberMessagesAdmPattern.matcher(thisEntireTopic);
         Matcher topicAuthorMatcher = topicAuthorPattern.matcher(thisEntireTopic);
         Matcher topicDateMatcher = topicDatePattern.matcher(thisEntireTopic);
         Matcher topicTypeMatcher = topicTypePattern.matcher(thisEntireTopic);
@@ -966,11 +968,16 @@ public final class JVCParser {
             newTopicInfo.authorType = "user";
         }
 
-        if (topicNameAndLinkMatcher.find() && topicNumberMessagesMatcher.find() && topicDateMatcher.find() && topicTypeMatcher.find()) {
+        if (topicNumberMessagesAdmMatcher.find()) {
+            newTopicInfo.nbOfMessages = topicNumberMessagesAdmMatcher.group(1);
+        } else if (topicNumberMessagesMatcher.find()) {
+            newTopicInfo.nbOfMessages = topicNumberMessagesMatcher.group(1);
+        }
+
+        if (topicNameAndLinkMatcher.find() && topicDateMatcher.find() && topicTypeMatcher.find()) {
             String topicNameAndLinkString = topicNameAndLinkMatcher.group(1);
             newTopicInfo.link = "http://www.jeuxvideo.com" + topicNameAndLinkString.substring(0, topicNameAndLinkString.indexOf("\""));
             newTopicInfo.htmlName = topicNameAndLinkString.substring(topicNameAndLinkString.indexOf("title=\"") + 7);
-            newTopicInfo.messages = topicNumberMessagesMatcher.group(1);
             newTopicInfo.wholeDate = topicDateMatcher.group(1);
             newTopicInfo.type = topicTypeMatcher.group(1);
         }
@@ -1371,7 +1378,7 @@ public final class JVCParser {
         public String htmlName = "";
         public String link = "";
         public String wholeDate = "";
-        public String messages = "";
+        public String nbOfMessages = "";
 
         public static final Parcelable.Creator<TopicInfos> CREATOR = new Parcelable.Creator<TopicInfos>() {
             @Override
@@ -1396,7 +1403,7 @@ public final class JVCParser {
             htmlName = in.readString();
             link = in.readString();
             wholeDate = in.readString();
-            messages = in.readString();
+            nbOfMessages = in.readString();
         }
 
         @Override
@@ -1412,7 +1419,7 @@ public final class JVCParser {
             out.writeString(htmlName);
             out.writeString(link);
             out.writeString(wholeDate);
-            out.writeString(messages);
+            out.writeString(nbOfMessages);
         }
     }
 

@@ -53,7 +53,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
             if (listenerForNewTopicWantRead != null) {
                 JVCParser.TopicInfos currentItem = adapterForForum.getItem(position);
-                String realPageToGo = JVCParser.setPageNumberForThisTopicLink(currentItem.link, (Integer.parseInt(currentItem.messages) / 20) + 1);
+                String realPageToGo = JVCParser.setPageNumberForThisTopicLink(currentItem.link, (Integer.parseInt(currentItem.nbOfMessages) / 20) + 1);
                 listenerForNewTopicWantRead.setReadNewTopic(realPageToGo, JVCParser.specialCharToNormalChar(currentItem.htmlName), currentItem.author, true);
                 return true;
             }
