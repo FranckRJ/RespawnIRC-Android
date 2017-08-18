@@ -837,8 +837,8 @@ public final class JVCParser {
                 ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, -1, "<bg_closed_spoil><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "000000" : "FFFFFF") + "\">&nbsp;SPOIL&nbsp;</font></bg_closed_spoil>", "", null, null);
                 ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, -1, "<p><bg_closed_spoil><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "000000" : "FFFFFF") + "\">&nbsp;SPOIL&nbsp;</font></bg_closed_spoil></p>", "", null, null);
             } else {
-                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "<font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "FFFFFF" : "000000") + "\">", "</font>", new RemoveFirstsAndLastsP(), null);
-                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "FFFFFF" : "000000") + "\">", "</font></p>",  new RemoveFirstsAndLastsP(), null);
+                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "<bg_opened_spoil><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "FFFFFF" : "000000") + "\">", "</font></bg_opened_spoil>", new RemoveFirstsAndLastsP(), null);
+                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p><bg_opened_spoil><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "FFFFFF" : "000000") + "\">", "</font></bg_opened_spoil></p>",  new RemoveFirstsAndLastsP(), null);
             }
         }
 
