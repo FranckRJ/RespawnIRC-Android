@@ -81,7 +81,7 @@ public final class JVCParser {
     private static final Pattern surroundedBlockquotePattern = Pattern.compile("(<br /> *)*(<(/)?blockquote>)( *<br />)*");
     private static final Pattern noelshackImagePattern = Pattern.compile("<span class=\"JvCare[^>]*><img class=\"img-shack\".*?src=\"http(s)?://([^\"]*)\" alt=\"([^\"]*)\"[^>]*></span>");
     private static final Pattern emptySearchPattern = Pattern.compile("<span style=\"[^\"]*\">[ \\n\\r]*Aucune réponse pour votre recherche ![ \\n\\r]*</span>");
-    private static final Pattern userCanPostAsModoPattern = Pattern.compile("<select class=\"select-user-post\" id=\"form_alias_rang\" name=\"form_alias_rang\">((.*?)(?=<option value=\"2\">)|(.*?)(?=</select>))<option value=\"2\">", Pattern.DOTALL);
+    private static final Pattern userCanPostAsModoPattern = Pattern.compile("<select class=\"select-user-post\" id=\"form_alias_rang\" name=\"form_alias_rang\">((.*?)(?=<option value=\"2\")|(.*?)(?=</select>))<option value=\"2\"", Pattern.DOTALL);
     private static final Pattern uglyImagesNamePattern = Pattern.compile("issou|risi|rizi|jesus|picsart|chancla|larry");
     private static final Pattern adPattern = Pattern.compile("<ins[^>]*></ins>");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");

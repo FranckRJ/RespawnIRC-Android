@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -42,6 +43,7 @@ public class SearchTopicInForumActivity extends ThemedActivity implements ShowFo
     private RadioButton topicModeSearchRadioButton = null;
     private String lastSearchedText = null;
     private PageNavigationUtil pageNavigation = null;
+    private ShareActionProvider shareAction = null;
     private String currentSearchLink = "";
     private String currentForumName = "";
     private boolean searchTextIsOpened = false;
@@ -63,6 +65,16 @@ public class SearchTopicInForumActivity extends ThemedActivity implements ShowFo
             return false;
         }
     };
+
+    private void updateShareAction() {
+        if (shareAction != null) {
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, pageNavigation.getCurrentPageLink());
+            shareIntent.setType("text/plain");
+            shareAction.setShareIntent(shareIntent);
+        }
+    }
 
     public SearchTopicInForumActivity() {
         pageNavigation = new PageNavigationUtil(this);
@@ -149,6 +161,7 @@ public class SearchTopicInForumActivity extends ThemedActivity implements ShowFo
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_searchtopic, menu);
         searchExpandableItem = menu.findItem(R.id.action_search_searchtopic);
+        shareAction = (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share_searchforum));
 
         View rootView = searchExpandableItem.getActionView();
         ImageButton buttonForSearch = (ImageButton) rootView.findViewById(R.id.search_button_searchlayout);
@@ -181,6 +194,16 @@ public class SearchTopicInForumActivity extends ThemedActivity implements ShowFo
             textForSearch.setText(lastSearchedText);
         }
         MenuItemCompat.expandActionView(searchExpandableItem);
+
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        menu.findItem(R.id.action_share_searchforum).setEnabled(!pageNavigation.getCurrentLinkIsEmpty());
+        updateShareAction();
 
         return true;
     }
