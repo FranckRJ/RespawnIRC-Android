@@ -8,4 +8,8 @@
         android:icon="@drawable/ic_action_action_search"
         app:showAsAction="collapseActionView|always"
         app:actionLayout="@layout/actionbar_search_edittext_searchlayout"/>
+    <item
+        android:id="@+id/action_share_searchforum"
+        android:title="@string/share"
+        app:actionProviderClass="android.support.v7.widget.ShareActionProvider"/>
 </menu>
