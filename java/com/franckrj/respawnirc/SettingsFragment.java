@@ -17,6 +17,7 @@ import android.support.annotation.NonNull;
 
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.ThemeManager;
+import com.franckrj.respawnirc.utils.Utils;
 
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     public static final String ARG_FILE_TO_LOAD = "com.franckrj.respawnirc.settingsfragment.ARG_FILE_TO_LOAD";
@@ -43,6 +44,9 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                 } else if (preference.getKey().equals(getString(R.string.subScreenSettingsHelp))) {
                     HelpSettingsDialogFragment helpDialogFragment = new HelpSettingsDialogFragment();
                     helpDialogFragment.show(getFragmentManager(), "HelpSettingsDialogFragment");
+                    return true;
+                } else if (preference.getKey().equals(getString(R.string.subScreenSettingsShowWebsite))) {
+                    Utils.openLinkInExternalNavigator("https://pijon.fr/RespawnIRC-Android/", getActivity());
                     return true;
                 }
             }

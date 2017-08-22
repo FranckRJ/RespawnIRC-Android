@@ -31,6 +31,7 @@
     <string name="settingsEnableGoToBottomOnLoad" translatable="false">settings.enableGoToBottomOnLoad</string>
     <string name="settingsEnableAutoScrollModeForum" translatable="false">settings.enableAutoScrollModeForum</string>
     <string name="subScreenSettingsHelp" translatable="false">subScreenSettings.help</string>
+    <string name="subScreenSettingsShowWebsite" translatable="false">subScreenSettings.showWebsite</string>
     <string name="settingsDefaultShowSpoilVal" translatable="false">settings.defaultShowSpoilVal</string>
     <string name="settingsMarkAuthorPseudoModeForum" translatable="false">settings.markAuthorPseudoModeForum</string>
     <string name="settingsPostAsModoWhenPossible" translatable="false">settings.postAsModoWhenPossible</string>
