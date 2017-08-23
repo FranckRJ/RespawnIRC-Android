@@ -2,20 +2,19 @@ package com.franckrj.respawnirc.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.v4.util.SimpleArrayMap;
 
 import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.jvctopic.jvctopicviewers.AbsShowTopicFragment;
 
-import java.util.HashMap;
-
 public class PrefsManager {
     private static SharedPreferences currentPrefs = null;
     private static SharedPreferences.Editor currentPrefsEdit = null;
-    private static HashMap<BoolPref.Names, BoolPref> listOfBoolPrefs = new HashMap<>();
-    private static HashMap<IntPref.Names, IntPref> listOfIntPrefs = new HashMap<>();
-    private static HashMap<StringPref.Names, StringPref> listOfStringPrefs = new HashMap<>();
-    private static HashMap<LongPref.Names, LongPref> listOfLongPrefs = new HashMap<>();
+    private static SimpleArrayMap<BoolPref.Names, BoolPref> listOfBoolPrefs = new SimpleArrayMap<>();
+    private static SimpleArrayMap<IntPref.Names, IntPref> listOfIntPrefs = new SimpleArrayMap<>();
+    private static SimpleArrayMap<StringPref.Names, StringPref> listOfStringPrefs = new SimpleArrayMap<>();
+    private static SimpleArrayMap<LongPref.Names, LongPref> listOfLongPrefs = new SimpleArrayMap<>();
 
     private static void addBoolPref(BoolPref.Names nameOfPref, String prefStringValue, boolean prefDefautlValue) {
         listOfBoolPrefs.put(nameOfPref, new BoolPref(prefStringValue, prefDefautlValue));
@@ -112,9 +111,10 @@ public class PrefsManager {
     }
 
     public static boolean getBool(String prefName) {
-        for (HashMap.Entry<BoolPref.Names, BoolPref> thisPref : listOfBoolPrefs.entrySet()) {
-            if (thisPref.getValue().stringName.equals(prefName)) {
-                return currentPrefs.getBoolean(thisPref.getValue().stringName, thisPref.getValue().defaultValue);
+        for (int i = 0; i < listOfBoolPrefs.size(); ++i) {
+            BoolPref tmpPref = listOfBoolPrefs.valueAt(i);
+            if (tmpPref.stringName.equals(prefName)) {
+                return currentPrefs.getBoolean(tmpPref.stringName, tmpPref.defaultValue);
             }
         }
 
@@ -142,9 +142,10 @@ public class PrefsManager {
     }
 
     public static String getString(String prefName) {
-        for (HashMap.Entry<StringPref.Names, StringPref> thisPref : listOfStringPrefs.entrySet()) {
-            if (thisPref.getValue().stringName.equals(prefName)) {
-                return currentPrefs.getString(thisPref.getValue().stringName, thisPref.getValue().defaultValue);
+        for (int i = 0; i < listOfStringPrefs.size(); ++i) {
+            StringPref tmpPref = listOfStringPrefs.valueAt(i);
+            if (tmpPref.stringName.equals(prefName)) {
+                return currentPrefs.getString(tmpPref.stringName, tmpPref.defaultValue);
             }
         }
 
@@ -162,9 +163,10 @@ public class PrefsManager {
     }
 
     public static StringPref getStringInfos(String prefName) {
-        for (HashMap.Entry<StringPref.Names, StringPref> thisPref : listOfStringPrefs.entrySet()) {
-            if (thisPref.getValue().stringName.equals(prefName)) {
-                return thisPref.getValue();
+        for (int i = 0; i < listOfStringPrefs.size(); ++i) {
+            StringPref tmpPref = listOfStringPrefs.valueAt(i);
+            if (tmpPref.stringName.equals(prefName)) {
+                return tmpPref;
             }
         }
 

@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.support.v4.util.SimpleArrayMap;
 import android.support.v7.graphics.drawable.DrawableWrapper;
 
 import java.io.File;
@@ -14,10 +15,9 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class ImageDownloader {
-    private HashMap<String, DrawableWrapper> listOfDrawable = new HashMap<>();
+    private SimpleArrayMap<String, DrawableWrapper> listOfDrawable = new SimpleArrayMap<>();
     private ArrayList<ImageGetterAsyncTask> listOfCurrentsTasks = new ArrayList<>();
     private Drawable defaultDrawable = null;
     private Drawable deletedDrawable = null;
