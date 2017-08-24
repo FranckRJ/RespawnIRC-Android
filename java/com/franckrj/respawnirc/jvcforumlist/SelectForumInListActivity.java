@@ -107,6 +107,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 
         noResultFoundTextView = (TextView) findViewById(R.id.text_noresultfound_selectforum);
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swiperefresh_selectforum);

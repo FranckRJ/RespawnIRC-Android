@@ -2,6 +2,7 @@
 <resources>
     <style name="AppTheme.Light.Real" parent="AppTheme.Light.Base"/>
     <style name="AppTheme.Light.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowAnimationStyle">@style/AppActivityAnimation</item>
         <item name="themedShadowBottom">@drawable/shadow_bottom_light</item>
         <item name="themedShadowTop">@drawable/shadow_top_light</item>
         <item name="colorPrimary">@color/colorPrimaryThemeLight</item>
@@ -23,6 +24,7 @@
     </style>
     <style name="AppTheme.Dark.Real" parent="AppTheme.Dark.Base"/>
     <style name="AppTheme.Dark.Base" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowAnimationStyle">@style/AppActivityAnimation</item>
         <item name="themedShadowBottom">@drawable/shadow_bottom_dark</item>
         <item name="themedShadowTop">@drawable/shadow_top_dark</item>
         <item name="colorPrimary">@color/colorPrimaryThemeDark</item>
@@ -44,6 +46,7 @@
     </style>
     <style name="AppTheme.Black.Real" parent="AppTheme.Black.Base"/>
     <style name="AppTheme.Black.Base" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowAnimationStyle">@style/AppActivityAnimation</item>
         <item name="themedShadowBottom">@drawable/shadow_bottom_dark</item>
         <item name="themedShadowTop">@drawable/shadow_top_dark</item>
         <item name="colorPrimary">@color/colorPrimaryThemeBlack</item>
@@ -69,5 +72,11 @@
     <style name="SelectableItemBackground">
         <item name="android:theme">@style/SelectableItemTheme</item>
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+    </style>
+    <style name="AppActivityAnimation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/slide_open_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/slide_open_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/slide_close_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/slide_close_out</item>
     </style>
 </resources>

@@ -164,6 +164,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 
         pageNavigation.initializePagerView((ViewPager) findViewById(R.id.pager_showforum));
         pageNavigation.initializeNavigationButtons((Button) findViewById(R.id.firstpage_button_showforum), (Button) findViewById(R.id.previouspage_button_showforum),
