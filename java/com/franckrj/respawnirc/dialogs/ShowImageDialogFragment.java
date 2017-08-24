@@ -104,7 +104,8 @@ public class ShowImageDialogFragment extends DialogFragment {
         mainView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
+                //TODO: pas sur que ce soit une bonne idée, ne pas appliquer ailleurs avant plus de tests
+                dismissAllowingStateLoss();
             }
         });
 
