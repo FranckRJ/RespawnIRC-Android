@@ -74,15 +74,17 @@ public class JVCTopicModeForumGetter extends AbsJVCTopicGetter {
 
             if (infoOfCurrentPage != null) {
                 if (fillBaseClassInfoFromPageInfo(infoOfCurrentPage)) {
+                    boolean dontShowMessages = false;
+
                     if (!infoOfCurrentPage.listOfMessages.isEmpty()) {
                         lastIdOfMessage = infoOfCurrentPage.listOfMessages.get(infoOfCurrentPage.listOfMessages.size() - 1).id;
                     }
 
-                    if (listenerForNewMessages != null) {
-                        listenerForNewMessages.getNewMessages(infoOfCurrentPage.listOfMessages, true);
-                    }
                     if (listenerForNewNumbersOfPages != null) {
-                        listenerForNewNumbersOfPages.getNewLastPageNumber(JVCParser.getPageNumberForThisTopicLink(infoOfCurrentPage.lastPageLink));
+                        dontShowMessages = listenerForNewNumbersOfPages.getNewLastPageNumber(JVCParser.getPageNumberForThisTopicLink(infoOfCurrentPage.lastPageLink));
+                    }
+                    if (listenerForNewMessages != null) {
+                        listenerForNewMessages.getNewMessages(infoOfCurrentPage.listOfMessages, true, dontShowMessages);
                     }
 
                     return;
@@ -90,12 +92,12 @@ public class JVCTopicModeForumGetter extends AbsJVCTopicGetter {
             }
 
             if (listenerForNewMessages != null) {
-                listenerForNewMessages.getNewMessages(new ArrayList<JVCParser.MessageInfos>(), true);
+                listenerForNewMessages.getNewMessages(new ArrayList<JVCParser.MessageInfos>(), true, false);
             }
         }
     }
 
     public interface NewNumbersOfPagesListener {
-        void getNewLastPageNumber(String newNumber);
+        boolean getNewLastPageNumber(String newNumber);
     }
 }

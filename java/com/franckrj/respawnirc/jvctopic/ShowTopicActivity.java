@@ -560,7 +560,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
     }
 
     @Override
-    public void getNewLastPageNumber(String newNumber) {
+    public boolean getNewLastPageNumber(String newNumber) {
         if (!newNumber.isEmpty()) {
             pageNavigation.setLastPageNumber(Integer.parseInt(newNumber));
         } else {
@@ -570,14 +570,17 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         pageNavigation.updateNavigationButtons();
 
         if (goToLastPageAfterLoading) {
+            goToLastPageAfterLoading = false;
             if (pageNavigation.getCurrentItemIndex() < pageNavigation.getLastPage() - 1) {
                 if (goToBottomOnLoadIsEnabled) {
                     pageNavigation.setGoToBottomOnNextLoad(true);
                 }
                 pageNavigation.setCurrentItemIndex(pageNavigation.getLastPage() - 1);
+                return true;
             }
-            goToLastPageAfterLoading = false;
         }
+
+        return false;
     }
 
     @Override
