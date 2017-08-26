@@ -164,7 +164,12 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         reloadAllForum(true);
     }
 
+    @Override
     public void setPageLink(String newForumPageLink) {
+        setPageLink(newForumPageLink, true);
+    }
+
+    public void setPageLink(String newForumPageLink, boolean startLoadingPage) {
         isInErrorMode = false;
 
         if (!newForumPageLink.isEmpty()) {
@@ -174,9 +179,15 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         getterForForum.stopAllCurrentTask();
         adapterForForum.removeAllItems();
         adapterForForum.updateAllItems();
-        getterForForum.startGetMessagesOfThisPage(newForumPageLink);
+
+        if (startLoadingPage) {
+            getterForForum.startGetMessagesOfThisPage(newForumPageLink);
+        } else {
+            getterForForum.setUrlForForumWithoutLoading(newForumPageLink);
+        }
     }
 
+    @Override
     public void clearContent() {
         getterForForum.stopAllCurrentTask();
         adapterForForum.removeAllItems();
@@ -271,8 +282,9 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
 
             if (currentArgs != null) {
                 getterForForum.setIsInSearchMode(currentArgs.getBoolean(ARG_IS_IN_SEARCH_MODE, false));
-                setPageLink(currentArgs.getString(ARG_FORUM_LINK, ""));
                 swipeRefresh.setEnabled(!getterForForum.getIsInSearchMode());
+                setPageLink(currentArgs.getString(ARG_FORUM_LINK, ""), !dontLoadOnFirstTime);
+                dontLoadOnFirstTime = false;
             }
         }
 

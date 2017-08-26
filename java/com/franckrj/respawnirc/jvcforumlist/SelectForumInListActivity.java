@@ -108,7 +108,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!isInProcessOfRecreating) {
+        if (savedInstanceState == null) {
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }
 

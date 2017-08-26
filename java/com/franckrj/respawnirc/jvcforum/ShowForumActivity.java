@@ -115,7 +115,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         return false;
     }
 
-    private void readThisTopicOrForum(String link, boolean goToLastPage) {
+    private boolean readThisTopicOrForum(String link, boolean goToLastPage) {
         if (link != null) {
             if (!link.isEmpty()) {
                 link = JVCParser.formatThisUrl(link);
@@ -123,14 +123,15 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
 
             if (JVCParser.checkIfItsForumLink(link)) {
                 if (readThisForum(link)) {
-                    return;
+                    return false;
                 }
             } else if (readThisTopic(link, true, null, null, goToLastPage)) {
-                return;
+                return true;
             }
         }
 
         Toast.makeText(this, R.string.errorInvalidLink, Toast.LENGTH_SHORT).show();
+        return false;
     }
 
     private void stopAllCurrentTasks() {
@@ -144,12 +145,15 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         return (ShowForumFragment) pageNavigation.getCurrentFragment();
     }
 
-    private void consumeIntent(Intent newIntent) {
+    private boolean consumeIntent(Intent newIntent) {
         String newLinkToGo = newIntent.getStringExtra(EXTRA_NEW_LINK);
 
+        //noinspection SimplifiableIfStatement
         if (newLinkToGo != null) {
-            readThisTopicOrForum(newLinkToGo, newIntent.getBooleanExtra(EXTRA_GO_TO_LAST_PAGE, false));
+            return readThisTopicOrForum(newLinkToGo, newIntent.getBooleanExtra(EXTRA_GO_TO_LAST_PAGE, false));
         }
+
+        return false;
     }
 
     private void updateShareAction() {
@@ -165,6 +169,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        boolean newActivityIsLaunched = false;
 
         pageNavigation.initializePagerView((ViewPager) findViewById(R.id.pager_showforum));
         pageNavigation.initializeNavigationButtons((Button) findViewById(R.id.firstpage_button_showforum), (Button) findViewById(R.id.previouspage_button_showforum),
@@ -174,7 +179,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         pageNavigation.setCurrentLink(PrefsManager.getString(PrefsManager.StringPref.Names.FORUM_URL_TO_FETCH));
         if (savedInstanceState == null) {
             currentTitle = getString(R.string.app_name);
-            consumeIntent(getIntent());
+            newActivityIsLaunched = consumeIntent(getIntent());
             pageNavigation.updateCurrentItemAndButtonsToCurrentLink();
         } else {
             currentTitle = savedInstanceState.getString(SAVE_CURRENT_FORUM_TITLE, getString(R.string.app_name));
@@ -184,15 +189,17 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         }
         setTitle(currentTitle);
 
-        if (getIntent() != null) {
+        if (savedInstanceState == null && getIntent() != null) {
             if (getIntent().getBooleanExtra(EXTRA_ITS_FIRST_START, false) && PrefsManager.getInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED) == MainActivity.ACTIVITY_SHOW_TOPIC) {
                 //TODO: A vérifier, peut causer des bugs car onPause() pas appelé, donc stopAllCurrentTasks() pas appelé donc potentiel NPE quelque part
                 startActivity(new Intent(this, ShowTopicActivity.class));
-                return;
+                newActivityIsLaunched = true;
             }
         }
 
-        if (!isInProcessOfRecreating) {
+        if (newActivityIsLaunched) {
+            pageNavigation.setDontLoadOnFirstTimeForNextFragCreate(true);
+        } else if (savedInstanceState == null) {
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }
     }

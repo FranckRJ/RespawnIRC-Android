@@ -11,12 +11,9 @@ import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
 
 public class ThemedActivity extends AppCompatActivity {
-    private static final String SAVE_IN_IN_PROCESS_OF_RECREATE = "saveIsInProcessOfRecreate";
-
     protected static ActivityManager.TaskDescription generalTaskDesc = null;
     protected static ThemeManager.ThemeName themeUsedForGenerateTaskDesc = null;
     protected ThemeManager.ThemeName oldThemeUsed = null;
-    protected boolean isInProcessOfRecreating = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,26 +29,14 @@ public class ThemedActivity extends AppCompatActivity {
             }
             setTaskDescription(generalTaskDesc);
         }
-
-        if (savedInstanceState != null) {
-            isInProcessOfRecreating = savedInstanceState.getBoolean(SAVE_IN_IN_PROCESS_OF_RECREATE, false);
-        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        isInProcessOfRecreating = false;
 
         if (oldThemeUsed != null && oldThemeUsed != ThemeManager.getThemeUsed()) {
-            isInProcessOfRecreating = true;
             recreate();
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(SAVE_IN_IN_PROCESS_OF_RECREATE, isInProcessOfRecreating);
     }
 }

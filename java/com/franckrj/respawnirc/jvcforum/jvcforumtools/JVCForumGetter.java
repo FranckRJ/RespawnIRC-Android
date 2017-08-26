@@ -94,6 +94,10 @@ public class JVCForumGetter {
         listenerForNewNumberOfMP = thisListener;
     }
 
+    public void setUrlForForumWithoutLoading(String newUrlOfPage) {
+        urlForForum = newUrlOfPage;
+    }
+
     public boolean startGetMessagesOfThisPage(String newUrlOfPage) {
         return startGetMessagesOfThisPage(newUrlOfPage, false);
     }

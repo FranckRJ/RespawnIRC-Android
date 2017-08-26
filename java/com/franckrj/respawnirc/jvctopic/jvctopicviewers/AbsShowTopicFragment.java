@@ -372,6 +372,11 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         }
 
         setHasOptionsMenu(true);
+
+        if (dontLoadOnFirstTime) {
+            absGetterForTopic.stopAllCurrentTask();
+            dontLoadOnFirstTime = false;
+        }
     }
 
     @Override

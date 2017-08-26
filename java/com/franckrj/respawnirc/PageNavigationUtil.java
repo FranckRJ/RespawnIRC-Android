@@ -29,6 +29,7 @@ public class PageNavigationUtil {
     private Activity parentActivity = null;
     private boolean loadNeedToBeDoneOnPageCreate = false;
     private boolean goToBottomOnNextLoad = false;
+    private boolean dontLoadOnFirstTimeForNextFragCreate = false;
     private int lastPage = 0;
 
     private final Button.OnClickListener changePageWithNavigationButtonListener = new View.OnClickListener() {
@@ -166,7 +167,7 @@ public class PageNavigationUtil {
             if (currentFragment != null) {
                 ((PageNavigationFunctions) parentActivity).doThingsBeforeLoadOnFragment(currentFragment);
                 if (goToBottomOnNextLoad) {
-                    currentFragment.goToBottomAtPageLoading();
+                    currentFragment.enableGoToBottomAtPageLoading();
                     goToBottomOnNextLoad = false;
                 }
                 currentFragment.setPageLink(((PageNavigationFunctions) parentActivity).setShowedPageNumberForThisLink(currentLink, position + 1));
@@ -248,6 +249,10 @@ public class PageNavigationUtil {
         goToBottomOnNextLoad = newVal;
     }
 
+    public void setDontLoadOnFirstTimeForNextFragCreate(boolean newVal) {
+        dontLoadOnFirstTimeForNextFragCreate = newVal;
+    }
+
     public void setDrawableForCurrentPageButton(Drawable thisDrawable) {
         currentPageButton.setCompoundDrawables(null, null, thisDrawable, null);
         currentPageButton.setCompoundDrawablePadding(parentActivity.getResources().getDimensionPixelSize(R.dimen.sizeBetweenTextAndArrow));
@@ -292,8 +297,12 @@ public class PageNavigationUtil {
                     AbsShowSomethingFragment tmpFragment = ((PageNavigationFunctions) parentActivity).createNewFragmentForRead(((PageNavigationFunctions) parentActivity).setShowedPageNumberForThisLink(currentLink, position + 1));
                     ((PageNavigationFunctions) parentActivity).doThingsBeforeLoadOnFragment(tmpFragment);
                     if (goToBottomOnNextLoad) {
-                        tmpFragment.goToBottomAtPageLoading();
+                        tmpFragment.enableGoToBottomAtPageLoading();
                         goToBottomOnNextLoad = false;
+                    }
+                    if (dontLoadOnFirstTimeForNextFragCreate) {
+                        tmpFragment.enableDontLoadOnFirstTime();
+                        dontLoadOnFirstTimeForNextFragCreate = false;
                     }
                     loadNeedToBeDoneOnPageCreate = false;
                     return tmpFragment;
