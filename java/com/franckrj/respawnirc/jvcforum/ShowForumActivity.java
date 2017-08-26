@@ -188,10 +188,11 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
             if (getIntent().getBooleanExtra(EXTRA_ITS_FIRST_START, false) && PrefsManager.getInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED) == MainActivity.ACTIVITY_SHOW_TOPIC) {
                 //TODO: A vérifier, peut causer des bugs car onPause() pas appelé, donc stopAllCurrentTasks() pas appelé donc potentiel NPE quelque part
                 startActivity(new Intent(this, ShowTopicActivity.class));
-            } else {
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                return;
             }
-        } else {
+        }
+
+        if (!isInProcessOfRecreating) {
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }
     }
