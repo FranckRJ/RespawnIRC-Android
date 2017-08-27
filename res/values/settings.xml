@@ -38,4 +38,5 @@
     <string name="settingsIgnoreTopicToo" translatable="false">settings.ignoreTopicToo</string>
     <string name="settingsHideTotallyMessagesOfIgnoredPseudos" translatable="false">settings.hideTotallyMessagesOfIgnoredPseudos</string>
     <string name="settingsEnableFastRefreshOfImages" translatable="false">settings.enableFastRefreshOfImages</string>
+    <string name="settingsEnableColorDeletedMessages" translatable="false">settings.enableColorDeletedMessages</string>
 </resources>

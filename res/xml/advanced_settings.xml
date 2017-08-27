@@ -17,6 +17,9 @@
             android:key="@string/settingsEnableFastRefreshOfImages"
             android:title="@string/enableFastRefreshOfImagesTitle"
             android:summary="@string/enableFastRefreshOfImagesSummary"/>
+        <CheckBoxPreference
+            android:key="@string/settingsEnableColorDeletedMessages"
+            android:title="@string/enableColorDeletedMessagesTitle"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/styleModeForum">

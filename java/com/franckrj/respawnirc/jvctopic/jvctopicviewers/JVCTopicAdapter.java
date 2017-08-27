@@ -61,6 +61,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     private boolean showAvatars = false;
     private boolean showSpoilDefault = false;
     private boolean fastRefreshOfImages = false;
+    private boolean colorDeletedMessages = true;
     private String surveyTitle = "";
     private View.OnClickListener onSurveyClickListener = null;
     private float multiplierOfLineSizeForInfoLineIfAvatarIsShowed = 0;
@@ -195,6 +196,10 @@ public class JVCTopicAdapter extends BaseAdapter {
         fastRefreshOfImages = newVal;
     }
 
+    public void setColorDeletedMessages(boolean newVal) {
+        colorDeletedMessages = newVal;
+    }
+
     public void setMultiplierOfLineSizeForInfoLineIfAvatarIsShowed(float newVal) {
         multiplierOfLineSizeForInfoLineIfAvatarIsShowed = newVal;
     }
@@ -270,6 +275,8 @@ public class JVCTopicAdapter extends BaseAdapter {
         } else {
             holder.signatureLineContent = replaceQuoteAndUrlSpans(Undeprecator.htmlFromHtml(JVCParser.createSignatureFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
         }
+
+        holder.messageIsDeleted = item.messageIsDeleted;
 
         return holder;
     }
@@ -417,7 +424,9 @@ public class JVCTopicAdapter extends BaseAdapter {
                 viewHolder.separator.setVisibility(View.GONE);
             }
 
-            if (realPosition % 2 == 0 || !alternateBackgroundColor) {
+            if (colorDeletedMessages && currentContent.messageIsDeleted) {
+                setColorBackgroundOfThisItem(convertView, ThemeManager.getColorRes(ThemeManager.ColorName.DELETED_MESSAGE_BACKGROUND_COLOR));
+            } else if (realPosition % 2 == 0 || !alternateBackgroundColor) {
                 setColorBackgroundOfThisItem(convertView, ThemeManager.getColorRes(ThemeManager.ColorName.DEFAULT_BACKGROUND_COLOR));
             } else {
                 setColorBackgroundOfThisItem(convertView, ThemeManager.getColorRes(ThemeManager.ColorName.ALT_BACKGROUND_COLOR));
@@ -497,6 +506,7 @@ public class JVCTopicAdapter extends BaseAdapter {
         public Spannable messageLineContent;
         public Spannable signatureLineContent;
         public Drawable avatarImageDrawable;
+        public boolean messageIsDeleted;
     }
 
     public interface URLClicked {

@@ -89,6 +89,7 @@ public class PrefsManager {
         addBoolPref(BoolPref.Names.IGNORE_TOPIC_TOO, currentContext.getString(R.string.settingsIgnoreTopicToo), true);
         addBoolPref(BoolPref.Names.HIDE_TOTALLY_MESSAGES_OF_IGNORED_PSEUDOS, currentContext.getString(R.string.settingsHideTotallyMessagesOfIgnoredPseudos), true);
         addBoolPref(BoolPref.Names.ENABLE_FAST_REFRESH_OF_IMAGES, currentContext.getString(R.string.settingsEnableFastRefreshOfImages), false);
+        addBoolPref(BoolPref.Names.ENABLE_COLOR_DELETED_MESSAGES, currentContext.getString(R.string.settingsEnableColorDeletedMessages), true);
 
         addStringPref(StringPref.Names.MAX_NUMBER_OF_OVERLY_QUOTE, currentContext.getString(R.string.settingsMaxNumberOfOverlyQuote), "2", 0, 15);
         addStringPref(StringPref.Names.SHOW_AVATAR_MODE_FORUM, currentContext.getString(R.string.settingsShowAvatarModeForum), "1");
@@ -255,7 +256,7 @@ public class PrefsManager {
             TOPIC_ALTERNATE_BACKGROUND_MODE_FORUM, TOPIC_ALTERNATE_BACKGROUND_MODE_IRC, FORUM_ALTERNATE_BACKGROUND,
             TOPIC_CLEAR_ON_REFRESH_MODE_FORUM,
             TOPIC_SHOW_REFRESH_WHEN_MESSAGE_SHOWED_MODE_IRC,
-            ENABLE_CARD_DESIGN_MODE_FORUM, SEPARATION_BETWEEN_MESSAGES_BLACK_THEM_MODE_FORUM,
+            ENABLE_CARD_DESIGN_MODE_FORUM, SEPARATION_BETWEEN_MESSAGES_BLACK_THEM_MODE_FORUM, ENABLE_COLOR_DELETED_MESSAGES,
             HIDE_UGLY_IMAGES,
             ENABLE_SMOOTH_SCROLL, ENABLE_AUTO_SCROLL_MODE_FORUM,
             ENABLE_GO_TO_BOTTOM_ON_LOAD,
