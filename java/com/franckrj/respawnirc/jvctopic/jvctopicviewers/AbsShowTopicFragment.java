@@ -253,6 +253,10 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         return absGetterForTopic.getIsInFavs();
     }
 
+    public boolean getUserCanLockTopic() {
+        return absGetterForTopic.getUserCanLockTopic();
+    }
+
     public String getTopicID() {
         return absGetterForTopic.getTopicID();
     }

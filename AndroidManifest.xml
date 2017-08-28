@@ -69,6 +69,10 @@
             android:label="@string/kick">
         </activity>
         <activity
+            android:name=".jvctopic.LockTopicActivity"
+            android:label="@string/lockTopic">
+        </activity>
+        <activity
             android:name=".SettingsActivity"
             android:label="@string/preference">
         </activity>

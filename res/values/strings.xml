@@ -196,6 +196,10 @@
     <string name="noPseudoIgnoredInList">La liste des pseudos ignorés est vide.</string>
     <string name="showWebsite">Voir le site web</string>
     <string name="enableColorDeletedMessagesTitle">Colorer les messages supprimés</string>
+    <string name="lockTopic">Fermer le topic</string>
+    <string name="lock">Fermer</string>
+    <string name="reasonOfLock">Raison de la fermeture…</string>
+    <string name="errorReasonMissing">Erreur, raison manquante.</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
