@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="lineSeparationColor">#50808080</color>
+    <color name="splashBackgroundColor">#002F46</color>
     <!-- Light Theme -->
     <color name="shadowColorThemeLight">#50000000</color>
     <color name="colorPrimaryThemeLight">#3F51B5</color>
