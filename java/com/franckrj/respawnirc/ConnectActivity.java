@@ -103,6 +103,9 @@ public class ConnectActivity extends ThemedActivity {
         jvcWebView.clearHistory();
 
         jvcWebView.loadUrl("https://www.jeuxvideo.com/login");
+
+        PrefsManager.putBool(PrefsManager.BoolPref.Names.WEBVIEW_CACHE_NEED_TO_BE_CLEAR, true);
+        PrefsManager.applyChanges();
     }
 
     @Override

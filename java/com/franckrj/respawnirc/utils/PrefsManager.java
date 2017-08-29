@@ -42,6 +42,7 @@ public class PrefsManager {
 
         addBoolPref(BoolPref.Names.IS_FIRST_LAUNCH, "pref.isFirstLaunch", true);
         addBoolPref(BoolPref.Names.USER_IS_MODO, "pref.userIsModo", false);
+        addBoolPref(BoolPref.Names.WEBVIEW_CACHE_NEED_TO_BE_CLEAR, "pref.webviewCacheNeedToBeClear", false);
 
         addIntPref(IntPref.Names.LAST_ACTIVITY_VIEWED, "pref.lastActivityViewed", MainActivity.ACTIVITY_SELECT_FORUM_IN_LIST);
         addIntPref(IntPref.Names.CURRENT_TOPIC_MODE, "pref.currentTopicMode", AbsShowTopicFragment.MODE_FORUM);
@@ -264,7 +265,8 @@ public class PrefsManager {
             MARK_AUTHOR_PSEUDO_MODE_FORUM,
             USER_IS_MODO, POST_AS_MODO_WHEN_POSSIBLE,
             IGNORE_TOPIC_TOO, HIDE_TOTALLY_MESSAGES_OF_IGNORED_PSEUDOS,
-            ENABLE_FAST_REFRESH_OF_IMAGES
+            ENABLE_FAST_REFRESH_OF_IMAGES,
+            WEBVIEW_CACHE_NEED_TO_BE_CLEAR
         }
     }
 

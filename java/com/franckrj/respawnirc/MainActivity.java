@@ -27,9 +27,13 @@ public class MainActivity extends AppCompatActivity {
         int lastActivityViewed = PrefsManager.getInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED);
         String linkToOpen = null;
 
-        //vider le cache des webviews
-        WebView obj = new WebView(this);
-        obj.clearCache(true);
+        //vidage du cache des webviews
+        if (PrefsManager.getBool(PrefsManager.BoolPref.Names.WEBVIEW_CACHE_NEED_TO_BE_CLEAR)) {
+            WebView obj = new WebView(this);
+            obj.clearCache(true);
+            PrefsManager.putBool(PrefsManager.BoolPref.Names.WEBVIEW_CACHE_NEED_TO_BE_CLEAR, false);
+            PrefsManager.applyChanges();
+        }
 
         File[] listOfImagesCached = getCacheDir().listFiles();
         if (listOfImagesCached != null) {
