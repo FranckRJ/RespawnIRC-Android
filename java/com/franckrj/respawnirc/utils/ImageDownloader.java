@@ -109,11 +109,11 @@ public class ImageDownloader {
 
     private String imageLinkToFileName(String link) {
         if (link.startsWith("http://image.noelshack.com/minis/")) {
-            return "nlshck_mini_" + link.substring(("http://image.noelshack.com/minis/").length()).replace("/", "_");
+            return "img_nlsk_mini_" + link.substring(("http://image.noelshack.com/minis/").length()).replace("/", "_");
         } else if (link.startsWith("http://image.noelshack.com/fichiers/")) {
-            return "nlshck_big_" + link.substring(("http://image.noelshack.com/fichiers/").length()).replace("/", "_");
+            return "img_nlsk_big_" + link.substring(("http://image.noelshack.com/fichiers/").length()).replace("/", "_");
         } else if (link.startsWith("http://image.jeuxvideo.com/avatar")) {
-            return "vtr_" + link.substring(("http://image.jeuxvideo.com/avatar").length()).replace("/", "_");
+            return "img_vtr_" + link.substring(("http://image.jeuxvideo.com/avatar").length()).replace("/", "_");
         } else {
             return "";
         }

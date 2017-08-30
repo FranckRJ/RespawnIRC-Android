@@ -37,9 +37,9 @@ public class MainActivity extends AppCompatActivity {
 
         File[] listOfImagesCached = getCacheDir().listFiles();
         if (listOfImagesCached != null) {
-            if (listOfImagesCached.length > 50) {
+            if (listOfImagesCached.length > 100) {
                 for (File thisFile : listOfImagesCached) {
-                    if (!thisFile.isDirectory() && (thisFile.getName().startsWith("nlshck_") || thisFile.getName().startsWith("vtr_"))) {
+                    if (!thisFile.isDirectory() && thisFile.getName().startsWith("img_")) {
                         //noinspection ResultOfMethodCallIgnored
                         thisFile.delete();
                     }
