@@ -31,7 +31,6 @@ public class ConnectActivity extends AbsThemedActivity {
         if (!pseudoText.getText().toString().isEmpty()) {
             String allCookiesInstring = CookieManager.getInstance().getCookie("http://www.jeuxvideo.com/");
             String[] allCookiesInStringArray = TextUtils.split(allCookiesInstring, ";");
-            String helloCookieValue = null;
             String connectCookieValue = null;
 
             for (String thisCookie : allCookiesInStringArray) {
@@ -41,20 +40,15 @@ public class ConnectActivity extends AbsThemedActivity {
                 cookieInfos = TextUtils.split(thisCookie, "=");
 
                 if (cookieInfos.length > 1) {
-                    if (cookieInfos[0].equals("dlrowolleh")) {
-                        helloCookieValue = cookieInfos[1];
-                    } else if (cookieInfos[0].equals("coniunctio")) {
+                    if (cookieInfos[0].equals("coniunctio")) {
                         connectCookieValue = cookieInfos[1];
+                        break;
                     }
-                }
-
-                if (helloCookieValue != null && connectCookieValue != null) {
-                    break;
                 }
             }
 
-            if (helloCookieValue != null && connectCookieValue != null) {
-                PrefsManager.putString(PrefsManager.StringPref.Names.COOKIES_LIST, "dlrowolleh=" + helloCookieValue + ";coniunctio=" + connectCookieValue);
+            if (connectCookieValue != null) {
+                PrefsManager.putString(PrefsManager.StringPref.Names.COOKIES_LIST, "coniunctio=" + connectCookieValue);
                 PrefsManager.putString(PrefsManager.StringPref.Names.PSEUDO_OF_USER, pseudoText.getText().toString().trim());
                 PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, false);
                 PrefsManager.applyChanges();
