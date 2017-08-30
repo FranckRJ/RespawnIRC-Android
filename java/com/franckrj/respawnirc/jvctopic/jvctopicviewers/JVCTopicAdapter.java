@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.v7.widget.CardView;
 import android.text.Html;
 import android.text.Layout;
@@ -128,23 +129,21 @@ public class JVCTopicAdapter extends BaseAdapter {
     };
 
     public JVCTopicAdapter(Activity newParentActivity, JVCParser.Settings newSettings) {
-        Drawable deletedDrawable;
+        @DrawableRes int deletedDrawableRes = ThemeManager.getDrawableRes(ThemeManager.DrawableName.DELETED_IMAGE);
         Resources res;
 
         parentActivity = newParentActivity;
         currentSettings = newSettings;
         serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         res = parentActivity.getResources();
-        deletedDrawable = Undeprecator.resourcesGetDrawable(res, R.drawable.image_deleted);
-        deletedDrawable.setBounds(0, 0, deletedDrawable.getIntrinsicWidth(), deletedDrawable.getIntrinsicHeight());
 
-        jvcImageGetter = new CustomImageGetter(parentActivity, deletedDrawable, downloaderForImage);
+        jvcImageGetter = new CustomImageGetter(parentActivity, Undeprecator.resourcesGetDrawable(res, deletedDrawableRes), downloaderForImage);
         downloaderForImage.setParentActivity(parentActivity);
         downloaderForImage.setListenerForDownloadFinished(listenerForDownloadFinished);
         downloaderForImage.setImagesCacheDir(parentActivity.getCacheDir());
         downloaderForImage.setImagesSize(res.getDimensionPixelSize(R.dimen.imagesWidth), res.getDimensionPixelSize(R.dimen.imagesHeight));
-        downloaderForImage.setDefaultDrawable(Undeprecator.resourcesGetDrawable(res, R.drawable.image_file_download));
-        downloaderForImage.setDeletedDrawable(deletedDrawable);
+        downloaderForImage.setDefaultDrawable(Undeprecator.resourcesGetDrawable(res, ThemeManager.getDrawableRes(ThemeManager.DrawableName.DOWNLOAD_IMAGE)), true);
+        downloaderForImage.setDeletedDrawable(Undeprecator.resourcesGetDrawable(res, deletedDrawableRes), true);
     }
 
     public int getCurrentItemIDSelected() {

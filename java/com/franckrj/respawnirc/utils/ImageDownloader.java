@@ -50,12 +50,20 @@ public class ImageDownloader {
         listenerForDownloadFinished = newListener;
     }
 
-    public void setDefaultDrawable(Drawable newDrawable) {
+    public void setDefaultDrawable(Drawable newDrawable, boolean setBoundsToImageSize) {
         defaultDrawable = newDrawable;
+
+        if (setBoundsToImageSize) {
+            defaultDrawable.setBounds(0, 0, imagesWidth, imagesHeight);
+        }
     }
 
-    public void setDeletedDrawable(Drawable newDrawable) {
+    public void setDeletedDrawable(Drawable newDrawable, boolean setBoundsToImageSize) {
         deletedDrawable = newDrawable;
+
+        if (setBoundsToImageSize) {
+            deletedDrawable.setBounds(0, 0, imagesWidth, imagesHeight);
+        }
     }
 
     public void setScaleLargeImages(boolean newVal) {
