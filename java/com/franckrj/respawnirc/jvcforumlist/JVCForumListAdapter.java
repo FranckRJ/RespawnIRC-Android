@@ -480,9 +480,9 @@ public class JVCForumListAdapter extends BaseExpandableListAdapter implements Ex
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = serviceInflater.inflate(R.layout.jvcforums_row, parent, false);
-            holder.itemOne = (TextView) convertView.findViewById(R.id.item_one_jvcforums_text_row);
-            holder.imageButtonExpand = (ImageView) convertView.findViewById(R.id.image_button_expand_jvcforums_text_row);
-            holder.isForumImage = (ImageView) convertView.findViewById(R.id.image_is_forum_jvcforums_text_row);
+            holder.itemOne = convertView.findViewById(R.id.item_one_jvcforums_text_row);
+            holder.imageButtonExpand = convertView.findViewById(R.id.image_button_expand_jvcforums_text_row);
+            holder.isForumImage = convertView.findViewById(R.id.image_is_forum_jvcforums_text_row);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -525,9 +525,9 @@ public class JVCForumListAdapter extends BaseExpandableListAdapter implements Ex
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = serviceInflater.inflate(R.layout.jvcforums_row, parent, false);
-            holder.itemOne = (TextView) convertView.findViewById(R.id.item_one_jvcforums_text_row);
-            holder.imageButtonExpand = (ImageView) convertView.findViewById(R.id.image_button_expand_jvcforums_text_row);
-            holder.isForumImage = (ImageView) convertView.findViewById(R.id.image_is_forum_jvcforums_text_row);
+            holder.itemOne = convertView.findViewById(R.id.item_one_jvcforums_text_row);
+            holder.imageButtonExpand = convertView.findViewById(R.id.image_button_expand_jvcforums_text_row);
+            holder.isForumImage = convertView.findViewById(R.id.image_is_forum_jvcforums_text_row);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();

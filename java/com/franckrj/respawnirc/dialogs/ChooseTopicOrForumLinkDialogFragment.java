@@ -46,7 +46,7 @@ public class ChooseTopicOrForumLinkDialogFragment extends DialogFragment {
         super.onCreateDialog(savedInstanceState);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_choosetopicorforumlink, null);
-        linkEdit = (EditText) mainView.findViewById(R.id.link_edit_choosetopicorforumlink);
+        linkEdit = mainView.findViewById(R.id.link_edit_choosetopicorforumlink);
         linkEdit.setOnEditorActionListener(actionInEditTextListener);
         builder.setTitle(R.string.openTopicOrForumLink).setView(mainView)
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

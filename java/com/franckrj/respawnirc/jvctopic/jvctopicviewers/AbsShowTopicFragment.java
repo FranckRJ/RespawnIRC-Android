@@ -284,9 +284,9 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View mainView = inflater.inflate(R.layout.fragment_showtopic, container, false);
 
-        errorBackgroundMessage = (TextView) mainView.findViewById(R.id.text_errorbackgroundmessage_showtopicfrag);
-        jvcMsgList = (ListView) mainView.findViewById(R.id.jvcmessage_view_showtopicfrag);
-        swipeRefresh = (SwipeRefreshLayout) mainView.findViewById(R.id.swiperefresh_showtopicfrag);
+        errorBackgroundMessage = mainView.findViewById(R.id.text_errorbackgroundmessage_showtopicfrag);
+        jvcMsgList = mainView.findViewById(R.id.jvcmessage_view_showtopicfrag);
+        swipeRefresh = mainView.findViewById(R.id.swiperefresh_showtopicfrag);
 
         return mainView;
     }

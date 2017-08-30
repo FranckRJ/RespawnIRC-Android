@@ -24,13 +24,13 @@ import android.widget.Toast;
 import com.franckrj.respawnirc.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.PageNavigationUtil;
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.ThemedActivity;
+import com.franckrj.respawnirc.AbsThemedActivity;
 import com.franckrj.respawnirc.jvcforum.jvcforumtools.ShowForumFragment;
 import com.franckrj.respawnirc.jvctopic.ShowTopicActivity;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Utils;
 
-public class SearchTopicInForumActivity extends ThemedActivity implements ShowForumFragment.NewTopicWantRead, PageNavigationUtil.PageNavigationFunctions {
+public class SearchTopicInForumActivity extends AbsThemedActivity implements ShowForumFragment.NewTopicWantRead, PageNavigationUtil.PageNavigationFunctions {
     public static final String EXTRA_FORUM_LINK = "com.franckrj.respawnirc.EXTRA_FORUM_LINK";
     public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.EXTRA_FORUM_NAME";
 
@@ -99,7 +99,7 @@ public class SearchTopicInForumActivity extends ThemedActivity implements ShowFo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_searchtopic);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_searchtopic);
+        Toolbar myToolbar = findViewById(R.id.toolbar_searchtopic);
         setSupportActionBar(myToolbar);
 
         ActionBar myActionBar = getSupportActionBar();
@@ -113,7 +113,7 @@ public class SearchTopicInForumActivity extends ThemedActivity implements ShowFo
                         (Button) findViewById(R.id.currentpage_button_searchtopic), (Button) findViewById(R.id.nextpage_button_searchtopic), null);
         pageNavigation.updateAdapterForPagerView();
 
-        topicModeSearchRadioButton = (RadioButton) findViewById(R.id.topicmode_radio_searchtopic);
+        topicModeSearchRadioButton = findViewById(R.id.topicmode_radio_searchtopic);
 
         if (getIntent() != null) {
             String newLinkForSearch = getIntent().getStringExtra(EXTRA_FORUM_LINK);
@@ -150,7 +150,7 @@ public class SearchTopicInForumActivity extends ThemedActivity implements ShowFo
         outState.putString(SAVE_CURRENT_SEARCH_LINK, pageNavigation.getCurrentPageLink());
         outState.putString(SAVE_SEARCH_FORUM_CONTENT, null);
         if (textForSearch != null && searchExpandableItem != null) {
-            if (MenuItemCompat.isActionViewExpanded(searchExpandableItem)) {
+            if (searchExpandableItem.isActionViewExpanded()) {
                 outState.putString(SAVE_SEARCH_FORUM_CONTENT, textForSearch.getText().toString());
             }
         }
@@ -164,13 +164,13 @@ public class SearchTopicInForumActivity extends ThemedActivity implements ShowFo
         shareAction = (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share_searchforum));
 
         View rootView = searchExpandableItem.getActionView();
-        ImageButton buttonForSearch = (ImageButton) rootView.findViewById(R.id.search_button_searchlayout);
-        textForSearch = (EditText) rootView.findViewById(R.id.search_text_searchlayout);
+        ImageButton buttonForSearch = rootView.findViewById(R.id.search_button_searchlayout);
+        textForSearch = rootView.findViewById(R.id.search_text_searchlayout);
         textForSearch.setHint(R.string.topicSearch);
         textForSearch.setOnEditorActionListener(actionInSearchEditTextListener);
         buttonForSearch.setOnClickListener(searchButtonClickedListener);
 
-        MenuItemCompat.setOnActionExpandListener(searchExpandableItem, new MenuItemCompat.OnActionExpandListener() {
+        searchExpandableItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 searchTextIsOpened = false;
@@ -193,7 +193,7 @@ public class SearchTopicInForumActivity extends ThemedActivity implements ShowFo
         if (lastSearchedText != null) {
             textForSearch.setText(lastSearchedText);
         }
-        MenuItemCompat.expandActionView(searchExpandableItem);
+        searchExpandableItem.expandActionView();
 
         return true;
     }

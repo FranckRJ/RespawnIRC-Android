@@ -1,7 +1,6 @@
 package com.franckrj.respawnirc.jvctopic;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -13,11 +12,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.ThemedActivity;
+import com.franckrj.respawnirc.AbsThemedActivity;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.WebManager;
 
-public class LockTopicActivity extends ThemedActivity {
+public class LockTopicActivity extends AbsThemedActivity {
     public static final String EXTRA_ID_FORUM = "com.franckrj.respawnirc.locktopicactivity.EXTRA_ID_FORUM";
     public static final String EXTRA_ID_TOPIC = "com.franckrj.respawnirc.locktopicactivity.EXTRA_ID_TOPIC";
     public static final String EXTRA_AJAX_MOD = "com.franckrj.respawnirc.locktopicactivity.EXTRA_AJAX_MOD";
@@ -58,7 +57,7 @@ public class LockTopicActivity extends ThemedActivity {
 
         boolean errorWhenFillingInfos = false;
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_locktopic);
+        Toolbar myToolbar = findViewById(R.id.toolbar_locktopic);
         setSupportActionBar(myToolbar);
 
         ActionBar myActionBar = getSupportActionBar();
@@ -67,8 +66,8 @@ public class LockTopicActivity extends ThemedActivity {
             myActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        Button applyLockButton = (Button) findViewById(R.id.lock_button_locktopic);
-        reasonEdit = (EditText) findViewById(R.id.reason_edit_locktopic);
+        Button applyLockButton = findViewById(R.id.lock_button_locktopic);
+        reasonEdit = findViewById(R.id.reason_edit_locktopic);
         applyLockButton.setOnClickListener(lockButtonClickedListener);
 
         if (getIntent() != null) {

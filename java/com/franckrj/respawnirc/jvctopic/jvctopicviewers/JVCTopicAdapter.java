@@ -487,12 +487,12 @@ public class JVCTopicAdapter extends BaseAdapter {
         public final ImageButton showMenuButton;
 
         public CustomViewHolder(View itemView) {
-            infoLine = (TextView) itemView.findViewById(R.id.item_one_jvcmessages_text_row);
-            avatarImage = (ImageView) itemView.findViewById(R.id.image_one_jvcmessages_text_row);
-            messageLine = (TextView) itemView.findViewById(R.id.item_two_jvcmessages_text_row);
-            signatureLine = (TextView) itemView.findViewById(R.id.item_three_jvcmessages_text_row);
+            infoLine = itemView.findViewById(R.id.item_one_jvcmessages_text_row);
+            avatarImage = itemView.findViewById(R.id.image_one_jvcmessages_text_row);
+            messageLine = itemView.findViewById(R.id.item_two_jvcmessages_text_row);
+            signatureLine = itemView.findViewById(R.id.item_three_jvcmessages_text_row);
             separator = itemView.findViewById(R.id.item_separator_jvcmessages_text_row);
-            showMenuButton = (ImageButton) itemView.findViewById(R.id.menu_overflow_row);
+            showMenuButton = itemView.findViewById(R.id.menu_overflow_row);
 
             messageLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
             signatureLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());

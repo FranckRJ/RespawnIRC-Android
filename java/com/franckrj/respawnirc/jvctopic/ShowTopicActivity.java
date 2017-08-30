@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.ThemedActivity;
+import com.franckrj.respawnirc.AbsThemedActivity;
 import com.franckrj.respawnirc.dialogs.ChoosePageNumberDialogFragment;
 import com.franckrj.respawnirc.dialogs.LinkContextMenuDialogFragment;
 import com.franckrj.respawnirc.dialogs.MessageContextMenuDialogFragment;
@@ -44,7 +44,7 @@ import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 
-public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCTopicGetter.NewForumAndTopicNameAvailable,
+public class ShowTopicActivity extends AbsThemedActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCTopicGetter.NewForumAndTopicNameAvailable,
                                                                     PopupMenu.OnMenuItemClickListener, JVCTopicModeForumGetter.NewNumbersOfPagesListener,
                                                                     ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCTopicAdapter.URLClicked,
                                                                     AbsJVCTopicGetter.NewReasonForTopicLock, InsertStuffDialogFragment.StuffInserted,
@@ -282,7 +282,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         Drawable arrowDrawable = Undeprecator.resourcesGetDrawable(getResources(), ThemeManager.getDrawableRes(ThemeManager.DrawableName.ARROW_DROP_DOWN));
         arrowDrawable.setBounds(0, 0, arrowDrawable.getIntrinsicWidth() / 2, arrowDrawable.getIntrinsicHeight() / 2);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_showtopic);
+        Toolbar myToolbar = findViewById(R.id.toolbar_showtopic);
         myToolbar.setOnLongClickListener(showForumAndTopicTitleListener);
         setSupportActionBar(myToolbar);
 
@@ -293,9 +293,9 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         }
 
         messageSendLayout = findViewById(R.id.sendmessage_layout_showtopic);
-        messageSendEdit = (EditText) findViewById(R.id.sendmessage_text_showtopic);
-        messageSendButton = (ImageButton) findViewById(R.id.sendmessage_button_showtopic);
-        insertStuffButton = (ImageButton) findViewById(R.id.insertstuff_button_showtopic);
+        messageSendEdit = findViewById(R.id.sendmessage_text_showtopic);
+        messageSendButton = findViewById(R.id.sendmessage_button_showtopic);
+        insertStuffButton = findViewById(R.id.insertstuff_button_showtopic);
 
         pageNavigation.initializeLayoutForAllNavigationButtons(findViewById(R.id.header_layout_showtopic), findViewById(R.id.shadow_header_showtopic));
         pageNavigation.initializePagerView((ViewPager) findViewById(R.id.pager_showtopic));

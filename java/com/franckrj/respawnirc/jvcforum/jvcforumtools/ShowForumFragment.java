@@ -216,9 +216,9 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View mainView = inflater.inflate(R.layout.fragment_showforum, container, false);
 
-        jvcTopicList = (ListView) mainView.findViewById(R.id.jvctopic_view_showforumfrag);
-        swipeRefresh = (SwipeRefreshLayout) mainView.findViewById(R.id.swiperefresh_showforumfrag);
-        errorBackgroundMessage = (TextView) mainView.findViewById(R.id.text_errorbackgroundmessage_showforumfrag);
+        jvcTopicList = mainView.findViewById(R.id.jvctopic_view_showforumfrag);
+        swipeRefresh = mainView.findViewById(R.id.swiperefresh_showforumfrag);
+        errorBackgroundMessage = mainView.findViewById(R.id.text_errorbackgroundmessage_showforumfrag);
 
         swipeRefresh.setOnRefreshListener(listenerForRefresh);
 

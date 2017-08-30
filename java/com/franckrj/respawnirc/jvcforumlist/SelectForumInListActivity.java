@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -21,7 +19,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.franckrj.respawnirc.MainActivity;
-import com.franckrj.respawnirc.NavigationMenuListView;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.dialogs.ChooseTopicOrForumLinkDialogFragment;
 import com.franckrj.respawnirc.dialogs.HelpFirstLaunchDialogFragment;
@@ -112,13 +109,13 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }
 
-        noResultFoundTextView = (TextView) findViewById(R.id.text_noresultfound_selectforum);
-        swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swiperefresh_selectforum);
+        noResultFoundTextView = findViewById(R.id.text_noresultfound_selectforum);
+        swipeRefresh = findViewById(R.id.swiperefresh_selectforum);
         noResultFoundTextView.setVisibility(View.GONE);
         swipeRefresh.setEnabled(false);
         swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
 
-        ExpandableListView forumListView = (ExpandableListView) findViewById(R.id.forum_expendable_list_selectforum);
+        ExpandableListView forumListView = findViewById(R.id.forum_expendable_list_selectforum);
         adapterForForumList = new JVCForumListAdapter(this);
         forumListView.setAdapter(adapterForForumList);
         forumListView.setOnGroupClickListener(adapterForForumList);
@@ -162,7 +159,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         outState.putBoolean(SAVE_SEARCH_TEXT_IS_OPENED, searchTextIsOpened);
         outState.putString(SAVE_SEARCH_FORUM_CONTENT, null);
         if (textForSearch != null && searchExpandableItem != null) {
-            if (MenuItemCompat.isActionViewExpanded(searchExpandableItem)) {
+            if (searchExpandableItem.isActionViewExpanded()) {
                 outState.putString(SAVE_SEARCH_FORUM_CONTENT, textForSearch.getText().toString());
             }
         }
@@ -175,13 +172,13 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         searchExpandableItem = menu.findItem(R.id.action_search_selectforum);
 
         View rootView = searchExpandableItem.getActionView();
-        ImageButton buttonForSearch = (ImageButton) rootView.findViewById(R.id.search_button_searchlayout);
-        textForSearch = (EditText) rootView.findViewById(R.id.search_text_searchlayout);
+        ImageButton buttonForSearch = rootView.findViewById(R.id.search_button_searchlayout);
+        textForSearch = rootView.findViewById(R.id.search_text_searchlayout);
         textForSearch.setHint(R.string.forumSearch);
         textForSearch.setOnEditorActionListener(actionInSearchEditTextListener);
         buttonForSearch.setOnClickListener(searchButtonClickedListener);
 
-        MenuItemCompat.setOnActionExpandListener(searchExpandableItem, new MenuItemCompat.OnActionExpandListener() {
+        searchExpandableItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 searchTextIsOpened = false;
@@ -207,7 +204,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
 
         if (lastSearchedText != null) {
             textForSearch.setText(lastSearchedText);
-            MenuItemCompat.expandActionView(searchExpandableItem);
+            searchExpandableItem.expandActionView();
         }
 
         return true;
@@ -229,7 +226,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
     protected void initializeViewAndToolbar() {
         setContentView(R.layout.activity_selectforum);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_selectforum);
+        Toolbar myToolbar = findViewById(R.id.toolbar_selectforum);
         setSupportActionBar(myToolbar);
 
         ActionBar myActionBar = getSupportActionBar();
@@ -238,8 +235,8 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
             myActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        layoutForDrawer = (DrawerLayout) findViewById(R.id.layout_drawer_selectforum);
-        navigationMenuList = (NavigationMenuListView) findViewById(R.id.navigation_menu_selectforum);
+        layoutForDrawer = findViewById(R.id.layout_drawer_selectforum);
+        navigationMenuList = findViewById(R.id.navigation_menu_selectforum);
     }
 
     @Override

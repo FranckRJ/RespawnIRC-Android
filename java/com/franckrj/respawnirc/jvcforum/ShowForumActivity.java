@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
@@ -16,7 +15,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.MainActivity;
-import com.franckrj.respawnirc.NavigationMenuListView;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.dialogs.SelectTextDialogFragment;
 import com.franckrj.respawnirc.jvctopic.ShowTopicActivity;
@@ -341,7 +339,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     protected void initializeViewAndToolbar() {
         setContentView(R.layout.activity_showforum);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_showforum);
+        Toolbar myToolbar = findViewById(R.id.toolbar_showforum);
         myToolbar.setOnLongClickListener(showForumTitleListener);
         setSupportActionBar(myToolbar);
 
@@ -351,8 +349,8 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
             myActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        layoutForDrawer = (DrawerLayout) findViewById(R.id.layout_drawer_showforum);
-        navigationMenuList = (NavigationMenuListView) findViewById(R.id.navigation_menu_showforum);
+        layoutForDrawer = findViewById(R.id.layout_drawer_showforum);
+        navigationMenuList = findViewById(R.id.navigation_menu_showforum);
     }
 
     @Override

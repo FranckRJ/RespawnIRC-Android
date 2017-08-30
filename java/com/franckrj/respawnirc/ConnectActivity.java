@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
 
-public class ConnectActivity extends ThemedActivity {
+public class ConnectActivity extends AbsThemedActivity {
     private WebView jvcWebView = null;
     private EditText pseudoText = null;
     private HelpConnectDialogFragment helpDialogFragment = null;
@@ -78,7 +78,7 @@ public class ConnectActivity extends ThemedActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_connect);
+        Toolbar myToolbar = findViewById(R.id.toolbar_connect);
         setSupportActionBar(myToolbar);
 
         ActionBar myActionBar = getSupportActionBar();
@@ -87,8 +87,8 @@ public class ConnectActivity extends ThemedActivity {
             myActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        jvcWebView = (WebView) findViewById(R.id.webview_connect);
-        pseudoText = (EditText) findViewById(R.id.pseudo_text_connect);
+        jvcWebView = findViewById(R.id.webview_connect);
+        pseudoText = findViewById(R.id.pseudo_text_connect);
 
         helpDialogFragment = new HelpConnectDialogFragment();
 

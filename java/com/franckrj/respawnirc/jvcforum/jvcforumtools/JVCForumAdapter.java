@@ -114,10 +114,10 @@ public class JVCForumAdapter extends BaseAdapter {
             holder = new ViewHolder();
 
             convertView = serviceInflater.inflate(R.layout.jvctopics_row, parent, false);
-            holder.firstLine = (TextView) convertView.findViewById(R.id.item_one_jvctopics_text_row);
-            holder.secondLine = (TextView) convertView.findViewById(R.id.item_two_jvctopics_text_row);
-            holder.thirdLine = (TextView) convertView.findViewById(R.id.item_three_jvctopics_text_row);
-            holder.topicIcon = (ImageView) convertView.findViewById(R.id.item_topic_icon_jvctopics_image_row);
+            holder.firstLine = convertView.findViewById(R.id.item_one_jvctopics_text_row);
+            holder.secondLine = convertView.findViewById(R.id.item_two_jvctopics_text_row);
+            holder.thirdLine = convertView.findViewById(R.id.item_three_jvctopics_text_row);
+            holder.topicIcon = convertView.findViewById(R.id.item_topic_icon_jvctopics_image_row);
 
             convertView.setTag(holder);
         } else {

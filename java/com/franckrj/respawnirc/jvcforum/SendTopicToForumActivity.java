@@ -12,14 +12,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.ThemedActivity;
+import com.franckrj.respawnirc.AbsThemedActivity;
 import com.franckrj.respawnirc.dialogs.InsertStuffDialogFragment;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
-public class SendTopicToForumActivity extends ThemedActivity implements InsertStuffDialogFragment.StuffInserted {
+public class SendTopicToForumActivity extends AbsThemedActivity implements InsertStuffDialogFragment.StuffInserted {
     public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_FORUM_NAME";
     public static final String EXTRA_FORUM_LINK = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_FORUM_LINK";
     public static final String EXTRA_INPUT_LIST = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_INPUT_LIST";
@@ -59,7 +59,7 @@ public class SendTopicToForumActivity extends ThemedActivity implements InsertSt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sendtopic);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_sendtopic);
+        Toolbar myToolbar = findViewById(R.id.toolbar_sendtopic);
         setSupportActionBar(myToolbar);
 
         ActionBar myActionBar = getSupportActionBar();
@@ -68,8 +68,8 @@ public class SendTopicToForumActivity extends ThemedActivity implements InsertSt
             myActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        topicTitleEdit = (EditText) findViewById(R.id.topic_title_edit_sendtopic);
-        topicContentEdit = (EditText) findViewById(R.id.topic_content_edit_sendtopic);
+        topicTitleEdit = findViewById(R.id.topic_title_edit_sendtopic);
+        topicContentEdit = findViewById(R.id.topic_content_edit_sendtopic);
 
         if (getIntent() != null) {
             if (getIntent().getStringExtra(EXTRA_FORUM_NAME) != null && myActionBar != null) {

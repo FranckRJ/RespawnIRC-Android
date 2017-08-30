@@ -16,7 +16,7 @@ import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
 
-public class WebNavigatorActivity extends ThemedActivity {
+public class WebNavigatorActivity extends AbsThemedActivity {
     public static final String EXTRA_URL_LOAD = "com.franckrj.respawnirc.webnavigatoractivity.EXTRA_URL_LOAD";
 
     private static final String SAVE_TITLE_FOR_NAVIGATOR = "saveTitleForNavigator";
@@ -39,7 +39,7 @@ public class WebNavigatorActivity extends ThemedActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webnavigator);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_webnavigator);
+        Toolbar myToolbar = findViewById(R.id.toolbar_webnavigator);
         setSupportActionBar(myToolbar);
 
         ActionBar myActionBar = getSupportActionBar();
@@ -57,7 +57,7 @@ public class WebNavigatorActivity extends ThemedActivity {
             CookieManager.getInstance().setCookie("http://www.jeuxvideo.com/", secondCookie);
         }
 
-        navigatorWebView = (WebView) findViewById(R.id.webview_webnavigator);
+        navigatorWebView = findViewById(R.id.webview_webnavigator);
 
         navigatorWebView.setWebViewClient(new WebViewClient() {
             @Override

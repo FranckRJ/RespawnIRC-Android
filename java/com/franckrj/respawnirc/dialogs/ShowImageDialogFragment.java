@@ -91,8 +91,8 @@ public class ShowImageDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View mainView = inflater.inflate(R.layout.dialog_showimage, container, false);
-        viewForImage = (ImageView) mainView.findViewById(R.id.imageview_image_showimage);
-        progressBarForImage = (ProgressBar) mainView.findViewById(R.id.downloading_image_showimage);
+        viewForImage = mainView.findViewById(R.id.imageview_image_showimage);
+        progressBarForImage = mainView.findViewById(R.id.downloading_image_showimage);
 
         progressBarForImage.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
         viewForImage.setVisibility(View.GONE);

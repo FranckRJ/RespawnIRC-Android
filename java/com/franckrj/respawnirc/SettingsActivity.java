@@ -6,7 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-public class SettingsActivity extends ThemedActivity implements SettingsFragment.NewSettingsFileNeedALoad {
+public class SettingsActivity extends AbsThemedActivity implements SettingsFragment.NewSettingsFileNeedALoad {
     public static final String EXTRA_FILE_TO_LOAD = "com.respawnirc.settingsactivity.EXTRA_FILE_TO_LOAD";
 
     @Override
@@ -14,7 +14,7 @@ public class SettingsActivity extends ThemedActivity implements SettingsFragment
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_settings);
+        Toolbar myToolbar = findViewById(R.id.toolbar_settings);
         setSupportActionBar(myToolbar);
 
         ActionBar myActionBar = getSupportActionBar();
