@@ -200,6 +200,7 @@
     <string name="lock">Fermer</string>
     <string name="reasonOfLock">Raison de la fermeture…</string>
     <string name="errorReasonMissing">Erreur, raison manquante.</string>
+    <string name="goToDirectLinkForDDB">Accéder au message (DDB)</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
@@ -212,6 +213,7 @@
         <item>@string/ignore</item>
         <item>@string/copyPseudo</item>
         <item>@string/copyPermalink</item>
+        <item>@string/goToDirectLinkForDDB</item>
         <item>@string/selectText</item>
     </string-array>
     <string-array name="choicesForConnectionReadable">
