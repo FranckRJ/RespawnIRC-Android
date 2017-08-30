@@ -60,8 +60,7 @@ public class LongClickLinkMovementMethod extends LinkMovementMethod {
                         @Override
                         public void run() {
                             Vibrator vibratorService = (Vibrator) widget.getContext().getSystemService(Context.VIBRATOR_SERVICE);
-                            //TODO: Deprecated dans l'API 26, à changer lors du changement d'API
-                            vibratorService.vibrate(LONG_PRESS_VIBRATE_PATTERN, -1);
+                            Undeprecator.vibratorVibrate(vibratorService, LONG_PRESS_VIBRATE_PATTERN, -1);
                             link[0].onLongClick(widget);
                             itsLongPress = true;
                         }
