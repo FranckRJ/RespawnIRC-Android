@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.AbsThemedActivity;
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
 public class KickPseudoActivity extends AbsThemedActivity {
@@ -151,7 +152,8 @@ public class KickPseudoActivity extends AbsThemedActivity {
             if (infoOfKick.length == 1) {
                 WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
                 currentWebInfos.followRedirects = false;
-                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_kick.php", "GET", "action=post&motif_kick=" + infoOfKick[0].motive + "&raison_kick=" + infoOfKick[0].reason + "&duree_kick=3&id_alias_a_kick=" + infoOfKick[0].idAliasPseudo + "&id_forum=" + infoOfKick[0].idForum + "&id_message=" + infoOfKick[0].idMessage + "&" + infoOfKick[0].ajaxInfos, infoOfKick[0].cookies, currentWebInfos);
+                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_kick.php", "GET", "action=post&motif_kick=" + infoOfKick[0].motive + "&raison_kick=" + Utils.convertStringToUrlString(infoOfKick[0].reason) +
+                        "&duree_kick=3&id_alias_a_kick=" + infoOfKick[0].idAliasPseudo + "&id_forum=" + infoOfKick[0].idForum + "&id_message=" + infoOfKick[0].idMessage + "&" + infoOfKick[0].ajaxInfos, infoOfKick[0].cookies, currentWebInfos);
             }
             return "erreurlol";
         }

@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.AbsThemedActivity;
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
 public class LockTopicActivity extends AbsThemedActivity {
@@ -123,7 +124,8 @@ public class LockTopicActivity extends AbsThemedActivity {
             if (infoOfLock.length == 1) {
                 WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
                 currentWebInfos.followRedirects = false;
-                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/modal_moderation_topic.php", "GET", "id_forum=" + infoOfLock[0].idForum + "&tab_topic[]=" +  infoOfLock[0].idTopic + "&type=lock&raison_moderation=" + infoOfLock[0].reason + "&action=post&" + infoOfLock[0].ajaxInfos, infoOfLock[0].cookies, currentWebInfos);
+                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/modal_moderation_topic.php", "GET", "id_forum=" + infoOfLock[0].idForum + "&tab_topic[]=" +  infoOfLock[0].idTopic +
+                        "&type=lock&raison_moderation=" + Utils.convertStringToUrlString(infoOfLock[0].reason) + "&action=post&" + infoOfLock[0].ajaxInfos, infoOfLock[0].cookies, currentWebInfos);
             }
             return "erreurlol";
         }
