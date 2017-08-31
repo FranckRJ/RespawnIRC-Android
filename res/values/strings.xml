@@ -201,6 +201,9 @@
     <string name="reasonOfLock">Raison de la fermeture…</string>
     <string name="errorReasonMissing">Erreur, raison manquante.</string>
     <string name="goToDirectLinkForDDB">Accéder au message (DDB)</string>
+    <string name="manageSurvey">Gérer le sondage</string>
+    <string name="keepEmptyToNotUse">Laisser vide pour ne pas utiliser</string>
+    <string name="surveyTitlePlaceholder">Titre (vide pour ne pas créer de sondage)</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

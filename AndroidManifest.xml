@@ -48,6 +48,11 @@
             android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
         <activity
+            android:name=".jvcforum.ManageSurveyOfTopicActivity"
+            android:label="@string/manageSurvey"
+            android:windowSoftInputMode="stateAlwaysHidden">
+        </activity>
+        <activity
             android:name=".jvctopic.ShowTopicActivity"
             android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
