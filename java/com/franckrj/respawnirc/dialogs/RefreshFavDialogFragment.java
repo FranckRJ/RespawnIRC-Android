@@ -69,7 +69,7 @@ public class RefreshFavDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View mainView = inflater.inflate(R.layout.dialog_loading, container, false);
-        TextView textView = (TextView) mainView.findViewById(R.id.textview_loading_dialog);
+        TextView textView = mainView.findViewById(R.id.textview_loading_dialog);
         textView.setText(R.string.loadingFavs);
 
         return mainView;

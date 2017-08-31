@@ -36,6 +36,26 @@
                 android:minLines="4"
                 android:maxLines="10"
                 android:hint="@string/messagePlaceHolder"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/insertstuff_button_sendtopic"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="40"
+                    android:layout_margin="4dp"
+                    android:text="@string/insertStuff"/>
+                <Button
+                    android:id="@+id/managesurvey_button_sendtopic"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="60"
+                    android:layout_margin="4dp"
+                    android:text="@string/manageSurvey"/>
+            </LinearLayout>
         </LinearLayout>
 
         <include

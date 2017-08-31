@@ -26,8 +26,12 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
 
     private final JVCTopicModeForumGetter.NewMessagesListener listenerForNewMessages = new JVCTopicModeForumGetter.NewMessagesListener() {
         @Override
-        public void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages, boolean itsReallyEmpty) {
-            if (!listOfNewMessages.isEmpty()) {
+        public void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages, boolean itsReallyEmpty, boolean dontShowMessages) {
+            if (dontShowMessages) {
+                isInErrorMode = false;
+                allMessagesShowedAreFromIgnoredPseudos = false;
+                goToBottomAtPageLoading = false;
+            } else if (!listOfNewMessages.isEmpty()) {
                 String pseudoOfUserInLC = currentSettings.pseudoOfUser.toLowerCase();
                 boolean scrolledAtTheEnd = false;
                 isInErrorMode = false;

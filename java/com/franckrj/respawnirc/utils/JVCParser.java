@@ -21,7 +21,8 @@ public final class JVCParser {
     private static final Pattern signaturePattern = Pattern.compile("<div class=\"signature-msg[^\"]*\">(.*?)</div>", Pattern.DOTALL);
     private static final Pattern avatarPattern = Pattern.compile("<img src=\"[^\"]*\" data-srcset=\"(http:)?//([^\"]*)\" class=\"user-avatar-msg\"", Pattern.DOTALL);
     private static final Pattern entireTopicPattern = Pattern.compile("<li class=\"[^\"]*\" data-id=\"[^\"]*\">.*?<span class=\"topic-subject\">.*?</li>", Pattern.DOTALL);
-    private static final Pattern pseudoIsBlacklistedPattern = Pattern.compile("<div class=\"bloc-message-forum msg-pseudo-blacklist \" data-id=\"");
+    private static final Pattern pseudoIsBlacklistedPattern = Pattern.compile("<div class=\"bloc-message-forum msg-pseudo-blacklist[^\"]*\" data-id=\"");
+    private static final Pattern messageIsDeletedPattern = Pattern.compile("<div class=\"bloc-message-forum msg-supprime[^\"]*\" data-id=\"");
     private static final Pattern pseudoInfosPattern = Pattern.compile("<span class=\"JvCare [^ ]* bloc-pseudo-msg text-([^\"]*)\" target=\"_blank\">[^a-zA-Z0-9_\\[\\]-]*([a-zA-Z0-9_\\[\\]-]*)[^<]*</span>");
     private static final Pattern idAliasPattern = Pattern.compile("data-id-alias=\"([0-9]+)\">");
     private static final Pattern messagePattern = Pattern.compile("<div class=\"bloc-contenu\"><div class=\"txt-msg  text-[^-]*-forum \">((.*?)(?=<div class=\"info-edition-msg\">)|(.*?)(?=<div class=\"signature-msg)|(.*))", Pattern.DOTALL);
@@ -82,6 +83,7 @@ public final class JVCParser {
     private static final Pattern noelshackImagePattern = Pattern.compile("<span class=\"JvCare[^>]*><img class=\"img-shack\".*?src=\"http(s)?://([^\"]*)\" alt=\"([^\"]*)\"[^>]*></span>");
     private static final Pattern emptySearchPattern = Pattern.compile("<span style=\"[^\"]*\">[ \\n\\r]*Aucune réponse pour votre recherche ![ \\n\\r]*</span>");
     private static final Pattern userCanPostAsModoPattern = Pattern.compile("<select class=\"select-user-post\" id=\"form_alias_rang\" name=\"form_alias_rang\">((.*?)(?=<option value=\"2\")|(.*?)(?=</select>))<option value=\"2\"", Pattern.DOTALL);
+    private static final Pattern userCanLockTopicPattern = Pattern.compile("<span class=\"btn btn-forum-modo btn-lock-topic\" data-type=\"lock\">Bloquer</span>");
     private static final Pattern uglyImagesNamePattern = Pattern.compile("issou|risi|rizi|jesus|picsart|chancla|larry");
     private static final Pattern adPattern = Pattern.compile("<ins[^>]*></ins>");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
@@ -495,9 +497,7 @@ public final class JVCParser {
     }
 
     public static boolean getSearchIsEmptyInPage(String pageSource) {
-        Matcher emptySearchMatcher = emptySearchPattern.matcher(pageSource);
-
-        return emptySearchMatcher.find();
+        return emptySearchPattern.matcher(pageSource).find();
     }
 
     public static Boolean getIsInFavsFromPage(String pageSource) {
@@ -650,9 +650,11 @@ public final class JVCParser {
     }
 
     public static boolean getUserCanPostAsModo(String pageSource) {
-        Matcher userCanPostAsModo = userCanPostAsModoPattern.matcher(pageSource);
+        return userCanPostAsModoPattern.matcher(pageSource).find();
+    }
 
-        return userCanPostAsModo.find();
+    public static boolean getUserCanLockTopic(String pageSource) {
+        return userCanLockTopicPattern.matcher(pageSource).find();
     }
 
     public static String getListOfInputInAStringInTopicFormForThisPage(String pageSource) {
@@ -837,8 +839,8 @@ public final class JVCParser {
                 ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, -1, "<bg_closed_spoil><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "000000" : "FFFFFF") + "\">&nbsp;SPOIL&nbsp;</font></bg_closed_spoil>", "", null, null);
                 ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, -1, "<p><bg_closed_spoil><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "000000" : "FFFFFF") + "\">&nbsp;SPOIL&nbsp;</font></bg_closed_spoil></p>", "", null, null);
             } else {
-                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "<font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "FFFFFF" : "000000") + "\">", "</font>", new RemoveFirstsAndLastsP(), null);
-                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "FFFFFF" : "000000") + "\">", "</font></p>",  new RemoveFirstsAndLastsP(), null);
+                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "<bg_opened_spoil><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "FFFFFF" : "000000") + "\">", "</font></bg_opened_spoil>", new RemoveFirstsAndLastsP(), null);
+                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p><bg_opened_spoil><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "FFFFFF" : "000000") + "\">", "</font></bg_opened_spoil></p>",  new RemoveFirstsAndLastsP(), null);
             }
         }
 
@@ -904,6 +906,7 @@ public final class JVCParser {
     public static MessageInfos createMessageInfoFromEntireMessage(String thisEntireMessage) {
         MessageInfos newMessageInfo = new MessageInfos();
         Matcher pseudoIsBlacklistedMatcher = pseudoIsBlacklistedPattern.matcher(thisEntireMessage);
+        Matcher messageIsDeletedMatcher = messageIsDeletedPattern.matcher(thisEntireMessage);
         Matcher pseudoInfosMatcher = pseudoInfosPattern.matcher(thisEntireMessage);
         Matcher idAliasMatcher = idAliasPattern.matcher(thisEntireMessage);
         Matcher messageMatcher = messagePattern.matcher(thisEntireMessage);
@@ -914,6 +917,7 @@ public final class JVCParser {
         Matcher messageIDMatcher = messageIDPattern.matcher(thisEntireMessage);
 
         newMessageInfo.pseudoIsBlacklisted = pseudoIsBlacklistedMatcher.find();
+        newMessageInfo.messageIsDeleted = messageIsDeletedMatcher.find();
 
         if (pseudoInfosMatcher.find()) {
             newMessageInfo.pseudo = pseudoInfosMatcher.group(2);
@@ -1283,6 +1287,7 @@ public final class JVCParser {
         public String wholeDate = "";
         public String lastTimeEdit = "";
         public boolean pseudoIsBlacklisted = false;
+        public boolean messageIsDeleted = false;
         public boolean messageContentContainSpoil = false;
         public boolean signatureContainSpoil = false;
         public boolean showSpoil = false;
@@ -1319,15 +1324,16 @@ public final class JVCParser {
             dateTime = in.readString();
             wholeDate = in.readString();
             lastTimeEdit = in.readString();
-            pseudoIsBlacklisted = (in.readInt() == 1);
-            messageContentContainSpoil = (in.readInt() == 1);
-            signatureContainSpoil = (in.readInt() == 1);
-            showSpoil = (in.readInt() == 1);
+            pseudoIsBlacklisted = (in.readByte() == 1);
+            messageIsDeleted = (in.readByte() == 1);
+            messageContentContainSpoil = (in.readByte() == 1);
+            signatureContainSpoil = (in.readByte() == 1);
+            showSpoil = (in.readByte() == 1);
             numberOfOverlyQuote = in.readInt();
-            showOverlyQuote = (in.readInt() == 1);
-            isAnEdit = (in.readInt() == 1);
-            containUglyImages = (in.readInt() == 1);
-            showUglyImages = (in.readInt() == 1);
+            showOverlyQuote = (in.readByte() == 1);
+            isAnEdit = (in.readByte() == 1);
+            containUglyImages = (in.readByte() == 1);
+            showUglyImages = (in.readByte() == 1);
             id = in.readLong();
         }
 
@@ -1347,15 +1353,16 @@ public final class JVCParser {
             out.writeString(dateTime);
             out.writeString(wholeDate);
             out.writeString(lastTimeEdit);
-            out.writeInt(pseudoIsBlacklisted ? 1 : 0);
-            out.writeInt(messageContentContainSpoil ? 1 : 0);
-            out.writeInt(signatureContainSpoil ? 1 : 0);
-            out.writeInt(showSpoil ? 1 : 0);
+            out.writeByte((byte)(pseudoIsBlacklisted ? 1 : 0));
+            out.writeByte((byte)(messageIsDeleted ? 1 : 0));
+            out.writeByte((byte)(messageContentContainSpoil ? 1 : 0));
+            out.writeByte((byte)(signatureContainSpoil ? 1 : 0));
+            out.writeByte((byte)(showSpoil ? 1 : 0));
             out.writeInt(numberOfOverlyQuote);
-            out.writeInt(showOverlyQuote ? 1 : 0);
-            out.writeInt(isAnEdit ? 1 : 0);
-            out.writeInt(containUglyImages ? 1 : 0);
-            out.writeInt(showUglyImages ? 1 : 0);
+            out.writeByte((byte)(showOverlyQuote ? 1 : 0));
+            out.writeByte((byte)(isAnEdit ? 1 : 0));
+            out.writeByte((byte)(containUglyImages ? 1 : 0));
+            out.writeByte((byte)(showUglyImages ? 1 : 0));
             out.writeLong(id);
         }
 

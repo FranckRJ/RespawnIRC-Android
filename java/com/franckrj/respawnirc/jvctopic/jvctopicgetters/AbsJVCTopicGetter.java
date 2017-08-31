@@ -25,6 +25,7 @@ public abstract class AbsJVCTopicGetter {
     protected static final String SAVE_SURVEY_REPLYS_WITH_INFOS = "saveSurveyReplysWithInfos";
     protected static final String SAVE_TOPIC_IS_IN_FAV = "saveTopicIsInFav";
     protected static final String SAVE_USER_CAN_POST_AS_MODO = "saveUserCanPostAsModo";
+    protected static final String SAVE_USER_CAN_LOCK_TOPIC = "saveUserCanLockTopic";
 
     protected String urlForTopic = "";
     protected boolean isLoadingFirstPage = false;
@@ -48,6 +49,7 @@ public abstract class AbsJVCTopicGetter {
     protected NewPseudoOfAuthorAvailable listenerForNewPseudoOfAuthor = null;
     protected boolean userCanPostAsModo = false;
     protected NewUserCanPostAsModoInfoAvailable listenerForNewUserCanPostAsModo = null;
+    protected boolean userCanLockTopic = false;
     protected ErrorType lastTypeOfError = ErrorType.NONE_OR_UNKNOWN;
 
     public String getUrlForTopic() {
@@ -92,6 +94,10 @@ public abstract class AbsJVCTopicGetter {
 
     public ErrorType getLastTypeOfError() {
         return lastTypeOfError;
+    }
+
+    public boolean getUserCanLockTopic() {
+        return userCanLockTopic;
     }
 
     public void setIsInFavs(Boolean newVal) {
@@ -157,6 +163,7 @@ public abstract class AbsJVCTopicGetter {
         htmlSurveyTitle = savedInstanceState.getString(SAVE_HTML_SURVEY_TITLE, "");
         listOfSurveyReplyWithInfos = savedInstanceState.getParcelableArrayList(SAVE_SURVEY_REPLYS_WITH_INFOS);
         userCanPostAsModo = savedInstanceState.getBoolean(SAVE_USER_CAN_POST_AS_MODO);
+        userCanLockTopic = savedInstanceState.getBoolean(SAVE_USER_CAN_LOCK_TOPIC);
         if (savedInstanceState.containsKey(SAVE_TOPIC_IS_IN_FAV)) {
             isInFavs = savedInstanceState.getBoolean(SAVE_TOPIC_IS_IN_FAV, false);
         } else {
@@ -176,6 +183,7 @@ public abstract class AbsJVCTopicGetter {
         savedInstanceState.putString(SAVE_HTML_SURVEY_TITLE, htmlSurveyTitle);
         savedInstanceState.putParcelableArrayList(SAVE_SURVEY_REPLYS_WITH_INFOS, listOfSurveyReplyWithInfos);
         savedInstanceState.putBoolean(SAVE_USER_CAN_POST_AS_MODO, userCanPostAsModo);
+        savedInstanceState.putBoolean(SAVE_USER_CAN_LOCK_TOPIC, userCanLockTopic);
         if (isInFavs != null) {
             savedInstanceState.putBoolean(SAVE_TOPIC_IS_IN_FAV, isInFavs);
         }
@@ -212,6 +220,7 @@ public abstract class AbsJVCTopicGetter {
                 newPageInfos.newListOfSurveyReplyWithInfos = JVCParser.getListOfSurveyReplyWithInfos(pageContent);
             }
             newPageInfos.newUserCanPostAsModo = JVCParser.getUserCanPostAsModo(pageContent);
+            newPageInfos.newUserCanLockTopic = JVCParser.getUserCanLockTopic(pageContent);
         }
 
         return newPageInfos;
@@ -243,6 +252,7 @@ public abstract class AbsJVCTopicGetter {
             isInFavs = infoOfCurrentPage.newIsInFavs;
             topicID = infoOfCurrentPage.newTopicID;
             listOfSurveyReplyWithInfos = infoOfCurrentPage.newListOfSurveyReplyWithInfos;
+            userCanLockTopic = infoOfCurrentPage.newUserCanLockTopic;
 
             if (infoOfCurrentPage.newUserCanPostAsModo != userCanPostAsModo) {
                 userCanPostAsModo = infoOfCurrentPage.newUserCanPostAsModo;
@@ -301,6 +311,7 @@ public abstract class AbsJVCTopicGetter {
         public String newHtmlSurveyTitle;
         public ArrayList<JVCParser.SurveyReplyInfos> newListOfSurveyReplyWithInfos = new ArrayList<>();
         public boolean newUserCanPostAsModo;
+        public boolean newUserCanLockTopic;
     }
 
     public interface TopicLinkChanged {
@@ -312,7 +323,7 @@ public abstract class AbsJVCTopicGetter {
     }
 
     public interface NewMessagesListener {
-        void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages, boolean itsReallyEmpty);
+        void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages, boolean itsReallyEmpty, boolean dontShowMessages);
     }
 
     public interface NewGetterStateListener {

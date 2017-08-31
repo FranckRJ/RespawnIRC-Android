@@ -2,6 +2,9 @@ package com.franckrj.respawnirc.utils;
 
 import android.app.Activity;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
 
@@ -20,11 +23,24 @@ public class CustomImageGetter implements Html.ImageGetter {
     public Drawable getDrawable(String source) {
         if (!source.startsWith("http")) {
             Drawable drawable;
+            int resID;
             Resources res = parentActivity.getResources();
-            int resID = res.getIdentifier(source.substring(0, source.lastIndexOf(".")), "drawable", parentActivity.getPackageName());
+            boolean needToBeBig = false;
+
+            if (source.startsWith("big-")) {
+                source = source.substring(("big-").length());
+                needToBeBig = true;
+            }
+            resID = res.getIdentifier(source.substring(0, source.lastIndexOf(".")), "drawable", parentActivity.getPackageName());
 
             try {
-                drawable = Undeprecator.resourcesGetDrawable(res, resID);
+                if (needToBeBig) {
+                    Bitmap tmpBitmap = BitmapFactory.decodeResource(res, resID);
+                    tmpBitmap = Bitmap.createScaledBitmap(tmpBitmap, tmpBitmap.getWidth() * 2, tmpBitmap.getHeight() * 2, false);
+                    drawable = new BitmapDrawable(res, tmpBitmap);
+                } else {
+                    drawable = Undeprecator.resourcesGetDrawable(res, resID);
+                }
             } catch (Exception e) {
                 drawable = deletedDrawable;
             }

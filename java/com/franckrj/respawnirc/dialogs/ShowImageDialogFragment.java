@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.ImageDownloader;
+import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
 
 public class ShowImageDialogFragment extends DialogFragment {
@@ -61,7 +62,7 @@ public class ShowImageDialogFragment extends DialogFragment {
 
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-            deletedDrawable = Undeprecator.resourcesGetDrawable(res, R.drawable.image_deleted);
+            deletedDrawable = Undeprecator.resourcesGetDrawable(res, ThemeManager.getDrawableRes(ThemeManager.DrawableName.DELETED_IMAGE));
             deletedDrawable.setBounds(0, 0, deletedDrawable.getIntrinsicWidth(), deletedDrawable.getIntrinsicHeight());
 
             downloaderForImage.setParentActivity(getActivity());
@@ -69,8 +70,8 @@ public class ShowImageDialogFragment extends DialogFragment {
             downloaderForImage.setImagesCacheDir(getActivity().getCacheDir());
             downloaderForImage.setScaleLargeImages(true);
             downloaderForImage.setImagesSize(metrics.widthPixels, metrics.heightPixels);
-            downloaderForImage.setDefaultDrawable(deletedDrawable);
-            downloaderForImage.setDeletedDrawable(deletedDrawable);
+            downloaderForImage.setDefaultDrawable(deletedDrawable, false);
+            downloaderForImage.setDeletedDrawable(deletedDrawable, false);
         }
     }
 
@@ -90,8 +91,8 @@ public class ShowImageDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View mainView = inflater.inflate(R.layout.dialog_showimage, container, false);
-        viewForImage = (ImageView) mainView.findViewById(R.id.imageview_image_showimage);
-        progressBarForImage = (ProgressBar) mainView.findViewById(R.id.downloading_image_showimage);
+        viewForImage = mainView.findViewById(R.id.imageview_image_showimage);
+        progressBarForImage = mainView.findViewById(R.id.downloading_image_showimage);
 
         progressBarForImage.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
         viewForImage.setVisibility(View.GONE);
@@ -104,7 +105,8 @@ public class ShowImageDialogFragment extends DialogFragment {
         mainView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
+                //TODO: pas sur que ce soit une bonne idée, ne pas appliquer ailleurs avant plus de tests
+                dismissAllowingStateLoss();
             }
         });
 

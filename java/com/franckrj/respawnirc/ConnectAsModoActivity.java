@@ -15,7 +15,7 @@ import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.WebManager;
 
-public class ConnectAsModoActivity extends ThemedActivity {
+public class ConnectAsModoActivity extends AbsThemedActivity {
     private ConnectAsModoTask currentTaskConnectAsModo = null;
     private SwipeRefreshLayout swipeRefresh = null;
     private EditText modoPasswordText = null;
@@ -48,7 +48,7 @@ public class ConnectAsModoActivity extends ThemedActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modoconnect);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_modoconnect);
+        Toolbar myToolbar = findViewById(R.id.toolbar_modoconnect);
         setSupportActionBar(myToolbar);
 
         ActionBar myActionBar = getSupportActionBar();
@@ -57,9 +57,9 @@ public class ConnectAsModoActivity extends ThemedActivity {
             myActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swiperefresh_modoconnect);
-        modoPasswordText = (EditText) findViewById(R.id.password_text_modoconnect);
-        validateButton = (Button) findViewById(R.id.validate_button_modoconnect);
+        swipeRefresh = findViewById(R.id.swiperefresh_modoconnect);
+        modoPasswordText = findViewById(R.id.password_text_modoconnect);
+        validateButton = findViewById(R.id.validate_button_modoconnect);
 
         swipeRefresh.setEnabled(false);
         modoPasswordText.setVisibility(View.GONE);

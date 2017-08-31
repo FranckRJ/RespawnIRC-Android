@@ -25,7 +25,7 @@ import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 
-public abstract class AbsNavigationViewActivity extends ThemedActivity implements RefreshFavDialogFragment.NewFavsAvailable {
+public abstract class AbsNavigationViewActivity extends AbsThemedActivity implements RefreshFavDialogFragment.NewFavsAvailable {
     protected static final int GROUP_ID_BASIC = 0;
     protected static final int GROUP_ID_FORUM_FAV = 1;
     protected static final int GROUP_ID_TOPIC_FAV = 2;
@@ -432,8 +432,8 @@ public abstract class AbsNavigationViewActivity extends ThemedActivity implement
         toggleForDrawer.setDrawerSlideAnimationEnabled(false);
 
         View navigationHeader = getLayoutInflater().inflate(R.layout.navigation_view_header, navigationMenuList, false);
-        pseudoTextNavigation = (TextView) navigationHeader.findViewById(R.id.pseudo_text_navigation_header);
-        contextConnectImageNavigation = (ImageView) navigationHeader.findViewById(R.id.context_connect_image_navigation_header);
+        pseudoTextNavigation = navigationHeader.findViewById(R.id.pseudo_text_navigation_header);
+        contextConnectImageNavigation = navigationHeader.findViewById(R.id.context_connect_image_navigation_header);
         adapterForNavigationMenu = new NavigationMenuAdapter(this);
         adapterForNavigationMenu.setBackgroundColors(Undeprecator.resourcesGetColor(getResources(), (ThemeManager.getThemeUsedIsDark() ? android.R.color.white : android.R.color.black)),
                 Undeprecator.resourcesGetColor(getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.NAVIGATION_ICON_COLOR)),

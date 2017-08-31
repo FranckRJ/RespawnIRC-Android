@@ -3,6 +3,8 @@ package com.franckrj.respawnirc.utils;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -70,6 +72,15 @@ public class Undeprecator {
         } else {
             //noinspection deprecation
             manager.removeAllCookie();
+        }
+    }
+
+    public static void vibratorVibrate(Vibrator vibratorService, long[] pattern, int repeat) {
+        if (Build.VERSION.SDK_INT >= 26) {
+            vibratorService.vibrate(VibrationEffect.createWaveform(pattern, repeat));
+        } else {
+            //noinspection deprecation
+            vibratorService.vibrate(pattern, repeat);
         }
     }
 }

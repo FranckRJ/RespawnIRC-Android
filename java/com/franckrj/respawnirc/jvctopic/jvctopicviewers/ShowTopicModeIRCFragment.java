@@ -29,7 +29,7 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
 
     private final JVCTopicModeIRCGetter.NewMessagesListener listenerForNewMessages = new JVCTopicModeIRCGetter.NewMessagesListener() {
         @Override
-        public void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages, boolean itsReallyEmpty) {
+        public void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages, boolean itsReallyEmpty, boolean dontShowMessages) {
             if (!listOfNewMessages.isEmpty()) {
                 String pseudoOfUserInLC = currentSettings.pseudoOfUser.toLowerCase();
                 boolean scrolledAtTheEnd = true;

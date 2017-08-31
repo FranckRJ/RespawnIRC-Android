@@ -35,7 +35,7 @@ public class SelectTextDialogFragment extends DialogFragment {
         }
 
         View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_selecttext, null);
-        textShowed = (TextView) mainView.findViewById(R.id.text_selecttext);
+        textShowed = mainView.findViewById(R.id.text_selecttext);
 
         if (textIsHtml) {
             textShowed.setText(Undeprecator.htmlFromHtml(textContent));

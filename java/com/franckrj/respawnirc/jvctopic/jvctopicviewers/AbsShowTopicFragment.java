@@ -122,6 +122,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         smoothScrollIsEnabled = PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_SMOOTH_SCROLL);
         adapterForTopic.setShowSpoilDefault(PrefsManager.getBool(PrefsManager.BoolPref.Names.DEFAULT_SHOW_SPOIL_VAL));
         adapterForTopic.setFastRefreshOfImages(PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_FAST_REFRESH_OF_IMAGES));
+        adapterForTopic.setColorDeletedMessages(PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_COLOR_DELETED_MESSAGES));
         userIsConnectedAsModo = PrefsManager.getBool(PrefsManager.BoolPref.Names.USER_IS_MODO);
         hideTotallyMessagesOfIgnoredPseudos = PrefsManager.getBool(PrefsManager.BoolPref.Names.HIDE_TOTALLY_MESSAGES_OF_IGNORED_PSEUDOS);
     }
@@ -252,6 +253,10 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         return absGetterForTopic.getIsInFavs();
     }
 
+    public boolean getUserCanLockTopic() {
+        return absGetterForTopic.getUserCanLockTopic();
+    }
+
     public String getTopicID() {
         return absGetterForTopic.getTopicID();
     }
@@ -279,9 +284,9 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View mainView = inflater.inflate(R.layout.fragment_showtopic, container, false);
 
-        errorBackgroundMessage = (TextView) mainView.findViewById(R.id.text_errorbackgroundmessage_showtopicfrag);
-        jvcMsgList = (ListView) mainView.findViewById(R.id.jvcmessage_view_showtopicfrag);
-        swipeRefresh = (SwipeRefreshLayout) mainView.findViewById(R.id.swiperefresh_showtopicfrag);
+        errorBackgroundMessage = mainView.findViewById(R.id.text_errorbackgroundmessage_showtopicfrag);
+        jvcMsgList = mainView.findViewById(R.id.jvcmessage_view_showtopicfrag);
+        swipeRefresh = mainView.findViewById(R.id.swiperefresh_showtopicfrag);
 
         return mainView;
     }
@@ -372,6 +377,11 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         }
 
         setHasOptionsMenu(true);
+
+        if (dontLoadOnFirstTime) {
+            absGetterForTopic.stopAllCurrentTask();
+            dontLoadOnFirstTime = false;
+        }
     }
 
     @Override

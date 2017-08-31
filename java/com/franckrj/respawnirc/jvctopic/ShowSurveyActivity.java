@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.ThemedActivity;
+import com.franckrj.respawnirc.AbsThemedActivity;
 import com.franckrj.respawnirc.dialogs.VoteInSurveyDialogFragment;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.ThemeManager;
@@ -22,7 +22,7 @@ import com.franckrj.respawnirc.utils.WebManager;
 
 import java.util.ArrayList;
 
-public class ShowSurveyActivity extends ThemedActivity implements VoteInSurveyDialogFragment.VoteInSurveyRegistered {
+public class ShowSurveyActivity extends AbsThemedActivity implements VoteInSurveyDialogFragment.VoteInSurveyRegistered {
     public static final String EXTRA_SURVEY_TITLE = "com.franckrj.respawnirc.showsurveyactivity.EXTRA_SURVEY_TITLE";
     public static final String EXTRA_SURVEY_REPLYS_WITH_INFOS = "com.franckrj.respawnirc.showsurveyactivity.EXTRA_SURVEY_REPLYS_WITH_INFOS";
     public static final String EXTRA_TOPIC_ID = "com.franckrj.respawnirc.showsurveyactivity.EXTRA_TOPIC_ID";
@@ -142,7 +142,7 @@ public class ShowSurveyActivity extends ThemedActivity implements VoteInSurveyDi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showsurvey);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_showsurvey);
+        Toolbar myToolbar = findViewById(R.id.toolbar_showsurvey);
         setSupportActionBar(myToolbar);
 
         ActionBar myActionBar = getSupportActionBar();
@@ -151,9 +151,9 @@ public class ShowSurveyActivity extends ThemedActivity implements VoteInSurveyDi
             myActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        contentText = (TextView) findViewById(R.id.content_showsurvey);
-        voteButton = (Button) findViewById(R.id.button_vote_showsurvey);
-        swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swiperefresh_showsurvey);
+        contentText = findViewById(R.id.content_showsurvey);
+        voteButton = findViewById(R.id.button_vote_showsurvey);
+        swipeRefresh = findViewById(R.id.swiperefresh_showsurvey);
 
         voteButton.setVisibility(View.GONE);
         voteButton.setOnClickListener(voteButtonClickedListener);

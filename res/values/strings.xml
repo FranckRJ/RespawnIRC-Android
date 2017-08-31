@@ -194,6 +194,16 @@
     <string name="enableFastRefreshOfImagesSummary">(augmente l\'utilisation des ressources CPU)</string>
     <string name="hideTotallyMessagesOfIgnoredPseudosTitle">Cacher totalement les messages des ignorés</string>
     <string name="noPseudoIgnoredInList">La liste des pseudos ignorés est vide.</string>
+    <string name="showWebsite">Voir le site web</string>
+    <string name="enableColorDeletedMessagesTitle">Colorer les messages supprimés</string>
+    <string name="lockTopic">Fermer le topic</string>
+    <string name="lock">Fermer</string>
+    <string name="reasonOfLock">Raison de la fermeture…</string>
+    <string name="errorReasonMissing">Erreur, raison manquante.</string>
+    <string name="goToDirectLinkForDDB">Accéder au message (DDB)</string>
+    <string name="manageSurvey">Gérer le sondage</string>
+    <string name="keepEmptyToNotUse">Laisser vide pour ne pas utiliser</string>
+    <string name="surveyTitlePlaceholder">Titre (vide pour ne pas créer de sondage)</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
@@ -206,6 +216,7 @@
         <item>@string/ignore</item>
         <item>@string/copyPseudo</item>
         <item>@string/copyPermalink</item>
+        <item>@string/goToDirectLinkForDDB</item>
         <item>@string/selectText</item>
     </string-array>
     <string-array name="choicesForConnectionReadable">

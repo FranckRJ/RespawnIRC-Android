@@ -94,6 +94,10 @@ public class JVCForumGetter {
         listenerForNewNumberOfMP = thisListener;
     }
 
+    public void setUrlForForumWithoutLoading(String newUrlOfPage) {
+        urlForForum = newUrlOfPage;
+    }
+
     public boolean startGetMessagesOfThisPage(String newUrlOfPage) {
         return startGetMessagesOfThisPage(newUrlOfPage, false);
     }
@@ -243,7 +247,7 @@ public class JVCForumGetter {
                     }
 
                     if (!latestListOfInputInAString.isEmpty()) {
-                        latestListOfInputInAString = latestListOfInputInAString + "&spotify_topic=&submit_sondage=0&question_sondage=&reponse_sondage[]=";
+                        latestListOfInputInAString = latestListOfInputInAString + "&spotify_topic=";
                     }
 
                     if (!infoOfCurrentPage.newForumName.equals(forumName)) {

@@ -12,11 +12,12 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.ThemedActivity;
+import com.franckrj.respawnirc.AbsThemedActivity;
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
-public class KickPseudoActivity extends ThemedActivity {
+public class KickPseudoActivity extends AbsThemedActivity {
     public static final String EXTRA_PSEUDO = "com.franckrj.respawnirc.kickpseudoactivity.EXTRA_PSEUDO";
     public static final String EXTRA_ID_ALIAS = "com.franckrj.respawnirc.kickpseudoactivity.EXTRA_ID_ALIAS";
     public static final String EXTRA_ID_FORUM = "com.franckrj.respawnirc.kickpseudoactivity.EXTRA_ID_FORUM";
@@ -76,7 +77,7 @@ public class KickPseudoActivity extends ThemedActivity {
 
         boolean errorWhenFillingInfos = false;
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_kickpseudo);
+        Toolbar myToolbar = findViewById(R.id.toolbar_kickpseudo);
         setSupportActionBar(myToolbar);
 
         ActionBar myActionBar = getSupportActionBar();
@@ -85,9 +86,9 @@ public class KickPseudoActivity extends ThemedActivity {
             myActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        Button applyKickButton = (Button) findViewById(R.id.kick_button_kickpseudo);
-        motiveSpinner = (Spinner) findViewById(R.id.motives_spinner_kickpseudo);
-        reasonEdit = (EditText) findViewById(R.id.reason_edit_kickpseudo);
+        Button applyKickButton = findViewById(R.id.kick_button_kickpseudo);
+        motiveSpinner = findViewById(R.id.motives_spinner_kickpseudo);
+        reasonEdit = findViewById(R.id.reason_edit_kickpseudo);
         applyKickButton.setOnClickListener(kickButtonClickedListener);
 
         if (getIntent() != null) {
@@ -151,7 +152,8 @@ public class KickPseudoActivity extends ThemedActivity {
             if (infoOfKick.length == 1) {
                 WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
                 currentWebInfos.followRedirects = false;
-                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_kick.php", "GET", "action=post&motif_kick=" + infoOfKick[0].motive + "&raison_kick=" + infoOfKick[0].reason + "&duree_kick=3&id_alias_a_kick=" + infoOfKick[0].idAliasPseudo + "&id_forum=" + infoOfKick[0].idForum + "&id_message=" + infoOfKick[0].idMessage + "&" + infoOfKick[0].ajaxInfos, infoOfKick[0].cookies, currentWebInfos);
+                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_kick.php", "GET", "action=post&motif_kick=" + infoOfKick[0].motive + "&raison_kick=" + Utils.convertStringToUrlString(infoOfKick[0].reason) +
+                        "&duree_kick=3&id_alias_a_kick=" + infoOfKick[0].idAliasPseudo + "&id_forum=" + infoOfKick[0].idForum + "&id_message=" + infoOfKick[0].idMessage + "&" + infoOfKick[0].ajaxInfos, infoOfKick[0].cookies, currentWebInfos);
             }
             return "erreurlol";
         }

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
@@ -16,7 +15,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.MainActivity;
-import com.franckrj.respawnirc.NavigationMenuListView;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.dialogs.SelectTextDialogFragment;
 import com.franckrj.respawnirc.jvctopic.ShowTopicActivity;
@@ -35,6 +33,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
                                                     AddOrRemoveThingToFavs.ActionToFavsEnded, JVCForumGetter.NewNumberOfMPSetted {
     public static final String EXTRA_NEW_LINK = "com.franckrj.respawnirc.EXTRA_NEW_LINK";
     public static final String EXTRA_GO_TO_LAST_PAGE = "com.franckrj.respawnirc.EXTRA_GO_TO_LAST_PAGE";
+    public static final String EXTRA_ITS_FIRST_START = "com.franckrj.respawnirc.EXTRA_ITS_FIRST_START";
 
     private static final int SEND_TOPIC_REQUEST_CODE = 156;
     private static final String SAVE_CURRENT_FORUM_TITLE = "saveCurrentForumTitle";
@@ -114,7 +113,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         return false;
     }
 
-    private void readThisTopicOrForum(String link, boolean goToLastPage) {
+    private boolean readThisTopicOrForum(String link, boolean goToLastPage) {
         if (link != null) {
             if (!link.isEmpty()) {
                 link = JVCParser.formatThisUrl(link);
@@ -122,14 +121,15 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
 
             if (JVCParser.checkIfItsForumLink(link)) {
                 if (readThisForum(link)) {
-                    return;
+                    return false;
                 }
             } else if (readThisTopic(link, true, null, null, goToLastPage)) {
-                return;
+                return true;
             }
         }
 
         Toast.makeText(this, R.string.errorInvalidLink, Toast.LENGTH_SHORT).show();
+        return false;
     }
 
     private void stopAllCurrentTasks() {
@@ -143,12 +143,15 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         return (ShowForumFragment) pageNavigation.getCurrentFragment();
     }
 
-    private void consumeIntent(Intent newIntent) {
+    private boolean consumeIntent(Intent newIntent) {
         String newLinkToGo = newIntent.getStringExtra(EXTRA_NEW_LINK);
 
+        //noinspection SimplifiableIfStatement
         if (newLinkToGo != null) {
-            readThisTopicOrForum(newLinkToGo, newIntent.getBooleanExtra(EXTRA_GO_TO_LAST_PAGE, false));
+            return readThisTopicOrForum(newLinkToGo, newIntent.getBooleanExtra(EXTRA_GO_TO_LAST_PAGE, false));
         }
+
+        return false;
     }
 
     private void updateShareAction() {
@@ -164,6 +167,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        boolean newActivityIsLaunched = false;
 
         pageNavigation.initializePagerView((ViewPager) findViewById(R.id.pager_showforum));
         pageNavigation.initializeNavigationButtons((Button) findViewById(R.id.firstpage_button_showforum), (Button) findViewById(R.id.previouspage_button_showforum),
@@ -173,7 +177,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         pageNavigation.setCurrentLink(PrefsManager.getString(PrefsManager.StringPref.Names.FORUM_URL_TO_FETCH));
         if (savedInstanceState == null) {
             currentTitle = getString(R.string.app_name);
-            consumeIntent(getIntent());
+            newActivityIsLaunched = consumeIntent(getIntent());
             pageNavigation.updateCurrentItemAndButtonsToCurrentLink();
         } else {
             currentTitle = savedInstanceState.getString(SAVE_CURRENT_FORUM_TITLE, getString(R.string.app_name));
@@ -182,6 +186,19 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
             pageNavigation.updateNavigationButtons();
         }
         setTitle(currentTitle);
+
+        if (savedInstanceState == null && getIntent() != null) {
+            if (getIntent().getBooleanExtra(EXTRA_ITS_FIRST_START, false) && PrefsManager.getInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED) == MainActivity.ACTIVITY_SHOW_TOPIC) {
+                startActivity(new Intent(this, ShowTopicActivity.class));
+                newActivityIsLaunched = true;
+            }
+        }
+
+        if (newActivityIsLaunched) {
+            pageNavigation.setDontLoadOnFirstTimeForNextFragCreate(true);
+        } else if (savedInstanceState == null) {
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        }
     }
 
     @Override
@@ -321,7 +338,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     protected void initializeViewAndToolbar() {
         setContentView(R.layout.activity_showforum);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_showforum);
+        Toolbar myToolbar = findViewById(R.id.toolbar_showforum);
         myToolbar.setOnLongClickListener(showForumTitleListener);
         setSupportActionBar(myToolbar);
 
@@ -331,8 +348,8 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
             myActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        layoutForDrawer = (DrawerLayout) findViewById(R.id.layout_drawer_showforum);
-        navigationMenuList = (NavigationMenuListView) findViewById(R.id.navigation_menu_showforum);
+        layoutForDrawer = findViewById(R.id.layout_drawer_showforum);
+        navigationMenuList = findViewById(R.id.navigation_menu_showforum);
     }
 
     @Override

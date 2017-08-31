@@ -10,7 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
 
-public class ThemedActivity extends AppCompatActivity {
+public abstract class AbsThemedActivity extends AppCompatActivity {
     protected static ActivityManager.TaskDescription generalTaskDesc = null;
     protected static ThemeManager.ThemeName themeUsedForGenerateTaskDesc = null;
     protected ThemeManager.ThemeName oldThemeUsed = null;

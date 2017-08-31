@@ -57,7 +57,7 @@ public class ChoosePageNumberDialogFragment extends DialogFragment {
         Window currentWindow;
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_choosepagenumber, null);
-        pageNumberEdit = (EditText) mainView.findViewById(R.id.pagenumber_edit_choosepagenumber);
+        pageNumberEdit = mainView.findViewById(R.id.pagenumber_edit_choosepagenumber);
         pageNumberEdit.setOnEditorActionListener(actionInEditTextListener);
         builder.setTitle(R.string.choosePageNumber).setView(mainView)
             .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

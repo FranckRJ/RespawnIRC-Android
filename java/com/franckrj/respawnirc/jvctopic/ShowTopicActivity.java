@@ -1,5 +1,6 @@
 package com.franckrj.respawnirc.jvctopic;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -18,7 +19,7 @@ import android.widget.Toast;
 
 import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.ThemedActivity;
+import com.franckrj.respawnirc.AbsThemedActivity;
 import com.franckrj.respawnirc.dialogs.ChoosePageNumberDialogFragment;
 import com.franckrj.respawnirc.dialogs.LinkContextMenuDialogFragment;
 import com.franckrj.respawnirc.dialogs.MessageContextMenuDialogFragment;
@@ -43,7 +44,7 @@ import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 
-public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCTopicGetter.NewForumAndTopicNameAvailable,
+public class ShowTopicActivity extends AbsThemedActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCTopicGetter.NewForumAndTopicNameAvailable,
                                                                     PopupMenu.OnMenuItemClickListener, JVCTopicModeForumGetter.NewNumbersOfPagesListener,
                                                                     ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCTopicAdapter.URLClicked,
                                                                     AbsJVCTopicGetter.NewReasonForTopicLock, InsertStuffDialogFragment.StuffInserted,
@@ -55,6 +56,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
     public static final String EXTRA_PSEUDO_OF_AUTHOR = "com.franckrj.respawnirc.EXTRA_PSEUDO_OF_AUTHOR";
     public static final String EXTRA_GO_TO_LAST_PAGE = "com.franckrj.respawnirc.EXTRA_GO_TO_LAST_PAGE";
 
+    private static final int LOCK_TOPIC_REQUEST_CODE = 1245;
     private static final String SAVE_CURRENT_FORUM_TITLE_FOR_TOPIC = "saveCurrentForumTitleForTopic";
     private static final String SAVE_CURRENT_TOPIC_TITLE_FOR_TOPIC = "saveCurrentTopicTitleForTopic";
     private static final String SAVE_LAST_PAGE = "saveLastPage";
@@ -280,7 +282,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         Drawable arrowDrawable = Undeprecator.resourcesGetDrawable(getResources(), ThemeManager.getDrawableRes(ThemeManager.DrawableName.ARROW_DROP_DOWN));
         arrowDrawable.setBounds(0, 0, arrowDrawable.getIntrinsicWidth() / 2, arrowDrawable.getIntrinsicHeight() / 2);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_showtopic);
+        Toolbar myToolbar = findViewById(R.id.toolbar_showtopic);
         myToolbar.setOnLongClickListener(showForumAndTopicTitleListener);
         setSupportActionBar(myToolbar);
 
@@ -291,9 +293,9 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         }
 
         messageSendLayout = findViewById(R.id.sendmessage_layout_showtopic);
-        messageSendEdit = (EditText) findViewById(R.id.sendmessage_text_showtopic);
-        messageSendButton = (ImageButton) findViewById(R.id.sendmessage_button_showtopic);
-        insertStuffButton = (ImageButton) findViewById(R.id.insertstuff_button_showtopic);
+        messageSendEdit = findViewById(R.id.sendmessage_text_showtopic);
+        messageSendButton = findViewById(R.id.sendmessage_button_showtopic);
+        insertStuffButton = findViewById(R.id.insertstuff_button_showtopic);
 
         pageNavigation.initializeLayoutForAllNavigationButtons(findViewById(R.id.header_layout_showtopic), findViewById(R.id.shadow_header_showtopic));
         pageNavigation.initializePagerView((ViewPager) findViewById(R.id.pager_showtopic));
@@ -410,6 +412,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         menu.findItem(R.id.action_past_last_message_sended_showtopic).setEnabled(!lastMessageSended.isEmpty());
 
         if (!pseudoOfUser.isEmpty() && getCurrentFragment() != null) {
+            menu.findItem(R.id.action_lock_topic_showtopic).setEnabled(getCurrentFragment().getUserCanLockTopic());
             if (getCurrentFragment().getIsInFavs() != null) {
                 menu.findItem(R.id.action_change_topic_fav_value_showtopic).setEnabled(true);
                 if (getCurrentFragment().getIsInFavs()) {
@@ -419,6 +422,8 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
                 }
                 return true;
             }
+        } else {
+            menu.findItem(R.id.action_lock_topic_showtopic).setEnabled(false);
         }
         menu.findItem(R.id.action_change_topic_fav_value_showtopic).setEnabled(false);
         return true;
@@ -438,6 +443,14 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
                     Toast.makeText(ShowTopicActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
                 }
                 return true;
+            case R.id.action_lock_topic_showtopic:
+                Intent newLockTopicIntent = new Intent(ShowTopicActivity.this, LockTopicActivity.class);
+                newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_ID_FORUM, JVCParser.getForumIDOfThisTopic(pageNavigation.getCurrentPageLink()));
+                newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_ID_TOPIC, getCurrentFragment().getTopicID());
+                newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_AJAX_MOD, getCurrentFragment().getLatestAjaxInfos().mod);
+                newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_COOKIES, cookieListInAString);
+                startActivityForResult(newLockTopicIntent, LOCK_TOPIC_REQUEST_CODE);
+                return true;
             case R.id.action_open_in_browser_showtopic:
                 if (!useInternalNavigatorForDefaultOpening) {
                     Utils.openLinkInExternalNavigator(pageNavigation.getCurrentPageLink(), this);
@@ -452,6 +465,15 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == LOCK_TOPIC_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            if (getCurrentFragment() != null) {
+                getCurrentFragment().reloadTopic();
+            }
         }
     }
 
@@ -560,7 +582,7 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
     }
 
     @Override
-    public void getNewLastPageNumber(String newNumber) {
+    public boolean getNewLastPageNumber(String newNumber) {
         if (!newNumber.isEmpty()) {
             pageNavigation.setLastPageNumber(Integer.parseInt(newNumber));
         } else {
@@ -570,14 +592,17 @@ public class ShowTopicActivity extends ThemedActivity implements AbsShowTopicFra
         pageNavigation.updateNavigationButtons();
 
         if (goToLastPageAfterLoading) {
+            goToLastPageAfterLoading = false;
             if (pageNavigation.getCurrentItemIndex() < pageNavigation.getLastPage() - 1) {
                 if (goToBottomOnLoadIsEnabled) {
                     pageNavigation.setGoToBottomOnNextLoad(true);
                 }
                 pageNavigation.setCurrentItemIndex(pageNavigation.getLastPage() - 1);
+                return true;
             }
-            goToLastPageAfterLoading = false;
         }
+
+        return false;
     }
 
     @Override

@@ -9,7 +9,6 @@ import android.webkit.WebView;
 
 import com.franckrj.respawnirc.jvcforumlist.SelectForumInListActivity;
 import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
-import com.franckrj.respawnirc.jvctopic.ShowTopicActivity;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Utils;
 
@@ -28,15 +27,19 @@ public class MainActivity extends AppCompatActivity {
         int lastActivityViewed = PrefsManager.getInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED);
         String linkToOpen = null;
 
-        //vider le cache des webviews
-        WebView obj = new WebView(this);
-        obj.clearCache(true);
+        //vidage du cache des webviews
+        if (PrefsManager.getBool(PrefsManager.BoolPref.Names.WEBVIEW_CACHE_NEED_TO_BE_CLEAR)) {
+            WebView obj = new WebView(this);
+            obj.clearCache(true);
+            PrefsManager.putBool(PrefsManager.BoolPref.Names.WEBVIEW_CACHE_NEED_TO_BE_CLEAR, false);
+            PrefsManager.applyChanges();
+        }
 
         File[] listOfImagesCached = getCacheDir().listFiles();
         if (listOfImagesCached != null) {
-            if (listOfImagesCached.length > 50) {
+            if (listOfImagesCached.length > 100) {
                 for (File thisFile : listOfImagesCached) {
-                    if (!thisFile.isDirectory() && (thisFile.getName().startsWith("nlshck_") || thisFile.getName().startsWith("vtr_"))) {
+                    if (!thisFile.isDirectory() && thisFile.getName().startsWith("img_")) {
                         //noinspection ResultOfMethodCallIgnored
                         thisFile.delete();
                     }
@@ -66,10 +69,8 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 firstIntentToLaunch = new Intent(this, ShowForumActivity.class);
                 firstIntentToLaunch.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                firstIntentToLaunch.putExtra(ShowForumActivity.EXTRA_ITS_FIRST_START, true);
                 startActivity(firstIntentToLaunch);
-                if (lastActivityViewed == ACTIVITY_SHOW_TOPIC) {
-                    startActivity(new Intent(this, ShowTopicActivity.class));
-                }
             }
         } else {
             Intent newShowForumIntent = new Intent(this, ShowForumActivity.class);

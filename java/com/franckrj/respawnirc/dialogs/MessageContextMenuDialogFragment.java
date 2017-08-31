@@ -25,7 +25,8 @@ public class MessageContextMenuDialogFragment extends DialogFragment {
     private static final int POS_IGNORE = 2;
     private static final int POS_COPY_PSEUDO = 3;
     private static final int POS_COPY_PERMALINK = 4;
-    private static final int POS_SELECT_TEXT = 5;
+    private static final int POS_DDB = 5;
+    private static final int POS_SELECT_TEXT = 6;
 
     private String pseudoOfMessage;
     private String pseudoOfUser;
@@ -93,6 +94,10 @@ public class MessageContextMenuDialogFragment extends DialogFragment {
                     case POS_COPY_PERMALINK: {
                         Utils.putStringInClipboard("http://www.jeuxvideo.com/" + pseudoOfMessage.toLowerCase() + "/forums/message/" + idOfMessage, getActivity());
                         Toast.makeText(getActivity(), R.string.copyDone, Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                    case POS_DDB: {
+                        Utils.openLinkInInternalNavigator("http://www.jeuxvideo.com/" + pseudoOfMessage.toLowerCase() + "/forums/message/" + idOfMessage, getActivity());
                         break;
                     }
                     case POS_SELECT_TEXT: {

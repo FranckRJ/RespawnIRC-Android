@@ -131,7 +131,7 @@ public class NavigationMenuAdapter extends BaseAdapter {
             holder = new CustomViewHolder();
 
             convertView = serviceInflater.inflate(R.layout.navigationmenu_row, parent, false);
-            holder.contentTextView = (TextView) convertView.findViewById(R.id.content_text_navigationmenu);
+            holder.contentTextView = convertView.findViewById(R.id.content_text_navigationmenu);
             holder.upperLineView = convertView.findViewById(R.id.upper_line_navigationmenu);
 
             holder.contentTextView.setCompoundDrawablePadding(parentActivity.getResources().getDimensionPixelSize(R.dimen.paddingForCompoundDrawableNavigationMenu));

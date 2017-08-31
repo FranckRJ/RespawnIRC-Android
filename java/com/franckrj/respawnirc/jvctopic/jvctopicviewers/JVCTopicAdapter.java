@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.v7.widget.CardView;
 import android.text.Html;
 import android.text.Layout;
@@ -61,6 +62,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     private boolean showAvatars = false;
     private boolean showSpoilDefault = false;
     private boolean fastRefreshOfImages = false;
+    private boolean colorDeletedMessages = true;
     private String surveyTitle = "";
     private View.OnClickListener onSurveyClickListener = null;
     private float multiplierOfLineSizeForInfoLineIfAvatarIsShowed = 0;
@@ -127,23 +129,21 @@ public class JVCTopicAdapter extends BaseAdapter {
     };
 
     public JVCTopicAdapter(Activity newParentActivity, JVCParser.Settings newSettings) {
-        Drawable deletedDrawable;
+        @DrawableRes int deletedDrawableRes = ThemeManager.getDrawableRes(ThemeManager.DrawableName.DELETED_IMAGE);
         Resources res;
 
         parentActivity = newParentActivity;
         currentSettings = newSettings;
         serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         res = parentActivity.getResources();
-        deletedDrawable = Undeprecator.resourcesGetDrawable(res, R.drawable.image_deleted);
-        deletedDrawable.setBounds(0, 0, deletedDrawable.getIntrinsicWidth(), deletedDrawable.getIntrinsicHeight());
 
-        jvcImageGetter = new CustomImageGetter(parentActivity, deletedDrawable, downloaderForImage);
+        jvcImageGetter = new CustomImageGetter(parentActivity, Undeprecator.resourcesGetDrawable(res, deletedDrawableRes), downloaderForImage);
         downloaderForImage.setParentActivity(parentActivity);
         downloaderForImage.setListenerForDownloadFinished(listenerForDownloadFinished);
         downloaderForImage.setImagesCacheDir(parentActivity.getCacheDir());
         downloaderForImage.setImagesSize(res.getDimensionPixelSize(R.dimen.imagesWidth), res.getDimensionPixelSize(R.dimen.imagesHeight));
-        downloaderForImage.setDefaultDrawable(Undeprecator.resourcesGetDrawable(res, R.drawable.image_file_download));
-        downloaderForImage.setDeletedDrawable(deletedDrawable);
+        downloaderForImage.setDefaultDrawable(Undeprecator.resourcesGetDrawable(res, ThemeManager.getDrawableRes(ThemeManager.DrawableName.DOWNLOAD_IMAGE)), true);
+        downloaderForImage.setDeletedDrawable(Undeprecator.resourcesGetDrawable(res, deletedDrawableRes), true);
     }
 
     public int getCurrentItemIDSelected() {
@@ -193,6 +193,10 @@ public class JVCTopicAdapter extends BaseAdapter {
 
     public void setFastRefreshOfImages(boolean newVal) {
         fastRefreshOfImages = newVal;
+    }
+
+    public void setColorDeletedMessages(boolean newVal) {
+        colorDeletedMessages = newVal;
     }
 
     public void setMultiplierOfLineSizeForInfoLineIfAvatarIsShowed(float newVal) {
@@ -270,6 +274,8 @@ public class JVCTopicAdapter extends BaseAdapter {
         } else {
             holder.signatureLineContent = replaceQuoteAndUrlSpans(Undeprecator.htmlFromHtml(JVCParser.createSignatureFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
         }
+
+        holder.messageIsDeleted = item.messageIsDeleted;
 
         return holder;
     }
@@ -417,7 +423,9 @@ public class JVCTopicAdapter extends BaseAdapter {
                 viewHolder.separator.setVisibility(View.GONE);
             }
 
-            if (realPosition % 2 == 0 || !alternateBackgroundColor) {
+            if (colorDeletedMessages && currentContent.messageIsDeleted) {
+                setColorBackgroundOfThisItem(convertView, ThemeManager.getColorRes(ThemeManager.ColorName.DELETED_MESSAGE_BACKGROUND_COLOR));
+            } else if (realPosition % 2 == 0 || !alternateBackgroundColor) {
                 setColorBackgroundOfThisItem(convertView, ThemeManager.getColorRes(ThemeManager.ColorName.DEFAULT_BACKGROUND_COLOR));
             } else {
                 setColorBackgroundOfThisItem(convertView, ThemeManager.getColorRes(ThemeManager.ColorName.ALT_BACKGROUND_COLOR));
@@ -479,12 +487,12 @@ public class JVCTopicAdapter extends BaseAdapter {
         public final ImageButton showMenuButton;
 
         public CustomViewHolder(View itemView) {
-            infoLine = (TextView) itemView.findViewById(R.id.item_one_jvcmessages_text_row);
-            avatarImage = (ImageView) itemView.findViewById(R.id.image_one_jvcmessages_text_row);
-            messageLine = (TextView) itemView.findViewById(R.id.item_two_jvcmessages_text_row);
-            signatureLine = (TextView) itemView.findViewById(R.id.item_three_jvcmessages_text_row);
+            infoLine = itemView.findViewById(R.id.item_one_jvcmessages_text_row);
+            avatarImage = itemView.findViewById(R.id.image_one_jvcmessages_text_row);
+            messageLine = itemView.findViewById(R.id.item_two_jvcmessages_text_row);
+            signatureLine = itemView.findViewById(R.id.item_three_jvcmessages_text_row);
             separator = itemView.findViewById(R.id.item_separator_jvcmessages_text_row);
-            showMenuButton = (ImageButton) itemView.findViewById(R.id.menu_overflow_row);
+            showMenuButton = itemView.findViewById(R.id.menu_overflow_row);
 
             messageLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
             signatureLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
@@ -497,6 +505,7 @@ public class JVCTopicAdapter extends BaseAdapter {
         public Spannable messageLineContent;
         public Spannable signatureLineContent;
         public Drawable avatarImageDrawable;
+        public boolean messageIsDeleted;
     }
 
     public interface URLClicked {

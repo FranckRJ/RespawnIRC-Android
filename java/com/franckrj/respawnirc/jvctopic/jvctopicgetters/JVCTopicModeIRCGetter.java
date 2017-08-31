@@ -189,7 +189,7 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
                             }
 
                             if (listenerForNewMessages != null) {
-                                listenerForNewMessages.getNewMessages(listOfNewMessages, infoOfCurrentPage.listOfMessages.isEmpty());
+                                listenerForNewMessages.getNewMessages(listOfNewMessages, infoOfCurrentPage.listOfMessages.isEmpty(), false);
                             }
                         }
 
@@ -204,12 +204,12 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
                         }
                     } else {
                         if (listenerForNewMessages != null) {
-                            listenerForNewMessages.getNewMessages(new ArrayList<JVCParser.MessageInfos>(), true);
+                            listenerForNewMessages.getNewMessages(new ArrayList<JVCParser.MessageInfos>(), true, false);
                         }
                     }
                 } else {
                     if (listenerForNewMessages != null) {
-                        listenerForNewMessages.getNewMessages(new ArrayList<JVCParser.MessageInfos>(), true);
+                        listenerForNewMessages.getNewMessages(new ArrayList<JVCParser.MessageInfos>(), true, false);
                     }
                 }
 

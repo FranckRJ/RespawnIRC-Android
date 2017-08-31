@@ -2,20 +2,19 @@ package com.franckrj.respawnirc.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.v4.util.SimpleArrayMap;
 
 import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.jvctopic.jvctopicviewers.AbsShowTopicFragment;
 
-import java.util.HashMap;
-
 public class PrefsManager {
     private static SharedPreferences currentPrefs = null;
     private static SharedPreferences.Editor currentPrefsEdit = null;
-    private static HashMap<BoolPref.Names, BoolPref> listOfBoolPrefs = new HashMap<>();
-    private static HashMap<IntPref.Names, IntPref> listOfIntPrefs = new HashMap<>();
-    private static HashMap<StringPref.Names, StringPref> listOfStringPrefs = new HashMap<>();
-    private static HashMap<LongPref.Names, LongPref> listOfLongPrefs = new HashMap<>();
+    private static SimpleArrayMap<BoolPref.Names, BoolPref> listOfBoolPrefs = new SimpleArrayMap<>();
+    private static SimpleArrayMap<IntPref.Names, IntPref> listOfIntPrefs = new SimpleArrayMap<>();
+    private static SimpleArrayMap<StringPref.Names, StringPref> listOfStringPrefs = new SimpleArrayMap<>();
+    private static SimpleArrayMap<LongPref.Names, LongPref> listOfLongPrefs = new SimpleArrayMap<>();
 
     private static void addBoolPref(BoolPref.Names nameOfPref, String prefStringValue, boolean prefDefautlValue) {
         listOfBoolPrefs.put(nameOfPref, new BoolPref(prefStringValue, prefDefautlValue));
@@ -43,6 +42,7 @@ public class PrefsManager {
 
         addBoolPref(BoolPref.Names.IS_FIRST_LAUNCH, "pref.isFirstLaunch", true);
         addBoolPref(BoolPref.Names.USER_IS_MODO, "pref.userIsModo", false);
+        addBoolPref(BoolPref.Names.WEBVIEW_CACHE_NEED_TO_BE_CLEAR, "pref.webviewCacheNeedToBeClear", false);
 
         addIntPref(IntPref.Names.LAST_ACTIVITY_VIEWED, "pref.lastActivityViewed", MainActivity.ACTIVITY_SELECT_FORUM_IN_LIST);
         addIntPref(IntPref.Names.CURRENT_TOPIC_MODE, "pref.currentTopicMode", AbsShowTopicFragment.MODE_FORUM);
@@ -90,6 +90,7 @@ public class PrefsManager {
         addBoolPref(BoolPref.Names.IGNORE_TOPIC_TOO, currentContext.getString(R.string.settingsIgnoreTopicToo), true);
         addBoolPref(BoolPref.Names.HIDE_TOTALLY_MESSAGES_OF_IGNORED_PSEUDOS, currentContext.getString(R.string.settingsHideTotallyMessagesOfIgnoredPseudos), true);
         addBoolPref(BoolPref.Names.ENABLE_FAST_REFRESH_OF_IMAGES, currentContext.getString(R.string.settingsEnableFastRefreshOfImages), false);
+        addBoolPref(BoolPref.Names.ENABLE_COLOR_DELETED_MESSAGES, currentContext.getString(R.string.settingsEnableColorDeletedMessages), true);
 
         addStringPref(StringPref.Names.MAX_NUMBER_OF_OVERLY_QUOTE, currentContext.getString(R.string.settingsMaxNumberOfOverlyQuote), "2", 0, 15);
         addStringPref(StringPref.Names.SHOW_AVATAR_MODE_FORUM, currentContext.getString(R.string.settingsShowAvatarModeForum), "1");
@@ -112,9 +113,10 @@ public class PrefsManager {
     }
 
     public static boolean getBool(String prefName) {
-        for (HashMap.Entry<BoolPref.Names, BoolPref> thisPref : listOfBoolPrefs.entrySet()) {
-            if (thisPref.getValue().stringName.equals(prefName)) {
-                return currentPrefs.getBoolean(thisPref.getValue().stringName, thisPref.getValue().defaultValue);
+        for (int i = 0; i < listOfBoolPrefs.size(); ++i) {
+            BoolPref tmpPref = listOfBoolPrefs.valueAt(i);
+            if (tmpPref.stringName.equals(prefName)) {
+                return currentPrefs.getBoolean(tmpPref.stringName, tmpPref.defaultValue);
             }
         }
 
@@ -142,9 +144,10 @@ public class PrefsManager {
     }
 
     public static String getString(String prefName) {
-        for (HashMap.Entry<StringPref.Names, StringPref> thisPref : listOfStringPrefs.entrySet()) {
-            if (thisPref.getValue().stringName.equals(prefName)) {
-                return currentPrefs.getString(thisPref.getValue().stringName, thisPref.getValue().defaultValue);
+        for (int i = 0; i < listOfStringPrefs.size(); ++i) {
+            StringPref tmpPref = listOfStringPrefs.valueAt(i);
+            if (tmpPref.stringName.equals(prefName)) {
+                return currentPrefs.getString(tmpPref.stringName, tmpPref.defaultValue);
             }
         }
 
@@ -162,9 +165,10 @@ public class PrefsManager {
     }
 
     public static StringPref getStringInfos(String prefName) {
-        for (HashMap.Entry<StringPref.Names, StringPref> thisPref : listOfStringPrefs.entrySet()) {
-            if (thisPref.getValue().stringName.equals(prefName)) {
-                return thisPref.getValue();
+        for (int i = 0; i < listOfStringPrefs.size(); ++i) {
+            StringPref tmpPref = listOfStringPrefs.valueAt(i);
+            if (tmpPref.stringName.equals(prefName)) {
+                return tmpPref;
             }
         }
 
@@ -253,7 +257,7 @@ public class PrefsManager {
             TOPIC_ALTERNATE_BACKGROUND_MODE_FORUM, TOPIC_ALTERNATE_BACKGROUND_MODE_IRC, FORUM_ALTERNATE_BACKGROUND,
             TOPIC_CLEAR_ON_REFRESH_MODE_FORUM,
             TOPIC_SHOW_REFRESH_WHEN_MESSAGE_SHOWED_MODE_IRC,
-            ENABLE_CARD_DESIGN_MODE_FORUM, SEPARATION_BETWEEN_MESSAGES_BLACK_THEM_MODE_FORUM,
+            ENABLE_CARD_DESIGN_MODE_FORUM, SEPARATION_BETWEEN_MESSAGES_BLACK_THEM_MODE_FORUM, ENABLE_COLOR_DELETED_MESSAGES,
             HIDE_UGLY_IMAGES,
             ENABLE_SMOOTH_SCROLL, ENABLE_AUTO_SCROLL_MODE_FORUM,
             ENABLE_GO_TO_BOTTOM_ON_LOAD,
@@ -261,7 +265,8 @@ public class PrefsManager {
             MARK_AUTHOR_PSEUDO_MODE_FORUM,
             USER_IS_MODO, POST_AS_MODO_WHEN_POSSIBLE,
             IGNORE_TOPIC_TOO, HIDE_TOTALLY_MESSAGES_OF_IGNORED_PSEUDOS,
-            ENABLE_FAST_REFRESH_OF_IMAGES
+            ENABLE_FAST_REFRESH_OF_IMAGES,
+            WEBVIEW_CACHE_NEED_TO_BE_CLEAR
         }
     }
 

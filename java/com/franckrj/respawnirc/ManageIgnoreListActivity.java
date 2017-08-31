@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class ManageIgnoreListActivity extends ThemedActivity {
+public class ManageIgnoreListActivity extends AbsThemedActivity {
     private TextView emptyListMessageText = null;
     private IgnoreListAdapter adapterForIgnoreList = null;
     private ArrayList<String> listOfIgnoredPseudos = new ArrayList<>();
@@ -51,7 +51,7 @@ public class ManageIgnoreListActivity extends ThemedActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manageignorelist);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_manageignorelist);
+        Toolbar myToolbar = findViewById(R.id.toolbar_manageignorelist);
         setSupportActionBar(myToolbar);
 
         ActionBar myActionBar = getSupportActionBar();
@@ -62,8 +62,8 @@ public class ManageIgnoreListActivity extends ThemedActivity {
 
         genrateListOfIgnoredPseudos();
         adapterForIgnoreList = new IgnoreListAdapter(this, listOfIgnoredPseudos);
-        ListView ignoreListView = (ListView) findViewById(R.id.ignore_list_manageignorelist);
-        emptyListMessageText = (TextView) findViewById(R.id.text_emptylist_manageignorelist);
+        ListView ignoreListView = findViewById(R.id.ignore_list_manageignorelist);
+        emptyListMessageText = findViewById(R.id.text_emptylist_manageignorelist);
         ignoreListView.setAdapter(adapterForIgnoreList);
 
         if (listOfIgnoredPseudos.isEmpty()) {
@@ -111,8 +111,8 @@ public class ManageIgnoreListActivity extends ThemedActivity {
                 holder = new ViewHolder();
 
                 convertView = serviceInflater.inflate(R.layout.ignorelist_row, parent, false);
-                holder.mainText = (TextView) convertView.findViewById(R.id.text_main_ignorelist_row);
-                holder.actionButton = (ImageButton) convertView.findViewById(R.id.image_button_action_ignorelist_row);
+                holder.mainText = convertView.findViewById(R.id.text_main_ignorelist_row);
+                holder.actionButton = convertView.findViewById(R.id.image_button_action_ignorelist_row);
 
                 convertView.setTag(holder);
             } else {

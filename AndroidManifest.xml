@@ -16,6 +16,7 @@
         android:theme="@style/AppTheme.Light.Real">
         <activity
             android:name=".MainActivity"
+            android:theme="@style/SplashTheme"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -47,6 +48,11 @@
             android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
         <activity
+            android:name=".jvcforum.ManageSurveyOfTopicActivity"
+            android:label="@string/manageSurvey"
+            android:windowSoftInputMode="stateAlwaysHidden">
+        </activity>
+        <activity
             android:name=".jvctopic.ShowTopicActivity"
             android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
@@ -67,6 +73,10 @@
         <activity
             android:name=".jvctopic.KickPseudoActivity"
             android:label="@string/kick">
+        </activity>
+        <activity
+            android:name=".jvctopic.LockTopicActivity"
+            android:label="@string/lockTopic">
         </activity>
         <activity
             android:name=".SettingsActivity"

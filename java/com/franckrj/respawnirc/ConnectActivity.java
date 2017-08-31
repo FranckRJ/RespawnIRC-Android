@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
 
-public class ConnectActivity extends ThemedActivity {
+public class ConnectActivity extends AbsThemedActivity {
     private WebView jvcWebView = null;
     private EditText pseudoText = null;
     private HelpConnectDialogFragment helpDialogFragment = null;
@@ -31,7 +31,6 @@ public class ConnectActivity extends ThemedActivity {
         if (!pseudoText.getText().toString().isEmpty()) {
             String allCookiesInstring = CookieManager.getInstance().getCookie("http://www.jeuxvideo.com/");
             String[] allCookiesInStringArray = TextUtils.split(allCookiesInstring, ";");
-            String helloCookieValue = null;
             String connectCookieValue = null;
 
             for (String thisCookie : allCookiesInStringArray) {
@@ -41,20 +40,15 @@ public class ConnectActivity extends ThemedActivity {
                 cookieInfos = TextUtils.split(thisCookie, "=");
 
                 if (cookieInfos.length > 1) {
-                    if (cookieInfos[0].equals("dlrowolleh")) {
-                        helloCookieValue = cookieInfos[1];
-                    } else if (cookieInfos[0].equals("coniunctio")) {
+                    if (cookieInfos[0].equals("coniunctio")) {
                         connectCookieValue = cookieInfos[1];
+                        break;
                     }
-                }
-
-                if (helloCookieValue != null && connectCookieValue != null) {
-                    break;
                 }
             }
 
-            if (helloCookieValue != null && connectCookieValue != null) {
-                PrefsManager.putString(PrefsManager.StringPref.Names.COOKIES_LIST, "dlrowolleh=" + helloCookieValue + ";coniunctio=" + connectCookieValue);
+            if (connectCookieValue != null) {
+                PrefsManager.putString(PrefsManager.StringPref.Names.COOKIES_LIST, "coniunctio=" + connectCookieValue);
                 PrefsManager.putString(PrefsManager.StringPref.Names.PSEUDO_OF_USER, pseudoText.getText().toString().trim());
                 PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, false);
                 PrefsManager.applyChanges();
@@ -78,7 +72,7 @@ public class ConnectActivity extends ThemedActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_connect);
+        Toolbar myToolbar = findViewById(R.id.toolbar_connect);
         setSupportActionBar(myToolbar);
 
         ActionBar myActionBar = getSupportActionBar();
@@ -87,8 +81,8 @@ public class ConnectActivity extends ThemedActivity {
             myActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        jvcWebView = (WebView) findViewById(R.id.webview_connect);
-        pseudoText = (EditText) findViewById(R.id.pseudo_text_connect);
+        jvcWebView = findViewById(R.id.webview_connect);
+        pseudoText = findViewById(R.id.pseudo_text_connect);
 
         helpDialogFragment = new HelpConnectDialogFragment();
 
@@ -103,6 +97,9 @@ public class ConnectActivity extends ThemedActivity {
         jvcWebView.clearHistory();
 
         jvcWebView.loadUrl("https://www.jeuxvideo.com/login");
+
+        PrefsManager.putBool(PrefsManager.BoolPref.Names.WEBVIEW_CACHE_NEED_TO_BE_CLEAR, true);
+        PrefsManager.applyChanges();
     }
 
     @Override

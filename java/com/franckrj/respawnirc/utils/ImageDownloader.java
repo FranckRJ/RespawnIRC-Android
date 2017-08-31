@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.support.v4.util.SimpleArrayMap;
 import android.support.v7.graphics.drawable.DrawableWrapper;
 
 import java.io.File;
@@ -14,10 +15,9 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class ImageDownloader {
-    private HashMap<String, DrawableWrapper> listOfDrawable = new HashMap<>();
+    private SimpleArrayMap<String, DrawableWrapper> listOfDrawable = new SimpleArrayMap<>();
     private ArrayList<ImageGetterAsyncTask> listOfCurrentsTasks = new ArrayList<>();
     private Drawable defaultDrawable = null;
     private Drawable deletedDrawable = null;
@@ -50,12 +50,20 @@ public class ImageDownloader {
         listenerForDownloadFinished = newListener;
     }
 
-    public void setDefaultDrawable(Drawable newDrawable) {
+    public void setDefaultDrawable(Drawable newDrawable, boolean setBoundsToImageSize) {
         defaultDrawable = newDrawable;
+
+        if (setBoundsToImageSize) {
+            defaultDrawable.setBounds(0, 0, imagesWidth, imagesHeight);
+        }
     }
 
-    public void setDeletedDrawable(Drawable newDrawable) {
+    public void setDeletedDrawable(Drawable newDrawable, boolean setBoundsToImageSize) {
         deletedDrawable = newDrawable;
+
+        if (setBoundsToImageSize) {
+            deletedDrawable.setBounds(0, 0, imagesWidth, imagesHeight);
+        }
     }
 
     public void setScaleLargeImages(boolean newVal) {
@@ -101,11 +109,11 @@ public class ImageDownloader {
 
     private String imageLinkToFileName(String link) {
         if (link.startsWith("http://image.noelshack.com/minis/")) {
-            return "nlshck_mini_" + link.substring(("http://image.noelshack.com/minis/").length()).replace("/", "_");
+            return "img_nlsk_mini_" + link.substring(("http://image.noelshack.com/minis/").length()).replace("/", "_");
         } else if (link.startsWith("http://image.noelshack.com/fichiers/")) {
-            return "nlshck_big_" + link.substring(("http://image.noelshack.com/fichiers/").length()).replace("/", "_");
+            return "img_nlsk_big_" + link.substring(("http://image.noelshack.com/fichiers/").length()).replace("/", "_");
         } else if (link.startsWith("http://image.jeuxvideo.com/avatar")) {
-            return "vtr_" + link.substring(("http://image.jeuxvideo.com/avatar").length()).replace("/", "_");
+            return "img_vtr_" + link.substring(("http://image.jeuxvideo.com/avatar").length()).replace("/", "_");
         } else {
             return "";
         }

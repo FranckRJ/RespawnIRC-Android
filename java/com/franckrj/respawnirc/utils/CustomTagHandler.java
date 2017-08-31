@@ -11,11 +11,15 @@ import android.text.style.StrikethroughSpan;
 import org.xml.sax.XMLReader;
 
 public class CustomTagHandler implements Html.TagHandler {
+    private static @ColorInt int almostDimGray = Color.rgb(102, 102, 102);
+
     public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
         if (tag.toLowerCase().equals("s")) {
             processStrike(opening, output);
         } else if (tag.toLowerCase().equals("bg_closed_spoil")) {
             processBackgroundColor(opening, output, (ThemeManager.getThemeUsedIsDark() ? Color.WHITE : Color.BLACK));
+        } else if (tag.toLowerCase().equals("bg_opened_spoil")) {
+            processBackgroundColor(opening, output, (ThemeManager.getThemeUsedIsDark() ? almostDimGray : Color.LTGRAY));
         }
     }
 

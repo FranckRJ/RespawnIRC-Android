@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/reason_edit_locktopic"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/toolbar_locktopic"
+            android:layout_margin="8dp"
+            android:gravity="bottom"
+            android:inputType="textMultiLine|textCapSentences"
+            android:minLines="4"
+            android:maxLines="6"
+            android:hint="@string/reasonOfLock"/>
+
+        <Button
+            android:id="@+id/lock_button_locktopic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/reason_edit_locktopic"
+            android:text="@string/lock"
+            android:layout_margin="16dp"/>
+
+        <include
+            android:id="@+id/toolbar_locktopic"
+            layout="@layout/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_below="@+id/toolbar_locktopic"
+            android:background="?attr/themedShadowTop"/>
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>
