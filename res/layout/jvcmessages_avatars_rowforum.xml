@@ -14,8 +14,8 @@
         android:orientation="horizontal">
         <ImageView
             android:id="@+id/image_one_jvcmessages_text_row"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_marginLeft="4dp"
             android:layout_marginStart="4dp"
             android:layout_marginTop="4dp"
