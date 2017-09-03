@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
+import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
 public class ConnectAsModoActivity extends AbsThemedActivity {
@@ -122,7 +123,8 @@ public class ConnectAsModoActivity extends AbsThemedActivity {
                 if (passwordToUse == null) {
                     return WebManager.sendRequest("https://www.jeuxvideo.com/sso/auth.php", "GET", "", params[0], currentWebInfos);
                 } else {
-                    return WebManager.sendRequest("https://www.jeuxvideo.com/sso/auth.php", "POST", "password=" + passwordToUse + listOfInputInStringToUse, params[0], currentWebInfos);
+                    return WebManager.sendRequest("https://www.jeuxvideo.com/sso/auth.php", "POST", "password=" +
+                            Utils.convertStringToUrlString(passwordToUse) + listOfInputInStringToUse, params[0], currentWebInfos);
                 }
             }
             return null;
