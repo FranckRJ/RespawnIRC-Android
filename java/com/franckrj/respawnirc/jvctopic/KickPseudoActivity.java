@@ -53,7 +53,7 @@ public class KickPseudoActivity extends AbsThemedActivity {
                     currentTaskForKick = new ApplyKickToPseudo();
                     infosForKick.motive = motiveValue;
                     infosForKick.reason = reasonEdit.getText().toString();
-                    currentTaskForKick.execute(infosForKick);
+                    currentTaskForKick.execute(new KickInfos(infosForKick));
                 } else {
                     Toast.makeText(KickPseudoActivity.this, R.string.errorReasonOrMotiveMissingForKick, Toast.LENGTH_SHORT).show();
                 }
@@ -187,5 +187,17 @@ public class KickPseudoActivity extends AbsThemedActivity {
         public String idMessage = "";
         public String ajaxInfos = "";
         public String cookies = "";
+
+        public KickInfos() {}
+
+        public KickInfos(KickInfos baseForCopy) {
+            motive = baseForCopy.motive;
+            reason = baseForCopy.reason;
+            idAliasPseudo = baseForCopy.idAliasPseudo;
+            idForum = baseForCopy.idForum;
+            idMessage = baseForCopy.idMessage;
+            ajaxInfos = baseForCopy.ajaxInfos;
+            cookies = baseForCopy.cookies;
+        }
     }
 }

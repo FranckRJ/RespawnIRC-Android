@@ -60,7 +60,7 @@ public class SendTopicToForumActivity extends AbsThemedActivity implements Inser
             currentInfos.lastTopicContentSended = topicContentEdit.getText().toString();
 
             currentAsyncTaskForSendTopic = new SendTopicToJVC();
-            currentAsyncTaskForSendTopic.execute(currentInfos);
+            currentAsyncTaskForSendTopic.execute(new SendTopicInfos(currentInfos));
 
             PrefsManager.putString(PrefsManager.StringPref.Names.LAST_TOPIC_TITLE_SENDED, currentInfos.lastTopicTitleSended);
             PrefsManager.putString(PrefsManager.StringPref.Names.LAST_TOPIC_CONTENT_SENDED, currentInfos.lastTopicContentSended);
@@ -256,5 +256,17 @@ public class SendTopicToForumActivity extends AbsThemedActivity implements Inser
         private String lastTopicContentSended = "";
         private String surveyTitle = "";
         private ArrayList<String> surveyReplysList = new ArrayList<>();
+
+        public SendTopicInfos() {}
+
+        public SendTopicInfos(SendTopicInfos baseForCopy) {
+            cookieList = baseForCopy.cookieList;
+            linkToSend = baseForCopy.linkToSend;
+            listOfInputsInAstring = baseForCopy.listOfInputsInAstring;
+            lastTopicTitleSended = baseForCopy.lastTopicTitleSended;
+            lastTopicContentSended = baseForCopy.lastTopicContentSended;
+            surveyTitle = baseForCopy.surveyTitle;
+            surveyReplysList = new ArrayList<>(baseForCopy.surveyReplysList);
+        }
     }
 }

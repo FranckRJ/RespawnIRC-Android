@@ -34,7 +34,7 @@ public class LockTopicActivity extends AbsThemedActivity {
                 if (!reasonEdit.getText().toString().isEmpty()) {
                     currentTaskForLock = new ApplyLockToTopic();
                     infosForLock.reason = reasonEdit.getText().toString();
-                    currentTaskForLock.execute(infosForLock);
+                    currentTaskForLock.execute(new LockInfos(infosForLock));
                 } else {
                     Toast.makeText(LockTopicActivity.this, R.string.errorReasonMissing, Toast.LENGTH_SHORT).show();
                 }
@@ -159,5 +159,15 @@ public class LockTopicActivity extends AbsThemedActivity {
         public String idTopic = "";
         public String ajaxInfos = "";
         public String cookies = "";
+
+        public LockInfos() {}
+
+        public LockInfos(LockInfos baseForCopy) {
+            reason = baseForCopy.reason;
+            idForum = baseForCopy.idForum;
+            idTopic = baseForCopy.idTopic;
+            ajaxInfos = baseForCopy.ajaxInfos;
+            cookies = baseForCopy.cookies;
+        }
     }
 }
