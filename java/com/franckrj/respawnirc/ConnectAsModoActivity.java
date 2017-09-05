@@ -22,6 +22,8 @@ import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
 public class ConnectAsModoActivity extends AbsThemedActivity {
+    private static final String SAVE_LIST_OF_INPUT = "saveListOfInput";
+
     private ConnectAsModoTask currentTaskConnectAsModo = null;
     private SwipeRefreshLayout swipeRefresh = null;
     private EditText modoPasswordText = null;
@@ -85,13 +87,23 @@ public class ConnectAsModoActivity extends AbsThemedActivity {
         validateButton = findViewById(R.id.validate_button_modoconnect);
 
         swipeRefresh.setEnabled(false);
+        swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
         modoPasswordText.setOnEditorActionListener(actionInPasswordEditTextListener);
-        modoPasswordText.setVisibility(View.GONE);
-        validateButton.setVisibility(View.GONE);
         validateButton.setOnClickListener(validateButtonClickedListener);
 
         currentCookieList = PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST);
 
+        if (savedInstanceState != null) {
+            String tmpListOfInputInAString = savedInstanceState.getString(SAVE_LIST_OF_INPUT, null);
+
+            if (!Utils.stringIsEmptyOrNull(tmpListOfInputInAString)) {
+                latestListOfInputInAString = tmpListOfInputInAString;
+                return;
+            }
+        }
+
+        modoPasswordText.setVisibility(View.GONE);
+        validateButton.setVisibility(View.GONE);
         currentTaskConnectAsModo = new ConnectAsModoTask(null);
         currentTaskConnectAsModo.execute(currentCookieList);
     }
@@ -100,6 +112,12 @@ public class ConnectAsModoActivity extends AbsThemedActivity {
     public void onPause() {
         stopAllCurrentTasks();
         super.onPause();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(SAVE_LIST_OF_INPUT, latestListOfInputInAString);
     }
 
     @Override
