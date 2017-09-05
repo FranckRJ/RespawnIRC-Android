@@ -8,6 +8,7 @@ import android.view.MenuItem;
 
 public class SettingsActivity extends AbsThemedActivity implements SettingsFragment.NewSettingsFileNeedALoad {
     public static final String EXTRA_FILE_TO_LOAD = "com.respawnirc.settingsactivity.EXTRA_FILE_TO_LOAD";
+    public static final String EXTRA_PREF_TITLE = "com.respawnirc.settingsactivity.EXTRA_PREF_TITLE";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,14 @@ public class SettingsActivity extends AbsThemedActivity implements SettingsFragm
 
             getFragmentManager().beginTransaction().replace(R.id.content_frame_settings, newFragmentToAdd).commit();
         }
+
+        if (getIntent() != null) {
+            String newTitle = getIntent().getStringExtra(EXTRA_PREF_TITLE);
+
+            if (newTitle != null) {
+                setTitle(newTitle);
+            }
+        }
     }
 
     @Override
@@ -51,9 +60,10 @@ public class SettingsActivity extends AbsThemedActivity implements SettingsFragm
     }
 
     @Override
-    public void getNewSettingsFileId(int fileID) {
+    public void getNewSettingsFileId(int fileID, String newTitle) {
         Intent newSettingsActivityIntent = new Intent(this, SettingsActivity.class);
-        newSettingsActivityIntent.putExtra(SettingsActivity.EXTRA_FILE_TO_LOAD, fileID);
+        newSettingsActivityIntent.putExtra(EXTRA_FILE_TO_LOAD, fileID);
+        newSettingsActivityIntent.putExtra(EXTRA_PREF_TITLE, newTitle);
         startActivity(newSettingsActivityIntent);
     }
 }

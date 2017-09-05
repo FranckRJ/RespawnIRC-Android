@@ -7,12 +7,12 @@ import android.preference.ListPreference;
 import android.util.AttributeSet;
 
 public class ListPreferenceCompat extends ListPreference {
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(21)
     public ListPreferenceCompat(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(21)
     public ListPreferenceCompat(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
@@ -29,7 +29,7 @@ public class ListPreferenceCompat extends ListPreference {
     // http://stackoverflow.com/a/21642401/7413918
     @Override
     public void setValue(String value) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= 19) {
             super.setValue(value);
         } else {
             String oldValue = getValue();

@@ -14,6 +14,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.support.annotation.NonNull;
+import android.support.v4.util.SimpleArrayMap;
 
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.ThemeManager;
@@ -22,21 +23,23 @@ import com.franckrj.respawnirc.utils.Utils;
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     public static final String ARG_FILE_TO_LOAD = "com.franckrj.respawnirc.settingsfragment.ARG_FILE_TO_LOAD";
 
+    private SimpleArrayMap<String, MinMaxInfos> listOfMinMaxInfos = new SimpleArrayMap<>();
+
     private final Preference.OnPreferenceClickListener subScreenPreferenceClicked = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
             if (getActivity() instanceof NewSettingsFileNeedALoad) {
                 if (preference.getKey().equals(getString(R.string.subScreenSettingsStyle))) {
-                    ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.style_settings);
+                    ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.style_settings, preference.getTitle().toString());
                     return true;
                 } else if (preference.getKey().equals(getString(R.string.subScreenSettingsImageLink))) {
-                    ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.imagelink_settings);
+                    ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.imagelink_settings, preference.getTitle().toString());
                     return true;
                 } else if (preference.getKey().equals(getString(R.string.subScreenSettingsBehaviour))) {
-                    ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.behaviour_settings);
+                    ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.behaviour_settings, preference.getTitle().toString());
                     return true;
                 } else if (preference.getKey().equals(getString(R.string.subScreenSettingsAdvanced))) {
-                    ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.advanced_settings);
+                    ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.advanced_settings, preference.getTitle().toString());
                     return true;
                 } else if (preference.getKey().equals(getString(R.string.subScreenSettingsIgnoreList))) {
                     startActivity(new Intent(getActivity(), ManageIgnoreListActivity.class));
@@ -86,7 +89,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
         if (pref instanceof EditTextPreference) {
             EditTextPreference editTextPref = (EditTextPreference) pref;
-            MinMaxInfos prefMinMax = (MinMaxInfos) editTextPref.getEditText().getTag();
+            MinMaxInfos prefMinMax = listOfMinMaxInfos.get(editTextPref.getKey());
             if (prefMinMax != null) {
                 int prefValue = 0;
                 if (!editTextPref.getText().isEmpty()) {
@@ -136,8 +139,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         if (pref instanceof EditTextPreference) {
             PrefsManager.StringPref currentPrefsInfos = PrefsManager.getStringInfos(pref.getKey());
             if (currentPrefsInfos.isInt) {
-                EditTextPreference editTextPref = (EditTextPreference) pref;
-                editTextPref.getEditText().setTag(new MinMaxInfos(currentPrefsInfos.minVal, currentPrefsInfos.maxVal));
+                listOfMinMaxInfos.put(pref.getKey(), new MinMaxInfos(currentPrefsInfos.minVal, currentPrefsInfos.maxVal));
             }
         }
     }
@@ -158,7 +160,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     private void updatePrefSummary(Preference pref) {
         if (pref instanceof EditTextPreference) {
             EditTextPreference editTextPref = (EditTextPreference) pref;
-            MinMaxInfos prefMinMax = (MinMaxInfos) editTextPref.getEditText().getTag();
+            MinMaxInfos prefMinMax = listOfMinMaxInfos.get(editTextPref.getKey());
             if (prefMinMax != null) {
                 editTextPref.setSummary("Entre " + String.valueOf(prefMinMax.min) + " et " + String.valueOf(prefMinMax.max) + " : " + editTextPref.getText());
             }
@@ -176,7 +178,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     }
 
     public interface NewSettingsFileNeedALoad {
-        void getNewSettingsFileId(int fileID);
+        void getNewSettingsFileId(int fileID, String newTitle);
     }
 
     public static class HelpSettingsDialogFragment extends DialogFragment {
