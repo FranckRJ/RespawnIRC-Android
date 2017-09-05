@@ -16,9 +16,7 @@
             android:layout_alignParentBottom="true"
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
-            android:orientation="vertical"
-            android:focusable="true"
-            android:focusableInTouchMode="true">
+            android:orientation="vertical">
             <EditText
                 android:id="@+id/topic_title_edit_sendtopic"
                 android:layout_width="match_parent"

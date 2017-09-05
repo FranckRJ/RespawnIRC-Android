@@ -17,8 +17,8 @@
             android:layout_margin="8dp"
             android:gravity="bottom"
             android:inputType="textMultiLine|textCapSentences"
-            android:minLines="4"
-            android:maxLines="6"
+            android:minLines="2"
+            android:maxLines="3"
             android:hint="@string/reasonOfLock"/>
 
         <Button

@@ -35,6 +35,8 @@ public class KickPseudoActivity extends AbsThemedActivity {
         public void onClick(View v) {
             String motiveValue = null;
 
+            Utils.hideSoftKeyboard(KickPseudoActivity.this);
+
             if (motiveSpinner.getSelectedItem() != null) {
                 //truc moche pour être certain de bien avoir un int sans avoir de warning débile de l'IDE
                 try {

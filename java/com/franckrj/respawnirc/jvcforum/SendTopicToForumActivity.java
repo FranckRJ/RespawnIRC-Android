@@ -55,6 +55,8 @@ public class SendTopicToForumActivity extends AbsThemedActivity implements Inser
     };
 
     private void sendNewTopic() {
+        Utils.hideSoftKeyboard(this);
+
         if (currentAsyncTaskForSendTopic == null) {
             currentInfos.lastTopicTitleSended = topicTitleEdit.getText().toString();
             currentInfos.lastTopicContentSended = topicContentEdit.getText().toString();

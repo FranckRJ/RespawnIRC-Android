@@ -1,14 +1,19 @@
 package com.franckrj.respawnirc;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.utils.JVCParser;
@@ -27,14 +32,31 @@ public class ConnectAsModoActivity extends AbsThemedActivity {
     private final View.OnClickListener validateButtonClickedListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (currentTaskConnectAsModo == null) {
-                currentTaskConnectAsModo = new ConnectAsModoTask(modoPasswordText.getText().toString(), latestListOfInputInAString);
-                currentTaskConnectAsModo.execute(currentCookieList);
-            } else {
-                Toast.makeText(ConnectAsModoActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
-            }
+            performConnect();
         }
     };
+
+    private final TextView.OnEditorActionListener actionInPasswordEditTextListener = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                performConnect();
+                return true;
+            }
+            return false;
+        }
+    };
+
+    private void performConnect() {
+        Utils.hideSoftKeyboard(this);
+
+        if (currentTaskConnectAsModo == null) {
+            currentTaskConnectAsModo = new ConnectAsModoTask(modoPasswordText.getText().toString(), latestListOfInputInAString);
+            currentTaskConnectAsModo.execute(currentCookieList);
+        } else {
+            Toast.makeText(ConnectAsModoActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private void stopAllCurrentTasks() {
         if (currentTaskConnectAsModo != null) {
@@ -63,6 +85,7 @@ public class ConnectAsModoActivity extends AbsThemedActivity {
         validateButton = findViewById(R.id.validate_button_modoconnect);
 
         swipeRefresh.setEnabled(false);
+        modoPasswordText.setOnEditorActionListener(actionInPasswordEditTextListener);
         modoPasswordText.setVisibility(View.GONE);
         validateButton.setVisibility(View.GONE);
         validateButton.setOnClickListener(validateButtonClickedListener);
@@ -140,8 +163,13 @@ public class ConnectAsModoActivity extends AbsThemedActivity {
                 if (passwordToUse == null) {
                     latestListOfInputInAString = JVCParser.getListOfInputInAStringInModoConnectFormForThisPage(pageContent);
                     if (!latestListOfInputInAString.isEmpty()) {
+                        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
                         modoPasswordText.setVisibility(View.VISIBLE);
                         validateButton.setVisibility(View.VISIBLE);
+                        modoPasswordText.requestFocus();
+                        inputManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+
                         return;
                     } else if (JVCParser.getErrorMessageWhenModoConnect(pageContent).isEmpty()) {
                         PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, true);

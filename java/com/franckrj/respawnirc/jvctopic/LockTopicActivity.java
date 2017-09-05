@@ -30,6 +30,8 @@ public class LockTopicActivity extends AbsThemedActivity {
     private final View.OnClickListener lockButtonClickedListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            Utils.hideSoftKeyboard(LockTopicActivity.this);
+
             if (currentTaskForLock == null) {
                 if (!reasonEdit.getText().toString().isEmpty()) {
                     currentTaskForLock = new ApplyLockToTopic();

@@ -40,12 +40,12 @@
         </activity>
         <activity
             android:name=".jvcforum.SearchTopicInForumActivity"
-            android:windowSoftInputMode="stateAlwaysHidden">
+            android:windowSoftInputMode="stateVisible">
         </activity>
         <activity
             android:name=".jvcforum.SendTopicToForumActivity"
             android:label="@string/sendATopic"
-            android:windowSoftInputMode="stateAlwaysHidden">
+            android:windowSoftInputMode="stateVisible">
         </activity>
         <activity
             android:name=".jvcforum.ManageSurveyOfTopicActivity"
@@ -72,11 +72,13 @@
         </activity>
         <activity
             android:name=".jvctopic.KickPseudoActivity"
-            android:label="@string/kick">
+            android:label="@string/kick"
+            android:windowSoftInputMode="stateVisible">
         </activity>
         <activity
             android:name=".jvctopic.LockTopicActivity"
-            android:label="@string/lockTopic">
+            android:label="@string/lockTopic"
+            android:windowSoftInputMode="stateVisible">
         </activity>
         <activity
             android:name=".SettingsActivity"
