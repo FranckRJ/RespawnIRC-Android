@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.franckrj.respawnirc.AbsThemedActivity;
 import com.franckrj.respawnirc.R;
@@ -101,5 +102,11 @@ public class ManageSurveyOfTopicActivity extends AbsThemedActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(this, getString(R.string.warningChangesNotSaved), Toast.LENGTH_LONG).show();
+        super.onBackPressed();
     }
 }
