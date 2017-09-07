@@ -3,21 +3,18 @@ package com.franckrj.respawnirc.jvctopic;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.AbsThemedActivity;
+import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
-public class LockTopicActivity extends AbsThemedActivity {
+public class LockTopicActivity extends AbsHomeIsBackActivity {
     public static final String EXTRA_ID_FORUM = "com.franckrj.respawnirc.locktopicactivity.EXTRA_ID_FORUM";
     public static final String EXTRA_ID_TOPIC = "com.franckrj.respawnirc.locktopicactivity.EXTRA_ID_TOPIC";
     public static final String EXTRA_AJAX_MOD = "com.franckrj.respawnirc.locktopicactivity.EXTRA_AJAX_MOD";
@@ -57,17 +54,9 @@ public class LockTopicActivity extends AbsThemedActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locktopic);
+        initToolbar(R.id.toolbar_locktopic);
 
         boolean errorWhenFillingInfos = false;
-
-        Toolbar myToolbar = findViewById(R.id.toolbar_locktopic);
-        setSupportActionBar(myToolbar);
-
-        ActionBar myActionBar = getSupportActionBar();
-        if (myActionBar != null) {
-            myActionBar.setHomeButtonEnabled(true);
-            myActionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         Button applyLockButton = findViewById(R.id.lock_button_locktopic);
         reasonEdit = findViewById(R.id.reason_edit_locktopic);
@@ -107,17 +96,6 @@ public class LockTopicActivity extends AbsThemedActivity {
     public void onPause() {
         stopAllCurrentTasks();
         super.onPause();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     private class ApplyLockToTopic extends AsyncTask<LockInfos, Void, String> {

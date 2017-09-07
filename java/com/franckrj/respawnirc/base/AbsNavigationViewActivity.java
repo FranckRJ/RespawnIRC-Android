@@ -1,4 +1,4 @@
-package com.franckrj.respawnirc;
+package com.franckrj.respawnirc.base;
 
 import android.content.Intent;
 import android.content.pm.ShortcutManager;
@@ -15,6 +15,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.franckrj.respawnirc.ConnectActivity;
+import com.franckrj.respawnirc.ConnectAsModoActivity;
+import com.franckrj.respawnirc.NavigationMenuAdapter;
+import com.franckrj.respawnirc.NavigationMenuListView;
+import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.SettingsActivity;
 import com.franckrj.respawnirc.jvcforumlist.SelectForumInListActivity;
 import com.franckrj.respawnirc.dialogs.RefreshFavDialogFragment;
 import com.franckrj.respawnirc.utils.ThemeManager;
@@ -25,7 +31,7 @@ import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 
-public abstract class AbsNavigationViewActivity extends AbsThemedActivity implements RefreshFavDialogFragment.NewFavsAvailable {
+public abstract class AbsNavigationViewActivity extends AbsToolbarActivity implements RefreshFavDialogFragment.NewFavsAvailable {
     protected static final int GROUP_ID_BASIC = 0;
     protected static final int GROUP_ID_FORUM_FAV = 1;
     protected static final int GROUP_ID_TOPIC_FAV = 2;

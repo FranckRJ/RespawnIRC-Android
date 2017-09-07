@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.franckrj.respawnirc.base.AbsShowSomethingFragment;
+
 public class PageNavigationUtil {
     public static final int ID_BUTTON_CURRENT = 0;
     public static final int ID_BUTTON_OTHER = 1;

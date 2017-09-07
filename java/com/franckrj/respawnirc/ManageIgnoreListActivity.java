@@ -3,10 +3,7 @@ package com.franckrj.respawnirc;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -14,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
 import com.franckrj.respawnirc.utils.IgnoreListManager;
 
 import java.util.ArrayList;
@@ -21,7 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class ManageIgnoreListActivity extends AbsThemedActivity {
+public class ManageIgnoreListActivity extends AbsHomeIsBackActivity {
     private TextView emptyListMessageText = null;
     private IgnoreListAdapter adapterForIgnoreList = null;
     private ArrayList<String> listOfIgnoredPseudos = new ArrayList<>();
@@ -50,15 +48,7 @@ public class ManageIgnoreListActivity extends AbsThemedActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manageignorelist);
-
-        Toolbar myToolbar = findViewById(R.id.toolbar_manageignorelist);
-        setSupportActionBar(myToolbar);
-
-        ActionBar myActionBar = getSupportActionBar();
-        if (myActionBar != null) {
-            myActionBar.setHomeButtonEnabled(true);
-            myActionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        initToolbar(R.id.toolbar_manageignorelist);
 
         generateListOfIgnoredPseudos();
         adapterForIgnoreList = new IgnoreListAdapter(this, listOfIgnoredPseudos);
@@ -81,17 +71,6 @@ public class ManageIgnoreListActivity extends AbsThemedActivity {
         }
 
         super.onPause();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     private class IgnoreListAdapter extends ArrayAdapter<String> {

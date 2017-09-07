@@ -4,15 +4,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.AbsThemedActivity;
+import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
 import com.franckrj.respawnirc.dialogs.VoteInSurveyDialogFragment;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.ThemeManager;
@@ -22,7 +20,7 @@ import com.franckrj.respawnirc.utils.WebManager;
 
 import java.util.ArrayList;
 
-public class ShowSurveyActivity extends AbsThemedActivity implements VoteInSurveyDialogFragment.VoteInSurveyRegistered {
+public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInSurveyDialogFragment.VoteInSurveyRegistered {
     public static final String EXTRA_SURVEY_TITLE = "com.franckrj.respawnirc.showsurveyactivity.EXTRA_SURVEY_TITLE";
     public static final String EXTRA_SURVEY_REPLYS_WITH_INFOS = "com.franckrj.respawnirc.showsurveyactivity.EXTRA_SURVEY_REPLYS_WITH_INFOS";
     public static final String EXTRA_TOPIC_ID = "com.franckrj.respawnirc.showsurveyactivity.EXTRA_TOPIC_ID";
@@ -141,15 +139,9 @@ public class ShowSurveyActivity extends AbsThemedActivity implements VoteInSurve
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showsurvey);
-
-        Toolbar myToolbar = findViewById(R.id.toolbar_showsurvey);
-        setSupportActionBar(myToolbar);
+        initToolbar(R.id.toolbar_showsurvey);
 
         ActionBar myActionBar = getSupportActionBar();
-        if (myActionBar != null) {
-            myActionBar.setHomeButtonEnabled(true);
-            myActionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         contentText = findViewById(R.id.content_showsurvey);
         voteButton = findViewById(R.id.button_vote_showsurvey);
@@ -196,17 +188,6 @@ public class ShowSurveyActivity extends AbsThemedActivity implements VoteInSurve
         super.onSaveInstanceState(outState);
         outState.putBoolean(SAVE_VOTE_BUTTON_IS_VISIBLE, voteButton.getVisibility() == View.VISIBLE);
         outState.putString(SAVE_CONTENT_FOR_SURVEY, contentForSurvey);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override
