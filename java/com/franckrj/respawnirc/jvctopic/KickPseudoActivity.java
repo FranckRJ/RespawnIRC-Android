@@ -143,16 +143,18 @@ public class KickPseudoActivity extends AbsHomeIsBackActivity {
             super.onPostExecute(kickResponse);
             currentTaskForKick = null;
 
-            if (kickResponse != null) {
+            if (!Utils.stringIsEmptyOrNull(kickResponse)) {
                 String potentialError = JVCParser.getErrorMessageInJSONMode(kickResponse);
 
                 if (potentialError != null) {
                     Toast.makeText(KickPseudoActivity.this, potentialError, Toast.LENGTH_SHORT).show();
-                    return;
                 } else if (!kickResponse.startsWith("{") && !kickResponse.isEmpty()) {
                     Toast.makeText(KickPseudoActivity.this, R.string.unknownErrorPleaseRetry, Toast.LENGTH_SHORT).show();
-                    return;
+                } else {
+                    Toast.makeText(KickPseudoActivity.this, R.string.kickSuccessful, Toast.LENGTH_SHORT).show();
+                    finish();
                 }
+                return;
             }
 
             Toast.makeText(KickPseudoActivity.this, R.string.noKnownResponseFromJVC, Toast.LENGTH_SHORT).show();

@@ -52,7 +52,7 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
                 PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, false);
                 PrefsManager.applyChanges();
 
-                Toast.makeText(this, R.string.connectionSucessful, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.connectionSuccessful, Toast.LENGTH_SHORT).show();
 
                 super.onBackPressed();
                 return;

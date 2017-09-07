@@ -182,7 +182,7 @@ public class ConnectAsModoActivity extends AbsHomeIsBackActivity {
                     if (errorWhenConnecting.isEmpty()) {
                         PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, true);
                         PrefsManager.applyChanges();
-                        Toast.makeText(ConnectAsModoActivity.this, R.string.connectionSucessful, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ConnectAsModoActivity.this, R.string.connectionSuccessful, Toast.LENGTH_SHORT).show();
                         finish();
                     } else {
                         Toast.makeText(ConnectAsModoActivity.this, errorWhenConnecting, Toast.LENGTH_SHORT).show();

@@ -115,7 +115,7 @@ public class LockTopicActivity extends AbsHomeIsBackActivity {
             super.onPostExecute(lockResponse);
             currentTaskForLock = null;
 
-            if (lockResponse != null) {
+            if (!Utils.stringIsEmptyOrNull(lockResponse)) {
                 String potentialError = JVCParser.getErrorMessageInJSONMode(lockResponse);
 
                 if (potentialError != null) {

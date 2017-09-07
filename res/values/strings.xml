@@ -159,7 +159,7 @@
     <string name="modoPassword">Mot de passe de modération</string>
     <string name="validate">Valider</string>
     <string name="connnectAsModoText">Se connecter à la modération</string>
-    <string name="connectionSucessful">Connexion réussie</string>
+    <string name="connectionSuccessful">Connexion réussie</string>
     <string name="showBlacklistedMessage">Afficher le message</string>
     <string name="postAsModoWhenPossibleTitle">Poster en tant que modérateur</string>
     <string name="postAsModoWhenPossibleSummary">(uniquement lorsque vous êtes connecté en tant que modo sur les forums que vous modérez)</string>
@@ -204,6 +204,7 @@
     <string name="keepEmptyToNotUse">Laisser vide pour ne pas utiliser</string>
     <string name="surveyTitlePlaceholder">Titre (vide pour ne pas créer de sondage)</string>
     <string name="warningChangesNotSaved">Attention, vos changements n\'ont pas été sauvegardés !</string>
+    <string name="kickSuccessful">Kick effectué</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
