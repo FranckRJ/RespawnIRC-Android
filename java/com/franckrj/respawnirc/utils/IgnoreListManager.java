@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import java.util.Arrays;
 import java.util.HashSet;
 
-public class IgnoreListTool {
+public class IgnoreListManager {
     private static HashSet<String> listOfIgnoredPseudosInLC = new HashSet<>();
 
     public static boolean pseudoInLCIsIgnored(String pseudoToCheckInLC) {

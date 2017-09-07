@@ -1,5 +1,6 @@
 package com.franckrj.respawnirc.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -45,6 +46,7 @@ public class ChooseTopicOrForumLinkDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        @SuppressLint("InflateParams")
         View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_choosetopicorforumlink, null);
         linkEdit = mainView.findViewById(R.id.link_edit_choosetopicorforumlink);
         linkEdit.setOnEditorActionListener(actionInEditTextListener);

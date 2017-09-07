@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.franckrj.respawnirc.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.utils.IgnoreListTool;
+import com.franckrj.respawnirc.utils.IgnoreListManager;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
 
@@ -88,7 +88,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
                     if (ignoreTopicToo) {
                         String pseudoOfTopicInLC = thisTopicInfo.author.toLowerCase();
 
-                        if (!pseudoOfTopicInLC.equals(pseudoOfUserInLC) && IgnoreListTool.pseudoInLCIsIgnored(pseudoOfTopicInLC)) {
+                        if (!pseudoOfTopicInLC.equals(pseudoOfUserInLC) && IgnoreListManager.pseudoInLCIsIgnored(pseudoOfTopicInLC)) {
                             continue;
                         }
                     }

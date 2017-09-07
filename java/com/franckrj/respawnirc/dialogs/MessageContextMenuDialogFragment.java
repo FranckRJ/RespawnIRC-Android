@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.utils.IgnoreListTool;
+import com.franckrj.respawnirc.utils.IgnoreListManager;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Utils;
 
@@ -75,8 +75,8 @@ public class MessageContextMenuDialogFragment extends DialogFragment {
                     }
                     case POS_IGNORE: {
                         if (!pseudoOfUser.toLowerCase().equals(pseudoOfMessage.toLowerCase())) {
-                            if (IgnoreListTool.addPseudoToIgnoredList(pseudoOfMessage)) {
-                                IgnoreListTool.saveListOfIgnoredPseudos();
+                            if (IgnoreListManager.addPseudoToIgnoredList(pseudoOfMessage)) {
+                                IgnoreListManager.saveListOfIgnoredPseudos();
                                 Toast.makeText(getActivity(), getString(R.string.pseudoIgnored, pseudoOfMessage), Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(getActivity(), R.string.pseudoIsAlreadyIgnored, Toast.LENGTH_SHORT).show();

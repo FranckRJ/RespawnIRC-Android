@@ -1,5 +1,6 @@
 package com.franckrj.respawnirc.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -34,6 +35,7 @@ public class SelectTextDialogFragment extends DialogFragment {
             textIsHtml = currentArgs.getBoolean(ARG_TEXT_IS_HTML, false);
         }
 
+        @SuppressLint("InflateParams")
         View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_selecttext, null);
         textShowed = mainView.findViewById(R.id.text_selecttext);
 

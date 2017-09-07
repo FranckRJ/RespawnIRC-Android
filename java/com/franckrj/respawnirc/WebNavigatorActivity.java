@@ -1,5 +1,6 @@
 package com.franckrj.respawnirc;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -34,6 +35,7 @@ public class WebNavigatorActivity extends AbsThemedActivity {
         }
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +80,7 @@ public class WebNavigatorActivity extends AbsThemedActivity {
         navigatorWebView.getSettings().setBuiltInZoomControls(true);
         navigatorWebView.getSettings().setDisplayZoomControls(false);
         navigatorWebView.getSettings().setJavaScriptEnabled(true);
-        navigatorWebView.getSettings().setSaveFormData(false);
+        Undeprecator.webSettingsSetSaveFormData(navigatorWebView.getSettings(), false);
         Undeprecator.webSettingsSetSavePassword(navigatorWebView.getSettings(), false);
 
         currentTitle = getString(R.string.app_name);

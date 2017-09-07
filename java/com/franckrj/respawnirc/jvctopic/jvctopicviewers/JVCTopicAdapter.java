@@ -68,6 +68,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     private float multiplierOfLineSizeForInfoLineIfAvatarIsShowed = 0;
     private boolean userIsModo = false;
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final ImageDownloader.DownloadFinished listenerForDownloadFinished = new ImageDownloader.DownloadFinished() {
         @Override
         public void newDownloadFinished(int numberOfDownloadRemaining) {

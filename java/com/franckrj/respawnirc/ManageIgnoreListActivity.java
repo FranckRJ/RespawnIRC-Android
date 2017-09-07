@@ -14,7 +14,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.franckrj.respawnirc.utils.IgnoreListTool;
+import com.franckrj.respawnirc.utils.IgnoreListManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,15 +27,15 @@ public class ManageIgnoreListActivity extends AbsThemedActivity {
     private ArrayList<String> listOfIgnoredPseudos = new ArrayList<>();
     private boolean listHasChanged = false;
 
-    private void genrateListOfIgnoredPseudos() {
+    private void generateListOfIgnoredPseudos() {
         listOfIgnoredPseudos.clear();
-        listOfIgnoredPseudos.addAll(Arrays.asList(IgnoreListTool.getListOfIgnoredPseudosInLCAsArray()));
+        listOfIgnoredPseudos.addAll(Arrays.asList(IgnoreListManager.getListOfIgnoredPseudosInLCAsArray()));
         Collections.sort(listOfIgnoredPseudos);
     }
 
     private void removeItem(int position) {
         if (position < listOfIgnoredPseudos.size()) {
-            IgnoreListTool.removePseudoFromIgnoredList(listOfIgnoredPseudos.get(position));
+            IgnoreListManager.removePseudoFromIgnoredList(listOfIgnoredPseudos.get(position));
             listOfIgnoredPseudos.remove(position);
             adapterForIgnoreList.notifyDataSetChanged();
             listHasChanged = true;
@@ -60,7 +60,7 @@ public class ManageIgnoreListActivity extends AbsThemedActivity {
             myActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        genrateListOfIgnoredPseudos();
+        generateListOfIgnoredPseudos();
         adapterForIgnoreList = new IgnoreListAdapter(this, listOfIgnoredPseudos);
         ListView ignoreListView = findViewById(R.id.ignore_list_manageignorelist);
         emptyListMessageText = findViewById(R.id.text_emptylist_manageignorelist);
@@ -76,7 +76,7 @@ public class ManageIgnoreListActivity extends AbsThemedActivity {
     @Override
     public void onPause() {
         if (listHasChanged) {
-            IgnoreListTool.saveListOfIgnoredPseudos();
+            IgnoreListManager.saveListOfIgnoredPseudos();
             listHasChanged = false;
         }
 

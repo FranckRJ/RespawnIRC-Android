@@ -1,5 +1,6 @@
 package com.franckrj.respawnirc;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -23,7 +24,6 @@ import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
 
 public class ConnectActivity extends AbsThemedActivity {
-    private WebView jvcWebView = null;
     private EditText pseudoText = null;
     private HelpConnectDialogFragment helpDialogFragment = null;
 
@@ -67,6 +67,7 @@ public class ConnectActivity extends AbsThemedActivity {
         Toast.makeText(this, R.string.errorCookiesMissingConnect, Toast.LENGTH_LONG).show();
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +82,7 @@ public class ConnectActivity extends AbsThemedActivity {
             myActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        jvcWebView = findViewById(R.id.webview_connect);
+        WebView jvcWebView = findViewById(R.id.webview_connect);
         pseudoText = findViewById(R.id.pseudo_text_connect);
 
         helpDialogFragment = new HelpConnectDialogFragment();
@@ -91,7 +92,7 @@ public class ConnectActivity extends AbsThemedActivity {
         jvcWebView.setWebViewClient(new WebViewClient());
         jvcWebView.setWebChromeClient(new WebChromeClient());
         jvcWebView.getSettings().setJavaScriptEnabled(true);
-        jvcWebView.getSettings().setSaveFormData(false);
+        Undeprecator.webSettingsSetSaveFormData(jvcWebView.getSettings(), false);
         Undeprecator.webSettingsSetSavePassword(jvcWebView.getSettings(), false);
         jvcWebView.clearCache(true);
         jvcWebView.clearHistory();
