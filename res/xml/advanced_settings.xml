@@ -1,31 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
+<android.support.v7.preference.PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory
+
+    <android.support.v7.preference.PreferenceCategory
         android:title="@string/settingsGeneralTitle">
-        <CheckBoxPreference
+        <android.support.v7.preference.CheckBoxPreference
             android:key="@string/settingsTransformStickerToSmiley"
             android:title="@string/transformStickerToSmileyTitle"
             android:summary="@string/transformStickerToSmileySummary"/>
-        <CheckBoxPreference
+
+        <android.support.v7.preference.CheckBoxPreference
             android:key="@string/settingsIgnoreTopicToo"
             android:title="@string/ignoreTopicTooTitle"/>
-        <CheckBoxPreference
+
+        <android.support.v7.preference.CheckBoxPreference
             android:key="@string/settingsHideTotallyMessagesOfIgnoredPseudos"
             android:title="@string/hideTotallyMessagesOfIgnoredPseudosTitle"/>
-        <CheckBoxPreference
+
+        <android.support.v7.preference.CheckBoxPreference
             android:key="@string/settingsEnableFastRefreshOfImages"
             android:title="@string/enableFastRefreshOfImagesTitle"
             android:summary="@string/enableFastRefreshOfImagesSummary"/>
-        <CheckBoxPreference
+
+        <android.support.v7.preference.CheckBoxPreference
             android:key="@string/settingsEnableColorDeletedMessages"
             android:title="@string/enableColorDeletedMessagesTitle"/>
-    </PreferenceCategory>
-    <PreferenceCategory
+    </android.support.v7.preference.PreferenceCategory>
+
+    <android.support.v7.preference.PreferenceCategory
         android:title="@string/styleModeForum">
-        <CheckBoxPreference
+        <android.support.v7.preference.CheckBoxPreference
             android:key="@string/settingsSeparationBetweenMessagesBlackThemeModeForum"
             android:title="@string/separationBetweenMessagesTitle"
             android:summary="@string/blackThemeOnlySummary"/>
-    </PreferenceCategory>
-</PreferenceScreen>
+    </android.support.v7.preference.PreferenceCategory>
+
+    <android.support.v7.preference.PreferenceCategory/>
+
+</android.support.v7.preference.PreferenceScreen>
