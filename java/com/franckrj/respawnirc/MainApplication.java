@@ -4,7 +4,7 @@ import android.app.Application;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 
-import com.franckrj.respawnirc.utils.IgnoreListTool;
+import com.franckrj.respawnirc.utils.IgnoreListManager;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.StickerConverter;
 import com.franckrj.respawnirc.utils.ThemeManager;
@@ -19,7 +19,7 @@ public class MainApplication extends Application {
 
         PrefsManager.initializeSharedPrefs(getApplicationContext());
         ThemeManager.updateThemeUsed();
-        IgnoreListTool.loadListOfIgnoredPseudos();
+        IgnoreListManager.loadListOfIgnoredPseudos();
         StickerConverter.initializeBasesRules();
 
         NetworkBroadcastReceiver.updateConnectionInfos(getApplicationContext());

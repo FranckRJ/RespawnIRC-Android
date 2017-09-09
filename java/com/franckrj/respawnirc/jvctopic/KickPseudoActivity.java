@@ -2,9 +2,6 @@ package com.franckrj.respawnirc.jvctopic;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,12 +9,12 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.AbsThemedActivity;
+import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
-public class KickPseudoActivity extends AbsThemedActivity {
+public class KickPseudoActivity extends AbsHomeIsBackActivity {
     public static final String EXTRA_PSEUDO = "com.franckrj.respawnirc.kickpseudoactivity.EXTRA_PSEUDO";
     public static final String EXTRA_ID_ALIAS = "com.franckrj.respawnirc.kickpseudoactivity.EXTRA_ID_ALIAS";
     public static final String EXTRA_ID_FORUM = "com.franckrj.respawnirc.kickpseudoactivity.EXTRA_ID_FORUM";
@@ -76,17 +73,9 @@ public class KickPseudoActivity extends AbsThemedActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kickpseudo);
+        initToolbar(R.id.toolbar_kickpseudo);
 
         boolean errorWhenFillingInfos = false;
-
-        Toolbar myToolbar = findViewById(R.id.toolbar_kickpseudo);
-        setSupportActionBar(myToolbar);
-
-        ActionBar myActionBar = getSupportActionBar();
-        if (myActionBar != null) {
-            myActionBar.setHomeButtonEnabled(true);
-            myActionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         Button applyKickButton = findViewById(R.id.kick_button_kickpseudo);
         motiveSpinner = findViewById(R.id.motives_spinner_kickpseudo);
@@ -94,8 +83,8 @@ public class KickPseudoActivity extends AbsThemedActivity {
         applyKickButton.setOnClickListener(kickButtonClickedListener);
 
         if (getIntent() != null) {
-            if (getIntent().getStringExtra(EXTRA_PSEUDO) != null && myActionBar != null) {
-                myActionBar.setTitle(getString(R.string.kickPseudo, getIntent().getStringExtra(EXTRA_PSEUDO)));
+            if (getIntent().getStringExtra(EXTRA_PSEUDO) != null) {
+                setTitle(getString(R.string.kickPseudo, getIntent().getStringExtra(EXTRA_PSEUDO)));
             }
             if (getIntent().getStringExtra(EXTRA_ID_ALIAS) != null) {
                 infosForKick.idAliasPseudo = getIntent().getStringExtra(EXTRA_ID_ALIAS);
@@ -137,17 +126,6 @@ public class KickPseudoActivity extends AbsThemedActivity {
         super.onPause();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     private class ApplyKickToPseudo extends AsyncTask<KickInfos, Void, String> {
         @Override
         protected String doInBackground(KickInfos... infoOfKick) {
@@ -165,16 +143,18 @@ public class KickPseudoActivity extends AbsThemedActivity {
             super.onPostExecute(kickResponse);
             currentTaskForKick = null;
 
-            if (kickResponse != null) {
+            if (!Utils.stringIsEmptyOrNull(kickResponse)) {
                 String potentialError = JVCParser.getErrorMessageInJSONMode(kickResponse);
 
                 if (potentialError != null) {
                     Toast.makeText(KickPseudoActivity.this, potentialError, Toast.LENGTH_SHORT).show();
-                    return;
                 } else if (!kickResponse.startsWith("{") && !kickResponse.isEmpty()) {
                     Toast.makeText(KickPseudoActivity.this, R.string.unknownErrorPleaseRetry, Toast.LENGTH_SHORT).show();
-                    return;
+                } else {
+                    Toast.makeText(KickPseudoActivity.this, R.string.kickSuccessful, Toast.LENGTH_SHORT).show();
+                    finish();
                 }
+                return;
             }
 
             Toast.makeText(KickPseudoActivity.this, R.string.noKnownResponseFromJVC, Toast.LENGTH_SHORT).show();

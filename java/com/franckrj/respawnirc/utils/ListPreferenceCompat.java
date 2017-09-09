@@ -7,20 +7,24 @@ import android.preference.ListPreference;
 import android.util.AttributeSet;
 
 public class ListPreferenceCompat extends ListPreference {
+    @SuppressWarnings("unused")
     @TargetApi(21)
     public ListPreferenceCompat(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
+    @SuppressWarnings("unused")
     @TargetApi(21)
     public ListPreferenceCompat(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
+    @SuppressWarnings("unused")
     public ListPreferenceCompat(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
+    @SuppressWarnings("unused")
     public ListPreferenceCompat(Context context) {
         super(context);
     }

@@ -4,10 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -16,12 +13,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
-public class ConnectAsModoActivity extends AbsThemedActivity {
+public class ConnectAsModoActivity extends AbsHomeIsBackActivity {
     private static final String SAVE_LIST_OF_INPUT = "saveListOfInput";
 
     private ConnectAsModoTask currentTaskConnectAsModo = null;
@@ -72,15 +70,7 @@ public class ConnectAsModoActivity extends AbsThemedActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modoconnect);
-
-        Toolbar myToolbar = findViewById(R.id.toolbar_modoconnect);
-        setSupportActionBar(myToolbar);
-
-        ActionBar myActionBar = getSupportActionBar();
-        if (myActionBar != null) {
-            myActionBar.setHomeButtonEnabled(true);
-            myActionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        initToolbar(R.id.toolbar_modoconnect);
 
         swipeRefresh = findViewById(R.id.swiperefresh_modoconnect);
         modoPasswordText = findViewById(R.id.password_text_modoconnect);
@@ -118,17 +108,6 @@ public class ConnectAsModoActivity extends AbsThemedActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(SAVE_LIST_OF_INPUT, latestListOfInputInAString);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override
@@ -203,7 +182,7 @@ public class ConnectAsModoActivity extends AbsThemedActivity {
                     if (errorWhenConnecting.isEmpty()) {
                         PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, true);
                         PrefsManager.applyChanges();
-                        Toast.makeText(ConnectAsModoActivity.this, R.string.connectionSucessful, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ConnectAsModoActivity.this, R.string.connectionSuccessful, Toast.LENGTH_SHORT).show();
                         finish();
                     } else {
                         Toast.makeText(ConnectAsModoActivity.this, errorWhenConnecting, Toast.LENGTH_SHORT).show();

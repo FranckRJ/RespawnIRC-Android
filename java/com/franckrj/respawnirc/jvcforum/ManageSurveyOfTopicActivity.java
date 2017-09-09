@@ -3,22 +3,19 @@ package com.franckrj.respawnirc.jvcforum;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.franckrj.respawnirc.AbsThemedActivity;
+import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 
 //TODO: Pas beau, tout changer
-public class ManageSurveyOfTopicActivity extends AbsThemedActivity {
+public class ManageSurveyOfTopicActivity extends AbsHomeIsBackActivity {
     public static final String EXTRA_SURVEY_TITLE = "com.franckrj.respawnirc.managesurveyactivity.EXTRA_SURVEY_TITLE";
     public static final String EXTRA_SURVEY_REPLYS_LIST = "com.franckrj.respawnirc.managesurveyactivity.EXTRA_SURVEY_REPLYS_LIST";
 
@@ -50,15 +47,7 @@ public class ManageSurveyOfTopicActivity extends AbsThemedActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_managesurvey);
-
-        Toolbar myToolbar = findViewById(R.id.toolbar_managesurvey);
-        setSupportActionBar(myToolbar);
-
-        ActionBar myActionBar = getSupportActionBar();
-        if (myActionBar != null) {
-            myActionBar.setHomeButtonEnabled(true);
-            myActionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        initToolbar(R.id.toolbar_managesurvey);
 
         Button validateButton = findViewById(R.id.validate_button_managesurvey);
         titleEdit = findViewById(R.id.title_edit_managesurvey);
@@ -90,17 +79,6 @@ public class ManageSurveyOfTopicActivity extends AbsThemedActivity {
                     }
                 }
             }
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
     }
 

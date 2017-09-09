@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,7 +18,7 @@ import android.widget.Toast;
 
 import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.AbsThemedActivity;
+import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
 import com.franckrj.respawnirc.dialogs.ChoosePageNumberDialogFragment;
 import com.franckrj.respawnirc.dialogs.LinkContextMenuDialogFragment;
 import com.franckrj.respawnirc.dialogs.MessageContextMenuDialogFragment;
@@ -32,7 +31,7 @@ import com.franckrj.respawnirc.jvctopic.jvctopicviewers.AbsShowTopicFragment;
 import com.franckrj.respawnirc.jvctopic.jvctopicviewers.JVCTopicAdapter;
 import com.franckrj.respawnirc.jvctopic.jvctopicviewers.ShowTopicModeForumFragment;
 import com.franckrj.respawnirc.jvctopic.jvctopicviewers.ShowTopicModeIRCFragment;
-import com.franckrj.respawnirc.AbsShowSomethingFragment;
+import com.franckrj.respawnirc.base.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.PageNavigationUtil;
 import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
 import com.franckrj.respawnirc.utils.AddOrRemoveThingToFavs;
@@ -44,7 +43,7 @@ import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 
-public class ShowTopicActivity extends AbsThemedActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCTopicGetter.NewForumAndTopicNameAvailable,
+public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCTopicGetter.NewForumAndTopicNameAvailable,
                                                                     PopupMenu.OnMenuItemClickListener, JVCTopicModeForumGetter.NewNumbersOfPagesListener,
                                                                     ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCTopicAdapter.URLClicked,
                                                                     AbsJVCTopicGetter.NewReasonForTopicLock, InsertStuffDialogFragment.StuffInserted,
@@ -278,19 +277,11 @@ public class ShowTopicActivity extends AbsThemedActivity implements AbsShowTopic
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showtopic);
-
-        Drawable arrowDrawable = Undeprecator.resourcesGetDrawable(getResources(), ThemeManager.getDrawableRes(ThemeManager.DrawableName.ARROW_DROP_DOWN));
-        arrowDrawable.setBounds(0, 0, arrowDrawable.getIntrinsicWidth() / 2, arrowDrawable.getIntrinsicHeight() / 2);
-
-        Toolbar myToolbar = findViewById(R.id.toolbar_showtopic);
-        myToolbar.setOnLongClickListener(showForumAndTopicTitleListener);
-        setSupportActionBar(myToolbar);
+        initToolbar(R.id.toolbar_showtopic).setOnLongClickListener(showForumAndTopicTitleListener);
 
         ActionBar myActionBar = getSupportActionBar();
-        if (myActionBar != null) {
-            myActionBar.setHomeButtonEnabled(true);
-            myActionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        Drawable arrowDrawable = Undeprecator.resourcesGetDrawable(getResources(), ThemeManager.getDrawableRes(ThemeManager.DrawableName.ARROW_DROP_DOWN));
+        arrowDrawable.setBounds(0, 0, arrowDrawable.getIntrinsicWidth() / 2, arrowDrawable.getIntrinsicHeight() / 2);
 
         messageSendLayout = findViewById(R.id.sendmessage_layout_showtopic);
         messageSendEdit = findViewById(R.id.sendmessage_text_showtopic);
@@ -432,9 +423,6 @@ public class ShowTopicActivity extends AbsThemedActivity implements AbsShowTopic
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
             case R.id.action_change_topic_fav_value_showtopic:
                 if (currentTaskForFavs == null) {
                     currentTaskForFavs = new AddOrRemoveThingToFavs(!getCurrentFragment().getIsInFavs(), this);

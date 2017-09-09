@@ -1,5 +1,6 @@
 package com.franckrj.respawnirc.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -570,6 +571,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
         jvcImageGetter = new CustomImageGetter(getActivity(), deletedDrawable, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        @SuppressLint("InflateParams")
         View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_insertstuff, null);
         mainTextView = mainView.findViewById(R.id.showstuff_text_insertstuff);
         listOfCategoryButtons[0] = mainView.findViewById(R.id.smiley_button_insertstuff);

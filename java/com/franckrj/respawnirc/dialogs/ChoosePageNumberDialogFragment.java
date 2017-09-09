@@ -1,5 +1,6 @@
 package com.franckrj.respawnirc.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -56,6 +57,7 @@ public class ChoosePageNumberDialogFragment extends DialogFragment {
         AlertDialog alertToShow;
         Window currentWindow;
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        @SuppressLint("InflateParams")
         View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_choosepagenumber, null);
         pageNumberEdit = mainView.findViewById(R.id.pagenumber_edit_choosepagenumber);
         pageNumberEdit.setOnEditorActionListener(actionInEditTextListener);

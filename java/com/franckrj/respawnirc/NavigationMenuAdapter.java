@@ -28,7 +28,7 @@ public class NavigationMenuAdapter extends BaseAdapter {
     private @ColorInt int normalTextColor;
     private @ColorInt int headerTextColor;
 
-    NavigationMenuAdapter(Activity newParentActivity) {
+    public NavigationMenuAdapter(Activity newParentActivity) {
         parentActivity = newParentActivity;
         serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }

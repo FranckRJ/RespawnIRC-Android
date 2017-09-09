@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.ShareActionProvider;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,11 +18,11 @@ import com.franckrj.respawnirc.dialogs.SelectTextDialogFragment;
 import com.franckrj.respawnirc.jvctopic.ShowTopicActivity;
 import com.franckrj.respawnirc.jvcforum.jvcforumtools.JVCForumGetter;
 import com.franckrj.respawnirc.jvcforum.jvcforumtools.ShowForumFragment;
-import com.franckrj.respawnirc.AbsShowSomethingFragment;
+import com.franckrj.respawnirc.base.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.PageNavigationUtil;
 import com.franckrj.respawnirc.utils.AddOrRemoveThingToFavs;
 import com.franckrj.respawnirc.utils.JVCParser;
-import com.franckrj.respawnirc.AbsNavigationViewActivity;
+import com.franckrj.respawnirc.base.AbsNavigationViewActivity;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Utils;
 
@@ -337,16 +335,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     @Override
     protected void initializeViewAndToolbar() {
         setContentView(R.layout.activity_showforum);
-
-        Toolbar myToolbar = findViewById(R.id.toolbar_showforum);
-        myToolbar.setOnLongClickListener(showForumTitleListener);
-        setSupportActionBar(myToolbar);
-
-        ActionBar myActionBar = getSupportActionBar();
-        if (myActionBar != null) {
-            myActionBar.setHomeButtonEnabled(true);
-            myActionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        initToolbar(R.id.toolbar_showforum).setOnLongClickListener(showForumTitleListener);
 
         layoutForDrawer = findViewById(R.id.layout_drawer_showforum);
         navigationMenuList = findViewById(R.id.navigation_menu_showforum);

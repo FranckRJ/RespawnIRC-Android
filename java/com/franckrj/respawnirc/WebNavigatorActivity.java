@@ -1,9 +1,9 @@
 package com.franckrj.respawnirc;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.CookieManager;
@@ -12,11 +12,12 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
 
-public class WebNavigatorActivity extends AbsThemedActivity {
+public class WebNavigatorActivity extends AbsHomeIsBackActivity {
     public static final String EXTRA_URL_LOAD = "com.franckrj.respawnirc.webnavigatoractivity.EXTRA_URL_LOAD";
 
     private static final String SAVE_TITLE_FOR_NAVIGATOR = "saveTitleForNavigator";
@@ -34,19 +35,12 @@ public class WebNavigatorActivity extends AbsThemedActivity {
         }
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webnavigator);
-
-        Toolbar myToolbar = findViewById(R.id.toolbar_webnavigator);
-        setSupportActionBar(myToolbar);
-
-        ActionBar myActionBar = getSupportActionBar();
-        if (myActionBar != null) {
-            myActionBar.setHomeButtonEnabled(true);
-            myActionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        initToolbar(R.id.toolbar_webnavigator);
 
         String cookies = PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST);
 
@@ -78,7 +72,7 @@ public class WebNavigatorActivity extends AbsThemedActivity {
         navigatorWebView.getSettings().setBuiltInZoomControls(true);
         navigatorWebView.getSettings().setDisplayZoomControls(false);
         navigatorWebView.getSettings().setJavaScriptEnabled(true);
-        navigatorWebView.getSettings().setSaveFormData(false);
+        Undeprecator.webSettingsSetSaveFormData(navigatorWebView.getSettings(), false);
         Undeprecator.webSettingsSetSavePassword(navigatorWebView.getSettings(), false);
 
         currentTitle = getString(R.string.app_name);
@@ -121,9 +115,6 @@ public class WebNavigatorActivity extends AbsThemedActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                super.onBackPressed();
-                return true;
             case R.id.action_open_in_external_browser_webnavigator:
                 Utils.openLinkInExternalNavigator(currentUrl, this);
                 return true;

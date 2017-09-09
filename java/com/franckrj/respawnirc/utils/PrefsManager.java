@@ -1,5 +1,6 @@
 package com.franckrj.respawnirc.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v4.util.SimpleArrayMap;
@@ -36,6 +37,7 @@ public class PrefsManager {
         listOfLongPrefs.put(nameOfPref, new LongPref(prefStringValue, prefDefautlValue));
     }
 
+    @SuppressLint("CommitPrefEdits")
     public static void initializeSharedPrefs(Context currentContext) {
         currentPrefs = currentContext.getSharedPreferences(currentContext.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         currentPrefsEdit = currentPrefs.edit();

@@ -61,6 +61,11 @@ public class Undeprecator {
         }
     }
 
+    public static void webSettingsSetSaveFormData(WebSettings settings, boolean newVal) {
+        //noinspection deprecation
+        settings.setSaveFormData(newVal);
+    }
+
     public static void webSettingsSetSavePassword(WebSettings settings, boolean newVal) {
         //noinspection deprecation
         settings.setSavePassword(newVal);

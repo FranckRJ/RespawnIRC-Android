@@ -2,11 +2,10 @@ package com.franckrj.respawnirc;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 
-public class SettingsActivity extends AbsThemedActivity implements SettingsFragment.NewSettingsFileNeedALoad {
+import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
+
+public class SettingsActivity extends AbsHomeIsBackActivity implements SettingsFragment.NewSettingsFileNeedALoad {
     public static final String EXTRA_FILE_TO_LOAD = "com.respawnirc.settingsactivity.EXTRA_FILE_TO_LOAD";
     public static final String EXTRA_PREF_TITLE = "com.respawnirc.settingsactivity.EXTRA_PREF_TITLE";
 
@@ -14,15 +13,7 @@ public class SettingsActivity extends AbsThemedActivity implements SettingsFragm
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-
-        Toolbar myToolbar = findViewById(R.id.toolbar_settings);
-        setSupportActionBar(myToolbar);
-
-        ActionBar myActionBar = getSupportActionBar();
-        if (myActionBar != null) {
-            myActionBar.setHomeButtonEnabled(true);
-            myActionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        initToolbar(R.id.toolbar_settings);
 
         if (savedInstanceState == null) {
             int idOfFileToLoad = R.xml.main_settings;
@@ -45,17 +36,6 @@ public class SettingsActivity extends AbsThemedActivity implements SettingsFragm
             if (newTitle != null) {
                 setTitle(newTitle);
             }
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
     }
 

@@ -1,13 +1,12 @@
 package com.franckrj.respawnirc;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,11 +18,11 @@ import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
 
-public class ConnectActivity extends AbsThemedActivity {
-    private WebView jvcWebView = null;
+public class ConnectActivity extends AbsHomeIsBackActivity {
     private EditText pseudoText = null;
     private HelpConnectDialogFragment helpDialogFragment = null;
 
@@ -53,7 +52,7 @@ public class ConnectActivity extends AbsThemedActivity {
                 PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, false);
                 PrefsManager.applyChanges();
 
-                Toast.makeText(this, R.string.connectionSucessful, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.connectionSuccessful, Toast.LENGTH_SHORT).show();
 
                 super.onBackPressed();
                 return;
@@ -67,21 +66,14 @@ public class ConnectActivity extends AbsThemedActivity {
         Toast.makeText(this, R.string.errorCookiesMissingConnect, Toast.LENGTH_LONG).show();
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect);
+        initToolbar(R.id.toolbar_connect);
 
-        Toolbar myToolbar = findViewById(R.id.toolbar_connect);
-        setSupportActionBar(myToolbar);
-
-        ActionBar myActionBar = getSupportActionBar();
-        if (myActionBar != null) {
-            myActionBar.setHomeButtonEnabled(true);
-            myActionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-        jvcWebView = findViewById(R.id.webview_connect);
+        WebView jvcWebView = findViewById(R.id.webview_connect);
         pseudoText = findViewById(R.id.pseudo_text_connect);
 
         helpDialogFragment = new HelpConnectDialogFragment();
@@ -91,7 +83,7 @@ public class ConnectActivity extends AbsThemedActivity {
         jvcWebView.setWebViewClient(new WebViewClient());
         jvcWebView.setWebChromeClient(new WebChromeClient());
         jvcWebView.getSettings().setJavaScriptEnabled(true);
-        jvcWebView.getSettings().setSaveFormData(false);
+        Undeprecator.webSettingsSetSaveFormData(jvcWebView.getSettings(), false);
         Undeprecator.webSettingsSetSavePassword(jvcWebView.getSettings(), false);
         jvcWebView.clearCache(true);
         jvcWebView.clearHistory();
@@ -112,9 +104,6 @@ public class ConnectActivity extends AbsThemedActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
             case R.id.action_showhelp_connect:
                 helpDialogFragment.show(getFragmentManager(), "HelpConnectDialogFragment");
                 return true;

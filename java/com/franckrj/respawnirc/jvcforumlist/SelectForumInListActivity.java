@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,7 +22,7 @@ import com.franckrj.respawnirc.dialogs.ChooseTopicOrForumLinkDialogFragment;
 import com.franckrj.respawnirc.dialogs.HelpFirstLaunchDialogFragment;
 import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
 import com.franckrj.respawnirc.utils.JVCParser;
-import com.franckrj.respawnirc.AbsNavigationViewActivity;
+import com.franckrj.respawnirc.base.AbsNavigationViewActivity;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
@@ -225,15 +223,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
     @Override
     protected void initializeViewAndToolbar() {
         setContentView(R.layout.activity_selectforum);
-
-        Toolbar myToolbar = findViewById(R.id.toolbar_selectforum);
-        setSupportActionBar(myToolbar);
-
-        ActionBar myActionBar = getSupportActionBar();
-        if (myActionBar != null) {
-            myActionBar.setHomeButtonEnabled(true);
-            myActionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        initToolbar(R.id.toolbar_selectforum);
 
         layoutForDrawer = findViewById(R.id.layout_drawer_selectforum);
         navigationMenuList = findViewById(R.id.navigation_menu_selectforum);
