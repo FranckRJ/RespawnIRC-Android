@@ -9,11 +9,14 @@ import android.os.AsyncTask;
 import android.support.v4.util.SimpleArrayMap;
 import android.support.v7.graphics.drawable.DrawableWrapper;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
 public class ImageDownloader {
@@ -23,6 +26,7 @@ public class ImageDownloader {
     private Drawable deletedDrawable = null;
     private int numberOfFilesDownloading = 0;
     private DownloadFinished listenerForDownloadFinished = null;
+    private CurrentProgress listenerForCurrentProgress = null;
     private int imagesWidth = 0;
     private int imagesHeight = 0;
     private File imagesCacheDir = null;
@@ -48,6 +52,10 @@ public class ImageDownloader {
 
     public void setListenerForDownloadFinished(DownloadFinished newListener) {
         listenerForDownloadFinished = newListener;
+    }
+
+    public void setListenerForCurrentProgress(CurrentProgress newListener) {
+        listenerForCurrentProgress = newListener;
     }
 
     public void setDefaultDrawable(Drawable newDrawable, boolean setBoundsToImageSize) {
@@ -77,8 +85,7 @@ public class ImageDownloader {
             try {
                 File newFile = new File(imagesCacheDir, imageLinkToFileName(link));
                 if (newFile.exists()) {
-                    FileInputStream inputStream = new FileInputStream(newFile);
-                    drawable = new DrawableWrapper(new BitmapDrawable(parentActivity.getResources(), inputStream));
+                    drawable = new DrawableWrapper(new BitmapDrawable(parentActivity.getResources(), loadBitmapFromCache(newFile.getPath())));
                 }
             } catch (Exception e) {
                 drawable = null;
@@ -102,7 +109,7 @@ public class ImageDownloader {
 
     public void stopAllCurrentTasks() {
         for (ImageGetterAsyncTask taskIterator : listOfCurrentsTasks) {
-            taskIterator.cancel(true);
+            taskIterator.cancel(false);
         }
         listOfCurrentsTasks.clear();
     }
@@ -120,9 +127,9 @@ public class ImageDownloader {
     }
 
     private void startDownloadOfThisFileInThisWrapper(String linkToFile, DrawableWrapper thisWrapper) {
-        ImageGetterAsyncTask getterForImage = new ImageGetterAsyncTask(thisWrapper, linkToFile);
+        ImageGetterAsyncTask getterForImage = new ImageGetterAsyncTask(thisWrapper, linkToFile, imagesCacheDir.getPath());
         listOfCurrentsTasks.add(getterForImage);
-        getterForImage.execute(linkToFile);
+        getterForImage.execute();
         ++numberOfFilesDownloading;
     }
 
@@ -142,86 +149,131 @@ public class ImageDownloader {
         }
     }
 
-    private class ImageGetterAsyncTask extends AsyncTask<String, Void, Bitmap> {
-        DrawableWrapper wrapperForDrawable;
-        String fileName;
+    public Bitmap loadBitmapFromCache(String fileName) {
+        try {
+            Bitmap bitmapLoaded;
+            BitmapFactory.Options currentOptions = new BitmapFactory.Options();
+            InputStream stream = new FileInputStream(fileName);
 
-        public ImageGetterAsyncTask(DrawableWrapper newWrapper, String link) {
+            if (scaleLargeImages) {
+                int maxOfScreenSize = Math.max(imagesWidth, imagesHeight);
+                currentOptions.inJustDecodeBounds = true;
+                BitmapFactory.decodeStream(stream, null, currentOptions);
+                stream.close();
+                stream = new FileInputStream(fileName);
+                currentOptions.inSampleSize = calculateInSampleSize(currentOptions, maxOfScreenSize, maxOfScreenSize);
+                currentOptions.inJustDecodeBounds = false;
+            }
+
+            bitmapLoaded = BitmapFactory.decodeStream(stream, null, currentOptions);
+            stream.close();
+
+            return bitmapLoaded;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        int height = options.outHeight;
+        int width = options.outWidth;
+        int inSampleSize = 1;
+
+        while (width / 2 > reqWidth * 0.9 || height / 2 > reqHeight * 0.9) {
+            inSampleSize *= 2;
+            width /= 2;
+            height /=2;
+        }
+
+        return inSampleSize;
+    }
+
+    private class ImageGetterAsyncTask extends AsyncTask<Void, Integer, String> {
+        final DrawableWrapper wrapperForDrawable;
+        final String fileDownloadPath;
+        final String fileLocalPath;
+        final boolean itsABigFile;
+
+        public ImageGetterAsyncTask(DrawableWrapper newWrapper, String link, String cacheDirPath) {
             wrapperForDrawable = newWrapper;
-            fileName = imageLinkToFileName(link);
+            fileDownloadPath = link;
+            fileLocalPath = (cacheDirPath + "/" + imageLinkToFileName(fileDownloadPath)).replace("//", "/");
+            itsABigFile = scaleLargeImages;
         }
 
         @Override
-        protected Bitmap doInBackground(String... params) {
-            String source = params[0];
-            return fetchDrawable(source);
-        }
+        protected String doInBackground(Void... params) {
+            try {
+                int lenghtOfFile = 0;
+                URL url = new URL(fileDownloadPath);
 
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            if (result != null) {
-                BitmapDrawable newDrawable = new BitmapDrawable(parentActivity.getResources(), result);
-                newDrawable.setBounds(0, 0, imagesWidth, imagesHeight);
-                wrapperForDrawable.setWrappedDrawable(newDrawable);
+                if (itsABigFile) {
+                    URLConnection conection = url.openConnection();
+                    conection.connect();
+                    lenghtOfFile = conection.getContentLength();
+                }
 
-                if (!fileName.isEmpty() && !imagesCacheDir.getPath().isEmpty()) {
-                    try {
-                        File newFile = new File(imagesCacheDir, fileName);
-                        FileOutputStream outputStream = new FileOutputStream(newFile);
+                InputStream input = new BufferedInputStream(url.openStream(), 8192);
+                OutputStream output = new FileOutputStream(fileLocalPath);
+                byte data[] = new byte[8192];
+                long total = 0;
+                int count;
 
-                        result.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-                        outputStream.flush();
-                        outputStream.close();
-                    } catch (Exception e) {
-                        //rien
+                while ((count = input.read(data)) != -1 && !isCancelled()) {
+                    total += count;
+                    output.write(data, 0, count);
+
+                    if (lenghtOfFile > 0) {
+                        publishProgress((int) ((total * 100) / lenghtOfFile));
                     }
+                }
+
+                output.flush();
+                output.close();
+                input.close();
+
+                if (isCancelled()) {
+                    File file = new File(fileLocalPath);
+                    //noinspection ResultOfMethodCallIgnored
+                    file.delete();
+                    return "";
+                }
+
+                return fileLocalPath;
+            } catch (Exception e) {
+                return "";
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+            if (progress.length > 0 && listenerForCurrentProgress != null) {
+                listenerForCurrentProgress.newCurrentProgress(progress[0], fileDownloadPath);
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String resultFileName) {
+            if (!resultFileName.isEmpty()) {
+                try {
+                    BitmapDrawable drawableToUse = new BitmapDrawable(parentActivity.getResources(), loadBitmapFromCache(resultFileName));
+                    drawableToUse.setBounds(0, 0, imagesWidth, imagesHeight);
+                    wrapperForDrawable.setWrappedDrawable(drawableToUse);
+                } catch (Exception e) {
+                    wrapperForDrawable.setWrappedDrawable(deletedDrawable);
                 }
             } else {
                 wrapperForDrawable.setWrappedDrawable(deletedDrawable);
             }
             downloadOfAFileEnded(this);
         }
-
-        public Bitmap fetchDrawable(String urlString) {
-            try {
-                Bitmap bitmapToReturn;
-                BitmapFactory.Options currentOptions = new BitmapFactory.Options();
-                InputStream stream = (InputStream) new URL(urlString).getContent();
-
-                if (scaleLargeImages) {
-                    int maxOfScreenSize = Math.max(imagesWidth, imagesHeight);
-                    currentOptions.inJustDecodeBounds = true;
-                    BitmapFactory.decodeStream(stream, null, currentOptions);
-                    stream.close();
-                    stream = (InputStream) new URL(urlString).getContent();
-                    currentOptions.inSampleSize = calculateInSampleSize(currentOptions, maxOfScreenSize, maxOfScreenSize);
-                    currentOptions.inJustDecodeBounds = false;
-                }
-
-                bitmapToReturn = BitmapFactory.decodeStream(stream, null, currentOptions);
-                stream.close();
-                return bitmapToReturn;
-            } catch (Exception e) {
-                return null;
-            }
-        }
-
-        public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-            int height = options.outHeight;
-            int width = options.outWidth;
-            int inSampleSize = 1;
-
-            while (width / 2 > reqWidth * 0.9 || height / 2 > reqHeight * 0.9) {
-                inSampleSize *= 2;
-                width /= 2;
-                height /=2;
-            }
-
-            return inSampleSize;
-        }
     }
 
     public interface DownloadFinished {
         void newDownloadFinished(int numberOfDownloadRemaining);
+    }
+
+    public interface CurrentProgress {
+        void newCurrentProgress(int progressInPercent, String fileLink);
     }
 }

@@ -26,7 +26,8 @@ public class ShowImageDialogFragment extends DialogFragment {
     public static final String ARG_IMAGE_LINK = "com.franckrj.respawnirc.showimagedialogfragment.ARG_IMAGE_LINK";
 
     private ImageView viewForImage = null;
-    private ProgressBar progressBarForImage = null;
+    private ProgressBar progressBarDeterminateForImage = null;
+    private ProgressBar progressBarIndeterminateForImage = null;
     private ImageDownloader downloaderForImage = new ImageDownloader();
     private String linkOfImage = "";
     private Drawable fullsizeImage = null;
@@ -38,9 +39,21 @@ public class ShowImageDialogFragment extends DialogFragment {
         }
     };
 
+    private final ImageDownloader.CurrentProgress listenerForCurrentProgress = new ImageDownloader.CurrentProgress() {
+        @Override
+        public void newCurrentProgress(int progressInPercent, String fileLink) {
+            if (linkOfImage.equals(fileLink)) {
+                progressBarIndeterminateForImage.setVisibility(View.GONE);
+                progressBarDeterminateForImage.setVisibility(View.VISIBLE);
+                progressBarDeterminateForImage.setProgress(progressInPercent);
+            }
+        }
+    };
+
     private void updateViewForImage() {
         viewForImage.setVisibility(View.VISIBLE);
-        progressBarForImage.setVisibility(View.GONE);
+        progressBarIndeterminateForImage.setVisibility(View.GONE);
+        progressBarDeterminateForImage.setVisibility(View.GONE);
         viewForImage.setImageDrawable(fullsizeImage);
     }
 
@@ -67,6 +80,7 @@ public class ShowImageDialogFragment extends DialogFragment {
 
             downloaderForImage.setParentActivity(getActivity());
             downloaderForImage.setListenerForDownloadFinished(listenerForDownloadFinished);
+            downloaderForImage.setListenerForCurrentProgress(listenerForCurrentProgress);
             downloaderForImage.setImagesCacheDir(getActivity().getCacheDir());
             downloaderForImage.setScaleLargeImages(true);
             downloaderForImage.setImagesSize(metrics.widthPixels, metrics.heightPixels);
@@ -92,9 +106,13 @@ public class ShowImageDialogFragment extends DialogFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View mainView = inflater.inflate(R.layout.dialog_showimage, container, false);
         viewForImage = mainView.findViewById(R.id.imageview_image_showimage);
-        progressBarForImage = mainView.findViewById(R.id.downloading_image_showimage);
+        progressBarDeterminateForImage = mainView.findViewById(R.id.dl_determinate_image_showimage);
+        progressBarIndeterminateForImage = mainView.findViewById(R.id.dl_indeterminate_image_showimage);
 
-        progressBarForImage.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
+        /*nécessaire pour un affichage correcte sur les versions récentes d'android.*/
+        progressBarDeterminateForImage.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
+        progressBarIndeterminateForImage.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
+        progressBarDeterminateForImage.setVisibility(View.GONE);
         viewForImage.setVisibility(View.GONE);
 
         fullsizeImage = downloaderForImage.getDrawableFromLink(linkOfImage);
