@@ -156,12 +156,11 @@ public class ImageDownloader {
             InputStream stream = new FileInputStream(fileName);
 
             if (scaleLargeImages) {
-                int maxOfScreenSize = Math.max(imagesWidth, imagesHeight);
                 currentOptions.inJustDecodeBounds = true;
                 BitmapFactory.decodeStream(stream, null, currentOptions);
                 stream.close();
                 stream = new FileInputStream(fileName);
-                currentOptions.inSampleSize = calculateInSampleSize(currentOptions, maxOfScreenSize, maxOfScreenSize);
+                currentOptions.inSampleSize = calculateInSampleSize(currentOptions, imagesWidth, imagesHeight);
                 currentOptions.inJustDecodeBounds = false;
             }
 

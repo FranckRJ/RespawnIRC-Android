@@ -2,6 +2,7 @@ package com.franckrj.respawnirc.dialogs;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -79,6 +80,12 @@ public class RefreshFavDialogFragment extends DialogFragment {
     public void onPause() {
         stopAllCurrentTask();
         super.onPause();
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialogInterface) {
+        stopAllCurrentTask();
+        super.onDismiss(dialogInterface);
     }
 
     private class GetFavsOfPseudo extends AsyncTask<String, Void, ArrayList<JVCParser.NameAndLink>> {

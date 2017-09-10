@@ -121,6 +121,10 @@ public class JVCTopicAdapter extends BaseAdapter {
                         popup.getMenu().add(Menu.NONE, R.id.menu_show_ugly_images_message, Menu.NONE, R.string.showUglyImagesMessage);
                     }
                 }
+
+                if (itemSelected.messageIsDeleted) {
+                    popup.getMenu().removeItem(R.id.menu_delete_message);
+                }
             } else {
                 popup.getMenu().add(Menu.NONE, R.id.menu_show_blacklisted_message, Menu.NONE, R.string.showBlacklistedMessage);
             }
