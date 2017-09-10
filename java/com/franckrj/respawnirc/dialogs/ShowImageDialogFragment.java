@@ -132,6 +132,12 @@ public class ShowImageDialogFragment extends DialogFragment {
     }
 
     @Override
+    public void onPause() {
+        downloaderForImage.stopAllCurrentTasks();
+        super.onPause();
+    }
+
+    @Override
     public void onDismiss(DialogInterface dialogInterface) {
         downloaderForImage.stopAllCurrentTasks();
         super.onDismiss(dialogInterface);
