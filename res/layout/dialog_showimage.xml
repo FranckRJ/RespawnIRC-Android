@@ -18,7 +18,14 @@
         android:scaleType="fitCenter"
         android:contentDescription="@string/noelshack"/>
     <ProgressBar
-        android:id="@+id/downloading_image_showimage"
+        style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+        android:id="@+id/dl_determinate_image_showimage"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:indeterminate="false"/>
+    <ProgressBar
+        style="@style/Base.Widget.AppCompat.ProgressBar"
+        android:id="@+id/dl_indeterminate_image_showimage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:indeterminate="true"/>
