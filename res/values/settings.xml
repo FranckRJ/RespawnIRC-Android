@@ -40,4 +40,6 @@
     <string name="settingsHideTotallyMessagesOfIgnoredPseudos" translatable="false">settings.hideTotallyMessagesOfIgnoredPseudos</string>
     <string name="settingsEnableFastRefreshOfImages" translatable="false">settings.enableFastRefreshOfImages</string>
     <string name="settingsEnableColorDeletedMessages" translatable="false">settings.enableColorDeletedMessages</string>
+    <string name="settingsColorPseudoOfUserInInfo" translatable="false">settings.colorPseudoOfUserInInfo</string>
+    <string name="settingsColorPseudoOfUserInMessage" translatable="false">settings.colorPseudoOfUserInMessage</string>
 </resources>

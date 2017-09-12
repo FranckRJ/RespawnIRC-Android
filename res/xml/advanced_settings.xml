@@ -25,6 +25,14 @@
         <android.support.v7.preference.CheckBoxPreference
             android:key="@string/settingsEnableColorDeletedMessages"
             android:title="@string/enableColorDeletedMessagesTitle"/>
+
+        <android.support.v7.preference.CheckBoxPreference
+            android:key="@string/settingsColorPseudoOfUserInInfo"
+            android:title="@string/colorPseudoOfUserInInfoTitle"/>
+
+        <android.support.v7.preference.CheckBoxPreference
+            android:key="@string/settingsColorPseudoOfUserInMessage"
+            android:title="@string/colorPseudoOfUserInMessageTitle"/>
     </android.support.v7.preference.PreferenceCategory>
 
     <android.support.v7.preference.PreferenceCategory

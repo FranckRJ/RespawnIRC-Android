@@ -761,7 +761,7 @@ public final class JVCParser {
             ToolForParsing.replaceStringByAnother(newFirstLine, "<%DATE_COLOR_END%>", "");
         }
 
-        if (thisMessageInfo.pseudo.toLowerCase().equals(settings.pseudoOfUser.toLowerCase())) {
+        if (thisMessageInfo.pseudo.toLowerCase().equals(settings.pseudoOfUser.toLowerCase()) && settings.colorPseudoOfUserInInfoLine) {
             ToolForParsing.replaceStringByAnother(newFirstLine, "<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoUser + "\">");
         } else if (thisMessageInfo.pseudoType.equals("modo")){
             ToolForParsing.replaceStringByAnother(newFirstLine, "<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoModo + "\">");
@@ -856,7 +856,7 @@ public final class JVCParser {
             ToolForParsing.removeOverlyQuoteInPrettyMessage(messageInBuilder, settings.maxNumberOfOverlyQuotes);
         }
 
-        if (!settings.pseudoOfUser.isEmpty()) {
+        if (!settings.pseudoOfUser.isEmpty() && settings.colorPseudoOfUserInMessage) {
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, Pattern.compile("(?i)" + settings.pseudoOfUser.replace("[", "\\[").replace("]", "\\]") + "(?![^<>]*(>|</a>))"), 0, "<font color=\"" + settings.colorPseudoUser + "\">", "</font>", null, null);
         }
 
@@ -1635,6 +1635,8 @@ public final class JVCParser {
         public String colorPseudoModo;
         public String colorPseudoAdmin;
         public int maxNumberOfOverlyQuotes = 0;
+        public boolean colorPseudoOfUserInInfoLine = true;
+        public boolean colorPseudoOfUserInMessage = true;
         public boolean applyMarkToPseudoAuthor = false;
         public boolean showNoelshackImages = false;
         public boolean transformStickerToSmiley = false;
