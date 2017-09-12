@@ -205,6 +205,8 @@
     <string name="surveyTitlePlaceholder">Titre (vide pour ne pas créer de sondage)</string>
     <string name="warningChangesNotSaved">Attention, vos changements n\'ont pas été sauvegardés !</string>
     <string name="kickSuccessful">Kick effectué</string>
+    <string name="colorPseudoOfUserInInfoTitle">Colorer votre pseudo</string>
+    <string name="colorPseudoOfUserInMessageTitle">Colorer votre pseudo dans les messages</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

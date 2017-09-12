@@ -20,6 +20,12 @@
         <CheckBoxPreference
             android:key="@string/settingsEnableColorDeletedMessages"
             android:title="@string/enableColorDeletedMessagesTitle"/>
+        <CheckBoxPreference
+            android:key="@string/settingsColorPseudoOfUserInInfo"
+            android:title="@string/colorPseudoOfUserInInfoTitle"/>
+        <CheckBoxPreference
+            android:key="@string/settingsColorPseudoOfUserInMessage"
+            android:title="@string/colorPseudoOfUserInMessageTitle"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/styleModeForum">
