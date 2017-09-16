@@ -1,8 +1,8 @@
 package com.franckrj.respawnirc.jvctopic.jvctopicgetters;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
@@ -142,7 +142,7 @@ public abstract class AbsJVCTopicGetter {
 
     public void stopAllCurrentTask() {
         if (currentAsyncTaskForGetMessage != null) {
-            currentAsyncTaskForGetMessage.cancel(true);
+            currentAsyncTaskForGetMessage.cancel(false);
             currentAsyncTaskForGetMessage = null;
         }
 
@@ -195,13 +195,12 @@ public abstract class AbsJVCTopicGetter {
         htmlSurveyTitle = null;
     }
 
-    protected TopicPageInfos downloadAndParseTopicPage(String topicLink, String cookies, boolean useBiggerTimeoutTime) {
-        WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
+    protected TopicPageInfos downloadAndParseTopicPage(String topicLink, WebManager.WebInfos currentWebInfos, boolean useBiggerTimeoutTime) {
         TopicPageInfos newPageInfos = null;
         String pageContent;
         currentWebInfos.followRedirects = true;
         currentWebInfos.useBiggerTimeoutTime = useBiggerTimeoutTime;
-        pageContent = WebManager.sendRequest(topicLink, "GET", "", cookies, currentWebInfos);
+        pageContent = WebManager.sendRequest(topicLink, "GET", "", currentWebInfos);
 
         if (pageContent != null) {
             newPageInfos = new TopicPageInfos();
@@ -290,7 +289,7 @@ public abstract class AbsJVCTopicGetter {
         return pageDownloadedIsAnalysable;
     }
 
-    protected abstract class AbsGetJVCLastMessages extends AsyncTask<String, Void, TopicPageInfos> {
+    protected abstract class AbsGetJVCLastMessages extends AbsWebRequestAsyncTask<String, Void, TopicPageInfos> {
     }
 
     public enum ErrorType {

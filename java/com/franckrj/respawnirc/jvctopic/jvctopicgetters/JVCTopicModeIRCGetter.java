@@ -139,7 +139,7 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
         @Override
         protected TopicPageInfos doInBackground(String... params) {
             if (params.length > 1) {
-                return downloadAndParseTopicPage(params[0], params[1], useBiggerTimeoutTime);
+                return downloadAndParseTopicPage(params[0], initWebInfos(params[1], true), useBiggerTimeoutTime);
             } else {
                 return null;
             }

@@ -2,7 +2,6 @@ package com.franckrj.respawnirc.jvcforumlist;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
@@ -18,6 +17,7 @@ import android.widget.TextView;
 
 import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 import com.franckrj.respawnirc.dialogs.ChooseTopicOrForumLinkDialogFragment;
 import com.franckrj.respawnirc.dialogs.HelpFirstLaunchDialogFragment;
 import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
@@ -93,7 +93,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
 
     private void stopAllCurrentTasks() {
         if (currentAsyncTaskForGetSearchedForums != null) {
-            currentAsyncTaskForGetSearchedForums.cancel(true);
+            currentAsyncTaskForGetSearchedForums.cancel(false);
             currentAsyncTaskForGetSearchedForums = null;
         }
         swipeRefresh.setRefreshing(false);
@@ -246,7 +246,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         readNewTopicOrForum(newTopicOrForumLink, false);
     }
 
-    private class GetSearchedForums extends AsyncTask<String, Void, String> {
+    private class GetSearchedForums extends AbsWebRequestAsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
             adapterForForumList.clearListOfForums();
@@ -258,10 +258,9 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         protected String doInBackground(String... params) {
             if (params.length > 0) {
                 String pageResult;
-                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
-                currentWebInfos.followRedirects = false;
+                WebManager.WebInfos currentWebInfos = initWebInfos("", false);
 
-                pageResult = WebManager.sendRequest("http://www.jeuxvideo.com/forums/recherche.php", "GET", "q=" + Utils.convertStringToUrlString(params[0]), "", currentWebInfos);
+                pageResult = WebManager.sendRequest("http://www.jeuxvideo.com/forums/recherche.php", "GET", "q=" + Utils.convertStringToUrlString(params[0]), currentWebInfos);
 
                 if (!currentWebInfos.currentUrl.isEmpty() && !currentWebInfos.currentUrl.startsWith("http://www.jeuxvideo.com/forums/recherche.php")) {
                     return "respawnirc:redirect:" + currentWebInfos.currentUrl;

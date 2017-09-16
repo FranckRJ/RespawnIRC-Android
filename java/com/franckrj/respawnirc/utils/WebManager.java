@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Random;
+import java.util.concurrent.Callable;
 
 public class WebManager {
     private static String userAgentString = "ResdroidIRC";
@@ -24,26 +25,36 @@ public class WebManager {
         userAgentString = newUserAgent;
     }
 
-    public static String sendRequestWithMultipleTrys(String linkToPage, String requestMethod, String requestParameters, String cookiesInAString, WebInfos currentInfos, int maxNumberOfTrys) {
+    public static String sendRequestWithMultipleTrys(String linkToPage, String requestMethod, String requestParameters, WebInfos currentInfos, int maxNumberOfTrys) {
         int numberOfTrys = 0;
         String pageContent;
 
         do {
             ++numberOfTrys;
-            pageContent = sendRequest(linkToPage, requestMethod, requestParameters, cookiesInAString, currentInfos);
+            pageContent = sendRequest(linkToPage, requestMethod, requestParameters, currentInfos);
+
+            try {
+                if (currentInfos.isCancelled != null) {
+                    if (currentInfos.isCancelled.call()) {
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                break;
+            }
         } while (currentInfos.currentUrl.equals(linkToPage) && numberOfTrys < maxNumberOfTrys);
 
         return pageContent;
     }
 
-    public static String sendRequest(String linkToPage, String requestMethod, String requestParameters, String cookiesInAString, WebInfos currentInfos) {
+    public static String sendRequest(String linkToPage, String requestMethod, String requestParameters, WebInfos currentInfos) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
         try {
             URL urlToPage;
             InputStream inputStream;
-            StringBuilder buffer;
+            StringBuilder buffer = new StringBuilder();
             String line;
 
             if (requestMethod.equals("GET") && !requestParameters.isEmpty()) {
@@ -67,22 +78,33 @@ public class WebManager {
             urlConnection.setRequestMethod(requestMethod);
             urlConnection.setRequestProperty("User-Agent", userAgentString);
             urlConnection.setRequestProperty("Connection", "Keep-Alive");
-            urlConnection.setRequestProperty("Cookie", cookiesInAString);
+            urlConnection.setRequestProperty("Cookie", currentInfos.cookiesInAString);
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
             if (requestMethod.equals("POST")) {
-                DataOutputStream writer;
-                urlConnection.setDoOutput(true);
-                urlConnection.setFixedLengthStreamingMode(requestParameters.getBytes().length);
+                DataOutputStream writer = null;
 
-                writer = new DataOutputStream(urlConnection.getOutputStream());
-                writer.writeBytes(requestParameters);
-                writer.flush();
-                writer.close();
+                try {
+                    urlConnection.setDoOutput(true);
+                    urlConnection.setFixedLengthStreamingMode(requestParameters.getBytes().length);
+
+                    writer = new DataOutputStream(urlConnection.getOutputStream());
+                    writer.writeBytes(requestParameters);
+                    writer.flush();
+                } catch (Exception e) {
+                    //rien
+                } finally {
+                    if (writer != null) {
+                        try {
+                            writer.close();
+                        } catch (Exception e) {
+                            //rien
+                        }
+                    }
+                }
             }
 
             inputStream = urlConnection.getInputStream();
-            buffer = new StringBuilder();
             if (inputStream == null) {
                 return null;
             }
@@ -90,6 +112,12 @@ public class WebManager {
 
             while ((line = reader.readLine()) != null) {
                 buffer.append(line).append("\n");
+
+                if (currentInfos.isCancelled != null) {
+                    if (currentInfos.isCancelled.call()) {
+                        return null;
+                    }
+                }
             }
 
             if (currentInfos.followRedirects) {
@@ -128,8 +156,10 @@ public class WebManager {
     }
 
     public static class WebInfos {
+        public Callable<Boolean> isCancelled = null;
         public boolean followRedirects = false;
         public String currentUrl = "";
+        public String cookiesInAString = "";
         public boolean useBiggerTimeoutTime = true;
     }
 }

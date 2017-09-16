@@ -1,8 +1,8 @@
 package com.franckrj.respawnirc.jvcforum.jvcforumtools;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
@@ -124,7 +124,7 @@ public class JVCForumGetter {
 
     public void stopAllCurrentTask() {
         if (currentAsyncTaskForGetTopic != null) {
-            currentAsyncTaskForGetTopic.cancel(true);
+            currentAsyncTaskForGetTopic.cancel(false);
             currentAsyncTaskForGetTopic = null;
         }
 
@@ -159,7 +159,7 @@ public class JVCForumGetter {
         }
     }
 
-    private class GetJVCLastTopics extends AsyncTask<String, Void, ForumPageInfos> {
+    private class GetJVCLastTopics extends AbsWebRequestAsyncTask<String, Void, ForumPageInfos> {
         boolean isInSearchMode = false;
         boolean useBiggerTimeoutTime = false;
 
@@ -178,12 +178,11 @@ public class JVCForumGetter {
         @Override
         protected ForumPageInfos doInBackground(String... params) {
             if (params.length > 1) {
-                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
+                WebManager.WebInfos currentWebInfos = initWebInfos(params[1], true);
                 ForumPageInfos newPageInfos = null;
                 String pageContent;
-                currentWebInfos.followRedirects = true;
                 currentWebInfos.useBiggerTimeoutTime = useBiggerTimeoutTime;
-                pageContent = WebManager.sendRequest(params[0], "GET", "", params[1], currentWebInfos);
+                pageContent = WebManager.sendRequest(params[0], "GET", "", currentWebInfos);
 
                 if (pageContent != null) {
                     newPageInfos = new ForumPageInfos();

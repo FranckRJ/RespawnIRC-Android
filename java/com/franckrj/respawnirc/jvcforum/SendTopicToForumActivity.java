@@ -2,7 +2,6 @@ package com.franckrj.respawnirc.jvcforum;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
@@ -14,6 +13,7 @@ import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
+import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 import com.franckrj.respawnirc.dialogs.InsertStuffDialogFragment;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
@@ -71,7 +71,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
 
     private void stopAllCurrentTasks() {
         if (currentAsyncTaskForSendTopic != null) {
-            currentAsyncTaskForSendTopic.cancel(true);
+            currentAsyncTaskForSendTopic.cancel(false);
             currentAsyncTaskForSendTopic = null;
         }
     }
@@ -170,14 +170,13 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
         Utils.insertStringInEditText(topicContentEdit, newStringToAdd, posOfCenterFromEnd);
     }
 
-    private class SendTopicToJVC extends AsyncTask<SendTopicInfos, Void, String> {
+    private class SendTopicToJVC extends AbsWebRequestAsyncTask<SendTopicInfos, Void, String> {
         @Override
         protected String doInBackground(SendTopicInfos... infosOfSend) {
             if (infosOfSend.length == 1) {
-                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
+                WebManager.WebInfos currentWebInfos = initWebInfos(infosOfSend[0].cookieList, false);
                 String pageContent;
                 String requestBuilded = "titre_topic=" + Utils.convertStringToUrlString(infosOfSend[0].lastTopicTitleSended) + "&message_topic=" + Utils.convertStringToUrlString(infosOfSend[0].lastTopicContentSended) + infosOfSend[0].listOfInputsInAstring;
-                currentWebInfos.followRedirects = false;
 
                 if (!Utils.stringIsEmptyOrNull(infosOfSend[0].surveyTitle)) {
                     requestBuilded += "&submit_sondage=1&question_sondage=" + Utils.convertStringToUrlString(infosOfSend[0].surveyTitle);
@@ -191,7 +190,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
                     requestBuilded += "&submit_sondage=0&question_sondage=&reponse_sondage[]=";
                 }
 
-                pageContent = WebManager.sendRequestWithMultipleTrys(infosOfSend[0].linkToSend, "POST", requestBuilded, infosOfSend[0].cookieList, currentWebInfos, 2);
+                pageContent = WebManager.sendRequestWithMultipleTrys(infosOfSend[0].linkToSend, "POST", requestBuilded, currentWebInfos, 2);
 
                 if (infosOfSend[0].linkToSend.equals(currentWebInfos.currentUrl)) {
                     pageContent = "respawnirc:resendneeded";

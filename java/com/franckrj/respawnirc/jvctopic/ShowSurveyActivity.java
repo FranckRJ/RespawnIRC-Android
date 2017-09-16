@@ -1,6 +1,5 @@
 package com.franckrj.respawnirc.jvctopic;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
@@ -11,6 +10,7 @@ import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
+import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 import com.franckrj.respawnirc.dialogs.VoteInSurveyDialogFragment;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.ThemeManager;
@@ -125,11 +125,11 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
 
     private void stopAllCurrentTasks() {
         if (currentTaskForSurvey != null) {
-            currentTaskForSurvey.cancel(true);
+            currentTaskForSurvey.cancel(false);
             currentTaskForSurvey = null;
         }
         if (currentTaskForVote != null) {
-            currentTaskForVote.cancel(true);
+            currentTaskForVote.cancel(false);
             currentTaskForVote = null;
         }
         swipeRefresh.setRefreshing(false);
@@ -202,7 +202,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
         }
     }
 
-    private class DownloadInfosForSurvey extends AsyncTask<String, Void, String> {
+    private class DownloadInfosForSurvey extends AbsWebRequestAsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
             swipeRefresh.setRefreshing(true);
@@ -211,9 +211,8 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
         @Override
         protected String doInBackground(String... params) {
             if (params.length > 2) {
-                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
-                currentWebInfos.followRedirects = false;
-                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_topic_sondage_view_response.php", "GET", "id_topic=" + params[0] + "&action=view_vote&" + params[1], params[2], currentWebInfos);
+                WebManager.WebInfos currentWebInfos = initWebInfos(params[2], false);
+                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_topic_sondage_view_response.php", "GET", "id_topic=" + params[0] + "&action=view_vote&" + params[1], currentWebInfos);
             }
             return null;
         }
@@ -235,7 +234,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
         }
     }
 
-    private class SendVoteToSurvey extends AsyncTask<String, Void, String> {
+    private class SendVoteToSurvey extends AbsWebRequestAsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
             swipeRefresh.setRefreshing(true);
@@ -244,9 +243,8 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
         @Override
         protected String doInBackground(String... params) {
             if (params.length > 3) {
-                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
-                currentWebInfos.followRedirects = false;
-                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_topic_sondage_vote.php", "GET", "id_topic=" + params[0] + "&" + params[1] + "&" + params[2], params[3], currentWebInfos);
+                WebManager.WebInfos currentWebInfos = initWebInfos(params[3], false);
+                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_topic_sondage_vote.php", "GET", "id_topic=" + params[0] + "&" + params[1] + "&" + params[2], currentWebInfos);
             }
             return null;
         }

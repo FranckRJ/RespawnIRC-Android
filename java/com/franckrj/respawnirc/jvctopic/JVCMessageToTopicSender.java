@@ -1,10 +1,10 @@
 package com.franckrj.respawnirc.jvctopic;
 
 import android.app.Activity;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
@@ -58,7 +58,7 @@ public class JVCMessageToTopicSender {
 
     public void stopAllCurrentTask() {
         if (currentAsyncTaskForSendMessage != null) {
-            currentAsyncTaskForSendMessage.cancel(true);
+            currentAsyncTaskForSendMessage.cancel(false);
             currentAsyncTaskForSendMessage = null;
         }
         stopCurrentEditTask();
@@ -66,7 +66,7 @@ public class JVCMessageToTopicSender {
 
     public void stopCurrentEditTask() {
         if (currentAsyncTaskForGetEditInfos != null) {
-            currentAsyncTaskForGetEditInfos.cancel(true);
+            currentAsyncTaskForGetEditInfos.cancel(false);
             currentAsyncTaskForGetEditInfos = null;
             isInEdit = false;
         }
@@ -108,13 +108,12 @@ public class JVCMessageToTopicSender {
         }
     }
 
-    private class GetEditJVCMessageInfos extends AsyncTask<String, Void, String> {
+    private class GetEditJVCMessageInfos extends AbsWebRequestAsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
             if (params.length > 2) {
-                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
-                currentWebInfos.followRedirects = false;
-                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_edit_message.php", "GET", "id_message=" + params[0] + "&" + params[1] + "&action=get", params[2], currentWebInfos);
+                WebManager.WebInfos currentWebInfos = initWebInfos(params[2], false);
+                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_edit_message.php", "GET", "id_message=" + params[0] + "&" + params[1] + "&action=get", currentWebInfos);
             } else {
                 return null;
             }
@@ -155,15 +154,14 @@ public class JVCMessageToTopicSender {
         }
     }
 
-    private class PostJVCMessage extends AsyncTask<InfosOfSend, Void, String> {
+    private class PostJVCMessage extends AbsWebRequestAsyncTask<InfosOfSend, Void, String> {
         @Override
         protected String doInBackground(final InfosOfSend... info) {
             if (info.length == 1) {
-                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
+                WebManager.WebInfos currentWebInfos = initWebInfos(info[0].cookiesUsed, false);
                 String pageContent;
-                currentWebInfos.followRedirects = false;
 
-                pageContent = WebManager.sendRequestWithMultipleTrys(info[0].urlUsed, "POST", "message_topic=" + Utils.convertStringToUrlString(info[0].messageSended) + info[0].listOfInputUsed, info[0].cookiesUsed, currentWebInfos, 2);
+                pageContent = WebManager.sendRequestWithMultipleTrys(info[0].urlUsed, "POST", "message_topic=" + Utils.convertStringToUrlString(info[0].messageSended) + info[0].listOfInputUsed, currentWebInfos, 2);
 
                 if (info[0].urlUsed.equals(currentWebInfos.currentUrl)) {
                     pageContent = "respawnirc:resendneeded";

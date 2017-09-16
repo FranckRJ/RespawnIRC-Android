@@ -3,7 +3,6 @@ package com.franckrj.respawnirc.dialogs;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +11,7 @@ import android.view.Window;
 import android.widget.TextView;
 
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.WebManager;
 
@@ -28,7 +28,7 @@ public class RefreshFavDialogFragment extends DialogFragment {
 
     private void stopAllCurrentTask() {
         if (currentTaskGetFavs != null) {
-            currentTaskGetFavs.cancel(true);
+            currentTaskGetFavs.cancel(false);
             currentTaskGetFavs = null;
         }
     }
@@ -88,7 +88,7 @@ public class RefreshFavDialogFragment extends DialogFragment {
         super.onDismiss(dialogInterface);
     }
 
-    private class GetFavsOfPseudo extends AsyncTask<String, Void, ArrayList<JVCParser.NameAndLink>> {
+    private class GetFavsOfPseudo extends AbsWebRequestAsyncTask<String, Void, ArrayList<JVCParser.NameAndLink>> {
         final int typeOfFav;
 
         GetFavsOfPseudo(int newTypeOfFav) {
@@ -98,10 +98,9 @@ public class RefreshFavDialogFragment extends DialogFragment {
         @Override
         protected ArrayList<JVCParser.NameAndLink> doInBackground(String... params) {
             if (params.length > 1) {
-                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
+                WebManager.WebInfos currentWebInfos = initWebInfos(params[1], false);
                 String pageContent;
-                currentWebInfos.followRedirects = false;
-                pageContent = WebManager.sendRequest("http://www.jeuxvideo.com/profil/" + params[0].toLowerCase(), "GET", "mode=favoris", params[1], currentWebInfos);
+                pageContent = WebManager.sendRequest("http://www.jeuxvideo.com/profil/" + params[0].toLowerCase(), "GET", "mode=favoris", currentWebInfos);
 
                 if (pageContent != null) {
                     if (typeOfFav == FAV_FORUM) {

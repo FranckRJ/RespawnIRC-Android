@@ -3,10 +3,10 @@ package com.franckrj.respawnirc.jvctopic;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.WebManager;
 
@@ -38,12 +38,12 @@ public class JVCMessageInTopicAction {
 
     public void stopAllCurrentTasks() {
         if (currentTaskQuoteMessage != null) {
-            currentTaskQuoteMessage.cancel(true);
+            currentTaskQuoteMessage.cancel(false);
             currentTaskQuoteMessage = null;
             latestMessageQuotedInfo = null;
         }
         if (currentTaskDeleteMessage != null) {
-            currentTaskDeleteMessage.cancel(true);
+            currentTaskDeleteMessage.cancel(false);
             currentTaskDeleteMessage = null;
         }
     }
@@ -82,15 +82,14 @@ public class JVCMessageInTopicAction {
         }
     }
 
-    private class QuoteJVCMessage extends AsyncTask<String, Void, String> {
+    private class QuoteJVCMessage extends AbsWebRequestAsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
             if (params.length > 2) {
-                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
+                WebManager.WebInfos currentWebInfos = initWebInfos(params[2], false);
                 String pageContent;
-                currentWebInfos.followRedirects = false;
 
-                pageContent = WebManager.sendRequestWithMultipleTrys("http://www.jeuxvideo.com/forums/ajax_citation.php", "POST", "id_message=" + params[0] + "&" + params[1], params[2], currentWebInfos, 2);
+                pageContent = WebManager.sendRequestWithMultipleTrys("http://www.jeuxvideo.com/forums/ajax_citation.php", "POST", "id_message=" + params[0] + "&" + params[1], currentWebInfos, 2);
 
                 if (pageContent != null) {
                     return JVCParser.getMessageQuoted(pageContent);
@@ -116,13 +115,12 @@ public class JVCMessageInTopicAction {
         }
     }
 
-    private class DeleteJVCMessage extends AsyncTask<String, Void, String> {
+    private class DeleteJVCMessage extends AbsWebRequestAsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
             if (params.length > 2) {
-                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
-                currentWebInfos.followRedirects = false;
-                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/modal_del_message.php", "GET", "tab_message[]=" + params[0] + "&type=delete&" + params[1], params[2], currentWebInfos);
+                WebManager.WebInfos currentWebInfos = initWebInfos(params[2], false);
+                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/modal_del_message.php", "GET", "tab_message[]=" + params[0] + "&type=delete&" + params[1], currentWebInfos);
             }
             return null;
         }

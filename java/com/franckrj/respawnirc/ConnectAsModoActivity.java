@@ -1,7 +1,6 @@
 package com.franckrj.respawnirc;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
@@ -14,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
+import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Utils;
@@ -60,7 +60,7 @@ public class ConnectAsModoActivity extends AbsHomeIsBackActivity {
 
     private void stopAllCurrentTasks() {
         if (currentTaskConnectAsModo != null) {
-            currentTaskConnectAsModo.cancel(true);
+            currentTaskConnectAsModo.cancel(false);
             currentTaskConnectAsModo = null;
         }
         swipeRefresh.setRefreshing(false);
@@ -116,7 +116,7 @@ public class ConnectAsModoActivity extends AbsHomeIsBackActivity {
         super.onBackPressed();
     }
 
-    private class ConnectAsModoTask extends AsyncTask<String, Void, String> {
+    private class ConnectAsModoTask extends AbsWebRequestAsyncTask<String, Void, String> {
         String passwordToUse = null;
         String listOfInputInStringToUse = "";
 
@@ -137,14 +137,13 @@ public class ConnectAsModoActivity extends AbsHomeIsBackActivity {
         @Override
         protected String doInBackground(String... params) {
             if (params.length > 0) {
-                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
-                currentWebInfos.followRedirects = false;
+                WebManager.WebInfos currentWebInfos = initWebInfos(params[0], false);
 
                 if (passwordToUse == null) {
-                    return WebManager.sendRequest("https://www.jeuxvideo.com/sso/auth.php", "GET", "", params[0], currentWebInfos);
+                    return WebManager.sendRequest("https://www.jeuxvideo.com/sso/auth.php", "GET", "", currentWebInfos);
                 } else {
                     return WebManager.sendRequest("https://www.jeuxvideo.com/sso/auth.php", "POST", "password=" +
-                            Utils.convertStringToUrlString(passwordToUse) + listOfInputInStringToUse, params[0], currentWebInfos);
+                            Utils.convertStringToUrlString(passwordToUse) + listOfInputInStringToUse, currentWebInfos);
                 }
             }
             return null;
