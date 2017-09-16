@@ -12,12 +12,12 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
+import com.franckrj.respawnirc.base.AbsToolbarActivity;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
 
-public class WebNavigatorActivity extends AbsHomeIsBackActivity {
+public class WebNavigatorActivity extends AbsToolbarActivity {
     public static final String EXTRA_URL_LOAD = "com.franckrj.respawnirc.webnavigatoractivity.EXTRA_URL_LOAD";
 
     private static final String SAVE_TITLE_FOR_NAVIGATOR = "saveTitleForNavigator";
@@ -115,6 +115,9 @@ public class WebNavigatorActivity extends AbsHomeIsBackActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
             case R.id.action_open_in_external_browser_webnavigator:
                 Utils.openLinkInExternalNavigator(currentUrl, this);
                 return true;

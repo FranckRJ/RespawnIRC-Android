@@ -54,7 +54,7 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
 
                 Toast.makeText(this, R.string.connectionSuccessful, Toast.LENGTH_SHORT).show();
 
-                super.onBackPressed();
+                finish();
                 return;
             }
         } else {
