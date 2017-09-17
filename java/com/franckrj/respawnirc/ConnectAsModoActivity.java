@@ -47,11 +47,68 @@ public class ConnectAsModoActivity extends AbsHomeIsBackActivity {
         }
     };
 
+    private final AbsWebRequestAsyncTask.RequestIsStarted connectAsModoIsStartedListener = new AbsWebRequestAsyncTask.RequestIsStarted() {
+        @Override
+        public void onRequestIsStarted() {
+            swipeRefresh.setRefreshing(true);
+        }
+    };
+
+    private final AbsWebRequestAsyncTask.RequestIsFinished<String> connectAsModoIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<String>() {
+        @Override
+        public void onRequestIsFinished(String reqResult) {
+            boolean isNotARealConnection = currentTaskConnectAsModo.getIsNotARealConnection();
+
+            swipeRefresh.setRefreshing(false);
+            currentTaskConnectAsModo = null;
+
+            if (reqResult != null) {
+                if (isNotARealConnection) {
+                    latestListOfInputInAString = JVCParser.getListOfInputInAStringInModoConnectFormForThisPage(reqResult);
+                    if (!latestListOfInputInAString.isEmpty()) {
+                        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                        modoPasswordText.setVisibility(View.VISIBLE);
+                        validateButton.setVisibility(View.VISIBLE);
+                        modoPasswordText.requestFocus();
+                        inputManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+
+                        return;
+                    } else if (JVCParser.getErrorMessageWhenModoConnect(reqResult).isEmpty()) {
+                        PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, true);
+                        PrefsManager.applyChanges();
+                        Toast.makeText(ConnectAsModoActivity.this, R.string.youAreAlreadyConnectedAsModo, Toast.LENGTH_SHORT).show();
+                        finish();
+                        return;
+                    }
+                } else {
+                    String errorWhenConnecting = JVCParser.getErrorMessageWhenModoConnect(reqResult);
+                    latestListOfInputInAString = JVCParser.getListOfInputInAStringInModoConnectFormForThisPage(reqResult);
+
+                    if (errorWhenConnecting.isEmpty()) {
+                        PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, true);
+                        PrefsManager.applyChanges();
+                        Toast.makeText(ConnectAsModoActivity.this, R.string.connectionSuccessful, Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        Toast.makeText(ConnectAsModoActivity.this, errorWhenConnecting, Toast.LENGTH_SHORT).show();
+                    }
+
+                    return;
+                }
+            }
+
+            Toast.makeText(ConnectAsModoActivity.this, R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
+        }
+    };
+
     private void performConnect() {
         Utils.hideSoftKeyboard(this);
 
         if (currentTaskConnectAsModo == null) {
             currentTaskConnectAsModo = new ConnectAsModoTask(modoPasswordText.getText().toString(), latestListOfInputInAString);
+            currentTaskConnectAsModo.setRequestIsStartedListener(connectAsModoIsStartedListener);
+            currentTaskConnectAsModo.setRequestIsFinishedListener(connectAsModoIsFinishedListener);
             currentTaskConnectAsModo.execute(currentCookieList);
         } else {
             Toast.makeText(ConnectAsModoActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
@@ -60,7 +117,7 @@ public class ConnectAsModoActivity extends AbsHomeIsBackActivity {
 
     private void stopAllCurrentTasks() {
         if (currentTaskConnectAsModo != null) {
-            currentTaskConnectAsModo.cancel(false);
+            currentTaskConnectAsModo.clearListenersAndCancel();
             currentTaskConnectAsModo = null;
         }
         swipeRefresh.setRefreshing(false);
@@ -95,6 +152,8 @@ public class ConnectAsModoActivity extends AbsHomeIsBackActivity {
         modoPasswordText.setVisibility(View.GONE);
         validateButton.setVisibility(View.GONE);
         currentTaskConnectAsModo = new ConnectAsModoTask(null);
+        currentTaskConnectAsModo.setRequestIsStartedListener(connectAsModoIsStartedListener);
+        currentTaskConnectAsModo.setRequestIsFinishedListener(connectAsModoIsFinishedListener);
         currentTaskConnectAsModo.execute(currentCookieList);
     }
 
@@ -116,9 +175,9 @@ public class ConnectAsModoActivity extends AbsHomeIsBackActivity {
         super.onBackPressed();
     }
 
-    private class ConnectAsModoTask extends AbsWebRequestAsyncTask<String, Void, String> {
-        String passwordToUse = null;
-        String listOfInputInStringToUse = "";
+    private static class ConnectAsModoTask extends AbsWebRequestAsyncTask<String, Void, String> {
+        private String passwordToUse = null;
+        private String listOfInputInStringToUse = "";
 
         public ConnectAsModoTask(String newPasswordToUse) {
             passwordToUse = newPasswordToUse;
@@ -129,9 +188,8 @@ public class ConnectAsModoActivity extends AbsHomeIsBackActivity {
             listOfInputInStringToUse = newListOfInputInStringToUse;
         }
 
-        @Override
-        protected void onPreExecute() {
-            swipeRefresh.setRefreshing(true);
+        public boolean getIsNotARealConnection() {
+            return passwordToUse == null;
         }
 
         @Override
@@ -147,51 +205,6 @@ public class ConnectAsModoActivity extends AbsHomeIsBackActivity {
                 }
             }
             return null;
-        }
-
-        @Override
-        protected void onPostExecute(String pageContent) {
-            super.onPostExecute(pageContent);
-            swipeRefresh.setRefreshing(false);
-            currentTaskConnectAsModo = null;
-
-            if (pageContent != null) {
-                if (passwordToUse == null) {
-                    latestListOfInputInAString = JVCParser.getListOfInputInAStringInModoConnectFormForThisPage(pageContent);
-                    if (!latestListOfInputInAString.isEmpty()) {
-                        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
-                        modoPasswordText.setVisibility(View.VISIBLE);
-                        validateButton.setVisibility(View.VISIBLE);
-                        modoPasswordText.requestFocus();
-                        inputManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
-
-                        return;
-                    } else if (JVCParser.getErrorMessageWhenModoConnect(pageContent).isEmpty()) {
-                        PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, true);
-                        PrefsManager.applyChanges();
-                        Toast.makeText(ConnectAsModoActivity.this, R.string.youAreAlreadyConnectedAsModo, Toast.LENGTH_SHORT).show();
-                        finish();
-                        return;
-                    }
-                } else {
-                    String errorWhenConnecting = JVCParser.getErrorMessageWhenModoConnect(pageContent);
-                    latestListOfInputInAString = JVCParser.getListOfInputInAStringInModoConnectFormForThisPage(pageContent);
-
-                    if (errorWhenConnecting.isEmpty()) {
-                        PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, true);
-                        PrefsManager.applyChanges();
-                        Toast.makeText(ConnectAsModoActivity.this, R.string.connectionSuccessful, Toast.LENGTH_SHORT).show();
-                        finish();
-                    } else {
-                        Toast.makeText(ConnectAsModoActivity.this, errorWhenConnecting, Toast.LENGTH_SHORT).show();
-                    }
-
-                    return;
-                }
-            }
-
-            Toast.makeText(ConnectAsModoActivity.this, R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
         }
     }
 }

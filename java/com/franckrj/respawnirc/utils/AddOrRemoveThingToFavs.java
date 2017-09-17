@@ -6,9 +6,25 @@ public class AddOrRemoveThingToFavs extends AbsWebRequestAsyncTask<String, Void,
     private final boolean addToFavs;
     private ActionToFavsEnded actionToFavsEndedListener = null;
 
+    @SuppressWarnings("FieldCanBeLocal")
+    private final AbsWebRequestAsyncTask.RequestIsFinished<String> changeFavIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<String>() {
+        @Override
+        public void onRequestIsFinished(String reqResult) {
+            if (actionToFavsEndedListener != null) {
+                if (reqResult != null) {
+                    actionToFavsEndedListener.getActionToFavsResult(reqResult, true);
+                    return;
+                }
+
+                actionToFavsEndedListener.getActionToFavsResult("", false);
+            }
+        }
+    };
+
     public AddOrRemoveThingToFavs(boolean itsAnAdd, ActionToFavsEnded newListener) {
         addToFavs = itsAnAdd;
         actionToFavsEndedListener = newListener;
+        setRequestIsFinishedListener(changeFavIsFinishedListener);
     }
 
     public boolean getAddToFavs() {
@@ -53,20 +69,6 @@ public class AddOrRemoveThingToFavs extends AbsWebRequestAsyncTask<String, Void,
             return JVCParser.getErrorMessageInJSONMode(pageContent);
         }
         return null;
-    }
-
-    @Override
-    protected void onPostExecute(String errorResult) {
-        super.onPostExecute(errorResult);
-
-        if (actionToFavsEndedListener != null) {
-            if (errorResult != null) {
-                actionToFavsEndedListener.getActionToFavsResult(errorResult, true);
-                return;
-            }
-
-            actionToFavsEndedListener.getActionToFavsResult("", false);
-        }
     }
 
     public interface ActionToFavsEnded {

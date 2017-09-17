@@ -233,7 +233,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
     private void stopAllCurrentTask() {
         if (currentTaskForFavs != null) {
-            currentTaskForFavs.cancel(false);
+            currentTaskForFavs.clearListenersAndCancel();
             currentTaskForFavs = null;
         }
         actionsForMessages.stopAllCurrentTasks();

@@ -142,7 +142,7 @@ public abstract class AbsJVCTopicGetter {
 
     public void stopAllCurrentTask() {
         if (currentAsyncTaskForGetMessage != null) {
-            currentAsyncTaskForGetMessage.cancel(false);
+            currentAsyncTaskForGetMessage.clearListenersAndCancel();
             currentAsyncTaskForGetMessage = null;
         }
 
@@ -195,7 +195,7 @@ public abstract class AbsJVCTopicGetter {
         htmlSurveyTitle = null;
     }
 
-    protected TopicPageInfos downloadAndParseTopicPage(String topicLink, WebManager.WebInfos currentWebInfos, boolean useBiggerTimeoutTime) {
+    protected static TopicPageInfos downloadAndParseTopicPage(String topicLink, WebManager.WebInfos currentWebInfos, boolean useBiggerTimeoutTime) {
         TopicPageInfos newPageInfos = null;
         String pageContent;
         currentWebInfos.followRedirects = true;
@@ -289,7 +289,7 @@ public abstract class AbsJVCTopicGetter {
         return pageDownloadedIsAnalysable;
     }
 
-    protected abstract class AbsGetJVCLastMessages extends AbsWebRequestAsyncTask<String, Void, TopicPageInfos> {
+    protected abstract static class AbsGetJVCLastMessages extends AbsWebRequestAsyncTask<String, Void, TopicPageInfos> {
     }
 
     public enum ErrorType {

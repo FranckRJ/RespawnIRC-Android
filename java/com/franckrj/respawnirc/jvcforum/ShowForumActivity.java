@@ -132,7 +132,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
 
     private void stopAllCurrentTasks() {
         if (currentTaskForFavs != null) {
-            currentTaskForFavs.cancel(false);
+            currentTaskForFavs.clearListenersAndCancel();
             currentTaskForFavs = null;
         }
     }

@@ -24,6 +24,70 @@ public class JVCMessageToTopicSender {
     private GetEditJVCMessageInfos currentAsyncTaskForGetEditInfos = null;
     private InfosOfSend infosOfLastSend = new InfosOfSend();
 
+    private final AbsWebRequestAsyncTask.RequestIsFinished<String> postMessageIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<String>() {
+        @Override
+        public void onRequestIsFinished(String reqResult) {
+            String errorWhenSending = null;
+
+            currentAsyncTaskForSendMessage = null;
+
+            if (!Utils.stringIsEmptyOrNull(reqResult)) {
+                if (reqResult.equals("respawnirc:resendneeded")) {
+                    errorWhenSending = parentActivity.getString(R.string.unknownErrorPleaseRetry);
+                } else if (!isInEdit) {
+                    errorWhenSending = JVCParser.getErrorMessage(reqResult);
+                } else {
+                    errorWhenSending = JVCParser.getErrorMessageInJSONMode(reqResult);
+                }
+            }
+
+            if (isInEdit && !Utils.stringsAreEquals(errorWhenSending, "respawnirc:resendneeded")) {
+                isInEdit = false;
+                lastInfosForEdit = null;
+                ajaxListInfos = null;
+            }
+
+            if (listenerForNewMessagePosted != null) {
+                listenerForNewMessagePosted.lastMessageIsSended(errorWhenSending);
+            }
+        }
+    };
+
+    private final AbsWebRequestAsyncTask.RequestIsFinished<String> getEditInfosIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<String>() {
+        @Override
+        public void onRequestIsFinished(String reqResult) {
+            String newMessageEdit = "";
+            boolean messageIsAnError = false;
+
+            if (!Utils.stringIsEmptyOrNull(reqResult)) {
+                String pageResultParsed = JVCParser.parsingAjaxMessages(reqResult);
+                lastInfosForEdit += ajaxListInfos + "&action=post";
+                lastInfosForEdit += JVCParser.getListOfInputInAStringInTopicFormForThisPage(pageResultParsed);
+                newMessageEdit = JVCParser.getMessageEdit(pageResultParsed);
+
+                if (newMessageEdit.isEmpty()) {
+                    messageIsAnError = true;
+                    newMessageEdit = JVCParser.getErrorMessageInJSONMode(reqResult);
+                    if (newMessageEdit == null) {
+                        newMessageEdit = "";
+                    }
+                }
+            }
+
+            if (newMessageEdit.isEmpty() || messageIsAnError) {
+                isInEdit = false;
+                lastInfosForEdit = null;
+                ajaxListInfos = null;
+            }
+
+            if (listenerForNewMessageWantEdit != null) {
+                listenerForNewMessageWantEdit.initializeEditMode(newMessageEdit, messageIsAnError);
+            }
+
+            currentAsyncTaskForGetEditInfos = null;
+        }
+    };
+
     public JVCMessageToTopicSender(Activity newParentActivity) {
         parentActivity = newParentActivity;
     }
@@ -58,7 +122,7 @@ public class JVCMessageToTopicSender {
 
     public void stopAllCurrentTask() {
         if (currentAsyncTaskForSendMessage != null) {
-            currentAsyncTaskForSendMessage.cancel(false);
+            currentAsyncTaskForSendMessage.clearListenersAndCancel();
             currentAsyncTaskForSendMessage = null;
         }
         stopCurrentEditTask();
@@ -66,7 +130,7 @@ public class JVCMessageToTopicSender {
 
     public void stopCurrentEditTask() {
         if (currentAsyncTaskForGetEditInfos != null) {
-            currentAsyncTaskForGetEditInfos.cancel(false);
+            currentAsyncTaskForGetEditInfos.clearListenersAndCancel();
             currentAsyncTaskForGetEditInfos = null;
             isInEdit = false;
         }
@@ -87,6 +151,7 @@ public class JVCMessageToTopicSender {
             infosOfLastSend.cookiesUsed = cookieListInAString;
 
             currentAsyncTaskForSendMessage = new PostJVCMessage();
+            currentAsyncTaskForSendMessage.setRequestIsFinishedListener(postMessageIsFinishedListener);
             currentAsyncTaskForSendMessage.execute(infosOfLastSend);
             return true;
         } else {
@@ -101,6 +166,7 @@ public class JVCMessageToTopicSender {
             lastInfosForEdit = "&id_message=" + idOfMessage + "&";
 
             currentAsyncTaskForGetEditInfos = new GetEditJVCMessageInfos();
+            currentAsyncTaskForGetEditInfos.setRequestIsFinishedListener(getEditInfosIsFinishedListener);
             currentAsyncTaskForGetEditInfos.execute(idOfMessage, oldAjaxListInfos, cookieListInAString);
             return true;
         } else {
@@ -108,7 +174,7 @@ public class JVCMessageToTopicSender {
         }
     }
 
-    private class GetEditJVCMessageInfos extends AbsWebRequestAsyncTask<String, Void, String> {
+    private static class GetEditJVCMessageInfos extends AbsWebRequestAsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
             if (params.length > 2) {
@@ -118,43 +184,9 @@ public class JVCMessageToTopicSender {
                 return null;
             }
         }
-
-        @Override
-        protected void onPostExecute(String pageResult) {
-            super.onPostExecute(pageResult);
-            String newMessageEdit = "";
-            boolean messageIsAnError = false;
-
-            if (!Utils.stringIsEmptyOrNull(pageResult)) {
-                String pageResultParsed = JVCParser.parsingAjaxMessages(pageResult);
-                lastInfosForEdit += ajaxListInfos + "&action=post";
-                lastInfosForEdit += JVCParser.getListOfInputInAStringInTopicFormForThisPage(pageResultParsed);
-                newMessageEdit = JVCParser.getMessageEdit(pageResultParsed);
-
-                if (newMessageEdit.isEmpty()) {
-                    messageIsAnError = true;
-                    newMessageEdit = JVCParser.getErrorMessageInJSONMode(pageResult);
-                    if (newMessageEdit == null) {
-                        newMessageEdit = "";
-                    }
-                }
-            }
-
-            if (newMessageEdit.isEmpty() || messageIsAnError) {
-                isInEdit = false;
-                lastInfosForEdit = null;
-                ajaxListInfos = null;
-            }
-
-            if (listenerForNewMessageWantEdit != null) {
-                listenerForNewMessageWantEdit.initializeEditMode(newMessageEdit, messageIsAnError);
-            }
-
-            currentAsyncTaskForGetEditInfos = null;
-        }
     }
 
-    private class PostJVCMessage extends AbsWebRequestAsyncTask<InfosOfSend, Void, String> {
+    private static class PostJVCMessage extends AbsWebRequestAsyncTask<InfosOfSend, Void, String> {
         @Override
         protected String doInBackground(final InfosOfSend... info) {
             if (info.length == 1) {
@@ -170,34 +202,6 @@ public class JVCMessageToTopicSender {
                 return pageContent;
             } else {
                 return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String pageResult) {
-            super.onPostExecute(pageResult);
-            String errorWhenSending = null;
-
-            currentAsyncTaskForSendMessage = null;
-
-            if (!Utils.stringIsEmptyOrNull(pageResult)) {
-                if (pageResult.equals("respawnirc:resendneeded")) {
-                    errorWhenSending = parentActivity.getString(R.string.unknownErrorPleaseRetry);
-                } else if (!isInEdit) {
-                    errorWhenSending = JVCParser.getErrorMessage(pageResult);
-                } else {
-                    errorWhenSending = JVCParser.getErrorMessageInJSONMode(pageResult);
-                }
-            }
-
-            if (isInEdit && !Utils.stringsAreEquals(errorWhenSending, "respawnirc:resendneeded")) {
-                isInEdit = false;
-                lastInfosForEdit = null;
-                ajaxListInfos = null;
-            }
-
-            if (listenerForNewMessagePosted != null) {
-                listenerForNewMessagePosted.lastMessageIsSended(errorWhenSending);
             }
         }
     }

@@ -61,6 +61,48 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         }
     };
 
+    private final AbsWebRequestAsyncTask.RequestIsStarted getSearchedForumsIsStartedListener = new AbsWebRequestAsyncTask.RequestIsStarted() {
+        @Override
+        public void onRequestIsStarted() {
+            adapterForForumList.clearListOfForums();
+            noResultFoundTextView.setVisibility(View.GONE);
+            swipeRefresh.setRefreshing(true);
+        }
+    };
+
+    private final AbsWebRequestAsyncTask.RequestIsFinished<String> getSearchedForumsIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<String>() {
+        @Override
+        public void onRequestIsFinished(String reqResult) {
+            ArrayList<JVCParser.NameAndLink> newListOfForums = null;
+            swipeRefresh.setRefreshing(false);
+
+            currentAsyncTaskForGetSearchedForums = null;
+
+            if (reqResult != null) {
+                if (reqResult.startsWith("respawnirc:redirect:")) {
+                    String newLink = reqResult.substring(("respawnirc:redirect:").length());
+                    if (!newLink.isEmpty()) {
+                        readNewTopicOrForum("http://www.jeuxvideo.com" + newLink, false);
+                        return;
+                    }
+                } else {
+                    newListOfForums = JVCParser.getListOfForumsInSearchPage(reqResult);
+                }
+            }
+
+            if (newListOfForums == null) {
+                newListOfForums = new ArrayList<>();
+            }
+
+            adapterForForumList.setNewListOfForums(newListOfForums);
+            if (!newListOfForums.isEmpty()) {
+                noResultFoundTextView.setVisibility(View.GONE);
+            } else {
+                noResultFoundTextView.setVisibility(View.VISIBLE);
+            }
+        }
+    };
+
     public SelectForumInListActivity() {
         idOfBaseActivity = ITEM_ID_HOME;
     }
@@ -73,6 +115,8 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
                 noResultFoundTextView.setVisibility(View.GONE);
             } else if (currentAsyncTaskForGetSearchedForums == null) {
                 currentAsyncTaskForGetSearchedForums = new GetSearchedForums();
+                currentAsyncTaskForGetSearchedForums.setRequestIsStartedListener(getSearchedForumsIsStartedListener);
+                currentAsyncTaskForGetSearchedForums.setRequestIsFinishedListener(getSearchedForumsIsFinishedListener);
                 currentAsyncTaskForGetSearchedForums.execute(textForSearch.getText().toString());
             }
 
@@ -93,7 +137,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
 
     private void stopAllCurrentTasks() {
         if (currentAsyncTaskForGetSearchedForums != null) {
-            currentAsyncTaskForGetSearchedForums.cancel(false);
+            currentAsyncTaskForGetSearchedForums.clearListenersAndCancel();
             currentAsyncTaskForGetSearchedForums = null;
         }
         swipeRefresh.setRefreshing(false);
@@ -246,14 +290,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         readNewTopicOrForum(newTopicOrForumLink, false);
     }
 
-    private class GetSearchedForums extends AbsWebRequestAsyncTask<String, Void, String> {
-        @Override
-        protected void onPreExecute() {
-            adapterForForumList.clearListOfForums();
-            noResultFoundTextView.setVisibility(View.GONE);
-            swipeRefresh.setRefreshing(true);
-        }
-
+    private static class GetSearchedForums extends AbsWebRequestAsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
             if (params.length > 0) {
@@ -269,38 +306,6 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
                 }
             } else {
                 return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String pageResult) {
-            super.onPostExecute(pageResult);
-            ArrayList<JVCParser.NameAndLink> newListOfForums = null;
-            swipeRefresh.setRefreshing(false);
-
-            currentAsyncTaskForGetSearchedForums = null;
-
-            if (pageResult != null) {
-                if (pageResult.startsWith("respawnirc:redirect:")) {
-                    String newLink = pageResult.substring(("respawnirc:redirect:").length());
-                    if (!newLink.isEmpty()) {
-                        readNewTopicOrForum("http://www.jeuxvideo.com" + newLink, false);
-                        return;
-                    }
-                } else {
-                    newListOfForums = JVCParser.getListOfForumsInSearchPage(pageResult);
-                }
-            }
-
-            if (newListOfForums == null) {
-                newListOfForums = new ArrayList<>();
-            }
-
-            adapterForForumList.setNewListOfForums(newListOfForums);
-            if (!newListOfForums.isEmpty()) {
-                noResultFoundTextView.setVisibility(View.GONE);
-            } else {
-                noResultFoundTextView.setVisibility(View.VISIBLE);
             }
         }
     }

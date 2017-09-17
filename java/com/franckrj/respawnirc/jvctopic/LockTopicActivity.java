@@ -33,6 +33,7 @@ public class LockTopicActivity extends AbsHomeIsBackActivity {
                 if (!reasonEdit.getText().toString().isEmpty()) {
                     currentTaskForLock = new ApplyLockToTopic();
                     infosForLock.reason = reasonEdit.getText().toString();
+                    currentTaskForLock.setRequestIsFinishedListener(applyLockIsFinishedListener);
                     currentTaskForLock.execute(new LockInfos(infosForLock));
                 } else {
                     Toast.makeText(LockTopicActivity.this, R.string.errorReasonMissing, Toast.LENGTH_SHORT).show();
@@ -43,9 +44,32 @@ public class LockTopicActivity extends AbsHomeIsBackActivity {
         }
     };
 
+    private final AbsWebRequestAsyncTask.RequestIsFinished<String> applyLockIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<String>() {
+        @Override
+        public void onRequestIsFinished(String reqResult) {
+            currentTaskForLock = null;
+
+            if (!Utils.stringIsEmptyOrNull(reqResult)) {
+                String potentialError = JVCParser.getErrorMessageInJSONMode(reqResult);
+
+                if (potentialError != null) {
+                    Toast.makeText(LockTopicActivity.this, potentialError, Toast.LENGTH_SHORT).show();
+                } else if (!reqResult.startsWith("{") && !reqResult.isEmpty()) {
+                    Toast.makeText(LockTopicActivity.this, R.string.unknownErrorPleaseRetry, Toast.LENGTH_SHORT).show();
+                } else {
+                    setResult(Activity.RESULT_OK);
+                    finish();
+                }
+                return;
+            }
+
+            Toast.makeText(LockTopicActivity.this, R.string.noKnownResponseFromJVC, Toast.LENGTH_SHORT).show();
+        }
+    };
+
     private void stopAllCurrentTasks() {
         if (currentTaskForLock != null) {
-            currentTaskForLock.cancel(false);
+            currentTaskForLock.clearListenersAndCancel();
             currentTaskForLock = null;
         }
     }
@@ -98,7 +122,7 @@ public class LockTopicActivity extends AbsHomeIsBackActivity {
         super.onPause();
     }
 
-    private class ApplyLockToTopic extends AbsWebRequestAsyncTask<LockInfos, Void, String> {
+    private static class ApplyLockToTopic extends AbsWebRequestAsyncTask<LockInfos, Void, String> {
         @Override
         protected String doInBackground(LockInfos... infoOfLock) {
             if (infoOfLock.length == 1) {
@@ -107,28 +131,6 @@ public class LockTopicActivity extends AbsHomeIsBackActivity {
                         "&type=lock&raison_moderation=" + Utils.convertStringToUrlString(infoOfLock[0].reason) + "&action=post&" + infoOfLock[0].ajaxInfos, currentWebInfos);
             }
             return "erreurlol";
-        }
-
-        @Override
-        protected void onPostExecute(String lockResponse) {
-            super.onPostExecute(lockResponse);
-            currentTaskForLock = null;
-
-            if (!Utils.stringIsEmptyOrNull(lockResponse)) {
-                String potentialError = JVCParser.getErrorMessageInJSONMode(lockResponse);
-
-                if (potentialError != null) {
-                    Toast.makeText(LockTopicActivity.this, potentialError, Toast.LENGTH_SHORT).show();
-                } else if (!lockResponse.startsWith("{") && !lockResponse.isEmpty()) {
-                    Toast.makeText(LockTopicActivity.this, R.string.unknownErrorPleaseRetry, Toast.LENGTH_SHORT).show();
-                } else {
-                    setResult(Activity.RESULT_OK);
-                    finish();
-                }
-                return;
-            }
-
-            Toast.makeText(LockTopicActivity.this, R.string.noKnownResponseFromJVC, Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -26,9 +26,21 @@ public class RefreshFavDialogFragment extends DialogFragment {
 
     private GetFavsOfPseudo currentTaskGetFavs = null;
 
+    private final AbsWebRequestAsyncTask.RequestIsFinished<ArrayList<JVCParser.NameAndLink>> getFavsIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<ArrayList<JVCParser.NameAndLink>>() {
+        @Override
+        public void onRequestIsFinished(ArrayList<JVCParser.NameAndLink> reqResult) {
+            if (getActivity() instanceof NewFavsAvailable) {
+                ((NewFavsAvailable) getActivity()).getNewFavs(reqResult, currentTaskGetFavs.getTypeOfFav());
+            }
+
+            currentTaskGetFavs = null;
+            dismiss();
+        }
+    };
+
     private void stopAllCurrentTask() {
         if (currentTaskGetFavs != null) {
-            currentTaskGetFavs.cancel(false);
+            currentTaskGetFavs.clearListenersAndCancel();
             currentTaskGetFavs = null;
         }
     }
@@ -51,6 +63,7 @@ public class RefreshFavDialogFragment extends DialogFragment {
             dismiss();
         } else {
             currentTaskGetFavs = new GetFavsOfPseudo(typeOfFav);
+            currentTaskGetFavs.setRequestIsFinishedListener(getFavsIsFinishedListener);
             currentTaskGetFavs.execute(pseudoToFetch, currentCookieList);
         }
     }
@@ -88,11 +101,15 @@ public class RefreshFavDialogFragment extends DialogFragment {
         super.onDismiss(dialogInterface);
     }
 
-    private class GetFavsOfPseudo extends AbsWebRequestAsyncTask<String, Void, ArrayList<JVCParser.NameAndLink>> {
-        final int typeOfFav;
+    private static class GetFavsOfPseudo extends AbsWebRequestAsyncTask<String, Void, ArrayList<JVCParser.NameAndLink>> {
+        private final int typeOfFav;
 
-        GetFavsOfPseudo(int newTypeOfFav) {
+        public GetFavsOfPseudo(int newTypeOfFav) {
             typeOfFav = newTypeOfFav;
+        }
+
+        public int getTypeOfFav() {
+            return typeOfFav;
         }
 
         @Override
@@ -111,18 +128,6 @@ public class RefreshFavDialogFragment extends DialogFragment {
                 }
             }
             return null;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<JVCParser.NameAndLink> listOfForumsFavs) {
-            super.onPostExecute(listOfForumsFavs);
-
-            if (getActivity() instanceof NewFavsAvailable) {
-                ((NewFavsAvailable) getActivity()).getNewFavs(listOfForumsFavs, typeOfFav);
-            }
-
-            currentTaskGetFavs = null;
-            dismiss();
         }
     }
 
