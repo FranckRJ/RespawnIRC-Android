@@ -67,6 +67,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected int currentNavigationMenuMode = -1;
     protected ArrayList<NavigationMenuAdapter.MenuItemInfo> currentListOfMenuItem = null;
     protected String showMpStringContent = "";
+    protected boolean backIsOpenDrawer = false;
 
     protected final AdapterView.OnItemClickListener itemInNavigationClickedListener = new AdapterView.OnItemClickListener() {
         @Override
@@ -472,6 +473,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     public void onResume() {
         super.onResume();
         String tmpPseudoOfUser = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER);
+        backIsOpenDrawer = PrefsManager.getBool(PrefsManager.BoolPref.Names.BACK_IS_OPEN_DRAWER);
 
         if (!tmpPseudoOfUser.equals(pseudoOfUser)) {
             pseudoOfUser = tmpPseudoOfUser;
@@ -483,6 +485,8 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     public void onBackPressed() {
         if (layoutForDrawer.isDrawerOpen(GravityCompat.START)) {
             layoutForDrawer.closeDrawer(GravityCompat.START);
+        } else if (backIsOpenDrawer) {
+            layoutForDrawer.openDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }

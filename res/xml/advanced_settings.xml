@@ -33,6 +33,10 @@
         <android.support.v7.preference.CheckBoxPreference
             android:key="@string/settingsColorPseudoOfUserInMessage"
             android:title="@string/colorPseudoOfUserInMessageTitle"/>
+
+        <android.support.v7.preference.CheckBoxPreference
+            android:key="@string/settingsBackIsOpenDrawer"
+            android:title="@string/backIsOpenDrawerTitle"/>
     </android.support.v7.preference.PreferenceCategory>
 
     <android.support.v7.preference.PreferenceCategory
