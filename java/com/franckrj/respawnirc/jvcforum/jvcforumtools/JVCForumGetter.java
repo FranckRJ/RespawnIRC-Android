@@ -1,8 +1,8 @@
 package com.franckrj.respawnirc.jvcforum.jvcforumtools;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
@@ -37,6 +37,87 @@ public class JVCForumGetter {
     private boolean isInSearchMode = false;
     private ErrorType lastTypeOfError = ErrorType.NONE_OR_UNKNOWN;
     private boolean userCanPostAsModo = false;
+
+    private final AbsWebRequestAsyncTask.RequestIsStarted getLastTopicsIsStartedListener = new AbsWebRequestAsyncTask.RequestIsStarted() {
+        @Override
+        public void onRequestIsStarted() {
+            if (listenerForNewGetterState != null) {
+                listenerForNewGetterState.newStateSetted(STATE_LOADING);
+            }
+        }
+    };
+
+    private final AbsWebRequestAsyncTask.RequestIsFinished<ForumPageInfos> getLastTopicsIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<ForumPageInfos>() {
+        @Override
+        public void onRequestIsFinished(ForumPageInfos reqResult) {
+            currentAsyncTaskForGetTopic = null;
+            lastTypeOfError = ErrorType.NONE_OR_UNKNOWN;
+
+            if (listenerForNewGetterState != null) {
+                listenerForNewGetterState.newStateSetted(STATE_NOT_LOADING);
+            }
+
+            if (reqResult != null) {
+                boolean pageDownloadedIsAnalysable = true;
+
+                if (!reqResult.newUrlForForumPage.isEmpty()) {
+                    if (!isInSearchMode) {
+                        if (JVCParser.checkIfForumAreSame(urlForForum, reqResult.newUrlForForumPage)) {
+                            urlForForum = reqResult.newUrlForForumPage;
+                            if (listenerForForumLinkChanged != null) {
+                                listenerForForumLinkChanged.updateForumLink(urlForForum);
+                            }
+                        } else {
+                            lastTypeOfError = ErrorType.FORUM_DOES_NOT_EXIST;
+                            pageDownloadedIsAnalysable = false;
+                        }
+                    } else {
+                        lastTypeOfError = ErrorType.SEARCH_IS_EMPTY_AND_ITS_NOT_A_FAIL;
+                        pageDownloadedIsAnalysable = false;
+                    }
+                }
+
+                if (pageDownloadedIsAnalysable) {
+                    latestAjaxInfos = reqResult.newLatestAjaxInfos;
+                    isInFavs = reqResult.newIsInFavs;
+                    latestListOfInputInAString = reqResult.newListOfInputInAString;
+                    userCanPostAsModo = reqResult.newUserCanPostAsModo;
+
+                    if (reqResult.newSearchIsEmpty) {
+                        lastTypeOfError = ErrorType.SEARCH_IS_EMPTY_AND_ITS_NOT_A_FAIL;
+                    }
+
+                    if (!latestListOfInputInAString.isEmpty()) {
+                        latestListOfInputInAString = latestListOfInputInAString + "&spotify_topic=";
+                    }
+
+                    if (!reqResult.newForumName.equals(forumName)) {
+                        forumName = reqResult.newForumName;
+                        if (listenerForNewForumName != null) {
+                            listenerForNewForumName.getNewForumName(forumName);
+                        }
+                    }
+
+                    if (!Utils.stringsAreEquals(latestNumberOfMP, reqResult.newNumberOfMp)) {
+                        latestNumberOfMP = reqResult.newNumberOfMp;
+                        if (listenerForNewNumberOfMP != null) {
+                            listenerForNewNumberOfMP.getNewNumberOfMP(latestNumberOfMP);
+                        }
+                    }
+
+                    if (listenerForNewTopics != null) {
+                        listenerForNewTopics.getNewTopics(reqResult.listOfTopics);
+                    }
+
+                    return;
+                }
+            }
+
+            if (listenerForNewTopics != null) {
+                listenerForNewTopics.getNewTopics(new ArrayList<JVCParser.TopicInfos>());
+            }
+        }
+    };
 
     public JVCParser.AjaxInfos getLatestAjaxInfos() {
         return latestAjaxInfos;
@@ -106,6 +187,8 @@ public class JVCForumGetter {
         if (currentAsyncTaskForGetTopic == null && !newUrlOfPage.isEmpty()) {
             urlForForum = newUrlOfPage;
             currentAsyncTaskForGetTopic = new GetJVCLastTopics(isInSearchMode, useBiggerTimeoutTime);
+            currentAsyncTaskForGetTopic.setRequestIsStartedListener(getLastTopicsIsStartedListener);
+            currentAsyncTaskForGetTopic.setRequestIsFinishedListener(getLastTopicsIsFinishedListener);
             currentAsyncTaskForGetTopic.execute(urlForForum, cookieListInAString);
             return true;
         } else {
@@ -124,7 +207,7 @@ public class JVCForumGetter {
 
     public void stopAllCurrentTask() {
         if (currentAsyncTaskForGetTopic != null) {
-            currentAsyncTaskForGetTopic.cancel(true);
+            currentAsyncTaskForGetTopic.clearListenersAndCancel();
             currentAsyncTaskForGetTopic = null;
         }
 
@@ -159,7 +242,7 @@ public class JVCForumGetter {
         }
     }
 
-    private class GetJVCLastTopics extends AsyncTask<String, Void, ForumPageInfos> {
+    private static class GetJVCLastTopics extends AbsWebRequestAsyncTask<String, Void, ForumPageInfos> {
         boolean isInSearchMode = false;
         boolean useBiggerTimeoutTime = false;
 
@@ -169,21 +252,13 @@ public class JVCForumGetter {
         }
 
         @Override
-        protected void onPreExecute() {
-            if (listenerForNewGetterState != null) {
-                listenerForNewGetterState.newStateSetted(STATE_LOADING);
-            }
-        }
-
-        @Override
         protected ForumPageInfos doInBackground(String... params) {
             if (params.length > 1) {
-                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
+                WebManager.WebInfos currentWebInfos = initWebInfos(params[1], true);
                 ForumPageInfos newPageInfos = null;
                 String pageContent;
-                currentWebInfos.followRedirects = true;
                 currentWebInfos.useBiggerTimeoutTime = useBiggerTimeoutTime;
-                pageContent = WebManager.sendRequest(params[0], "GET", "", params[1], currentWebInfos);
+                pageContent = WebManager.sendRequest(params[0], "GET", "", currentWebInfos);
 
                 if (pageContent != null) {
                     newPageInfos = new ForumPageInfos();
@@ -203,77 +278,6 @@ public class JVCForumGetter {
                 return newPageInfos;
             } else {
                 return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(ForumPageInfos infoOfCurrentPage) {
-            super.onPostExecute(infoOfCurrentPage);
-            currentAsyncTaskForGetTopic = null;
-            lastTypeOfError = ErrorType.NONE_OR_UNKNOWN;
-
-            if (listenerForNewGetterState != null) {
-                listenerForNewGetterState.newStateSetted(STATE_NOT_LOADING);
-            }
-
-            if (infoOfCurrentPage != null) {
-                boolean pageDownloadedIsAnalysable = true;
-
-                if (!infoOfCurrentPage.newUrlForForumPage.isEmpty()) {
-                    if (!isInSearchMode) {
-                        if (JVCParser.checkIfForumAreSame(urlForForum, infoOfCurrentPage.newUrlForForumPage)) {
-                            urlForForum = infoOfCurrentPage.newUrlForForumPage;
-                            if (listenerForForumLinkChanged != null) {
-                                listenerForForumLinkChanged.updateForumLink(urlForForum);
-                            }
-                        } else {
-                            lastTypeOfError = ErrorType.FORUM_DOES_NOT_EXIST;
-                            pageDownloadedIsAnalysable = false;
-                        }
-                    } else {
-                        lastTypeOfError = ErrorType.SEARCH_IS_EMPTY_AND_ITS_NOT_A_FAIL;
-                        pageDownloadedIsAnalysable = false;
-                    }
-                }
-
-                if (pageDownloadedIsAnalysable) {
-                    latestAjaxInfos = infoOfCurrentPage.newLatestAjaxInfos;
-                    isInFavs = infoOfCurrentPage.newIsInFavs;
-                    latestListOfInputInAString = infoOfCurrentPage.newListOfInputInAString;
-                    userCanPostAsModo = infoOfCurrentPage.newUserCanPostAsModo;
-
-                    if (infoOfCurrentPage.newSearchIsEmpty) {
-                        lastTypeOfError = ErrorType.SEARCH_IS_EMPTY_AND_ITS_NOT_A_FAIL;
-                    }
-
-                    if (!latestListOfInputInAString.isEmpty()) {
-                        latestListOfInputInAString = latestListOfInputInAString + "&spotify_topic=";
-                    }
-
-                    if (!infoOfCurrentPage.newForumName.equals(forumName)) {
-                        forumName = infoOfCurrentPage.newForumName;
-                        if (listenerForNewForumName != null) {
-                            listenerForNewForumName.getNewForumName(forumName);
-                        }
-                    }
-
-                    if (!Utils.stringsAreEquals(latestNumberOfMP, infoOfCurrentPage.newNumberOfMp)) {
-                        latestNumberOfMP = infoOfCurrentPage.newNumberOfMp;
-                        if (listenerForNewNumberOfMP != null) {
-                            listenerForNewNumberOfMP.getNewNumberOfMP(latestNumberOfMP);
-                        }
-                    }
-
-                    if (listenerForNewTopics != null) {
-                        listenerForNewTopics.getNewTopics(infoOfCurrentPage.listOfTopics);
-                    }
-
-                    return;
-                }
-            }
-
-            if (listenerForNewTopics != null) {
-                listenerForNewTopics.getNewTopics(new ArrayList<JVCParser.TopicInfos>());
             }
         }
     }

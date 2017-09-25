@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.ParcelableLongSparseStringArray;
 
@@ -21,6 +22,92 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
     private boolean messagesNeedToBeGet = false;
     private ParcelableLongSparseStringArray listOfEditInfos = new ParcelableLongSparseStringArray();
     protected Activity parentActivity = null;
+
+    private final AbsWebRequestAsyncTask.RequestIsStarted getMessagesIsStartedListener = new AbsWebRequestAsyncTask.RequestIsStarted() {
+        @Override
+        public void onRequestIsStarted() {
+            if (listenerForNewGetterState != null) {
+                listenerForNewGetterState.newStateSetted(STATE_LOADING);
+            }
+        }
+    };
+
+    private final AbsWebRequestAsyncTask.RequestIsFinished<TopicPageInfos> getMessagesIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<TopicPageInfos>() {
+        @Override
+        public void onRequestIsFinished(TopicPageInfos reqResult) {
+            boolean needToGetNewMessagesEarly = false;
+            ArrayList<JVCParser.MessageInfos> listOfNewMessages = new ArrayList<>();
+            currentAsyncTaskForGetMessage = null;
+            lastTypeOfError = ErrorType.NONE_OR_UNKNOWN;
+
+            if (listenerForNewGetterState != null) {
+                listenerForNewGetterState.newStateSetted(STATE_NOT_LOADING);
+            }
+
+            if (messagesNeedToBeGet) {
+                if (reqResult != null) {
+                    if (fillBaseClassInfoFromPageInfo(reqResult)) {
+                        if (reqResult.lastPageLink.isEmpty() || !firstTimeGetMessages) {
+                            if (!reqResult.listOfMessages.isEmpty()) {
+                                for (JVCParser.MessageInfos thisMessageInfo : reqResult.listOfMessages) {
+                                    String lastEditInfosForThisMessage = listOfEditInfos.get(thisMessageInfo.id);
+
+                                    if (lastEditInfosForThisMessage == null) {
+                                        lastEditInfosForThisMessage = thisMessageInfo.lastTimeEdit;
+                                    }
+
+                                    if (thisMessageInfo.id > lastIdOfMessage || !lastEditInfosForThisMessage.equals(thisMessageInfo.lastTimeEdit)) {
+                                        if (!lastEditInfosForThisMessage.equals(thisMessageInfo.lastTimeEdit)) {
+                                            thisMessageInfo.isAnEdit = true;
+                                        } else {
+                                            thisMessageInfo.isAnEdit = false;
+                                            lastIdOfMessage = thisMessageInfo.id;
+                                        }
+                                        listOfNewMessages.add(thisMessageInfo);
+                                        listOfEditInfos.put(thisMessageInfo.id, thisMessageInfo.lastTimeEdit);
+                                    }
+                                }
+
+                                while (listOfEditInfos.size() > 20) {
+                                    listOfEditInfos.removeAt(0);
+                                }
+
+                                firstTimeGetMessages = false;
+                            }
+
+                            if (listenerForNewMessages != null) {
+                                listenerForNewMessages.getNewMessages(listOfNewMessages, reqResult.listOfMessages.isEmpty(), false);
+                            }
+                        }
+
+                        if (!reqResult.lastPageLink.isEmpty()) {
+                            if (firstTimeGetMessages) {
+                                urlForTopic = reqResult.lastPageLink;
+                            } else {
+                                urlForTopic = reqResult.nextPageLink;
+                            }
+                            isLoadingFirstPage = false;
+                            needToGetNewMessagesEarly = true;
+                        }
+                    } else {
+                        if (listenerForNewMessages != null) {
+                            listenerForNewMessages.getNewMessages(new ArrayList<JVCParser.MessageInfos>(), true, false);
+                        }
+                    }
+                } else {
+                    if (listenerForNewMessages != null) {
+                        listenerForNewMessages.getNewMessages(new ArrayList<JVCParser.MessageInfos>(), true, false);
+                    }
+                }
+
+                if (needToGetNewMessagesEarly) {
+                    reloadTopic();
+                } else {
+                    startGetMessages(timeBetweenRefreshTopic);
+                }
+            }
+        }
+    };
 
     public JVCTopicModeIRCGetter(Activity newParentActivity) {
         parentActivity = newParentActivity;
@@ -114,6 +201,8 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
                 public void run() {
                     if (currentAsyncTaskForGetMessage != null) {
                         if (currentAsyncTaskForGetMessage.getStatus().equals(AsyncTask.Status.PENDING)) {
+                            currentAsyncTaskForGetMessage.setRequestIsStartedListener(getMessagesIsStartedListener);
+                            currentAsyncTaskForGetMessage.setRequestIsFinishedListener(getMessagesIsFinishedListener);
                             currentAsyncTaskForGetMessage.execute(urlForTopic, cookieListInAString);
                         }
                     }
@@ -122,7 +211,7 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
         }
     }
 
-    private class GetJVCIRCLastMessages extends AbsGetJVCLastMessages {
+    private static class GetJVCIRCLastMessages extends AbsGetJVCLastMessages {
         private boolean useBiggerTimeoutTime = false;
 
         public GetJVCIRCLastMessages(boolean newUseBiggerTimeoutTime) {
@@ -130,94 +219,11 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
         }
 
         @Override
-        protected void onPreExecute() {
-            if (listenerForNewGetterState != null) {
-                listenerForNewGetterState.newStateSetted(STATE_LOADING);
-            }
-        }
-
-        @Override
         protected TopicPageInfos doInBackground(String... params) {
             if (params.length > 1) {
-                return downloadAndParseTopicPage(params[0], params[1], useBiggerTimeoutTime);
+                return downloadAndParseTopicPage(params[0], initWebInfos(params[1], true), useBiggerTimeoutTime);
             } else {
                 return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(TopicPageInfos infoOfCurrentPage) {
-            super.onPostExecute(infoOfCurrentPage);
-            boolean needToGetNewMessagesEarly = false;
-            ArrayList<JVCParser.MessageInfos> listOfNewMessages = new ArrayList<>();
-            currentAsyncTaskForGetMessage = null;
-            lastTypeOfError = ErrorType.NONE_OR_UNKNOWN;
-
-            if (listenerForNewGetterState != null) {
-                listenerForNewGetterState.newStateSetted(STATE_NOT_LOADING);
-            }
-
-            if (messagesNeedToBeGet) {
-                if (infoOfCurrentPage != null) {
-                    if (fillBaseClassInfoFromPageInfo(infoOfCurrentPage)) {
-                        if (infoOfCurrentPage.lastPageLink.isEmpty() || !firstTimeGetMessages) {
-                            if (!infoOfCurrentPage.listOfMessages.isEmpty()) {
-                                for (JVCParser.MessageInfos thisMessageInfo : infoOfCurrentPage.listOfMessages) {
-                                    String lastEditInfosForThisMessage = listOfEditInfos.get(thisMessageInfo.id);
-
-                                    if (lastEditInfosForThisMessage == null) {
-                                        lastEditInfosForThisMessage = thisMessageInfo.lastTimeEdit;
-                                    }
-
-                                    if (thisMessageInfo.id > lastIdOfMessage || !lastEditInfosForThisMessage.equals(thisMessageInfo.lastTimeEdit)) {
-                                        if (!lastEditInfosForThisMessage.equals(thisMessageInfo.lastTimeEdit)) {
-                                            thisMessageInfo.isAnEdit = true;
-                                        } else {
-                                            thisMessageInfo.isAnEdit = false;
-                                            lastIdOfMessage = thisMessageInfo.id;
-                                        }
-                                        listOfNewMessages.add(thisMessageInfo);
-                                        listOfEditInfos.put(thisMessageInfo.id, thisMessageInfo.lastTimeEdit);
-                                    }
-                                }
-
-                                while (listOfEditInfos.size() > 20) {
-                                    listOfEditInfos.removeAt(0);
-                                }
-
-                                firstTimeGetMessages = false;
-                            }
-
-                            if (listenerForNewMessages != null) {
-                                listenerForNewMessages.getNewMessages(listOfNewMessages, infoOfCurrentPage.listOfMessages.isEmpty(), false);
-                            }
-                        }
-
-                        if (!infoOfCurrentPage.lastPageLink.isEmpty()) {
-                            if (firstTimeGetMessages) {
-                                urlForTopic = infoOfCurrentPage.lastPageLink;
-                            } else {
-                                urlForTopic = infoOfCurrentPage.nextPageLink;
-                            }
-                            isLoadingFirstPage = false;
-                            needToGetNewMessagesEarly = true;
-                        }
-                    } else {
-                        if (listenerForNewMessages != null) {
-                            listenerForNewMessages.getNewMessages(new ArrayList<JVCParser.MessageInfos>(), true, false);
-                        }
-                    }
-                } else {
-                    if (listenerForNewMessages != null) {
-                        listenerForNewMessages.getNewMessages(new ArrayList<JVCParser.MessageInfos>(), true, false);
-                    }
-                }
-
-                if (needToGetNewMessagesEarly) {
-                    reloadTopic();
-                } else {
-                    startGetMessages(timeBetweenRefreshTopic);
-                }
             }
         }
     }

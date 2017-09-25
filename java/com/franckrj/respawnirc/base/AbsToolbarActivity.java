@@ -4,7 +4,7 @@ import android.support.annotation.IdRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 
-public class AbsToolbarActivity extends AbsThemedActivity {
+public abstract class AbsToolbarActivity extends AbsThemedActivity {
     protected Toolbar initToolbar(@IdRes int idOfToolbar) {
         Toolbar myToolbar = findViewById(idOfToolbar);
         setSupportActionBar(myToolbar);

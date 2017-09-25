@@ -1,6 +1,5 @@
 package com.franckrj.respawnirc.jvctopic;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +9,7 @@ import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
+import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
@@ -52,6 +52,7 @@ public class KickPseudoActivity extends AbsHomeIsBackActivity {
                     currentTaskForKick = new ApplyKickToPseudo();
                     infosForKick.motive = motiveValue;
                     infosForKick.reason = reasonEdit.getText().toString();
+                    currentTaskForKick.setRequestIsFinishedListener(applyKickIsFinishedListener);
                     currentTaskForKick.execute(new KickInfos(infosForKick));
                 } else {
                     Toast.makeText(KickPseudoActivity.this, R.string.errorReasonOrMotiveMissingForKick, Toast.LENGTH_SHORT).show();
@@ -62,9 +63,32 @@ public class KickPseudoActivity extends AbsHomeIsBackActivity {
         }
     };
 
+    private final AbsWebRequestAsyncTask.RequestIsFinished<String> applyKickIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<String>() {
+        @Override
+        public void onRequestIsFinished(String reqResult) {
+            currentTaskForKick = null;
+
+            if (!Utils.stringIsEmptyOrNull(reqResult)) {
+                String potentialError = JVCParser.getErrorMessageInJSONMode(reqResult);
+
+                if (potentialError != null) {
+                    Toast.makeText(KickPseudoActivity.this, potentialError, Toast.LENGTH_SHORT).show();
+                } else if (!reqResult.startsWith("{") && !reqResult.isEmpty()) {
+                    Toast.makeText(KickPseudoActivity.this, R.string.unknownErrorPleaseRetry, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(KickPseudoActivity.this, R.string.kickSuccessful, Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                return;
+            }
+
+            Toast.makeText(KickPseudoActivity.this, R.string.noKnownResponseFromJVC, Toast.LENGTH_SHORT).show();
+        }
+    };
+
     private void stopAllCurrentTasks() {
         if (currentTaskForKick != null) {
-            currentTaskForKick.cancel(true);
+            currentTaskForKick.clearListenersAndCancel();
             currentTaskForKick = null;
         }
     }
@@ -126,38 +150,15 @@ public class KickPseudoActivity extends AbsHomeIsBackActivity {
         super.onPause();
     }
 
-    private class ApplyKickToPseudo extends AsyncTask<KickInfos, Void, String> {
+    private static class ApplyKickToPseudo extends AbsWebRequestAsyncTask<KickInfos, Void, String> {
         @Override
         protected String doInBackground(KickInfos... infoOfKick) {
             if (infoOfKick.length == 1) {
-                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
-                currentWebInfos.followRedirects = false;
+                WebManager.WebInfos currentWebInfos = initWebInfos(infoOfKick[0].cookies, false);
                 return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_kick.php", "GET", "action=post&motif_kick=" + infoOfKick[0].motive + "&raison_kick=" + Utils.convertStringToUrlString(infoOfKick[0].reason) +
-                        "&duree_kick=3&id_alias_a_kick=" + infoOfKick[0].idAliasPseudo + "&id_forum=" + infoOfKick[0].idForum + "&id_message=" + infoOfKick[0].idMessage + "&" + infoOfKick[0].ajaxInfos, infoOfKick[0].cookies, currentWebInfos);
+                        "&duree_kick=3&id_alias_a_kick=" + infoOfKick[0].idAliasPseudo + "&id_forum=" + infoOfKick[0].idForum + "&id_message=" + infoOfKick[0].idMessage + "&" + infoOfKick[0].ajaxInfos, currentWebInfos);
             }
             return "erreurlol";
-        }
-
-        @Override
-        protected void onPostExecute(String kickResponse) {
-            super.onPostExecute(kickResponse);
-            currentTaskForKick = null;
-
-            if (!Utils.stringIsEmptyOrNull(kickResponse)) {
-                String potentialError = JVCParser.getErrorMessageInJSONMode(kickResponse);
-
-                if (potentialError != null) {
-                    Toast.makeText(KickPseudoActivity.this, potentialError, Toast.LENGTH_SHORT).show();
-                } else if (!kickResponse.startsWith("{") && !kickResponse.isEmpty()) {
-                    Toast.makeText(KickPseudoActivity.this, R.string.unknownErrorPleaseRetry, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(KickPseudoActivity.this, R.string.kickSuccessful, Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-                return;
-            }
-
-            Toast.makeText(KickPseudoActivity.this, R.string.noKnownResponseFromJVC, Toast.LENGTH_SHORT).show();
         }
     }
 

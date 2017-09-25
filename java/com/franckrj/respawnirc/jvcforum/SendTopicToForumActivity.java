@@ -2,7 +2,6 @@ package com.franckrj.respawnirc.jvcforum;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
@@ -14,6 +13,7 @@ import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
+import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 import com.franckrj.respawnirc.dialogs.InsertStuffDialogFragment;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
@@ -53,6 +53,38 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
         }
     };
 
+    private final AbsWebRequestAsyncTask.RequestIsFinished<String> sendTopicIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<String>() {
+        @Override
+        public void onRequestIsFinished(String reqResult) {
+            currentAsyncTaskForSendTopic = null;
+
+            if (Utils.stringIsEmptyOrNull(reqResult)) {
+                reqResult = "error";
+            }
+
+            if (reqResult.equals("respawnirc:resendneeded")) {
+                Toast.makeText(SendTopicToForumActivity.this, R.string.unknownErrorPleaseRetry, Toast.LENGTH_SHORT).show();
+                return;
+            } else if (reqResult.startsWith("respawnirc:move:")) {
+                Intent data = new Intent();
+                reqResult = reqResult.substring(("respawnirc:move:").length());
+
+                if (reqResult.startsWith("/forums/")) {
+                    reqResult = "http://www.jeuxvideo.com" + reqResult;
+                } else if (!reqResult.startsWith("http:")) {
+                    reqResult = "http:" + reqResult;
+                }
+
+                data.putExtra(RESULT_EXTRA_TOPIC_LINK_TO_MOVE, reqResult);
+                setResult(Activity.RESULT_OK, data);
+            } else {
+                Toast.makeText(SendTopicToForumActivity.this, JVCParser.getErrorMessage(reqResult), Toast.LENGTH_SHORT).show();
+            }
+
+            finish();
+        }
+    };
+
     private void sendNewTopic() {
         Utils.hideSoftKeyboard(this);
 
@@ -61,6 +93,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
             currentInfos.lastTopicContentSended = topicContentEdit.getText().toString();
 
             currentAsyncTaskForSendTopic = new SendTopicToJVC();
+            currentAsyncTaskForSendTopic.setRequestIsFinishedListener(sendTopicIsFinishedListener);
             currentAsyncTaskForSendTopic.execute(new SendTopicInfos(currentInfos));
 
             PrefsManager.putString(PrefsManager.StringPref.Names.LAST_TOPIC_TITLE_SENDED, currentInfos.lastTopicTitleSended);
@@ -71,7 +104,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
 
     private void stopAllCurrentTasks() {
         if (currentAsyncTaskForSendTopic != null) {
-            currentAsyncTaskForSendTopic.cancel(true);
+            currentAsyncTaskForSendTopic.clearListenersAndCancel();
             currentAsyncTaskForSendTopic = null;
         }
     }
@@ -170,14 +203,13 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
         Utils.insertStringInEditText(topicContentEdit, newStringToAdd, posOfCenterFromEnd);
     }
 
-    private class SendTopicToJVC extends AsyncTask<SendTopicInfos, Void, String> {
+    private static class SendTopicToJVC extends AbsWebRequestAsyncTask<SendTopicInfos, Void, String> {
         @Override
         protected String doInBackground(SendTopicInfos... infosOfSend) {
             if (infosOfSend.length == 1) {
-                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
+                WebManager.WebInfos currentWebInfos = initWebInfos(infosOfSend[0].cookieList, false);
                 String pageContent;
                 String requestBuilded = "titre_topic=" + Utils.convertStringToUrlString(infosOfSend[0].lastTopicTitleSended) + "&message_topic=" + Utils.convertStringToUrlString(infosOfSend[0].lastTopicContentSended) + infosOfSend[0].listOfInputsInAstring;
-                currentWebInfos.followRedirects = false;
 
                 if (!Utils.stringIsEmptyOrNull(infosOfSend[0].surveyTitle)) {
                     requestBuilded += "&submit_sondage=1&question_sondage=" + Utils.convertStringToUrlString(infosOfSend[0].surveyTitle);
@@ -191,7 +223,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
                     requestBuilded += "&submit_sondage=0&question_sondage=&reponse_sondage[]=";
                 }
 
-                pageContent = WebManager.sendRequestWithMultipleTrys(infosOfSend[0].linkToSend, "POST", requestBuilded, infosOfSend[0].cookieList, currentWebInfos, 2);
+                pageContent = WebManager.sendRequestWithMultipleTrys(infosOfSend[0].linkToSend, "POST", requestBuilded, currentWebInfos, 2);
 
                 if (infosOfSend[0].linkToSend.equals(currentWebInfos.currentUrl)) {
                     pageContent = "respawnirc:resendneeded";
@@ -205,38 +237,6 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
             } else {
                 return null;
             }
-        }
-
-        @Override
-        protected void onPostExecute(String pageResult) {
-            super.onPostExecute(pageResult);
-
-            currentAsyncTaskForSendTopic = null;
-
-            if (Utils.stringIsEmptyOrNull(pageResult)) {
-                pageResult = "error";
-            }
-
-            if (pageResult.equals("respawnirc:resendneeded")) {
-                Toast.makeText(SendTopicToForumActivity.this, R.string.unknownErrorPleaseRetry, Toast.LENGTH_SHORT).show();
-                return;
-            } else if (pageResult.startsWith("respawnirc:move:")) {
-                Intent data = new Intent();
-                pageResult = pageResult.substring(("respawnirc:move:").length());
-
-                if (pageResult.startsWith("/forums/")) {
-                    pageResult = "http://www.jeuxvideo.com" + pageResult;
-                } else if (!pageResult.startsWith("http:")) {
-                    pageResult = "http:" + pageResult;
-                }
-
-                data.putExtra(RESULT_EXTRA_TOPIC_LINK_TO_MOVE, pageResult);
-                setResult(Activity.RESULT_OK, data);
-            } else {
-                Toast.makeText(SendTopicToForumActivity.this, JVCParser.getErrorMessage(pageResult), Toast.LENGTH_SHORT).show();
-            }
-
-            finish();
         }
     }
 

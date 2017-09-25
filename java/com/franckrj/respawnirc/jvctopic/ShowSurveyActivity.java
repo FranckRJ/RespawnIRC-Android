@@ -1,6 +1,5 @@
 package com.franckrj.respawnirc.jvctopic;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
@@ -11,6 +10,7 @@ import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
+import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 import com.franckrj.respawnirc.dialogs.VoteInSurveyDialogFragment;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.ThemeManager;
@@ -38,7 +38,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
     private String contentForSurvey = "";
     private ArrayList<JVCParser.SurveyReplyInfos> listOfReplysWithInfos;
 
-    private View.OnClickListener voteButtonClickedListener = new View.OnClickListener() {
+    private final View.OnClickListener voteButtonClickedListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (currentTaskForVote == null) {
@@ -54,6 +54,44 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
                 voteDialogFragment.setArguments(argForFrag);
                 voteDialogFragment.show(getFragmentManager(), "VoteInSurveyDialogFragment");
             }
+        }
+    };
+
+    private final AbsWebRequestAsyncTask.RequestIsStarted requestIsStartedListener = new AbsWebRequestAsyncTask.RequestIsStarted() {
+        @Override
+        public void onRequestIsStarted() {
+            swipeRefresh.setRefreshing(true);
+        }
+    };
+
+    private final AbsWebRequestAsyncTask.RequestIsFinished<String> downloadInfosIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<String>() {
+        @Override
+        public void onRequestIsFinished(String reqResult) {
+            swipeRefresh.setRefreshing(false);
+
+            if (listOfReplysWithInfos.isEmpty()) {
+                voteButton.setVisibility(View.GONE);
+            } else {
+                voteButton.setVisibility(View.VISIBLE);
+            }
+
+            analyzeSurveyContent(reqResult);
+
+            currentTaskForSurvey = null;
+        }
+    };
+
+    private final AbsWebRequestAsyncTask.RequestIsFinished<String> sendVoteIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<String>() {
+        @Override
+        public void onRequestIsFinished(String reqResult) {
+            swipeRefresh.setRefreshing(false);
+
+            if (analyzeSurveyContent(reqResult)) {
+                Toast.makeText(ShowSurveyActivity.this, R.string.voteRegistered, Toast.LENGTH_SHORT).show();
+                voteButton.setVisibility(View.GONE);
+            }
+
+            currentTaskForVote = null;
         }
     };
 
@@ -125,11 +163,11 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
 
     private void stopAllCurrentTasks() {
         if (currentTaskForSurvey != null) {
-            currentTaskForSurvey.cancel(true);
+            currentTaskForSurvey.clearListenersAndCancel();
             currentTaskForSurvey = null;
         }
         if (currentTaskForVote != null) {
-            currentTaskForVote.cancel(true);
+            currentTaskForVote.clearListenersAndCancel();
             currentTaskForVote = null;
         }
         swipeRefresh.setRefreshing(false);
@@ -168,6 +206,8 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
             }
             if (contentForSurvey.isEmpty() && getIntent().getStringExtra(EXTRA_TOPIC_ID) != null && getIntent().getStringExtra(EXTRA_AJAX_INFOS) != null && getIntent().getStringExtra(EXTRA_COOKIES) != null) {
                 currentTaskForSurvey = new DownloadInfosForSurvey();
+                currentTaskForSurvey.setRequestIsStartedListener(requestIsStartedListener);
+                currentTaskForSurvey.setRequestIsFinishedListener(downloadInfosIsFinishedListener);
                 currentTaskForSurvey.execute(getIntent().getStringExtra(EXTRA_TOPIC_ID), getIntent().getStringExtra(EXTRA_AJAX_INFOS), getIntent().getStringExtra(EXTRA_COOKIES));
             }
         }
@@ -198,70 +238,31 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
             Toast.makeText(this, R.string.errorVoteAlreadyRunning, Toast.LENGTH_SHORT).show();
         } else {
             currentTaskForVote = new SendVoteToSurvey();
+            currentTaskForVote.setRequestIsStartedListener(requestIsStartedListener);
+            currentTaskForVote.setRequestIsFinishedListener(sendVoteIsFinishedListener);
             currentTaskForVote.execute(getIntent().getStringExtra(EXTRA_TOPIC_ID), listOfReplysWithInfos.get(voteIndex).infosForReply, getIntent().getStringExtra(EXTRA_AJAX_INFOS), getIntent().getStringExtra(EXTRA_COOKIES));
         }
     }
 
-    private class DownloadInfosForSurvey extends AsyncTask<String, Void, String> {
-        @Override
-        protected void onPreExecute() {
-            swipeRefresh.setRefreshing(true);
-        }
-
+    private static class DownloadInfosForSurvey extends AbsWebRequestAsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
             if (params.length > 2) {
-                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
-                currentWebInfos.followRedirects = false;
-                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_topic_sondage_view_response.php", "GET", "id_topic=" + params[0] + "&action=view_vote&" + params[1], params[2], currentWebInfos);
+                WebManager.WebInfos currentWebInfos = initWebInfos(params[2], false);
+                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_topic_sondage_view_response.php", "GET", "id_topic=" + params[0] + "&action=view_vote&" + params[1], currentWebInfos);
             }
             return null;
-        }
-
-        @Override
-        protected void onPostExecute(String surveyBlock) {
-            super.onPostExecute(surveyBlock);
-            swipeRefresh.setRefreshing(false);
-
-            if (listOfReplysWithInfos.isEmpty()) {
-                voteButton.setVisibility(View.GONE);
-            } else {
-                voteButton.setVisibility(View.VISIBLE);
-            }
-
-            analyzeSurveyContent(surveyBlock);
-
-            currentTaskForSurvey = null;
         }
     }
 
-    private class SendVoteToSurvey extends AsyncTask<String, Void, String> {
-        @Override
-        protected void onPreExecute() {
-            swipeRefresh.setRefreshing(true);
-        }
-
+    private static class SendVoteToSurvey extends AbsWebRequestAsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
             if (params.length > 3) {
-                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
-                currentWebInfos.followRedirects = false;
-                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_topic_sondage_vote.php", "GET", "id_topic=" + params[0] + "&" + params[1] + "&" + params[2], params[3], currentWebInfos);
+                WebManager.WebInfos currentWebInfos = initWebInfos(params[3], false);
+                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_topic_sondage_vote.php", "GET", "id_topic=" + params[0] + "&" + params[1] + "&" + params[2], currentWebInfos);
             }
             return null;
-        }
-
-        @Override
-        protected void onPostExecute(String surveyBlock) {
-            super.onPostExecute(surveyBlock);
-            swipeRefresh.setRefreshing(false);
-
-            if (analyzeSurveyContent(surveyBlock)) {
-                Toast.makeText(ShowSurveyActivity.this, R.string.voteRegistered, Toast.LENGTH_SHORT).show();
-                voteButton.setVisibility(View.GONE);
-            }
-
-            currentTaskForVote = null;
         }
     }
 }

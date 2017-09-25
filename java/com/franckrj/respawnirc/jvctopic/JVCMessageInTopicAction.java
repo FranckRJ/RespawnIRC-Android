@@ -3,10 +3,10 @@ package com.franckrj.respawnirc.jvctopic;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.WebManager;
 
@@ -23,8 +23,44 @@ public class JVCMessageInTopicAction {
         public void onClick(DialogInterface dialog, int which) {
             if (which == DialogInterface.BUTTON_POSITIVE)  {
                 currentTaskDeleteMessage = new DeleteJVCMessage();
+                currentTaskDeleteMessage.setRequestIsFinishedListener(deleteMessageIsFinishedListener);
                 currentTaskDeleteMessage.execute(lastDeleteInfos.idOfMessage, lastDeleteInfos.latestAjaxInfosMod, lastDeleteInfos.cookieListInAString);
             }
+        }
+    };
+
+    private final AbsWebRequestAsyncTask.RequestIsFinished<String> quoteMessageIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<String>() {
+        @Override
+        public void onRequestIsFinished(String reqResult) {
+            if (reqResult != null) {
+                if (messageIsQuotedListener != null) {
+                    messageIsQuotedListener.getNewMessageQuoted(latestMessageQuotedInfo + "\n>" + reqResult + "\n\n");
+                }
+            } else {
+                Toast.makeText(parentActivity, R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
+            }
+
+            latestMessageQuotedInfo = null;
+            currentTaskQuoteMessage = null;
+        }
+    };
+
+    private final AbsWebRequestAsyncTask.RequestIsFinished<String> deleteMessageIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<String>() {
+        @Override
+        public void onRequestIsFinished(String reqResult) {
+            if (reqResult != null) {
+                String currentError = JVCParser.getErrorMessageInJSONMode(reqResult);
+
+                if (currentError == null) {
+                    Toast.makeText(parentActivity, R.string.supressSuccess, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(parentActivity, currentError, Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(parentActivity, R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
+            }
+
+            currentTaskDeleteMessage = null;
         }
     };
 
@@ -38,12 +74,12 @@ public class JVCMessageInTopicAction {
 
     public void stopAllCurrentTasks() {
         if (currentTaskQuoteMessage != null) {
-            currentTaskQuoteMessage.cancel(true);
+            currentTaskQuoteMessage.clearListenersAndCancel();
             currentTaskQuoteMessage = null;
             latestMessageQuotedInfo = null;
         }
         if (currentTaskDeleteMessage != null) {
-            currentTaskDeleteMessage.cancel(true);
+            currentTaskDeleteMessage.clearListenersAndCancel();
             currentTaskDeleteMessage = null;
         }
     }
@@ -54,6 +90,7 @@ public class JVCMessageInTopicAction {
             latestMessageQuotedInfo = JVCParser.buildMessageQuotedInfoFromThis(currentMessageInfos);
 
             currentTaskQuoteMessage = new QuoteJVCMessage();
+            currentTaskQuoteMessage.setRequestIsFinishedListener(quoteMessageIsFinishedListener);
             currentTaskQuoteMessage.execute(idOfMessage, latestAjaxInfos.list, cookieListInAString);
         } else {
             if (latestMessageQuotedInfo != null || currentTaskQuoteMessage != null) {
@@ -82,15 +119,14 @@ public class JVCMessageInTopicAction {
         }
     }
 
-    private class QuoteJVCMessage extends AsyncTask<String, Void, String> {
+    private static class QuoteJVCMessage extends AbsWebRequestAsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
             if (params.length > 2) {
-                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
+                WebManager.WebInfos currentWebInfos = initWebInfos(params[2], false);
                 String pageContent;
-                currentWebInfos.followRedirects = false;
 
-                pageContent = WebManager.sendRequestWithMultipleTrys("http://www.jeuxvideo.com/forums/ajax_citation.php", "POST", "id_message=" + params[0] + "&" + params[1], params[2], currentWebInfos, 2);
+                pageContent = WebManager.sendRequestWithMultipleTrys("http://www.jeuxvideo.com/forums/ajax_citation.php", "POST", "id_message=" + params[0] + "&" + params[1], currentWebInfos, 2);
 
                 if (pageContent != null) {
                     return JVCParser.getMessageQuoted(pageContent);
@@ -98,52 +134,16 @@ public class JVCMessageInTopicAction {
             }
             return null;
         }
-
-        @Override
-        protected void onPostExecute(String messageQuoted) {
-            super.onPostExecute(messageQuoted);
-
-            if (messageQuoted != null) {
-                if (messageIsQuotedListener != null) {
-                    messageIsQuotedListener.getNewMessageQuoted(latestMessageQuotedInfo + "\n>" + messageQuoted + "\n\n");
-                }
-            } else {
-                Toast.makeText(parentActivity, R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
-            }
-
-            latestMessageQuotedInfo = null;
-            currentTaskQuoteMessage = null;
-        }
     }
 
-    private class DeleteJVCMessage extends AsyncTask<String, Void, String> {
+    private static class DeleteJVCMessage extends AbsWebRequestAsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
             if (params.length > 2) {
-                WebManager.WebInfos currentWebInfos = new WebManager.WebInfos();
-                currentWebInfos.followRedirects = false;
-                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/modal_del_message.php", "GET", "tab_message[]=" + params[0] + "&type=delete&" + params[1], params[2], currentWebInfos);
+                WebManager.WebInfos currentWebInfos = initWebInfos(params[2], false);
+                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/modal_del_message.php", "GET", "tab_message[]=" + params[0] + "&type=delete&" + params[1], currentWebInfos);
             }
             return null;
-        }
-
-        @Override
-        protected void onPostExecute(String pageContent) {
-            super.onPostExecute(pageContent);
-
-            if (pageContent != null) {
-                String currentError = JVCParser.getErrorMessageInJSONMode(pageContent);
-
-                if (currentError == null) {
-                    Toast.makeText(parentActivity, R.string.supressSuccess, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(parentActivity, currentError, Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(parentActivity, R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
-            }
-
-            currentTaskDeleteMessage = null;
         }
     }
 
