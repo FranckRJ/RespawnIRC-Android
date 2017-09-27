@@ -3,6 +3,7 @@ package com.franckrj.respawnirc.base;
 import android.content.Intent;
 import android.content.pm.ShortcutManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -38,13 +39,14 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected static final int ITEM_ID_HOME = 0;
     protected static final int ITEM_ID_FORUM = 1;
     protected static final int ITEM_ID_SHOWMP = 2;
-    protected static final int ITEM_ID_PREF = 3;
-    protected static final int ITEM_ID_FORUM_FAV_SELECTED = 4;
-    protected static final int ITEM_ID_REFRESH_FORUM_FAV = 5;
-    protected static final int ITEM_ID_TOPIC_FAV_SELECTED = 6;
-    protected static final int ITEM_ID_REFRESH_TOPIC_FAV = 7;
-    protected static final int ITEM_ID_CONNECT = 8;
-    protected static final int ITEM_ID_CONNECT_AS_MODO = 9;
+    protected static final int ITEM_ID_SHOWGTA = 3;
+    protected static final int ITEM_ID_PREF = 4;
+    protected static final int ITEM_ID_FORUM_FAV_SELECTED = 5;
+    protected static final int ITEM_ID_REFRESH_FORUM_FAV = 6;
+    protected static final int ITEM_ID_TOPIC_FAV_SELECTED = 7;
+    protected static final int ITEM_ID_REFRESH_TOPIC_FAV = 8;
+    protected static final int ITEM_ID_CONNECT = 9;
+    protected static final int ITEM_ID_CONNECT_AS_MODO = 10;
     protected static final int MODE_HOME = 0;
     protected static final int MODE_FORUM = 1;
     protected static final int MODE_CONNECT = 2;
@@ -52,6 +54,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected static ArrayList<NavigationMenuAdapter.MenuItemInfo> listOfMenuItemInfoForHome = null;
     protected static ArrayList<NavigationMenuAdapter.MenuItemInfo> listOfMenuItemInfoForForum = null;
     protected static ArrayList<NavigationMenuAdapter.MenuItemInfo> listOfMenuItemInfoForConnect = null;
+    protected static NavigationMenuAdapter.MenuItemInfo showGTAMenuItem = null;
     protected DrawerLayout layoutForDrawer = null;
     protected NavigationMenuListView navigationMenuList = null;
     protected NavigationMenuAdapter adapterForNavigationMenu = null;
@@ -68,6 +71,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected ArrayList<NavigationMenuAdapter.MenuItemInfo> currentListOfMenuItem = null;
     protected String showMpStringContent = "";
     protected boolean backIsOpenDrawer = false;
+    protected boolean userIsModo = false;
 
     protected final AdapterView.OnItemClickListener itemInNavigationClickedListener = new AdapterView.OnItemClickListener() {
         @Override
@@ -263,6 +267,16 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                 listOfMenuItemInfoForConnect.add(tmpItemInfo);
             }
         }
+
+        if (showGTAMenuItem == null) {
+            showGTAMenuItem = new NavigationMenuAdapter.MenuItemInfo();
+            showGTAMenuItem.textContent = getString(R.string.gta);
+            showGTAMenuItem.drawableResID = R.drawable.ic_action_report_dark_zoom;
+            showGTAMenuItem.isHeader = false;
+            showGTAMenuItem.isEnabled = true;
+            showGTAMenuItem.itemID = ITEM_ID_SHOWGTA;
+            showGTAMenuItem.groupID = GROUP_ID_BASIC;
+        }
     }
 
     private void updateNavigationMenu() {
@@ -302,6 +316,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
 
         if (!isInNavigationConnectMode) {
             int positionOfShowMpItem = adapterForNavigationMenu.getPositionDependingOfID(ITEM_ID_SHOWMP, GROUP_ID_BASIC);
+            int positionOfShowGTAItem = adapterForNavigationMenu.getPositionDependingOfID(ITEM_ID_SHOWGTA, GROUP_ID_BASIC);
 
             updateFavsInNavigationMenu(false);
             adapterForNavigationMenu.setRowEnabled(positionOfShowMpItem, !pseudoOfUser.isEmpty());
@@ -315,6 +330,21 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                 contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_action_content_add_circle_outline));
             } else {
                 contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_action_navigation_expand_more_dark));
+            }
+
+            if (userIsModo && !pseudoOfUser.isEmpty()) {
+                pseudoTextNavigation.setTextColor(Undeprecator.resourcesGetColor(getResources(), R.color.colorPseudoModoThemeDark));
+
+                if (positionOfShowGTAItem == -1) {
+                    int positionOfPrefItem = adapterForNavigationMenu.getPositionDependingOfID(ITEM_ID_PREF, GROUP_ID_BASIC);
+                    currentListOfMenuItem.add(positionOfPrefItem, showGTAMenuItem);
+                }
+            } else {
+                pseudoTextNavigation.setTextColor(Color.WHITE);
+
+                if (positionOfShowGTAItem != -1) {
+                    currentListOfMenuItem.remove(positionOfShowGTAItem);
+                }
             }
         } else {
             adapterForNavigationMenu.setRowSelected(-1);
@@ -384,6 +414,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         initializeViewAndToolbar();
 
         pseudoOfUser = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER);
+        userIsModo = PrefsManager.getBool(PrefsManager.BoolPref.Names.USER_IS_MODO);
 
         toggleForDrawer = new ActionBarDrawerToggle(this, layoutForDrawer, R.string.openDrawerContentDescRes, R.string.closeDrawerContentDescRes) {
             @Override
@@ -413,6 +444,9 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                             break;
                         case ITEM_ID_SHOWMP:
                             Utils.openLinkInInternalNavigator("http://www.jeuxvideo.com/messages-prives/boite-reception.php", AbsNavigationViewActivity.this);
+                            break;
+                        case ITEM_ID_SHOWGTA:
+                            Utils.openLinkInInternalNavigator("http://www.jeuxvideo.com/gta/hp_alerte.php", AbsNavigationViewActivity.this);
                             break;
                         case ITEM_ID_PREF:
                             startActivity(new Intent(AbsNavigationViewActivity.this, SettingsActivity.class));
@@ -473,10 +507,12 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     public void onResume() {
         super.onResume();
         String tmpPseudoOfUser = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER);
+        boolean tmpUserIsModo = PrefsManager.getBool(PrefsManager.BoolPref.Names.USER_IS_MODO);
         backIsOpenDrawer = PrefsManager.getBool(PrefsManager.BoolPref.Names.BACK_IS_OPEN_DRAWER);
 
-        if (!tmpPseudoOfUser.equals(pseudoOfUser)) {
+        if (!tmpPseudoOfUser.equals(pseudoOfUser) || tmpUserIsModo != userIsModo) {
             pseudoOfUser = tmpPseudoOfUser;
+            userIsModo = tmpUserIsModo;
             updateNavigationMenu();
         }
     }

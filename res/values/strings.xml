@@ -208,6 +208,7 @@
     <string name="colorPseudoOfUserInInfoTitle">Colorer votre pseudo</string>
     <string name="colorPseudoOfUserInMessageTitle">Colorer votre pseudo dans les messages</string>
     <string name="backIsOpenDrawerTitle">Retour pour ouvrir le menu latéral</string>
+    <string name="gta">GTA</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
