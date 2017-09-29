@@ -93,7 +93,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                     }
 
                     refreshFavsDialogFragment.setArguments(argForFrag);
-                    refreshFavsDialogFragment.show(getFragmentManager(), "RefreshFavDialogFragment");
+                    refreshFavsDialogFragment.show(getSupportFragmentManager(), "RefreshFavDialogFragment");
                 } else {
                     Toast.makeText(AbsNavigationViewActivity.this, R.string.errorConnectNeeded, Toast.LENGTH_SHORT).show();
                 }

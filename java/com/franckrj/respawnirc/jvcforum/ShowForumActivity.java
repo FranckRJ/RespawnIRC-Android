@@ -55,7 +55,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
             SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
             argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumNames, currentTitle));
             selectTextDialogFragment.setArguments(argForFrag);
-            selectTextDialogFragment.show(getFragmentManager(), "SelectTextDialogFragment");
+            selectTextDialogFragment.show(getSupportFragmentManager(), "SelectTextDialogFragment");
             return true;
         }
     };

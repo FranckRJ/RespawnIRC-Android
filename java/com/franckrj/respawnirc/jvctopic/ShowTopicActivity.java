@@ -173,7 +173,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
             argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumAndTopicNames, currentTitles.forum, currentTitles.topic));
             selectTextDialogFragment.setArguments(argForFrag);
-            selectTextDialogFragment.show(getFragmentManager(), "SelectTextDialogFragment");
+            selectTextDialogFragment.show(getSupportFragmentManager(), "SelectTextDialogFragment");
             return true;
         }
     };
@@ -190,7 +190,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         @Override
         public void onClick(View buttonView) {
             InsertStuffDialogFragment insertStuffDialogFragment = new InsertStuffDialogFragment();
-            insertStuffDialogFragment.show(getFragmentManager(), "InsertStuffDialogFragment");
+            insertStuffDialogFragment.show(getSupportFragmentManager(), "InsertStuffDialogFragment");
         }
     };
 
@@ -222,7 +222,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
                 argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.topicLockedForReason, reasonOfLock));
                 selectTextDialogFragment.setArguments(argForFrag);
-                selectTextDialogFragment.show(getFragmentManager(), "SelectTextDialogFragment");
+                selectTextDialogFragment.show(getSupportFragmentManager(), "SelectTextDialogFragment");
             }
         }
     };
@@ -610,7 +610,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     public void extendPageSelection(View buttonView) {
         if (pageNavigation.getIdOfThisButton(buttonView) == PageNavigationUtil.ID_BUTTON_CURRENT) {
             ChoosePageNumberDialogFragment choosePageDialogFragment = new ChoosePageNumberDialogFragment();
-            choosePageDialogFragment.show(getFragmentManager(), "ChoosePageNumberDialogFragment");
+            choosePageDialogFragment.show(getSupportFragmentManager(), "ChoosePageNumberDialogFragment");
         }
     }
 
@@ -677,7 +677,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 ShowImageDialogFragment showImageDialogFragment = new ShowImageDialogFragment();
                 argForFrag.putString(ShowImageDialogFragment.ARG_IMAGE_LINK, JVCParser.noelshackToDirectLink(link));
                 showImageDialogFragment.setArguments(argForFrag);
-                showImageDialogFragment.show(getFragmentManager(), "ShowImageDialogFragment");
+                showImageDialogFragment.show(getSupportFragmentManager(), "ShowImageDialogFragment");
             } else {
                 if (!useInternalNavigatorForDefaultOpening) {
                     Utils.openLinkInExternalNavigator(link, this);
@@ -690,7 +690,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             LinkContextMenuDialogFragment linkMenuDialogFragment = new LinkContextMenuDialogFragment();
             argForFrag.putString(LinkContextMenuDialogFragment.ARG_URL, link);
             linkMenuDialogFragment.setArguments(argForFrag);
-            linkMenuDialogFragment.show(getFragmentManager(), "LinkContextMenuDialogFragment");
+            linkMenuDialogFragment.show(getSupportFragmentManager(), "LinkContextMenuDialogFragment");
         }
     }
 
@@ -769,7 +769,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         argForFrag.putBoolean(MessageContextMenuDialogFragment.ARG_USE_INTERNAL_BROWSER, useInternalNavigatorForDefaultOpening);
         argForFrag.putString(MessageContextMenuDialogFragment.ARG_MESSAGE_CONTENT, messageClicked.messageNotParsed);
         messageMenuDialogFragment.setArguments(argForFrag);
-        messageMenuDialogFragment.show(getFragmentManager(), "MessageContextMenuDialogFragment");
+        messageMenuDialogFragment.show(getSupportFragmentManager(), "MessageContextMenuDialogFragment");
     }
 
     @Override

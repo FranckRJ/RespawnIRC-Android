@@ -1,14 +1,14 @@
 package com.franckrj.respawnirc.dialogs;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.app.DialogFragment;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.util.SimpleArrayMap;
+import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
