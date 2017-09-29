@@ -44,11 +44,14 @@ public class WebNavigatorActivity extends AbsToolbarActivity {
 
         String cookies = PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST);
 
+        /*L'ancienne COOKIES_LIST contenait deux cookies, la nouvelle n'en contient plus qu'un.*/
         if (cookies.contains(";")) {
             String firstCookie = cookies.substring(0, cookies.indexOf(";"));
             String secondCookie = cookies.substring(cookies.indexOf(";") + 1, cookies.length());
             CookieManager.getInstance().setCookie("http://www.jeuxvideo.com/", firstCookie);
             CookieManager.getInstance().setCookie("http://www.jeuxvideo.com/", secondCookie);
+        } else {
+            CookieManager.getInstance().setCookie("http://www.jeuxvideo.com/", cookies);
         }
 
         navigatorWebView = findViewById(R.id.webview_webnavigator);
