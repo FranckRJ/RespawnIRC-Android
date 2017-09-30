@@ -45,6 +45,11 @@
             android:key="@string/settingsSeparationBetweenMessagesBlackThemeModeForum"
             android:title="@string/separationBetweenMessagesTitle"
             android:summary="@string/blackThemeOnlySummary"/>
+
+        <android.support.v7.preference.EditTextPreference
+            android:key="@string/settingsAvatarSize"
+            android:title="@string/avatarSizeTitle"
+            android:numeric="integer"/>
     </android.support.v7.preference.PreferenceCategory>
 
     <android.support.v7.preference.PreferenceCategory/>

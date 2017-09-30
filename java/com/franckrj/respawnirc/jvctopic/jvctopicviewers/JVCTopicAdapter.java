@@ -67,6 +67,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     private View.OnClickListener onSurveyClickListener = null;
     private float multiplierOfLineSizeForInfoLineIfAvatarIsShowed = 0;
     private boolean userIsModo = false;
+    private int avatarSize = -1;
 
     @SuppressWarnings("FieldCanBeLocal")
     private final ImageDownloader.DownloadFinished listenerForDownloadFinished = new ImageDownloader.DownloadFinished() {
@@ -214,6 +215,10 @@ public class JVCTopicAdapter extends BaseAdapter {
 
     public void setUserIsModo(boolean newVal) {
         userIsModo = newVal;
+    }
+
+    public void setAvatarSize(int newSize) {
+        avatarSize = newSize;
     }
 
     public void enableSurvey(String newSurveyTitle) {
@@ -407,9 +412,18 @@ public class JVCTopicAdapter extends BaseAdapter {
 
             if (viewHolder.avatarImage != null) {
                 if (currentContent.avatarImageDrawable != null) {
+                    ViewGroup.LayoutParams avatarLayoutParams = viewHolder.avatarImage.getLayoutParams();
+                    
                     viewHolder.avatarImage.setVisibility(View.VISIBLE);
                     viewHolder.avatarImage.setImageDrawable(null);
                     viewHolder.avatarImage.setImageDrawable(currentContent.avatarImageDrawable);
+                    
+                    if (avatarLayoutParams.width != avatarSize && avatarSize != -1) {
+                        avatarLayoutParams.height = avatarSize;
+                        avatarLayoutParams.width = avatarSize;
+                        /*Ligne nécessaire ?*/
+                        //viewHolder.avatarImage.requestLayout();
+                    }
 
                     if (multiplierOfLineSizeForInfoLineIfAvatarIsShowed != 0) {
                         viewHolder.infoLine.setLineSpacing(0, multiplierOfLineSizeForInfoLineIfAvatarIsShowed);

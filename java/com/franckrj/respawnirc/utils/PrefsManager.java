@@ -104,6 +104,7 @@ public class PrefsManager {
         addStringPref(StringPref.Names.MAX_NUMBER_OF_MESSAGES, currentContext.getString(R.string.settingsMaxNumberOfMessages), "60", 1, 120);
         addStringPref(StringPref.Names.INITIAL_NUMBER_OF_MESSAGES, currentContext.getString(R.string.settingsInitialNumberOfMessages), "10", 1, 20);
         addStringPref(StringPref.Names.THEME_USED, currentContext.getString(R.string.settingsThemeUsed), "0");
+        addStringPref(StringPref.Names.AVATAR_SIZE, currentContext.getString(R.string.settingsAvatarSize), "45", 40, 80);
     }
 
     public static boolean getBool(BoolPref.Names prefName) {
@@ -329,7 +330,8 @@ public class PrefsManager {
             REFRESH_TOPIC_TIME,
             MAX_NUMBER_OF_MESSAGES, INITIAL_NUMBER_OF_MESSAGES,
             THEME_USED,
-            IGNORED_PSEUDOS_IN_LC_LIST
+            IGNORED_PSEUDOS_IN_LC_LIST,
+            AVATAR_SIZE
         }
     }
 

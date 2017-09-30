@@ -43,4 +43,5 @@
     <string name="settingsColorPseudoOfUserInInfo" translatable="false">settings.colorPseudoOfUserInInfo</string>
     <string name="settingsColorPseudoOfUserInMessage" translatable="false">settings.colorPseudoOfUserInMessage</string>
     <string name="settingsBackIsOpenDrawer" translatable="false">settings.backIsOpenDrawer</string>
+    <string name="settingsAvatarSize" translatable="false">settings.avatarSize</string>
 </resources>
