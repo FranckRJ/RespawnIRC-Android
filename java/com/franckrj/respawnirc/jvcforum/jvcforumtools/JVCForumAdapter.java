@@ -85,10 +85,6 @@ public class JVCForumAdapter extends BaseAdapter {
         listOfContentForTopics.add(thisHolder);
     }
 
-    public void updateAllItems() {
-        notifyDataSetChanged();
-    }
-
     @Override
     public int getCount() {
         return listOfTopics.size();

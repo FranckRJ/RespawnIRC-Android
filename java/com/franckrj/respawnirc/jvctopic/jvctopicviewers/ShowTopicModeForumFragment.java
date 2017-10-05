@@ -56,7 +56,7 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
                     adapterForTopic.addItem(thisMessageInfo, true);
                 }
 
-                adapterForTopic.updateAllItems();
+                adapterForTopic.notifyDataSetChanged();
 
                 if (adapterForTopic.getAllItems().isEmpty()) {
                     setErrorBackgroundMessageForAllMessageIgnored();
@@ -104,7 +104,7 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
             getterForTopic.resetDirectlyShowedInfos();
             adapterForTopic.disableSurvey();
             adapterForTopic.removeAllItems();
-            adapterForTopic.updateAllItems();
+            adapterForTopic.notifyDataSetChanged();
         }
         return getterForTopic.reloadTopic();
     }
@@ -117,7 +117,7 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
         getterForTopic.resetDirectlyShowedInfos();
         adapterForTopic.disableSurvey();
         adapterForTopic.removeAllItems();
-        adapterForTopic.updateAllItems();
+        adapterForTopic.notifyDataSetChanged();
         getterForTopic.startGetMessagesOfThisPage(newTopicLink);
     }
 

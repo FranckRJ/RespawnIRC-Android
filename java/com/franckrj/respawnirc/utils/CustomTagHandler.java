@@ -15,44 +15,30 @@ public class CustomTagHandler implements Html.TagHandler {
 
     public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
         if (tag.toLowerCase().equals("s")) {
-            processStrike(opening, output);
-        } else if (tag.toLowerCase().equals("bg_closed_spoil")) {
-            processBackgroundColor(opening, output, (ThemeManager.getThemeUsedIsDark() ? Color.WHITE : Color.BLACK));
-        } else if (tag.toLowerCase().equals("bg_opened_spoil")) {
-            processBackgroundColor(opening, output, (ThemeManager.getThemeUsedIsDark() ? almostDimGray : Color.LTGRAY));
+            processAddOfSpan(opening, output, new StrikethroughSpan());
+        } else if (tag.toLowerCase().equals("bg_spoil_button")) {
+            processAddOfSpan(opening, output, new BackgroundColorSpan(ThemeManager.getThemeUsedIsDark() ? Color.WHITE : Color.BLACK));
+        } else if (tag.toLowerCase().equals("bg_spoil_content")) {
+            processAddOfSpan(opening, output, new BackgroundColorSpan(ThemeManager.getThemeUsedIsDark() ? almostDimGray : Color.LTGRAY));
+        } else if (tag.toLowerCase().startsWith("holdstring_")) {
+            String stringToHold = tag.substring(tag.indexOf("_") + 1);
+            processAddOfSpan(opening, output, new HoldingStringSpan(stringToHold));
         }
     }
 
-    private void processStrike(boolean opening, Editable output) {
+    private void processAddOfSpan(boolean opening, Editable output, Object thisSpan) {
         int len = output.length();
 
         if (opening) {
-            output.setSpan(new StrikethroughSpan(), len, len, Spannable.SPAN_MARK_MARK);
+            output.setSpan(thisSpan, len, len, Spannable.SPAN_MARK_MARK);
         } else {
-            Object obj = getLast(output, StrikethroughSpan.class);
+            Object obj = getLast(output, thisSpan.getClass());
             int where = output.getSpanStart(obj);
 
             output.removeSpan(obj);
 
             if (where != len) {
-                output.setSpan(new StrikethroughSpan(), where, len, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-        }
-    }
-
-    private void processBackgroundColor(boolean opening, Editable output, @ColorInt int color) {
-        int len = output.length();
-
-        if (opening) {
-            output.setSpan(new BackgroundColorSpan(color), len, len, Spannable.SPAN_MARK_MARK);
-        } else {
-            Object obj = getLast(output, BackgroundColorSpan.class);
-            int where = output.getSpanStart(obj);
-
-            output.removeSpan(obj);
-
-            if (where != len) {
-                output.setSpan(new BackgroundColorSpan(color), where, len, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                output.setSpan(thisSpan, where, len, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
     }

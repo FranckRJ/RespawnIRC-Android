@@ -96,7 +96,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
                     adapterForForum.addItem(thisTopicInfo);
                 }
 
-                adapterForForum.updateAllItems();
+                adapterForForum.notifyDataSetChanged();
 
                 if (adapterForForum.getAllItems().isEmpty()) {
                     allTopicsShowedAreFromIgnoredPseudos = true;
@@ -155,7 +155,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         isInErrorMode = false;
         if (clearTopicsOnRefresh && !forceDontClear) {
             adapterForForum.removeAllItems();
-            adapterForForum.updateAllItems();
+            adapterForForum.notifyDataSetChanged();
         }
         return getterForForum.reloadForum();
     }
@@ -178,7 +178,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
 
         getterForForum.stopAllCurrentTask();
         adapterForForum.removeAllItems();
-        adapterForForum.updateAllItems();
+        adapterForForum.notifyDataSetChanged();
 
         if (startLoadingPage) {
             getterForForum.startGetMessagesOfThisPage(newForumPageLink);
@@ -191,7 +191,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     public void clearContent() {
         getterForForum.stopAllCurrentTask();
         adapterForForum.removeAllItems();
-        adapterForForum.updateAllItems();
+        adapterForForum.notifyDataSetChanged();
         getterForForum.startGetMessagesOfThisPage("");
     }
 
@@ -266,7 +266,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
                 }
             }
 
-            adapterForForum.updateAllItems();
+            adapterForForum.notifyDataSetChanged();
 
             if (adapterForForum.getAllItems().isEmpty()) {
                 if (getterForForum.getIsInSearchMode() && getterForForum.getLastTypeOfError() == JVCForumGetter.ErrorType.SEARCH_IS_EMPTY_AND_ITS_NOT_A_FAIL) {
@@ -299,7 +299,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         isInErrorMode = false;
 
         if (oldAlternateBackgroundColor != adapterForForum.getAlternateBackgroundColor()) {
-            adapterForForum.updateAllItems();
+            adapterForForum.notifyDataSetChanged();
         }
 
         if (adapterForForum.getAllItems().isEmpty() && !allTopicsShowedAreFromIgnoredPseudos &&

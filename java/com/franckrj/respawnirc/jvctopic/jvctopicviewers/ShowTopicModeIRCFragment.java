@@ -70,7 +70,7 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
                     adapterForTopic.removeFirstItem();
                 }
 
-                adapterForTopic.updateAllItems();
+                adapterForTopic.notifyDataSetChanged();
 
                 if (adapterForTopic.getAllItems().isEmpty()) {
                     setErrorBackgroundMessageForAllMessageIgnored();
@@ -118,7 +118,7 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
         getterForTopic.resetDirectlyShowedInfos();
         adapterForTopic.disableSurvey();
         adapterForTopic.removeAllItems();
-        adapterForTopic.updateAllItems();
+        adapterForTopic.notifyDataSetChanged();
         getterForTopic.setOldTopic(oldUrlForTopic, oldLastIdOfMessage);
         getterForTopic.reloadTopic();
     }
@@ -131,7 +131,7 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
         getterForTopic.resetDirectlyShowedInfos();
         adapterForTopic.disableSurvey();
         adapterForTopic.removeAllItems();
-        adapterForTopic.updateAllItems();
+        adapterForTopic.notifyDataSetChanged();
         getterForTopic.setNewTopic(newTopicLink);
         getterForTopic.reloadTopic();
     }

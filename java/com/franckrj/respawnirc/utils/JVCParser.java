@@ -3,6 +3,7 @@ package com.franckrj.respawnirc.utils;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.v4.util.ArraySet;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -783,8 +784,13 @@ public final class JVCParser {
 
     public static String createMessageMessageLineFromInfos(MessageInfos thisMessageInfo, Settings settings) {
         String finalMessage = settings.secondLineFormat;
+        SpoilTagsInfos infosOfSpoilTags = new SpoilTagsInfos();
+        infosOfSpoilTags.containSpoil = thisMessageInfo.messageContentContainSpoil;
+        infosOfSpoilTags.listOfSpoilIDToShow = thisMessageInfo.listOfSpoilIDToShow;
+        infosOfSpoilTags.lastIDOfSpoil = -1;
 
-        finalMessage = finalMessage.replace("<%MESSAGE_MESSAGE%>", parseMessageToPrettyMessage(thisMessageInfo.messageNotParsed, settings, thisMessageInfo.messageContentContainSpoil, thisMessageInfo.showSpoil, thisMessageInfo.showOverlyQuote, thisMessageInfo.showUglyImages));
+        finalMessage = finalMessage.replace("<%MESSAGE_MESSAGE%>", parseMessageToPrettyMessage(thisMessageInfo.messageNotParsed, settings, infosOfSpoilTags, thisMessageInfo.showOverlyQuote, thisMessageInfo.showUglyImages));
+        thisMessageInfo.lastIDOfSpoilInMessage = infosOfSpoilTags.lastIDOfSpoil;
         if (!thisMessageInfo.lastTimeEdit.isEmpty()) {
             finalMessage = finalMessage.replace("<%EDIT_ALL%>", settings.addBeforeEdit + thisMessageInfo.lastTimeEdit.trim() + settings.addAfterEdit);
         } else {
@@ -796,10 +802,14 @@ public final class JVCParser {
     }
 
     public static String createSignatureFromInfos(MessageInfos thisMessageInfo, Settings settings) {
-        return "<small>" + parseMessageToPrettyMessage(thisMessageInfo.signatureNotParsed, settings, thisMessageInfo.signatureContainSpoil, thisMessageInfo.showSpoil, true, true) + "</small>";
+        SpoilTagsInfos infosOfSpoilTags = new SpoilTagsInfos();
+        infosOfSpoilTags.containSpoil = thisMessageInfo.signatureContainSpoil;
+        infosOfSpoilTags.listOfSpoilIDToShow = thisMessageInfo.listOfSpoilIDToShow;
+        infosOfSpoilTags.lastIDOfSpoil = thisMessageInfo.lastIDOfSpoilInMessage;
+        return "<small>" + parseMessageToPrettyMessage(thisMessageInfo.signatureNotParsed, settings, infosOfSpoilTags, true, true) + "</small>";
     }
 
-    public static String parseMessageToPrettyMessage(String messageInString, Settings settings, boolean containSpoil, boolean showSpoil, boolean showOverlyQuote, boolean showUglyImages) {
+    public static String parseMessageToPrettyMessage(String messageInString, Settings settings, SpoilTagsInfos infosOfSpoilTag, boolean showOverlyQuote, boolean showUglyImages) {
         StringBuilder messageInBuilder = new StringBuilder(messageInString);
         MakeShortenedLinkIfPossible makeLinkDependingOnSettingsAndForceMake = new MakeShortenedLinkIfPossible((settings.shortenLongLink ? 50 : 0), true);
 
@@ -833,15 +843,12 @@ public final class JVCParser {
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 3, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         }
 
-        if (containSpoil) {
+        if (infosOfSpoilTag.containSpoil) {
+            BuildSpoilTag spoilTagBuilder = new BuildSpoilTag(infosOfSpoilTag.listOfSpoilIDToShow, infosOfSpoilTag.lastIDOfSpoil);
             ToolForParsing.removeOverlySpoils(messageInBuilder);
-            if (!showSpoil) {
-                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, -1, "<bg_closed_spoil><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "000000" : "FFFFFF") + "\">&nbsp;SPOIL&nbsp;</font></bg_closed_spoil>", "", null, null);
-                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, -1, "<p><bg_closed_spoil><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "000000" : "FFFFFF") + "\">&nbsp;SPOIL&nbsp;</font></bg_closed_spoil></p>", "", null, null);
-            } else {
-                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "<bg_opened_spoil><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "FFFFFF" : "000000") + "\">", "</font></bg_opened_spoil>", new RemoveFirstsAndLastsP(), null);
-                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p><bg_opened_spoil><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "FFFFFF" : "000000") + "\">", "</font></bg_opened_spoil></p>",  new RemoveFirstsAndLastsP(), null);
-            }
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "", "", new RemoveFirstsAndLastsP(), spoilTagBuilder);
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p>", "</p>",  new RemoveFirstsAndLastsP(), spoilTagBuilder);
+            infosOfSpoilTag.lastIDOfSpoil = spoilTagBuilder.getLastIDUsedForSpoil();
         }
 
         ToolForParsing.replaceStringByAnother(messageInBuilder, "<blockquote class=\"blockquote-jv\">", "<blockquote>");
@@ -1290,13 +1297,14 @@ public final class JVCParser {
         public boolean messageIsDeleted = false;
         public boolean messageContentContainSpoil = false;
         public boolean signatureContainSpoil = false;
-        public boolean showSpoil = false;
         public int numberOfOverlyQuote = 0;
         public boolean showOverlyQuote = false;
         public boolean isAnEdit = false;
         public boolean containUglyImages = false;
         public boolean showUglyImages = false;
         public long id = 0;
+        public int lastIDOfSpoilInMessage = -1;
+        public ArraySet<Integer> listOfSpoilIDToShow = new ArraySet<>();
 
         public static final Parcelable.Creator<MessageInfos> CREATOR = new Parcelable.Creator<MessageInfos>() {
             @Override
@@ -1328,13 +1336,18 @@ public final class JVCParser {
             messageIsDeleted = (in.readByte() == 1);
             messageContentContainSpoil = (in.readByte() == 1);
             signatureContainSpoil = (in.readByte() == 1);
-            showSpoil = (in.readByte() == 1);
             numberOfOverlyQuote = in.readInt();
             showOverlyQuote = (in.readByte() == 1);
             isAnEdit = (in.readByte() == 1);
             containUglyImages = (in.readByte() == 1);
             showUglyImages = (in.readByte() == 1);
             id = in.readLong();
+            lastIDOfSpoilInMessage = in.readInt();
+
+            final int sizeOfListOfSpoidIDToShow = in.readInt();
+            for (int i = 0; i < sizeOfListOfSpoidIDToShow; ++i) {
+                listOfSpoilIDToShow.add(in.readInt());
+            }
         }
 
         @Override
@@ -1357,13 +1370,18 @@ public final class JVCParser {
             out.writeByte((byte)(messageIsDeleted ? 1 : 0));
             out.writeByte((byte)(messageContentContainSpoil ? 1 : 0));
             out.writeByte((byte)(signatureContainSpoil ? 1 : 0));
-            out.writeByte((byte)(showSpoil ? 1 : 0));
             out.writeInt(numberOfOverlyQuote);
             out.writeByte((byte)(showOverlyQuote ? 1 : 0));
             out.writeByte((byte)(isAnEdit ? 1 : 0));
             out.writeByte((byte)(containUglyImages ? 1 : 0));
             out.writeByte((byte)(showUglyImages ? 1 : 0));
             out.writeLong(id);
+            out.writeInt(lastIDOfSpoilInMessage);
+
+            out.writeInt(listOfSpoilIDToShow.size());
+            for (int i = 0; i < listOfSpoilIDToShow.size(); ++i) {
+                out.writeInt(listOfSpoilIDToShow.valueAt(i));
+            }
         }
 
         @Override
@@ -1600,6 +1618,39 @@ public final class JVCParser {
         }
     }
 
+    private static class BuildSpoilTag implements StringModifier {
+        private static final String spoilButtonCode = "<bg_spoil_button><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "000000" : "FFFFFF") +
+                                                      "\">&nbsp;SPOIL&nbsp;</font></bg_spoil_button>";
+
+        private ArraySet<Integer> listOfSpoilIDToShow = null;
+        private boolean showAllSpoils = false;
+        private int lastIDUsed = -1;
+
+        public BuildSpoilTag(ArraySet<Integer> newListOfSpoilIDToShow, int newLastIDUsed) {
+            listOfSpoilIDToShow = newListOfSpoilIDToShow;
+            showAllSpoils = listOfSpoilIDToShow.contains(-1);
+            lastIDUsed = newLastIDUsed;
+        }
+
+        public int getLastIDUsedForSpoil() {
+            return lastIDUsed;
+        }
+
+        @Override
+        public String changeString(String baseString) {
+            //lastIDUsed + 1 est l'ID utilisé pour la balise actuelle
+            String id = String.valueOf(++lastIDUsed);
+            boolean showThisSpoil = showAllSpoils || listOfSpoilIDToShow.contains(lastIDUsed);
+
+            if (showThisSpoil) {
+                return "<holdstring_c" + id + ">" + spoilButtonCode + "</holdstring_c" + id + ">" + "<bg_spoil_content><font color=\"#" +
+                        (ThemeManager.getThemeUsedIsDark() ? "FFFFFF" : "000000") + "\"> " + baseString + "</font></bg_spoil_content>";
+            } else {
+                return "<holdstring_o" + id + ">" + spoilButtonCode + "</holdstring_o" + id + ">";
+            }
+        }
+    }
+
     public static class SurveyInfos {
         public boolean isOpen = true;
         public String htmlTitle = "";
@@ -1642,6 +1693,12 @@ public final class JVCParser {
         public boolean transformStickerToSmiley = false;
         public boolean shortenLongLink = false;
         public boolean hideUglyImages = false;
+    }
+
+    private static class SpoilTagsInfos {
+        public ArraySet<Integer> listOfSpoilIDToShow = null;
+        public boolean containSpoil = false;
+        public int lastIDOfSpoil = -1;
     }
 
     private interface StringModifier {
