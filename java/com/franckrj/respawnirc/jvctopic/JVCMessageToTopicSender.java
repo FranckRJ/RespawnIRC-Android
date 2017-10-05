@@ -41,7 +41,7 @@ public class JVCMessageToTopicSender {
                 }
             }
 
-            if (isInEdit && !Utils.stringsAreEquals(errorWhenSending, "respawnirc:resendneeded")) {
+            if (isInEdit && !Utils.stringsAreEquals(reqResult, "respawnirc:resendneeded")) {
                 isInEdit = false;
                 lastInfosForEdit = null;
                 ajaxListInfos = null;
