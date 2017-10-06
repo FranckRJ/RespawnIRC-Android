@@ -216,7 +216,9 @@ public class InsertStuffDialogFragment extends DialogFragment {
                     appendAnotherStuff("sticker_zu9", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_zua", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_zub", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_zuc", textForShowAllStuff, false);
+                    appendAnotherStuff("sticker_zuc_fr", textForShowAllStuff, false);
+                    appendAnotherStuff("sticker_zuc_en", textForShowAllStuff, false);
+                    appendAnotherStuff("sticker_zuc_es", textForShowAllStuff, false);
                     break;
                 case 3:
                     //lapin

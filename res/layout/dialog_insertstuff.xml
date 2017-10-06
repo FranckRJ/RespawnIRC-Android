@@ -55,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:padding="8dp"
-                android:src="@drawable/sticker_zuc"
+                android:src="@drawable/sticker_zuc_fr"
                 android:scaleType="fitCenter"
                 android:contentDescription="@string/insertStuff"/>
             <ImageView
