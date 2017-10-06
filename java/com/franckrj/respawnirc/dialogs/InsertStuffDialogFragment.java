@@ -575,7 +575,10 @@ public class InsertStuffDialogFragment extends DialogFragment {
         deletedDrawable.setBounds(0, 0, deletedDrawable.getIntrinsicWidth(), deletedDrawable.getIntrinsicHeight());
 
         jvcImageGetter = new CustomImageGetter(getActivity(), deletedDrawable, null);
-        oldRowNumber = PrefsManager.getInt(PrefsManager.IntPref.Names.LAST_ROW_SELECTED_INSERTSTUFF);
+
+        if (PrefsManager.getBool(PrefsManager.BoolPref.Names.SAVE_LAST_ROW_USED_INSERTSTUFF)) {
+            oldRowNumber = PrefsManager.getInt(PrefsManager.IntPref.Names.LAST_ROW_SELECTED_INSERTSTUFF);
+        }
 
         if (oldRowNumber >= MAX_NUMBER_OF_ROW) {
             oldRowNumber = MAX_NUMBER_OF_ROW - 1;

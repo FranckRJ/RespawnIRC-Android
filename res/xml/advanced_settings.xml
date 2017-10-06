@@ -37,6 +37,10 @@
         <android.support.v7.preference.CheckBoxPreference
             android:key="@string/settingsBackIsOpenDrawer"
             android:title="@string/backIsOpenDrawerTitle"/>
+
+        <android.support.v7.preference.CheckBoxPreference
+            android:key="@string/settingsSaveLastRowUsedInsertstuff"
+            android:title="@string/saveLastRowUsedInsertstuffTitle"/>
     </android.support.v7.preference.PreferenceCategory>
 
     <android.support.v7.preference.PreferenceCategory
