@@ -16,9 +16,11 @@ import android.text.Spanned;
 import android.text.style.URLSpan;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.CustomImageGetter;
 import com.franckrj.respawnirc.utils.LongClickLinkMovementMethod;
@@ -33,6 +35,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
     private static boolean textDecorationRowGeneratedForDarkTheme = false;
 
     private TextView mainTextView = null;
+    private ScrollView scrollViewOfButtons = null;
     private Html.ImageGetter jvcImageGetter = null;
     private ImageView[] listOfCategoryButtons = new ImageView[MAX_NUMBER_OF_ROW];
     private int oldRowNumber = 1;
@@ -60,7 +63,10 @@ public class InsertStuffDialogFragment extends DialogFragment {
         listOfCategoryButtons[rowToUse].setBackgroundColor(Undeprecator.resourcesGetColor(getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.MORE_DARKER_BACKGROUND_COLOR)));
         initializeSpanForTextViewIfNeeded(jvcImageGetter, rowToUse);
         mainTextView.setText(replaceUrlSpans(listOfSpanForTextView[rowToUse]));
+        scrollViewOfButtons.requestChildFocus(listOfCategoryButtons[rowToUse], listOfCategoryButtons[rowToUse]);
         oldRowNumber = rowToUse;
+        PrefsManager.putInt(PrefsManager.IntPref.Names.LAST_ROW_SELECTED_INSERTSTUFF, oldRowNumber);
+        PrefsManager.applyChanges();
     }
 
     private void initializeListOfSmileyName() {
@@ -569,10 +575,18 @@ public class InsertStuffDialogFragment extends DialogFragment {
         deletedDrawable.setBounds(0, 0, deletedDrawable.getIntrinsicWidth(), deletedDrawable.getIntrinsicHeight());
 
         jvcImageGetter = new CustomImageGetter(getActivity(), deletedDrawable, null);
+        oldRowNumber = PrefsManager.getInt(PrefsManager.IntPref.Names.LAST_ROW_SELECTED_INSERTSTUFF);
+
+        if (oldRowNumber >= MAX_NUMBER_OF_ROW) {
+            oldRowNumber = MAX_NUMBER_OF_ROW - 1;
+        } else if (oldRowNumber < 0) {
+            oldRowNumber = 0;
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         @SuppressLint("InflateParams")
         View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_insertstuff, null);
+        scrollViewOfButtons = mainView.findViewById(R.id.list_scrollview_insertstuff);
         mainTextView = mainView.findViewById(R.id.showstuff_text_insertstuff);
         listOfCategoryButtons[0] = mainView.findViewById(R.id.smiley_button_insertstuff);
         listOfCategoryButtons[1] = mainView.findViewById(R.id.textformat_button_insertstuff);
@@ -603,6 +617,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
 
         mainTextView.setMovementMethod(LongClickLinkMovementMethod.getInstance());
         selectThisRow(oldRowNumber);
+
         builder.setTitle(R.string.insertStuff).setView(mainView)
             .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                 @Override

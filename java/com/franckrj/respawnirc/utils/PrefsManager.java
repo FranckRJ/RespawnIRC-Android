@@ -50,6 +50,7 @@ public class PrefsManager {
         addIntPref(IntPref.Names.CURRENT_TOPIC_MODE, "pref.currentTopicMode", AbsShowTopicFragment.MODE_FORUM);
         addIntPref(IntPref.Names.FORUM_FAV_ARRAY_SIZE, "pref.forumFavArraySize", 0);
         addIntPref(IntPref.Names.TOPIC_FAV_ARRAY_SIZE, "pref.topicFavArraySize", 0);
+        addIntPref(IntPref.Names.LAST_ROW_SELECTED_INSERTSTUFF, "pref.lastRowSelecetdInsertstuff", 1);
 
         addStringPref(StringPref.Names.PSEUDO_OF_USER, "pref.pseudoUser", "");
         addStringPref(StringPref.Names.COOKIES_LIST, "pref.cookiesList", "");
@@ -290,7 +291,8 @@ public class PrefsManager {
         public enum Names {
             LAST_ACTIVITY_VIEWED,
             CURRENT_TOPIC_MODE,
-            FORUM_FAV_ARRAY_SIZE, TOPIC_FAV_ARRAY_SIZE
+            FORUM_FAV_ARRAY_SIZE, TOPIC_FAV_ARRAY_SIZE,
+            LAST_ROW_SELECTED_INSERTSTUFF
         }
     }
 
