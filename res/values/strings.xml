@@ -211,6 +211,7 @@
     <string name="gta">GTA</string>
     <string name="avatarSizeTitle">Taille des avatars (en dp)</string>
     <string name="saveLastRowUsedInsertstuffTitle">Se souvenir du dernier type de sticker utilisé</string>
+    <string name="errorThereIsACaptcha">Erreur, les captchas ne sont pas supportés. Veuillez ré-essayer dans quelques instants.</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

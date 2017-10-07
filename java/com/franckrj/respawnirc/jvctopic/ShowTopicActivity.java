@@ -75,7 +75,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     private AddOrRemoveThingToFavs currentTaskForFavs = null;
     private String reasonOfLock = null;
     private ImageButton insertStuffButton = null;
-    private PageNavigationUtil pageNavigation = null;
+    private PageNavigationUtil pageNavigation = new PageNavigationUtil(this);
     private boolean useInternalNavigatorForDefaultOpening = false;
     private boolean convertNoelshackLinkToDirectLink = false;
     private boolean showOverviewOnImageClick = false;
@@ -94,7 +94,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                         newMessageToEdit = getString(R.string.errorCantGetEditInfos);
                     }
                     messageSendButton.setImageResource(ThemeManager.getDrawableRes(ThemeManager.DrawableName.CONTENT_SEND));
-                    Toast.makeText(ShowTopicActivity.this, newMessageToEdit, Toast.LENGTH_SHORT).show();
+                    showErrorWhenSendingMessage(newMessageToEdit);
                 } else {
                     messageSendEdit.setText(newMessageToEdit);
                     messageSendEdit.setSelection(newMessageToEdit.length());
@@ -111,7 +111,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 messageSendButton.setImageResource(ThemeManager.getDrawableRes(ThemeManager.DrawableName.CONTENT_SEND));
 
                 if (withThisError != null) {
-                    Toast.makeText(ShowTopicActivity.this, withThisError, Toast.LENGTH_LONG).show();
+                    showErrorWhenSendingMessage(withThisError);
                 } else {
                     messageSendEdit.setText("");
                 }
@@ -227,8 +227,12 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         }
     };
 
-    public ShowTopicActivity() {
-        pageNavigation = new PageNavigationUtil(this);
+    private void showErrorWhenSendingMessage(String error) {
+        if (error.toLowerCase().contains("captcha")) {
+            Toast.makeText(ShowTopicActivity.this, R.string.errorThereIsACaptcha, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(ShowTopicActivity.this, error, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void stopAllCurrentTask() {

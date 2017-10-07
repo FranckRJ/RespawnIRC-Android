@@ -545,7 +545,7 @@ public final class JVCParser {
         Matcher errorMatcher = alertPattern.matcher(pageSource);
 
         if (errorMatcher.find()) {
-            return "Erreur : " + specialCharToNormalChar(errorMatcher.group(1));
+            return "Erreur : " + specialCharToNormalChar(errorMatcher.group(1)).trim();
         } else {
             return "Erreur : le message n'a pas été envoyé.";
         }
@@ -555,7 +555,7 @@ public final class JVCParser {
         Matcher errorMatcher = errorBlocPattern.matcher(pageSource);
 
         if (errorMatcher.find()) {
-            return "Erreur : " + specialCharToNormalChar(errorMatcher.group(1));
+            return "Erreur : " + specialCharToNormalChar(errorMatcher.group(1)).trim();
         } else {
             Matcher alertMatcher = alertPattern.matcher(pageSource);
 
@@ -573,7 +573,7 @@ public final class JVCParser {
         Matcher errorMatcher = errorInJSONModePattern.matcher(pageSource);
 
         if (errorMatcher.find()) {
-            return "Erreur : " + specialCharToNormalChar(parsingAjaxMessages(errorMatcher.group(1)));
+            return "Erreur : " + specialCharToNormalChar(parsingAjaxMessages(errorMatcher.group(1))).trim();
         } else {
             return null;
         }
