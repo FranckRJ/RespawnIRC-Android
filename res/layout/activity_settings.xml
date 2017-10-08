@@ -15,7 +15,7 @@
             android:id="@+id/content_frame_settings"
             android:layout_below="@+id/toolbar_settings"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"/>
 
         <include
             android:id="@+id/toolbar_settings"

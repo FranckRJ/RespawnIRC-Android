@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.ShareActionProvider;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -79,7 +80,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             } else {
                 adapterForTopic.disableSurvey();
             }
-            adapterForTopic.updateAllItems();
+            adapterForTopic.notifyDataSetChanged();
         }
     };
 
@@ -106,6 +107,14 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     };
 
     protected void initializeSettings() {
+        int avatarSizeInDP;
+
+        try {
+            avatarSizeInDP = Integer.valueOf(PrefsManager.getString(PrefsManager.StringPref.Names.AVATAR_SIZE));
+        } catch (Exception e) {
+            avatarSizeInDP = -1;
+        }
+
         try {
             showNoelshackImageAdv = Integer.valueOf(PrefsManager.getString(PrefsManager.StringPref.Names.SHOW_NOELSHACK_IMAGE));
         } catch (Exception e) {
@@ -125,6 +134,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         adapterForTopic.setShowSpoilDefault(PrefsManager.getBool(PrefsManager.BoolPref.Names.DEFAULT_SHOW_SPOIL_VAL));
         adapterForTopic.setFastRefreshOfImages(PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_FAST_REFRESH_OF_IMAGES));
         adapterForTopic.setColorDeletedMessages(PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_COLOR_DELETED_MESSAGES));
+        adapterForTopic.setAvatarSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, avatarSizeInDP, getResources().getDisplayMetrics()));
         userIsConnectedAsModo = PrefsManager.getBool(PrefsManager.BoolPref.Names.USER_IS_MODO);
         hideTotallyMessagesOfIgnoredPseudos = PrefsManager.getBool(PrefsManager.BoolPref.Names.HIDE_TOTALLY_MESSAGES_OF_IGNORED_PSEUDOS);
     }
@@ -190,45 +200,45 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         switch (item.getItemId()) {
             case R.id.menu_show_spoil_message:
                 currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
-                currentItem.showSpoil = true;
+                currentItem.listOfSpoilIDToShow.add(-1);
                 adapterForTopic.updateThisItem(currentItem, false);
-                adapterForTopic.updateAllItems();
+                adapterForTopic.notifyDataSetChanged();
                 return true;
             case R.id.menu_hide_spoil_message:
                 currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
-                currentItem.showSpoil = false;
+                currentItem.listOfSpoilIDToShow.clear();
                 adapterForTopic.updateThisItem(currentItem, false);
-                adapterForTopic.updateAllItems();
+                adapterForTopic.notifyDataSetChanged();
                 return true;
             case R.id.menu_show_quote_message:
                 currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
                 currentItem.showOverlyQuote = true;
                 adapterForTopic.updateThisItem(currentItem, false);
-                adapterForTopic.updateAllItems();
+                adapterForTopic.notifyDataSetChanged();
                 return true;
             case R.id.menu_hide_quote_message:
                 currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
                 currentItem.showOverlyQuote = false;
                 adapterForTopic.updateThisItem(currentItem, false);
-                adapterForTopic.updateAllItems();
+                adapterForTopic.notifyDataSetChanged();
                 return true;
             case R.id.menu_show_ugly_images_message:
                 currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
                 currentItem.showUglyImages = true;
                 adapterForTopic.updateThisItem(currentItem, false);
-                adapterForTopic.updateAllItems();
+                adapterForTopic.notifyDataSetChanged();
                 return true;
             case R.id.menu_hide_ugly_images_message:
                 currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
                 currentItem.showUglyImages = false;
                 adapterForTopic.updateThisItem(currentItem, false);
-                adapterForTopic.updateAllItems();
+                adapterForTopic.notifyDataSetChanged();
                 return true;
             case R.id.menu_show_blacklisted_message:
                 currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
                 currentItem.pseudoIsBlacklisted = false;
                 adapterForTopic.updateThisItem(currentItem, false);
-                adapterForTopic.updateAllItems();
+                adapterForTopic.notifyDataSetChanged();
                 return true;
             default:
                 return false;
@@ -277,7 +287,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         absGetterForTopic.resetDirectlyShowedInfos();
         adapterForTopic.disableSurvey();
         adapterForTopic.removeAllItems();
-        adapterForTopic.updateAllItems();
+        adapterForTopic.notifyDataSetChanged();
         setPageLink("");
     }
 
@@ -365,7 +375,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
                 }
             }
 
-            adapterForTopic.updateAllItems();
+            adapterForTopic.notifyDataSetChanged();
 
             if (adapterForTopic.getAllItems().isEmpty() && allMessagesShowedAreFromIgnoredPseudos) {
                 setErrorBackgroundMessageForAllMessageIgnored();

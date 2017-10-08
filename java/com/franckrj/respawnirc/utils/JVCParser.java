@@ -3,6 +3,7 @@ package com.franckrj.respawnirc.utils;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.v4.util.ArraySet;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,7 +73,7 @@ public final class JVCParser {
     private static final Pattern surveyReplyWithInfosPattern = Pattern.compile("<a href=\"#\" class=\"btn-sondage-reponse\" data-id-sondage=\"([^\"]*)\" data-id-reponse=\"([^\"]*)\">(.*?)</a>", Pattern.DOTALL);
     private static final Pattern realSurveyContentPattern = Pattern.compile("\"html\":\"(.*?)\"\\}");
     private static final Pattern numberOfMpJVCPattern = Pattern.compile("<div class=\".*?account-mp.*?\">[^<]*<span[^c]*class=\"account-number-mp[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
-    private static final Pattern overlyJVCQuotePattern = Pattern.compile("(<blockquote class=\"blockquote-jv\">|</blockquote>)");
+    private static final Pattern overlyJVCQuotePattern = Pattern.compile("(<(/)?blockquote>)");
     private static final Pattern overlyBetterQuotePattern = Pattern.compile("<(/)?blockquote>");
     private static final Pattern jvcLinkPattern = Pattern.compile("<a href=\"([^\"]*)\"( )?( title=\"[^\"]*\")?>.*?</a>");
     private static final Pattern shortLinkPattern = Pattern.compile("<span class=\"JvCare [^\"]*\" rel=\"nofollow[^\"]*\" target=\"_blank\">([^<]*)</span>");
@@ -544,7 +545,7 @@ public final class JVCParser {
         Matcher errorMatcher = alertPattern.matcher(pageSource);
 
         if (errorMatcher.find()) {
-            return "Erreur : " + specialCharToNormalChar(errorMatcher.group(1));
+            return "Erreur : " + specialCharToNormalChar(errorMatcher.group(1)).trim();
         } else {
             return "Erreur : le message n'a pas été envoyé.";
         }
@@ -554,7 +555,7 @@ public final class JVCParser {
         Matcher errorMatcher = errorBlocPattern.matcher(pageSource);
 
         if (errorMatcher.find()) {
-            return "Erreur : " + specialCharToNormalChar(errorMatcher.group(1));
+            return "Erreur : " + specialCharToNormalChar(errorMatcher.group(1)).trim();
         } else {
             Matcher alertMatcher = alertPattern.matcher(pageSource);
 
@@ -572,7 +573,7 @@ public final class JVCParser {
         Matcher errorMatcher = errorInJSONModePattern.matcher(pageSource);
 
         if (errorMatcher.find()) {
-            return "Erreur : " + specialCharToNormalChar(parsingAjaxMessages(errorMatcher.group(1)));
+            return "Erreur : " + specialCharToNormalChar(parsingAjaxMessages(errorMatcher.group(1))).trim();
         } else {
             return null;
         }
@@ -783,8 +784,13 @@ public final class JVCParser {
 
     public static String createMessageMessageLineFromInfos(MessageInfos thisMessageInfo, Settings settings) {
         String finalMessage = settings.secondLineFormat;
+        SpoilTagsInfos infosOfSpoilTags = new SpoilTagsInfos();
+        infosOfSpoilTags.containSpoil = thisMessageInfo.messageContentContainSpoil;
+        infosOfSpoilTags.listOfSpoilIDToShow = thisMessageInfo.listOfSpoilIDToShow;
+        infosOfSpoilTags.lastIDOfSpoil = -1;
 
-        finalMessage = finalMessage.replace("<%MESSAGE_MESSAGE%>", parseMessageToPrettyMessage(thisMessageInfo.messageNotParsed, settings, thisMessageInfo.messageContentContainSpoil, thisMessageInfo.showSpoil, thisMessageInfo.showOverlyQuote, thisMessageInfo.showUglyImages));
+        finalMessage = finalMessage.replace("<%MESSAGE_MESSAGE%>", parseMessageToPrettyMessage(thisMessageInfo.messageNotParsed, settings, infosOfSpoilTags, thisMessageInfo.showOverlyQuote, thisMessageInfo.showUglyImages));
+        thisMessageInfo.lastIDOfSpoilInMessage = infosOfSpoilTags.lastIDOfSpoil;
         if (!thisMessageInfo.lastTimeEdit.isEmpty()) {
             finalMessage = finalMessage.replace("<%EDIT_ALL%>", settings.addBeforeEdit + thisMessageInfo.lastTimeEdit.trim() + settings.addAfterEdit);
         } else {
@@ -796,29 +802,29 @@ public final class JVCParser {
     }
 
     public static String createSignatureFromInfos(MessageInfos thisMessageInfo, Settings settings) {
-        return "<small>" + parseMessageToPrettyMessage(thisMessageInfo.signatureNotParsed, settings, thisMessageInfo.signatureContainSpoil, thisMessageInfo.showSpoil, true, true) + "</small>";
+        SpoilTagsInfos infosOfSpoilTags = new SpoilTagsInfos();
+        infosOfSpoilTags.containSpoil = thisMessageInfo.signatureContainSpoil;
+        infosOfSpoilTags.listOfSpoilIDToShow = thisMessageInfo.listOfSpoilIDToShow;
+        infosOfSpoilTags.lastIDOfSpoil = thisMessageInfo.lastIDOfSpoilInMessage;
+        return "<small>" + parseMessageToPrettyMessage(thisMessageInfo.signatureNotParsed, settings, infosOfSpoilTags, true, true) + "</small>";
     }
 
-    public static String parseMessageToPrettyMessage(String messageInString, Settings settings, boolean containSpoil, boolean showSpoil, boolean showOverlyQuote, boolean showUglyImages) {
+    public static String parseMessageToPrettyMessage(String messageInString, Settings settings, SpoilTagsInfos infosOfSpoilTag, boolean showOverlyQuote, boolean showUglyImages) {
         StringBuilder messageInBuilder = new StringBuilder(messageInString);
         MakeShortenedLinkIfPossible makeLinkDependingOnSettingsAndForceMake = new MakeShortenedLinkIfPossible((settings.shortenLongLink ? 50 : 0), true);
 
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, adPattern, -1, "", "", null, null);
-        ToolForParsing.replaceStringByAnother(messageInBuilder, "\r", "");
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeBlockPattern, 1, "<p><font face=\"monospace\">", "</font></p>", new MakeCodeTagGreatAgain(true), null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeLinePattern, 1, " <font face=\"monospace\">", "</font> ", new MakeCodeTagGreatAgain(false), null);
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "\n", "");
+
         StickerConverter.convertStickerWithThisRule(messageInBuilder, StickerConverter.ruleForNoLangageSticker);
         if (settings.transformStickerToSmiley) {
             StickerConverter.convertStickerWithThisRule(messageInBuilder, StickerConverter.ruleForStickerToSmiley);
         }
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, stickerPattern, 2, "<img src=\"sticker_", ".png\"/>", new ConvertStringToString("-", "_"), null);
-
-        ToolForParsing.replaceStringByAnother(messageInBuilder, "\n", "");
-        ToolForParsing.parseListInMessageIfNeeded(messageInBuilder);
-
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, smileyPattern, 2, "<img src=\"smiley_", "\"/>", null, null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, youtubeVideoPattern, 2, "<a href=\"http://youtu.be/", "\">http://youtu.be/", 2, "</a>");
 
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, youtubeVideoPattern, 2, "<a href=\"http://youtu.be/", "\">http://youtu.be/", 2, "</a>");
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
@@ -833,18 +839,13 @@ public final class JVCParser {
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 3, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         }
 
-        if (containSpoil) {
-            ToolForParsing.removeOverlySpoils(messageInBuilder);
-            if (!showSpoil) {
-                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, -1, "<bg_closed_spoil><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "000000" : "FFFFFF") + "\">&nbsp;SPOIL&nbsp;</font></bg_closed_spoil>", "", null, null);
-                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, -1, "<p><bg_closed_spoil><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "000000" : "FFFFFF") + "\">&nbsp;SPOIL&nbsp;</font></bg_closed_spoil></p>", "", null, null);
-            } else {
-                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "<bg_opened_spoil><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "FFFFFF" : "000000") + "\">", "</font></bg_opened_spoil>", new RemoveFirstsAndLastsP(), null);
-                ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p><bg_opened_spoil><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "FFFFFF" : "000000") + "\">", "</font></bg_opened_spoil></p>",  new RemoveFirstsAndLastsP(), null);
-            }
+        if (infosOfSpoilTag.containSpoil) {
+            BuildSpoilTag spoilTagBuilder = new BuildSpoilTag(infosOfSpoilTag.listOfSpoilIDToShow, infosOfSpoilTag.lastIDOfSpoil);
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "", "", new RemoveFirstsAndLastsP(), spoilTagBuilder);
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p>", "</p>",  new RemoveFirstsAndLastsP(), spoilTagBuilder);
+            infosOfSpoilTag.lastIDOfSpoil = spoilTagBuilder.getLastIDUsedForSpoil();
         }
 
-        ToolForParsing.replaceStringByAnother(messageInBuilder, "<blockquote class=\"blockquote-jv\">", "<blockquote>");
         ToolForParsing.removeDivAndAdaptParagraphInMessage(messageInBuilder);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, surroundedBlockquotePattern, 2, "", "", null, null);
 
@@ -866,23 +867,18 @@ public final class JVCParser {
     public static String parseMessageToSimpleMessage(String messageInString) {
         StringBuilder messageInBuilder = new StringBuilder(messageInString);
 
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, adPattern, -1, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeBlockPattern, 1, "<p>&lt;code&gt;", "&lt;/code&gt;</p>", new ConvertStringToString("\n", "<br />"), new ConvertStringToString("  ", "&nbsp;&nbsp;"));
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeLinePattern, 1, "&lt;code&gt;", "&lt;/code&gt;", new ConvertStringToString("  ", "&nbsp;&nbsp;"), null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, stickerPattern, 2, "[[sticker:p/", "]]", null, null);
         ToolForParsing.replaceStringByAnother(messageInBuilder, "\n", "");
-        ToolForParsing.replaceStringByAnother(messageInBuilder, "\r", "");
-        ToolForParsing.parseListInMessageIfNeeded(messageInBuilder);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, smileyPattern, 3, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, youtubeVideoPattern, 2, "http://youtu.be/", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcLinkPattern, 1, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longLinkPattern, 1, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 3, "", "", null, null);
-        ToolForParsing.removeOverlySpoils(messageInBuilder);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "&lt;spoil&gt;", "&lt;/spoil&gt;", new RemoveFirstsAndLastsP(), null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p>&lt;spoil&gt;", "&lt;/spoil&gt;</p>",  new RemoveFirstsAndLastsP(), null);
-        ToolForParsing.replaceStringByAnother(messageInBuilder, "<blockquote class=\"blockquote-jv\">", "<blockquote>");
         ToolForParsing.removeDivAndAdaptParagraphInMessage(messageInBuilder);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, surroundedBlockquotePattern, -1, "<br /><br />", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvCarePattern, 1, "", "", null, null);
@@ -900,6 +896,21 @@ public final class JVCParser {
         ToolForParsing.replaceStringByAnother(messageInBuilder, "<br />", "\n");
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, htmlTagPattern, -1, "", "", null, null);
         ToolForParsing.replaceStringByAnother(messageInBuilder, "\n", "<br />");
+        return messageInBuilder.toString();
+    }
+
+    public static String makeBasicMessageParse(String messageToParse, boolean containSpoil) {
+        StringBuilder messageInBuilder = new StringBuilder(messageToParse);
+
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, adPattern, -1, "", "", null, null);
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "\r", "");
+        ToolForParsing.parseListInMessageIfNeeded(messageInBuilder);
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "<blockquote class=\"blockquote-jv\">", "<blockquote>");
+
+        if (containSpoil) {
+            ToolForParsing.removeOverlySpoils(messageInBuilder);
+        }
+
         return messageInBuilder.toString();
     }
 
@@ -944,12 +955,16 @@ public final class JVCParser {
             newMessageInfo.messageNotParsed = messageMatcher.group(1);
             newMessageInfo.dateTime = dateMessageMatcher.group(3);
             newMessageInfo.wholeDate = dateMessageMatcher.group(2);
-            newMessageInfo.numberOfOverlyQuote = ToolForParsing.countNumberOfOverlyQuoteInNotPrettyMessage(newMessageInfo.messageNotParsed);
             newMessageInfo.containUglyImages = ToolForParsing.hasUglyImagesInNotPrettyMessage(newMessageInfo.messageNotParsed);
             newMessageInfo.id = Long.parseLong(messageIDMatcher.group(1));
 
             newMessageInfo.messageContentContainSpoil = newMessageInfo.messageNotParsed.contains("<span class=\"contenu-spoil\">");
             newMessageInfo.signatureContainSpoil = newMessageInfo.signatureNotParsed.contains("<span class=\"contenu-spoil\">");
+
+            newMessageInfo.messageNotParsed = makeBasicMessageParse(newMessageInfo.messageNotParsed, newMessageInfo.messageContentContainSpoil);
+            newMessageInfo.signatureNotParsed = makeBasicMessageParse(newMessageInfo.signatureNotParsed, newMessageInfo.signatureContainSpoil);
+
+            newMessageInfo.numberOfOverlyQuote = ToolForParsing.countNumberOfOverlyQuoteInPreParsedMessage(newMessageInfo.messageNotParsed);
         }
 
         return newMessageInfo;
@@ -1141,14 +1156,14 @@ public final class JVCParser {
             }
         }
 
-        public static int countNumberOfOverlyQuoteInNotPrettyMessage(String notPrettyMessage) {
-            Matcher htmlTagMatcher = overlyJVCQuotePattern.matcher(notPrettyMessage);
+        public static int countNumberOfOverlyQuoteInPreParsedMessage(String preParsedMessage) {
+            Matcher htmlTagMatcher = overlyJVCQuotePattern.matcher(preParsedMessage);
             int maxNumberOfOverlyQuoteInMessage = 0;
             int currentNumberOfOverlyQuoteInMessage = 0;
             int lastOffsetOfTag = 0;
 
             while (htmlTagMatcher.find(lastOffsetOfTag)) {
-                if (htmlTagMatcher.group().equals("<blockquote class=\"blockquote-jv\">")) {
+                if (htmlTagMatcher.group().equals("<blockquote>")) {
                     ++currentNumberOfOverlyQuoteInMessage;
                 }
                 else if (htmlTagMatcher.group().equals("</blockquote>")) {
@@ -1290,13 +1305,14 @@ public final class JVCParser {
         public boolean messageIsDeleted = false;
         public boolean messageContentContainSpoil = false;
         public boolean signatureContainSpoil = false;
-        public boolean showSpoil = false;
         public int numberOfOverlyQuote = 0;
         public boolean showOverlyQuote = false;
         public boolean isAnEdit = false;
         public boolean containUglyImages = false;
         public boolean showUglyImages = false;
         public long id = 0;
+        public int lastIDOfSpoilInMessage = -1;
+        public ArraySet<Integer> listOfSpoilIDToShow = new ArraySet<>();
 
         public static final Parcelable.Creator<MessageInfos> CREATOR = new Parcelable.Creator<MessageInfos>() {
             @Override
@@ -1328,13 +1344,18 @@ public final class JVCParser {
             messageIsDeleted = (in.readByte() == 1);
             messageContentContainSpoil = (in.readByte() == 1);
             signatureContainSpoil = (in.readByte() == 1);
-            showSpoil = (in.readByte() == 1);
             numberOfOverlyQuote = in.readInt();
             showOverlyQuote = (in.readByte() == 1);
             isAnEdit = (in.readByte() == 1);
             containUglyImages = (in.readByte() == 1);
             showUglyImages = (in.readByte() == 1);
             id = in.readLong();
+            lastIDOfSpoilInMessage = in.readInt();
+
+            final int sizeOfListOfSpoidIDToShow = in.readInt();
+            for (int i = 0; i < sizeOfListOfSpoidIDToShow; ++i) {
+                listOfSpoilIDToShow.add(in.readInt());
+            }
         }
 
         @Override
@@ -1357,13 +1378,18 @@ public final class JVCParser {
             out.writeByte((byte)(messageIsDeleted ? 1 : 0));
             out.writeByte((byte)(messageContentContainSpoil ? 1 : 0));
             out.writeByte((byte)(signatureContainSpoil ? 1 : 0));
-            out.writeByte((byte)(showSpoil ? 1 : 0));
             out.writeInt(numberOfOverlyQuote);
             out.writeByte((byte)(showOverlyQuote ? 1 : 0));
             out.writeByte((byte)(isAnEdit ? 1 : 0));
             out.writeByte((byte)(containUglyImages ? 1 : 0));
             out.writeByte((byte)(showUglyImages ? 1 : 0));
             out.writeLong(id);
+            out.writeInt(lastIDOfSpoilInMessage);
+
+            out.writeInt(listOfSpoilIDToShow.size());
+            for (int i = 0; i < listOfSpoilIDToShow.size(); ++i) {
+                out.writeInt(listOfSpoilIDToShow.valueAt(i));
+            }
         }
 
         @Override
@@ -1600,6 +1626,39 @@ public final class JVCParser {
         }
     }
 
+    private static class BuildSpoilTag implements StringModifier {
+        private static final String spoilButtonCode = "<bg_spoil_button><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "000000" : "FFFFFF") +
+                                                      "\">&nbsp;SPOIL&nbsp;</font></bg_spoil_button>";
+
+        private ArraySet<Integer> listOfSpoilIDToShow = null;
+        private boolean showAllSpoils = false;
+        private int lastIDUsed = -1;
+
+        public BuildSpoilTag(ArraySet<Integer> newListOfSpoilIDToShow, int newLastIDUsed) {
+            listOfSpoilIDToShow = newListOfSpoilIDToShow;
+            showAllSpoils = listOfSpoilIDToShow.contains(-1);
+            lastIDUsed = newLastIDUsed;
+        }
+
+        public int getLastIDUsedForSpoil() {
+            return lastIDUsed;
+        }
+
+        @Override
+        public String changeString(String baseString) {
+            //lastIDUsed + 1 est l'ID utilisé pour la balise actuelle
+            String id = String.valueOf(++lastIDUsed);
+            boolean showThisSpoil = showAllSpoils || listOfSpoilIDToShow.contains(lastIDUsed);
+
+            if (showThisSpoil) {
+                return "<holdstring_c" + id + ">" + spoilButtonCode + "</holdstring_c" + id + ">" + "<bg_spoil_content><font color=\"#" +
+                        (ThemeManager.getThemeUsedIsDark() ? "FFFFFF" : "000000") + "\"> " + baseString + "</font></bg_spoil_content>";
+            } else {
+                return "<holdstring_o" + id + ">" + spoilButtonCode + "</holdstring_o" + id + ">";
+            }
+        }
+    }
+
     public static class SurveyInfos {
         public boolean isOpen = true;
         public String htmlTitle = "";
@@ -1642,6 +1701,12 @@ public final class JVCParser {
         public boolean transformStickerToSmiley = false;
         public boolean shortenLongLink = false;
         public boolean hideUglyImages = false;
+    }
+
+    private static class SpoilTagsInfos {
+        public ArraySet<Integer> listOfSpoilIDToShow = null;
+        public boolean containSpoil = false;
+        public int lastIDOfSpoil = -1;
     }
 
     private interface StringModifier {

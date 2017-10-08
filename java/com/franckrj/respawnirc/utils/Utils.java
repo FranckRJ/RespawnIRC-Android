@@ -76,19 +76,19 @@ public class Utils {
         return baseString;
     }
 
-    public static void openLinkInExternalNavigator(String link, Activity parentActviity) {
+    public static void openLinkInExternalNavigator(String link, Activity parentActivity) {
         try {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
-            parentActviity.startActivity(browserIntent);
+            parentActivity.startActivity(browserIntent);
         } catch (Exception e) {
             //rien
         }
     }
 
-    public static void openLinkInInternalNavigator(String link, Activity parentActviity) {
-        Intent newNavigatorIntent = new Intent(parentActviity, WebNavigatorActivity.class);
+    public static void openLinkInInternalNavigator(String link, Activity parentActivity) {
+        Intent newNavigatorIntent = new Intent(parentActivity, WebNavigatorActivity.class);
         newNavigatorIntent.putExtra(WebNavigatorActivity.EXTRA_URL_LOAD, link);
-        parentActviity.startActivity(newNavigatorIntent);
+        parentActivity.startActivity(newNavigatorIntent);
     }
 
     public static void putStringInClipboard(String textToCopy, Activity fromThisActivity) {

@@ -39,7 +39,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
         @Override
         public void onClick(View view) {
             InsertStuffDialogFragment insertStuffDialogFragment = new InsertStuffDialogFragment();
-            insertStuffDialogFragment.show(getFragmentManager(), "InsertStuffDialogFragment");
+            insertStuffDialogFragment.show(getSupportFragmentManager(), "InsertStuffDialogFragment");
         }
     };
 

@@ -1,26 +1,27 @@
 package com.franckrj.respawnirc;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.EditTextPreference;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceGroup;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.util.SimpleArrayMap;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.preference.CheckBoxPreference;
+import android.support.v7.preference.EditTextPreference;
+import android.support.v7.preference.ListPreference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceGroup;
+import android.support.v7.preference.SwitchPreferenceCompat;
 
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.Utils;
 
-public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
     public static final String ARG_FILE_TO_LOAD = "com.franckrj.respawnirc.settingsfragment.ARG_FILE_TO_LOAD";
 
     private SimpleArrayMap<String, MinMaxInfos> listOfMinMaxInfos = new SimpleArrayMap<>();
@@ -46,7 +47,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                     return true;
                 } else if (preference.getKey().equals(getString(R.string.subScreenSettingsHelp))) {
                     HelpSettingsDialogFragment helpDialogFragment = new HelpSettingsDialogFragment();
-                    helpDialogFragment.show(getFragmentManager(), "HelpSettingsDialogFragment");
+                    helpDialogFragment.show(getActivity().getSupportFragmentManager(), "HelpSettingsDialogFragment");
                     return true;
                 } else if (preference.getKey().equals(getString(R.string.subScreenSettingsShowWebsite))) {
                     Utils.openLinkInExternalNavigator("https://pijon.fr/RespawnIRC-Android/", getActivity());
@@ -58,8 +59,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     };
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         int idOfFileToLoad = R.xml.main_settings;
 
         if (getArguments() != null) {
@@ -67,7 +67,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         }
 
         getPreferenceManager().setSharedPreferencesName(getString(R.string.preference_file_key));
-        addPreferencesFromResource(idOfFileToLoad);
+        setPreferencesFromResource(idOfFileToLoad, rootKey);
         initPrefsInfos(getPreferenceScreen());
     }
 
@@ -148,6 +148,9 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         if (pref instanceof CheckBoxPreference) {
             CheckBoxPreference checkBoxPref = (CheckBoxPreference) pref;
             checkBoxPref.setChecked(PrefsManager.getBool(checkBoxPref.getKey()));
+        } else if (pref instanceof SwitchPreferenceCompat) {
+            SwitchPreferenceCompat switchPref = (SwitchPreferenceCompat) pref;
+            switchPref.setChecked(PrefsManager.getBool(switchPref.getKey()));
         } else if (pref instanceof EditTextPreference) {
             EditTextPreference editTextPref = (EditTextPreference) pref;
             editTextPref.setText(PrefsManager.getString(editTextPref.getKey()));

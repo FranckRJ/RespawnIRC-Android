@@ -1,11 +1,11 @@
 package com.franckrj.respawnirc;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.graphics.drawable.Drawable;
-import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +28,7 @@ public class PageNavigationUtil {
     private ViewPager pagerView = null;
     private ScreenSlidePagerAdapter adapterForPagerView = null;
     private boolean showNavigationButtons = true;
-    private Activity parentActivity = null;
+    private AppCompatActivity parentActivity = null;
     private boolean loadNeedToBeDoneOnPageCreate = false;
     private boolean goToBottomOnNextLoad = false;
     private boolean dontLoadOnFirstTimeForNextFragCreate = false;
@@ -84,7 +84,7 @@ public class PageNavigationUtil {
         }
     };
 
-    public PageNavigationUtil(Activity newParentActivity) {
+    public PageNavigationUtil(AppCompatActivity newParentActivity) {
         parentActivity = newParentActivity;
     }
 
@@ -152,7 +152,7 @@ public class PageNavigationUtil {
 
     public void updateAdapterForPagerView() {
         loadNeedToBeDoneOnPageCreate = true;
-        adapterForPagerView = new ScreenSlidePagerAdapter(parentActivity.getFragmentManager());
+        adapterForPagerView = new ScreenSlidePagerAdapter(parentActivity.getSupportFragmentManager());
         pagerView.setAdapter(adapterForPagerView);
     }
 

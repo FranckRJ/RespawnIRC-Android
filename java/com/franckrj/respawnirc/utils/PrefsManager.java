@@ -50,6 +50,7 @@ public class PrefsManager {
         addIntPref(IntPref.Names.CURRENT_TOPIC_MODE, "pref.currentTopicMode", AbsShowTopicFragment.MODE_FORUM);
         addIntPref(IntPref.Names.FORUM_FAV_ARRAY_SIZE, "pref.forumFavArraySize", 0);
         addIntPref(IntPref.Names.TOPIC_FAV_ARRAY_SIZE, "pref.topicFavArraySize", 0);
+        addIntPref(IntPref.Names.LAST_ROW_SELECTED_INSERTSTUFF, "pref.lastRowSelecetdInsertstuff", 1);
 
         addStringPref(StringPref.Names.PSEUDO_OF_USER, "pref.pseudoUser", "");
         addStringPref(StringPref.Names.COOKIES_LIST, "pref.cookiesList", "");
@@ -95,6 +96,8 @@ public class PrefsManager {
         addBoolPref(BoolPref.Names.ENABLE_COLOR_DELETED_MESSAGES, currentContext.getString(R.string.settingsEnableColorDeletedMessages), true);
         addBoolPref(BoolPref.Names.COLOR_PSEUDO_OF_USER_IN_INFO, currentContext.getString(R.string.settingsColorPseudoOfUserInInfo), true);
         addBoolPref(BoolPref.Names.COLOR_PSEUDO_OF_USER_IN_MESSAGE, currentContext.getString(R.string.settingsColorPseudoOfUserInMessage), true);
+        addBoolPref(BoolPref.Names.BACK_IS_OPEN_DRAWER, currentContext.getString(R.string.settingsBackIsOpenDrawer), false);
+        addBoolPref(BoolPref.Names.SAVE_LAST_ROW_USED_INSERTSTUFF, currentContext.getString(R.string.settingsSaveLastRowUsedInsertstuff), true);
 
         addStringPref(StringPref.Names.MAX_NUMBER_OF_OVERLY_QUOTE, currentContext.getString(R.string.settingsMaxNumberOfOverlyQuote), "2", 0, 15);
         addStringPref(StringPref.Names.SHOW_AVATAR_MODE_FORUM, currentContext.getString(R.string.settingsShowAvatarModeForum), "1");
@@ -103,6 +106,7 @@ public class PrefsManager {
         addStringPref(StringPref.Names.MAX_NUMBER_OF_MESSAGES, currentContext.getString(R.string.settingsMaxNumberOfMessages), "60", 1, 120);
         addStringPref(StringPref.Names.INITIAL_NUMBER_OF_MESSAGES, currentContext.getString(R.string.settingsInitialNumberOfMessages), "10", 1, 20);
         addStringPref(StringPref.Names.THEME_USED, currentContext.getString(R.string.settingsThemeUsed), "0");
+        addStringPref(StringPref.Names.AVATAR_SIZE, currentContext.getString(R.string.settingsAvatarSize), "45", 40, 80);
     }
 
     public static boolean getBool(BoolPref.Names prefName) {
@@ -271,7 +275,9 @@ public class PrefsManager {
             IGNORE_TOPIC_TOO, HIDE_TOTALLY_MESSAGES_OF_IGNORED_PSEUDOS,
             ENABLE_FAST_REFRESH_OF_IMAGES,
             WEBVIEW_CACHE_NEED_TO_BE_CLEAR,
-            COLOR_PSEUDO_OF_USER_IN_INFO, COLOR_PSEUDO_OF_USER_IN_MESSAGE
+            COLOR_PSEUDO_OF_USER_IN_INFO, COLOR_PSEUDO_OF_USER_IN_MESSAGE,
+            BACK_IS_OPEN_DRAWER,
+            SAVE_LAST_ROW_USED_INSERTSTUFF
         }
     }
 
@@ -287,7 +293,8 @@ public class PrefsManager {
         public enum Names {
             LAST_ACTIVITY_VIEWED,
             CURRENT_TOPIC_MODE,
-            FORUM_FAV_ARRAY_SIZE, TOPIC_FAV_ARRAY_SIZE
+            FORUM_FAV_ARRAY_SIZE, TOPIC_FAV_ARRAY_SIZE,
+            LAST_ROW_SELECTED_INSERTSTUFF
         }
     }
 
@@ -327,7 +334,8 @@ public class PrefsManager {
             REFRESH_TOPIC_TIME,
             MAX_NUMBER_OF_MESSAGES, INITIAL_NUMBER_OF_MESSAGES,
             THEME_USED,
-            IGNORED_PSEUDOS_IN_LC_LIST
+            IGNORED_PSEUDOS_IN_LC_LIST,
+            AVATAR_SIZE
         }
     }
 

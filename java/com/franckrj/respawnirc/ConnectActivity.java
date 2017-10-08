@@ -1,12 +1,12 @@
 package com.franckrj.respawnirc;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -105,7 +105,7 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_showhelp_connect:
-                helpDialogFragment.show(getFragmentManager(), "HelpConnectDialogFragment");
+                helpDialogFragment.show(getSupportFragmentManager(), "HelpConnectDialogFragment");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

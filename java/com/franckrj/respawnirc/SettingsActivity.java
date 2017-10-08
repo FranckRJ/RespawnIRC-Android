@@ -27,7 +27,7 @@ public class SettingsActivity extends AbsHomeIsBackActivity implements SettingsF
             argForFragment.putInt(SettingsFragment.ARG_FILE_TO_LOAD, idOfFileToLoad);
             newFragmentToAdd.setArguments(argForFragment);
 
-            getFragmentManager().beginTransaction().replace(R.id.content_frame_settings, newFragmentToAdd).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame_settings, newFragmentToAdd).commit();
         }
 
         if (getIntent() != null) {

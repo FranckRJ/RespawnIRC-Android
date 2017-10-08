@@ -1,11 +1,11 @@
 package com.franckrj.respawnirc.dialogs;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.R;
@@ -106,7 +106,7 @@ public class MessageContextMenuDialogFragment extends DialogFragment {
                         argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, JVCParser.parseMessageToSimpleMessage(messageNotParsed));
                         argForFrag.putBoolean(SelectTextDialogFragment.ARG_TEXT_IS_HTML, true);
                         selectTextDialogFragment.setArguments(argForFrag);
-                        selectTextDialogFragment.show(getFragmentManager(), "SelectTextDialogFragment");
+                        selectTextDialogFragment.show(getActivity().getSupportFragmentManager(), "SelectTextDialogFragment");
                         break;
                     }
                 }

@@ -19,6 +19,7 @@ public class StickerConverter {
         ruleForNoLangageSticker.add(new InfoForConvert("1n1n", "1n1n-fr", false));
         ruleForNoLangageSticker.add(new InfoForConvert("1n1m", "1n1m-fr", false));
         ruleForNoLangageSticker.add(new InfoForConvert("1n1p", "1n1p-fr", false));
+        ruleForNoLangageSticker.add(new InfoForConvert("zuc", "zuc-fr", false));
 
         ruleForStickerToSmiley = new ArrayList<>();
         ruleForStickerToSmiley.add(new InfoForConvert("1jnh", "45.gif", true));
@@ -50,7 +51,7 @@ public class StickerConverter {
         ruleForStickerToSmiley.add(new InfoForConvert("1lml", "27.gif", true));
         ruleForStickerToSmiley.add(new InfoForConvert("1lge", "36.gif", true));
         ruleForStickerToSmiley.add(new InfoForConvert("1lm9", "36.gif", true));
-        ruleForStickerToSmiley.add(new InfoForConvert("zuc", "36.gif", true));
+        ruleForStickerToSmiley.add(new InfoForConvert("zuc-fr", "36.gif", true));
         ruleForStickerToSmiley.add(new InfoForConvert("1jc5", "54.gif", true));
         ruleForStickerToSmiley.add(new InfoForConvert("1kl4", "52.gif", true));
         ruleForStickerToSmiley.add(new InfoForConvert("1jc3-fr", "42.gif", true));

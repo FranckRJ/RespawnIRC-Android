@@ -174,7 +174,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
 
         if (PrefsManager.getBool(PrefsManager.BoolPref.Names.IS_FIRST_LAUNCH)) {
             HelpFirstLaunchDialogFragment firstLaunchDialogFragment = new HelpFirstLaunchDialogFragment();
-            firstLaunchDialogFragment.show(getFragmentManager(), "HelpFirstLaunchDialogFragment");
+            firstLaunchDialogFragment.show(getSupportFragmentManager(), "HelpFirstLaunchDialogFragment");
             PrefsManager.putBool(PrefsManager.BoolPref.Names.IS_FIRST_LAUNCH, false);
             PrefsManager.applyChanges();
         }
@@ -257,7 +257,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         switch (item.getItemId()) {
             case R.id.action_select_topic_or_forum_selectforum:
                 ChooseTopicOrForumLinkDialogFragment chooseLinkDialogFragment = new ChooseTopicOrForumLinkDialogFragment();
-                chooseLinkDialogFragment.show(getFragmentManager(), "ChooseTopicOrForumLinkDialogFragment");
+                chooseLinkDialogFragment.show(getSupportFragmentManager(), "ChooseTopicOrForumLinkDialogFragment");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

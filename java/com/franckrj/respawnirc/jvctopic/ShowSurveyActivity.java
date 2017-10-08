@@ -52,7 +52,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
 
                 argForFrag.putStringArray(VoteInSurveyDialogFragment.ARG_SURVEY_REPLYS, listOfReplys);
                 voteDialogFragment.setArguments(argForFrag);
-                voteDialogFragment.show(getFragmentManager(), "VoteInSurveyDialogFragment");
+                voteDialogFragment.show(getSupportFragmentManager(), "VoteInSurveyDialogFragment");
             }
         }
     };

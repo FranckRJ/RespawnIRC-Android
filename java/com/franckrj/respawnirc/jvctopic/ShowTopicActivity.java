@@ -75,7 +75,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     private AddOrRemoveThingToFavs currentTaskForFavs = null;
     private String reasonOfLock = null;
     private ImageButton insertStuffButton = null;
-    private PageNavigationUtil pageNavigation = null;
+    private PageNavigationUtil pageNavigation = new PageNavigationUtil(this);
     private boolean useInternalNavigatorForDefaultOpening = false;
     private boolean convertNoelshackLinkToDirectLink = false;
     private boolean showOverviewOnImageClick = false;
@@ -94,7 +94,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                         newMessageToEdit = getString(R.string.errorCantGetEditInfos);
                     }
                     messageSendButton.setImageResource(ThemeManager.getDrawableRes(ThemeManager.DrawableName.CONTENT_SEND));
-                    Toast.makeText(ShowTopicActivity.this, newMessageToEdit, Toast.LENGTH_SHORT).show();
+                    showErrorWhenSendingMessage(newMessageToEdit);
                 } else {
                     messageSendEdit.setText(newMessageToEdit);
                     messageSendEdit.setSelection(newMessageToEdit.length());
@@ -111,7 +111,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 messageSendButton.setImageResource(ThemeManager.getDrawableRes(ThemeManager.DrawableName.CONTENT_SEND));
 
                 if (withThisError != null) {
-                    Toast.makeText(ShowTopicActivity.this, withThisError, Toast.LENGTH_LONG).show();
+                    showErrorWhenSendingMessage(withThisError);
                 } else {
                     messageSendEdit.setText("");
                 }
@@ -173,7 +173,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
             argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumAndTopicNames, currentTitles.forum, currentTitles.topic));
             selectTextDialogFragment.setArguments(argForFrag);
-            selectTextDialogFragment.show(getFragmentManager(), "SelectTextDialogFragment");
+            selectTextDialogFragment.show(getSupportFragmentManager(), "SelectTextDialogFragment");
             return true;
         }
     };
@@ -190,7 +190,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         @Override
         public void onClick(View buttonView) {
             InsertStuffDialogFragment insertStuffDialogFragment = new InsertStuffDialogFragment();
-            insertStuffDialogFragment.show(getFragmentManager(), "InsertStuffDialogFragment");
+            insertStuffDialogFragment.show(getSupportFragmentManager(), "InsertStuffDialogFragment");
         }
     };
 
@@ -222,13 +222,17 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
                 argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.topicLockedForReason, reasonOfLock));
                 selectTextDialogFragment.setArguments(argForFrag);
-                selectTextDialogFragment.show(getFragmentManager(), "SelectTextDialogFragment");
+                selectTextDialogFragment.show(getSupportFragmentManager(), "SelectTextDialogFragment");
             }
         }
     };
 
-    public ShowTopicActivity() {
-        pageNavigation = new PageNavigationUtil(this);
+    private void showErrorWhenSendingMessage(String error) {
+        if (error.toLowerCase().contains("captcha")) {
+            Toast.makeText(ShowTopicActivity.this, R.string.errorThereIsACaptcha, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(ShowTopicActivity.this, error, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void stopAllCurrentTask() {
@@ -610,7 +614,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     public void extendPageSelection(View buttonView) {
         if (pageNavigation.getIdOfThisButton(buttonView) == PageNavigationUtil.ID_BUTTON_CURRENT) {
             ChoosePageNumberDialogFragment choosePageDialogFragment = new ChoosePageNumberDialogFragment();
-            choosePageDialogFragment.show(getFragmentManager(), "ChoosePageNumberDialogFragment");
+            choosePageDialogFragment.show(getSupportFragmentManager(), "ChoosePageNumberDialogFragment");
         }
     }
 
@@ -677,7 +681,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 ShowImageDialogFragment showImageDialogFragment = new ShowImageDialogFragment();
                 argForFrag.putString(ShowImageDialogFragment.ARG_IMAGE_LINK, JVCParser.noelshackToDirectLink(link));
                 showImageDialogFragment.setArguments(argForFrag);
-                showImageDialogFragment.show(getFragmentManager(), "ShowImageDialogFragment");
+                showImageDialogFragment.show(getSupportFragmentManager(), "ShowImageDialogFragment");
             } else {
                 if (!useInternalNavigatorForDefaultOpening) {
                     Utils.openLinkInExternalNavigator(link, this);
@@ -690,7 +694,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             LinkContextMenuDialogFragment linkMenuDialogFragment = new LinkContextMenuDialogFragment();
             argForFrag.putString(LinkContextMenuDialogFragment.ARG_URL, link);
             linkMenuDialogFragment.setArguments(argForFrag);
-            linkMenuDialogFragment.show(getFragmentManager(), "LinkContextMenuDialogFragment");
+            linkMenuDialogFragment.show(getSupportFragmentManager(), "LinkContextMenuDialogFragment");
         }
     }
 
@@ -769,7 +773,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         argForFrag.putBoolean(MessageContextMenuDialogFragment.ARG_USE_INTERNAL_BROWSER, useInternalNavigatorForDefaultOpening);
         argForFrag.putString(MessageContextMenuDialogFragment.ARG_MESSAGE_CONTENT, messageClicked.messageNotParsed);
         messageMenuDialogFragment.setArguments(argForFrag);
-        messageMenuDialogFragment.show(getFragmentManager(), "MessageContextMenuDialogFragment");
+        messageMenuDialogFragment.show(getSupportFragmentManager(), "MessageContextMenuDialogFragment");
     }
 
     @Override

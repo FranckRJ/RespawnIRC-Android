@@ -14,6 +14,8 @@ import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.style.ClickableSpan;
 import android.text.style.LeadingMarginSpan;
 import android.text.style.LineBackgroundSpan;
 import android.text.style.QuoteSpan;
@@ -30,6 +32,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.utils.HoldingStringSpan;
 import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.CustomImageGetter;
 import com.franckrj.respawnirc.utils.CustomTagHandler;
@@ -67,6 +70,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     private View.OnClickListener onSurveyClickListener = null;
     private float multiplierOfLineSizeForInfoLineIfAvatarIsShowed = 0;
     private boolean userIsModo = false;
+    private int avatarSize = -1;
 
     @SuppressWarnings("FieldCanBeLocal")
     private final ImageDownloader.DownloadFinished listenerForDownloadFinished = new ImageDownloader.DownloadFinished() {
@@ -107,10 +111,10 @@ public class JVCTopicAdapter extends BaseAdapter {
                 }
 
                 if (itemSelected.messageContentContainSpoil || (showSignatures && itemSelected.signatureContainSpoil)) {
-                    if (itemSelected.showSpoil) {
-                        popup.getMenu().add(Menu.NONE, R.id.menu_hide_spoil_message, Menu.NONE, R.string.hideSpoilMessage);
-                    } else {
+                    if (itemSelected.listOfSpoilIDToShow.isEmpty()) {
                         popup.getMenu().add(Menu.NONE, R.id.menu_show_spoil_message, Menu.NONE, R.string.showSpoilMessage);
+                    } else {
+                        popup.getMenu().add(Menu.NONE, R.id.menu_hide_spoil_message, Menu.NONE, R.string.hideSpoilMessage);
                     }
                 }
 
@@ -216,6 +220,10 @@ public class JVCTopicAdapter extends BaseAdapter {
         userIsModo = newVal;
     }
 
+    public void setAvatarSize(int newSize) {
+        avatarSize = newSize;
+    }
+
     public void enableSurvey(String newSurveyTitle) {
         showSurvey = true;
         surveyTitle = newSurveyTitle;
@@ -252,18 +260,14 @@ public class JVCTopicAdapter extends BaseAdapter {
         }
     }
 
-    public void updateAllItems() {
-        notifyDataSetChanged();
-    }
-
     private ContentHolder updateHolderWithNewItem(ContentHolder holder, JVCParser.MessageInfos item, boolean isARealNewItem) {
-        if (isARealNewItem) {
-            item.showSpoil = showSpoilDefault;
+        if (isARealNewItem && showSpoilDefault) {
+            item.listOfSpoilIDToShow.add(-1);
         }
 
         holder.infoLineContent = new SpannableString(Undeprecator.htmlFromHtml(JVCParser.createMessageInfoLineFromInfos(item, currentSettings)));
         if (!item.pseudoIsBlacklisted) {
-            holder.messageLineContent = replaceQuoteAndUrlSpans(Undeprecator.htmlFromHtml(JVCParser.createMessageMessageLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
+            holder.messageLineContent = replaceNeededSpans(Undeprecator.htmlFromHtml(JVCParser.createMessageMessageLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler), item);
         } else {
             holder.messageLineContent = null;
         }
@@ -277,7 +281,7 @@ public class JVCTopicAdapter extends BaseAdapter {
         if (!showSignatures || item.signatureNotParsed.isEmpty() || item.pseudoIsBlacklisted) {
             holder.signatureLineContent = null;
         } else {
-            holder.signatureLineContent = replaceQuoteAndUrlSpans(Undeprecator.htmlFromHtml(JVCParser.createSignatureFromInfos(item, currentSettings), jvcImageGetter, tagHandler));
+            holder.signatureLineContent = replaceNeededSpans(Undeprecator.htmlFromHtml(JVCParser.createSignatureFromInfos(item, currentSettings), jvcImageGetter, tagHandler), item);
         }
 
         holder.messageIsDeleted = item.messageIsDeleted;
@@ -285,8 +289,9 @@ public class JVCTopicAdapter extends BaseAdapter {
         return holder;
     }
 
-    private Spannable replaceQuoteAndUrlSpans(Spanned spanToChange) {
+    private Spannable replaceNeededSpans(Spanned spanToChange, final JVCParser.MessageInfos infosOfMessage) {
         Spannable spannable = new SpannableString(spanToChange);
+
         QuoteSpan[] quoteSpanArray = spannable.getSpans(0, spannable.length(), QuoteSpan.class);
         for (QuoteSpan quoteSpan : quoteSpanArray) {
             Utils.replaceSpanByAnotherSpan(spannable, quoteSpan, new CustomQuoteSpan(Undeprecator.resourcesGetColor(parentActivity.getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_QUOTE_BACKGROUND)),
@@ -294,6 +299,7 @@ public class JVCTopicAdapter extends BaseAdapter {
                     parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripSize),
                     parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripGap)));
         }
+
         URLSpan[] urlSpanArray = spannable.getSpans(0, spannable.length(), URLSpan.class);
         for (final URLSpan urlSpan : urlSpanArray) {
             Utils.replaceSpanByAnotherSpan(spannable, urlSpan, new LongClickableSpan() {
@@ -303,6 +309,7 @@ public class JVCTopicAdapter extends BaseAdapter {
                         urlCLickedListener.getClickedURL(urlSpan.getURL(), false);
                     }
                 }
+
                 @Override
                 public void onLongClick(View v) {
                     if (urlCLickedListener != null) {
@@ -311,7 +318,44 @@ public class JVCTopicAdapter extends BaseAdapter {
                 }
             });
         }
+
+        HoldingStringSpan[] holdingStringSpanArray = spannable.getSpans(0, spannable.length(), HoldingStringSpan.class);
+        for (final HoldingStringSpan holdingStringSpan : holdingStringSpanArray) {
+            Utils.replaceSpanByAnotherSpan(spannable, holdingStringSpan, new ClickableSpan() {
+                @Override
+                public void onClick(View view) {
+                    updateListOfSpoidIDToShow(infosOfMessage, holdingStringSpan.getString());
+                }
+
+                @Override
+                public void updateDrawState(TextPaint ds) {
+                    //rien
+                }
+            });
+        }
+
         return spannable;
+    }
+
+    private void updateListOfSpoidIDToShow(JVCParser.MessageInfos infosOfMessage, String instructionForUpdate) {
+        boolean openSpoil = instructionForUpdate.startsWith("o");
+        int spoilID;
+
+        try {
+            spoilID = Integer.parseInt(instructionForUpdate.substring(1));
+        } catch (Exception e) {
+            spoilID = -1;
+        }
+
+        if (spoilID >= 0) {
+            if (openSpoil) {
+                infosOfMessage.listOfSpoilIDToShow.add(spoilID);
+            } else {
+                infosOfMessage.listOfSpoilIDToShow.remove(spoilID);
+            }
+            updateThisItem(infosOfMessage, false);
+            notifyDataSetChanged();
+        }
     }
 
     private void setColorBackgroundOfThisItem(View backrgoundView, @ColorRes int colorID) {
@@ -407,9 +451,18 @@ public class JVCTopicAdapter extends BaseAdapter {
 
             if (viewHolder.avatarImage != null) {
                 if (currentContent.avatarImageDrawable != null) {
+                    ViewGroup.LayoutParams avatarLayoutParams = viewHolder.avatarImage.getLayoutParams();
+                    
                     viewHolder.avatarImage.setVisibility(View.VISIBLE);
                     viewHolder.avatarImage.setImageDrawable(null);
                     viewHolder.avatarImage.setImageDrawable(currentContent.avatarImageDrawable);
+                    
+                    if (avatarLayoutParams.width != avatarSize && avatarSize != -1) {
+                        avatarLayoutParams.height = avatarSize;
+                        avatarLayoutParams.width = avatarSize;
+                        /*Ligne nécessaire ?*/
+                        //viewHolder.avatarImage.requestLayout();
+                    }
 
                     if (multiplierOfLineSizeForInfoLineIfAvatarIsShowed != 0) {
                         viewHolder.infoLine.setLineSpacing(0, multiplierOfLineSizeForInfoLineIfAvatarIsShowed);

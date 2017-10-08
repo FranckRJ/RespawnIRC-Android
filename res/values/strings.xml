@@ -18,7 +18,7 @@
     <string name="maxNumberOfMessagesTitle">Nb de messages affichés au max</string>
     <string name="initialNumberOfMessagesTitle">Nb de messages affichés au 1er chargement</string>
     <string name="settingsGeneralTitle">Général</string>
-    <string name="refreshTopicTimeTitle">Temps avant màj des messages</string>
+    <string name="refreshTopicTimeTitle">Temps avant màj des messages (en ms)</string>
     <string name="loadTopicFromOldInfos">Poursuivre la lecture</string>
     <string name="help">Aide</string>
     <string name="ok">OK</string>
@@ -207,6 +207,11 @@
     <string name="kickSuccessful">Kick effectué</string>
     <string name="colorPseudoOfUserInInfoTitle">Colorer votre pseudo</string>
     <string name="colorPseudoOfUserInMessageTitle">Colorer votre pseudo dans les messages</string>
+    <string name="backIsOpenDrawerTitle">Retour pour ouvrir le menu latéral</string>
+    <string name="gta">GTA</string>
+    <string name="avatarSizeTitle">Taille des avatars (en dp)</string>
+    <string name="saveLastRowUsedInsertstuffTitle">Se souvenir du dernier type de sticker utilisé</string>
+    <string name="errorThereIsACaptcha">Erreur, les captchas ne sont pas supportés. Veuillez ré-essayer dans quelques instants.</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
