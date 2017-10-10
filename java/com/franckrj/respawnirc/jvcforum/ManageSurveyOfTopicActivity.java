@@ -3,6 +3,8 @@ package com.franckrj.respawnirc.jvcforum;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,16 +12,18 @@ import android.widget.Toast;
 
 import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.jvcforum.jvcforumtools.SurveyReplysAdapter;
 import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 
-//TODO: Pas beau, tout changer
 public class ManageSurveyOfTopicActivity extends AbsHomeIsBackActivity {
     public static final String EXTRA_SURVEY_TITLE = "com.franckrj.respawnirc.managesurveyactivity.EXTRA_SURVEY_TITLE";
     public static final String EXTRA_SURVEY_REPLYS_LIST = "com.franckrj.respawnirc.managesurveyactivity.EXTRA_SURVEY_REPLYS_LIST";
 
-    private EditText[] replysEditList = new EditText[10];
+    private static final String SAVE_LIST_OF_REPLY_CONTENT = "saveListOfReplyContent";
+
+    private SurveyReplysAdapter adapterForReplys = null;
     private EditText titleEdit = null;
 
     private final View.OnClickListener validateButtonClicked = new View.OnClickListener() {
@@ -29,10 +33,9 @@ public class ManageSurveyOfTopicActivity extends AbsHomeIsBackActivity {
             String title = titleEdit.getText().toString();
             ArrayList<String> replysList = new ArrayList<>();
 
-            for (EditText thisReply : replysEditList) {
-                String reply = thisReply.getText().toString();
-                if (!Utils.stringIsEmptyOrNull(reply)) {
-                    replysList.add(reply);
+            for (String thisReply : adapterForReplys.getReplyContentList()) {
+                if (!Utils.stringIsEmptyOrNull(thisReply)) {
+                    replysList.add(thisReply);
                 }
             }
 
@@ -43,6 +46,13 @@ public class ManageSurveyOfTopicActivity extends AbsHomeIsBackActivity {
         }
     };
 
+    private final View.OnClickListener addReplyButtonClicked = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            adapterForReplys.addReply("");
+        }
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,19 +60,15 @@ public class ManageSurveyOfTopicActivity extends AbsHomeIsBackActivity {
         initToolbar(R.id.toolbar_managesurvey);
 
         Button validateButton = findViewById(R.id.validate_button_managesurvey);
+        Button addReplyButton = findViewById(R.id.addreply_button_managesurvey);
+        RecyclerView listOfReplys = findViewById(R.id.reply_list_managesurvey);
         titleEdit = findViewById(R.id.title_edit_managesurvey);
-        replysEditList[0] = findViewById(R.id.reply_0_edit_managesurvey);
-        replysEditList[1] = findViewById(R.id.reply_1_edit_managesurvey);
-        replysEditList[2] = findViewById(R.id.reply_2_edit_managesurvey);
-        replysEditList[3] = findViewById(R.id.reply_3_edit_managesurvey);
-        replysEditList[4] = findViewById(R.id.reply_4_edit_managesurvey);
-        replysEditList[5] = findViewById(R.id.reply_5_edit_managesurvey);
-        replysEditList[6] = findViewById(R.id.reply_6_edit_managesurvey);
-        replysEditList[7] = findViewById(R.id.reply_4_edit_managesurvey);
-        replysEditList[8] = findViewById(R.id.reply_8_edit_managesurvey);
-        replysEditList[9] = findViewById(R.id.reply_9_edit_managesurvey);
 
+        adapterForReplys = new SurveyReplysAdapter(this);
         validateButton.setOnClickListener(validateButtonClicked);
+        addReplyButton.setOnClickListener(addReplyButtonClicked);
+        listOfReplys.setLayoutManager(new LinearLayoutManager(this));
+        listOfReplys.setAdapter(adapterForReplys);
 
         if (getIntent() != null && savedInstanceState == null) {
             String title = getIntent().getStringExtra(EXTRA_SURVEY_TITLE);
@@ -75,11 +81,27 @@ public class ManageSurveyOfTopicActivity extends AbsHomeIsBackActivity {
             if (replysList != null) {
                 for (int i = 0; i < replysList.size(); ++i) {
                     if (!Utils.stringIsEmptyOrNull(replysList.get(i))) {
-                        replysEditList[i].setText(replysList.get(i));
+                        adapterForReplys.addReply(replysList.get(i));
                     }
                 }
             }
+        } else if (savedInstanceState != null) {
+            ArrayList<String> newListOfReplysContent = savedInstanceState.getStringArrayList(SAVE_LIST_OF_REPLY_CONTENT);
+
+            if (newListOfReplysContent != null) {
+                adapterForReplys.setReplys(newListOfReplysContent);
+            }
         }
+
+        while (adapterForReplys.getItemCount() < 2) {
+            adapterForReplys.addReply("");
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList(SAVE_LIST_OF_REPLY_CONTENT, adapterForReplys.getReplyContentList());
     }
 
     @Override
