@@ -1627,8 +1627,8 @@ public final class JVCParser {
     }
 
     private static class BuildSpoilTag implements StringModifier {
-        private static final String spoilButtonCode = "<bg_spoil_button><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "000000" : "FFFFFF") +
-                                                      "\">&nbsp;SPOIL&nbsp;</font></bg_spoil_button>";
+        private final String spoilButtonCode = "<bg_spoil_button><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "000000" : "FFFFFF") +
+                                               "\">&nbsp;SPOIL&nbsp;</font></bg_spoil_button>";
 
         private ArraySet<Integer> listOfSpoilIDToShow = null;
         private boolean showAllSpoils = false;
