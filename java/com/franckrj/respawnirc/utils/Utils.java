@@ -19,8 +19,10 @@ import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.WebNavigatorActivity;
 
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Utils {
     public static String resColorToString(int resID, Activity baseActivity) {
@@ -67,13 +69,32 @@ public class Utils {
         inThisSpan.removeSpan(oldSpan);
     }
 
-    public static String convertStringToUrlString(String baseString) {
+    public static String encodeStringToUrlString(String baseString) {
         try {
             baseString = URLEncoder.encode(baseString, "UTF-8");
         } catch (Exception e) {
             baseString = "";
         }
         return baseString;
+    }
+
+    public static String decodeUrlStringToString(String baseString) {
+        try {
+            baseString = URLDecoder.decode(baseString, "UTF-8");
+        } catch (Exception e) {
+            baseString = "";
+        }
+        return baseString;
+    }
+
+    public static ArrayList<String> mapStringArrayList(List<String> baseList, StringModifier mapFunction) {
+        ArrayList<String> newList = new ArrayList<>();
+
+        for (String currentString : baseList) {
+            newList.add(mapFunction.changeString(currentString));
+        }
+
+        return newList;
     }
 
     public static void openLinkInExternalNavigator(String link, Activity parentActivity) {
@@ -133,5 +154,9 @@ public class Utils {
         }
 
         shortcutManager.setDynamicShortcuts(listOfShortcuts);
+    }
+
+    public interface StringModifier {
+        String changeString(String baseString);
     }
 }

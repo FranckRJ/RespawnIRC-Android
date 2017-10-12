@@ -80,7 +80,7 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
     public void performSearch() {
         if (textForSearch != null) {
             if (!textForSearch.getText().toString().isEmpty()) {
-                pageNavigation.setCurrentLink(currentSearchLink + "?search_in_forum=" + Utils.convertStringToUrlString(textForSearch.getText().toString()) +
+                pageNavigation.setCurrentLink(currentSearchLink + "?search_in_forum=" + Utils.encodeStringToUrlString(textForSearch.getText().toString()) +
                         "&type_search_in_forum=" + (topicModeSearchRadioButton.isChecked() ? "titre_topic" : "auteur_topic"));
                 pageNavigation.updateAdapterForPagerView();
                 pageNavigation.updateCurrentItemAndButtonsToCurrentLink();

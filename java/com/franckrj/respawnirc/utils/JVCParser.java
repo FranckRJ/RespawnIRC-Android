@@ -1198,7 +1198,8 @@ public final class JVCParser {
             return false;
         }
 
-        public static void parseThisMessageWithThisPattern(StringBuilder messageToParse, Pattern patternToUse, int groupToUse, String stringBefore, String stringAfter, StringModifier firstModifier, StringModifier secondModifier) {
+        public static void parseThisMessageWithThisPattern(StringBuilder messageToParse, Pattern patternToUse, int groupToUse, String stringBefore,
+                                                           String stringAfter, Utils.StringModifier firstModifier, Utils.StringModifier secondModifier) {
             Matcher matcherToUse = patternToUse.matcher(messageToParse);
             int lastOffset = 0;
 
@@ -1535,7 +1536,7 @@ public final class JVCParser {
         }
     }
 
-    private static class ConvertStringToString implements StringModifier {
+    private static class ConvertStringToString implements Utils.StringModifier {
         private final String stringToRemplace;
         private final String stringNew;
 
@@ -1550,7 +1551,7 @@ public final class JVCParser {
         }
     }
 
-    private static class RemoveFirstsAndLastsP implements StringModifier {
+    private static class RemoveFirstsAndLastsP implements Utils.StringModifier {
         @Override
         public String changeString(String baseString) {
             while (baseString.startsWith("<p>")) {
@@ -1563,7 +1564,7 @@ public final class JVCParser {
         }
     }
 
-    private static class SuppressIfContainUglyNames implements StringModifier {
+    private static class SuppressIfContainUglyNames implements Utils.StringModifier {
         @Override
         public String changeString(String baseString) {
             Matcher uglyImagesNameMatcher = uglyImagesNamePattern.matcher(baseString);
@@ -1574,7 +1575,7 @@ public final class JVCParser {
         }
     }
 
-    private static class MakeCodeTagGreatAgain implements StringModifier {
+    private static class MakeCodeTagGreatAgain implements Utils.StringModifier {
         private final boolean isCodeBlock;
 
         MakeCodeTagGreatAgain(boolean newIsCodeBlock) {
@@ -1604,7 +1605,7 @@ public final class JVCParser {
         }
     }
 
-    private static class MakeShortenedLinkIfPossible implements StringModifier {
+    private static class MakeShortenedLinkIfPossible implements Utils.StringModifier {
         final int maxStringSize;
         final boolean forceLinkCreation;
 
@@ -1626,7 +1627,7 @@ public final class JVCParser {
         }
     }
 
-    private static class BuildSpoilTag implements StringModifier {
+    private static class BuildSpoilTag implements Utils.StringModifier {
         private final String spoilButtonCode = "<bg_spoil_button><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "000000" : "FFFFFF") +
                                                "\">&nbsp;SPOIL&nbsp;</font></bg_spoil_button>";
 
@@ -1707,9 +1708,5 @@ public final class JVCParser {
         public ArraySet<Integer> listOfSpoilIDToShow = null;
         public boolean containSpoil = false;
         public int lastIDOfSpoil = -1;
-    }
-
-    private interface StringModifier {
-        String changeString(String baseString);
     }
 }

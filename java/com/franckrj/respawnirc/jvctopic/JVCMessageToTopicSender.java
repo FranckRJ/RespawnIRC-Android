@@ -193,7 +193,7 @@ public class JVCMessageToTopicSender {
                 WebManager.WebInfos currentWebInfos = initWebInfos(info[0].cookiesUsed, false);
                 String pageContent;
 
-                pageContent = WebManager.sendRequestWithMultipleTrys(info[0].urlUsed, "POST", "message_topic=" + Utils.convertStringToUrlString(info[0].messageSended) + info[0].listOfInputUsed, currentWebInfos, 2);
+                pageContent = WebManager.sendRequestWithMultipleTrys(info[0].urlUsed, "POST", "message_topic=" + Utils.encodeStringToUrlString(info[0].messageSended) + info[0].listOfInputUsed, currentWebInfos, 2);
 
                 if (info[0].urlUsed.equals(currentWebInfos.currentUrl)) {
                     pageContent = "respawnirc:resendneeded";

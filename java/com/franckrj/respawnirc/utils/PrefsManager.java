@@ -65,6 +65,8 @@ public class PrefsManager {
         addStringPref(StringPref.Names.OLD_URL_FOR_TOPIC, "pref.oldUrlForTopic", "");
         addStringPref(StringPref.Names.LAST_TOPIC_TITLE_SENDED, "pref.lastTopicTitleSended", "");
         addStringPref(StringPref.Names.LAST_TOPIC_CONTENT_SENDED, "pref.lastTopicContentSended", "");
+        addStringPref(StringPref.Names.LAST_SURVEY_TITLE_SENDED, "pref.lastSurveyTitleSended", "");
+        addStringPref(StringPref.Names.LAST_SURVEY_REPLY_SENDED_IN_A_STRING, "pref.lastSurveyReplySendedInAString", "");
         addStringPref(StringPref.Names.IGNORED_PSEUDOS_IN_LC_LIST, "pref.ignoredPseudosInLCList", "");
 
         addLongPref(LongPref.Names.OLD_LAST_ID_OF_MESSAGE, "pref.oldLastIdOfMessage", 0);
@@ -327,7 +329,7 @@ public class PrefsManager {
             FORUM_FAV_NAME, FORUM_FAV_LINK, TOPIC_FAV_NAME, TOPIC_FAV_LINK,
             TOPIC_URL_TO_FETCH, FORUM_URL_TO_FETCH, PSEUDO_OF_AUTHOR_OF_TOPIC,
             OLD_URL_FOR_TOPIC,
-            LAST_TOPIC_TITLE_SENDED, LAST_TOPIC_CONTENT_SENDED,
+            LAST_TOPIC_TITLE_SENDED, LAST_TOPIC_CONTENT_SENDED, LAST_SURVEY_TITLE_SENDED, LAST_SURVEY_REPLY_SENDED_IN_A_STRING,
             MAX_NUMBER_OF_OVERLY_QUOTE,
             SHOW_AVATAR_MODE_FORUM,
             SHOW_NOELSHACK_IMAGE,

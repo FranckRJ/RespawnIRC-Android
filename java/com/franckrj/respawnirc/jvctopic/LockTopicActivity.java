@@ -128,7 +128,7 @@ public class LockTopicActivity extends AbsHomeIsBackActivity {
             if (infoOfLock.length == 1) {
                 WebManager.WebInfos currentWebInfos = initWebInfos(infoOfLock[0].cookies, false);
                 return WebManager.sendRequest("http://www.jeuxvideo.com/forums/modal_moderation_topic.php", "GET", "id_forum=" + infoOfLock[0].idForum + "&tab_topic[]=" +  infoOfLock[0].idTopic +
-                        "&type=lock&raison_moderation=" + Utils.convertStringToUrlString(infoOfLock[0].reason) + "&action=post&" + infoOfLock[0].ajaxInfos, currentWebInfos);
+                        "&type=lock&raison_moderation=" + Utils.encodeStringToUrlString(infoOfLock[0].reason) + "&action=post&" + infoOfLock[0].ajaxInfos, currentWebInfos);
             }
             return "erreurlol";
         }
