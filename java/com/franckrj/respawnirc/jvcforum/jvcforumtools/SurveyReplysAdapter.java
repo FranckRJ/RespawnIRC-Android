@@ -72,7 +72,9 @@ public class SurveyReplysAdapter extends RecyclerView.Adapter<SurveyReplysAdapte
 
             @Override
             public void afterTextChanged(Editable newText) {
-                listOfReplyContent.set(replyPos, newText.toString());
+                if (replyPos != -1) {
+                    listOfReplyContent.set(replyPos, newText.toString());
+                }
             }
         };
 
