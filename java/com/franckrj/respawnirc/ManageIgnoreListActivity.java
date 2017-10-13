@@ -3,6 +3,7 @@ package com.franckrj.respawnirc;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -54,6 +55,7 @@ public class ManageIgnoreListActivity extends AbsHomeIsBackActivity {
 
         generateListOfIgnoredPseudos();
         adapterForIgnoreList.setOnPseudoRemovedListener(listenerForPseudoRemoved);
+        ignoreListView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         ignoreListView.setLayoutManager(new LinearLayoutManager(this));
         ignoreListView.setAdapter(adapterForIgnoreList);
 
