@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.StyleRes;
 import android.support.v7.app.AppCompatActivity;
 
 import com.franckrj.respawnirc.R;
@@ -15,12 +16,18 @@ public abstract class AbsThemedActivity extends AppCompatActivity {
     protected static ActivityManager.TaskDescription generalTaskDesc = null;
     protected static ThemeManager.ThemeName themeUsedForGenerateTaskDesc = null;
     protected ThemeManager.ThemeName oldThemeUsed = null;
+    protected @StyleRes int colorAccentStyle = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         oldThemeUsed = ThemeManager.getThemeUsed();
         ThemeManager.changeActivityTheme(this);
+
+        if (colorAccentStyle != 0) {
+            getTheme().applyStyle(colorAccentStyle, true);
+        }
+
+        super.onCreate(savedInstanceState);
 
         if (Build.VERSION.SDK_INT >= 21) {
             if (generalTaskDesc == null || themeUsedForGenerateTaskDesc != ThemeManager.getThemeUsed()) {

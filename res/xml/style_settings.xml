@@ -1,65 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen
+<PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.preference.PreferenceCategory
+    <PreferenceCategory
         android:title="@string/settingsGeneralTitle">
-        <android.support.v7.preference.ListPreference
+        <ListPreference
             android:key="@string/settingsThemeUsed"
             android:title="@string/theme"
             android:summary="%s"
             android:entries="@array/choicesForThemesReadable"
             android:entryValues="@array/choicesForThemesValue"/>
 
-        <android.support.v7.preference.CheckBoxPreference
+        <CheckBoxPreference
             android:key="@string/settingsForumAlternateBackgroundColor"
             android:title="@string/forumAlternateBackgroundColorTitle"/>
-    </android.support.v7.preference.PreferenceCategory>
+    </PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory
+    <PreferenceCategory
         android:title="@string/settingsModeForumTitle">
-        <android.support.v7.preference.ListPreference
+        <ListPreference
             android:key="@string/settingsShowAvatarModeForum"
             android:title="@string/showAvatarTitle"
             android:summary="@string/needToBeEnabledOnJVCFirstSummaryWithString"
             android:entries="@array/choicesForConnectionReadable"
             android:entryValues="@array/choicesForConnectionValue"/>
 
-        <android.support.v7.preference.CheckBoxPreference
+        <CheckBoxPreference
             android:key="@string/settingsShowSignatureModeForum"
             android:title="@string/showSignatureTitle"
             android:summary="@string/needToBeEnabledOnJVCFirstSummary"/>
 
-        <android.support.v7.preference.CheckBoxPreference
+        <CheckBoxPreference
             android:key="@string/settingsEnableCardDesignModeForum"
             android:title="@string/enableCardDesignTitle"
             android:summary="@string/notAvailableForBlackThemeSummary"/>
 
-        <android.support.v7.preference.CheckBoxPreference
+        <CheckBoxPreference
             android:key="@string/settingsTopicAlternateBackgroundColorModeForum"
             android:title="@string/topicAlternateBackgroundColorTitle"/>
 
-        <android.support.v7.preference.CheckBoxPreference
+        <CheckBoxPreference
             android:key="@string/settingsMarkAuthorPseudoModeForum"
             android:title="@string/markAuthorPseudoTitle"/>
-    </android.support.v7.preference.PreferenceCategory>
+    </PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory
+    <PreferenceCategory
         android:title="@string/settingsModeIRCTitle">
-        <android.support.v7.preference.CheckBoxPreference
+        <CheckBoxPreference
             android:key="@string/settingsTopicAlternateBackgroundColorModeIRC"
             android:title="@string/topicAlternateBackgroundColorTitle"/>
 
-        <android.support.v7.preference.CheckBoxPreference
+        <CheckBoxPreference
             android:key="@string/settingsShowRefreshWhenMessagesShowedModeIRC"
             android:title="@string/showRefreshWhenMessagesShowedModeIRCTitle"/>
 
-        <android.support.v7.preference.CheckBoxPreference
+        <CheckBoxPreference
             android:key="@string/settingsShowSignatureModeIRC"
             android:title="@string/showSignatureTitle"
             android:summary="@string/needToBeEnabledOnJVCFirstSummary"/>
-    </android.support.v7.preference.PreferenceCategory>
+    </PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory/>
-
-</android.support.v7.preference.PreferenceScreen>
+</PreferenceScreen>
