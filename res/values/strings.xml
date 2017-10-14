@@ -214,6 +214,7 @@
     <string name="errorThereIsACaptcha">Erreur, les captchas ne sont pas supportés. Veuillez ré-essayer dans quelques instants.</string>
     <string name="replyTitleInSurveyManager">Rep n°%1$s :</string>
     <string name="addReply">Ajouter une réponse</string>
+    <string name="stickerSizeTitle">Taille des stickers (en dp)</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

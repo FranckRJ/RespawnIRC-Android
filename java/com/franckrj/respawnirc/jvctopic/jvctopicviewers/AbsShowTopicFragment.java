@@ -108,11 +108,17 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
 
     protected void initializeSettings() {
         int avatarSizeInDP;
+        int stickerSizeInDP;
 
         try {
             avatarSizeInDP = Integer.valueOf(PrefsManager.getString(PrefsManager.StringPref.Names.AVATAR_SIZE));
         } catch (Exception e) {
             avatarSizeInDP = -1;
+        }
+        try {
+            stickerSizeInDP = Integer.valueOf(PrefsManager.getString(PrefsManager.StringPref.Names.STICKER_SIZE));
+        } catch (Exception e) {
+            stickerSizeInDP = -1;
         }
 
         try {
@@ -122,6 +128,13 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         }
 
         updateSettingsDependingOnConnection();
+        if (avatarSizeInDP >= 0) {
+            adapterForTopic.setAvatarSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, avatarSizeInDP, getResources().getDisplayMetrics()));
+        }
+        if (stickerSizeInDP >= 0) {
+            adapterForTopic.setStickerSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, stickerSizeInDP, getResources().getDisplayMetrics()));
+        }
+
         currentSettings.maxNumberOfOverlyQuotes = Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MAX_NUMBER_OF_OVERLY_QUOTE));
         currentSettings.transformStickerToSmiley = PrefsManager.getBool(PrefsManager.BoolPref.Names.TRANSFORM_STICKER_TO_SMILEY);
         currentSettings.shortenLongLink = PrefsManager.getBool(PrefsManager.BoolPref.Names.SHORTEN_LONG_LINK);
@@ -134,7 +147,6 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         adapterForTopic.setShowSpoilDefault(PrefsManager.getBool(PrefsManager.BoolPref.Names.DEFAULT_SHOW_SPOIL_VAL));
         adapterForTopic.setFastRefreshOfImages(PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_FAST_REFRESH_OF_IMAGES));
         adapterForTopic.setColorDeletedMessages(PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_COLOR_DELETED_MESSAGES));
-        adapterForTopic.setAvatarSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, avatarSizeInDP, getResources().getDisplayMetrics()));
         userIsConnectedAsModo = PrefsManager.getBool(PrefsManager.BoolPref.Names.USER_IS_MODO);
         hideTotallyMessagesOfIgnoredPseudos = PrefsManager.getBool(PrefsManager.BoolPref.Names.HIDE_TOTALLY_MESSAGES_OF_IGNORED_PSEUDOS);
     }

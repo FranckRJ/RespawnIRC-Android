@@ -12,11 +12,16 @@ public class CustomImageGetter implements Html.ImageGetter {
     private Activity parentActivity = null;
     private Drawable deletedDrawable = null;
     private ImageDownloader downloaderForImage = null;
+    private int stickerSize = -1;
 
     public CustomImageGetter(Activity newParentActivity, Drawable newDeletedDrawable, ImageDownloader newDownloaderForImage) {
         parentActivity = newParentActivity;
         deletedDrawable = newDeletedDrawable;
         downloaderForImage = newDownloaderForImage;
+    }
+
+    public void setStickerSize(int newStickerSize) {
+        stickerSize = newStickerSize;
     }
 
     @Override
@@ -44,7 +49,12 @@ public class CustomImageGetter implements Html.ImageGetter {
             } catch (Exception e) {
                 drawable = deletedDrawable;
             }
-            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+
+            if (source.startsWith("sticker_") && stickerSize >= 0 && drawable != deletedDrawable) {
+                drawable.setBounds(0, 0, stickerSize, stickerSize);
+            } else {
+                drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+            }
 
             return drawable;
         } else if (source.startsWith("http://image.noelshack.com/minis") && downloaderForImage != null) {

@@ -9,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.v7.widget.CardView;
-import android.text.Html;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -59,7 +58,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     private ImageDownloader downloaderForImage = new ImageDownloader();
     private URLClicked urlCLickedListener = null;
     private PseudoClicked pseudoCLickedListener = null;
-    private Html.ImageGetter jvcImageGetter = null;
+    private CustomImageGetter jvcImageGetter = null;
     private boolean showSurvey = false;
     private boolean showSignatures = false;
     private boolean showAvatars = false;
@@ -222,6 +221,10 @@ public class JVCTopicAdapter extends BaseAdapter {
 
     public void setAvatarSize(int newSize) {
         avatarSize = newSize;
+    }
+
+    public void setStickerSize(int newSize) {
+        jvcImageGetter.setStickerSize(newSize);
     }
 
     public void enableSurvey(String newSurveyTitle) {
@@ -457,7 +460,7 @@ public class JVCTopicAdapter extends BaseAdapter {
                     viewHolder.avatarImage.setImageDrawable(null);
                     viewHolder.avatarImage.setImageDrawable(currentContent.avatarImageDrawable);
                     
-                    if (avatarLayoutParams.width != avatarSize && avatarSize != -1) {
+                    if (avatarLayoutParams.width != avatarSize && avatarSize >= 0) {
                         avatarLayoutParams.height = avatarSize;
                         avatarLayoutParams.width = avatarSize;
                         /*Ligne nécessaire ?*/

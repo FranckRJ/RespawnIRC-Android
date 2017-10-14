@@ -41,6 +41,11 @@
         <CheckBoxPreference
             android:key="@string/settingsSaveLastRowUsedInsertstuff"
             android:title="@string/saveLastRowUsedInsertstuffTitle"/>
+
+        <EditTextPreference
+            android:key="@string/settingsStickerSize"
+            android:title="@string/stickerSizeTitle"
+            android:numeric="integer"/>
     </PreferenceCategory>
 
     <PreferenceCategory
