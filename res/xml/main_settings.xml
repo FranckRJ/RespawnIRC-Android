@@ -1,48 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen
+<PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.preference.PreferenceCategory
+    <PreferenceCategory
         android:title="@string/preference">
-        <android.support.v7.preference.Preference
+        <Preference
             android:key="@string/subScreenSettingsStyle"
             android:persistent="false"
             android:title="@string/style"/>
 
-        <android.support.v7.preference.Preference
+        <Preference
             android:key="@string/subScreenSettingsImageLink"
             android:persistent="false"
             android:title="@string/imageLink"/>
 
-        <android.support.v7.preference.Preference
+        <Preference
             android:key="@string/subScreenSettingsBehaviour"
             android:persistent="false"
             android:title="@string/behaviour"/>
 
-        <android.support.v7.preference.Preference
+        <Preference
             android:key="@string/subScreenSettingsAdvanced"
             android:persistent="false"
             android:title="@string/advanced"/>
 
-        <android.support.v7.preference.Preference
+        <Preference
             android:key="@string/subScreenSettingsIgnoreList"
             android:persistent="false"
             android:title="@string/ignoreList"/>
-    </android.support.v7.preference.PreferenceCategory>
+    </PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory
+    <PreferenceCategory
         android:title="@string/information">
-        <android.support.v7.preference.Preference
+        <Preference
             android:key="@string/subScreenSettingsShowWebsite"
             android:persistent="false"
             android:title="@string/showWebsite"/>
 
-        <android.support.v7.preference.Preference
+        <Preference
             android:key="@string/subScreenSettingsHelp"
             android:persistent="false"
             android:title="@string/help"/>
-    </android.support.v7.preference.PreferenceCategory>
+    </PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory/>
-
-</android.support.v7.preference.PreferenceScreen>
+</PreferenceScreen>

@@ -10,18 +10,21 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.util.SimpleArrayMap;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.CheckBoxPreference;
-import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceGroup;
 import android.support.v7.preference.SwitchPreferenceCompat;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.Utils;
+import com.takisoft.fix.support.v7.preference.EditTextPreference;
+import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompatDividers;
 
-public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsFragment extends PreferenceFragmentCompatDividers implements SharedPreferences.OnSharedPreferenceChangeListener {
     public static final String ARG_FILE_TO_LOAD = "com.franckrj.respawnirc.settingsfragment.ARG_FILE_TO_LOAD";
 
     private SimpleArrayMap<String, MinMaxInfos> listOfMinMaxInfos = new SimpleArrayMap<>();
@@ -59,7 +62,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     };
 
     @Override
-    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+    public void onCreatePreferencesFix(Bundle savedInstanceState, String rootKey) {
         int idOfFileToLoad = R.xml.main_settings;
 
         if (getArguments() != null) {
@@ -69,6 +72,15 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         getPreferenceManager().setSharedPreferencesName(getString(R.string.preference_file_key));
         setPreferencesFromResource(idOfFileToLoad, rootKey);
         initPrefsInfos(getPreferenceScreen());
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        try {
+            return super.onCreateView(inflater, container, savedInstanceState);
+        } finally {
+            setDividerPreferences(DIVIDER_PREFERENCE_BETWEEN);
+        }
     }
 
     @Override

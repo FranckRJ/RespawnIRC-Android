@@ -8,6 +8,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -83,12 +84,13 @@ public class ShowImageDialogFragment extends DialogFragment {
             downloaderForImage.setListenerForCurrentProgress(listenerForCurrentProgress);
             downloaderForImage.setImagesCacheDir(getActivity().getCacheDir());
             downloaderForImage.setScaleLargeImages(true);
-            downloaderForImage.setImagesSize(metrics.widthPixels, metrics.heightPixels);
-            downloaderForImage.setDefaultDrawable(deletedDrawable, false);
-            downloaderForImage.setDeletedDrawable(deletedDrawable, false);
+            downloaderForImage.setDefaultDrawable(deletedDrawable);
+            downloaderForImage.setDeletedDrawable(deletedDrawable);
+            downloaderForImage.setImagesSize(metrics.widthPixels, metrics.heightPixels, false);
         }
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);

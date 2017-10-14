@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen
+<PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.preference.PreferenceCategory
+    <PreferenceCategory
         android:title="@string/noelshack">
-        <android.support.v7.preference.ListPreference
+        <ListPreference
             android:key="@string/settingsShowNoelshackImage"
             android:title="@string/showNoelshackImageTitle"
             android:summary="%s"
@@ -22,19 +22,17 @@
         <CheckBoxPreference
             android:key="@string/settingsHideUglyImages"
             android:title="@string/hideUglyImagesTitle"/>
-    </android.support.v7.preference.PreferenceCategory>
+    </PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory
+    <PreferenceCategory
         android:title="@string/link">
-        <android.support.v7.preference.CheckBoxPreference
+        <CheckBoxPreference
             android:key="@string/settingsShortenLongLink"
             android:title="@string/shortenLongLinkTitle"/>
 
-        <android.support.v7.preference.CheckBoxPreference
+        <CheckBoxPreference
             android:key="@string/settingsUseInternalNavigator"
             android:title="@string/useInternalNavigatorTitle"/>
-    </android.support.v7.preference.PreferenceCategory>
+    </PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory/>
-
-</android.support.v7.preference.PreferenceScreen>
+</PreferenceScreen>

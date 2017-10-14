@@ -65,6 +65,8 @@ public class PrefsManager {
         addStringPref(StringPref.Names.OLD_URL_FOR_TOPIC, "pref.oldUrlForTopic", "");
         addStringPref(StringPref.Names.LAST_TOPIC_TITLE_SENDED, "pref.lastTopicTitleSended", "");
         addStringPref(StringPref.Names.LAST_TOPIC_CONTENT_SENDED, "pref.lastTopicContentSended", "");
+        addStringPref(StringPref.Names.LAST_SURVEY_TITLE_SENDED, "pref.lastSurveyTitleSended", "");
+        addStringPref(StringPref.Names.LAST_SURVEY_REPLY_SENDED_IN_A_STRING, "pref.lastSurveyReplySendedInAString", "");
         addStringPref(StringPref.Names.IGNORED_PSEUDOS_IN_LC_LIST, "pref.ignoredPseudosInLCList", "");
 
         addLongPref(LongPref.Names.OLD_LAST_ID_OF_MESSAGE, "pref.oldLastIdOfMessage", 0);
@@ -106,7 +108,9 @@ public class PrefsManager {
         addStringPref(StringPref.Names.MAX_NUMBER_OF_MESSAGES, currentContext.getString(R.string.settingsMaxNumberOfMessages), "60", 1, 120);
         addStringPref(StringPref.Names.INITIAL_NUMBER_OF_MESSAGES, currentContext.getString(R.string.settingsInitialNumberOfMessages), "10", 1, 20);
         addStringPref(StringPref.Names.THEME_USED, currentContext.getString(R.string.settingsThemeUsed), "0");
-        addStringPref(StringPref.Names.AVATAR_SIZE, currentContext.getString(R.string.settingsAvatarSize), "45", 40, 80);
+        addStringPref(StringPref.Names.AVATAR_SIZE, currentContext.getString(R.string.settingsAvatarSize), "45", 40, 60);
+        addStringPref(StringPref.Names.STICKER_SIZE, currentContext.getString(R.string.settingsStickerSize), "50", 35, 70);
+        addStringPref(StringPref.Names.MINI_NOELSHACK_WIDTH, currentContext.getString(R.string.settingsMiniNoelshackWidth), "68", 68, 136);
     }
 
     public static boolean getBool(BoolPref.Names prefName) {
@@ -327,7 +331,7 @@ public class PrefsManager {
             FORUM_FAV_NAME, FORUM_FAV_LINK, TOPIC_FAV_NAME, TOPIC_FAV_LINK,
             TOPIC_URL_TO_FETCH, FORUM_URL_TO_FETCH, PSEUDO_OF_AUTHOR_OF_TOPIC,
             OLD_URL_FOR_TOPIC,
-            LAST_TOPIC_TITLE_SENDED, LAST_TOPIC_CONTENT_SENDED,
+            LAST_TOPIC_TITLE_SENDED, LAST_TOPIC_CONTENT_SENDED, LAST_SURVEY_TITLE_SENDED, LAST_SURVEY_REPLY_SENDED_IN_A_STRING,
             MAX_NUMBER_OF_OVERLY_QUOTE,
             SHOW_AVATAR_MODE_FORUM,
             SHOW_NOELSHACK_IMAGE,
@@ -335,7 +339,7 @@ public class PrefsManager {
             MAX_NUMBER_OF_MESSAGES, INITIAL_NUMBER_OF_MESSAGES,
             THEME_USED,
             IGNORED_PSEUDOS_IN_LC_LIST,
-            AVATAR_SIZE
+            AVATAR_SIZE, STICKER_SIZE, MINI_NOELSHACK_WIDTH
         }
     }
 

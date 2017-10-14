@@ -44,11 +44,11 @@ import com.franckrj.respawnirc.utils.Utils;
 import java.util.ArrayList;
 
 public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCTopicGetter.NewForumAndTopicNameAvailable,
-                                                                    PopupMenu.OnMenuItemClickListener, JVCTopicModeForumGetter.NewNumbersOfPagesListener,
-                                                                    ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCTopicAdapter.URLClicked,
-                                                                    AbsJVCTopicGetter.NewReasonForTopicLock, InsertStuffDialogFragment.StuffInserted,
-                                                                    PageNavigationUtil.PageNavigationFunctions, AddOrRemoveThingToFavs.ActionToFavsEnded, AbsJVCTopicGetter.TopicLinkChanged,
-                                                                    AbsShowTopicFragment.NewSurveyNeedToBeShown, JVCTopicAdapter.PseudoClicked, AbsJVCTopicGetter.NewPseudoOfAuthorAvailable {
+                                                                        PopupMenu.OnMenuItemClickListener, JVCTopicModeForumGetter.NewNumbersOfPagesListener,
+                                                                        ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCTopicAdapter.URLClicked,
+                                                                        AbsJVCTopicGetter.NewReasonForTopicLock, InsertStuffDialogFragment.StuffInserted,
+                                                                        PageNavigationUtil.PageNavigationFunctions, AddOrRemoveThingToFavs.ActionToFavsEnded, AbsJVCTopicGetter.TopicLinkChanged,
+                                                                        AbsShowTopicFragment.NewSurveyNeedToBeShown, JVCTopicAdapter.PseudoClicked, AbsJVCTopicGetter.NewPseudoOfAuthorAvailable {
     public static final String EXTRA_TOPIC_LINK = "com.franckrj.respawnirc.EXTRA_TOPIC_LINK";
     public static final String EXTRA_TOPIC_NAME = "com.franckrj.respawnirc.EXTRA_TOPIC_NAME";
     public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.EXTRA_FORUM_NAME";
@@ -85,7 +85,12 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
     private final JVCMessageToTopicSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageToTopicSender.NewMessageWantEditListener() {
         @Override
-        public void initializeEditMode(String newMessageToEdit, boolean messageIsAnError) {
+        public void editThisMessage(String messageID) {
+            startEditThisMessage(messageID, false);
+        }
+
+        @Override
+        public void initializeEditMode(String newMessageToEdit, boolean messageIsAnError, boolean useMessageToEdit) {
             if (reasonOfLock == null) {
                 messageSendButton.setEnabled(true);
 
@@ -95,7 +100,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                     }
                     messageSendButton.setImageResource(ThemeManager.getDrawableRes(ThemeManager.DrawableName.CONTENT_SEND));
                     showErrorWhenSendingMessage(newMessageToEdit);
-                } else {
+                } else if (useMessageToEdit) {
                     messageSendEdit.setText(newMessageToEdit);
                     messageSendEdit.setSelection(newMessageToEdit.length());
                 }
@@ -273,6 +278,24 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         }
     }
 
+    private void startEditThisMessage(String messageID, boolean useMessageToEdit) {
+        boolean infoForEditAreGetted = false;
+
+        if (messageSendButton.isEnabled() && getCurrentFragment().getLatestAjaxInfos().list != null) {
+            messageSendButton.setEnabled(false);
+            messageSendButton.setImageResource(ThemeManager.getDrawableRes(ThemeManager.DrawableName.CONTENT_EDIT));
+            infoForEditAreGetted = senderForMessages.getInfosForEditMessage(messageID, getCurrentFragment().getLatestAjaxInfos().list, cookieListInAString, useMessageToEdit);
+        }
+
+        if (!infoForEditAreGetted) {
+            if (!messageSendButton.isEnabled()) {
+                Toast.makeText(this, R.string.errorMessageAlreadySending, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     private AbsShowTopicFragment getCurrentFragment() {
         return (AbsShowTopicFragment) pageNavigation.getCurrentFragment();
     }
@@ -430,15 +453,15 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             case R.id.action_change_topic_fav_value_showtopic:
                 if (currentTaskForFavs == null) {
                     currentTaskForFavs = new AddOrRemoveThingToFavs(!getCurrentFragment().getIsInFavs(), this);
-                    currentTaskForFavs.execute(JVCParser.getForumIDOfThisTopic(pageNavigation.getCurrentPageLink()), getCurrentFragment().getTopicID(), getCurrentFragment().getLatestAjaxInfos().pref, cookieListInAString);
+                    currentTaskForFavs.execute(JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), getCurrentFragment().getTopicId(), getCurrentFragment().getLatestAjaxInfos().pref, cookieListInAString);
                 } else {
                     Toast.makeText(ShowTopicActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
                 }
                 return true;
             case R.id.action_lock_topic_showtopic:
                 Intent newLockTopicIntent = new Intent(ShowTopicActivity.this, LockTopicActivity.class);
-                newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_ID_FORUM, JVCParser.getForumIDOfThisTopic(pageNavigation.getCurrentPageLink()));
-                newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_ID_TOPIC, getCurrentFragment().getTopicID());
+                newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_ID_FORUM, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()));
+                newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_ID_TOPIC, getCurrentFragment().getTopicId());
                 newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_AJAX_MOD, getCurrentFragment().getLatestAjaxInfos().mod);
                 newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_COOKIES, cookieListInAString);
                 startActivityForResult(newLockTopicIntent, LOCK_TOPIC_REQUEST_CODE);
@@ -533,21 +556,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                         messageSendButton.setImageResource(ThemeManager.getDrawableRes(ThemeManager.DrawableName.CONTENT_SEND));
                         messageSendEdit.setText("");
                     } else {
-                        boolean infoForEditAreGetted = false;
-                        if (messageSendButton.isEnabled() && getCurrentFragment().getLatestAjaxInfos().list != null) {
-                            String idOfMessage = Long.toString(getCurrentFragment().getCurrentItemSelected().id);
-                            messageSendButton.setEnabled(false);
-                            messageSendButton.setImageResource(ThemeManager.getDrawableRes(ThemeManager.DrawableName.CONTENT_EDIT));
-                            infoForEditAreGetted = senderForMessages.getInfosForEditMessage(idOfMessage, getCurrentFragment().getLatestAjaxInfos().list, cookieListInAString);
-                        }
-
-                        if (!infoForEditAreGetted) {
-                            if (!messageSendButton.isEnabled()) {
-                                Toast.makeText(this, R.string.errorMessageAlreadySending, Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
-                            }
-                        }
+                        startEditThisMessage(Long.toString(getCurrentFragment().getCurrentItemSelected().id), true);
                     }
                 } else {
                     Toast.makeText(this, R.string.errorTopicIsLocked, Toast.LENGTH_SHORT).show();
@@ -562,7 +571,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 Intent newKickPseudoIntent = new Intent(ShowTopicActivity.this, KickPseudoActivity.class);
                 newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_PSEUDO, currentMessage.pseudo);
                 newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_ID_ALIAS, currentMessage.idAlias);
-                newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_ID_FORUM, JVCParser.getForumIDOfThisTopic(pageNavigation.getCurrentPageLink()));
+                newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_ID_FORUM, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()));
                 newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_ID_MESSAGE, String.valueOf(currentMessage.id));
                 newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_AJAX_MOD, getCurrentFragment().getLatestAjaxInfos().mod);
                 newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_COOKIES, cookieListInAString);
@@ -753,11 +762,11 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     }
 
     @Override
-    public void getNewSurveyInfos(String surveyTitle, String topicID, String ajaxInfos, ArrayList<JVCParser.SurveyReplyInfos> listOfReplysWithInfos) {
+    public void getNewSurveyInfos(String surveyTitle, String topicId, String ajaxInfos, ArrayList<JVCParser.SurveyReplyInfos> listOfReplysWithInfos) {
         Intent newShowSurveyIntent = new Intent(ShowTopicActivity.this, ShowSurveyActivity.class);
         newShowSurveyIntent.putExtra(ShowSurveyActivity.EXTRA_SURVEY_TITLE, surveyTitle);
         newShowSurveyIntent.putExtra(ShowSurveyActivity.EXTRA_SURVEY_REPLYS_WITH_INFOS, listOfReplysWithInfos);
-        newShowSurveyIntent.putExtra(ShowSurveyActivity.EXTRA_TOPIC_ID, topicID);
+        newShowSurveyIntent.putExtra(ShowSurveyActivity.EXTRA_TOPIC_ID, topicId);
         newShowSurveyIntent.putExtra(ShowSurveyActivity.EXTRA_AJAX_INFOS, ajaxInfos);
         newShowSurveyIntent.putExtra(ShowSurveyActivity.EXTRA_COOKIES, cookieListInAString);
         startActivity(newShowSurveyIntent);

@@ -10,9 +10,9 @@ public class ThemeManager {
     private static ThemeName themeUsed = ThemeName.LIGHT_THEME;
 
     public static void updateThemeUsed() {
-        String themeStringID = PrefsManager.getString(PrefsManager.StringPref.Names.THEME_USED);
+        String themeStringId = PrefsManager.getString(PrefsManager.StringPref.Names.THEME_USED);
 
-        switch (themeStringID) {
+        switch (themeStringId) {
             case "1":
                 themeUsed = ThemeName.DARK_THEME;
                 break;

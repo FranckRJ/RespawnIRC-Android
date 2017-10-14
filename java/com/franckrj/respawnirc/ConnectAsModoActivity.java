@@ -201,7 +201,7 @@ public class ConnectAsModoActivity extends AbsHomeIsBackActivity {
                     return WebManager.sendRequest("https://www.jeuxvideo.com/sso/auth.php", "GET", "", currentWebInfos);
                 } else {
                     return WebManager.sendRequest("https://www.jeuxvideo.com/sso/auth.php", "POST", "password=" +
-                            Utils.convertStringToUrlString(passwordToUse) + listOfInputInStringToUse, currentWebInfos);
+                            Utils.encodeStringToUrlString(passwordToUse) + listOfInputInStringToUse, currentWebInfos);
                 }
             }
             return null;

@@ -20,7 +20,7 @@ public abstract class AbsJVCTopicGetter {
     protected static final String SAVE_LATEST_AJAX_INFO_MOD = "saveLatestAjaxInfoMod";
     protected static final String SAVE_LATEST_AJAX_INFO_PREF = "saveLatestAjaxInfoPref";
     protected static final String SAVE_LAST_ID_OF_MESSAGE = "saveLastIdOfMessage";
-    protected static final String SAVE_TOPIC_ID = "saveTopicID";
+    protected static final String SAVE_TOPIC_ID = "saveTopicId";
     protected static final String SAVE_HTML_SURVEY_TITLE = "saveHtmlSurveyTitle";
     protected static final String SAVE_SURVEY_REPLYS_WITH_INFOS = "saveSurveyReplysWithInfos";
     protected static final String SAVE_TOPIC_IS_IN_FAV = "saveTopicIsInFav";
@@ -40,7 +40,7 @@ public abstract class AbsJVCTopicGetter {
     protected JVCParser.ForumAndTopicName currentNames = new JVCParser.ForumAndTopicName();
     protected TopicLinkChanged listenerForTopicLinkChanged = null;
     protected Boolean isInFavs = null;
-    protected String topicID = "";
+    protected String topicId = "";
     protected NewReasonForTopicLock listenerForNewReasonForTopicLock = null;
     protected String lockReason = "";
     protected NewSurveyForTopic listenerForNewSurveyForTopic = null;
@@ -76,8 +76,8 @@ public abstract class AbsJVCTopicGetter {
         return isInFavs;
     }
 
-    public String getTopicID() {
-        return topicID;
+    public String getTopicId() {
+        return topicId;
     }
 
     public String getSurveyTitleInHtml() {
@@ -159,7 +159,7 @@ public abstract class AbsJVCTopicGetter {
         latestAjaxInfos.mod = savedInstanceState.getString(SAVE_LATEST_AJAX_INFO_MOD, null);
         latestAjaxInfos.pref = savedInstanceState.getString(SAVE_LATEST_AJAX_INFO_PREF, null);
         lastIdOfMessage = savedInstanceState.getLong(SAVE_LAST_ID_OF_MESSAGE, 0);
-        topicID = savedInstanceState.getString(SAVE_TOPIC_ID, "");
+        topicId = savedInstanceState.getString(SAVE_TOPIC_ID, "");
         htmlSurveyTitle = savedInstanceState.getString(SAVE_HTML_SURVEY_TITLE, "");
         listOfSurveyReplyWithInfos = savedInstanceState.getParcelableArrayList(SAVE_SURVEY_REPLYS_WITH_INFOS);
         userCanPostAsModo = savedInstanceState.getBoolean(SAVE_USER_CAN_POST_AS_MODO);
@@ -179,7 +179,7 @@ public abstract class AbsJVCTopicGetter {
         savedInstanceState.putString(SAVE_LATEST_AJAX_INFO_MOD, latestAjaxInfos.mod);
         savedInstanceState.putString(SAVE_LATEST_AJAX_INFO_PREF, latestAjaxInfos.pref);
         savedInstanceState.putLong(SAVE_LAST_ID_OF_MESSAGE, lastIdOfMessage);
-        savedInstanceState.putString(SAVE_TOPIC_ID, topicID);
+        savedInstanceState.putString(SAVE_TOPIC_ID, topicId);
         savedInstanceState.putString(SAVE_HTML_SURVEY_TITLE, htmlSurveyTitle);
         savedInstanceState.putParcelableArrayList(SAVE_SURVEY_REPLYS_WITH_INFOS, listOfSurveyReplyWithInfos);
         savedInstanceState.putBoolean(SAVE_USER_CAN_POST_AS_MODO, userCanPostAsModo);
@@ -212,9 +212,9 @@ public abstract class AbsJVCTopicGetter {
             newPageInfos.ajaxInfosOfThisPage = JVCParser.getAllAjaxInfos(pageContent);
             newPageInfos.newNames = JVCParser.getForumAndTopicNameInTopicPage(pageContent);
             newPageInfos.newIsInFavs = JVCParser.getIsInFavsFromPage(pageContent);
-            newPageInfos.newTopicID = JVCParser.getTopicIDInThisTopicPage(pageContent);
+            newPageInfos.newTopicId = JVCParser.getTopicIdInThisTopicPage(pageContent);
             newPageInfos.newLockReason = JVCParser.getLockReasonFromPage(pageContent);
-            newPageInfos.newHtmlSurveyTitle = JVCParser.getSurveyHTMLTitleFromPage(pageContent);
+            newPageInfos.newHtmlSurveyTitle = JVCParser.getSurveyHtmlTitleFromPage(pageContent);
             if (!newPageInfos.newHtmlSurveyTitle.isEmpty()) {
                 newPageInfos.newListOfSurveyReplyWithInfos = JVCParser.getListOfSurveyReplyWithInfos(pageContent);
             }
@@ -249,7 +249,7 @@ public abstract class AbsJVCTopicGetter {
             latestListOfInputInAString = infoOfCurrentPage.listOfInputInAString;
             latestAjaxInfos = infoOfCurrentPage.ajaxInfosOfThisPage;
             isInFavs = infoOfCurrentPage.newIsInFavs;
-            topicID = infoOfCurrentPage.newTopicID;
+            topicId = infoOfCurrentPage.newTopicId;
             listOfSurveyReplyWithInfos = infoOfCurrentPage.newListOfSurveyReplyWithInfos;
             userCanLockTopic = infoOfCurrentPage.newUserCanLockTopic;
 
@@ -305,7 +305,7 @@ public abstract class AbsJVCTopicGetter {
         public JVCParser.AjaxInfos ajaxInfosOfThisPage;
         public JVCParser.ForumAndTopicName newNames;
         public Boolean newIsInFavs;
-        public String newTopicID;
+        public String newTopicId;
         public String newLockReason;
         public String newHtmlSurveyTitle;
         public ArrayList<JVCParser.SurveyReplyInfos> newListOfSurveyReplyWithInfos = new ArrayList<>();

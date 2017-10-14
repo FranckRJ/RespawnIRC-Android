@@ -10,19 +10,22 @@ import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
 public class JVCMessageToTopicSender {
-    private static final String SAVE_OLD_AJAX_LIST_INFOS = "saveOldAjaxListInfos";
+    private static final String SAVE_LAST_AJAX_LIST_INFOS = "saveLastAjaxListInfos";
+    private static final String SAVE_USE_MESSAGE_TO_EDIT = "saveUseMessageToEdit";
     private static final String SAVE_IS_IN_EDIT = "saveIsInEdit";
     private static final String SAVE_LAST_INFOS_FOR_EDIT = "saveLastInfosForEdit";
+    private static final String SAVE_LAST_MESSAGE_ID_USED_FOR_EDIT = "saveLastMessageIDUsedForEdit";
 
     private Activity parentActivity = null;
-    private String ajaxListInfos = null;
+    private String lastAjaxListInfos = "";
+    private boolean useMessageToEdit = true;
     private boolean isInEdit = false;
-    private String lastInfosForEdit = null;
+    private String lastInfosForEdit = "";
+    private String lastMessageIDUsedForEdit = "";
     private NewMessageWantEditListener listenerForNewMessageWantEdit = null;
     private NewMessagePostedListener listenerForNewMessagePosted = null;
     private PostJVCMessage currentAsyncTaskForSendMessage = null;
     private GetEditJVCMessageInfos currentAsyncTaskForGetEditInfos = null;
-    private InfosOfSend infosOfLastSend = new InfosOfSend();
 
     private final AbsWebRequestAsyncTask.RequestIsFinished<String> postMessageIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<String>() {
         @Override
@@ -37,18 +40,21 @@ public class JVCMessageToTopicSender {
                 } else if (!isInEdit) {
                     errorWhenSending = JVCParser.getErrorMessage(reqResult);
                 } else {
-                    errorWhenSending = JVCParser.getErrorMessageInJSONMode(reqResult);
+                    errorWhenSending = JVCParser.getErrorMessageInJsonMode(reqResult);
                 }
-            }
-
-            if (isInEdit && !Utils.stringsAreEquals(reqResult, "respawnirc:resendneeded")) {
-                isInEdit = false;
-                lastInfosForEdit = null;
-                ajaxListInfos = null;
             }
 
             if (listenerForNewMessagePosted != null) {
                 listenerForNewMessagePosted.lastMessageIsSended(errorWhenSending);
+            }
+
+            if (isInEdit && !Utils.stringsAreEquals(reqResult, "respawnirc:resendneeded")) {
+                isInEdit = false;
+                lastInfosForEdit = "";
+
+                if (listenerForNewMessageWantEdit != null && errorWhenSending != null) {
+                    listenerForNewMessageWantEdit.editThisMessage(lastMessageIDUsedForEdit);
+                }
             }
         }
     };
@@ -61,13 +67,13 @@ public class JVCMessageToTopicSender {
 
             if (!Utils.stringIsEmptyOrNull(reqResult)) {
                 String pageResultParsed = JVCParser.parsingAjaxMessages(reqResult);
-                lastInfosForEdit += ajaxListInfos + "&action=post";
+                lastInfosForEdit += lastAjaxListInfos + "&action=post";
                 lastInfosForEdit += JVCParser.getListOfInputInAStringInTopicFormForThisPage(pageResultParsed);
                 newMessageEdit = JVCParser.getMessageEdit(pageResultParsed);
 
                 if (newMessageEdit.isEmpty()) {
                     messageIsAnError = true;
-                    newMessageEdit = JVCParser.getErrorMessageInJSONMode(reqResult);
+                    newMessageEdit = JVCParser.getErrorMessageInJsonMode(reqResult);
                     if (newMessageEdit == null) {
                         newMessageEdit = "";
                     }
@@ -76,12 +82,11 @@ public class JVCMessageToTopicSender {
 
             if (newMessageEdit.isEmpty() || messageIsAnError) {
                 isInEdit = false;
-                lastInfosForEdit = null;
-                ajaxListInfos = null;
+                lastInfosForEdit = "";
             }
 
             if (listenerForNewMessageWantEdit != null) {
-                listenerForNewMessageWantEdit.initializeEditMode(newMessageEdit, messageIsAnError);
+                listenerForNewMessageWantEdit.initializeEditMode(newMessageEdit, messageIsAnError, useMessageToEdit);
             }
 
             currentAsyncTaskForGetEditInfos = null;
@@ -105,15 +110,19 @@ public class JVCMessageToTopicSender {
     }
 
     public void loadFromBundle(Bundle savedInstanceState) {
-        ajaxListInfos = savedInstanceState.getString(SAVE_OLD_AJAX_LIST_INFOS, null);
+        lastAjaxListInfos = savedInstanceState.getString(SAVE_LAST_AJAX_LIST_INFOS, "");
+        useMessageToEdit = savedInstanceState.getBoolean(SAVE_USE_MESSAGE_TO_EDIT, true);
         isInEdit = savedInstanceState.getBoolean(SAVE_IS_IN_EDIT, false);
-        lastInfosForEdit = savedInstanceState.getString(SAVE_LAST_INFOS_FOR_EDIT, null);
+        lastInfosForEdit = savedInstanceState.getString(SAVE_LAST_INFOS_FOR_EDIT, "");
+        lastMessageIDUsedForEdit = savedInstanceState.getString(SAVE_LAST_MESSAGE_ID_USED_FOR_EDIT, "");
     }
 
     public void saveToBundle(Bundle savedInstanceState) {
-        savedInstanceState.putString(SAVE_OLD_AJAX_LIST_INFOS, ajaxListInfos);
+        savedInstanceState.putString(SAVE_LAST_AJAX_LIST_INFOS, lastAjaxListInfos);
+        savedInstanceState.putBoolean(SAVE_USE_MESSAGE_TO_EDIT, useMessageToEdit);
         savedInstanceState.putBoolean(SAVE_IS_IN_EDIT, isInEdit);
         savedInstanceState.putString(SAVE_LAST_INFOS_FOR_EDIT, lastInfosForEdit);
+        savedInstanceState.putString(SAVE_LAST_MESSAGE_ID_USED_FOR_EDIT, lastMessageIDUsedForEdit);
     }
 
     public void sendEditMessage(String messageEditedToSend, String cookieListInAString) {
@@ -139,35 +148,37 @@ public class JVCMessageToTopicSender {
     public void cancelEdit() {
         stopCurrentEditTask();
         isInEdit = false;
-        lastInfosForEdit = null;
-        ajaxListInfos = null;
+        lastInfosForEdit = "";
     }
 
     public boolean sendThisMessage(String messageToSend, String urlToSend, String latestListOfInput, String cookieListInAString) {
         if (currentAsyncTaskForSendMessage == null) {
-            infosOfLastSend.messageSended = messageToSend;
-            infosOfLastSend.urlUsed = urlToSend;
-            infosOfLastSend.listOfInputUsed = latestListOfInput;
-            infosOfLastSend.cookiesUsed = cookieListInAString;
+            InfosOfSend infosForCurrentSend = new InfosOfSend();
+            infosForCurrentSend.messageSended = messageToSend;
+            infosForCurrentSend.urlUsed = urlToSend;
+            infosForCurrentSend.listOfInputUsed = latestListOfInput;
+            infosForCurrentSend.cookiesUsed = cookieListInAString;
 
             currentAsyncTaskForSendMessage = new PostJVCMessage();
             currentAsyncTaskForSendMessage.setRequestIsFinishedListener(postMessageIsFinishedListener);
-            currentAsyncTaskForSendMessage.execute(infosOfLastSend);
+            currentAsyncTaskForSendMessage.execute(infosForCurrentSend);
             return true;
         } else {
             return false;
         }
     }
 
-    public boolean getInfosForEditMessage(String idOfMessage, String oldAjaxListInfos, String cookieListInAString) {
+    public boolean getInfosForEditMessage(String idOfMessage, String ajaxListInfos, String cookieListInAString, boolean newUseMessageToEdit) {
         if (currentAsyncTaskForGetEditInfos == null) {
             isInEdit = true;
-            ajaxListInfos = oldAjaxListInfos;
-            lastInfosForEdit = "&id_message=" + idOfMessage + "&";
+            lastAjaxListInfos = ajaxListInfos;
+            useMessageToEdit = newUseMessageToEdit;
+            lastMessageIDUsedForEdit = idOfMessage;
+            lastInfosForEdit = "&id_message=" + lastMessageIDUsedForEdit + "&";
 
             currentAsyncTaskForGetEditInfos = new GetEditJVCMessageInfos();
             currentAsyncTaskForGetEditInfos.setRequestIsFinishedListener(getEditInfosIsFinishedListener);
-            currentAsyncTaskForGetEditInfos.execute(idOfMessage, oldAjaxListInfos, cookieListInAString);
+            currentAsyncTaskForGetEditInfos.execute(lastMessageIDUsedForEdit, lastAjaxListInfos, cookieListInAString);
             return true;
         } else {
             return false;
@@ -193,7 +204,7 @@ public class JVCMessageToTopicSender {
                 WebManager.WebInfos currentWebInfos = initWebInfos(info[0].cookiesUsed, false);
                 String pageContent;
 
-                pageContent = WebManager.sendRequestWithMultipleTrys(info[0].urlUsed, "POST", "message_topic=" + Utils.convertStringToUrlString(info[0].messageSended) + info[0].listOfInputUsed, currentWebInfos, 2);
+                pageContent = WebManager.sendRequestWithMultipleTrys(info[0].urlUsed, "POST", "message_topic=" + Utils.encodeStringToUrlString(info[0].messageSended) + info[0].listOfInputUsed, currentWebInfos, 2);
 
                 if (info[0].urlUsed.equals(currentWebInfos.currentUrl)) {
                     pageContent = "respawnirc:resendneeded";
@@ -214,7 +225,8 @@ public class JVCMessageToTopicSender {
     }
 
     public interface NewMessageWantEditListener {
-        void initializeEditMode(String newMessageToEdit, boolean messageIsAnError);
+        void editThisMessage(String messageID);
+        void initializeEditMode(String newMessageToEdit, boolean messageIsAnError, boolean useMessageToEdit);
     }
 
     public interface NewMessagePostedListener {

@@ -12,6 +12,7 @@ public class CustomImageGetter implements Html.ImageGetter {
     private Activity parentActivity = null;
     private Drawable deletedDrawable = null;
     private ImageDownloader downloaderForImage = null;
+    private int stickerSize = -1;
 
     public CustomImageGetter(Activity newParentActivity, Drawable newDeletedDrawable, ImageDownloader newDownloaderForImage) {
         parentActivity = newParentActivity;
@@ -19,11 +20,15 @@ public class CustomImageGetter implements Html.ImageGetter {
         downloaderForImage = newDownloaderForImage;
     }
 
+    public void setStickerSize(int newStickerSize) {
+        stickerSize = newStickerSize;
+    }
+
     @Override
     public Drawable getDrawable(String source) {
         if (!source.startsWith("http")) {
             Drawable drawable;
-            int resID;
+            int resId;
             Resources res = parentActivity.getResources();
             boolean needToBeBig = false;
 
@@ -31,20 +36,25 @@ public class CustomImageGetter implements Html.ImageGetter {
                 source = source.substring(("big-").length());
                 needToBeBig = true;
             }
-            resID = res.getIdentifier(source.substring(0, source.lastIndexOf(".")), "drawable", parentActivity.getPackageName());
+            resId = res.getIdentifier(source.substring(0, source.lastIndexOf(".")), "drawable", parentActivity.getPackageName());
 
             try {
                 if (needToBeBig) {
-                    Bitmap tmpBitmap = BitmapFactory.decodeResource(res, resID);
+                    Bitmap tmpBitmap = BitmapFactory.decodeResource(res, resId);
                     tmpBitmap = Bitmap.createScaledBitmap(tmpBitmap, tmpBitmap.getWidth() * 2, tmpBitmap.getHeight() * 2, false);
                     drawable = new BitmapDrawable(res, tmpBitmap);
                 } else {
-                    drawable = Undeprecator.resourcesGetDrawable(res, resID);
+                    drawable = Undeprecator.resourcesGetDrawable(res, resId);
                 }
             } catch (Exception e) {
                 drawable = deletedDrawable;
             }
-            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+
+            if (source.startsWith("sticker_") && stickerSize >= 0 && drawable != deletedDrawable) {
+                drawable.setBounds(0, 0, stickerSize, stickerSize);
+            } else {
+                drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+            }
 
             return drawable;
         } else if (source.startsWith("http://image.noelshack.com/minis") && downloaderForImage != null) {

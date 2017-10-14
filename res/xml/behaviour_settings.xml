@@ -1,64 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen
+<PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.preference.PreferenceCategory
+    <PreferenceCategory
         android:title="@string/settingsGeneralTitle">
-        <android.support.v7.preference.EditTextPreference
+        <EditTextPreference
             android:key="@string/settingsMaxNumberOfOverlyQuote"
             android:title="@string/maxNumberOfOverlyQuoteTitle"
             android:numeric="integer"/>
 
-        <android.support.v7.preference.CheckBoxPreference
+        <CheckBoxPreference
             android:key="@string/settingsEnableSmoothScroll"
             android:title="@string/enableSmoothScrollTitle"
             android:summary="@string/whenPossibleSummary"/>
 
-        <android.support.v7.preference.CheckBoxPreference
+        <CheckBoxPreference
             android:key="@string/settingsEnableGoToBottomOnLoad"
             android:title="@string/enableGoToBottomOnLoadTitle"
             android:summary="@string/enableGoToBottomOnLoadSummary"/>
 
-        <android.support.v7.preference.CheckBoxPreference
+        <CheckBoxPreference
             android:key="@string/settingsDefaultShowSpoilVal"
             android:title="@string/defaultShowSpoilValTitle"/>
 
-        <android.support.v7.preference.CheckBoxPreference
+        <CheckBoxPreference
             android:key="@string/settingsPostAsModoWhenPossible"
             android:title="@string/postAsModoWhenPossibleTitle"
             android:summary="@string/postAsModoWhenPossibleSummary"/>
-    </android.support.v7.preference.PreferenceCategory>
+    </PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory
+    <PreferenceCategory
         android:title="@string/settingsModeForumTitle">
-        <android.support.v7.preference.CheckBoxPreference
+        <CheckBoxPreference
             android:key="@string/settingsTopicClearOnRefresh"
             android:title="@string/topicClearOnRefreshTitle"/>
 
-        <android.support.v7.preference.CheckBoxPreference
+        <CheckBoxPreference
             android:key="@string/settingsEnableAutoScrollModeForum"
             android:title="@string/enableAutoScrollTitle"
             android:summary="@string/enableAutoScrollSummary"/>
-    </android.support.v7.preference.PreferenceCategory>
+    </PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory
+    <PreferenceCategory
         android:title="@string/settingsModeIRCTitle">
-        <android.support.v7.preference.EditTextPreference
+        <EditTextPreference
             android:key="@string/settingsRefreshTopicTime"
             android:title="@string/refreshTopicTimeTitle"
             android:numeric="integer"/>
 
-        <android.support.v7.preference.EditTextPreference
+        <EditTextPreference
             android:key="@string/settingsMaxNumberOfMessages"
             android:title="@string/maxNumberOfMessagesTitle"
             android:numeric="integer"/>
 
-        <android.support.v7.preference.EditTextPreference
+        <EditTextPreference
             android:key="@string/settingsInitialNumberOfMessages"
             android:title="@string/initialNumberOfMessagesTitle"
             android:numeric="integer"/>
-    </android.support.v7.preference.PreferenceCategory>
+    </PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory/>
-
-</android.support.v7.preference.PreferenceScreen>
+</PreferenceScreen>

@@ -69,7 +69,7 @@ public class KickPseudoActivity extends AbsHomeIsBackActivity {
             currentTaskForKick = null;
 
             if (!Utils.stringIsEmptyOrNull(reqResult)) {
-                String potentialError = JVCParser.getErrorMessageInJSONMode(reqResult);
+                String potentialError = JVCParser.getErrorMessageInJsonMode(reqResult);
 
                 if (potentialError != null) {
                     Toast.makeText(KickPseudoActivity.this, potentialError, Toast.LENGTH_SHORT).show();
@@ -155,7 +155,7 @@ public class KickPseudoActivity extends AbsHomeIsBackActivity {
         protected String doInBackground(KickInfos... infoOfKick) {
             if (infoOfKick.length == 1) {
                 WebManager.WebInfos currentWebInfos = initWebInfos(infoOfKick[0].cookies, false);
-                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_kick.php", "GET", "action=post&motif_kick=" + infoOfKick[0].motive + "&raison_kick=" + Utils.convertStringToUrlString(infoOfKick[0].reason) +
+                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_kick.php", "GET", "action=post&motif_kick=" + infoOfKick[0].motive + "&raison_kick=" + Utils.encodeStringToUrlString(infoOfKick[0].reason) +
                         "&duree_kick=3&id_alias_a_kick=" + infoOfKick[0].idAliasPseudo + "&id_forum=" + infoOfKick[0].idForum + "&id_message=" + infoOfKick[0].idMessage + "&" + infoOfKick[0].ajaxInfos, currentWebInfos);
             }
             return "erreurlol";

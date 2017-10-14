@@ -33,25 +33,25 @@ public class NavigationMenuAdapter extends BaseAdapter {
         serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public int getItemIDOfRow(int position) {
+    public int getItemIdOfRow(int position) {
         if (position < listOfMenuItem.size()) {
-            return listOfMenuItem.get(position).itemID;
+            return listOfMenuItem.get(position).itemId;
         }
         return -1;
     }
 
-    public int getGroupIDOfRow(int position) {
+    public int getGroupIdOfRow(int position) {
         if (position < listOfMenuItem.size()) {
-            return listOfMenuItem.get(position).groupID;
+            return listOfMenuItem.get(position).groupId;
         }
         return -1;
     }
 
-    public int getPositionDependingOfID(int itemID, int groupID) {
+    public int getPositionDependingOnId(int itemID, int groupID) {
         if (itemID != -1) {
             for (int i = 0; i < listOfMenuItem.size(); ++i) {
                 MenuItemInfo currentItemInfo = listOfMenuItem.get(i);
-                if (currentItemInfo.itemID == itemID && (groupID == -1 || currentItemInfo.groupID == groupID)) {
+                if (currentItemInfo.itemId == itemID && (groupID == -1 || currentItemInfo.groupId == groupID)) {
                     return i;
                 }
             }
@@ -62,7 +62,7 @@ public class NavigationMenuAdapter extends BaseAdapter {
 
     public void removeAllItemsFromGroup(int groupID) {
         for (int i = 0; i < listOfMenuItem.size(); ) {
-            if (listOfMenuItem.get(i).groupID == groupID) {
+            if (listOfMenuItem.get(i).groupId == groupID) {
                 listOfMenuItem.remove(i);
             } else {
                 ++i;
@@ -155,8 +155,8 @@ public class NavigationMenuAdapter extends BaseAdapter {
             holder.contentTextView.setTextColor(normalTextColor);
         }
 
-        if (currentMenuItemInfo.drawableResID != 0) {
-            Drawable compoundDrawable = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), currentMenuItemInfo.drawableResID).mutate();
+        if (currentMenuItemInfo.drawableResId != 0) {
+            Drawable compoundDrawable = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), currentMenuItemInfo.drawableResId).mutate();
 
             if (rowSelected == position && currentMenuItemInfo.isEnabled) {
                 compoundDrawable.setColorFilter(selectedItemColor, PorterDuff.Mode.SRC_ATOP);
@@ -191,10 +191,10 @@ public class NavigationMenuAdapter extends BaseAdapter {
 
     public static class MenuItemInfo {
         public String textContent = "";
-        public @DrawableRes int drawableResID = 0;
+        public @DrawableRes int drawableResId = 0;
         public boolean isHeader = false;
         public boolean isEnabled = true;
-        public int itemID = -1;
-        public int groupID = -1;
+        public int itemId = -1;
+        public int groupId = -1;
     }
 }

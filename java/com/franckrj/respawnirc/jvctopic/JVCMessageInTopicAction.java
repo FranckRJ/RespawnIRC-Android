@@ -49,7 +49,7 @@ public class JVCMessageInTopicAction {
         @Override
         public void onRequestIsFinished(String reqResult) {
             if (reqResult != null) {
-                String currentError = JVCParser.getErrorMessageInJSONMode(reqResult);
+                String currentError = JVCParser.getErrorMessageInJsonMode(reqResult);
 
                 if (currentError == null) {
                     Toast.makeText(parentActivity, R.string.supressSuccess, Toast.LENGTH_SHORT).show();

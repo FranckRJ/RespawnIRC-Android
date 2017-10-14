@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements InsertStuffDialogFragment.StuffInserted {
     public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_FORUM_NAME";
@@ -29,11 +31,17 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
     public static final String RESULT_EXTRA_TOPIC_LINK_TO_MOVE = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_TOPIC_LINK_TO_MOVE";
 
     private static final int MANAGE_SURVEY_REQUEST_CODE = 456;
+    private static final String SAVE_SURVEY_TITLE = "saveSurveyTitle";
+    private static final String SAVE_SURVEY_REPLY_LIST = "saveSurveyReplyList";
 
     private SendTopicToJVC currentAsyncTaskForSendTopic = null;
     private SendTopicInfos currentInfos = new SendTopicInfos();
     private EditText topicTitleEdit = null;
     private EditText topicContentEdit = null;
+    private String lastTopicTitleSended = "";
+    private String lastTopicContentSended = "";
+    private String lastSurveyTitleSended = "";
+    private String lastSurveyReplySendedInAString = "";
 
     private final View.OnClickListener insertStuffButtonClicked = new View.OnClickListener() {
         @Override
@@ -89,15 +97,28 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
         Utils.hideSoftKeyboard(this);
 
         if (currentAsyncTaskForSendTopic == null) {
-            currentInfos.lastTopicTitleSended = topicTitleEdit.getText().toString();
-            currentInfos.lastTopicContentSended = topicContentEdit.getText().toString();
+            lastSurveyTitleSended = currentInfos.surveyTitle;
+            lastSurveyReplySendedInAString = TextUtils.join("&", Utils.mapStringArrayList(currentInfos.surveyReplysList,
+                                                                                          new Utils.StringModifier() {
+                                                                                              @Override
+                                                                                              public String changeString(String baseString) {
+                                                                                                  return Utils.encodeStringToUrlString(baseString);
+                                                                                              }
+                                                                                          }));
+            lastTopicTitleSended = topicTitleEdit.getText().toString();
+            lastTopicContentSended = topicContentEdit.getText().toString();
+
+            currentInfos.topicTitle = lastTopicTitleSended;
+            currentInfos.topicContent = lastTopicContentSended;
 
             currentAsyncTaskForSendTopic = new SendTopicToJVC();
             currentAsyncTaskForSendTopic.setRequestIsFinishedListener(sendTopicIsFinishedListener);
             currentAsyncTaskForSendTopic.execute(new SendTopicInfos(currentInfos));
 
-            PrefsManager.putString(PrefsManager.StringPref.Names.LAST_TOPIC_TITLE_SENDED, currentInfos.lastTopicTitleSended);
-            PrefsManager.putString(PrefsManager.StringPref.Names.LAST_TOPIC_CONTENT_SENDED, currentInfos.lastTopicContentSended);
+            PrefsManager.putString(PrefsManager.StringPref.Names.LAST_TOPIC_TITLE_SENDED, lastTopicTitleSended);
+            PrefsManager.putString(PrefsManager.StringPref.Names.LAST_TOPIC_CONTENT_SENDED, lastTopicContentSended);
+            PrefsManager.putString(PrefsManager.StringPref.Names.LAST_SURVEY_TITLE_SENDED, lastSurveyTitleSended);
+            PrefsManager.putString(PrefsManager.StringPref.Names.LAST_SURVEY_REPLY_SENDED_IN_A_STRING, lastSurveyReplySendedInAString);
             PrefsManager.applyChanges();
         }
     }
@@ -136,20 +157,38 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
                 currentInfos.listOfInputsInAstring = getIntent().getStringExtra(EXTRA_INPUT_LIST);
             }
         }
+
+        if (savedInstanceState != null) {
+            ArrayList<String> tmpListOfReply = savedInstanceState.getStringArrayList(SAVE_SURVEY_REPLY_LIST);
+            currentInfos.surveyTitle = savedInstanceState.getString(SAVE_SURVEY_TITLE, "");
+
+            if (tmpListOfReply != null) {
+                currentInfos.surveyReplysList = tmpListOfReply;
+            }
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
         currentInfos.cookieList = PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST);
-        currentInfos.lastTopicTitleSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_TOPIC_TITLE_SENDED);
-        currentInfos.lastTopicContentSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_TOPIC_CONTENT_SENDED);
+        lastTopicTitleSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_TOPIC_TITLE_SENDED);
+        lastTopicContentSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_TOPIC_CONTENT_SENDED);
+        lastSurveyTitleSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_SURVEY_TITLE_SENDED);
+        lastSurveyReplySendedInAString = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_SURVEY_REPLY_SENDED_IN_A_STRING);
     }
 
     @Override
     public void onPause() {
         stopAllCurrentTasks();
         super.onPause();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(SAVE_SURVEY_TITLE, currentInfos.surveyTitle);
+        outState.putStringArrayList(SAVE_SURVEY_REPLY_LIST, currentInfos.surveyReplysList);
     }
 
     @Override
@@ -162,7 +201,8 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        menu.findItem(R.id.action_past_last_topic_sended_sendtopic).setEnabled(!currentInfos.lastTopicTitleSended.isEmpty() || !currentInfos.lastTopicContentSended.isEmpty());
+        menu.findItem(R.id.action_past_last_topic_sended_sendtopic).setEnabled(!lastTopicTitleSended.isEmpty() || !lastTopicContentSended.isEmpty() ||
+                                                                               !lastSurveyTitleSended.isEmpty() || !lastSurveyReplySendedInAString.isEmpty());
         return true;
     }
 
@@ -173,8 +213,16 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
                 sendNewTopic();
                 return true;
             case R.id.action_past_last_topic_sended_sendtopic:
-                topicTitleEdit.setText(currentInfos.lastTopicTitleSended);
-                topicContentEdit.setText(currentInfos.lastTopicContentSended);
+                topicTitleEdit.setText(lastTopicTitleSended);
+                topicContentEdit.setText(lastTopicContentSended);
+                currentInfos.surveyTitle = lastSurveyTitleSended;
+                currentInfos.surveyReplysList = Utils.mapStringArrayList(Arrays.asList(lastSurveyReplySendedInAString.split("&")),
+                                                                         new Utils.StringModifier() {
+                                                                             @Override
+                                                                             public String changeString(String baseString) {
+                                                                                 return Utils.decodeUrlStringToString(baseString);
+                                                                             }
+                                                                         });
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -209,14 +257,14 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
             if (infosOfSend.length == 1) {
                 WebManager.WebInfos currentWebInfos = initWebInfos(infosOfSend[0].cookieList, false);
                 String pageContent;
-                String requestBuilded = "titre_topic=" + Utils.convertStringToUrlString(infosOfSend[0].lastTopicTitleSended) + "&message_topic=" + Utils.convertStringToUrlString(infosOfSend[0].lastTopicContentSended) + infosOfSend[0].listOfInputsInAstring;
+                String requestBuilded = "titre_topic=" + Utils.encodeStringToUrlString(infosOfSend[0].topicTitle) + "&message_topic=" + Utils.encodeStringToUrlString(infosOfSend[0].topicContent) + infosOfSend[0].listOfInputsInAstring;
 
                 if (!Utils.stringIsEmptyOrNull(infosOfSend[0].surveyTitle)) {
-                    requestBuilded += "&submit_sondage=1&question_sondage=" + Utils.convertStringToUrlString(infosOfSend[0].surveyTitle);
+                    requestBuilded += "&submit_sondage=1&question_sondage=" + Utils.encodeStringToUrlString(infosOfSend[0].surveyTitle);
 
                     for (String thisReply : infosOfSend[0].surveyReplysList) {
                         if (!Utils.stringIsEmptyOrNull(thisReply)) {
-                            requestBuilded += "&reponse_sondage[]=" + Utils.convertStringToUrlString(thisReply);
+                            requestBuilded += "&reponse_sondage[]=" + Utils.encodeStringToUrlString(thisReply);
                         }
                     }
                 } else {
@@ -244,8 +292,8 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
         private String cookieList = "";
         private String linkToSend = "";
         private String listOfInputsInAstring = "";
-        private String lastTopicTitleSended = "";
-        private String lastTopicContentSended = "";
+        private String topicTitle = "";
+        private String topicContent = "";
         private String surveyTitle = "";
         private ArrayList<String> surveyReplysList = new ArrayList<>();
 
@@ -255,8 +303,8 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
             cookieList = baseForCopy.cookieList;
             linkToSend = baseForCopy.linkToSend;
             listOfInputsInAstring = baseForCopy.listOfInputsInAstring;
-            lastTopicTitleSended = baseForCopy.lastTopicTitleSended;
-            lastTopicContentSended = baseForCopy.lastTopicContentSended;
+            topicTitle = baseForCopy.topicTitle;
+            topicContent = baseForCopy.topicContent;
             surveyTitle = baseForCopy.surveyTitle;
             surveyReplysList = new ArrayList<>(baseForCopy.surveyReplysList);
         }

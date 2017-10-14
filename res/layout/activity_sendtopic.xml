@@ -32,7 +32,7 @@
                 android:gravity="bottom"
                 android:inputType="textMultiLine|textCapSentences"
                 android:minLines="4"
-                android:maxLines="10"
+                android:maxLines="8"
                 android:hint="@string/messagePlaceHolder"/>
 
             <LinearLayout

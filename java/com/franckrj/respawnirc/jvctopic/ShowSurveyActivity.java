@@ -97,7 +97,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
 
     private boolean analyzeSurveyContent(String pageContent) {
         if (!Utils.stringIsEmptyOrNull(pageContent)) {
-            String errorContent = JVCParser.getErrorMessageInJSONMode(pageContent);
+            String errorContent = JVCParser.getErrorMessageInJsonMode(pageContent);
 
             if (errorContent == null) {
                 JVCParser.SurveyInfos infosForSurvey = JVCParser.getSurveyInfosFromSurveyBlock(JVCParser.getRealSurveyContent(pageContent));
@@ -135,7 +135,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
         String colorValueOfPercentage;
 
         try {
-            int colorValueInNumber = (int)(Integer.parseInt(numberOfPercentage) * 2.5); //la couleur de l'int sera entre rouge 0 et rouge 250.
+            int colorValueInNumber = Utils.roundToInt(Integer.parseInt(numberOfPercentage) * 2.5); //la couleur de l'int sera entre rouge 0 et rouge 250.
 
             if (ThemeManager.getThemeUsedIsDark()) {
                 colorValueInNumber = 250 - colorValueInNumber; //inversion pour les thèmes sombres

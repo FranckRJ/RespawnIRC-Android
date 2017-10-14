@@ -100,7 +100,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         public void onClick(View view) {
             if (adapterForTopic.getShowSurvey()) {
                 if (getActivity() instanceof NewSurveyNeedToBeShown) {
-                    ((NewSurveyNeedToBeShown) getActivity()).getNewSurveyInfos(JVCParser.specialCharToNormalChar(absGetterForTopic.getSurveyTitleInHtml()), absGetterForTopic.getTopicID(), absGetterForTopic.getLatestAjaxInfos().list, absGetterForTopic.getListOfSurveyReplysWithInfos());
+                    ((NewSurveyNeedToBeShown) getActivity()).getNewSurveyInfos(JVCParser.specialCharToNormalChar(absGetterForTopic.getSurveyTitleInHtml()), absGetterForTopic.getTopicId(), absGetterForTopic.getLatestAjaxInfos().list, absGetterForTopic.getListOfSurveyReplysWithInfos());
                 }
             }
         }
@@ -108,11 +108,23 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
 
     protected void initializeSettings() {
         int avatarSizeInDP;
+        int stickerSizeInDP;
+        int miniNoelshackWidthInDP;
 
         try {
             avatarSizeInDP = Integer.valueOf(PrefsManager.getString(PrefsManager.StringPref.Names.AVATAR_SIZE));
         } catch (Exception e) {
             avatarSizeInDP = -1;
+        }
+        try {
+            stickerSizeInDP = Integer.valueOf(PrefsManager.getString(PrefsManager.StringPref.Names.STICKER_SIZE));
+        } catch (Exception e) {
+            stickerSizeInDP = -1;
+        }
+        try {
+            miniNoelshackWidthInDP = Integer.valueOf(PrefsManager.getString(PrefsManager.StringPref.Names.MINI_NOELSHACK_WIDTH));
+        } catch (Exception e) {
+            miniNoelshackWidthInDP = -1;
         }
 
         try {
@@ -122,6 +134,16 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         }
 
         updateSettingsDependingOnConnection();
+        if (avatarSizeInDP >= 0) {
+            adapterForTopic.setAvatarSize(Utils.roundToInt(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, avatarSizeInDP, getResources().getDisplayMetrics())));
+        }
+        if (stickerSizeInDP >= 0) {
+            adapterForTopic.setStickerSize(Utils.roundToInt(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, stickerSizeInDP, getResources().getDisplayMetrics())));
+        }
+        if (miniNoelshackWidthInDP >= 0) {
+            adapterForTopic.setMiniNoeslahckSizeByWidth(Utils.roundToInt(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, miniNoelshackWidthInDP, getResources().getDisplayMetrics())));
+        }
+
         currentSettings.maxNumberOfOverlyQuotes = Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MAX_NUMBER_OF_OVERLY_QUOTE));
         currentSettings.transformStickerToSmiley = PrefsManager.getBool(PrefsManager.BoolPref.Names.TRANSFORM_STICKER_TO_SMILEY);
         currentSettings.shortenLongLink = PrefsManager.getBool(PrefsManager.BoolPref.Names.SHORTEN_LONG_LINK);
@@ -134,7 +156,6 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         adapterForTopic.setShowSpoilDefault(PrefsManager.getBool(PrefsManager.BoolPref.Names.DEFAULT_SHOW_SPOIL_VAL));
         adapterForTopic.setFastRefreshOfImages(PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_FAST_REFRESH_OF_IMAGES));
         adapterForTopic.setColorDeletedMessages(PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_COLOR_DELETED_MESSAGES));
-        adapterForTopic.setAvatarSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, avatarSizeInDP, getResources().getDisplayMetrics()));
         userIsConnectedAsModo = PrefsManager.getBool(PrefsManager.BoolPref.Names.USER_IS_MODO);
         hideTotallyMessagesOfIgnoredPseudos = PrefsManager.getBool(PrefsManager.BoolPref.Names.HIDE_TOTALLY_MESSAGES_OF_IGNORED_PSEUDOS);
     }
@@ -199,43 +220,43 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         JVCParser.MessageInfos currentItem;
         switch (item.getItemId()) {
             case R.id.menu_show_spoil_message:
-                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
-                currentItem.listOfSpoilIDToShow.add(-1);
+                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIdSelected());
+                currentItem.listOfSpoilIdToShow.add(-1);
                 adapterForTopic.updateThisItem(currentItem, false);
                 adapterForTopic.notifyDataSetChanged();
                 return true;
             case R.id.menu_hide_spoil_message:
-                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
-                currentItem.listOfSpoilIDToShow.clear();
+                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIdSelected());
+                currentItem.listOfSpoilIdToShow.clear();
                 adapterForTopic.updateThisItem(currentItem, false);
                 adapterForTopic.notifyDataSetChanged();
                 return true;
             case R.id.menu_show_quote_message:
-                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
+                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIdSelected());
                 currentItem.showOverlyQuote = true;
                 adapterForTopic.updateThisItem(currentItem, false);
                 adapterForTopic.notifyDataSetChanged();
                 return true;
             case R.id.menu_hide_quote_message:
-                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
+                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIdSelected());
                 currentItem.showOverlyQuote = false;
                 adapterForTopic.updateThisItem(currentItem, false);
                 adapterForTopic.notifyDataSetChanged();
                 return true;
             case R.id.menu_show_ugly_images_message:
-                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
+                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIdSelected());
                 currentItem.showUglyImages = true;
                 adapterForTopic.updateThisItem(currentItem, false);
                 adapterForTopic.notifyDataSetChanged();
                 return true;
             case R.id.menu_hide_ugly_images_message:
-                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
+                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIdSelected());
                 currentItem.showUglyImages = false;
                 adapterForTopic.updateThisItem(currentItem, false);
                 adapterForTopic.notifyDataSetChanged();
                 return true;
             case R.id.menu_show_blacklisted_message:
-                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
+                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIdSelected());
                 currentItem.pseudoIsBlacklisted = false;
                 adapterForTopic.updateThisItem(currentItem, false);
                 adapterForTopic.notifyDataSetChanged();
@@ -258,7 +279,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     }
 
     public JVCParser.MessageInfos getCurrentItemSelected() {
-        return adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
+        return adapterForTopic.getItem(adapterForTopic.getCurrentItemIdSelected());
     }
 
     public Boolean getIsInFavs() {
@@ -269,8 +290,8 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         return absGetterForTopic.getUserCanLockTopic();
     }
 
-    public String getTopicID() {
-        return absGetterForTopic.getTopicID();
+    public String getTopicId() {
+        return absGetterForTopic.getTopicId();
     }
 
     public void setIsInFavs(Boolean newVal) {
@@ -423,7 +444,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     }
 
     public interface NewSurveyNeedToBeShown {
-        void getNewSurveyInfos(String surveyTitle, String topicID, String ajaxInfos, ArrayList<JVCParser.SurveyReplyInfos> listOfReplysWithInfos);
+        void getNewSurveyInfos(String surveyTitle, String topicId, String ajaxInfos, ArrayList<JVCParser.SurveyReplyInfos> listOfReplysWithInfos);
     }
 
     protected abstract void initializeGetterForMessages();

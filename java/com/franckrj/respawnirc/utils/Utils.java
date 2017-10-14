@@ -19,16 +19,22 @@ import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.WebNavigatorActivity;
 
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Utils {
-    public static String resColorToString(int resID, Activity baseActivity) {
-        return String.format("#%06X", 0xFFFFFF & Undeprecator.resourcesGetColor(baseActivity.getResources(), resID));
+    public static String resColorToString(int resId, Activity baseActivity) {
+        return String.format("#%06X", 0xFFFFFF & Undeprecator.resourcesGetColor(baseActivity.getResources(), resId));
     }
 
-    public static String resColorToStringWithAlpha(int resID, Activity baseActivity) {
-        return String.format("#%08X", Undeprecator.resourcesGetColor(baseActivity.getResources(), resID));
+    public static String resColorToStringWithAlpha(int resId, Activity baseActivity) {
+        return String.format("#%08X", Undeprecator.resourcesGetColor(baseActivity.getResources(), resId));
+    }
+
+    public static int roundToInt(double valToRound) {
+        return (int) (valToRound + 0.5);
     }
 
     public static boolean stringsAreEquals(String str1, String str2) {
@@ -67,13 +73,32 @@ public class Utils {
         inThisSpan.removeSpan(oldSpan);
     }
 
-    public static String convertStringToUrlString(String baseString) {
+    public static String encodeStringToUrlString(String baseString) {
         try {
             baseString = URLEncoder.encode(baseString, "UTF-8");
         } catch (Exception e) {
             baseString = "";
         }
         return baseString;
+    }
+
+    public static String decodeUrlStringToString(String baseString) {
+        try {
+            baseString = URLDecoder.decode(baseString, "UTF-8");
+        } catch (Exception e) {
+            baseString = "";
+        }
+        return baseString;
+    }
+
+    public static ArrayList<String> mapStringArrayList(List<String> baseList, StringModifier mapFunction) {
+        ArrayList<String> newList = new ArrayList<>();
+
+        for (String currentString : baseList) {
+            newList.add(mapFunction.changeString(currentString));
+        }
+
+        return newList;
     }
 
     public static void openLinkInExternalNavigator(String link, Activity parentActivity) {
@@ -133,5 +158,9 @@ public class Utils {
         }
 
         shortcutManager.setDynamicShortcuts(listOfShortcuts);
+    }
+
+    public interface StringModifier {
+        String changeString(String baseString);
     }
 }

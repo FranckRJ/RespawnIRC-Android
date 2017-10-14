@@ -45,9 +45,14 @@ public class ImageDownloader {
         imagesCacheDir = newCacheDir;
     }
 
-    public void setImagesSize(int newWidth, int newHeight) {
+    public void setImagesSize(int newWidth, int newHeight, boolean boundDefaultsDrawableToNewSize) {
         imagesWidth = newWidth;
         imagesHeight = newHeight;
+
+        if (boundDefaultsDrawableToNewSize) {
+            defaultDrawable.setBounds(0, 0, imagesWidth, imagesHeight);
+            deletedDrawable.setBounds(0, 0, imagesWidth, imagesHeight);
+        }
     }
 
     public void setListenerForDownloadFinished(DownloadFinished newListener) {
@@ -58,20 +63,12 @@ public class ImageDownloader {
         listenerForCurrentProgress = newListener;
     }
 
-    public void setDefaultDrawable(Drawable newDrawable, boolean setBoundsToImageSize) {
+    public void setDefaultDrawable(Drawable newDrawable) {
         defaultDrawable = newDrawable;
-
-        if (setBoundsToImageSize) {
-            defaultDrawable.setBounds(0, 0, imagesWidth, imagesHeight);
-        }
     }
 
-    public void setDeletedDrawable(Drawable newDrawable, boolean setBoundsToImageSize) {
+    public void setDeletedDrawable(Drawable newDrawable) {
         deletedDrawable = newDrawable;
-
-        if (setBoundsToImageSize) {
-            deletedDrawable.setBounds(0, 0, imagesWidth, imagesHeight);
-        }
     }
 
     public void setScaleLargeImages(boolean newVal) {
@@ -223,7 +220,7 @@ public class ImageDownloader {
                     output.write(data, 0, count);
 
                     if (lenghtOfFile > 0) {
-                        publishProgress((int) ((total * 100) / lenghtOfFile));
+                        publishProgress(Utils.roundToInt((total * 100) / lenghtOfFile));
                     }
                 }
 

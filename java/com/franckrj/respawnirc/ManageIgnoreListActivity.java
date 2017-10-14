@@ -1,14 +1,15 @@
 package com.franckrj.respawnirc;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
@@ -17,31 +18,29 @@ import com.franckrj.respawnirc.utils.IgnoreListManager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 public class ManageIgnoreListActivity extends AbsHomeIsBackActivity {
     private TextView emptyListMessageText = null;
     private IgnoreListAdapter adapterForIgnoreList = null;
-    private ArrayList<String> listOfIgnoredPseudos = new ArrayList<>();
     private boolean listHasChanged = false;
 
-    private void generateListOfIgnoredPseudos() {
-        listOfIgnoredPseudos.clear();
-        listOfIgnoredPseudos.addAll(Arrays.asList(IgnoreListManager.getListOfIgnoredPseudosInLCAsArray()));
-        Collections.sort(listOfIgnoredPseudos);
-    }
-
-    private void removeItem(int position) {
-        if (position < listOfIgnoredPseudos.size()) {
-            IgnoreListManager.removePseudoFromIgnoredList(listOfIgnoredPseudos.get(position));
-            listOfIgnoredPseudos.remove(position);
-            adapterForIgnoreList.notifyDataSetChanged();
+    private final IgnoreListAdapter.OnPseudoRemovedListener listenerForPseudoRemoved = new IgnoreListAdapter.OnPseudoRemovedListener() {
+        @Override
+        public void onPseudoRemoved(String pseudo) {
+            IgnoreListManager.removePseudoFromIgnoredList(pseudo);
             listHasChanged = true;
 
-            if (listOfIgnoredPseudos.isEmpty()) {
+            if (adapterForIgnoreList.listIsEmpty()) {
                 emptyListMessageText.setVisibility(View.VISIBLE);
             }
         }
+    };
+
+    private void generateListOfIgnoredPseudos() {
+        ArrayList<String> newListOfIgnoredPseudos = new ArrayList<>();
+        newListOfIgnoredPseudos.addAll(Arrays.asList(IgnoreListManager.getListOfIgnoredPseudosInLCAsArray()));
+        Collections.sort(newListOfIgnoredPseudos);
+        adapterForIgnoreList.setListOfIgnoredPseudos(newListOfIgnoredPseudos);
     }
 
     @Override
@@ -50,13 +49,17 @@ public class ManageIgnoreListActivity extends AbsHomeIsBackActivity {
         setContentView(R.layout.activity_manageignorelist);
         initToolbar(R.id.toolbar_manageignorelist);
 
-        generateListOfIgnoredPseudos();
-        adapterForIgnoreList = new IgnoreListAdapter(this, listOfIgnoredPseudos);
-        ListView ignoreListView = findViewById(R.id.ignore_list_manageignorelist);
+        adapterForIgnoreList = new IgnoreListAdapter(this);
+        RecyclerView ignoreListView = findViewById(R.id.ignore_list_manageignorelist);
         emptyListMessageText = findViewById(R.id.text_emptylist_manageignorelist);
+
+        generateListOfIgnoredPseudos();
+        adapterForIgnoreList.setOnPseudoRemovedListener(listenerForPseudoRemoved);
+        ignoreListView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        ignoreListView.setLayoutManager(new LinearLayoutManager(this));
         ignoreListView.setAdapter(adapterForIgnoreList);
 
-        if (listOfIgnoredPseudos.isEmpty()) {
+        if (adapterForIgnoreList.listIsEmpty()) {
             emptyListMessageText.setVisibility(View.VISIBLE);
         } else {
             emptyListMessageText.setVisibility(View.GONE);
@@ -73,45 +76,85 @@ public class ManageIgnoreListActivity extends AbsHomeIsBackActivity {
         super.onPause();
     }
 
-    private class IgnoreListAdapter extends ArrayAdapter<String> {
+    private static class IgnoreListAdapter extends RecyclerView.Adapter<IgnoreListAdapter.IgnoreViewHolder> {
         private LayoutInflater serviceInflater = null;
+        private ArrayList<String> listOfIgnoredPseudos = new ArrayList<>();
+        private OnPseudoRemovedListener listenerForPseudoRemoved = null;
 
-        public IgnoreListAdapter(Context context, List<String> listOfStrings) {
-            super(context, R.layout.ignorelist_row, listOfStrings);
-            serviceInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        public IgnoreListAdapter(Activity parentActivity) {
+            serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
-        @NonNull
+        public void setOnPseudoRemovedListener(OnPseudoRemovedListener newListenerForPseudoRemoved) {
+            listenerForPseudoRemoved = newListenerForPseudoRemoved;
+        }
+
+        public void setListOfIgnoredPseudos(ArrayList<String> newList) {
+            listOfIgnoredPseudos = newList;
+            notifyDataSetChanged();
+        }
+
+        public void removeItem(int position) {
+            if (position < listOfIgnoredPseudos.size()) {
+                String pseudoRemoved = listOfIgnoredPseudos.get(position);
+
+                listOfIgnoredPseudos.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, listOfIgnoredPseudos.size() - position);
+
+                if (listenerForPseudoRemoved != null) {
+                    listenerForPseudoRemoved.onPseudoRemoved(pseudoRemoved);
+                }
+            }
+        }
+
+        public boolean listIsEmpty() {
+            return listOfIgnoredPseudos.isEmpty();
+        }
+
         @Override
-        public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
-            ViewHolder holder;
+        public IgnoreViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new IgnoreViewHolder(serviceInflater.inflate(R.layout.ignorelist_row, parent, false));
+        }
 
-            if(convertView == null) {
-                holder = new ViewHolder();
+        @Override
+        public void onBindViewHolder(IgnoreViewHolder holder, int position) {
+            holder.setCurrentPseudo(listOfIgnoredPseudos.get(position), position);
+        }
 
-                convertView = serviceInflater.inflate(R.layout.ignorelist_row, parent, false);
-                holder.mainText = convertView.findViewById(R.id.text_main_ignorelist_row);
-                holder.actionButton = convertView.findViewById(R.id.image_button_action_ignorelist_row);
+        @Override
+        public int getItemCount() {
+            return listOfIgnoredPseudos.size();
+        }
 
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
+        public class IgnoreViewHolder extends RecyclerView.ViewHolder {
+            private TextView mainText = null;
+            private ImageButton actionButton = null;
+            private int position = -1;
+
+            public IgnoreViewHolder(View mainView) {
+                super(mainView);
+                mainText = mainView.findViewById(R.id.text_main_ignorelist_row);
+                actionButton = mainView.findViewById(R.id.image_button_action_ignorelist_row);
+
+                actionButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (position != -1) {
+                            removeItem(position);
+                        }
+                    }
+                });
             }
 
-            holder.mainText.setText(getItem(position));
-            holder.actionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    removeItem(position);
-                }
-            });
-
-            return convertView;
+            public void setCurrentPseudo(String newPseudo, int newPosition) {
+                mainText.setText(newPseudo);
+                position = newPosition;
+            }
         }
 
-        private class ViewHolder {
-            public TextView mainText;
-            public ImageButton actionButton;
+        public interface OnPseudoRemovedListener {
+            void onPseudoRemoved(String pseudo);
         }
     }
 }

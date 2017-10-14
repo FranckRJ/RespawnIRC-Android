@@ -9,206 +9,49 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--TODO: Totalement horrible, mais doit être terminé rapidement donc solution provisoire.-->
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/toolbar_managesurvey"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:orientation="vertical"
-                android:focusable="true"
-                android:focusableInTouchMode="true">
+                android:orientation="horizontal">
                 <Button
                     android:id="@+id/validate_button_managesurvey"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
+                    android:layout_weight="40"
+                    android:layout_margin="4dp"
                     android:text="@string/validate"/>
-
-                <EditText
-                    android:id="@+id/title_edit_managesurvey"
-                    android:layout_width="match_parent"
+                <Button
+                    android:id="@+id/addreply_button_managesurvey"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:inputType="text|textCapSentences"
-                    android:maxLines="1"
-                    android:hint="@string/surveyTitlePlaceholder"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Rep n°1 :"/>
-                    <EditText
-                        android:id="@+id/reply_0_edit_managesurvey"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text|textCapSentences"
-                        android:maxLines="1"
-                        android:hint="@string/keepEmptyToNotUse"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Rep n°2 :"/>
-                    <EditText
-                        android:id="@+id/reply_1_edit_managesurvey"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text|textCapSentences"
-                        android:maxLines="1"
-                        android:hint="@string/keepEmptyToNotUse"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Rep n°3 :"/>
-                    <EditText
-                        android:id="@+id/reply_2_edit_managesurvey"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text|textCapSentences"
-                        android:maxLines="1"
-                        android:hint="@string/keepEmptyToNotUse"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Rep n°4 :"/>
-                    <EditText
-                        android:id="@+id/reply_3_edit_managesurvey"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text|textCapSentences"
-                        android:maxLines="1"
-                        android:hint="@string/keepEmptyToNotUse"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Rep n°5 :"/>
-                    <EditText
-                        android:id="@+id/reply_4_edit_managesurvey"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text|textCapSentences"
-                        android:maxLines="1"
-                        android:hint="@string/keepEmptyToNotUse"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Rep n°6 :"/>
-                    <EditText
-                        android:id="@+id/reply_5_edit_managesurvey"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text|textCapSentences"
-                        android:maxLines="1"
-                        android:hint="@string/keepEmptyToNotUse"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Rep n°7 :"/>
-                    <EditText
-                        android:id="@+id/reply_6_edit_managesurvey"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text|textCapSentences"
-                        android:maxLines="1"
-                        android:hint="@string/keepEmptyToNotUse"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Rep n°8 :"/>
-                    <EditText
-                        android:id="@+id/reply_7_edit_managesurvey"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text|textCapSentences"
-                        android:maxLines="1"
-                        android:hint="@string/keepEmptyToNotUse"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Rep n°9 :"/>
-                    <EditText
-                        android:id="@+id/reply_8_edit_managesurvey"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text|textCapSentences"
-                        android:maxLines="1"
-                        android:hint="@string/keepEmptyToNotUse"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Rep n°10 :"/>
-                    <EditText
-                        android:id="@+id/reply_9_edit_managesurvey"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text|textCapSentences"
-                        android:maxLines="1"
-                        android:hint="@string/keepEmptyToNotUse"/>
-                </LinearLayout>
+                    android:layout_weight="60"
+                    android:layout_margin="4dp"
+                    android:text="@string/addReply"/>
             </LinearLayout>
-        </ScrollView>
+
+            <EditText
+                android:id="@+id/title_edit_managesurvey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text|textCapSentences"
+                android:maxLines="1"
+                android:hint="@string/surveyTitlePlaceholder"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/reply_list_managesurvey"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"/>
+        </LinearLayout>
 
         <include
             android:id="@+id/toolbar_managesurvey"

@@ -9,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.v7.widget.CardView;
-import android.text.Html;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -50,7 +49,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     private ArrayList<ContentHolder> listOfContentForMessages = new ArrayList<>();
     private LayoutInflater serviceInflater;
     private Activity parentActivity = null;
-    private int currentItemIDSelected = -1;
+    private int currentItemIdSelected = -1;
     private PopupMenu.OnMenuItemClickListener actionWhenItemMenuClicked = null;
     private JVCParser.Settings currentSettings = null;
     private int idOfLayoutToUse = 0;
@@ -59,7 +58,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     private ImageDownloader downloaderForImage = new ImageDownloader();
     private URLClicked urlCLickedListener = null;
     private PseudoClicked pseudoCLickedListener = null;
-    private Html.ImageGetter jvcImageGetter = null;
+    private CustomImageGetter jvcImageGetter = null;
     private boolean showSurvey = false;
     private boolean showSignatures = false;
     private boolean showAvatars = false;
@@ -89,8 +88,8 @@ public class JVCTopicAdapter extends BaseAdapter {
             MenuInflater inflater = popup.getMenuInflater();
             JVCParser.MessageInfos itemSelected;
 
-            currentItemIDSelected = (int) buttonView.getTag();
-            itemSelected = getItem(currentItemIDSelected);
+            currentItemIdSelected = (int) buttonView.getTag();
+            itemSelected = getItem(currentItemIdSelected);
             popup.setOnMenuItemClickListener(actionWhenItemMenuClicked);
 
             if (!itemSelected.pseudoIsBlacklisted) {
@@ -111,7 +110,7 @@ public class JVCTopicAdapter extends BaseAdapter {
                 }
 
                 if (itemSelected.messageContentContainSpoil || (showSignatures && itemSelected.signatureContainSpoil)) {
-                    if (itemSelected.listOfSpoilIDToShow.isEmpty()) {
+                    if (itemSelected.listOfSpoilIdToShow.isEmpty()) {
                         popup.getMenu().add(Menu.NONE, R.id.menu_show_spoil_message, Menu.NONE, R.string.showSpoilMessage);
                     } else {
                         popup.getMenu().add(Menu.NONE, R.id.menu_hide_spoil_message, Menu.NONE, R.string.hideSpoilMessage);
@@ -150,13 +149,13 @@ public class JVCTopicAdapter extends BaseAdapter {
         downloaderForImage.setParentActivity(parentActivity);
         downloaderForImage.setListenerForDownloadFinished(listenerForDownloadFinished);
         downloaderForImage.setImagesCacheDir(parentActivity.getCacheDir());
-        downloaderForImage.setImagesSize(res.getDimensionPixelSize(R.dimen.imagesWidth), res.getDimensionPixelSize(R.dimen.imagesHeight));
-        downloaderForImage.setDefaultDrawable(Undeprecator.resourcesGetDrawable(res, ThemeManager.getDrawableRes(ThemeManager.DrawableName.DOWNLOAD_IMAGE)), true);
-        downloaderForImage.setDeletedDrawable(Undeprecator.resourcesGetDrawable(res, deletedDrawableRes), true);
+        downloaderForImage.setDefaultDrawable(Undeprecator.resourcesGetDrawable(res, ThemeManager.getDrawableRes(ThemeManager.DrawableName.DOWNLOAD_IMAGE)));
+        downloaderForImage.setDeletedDrawable(Undeprecator.resourcesGetDrawable(res, deletedDrawableRes));
+        downloaderForImage.setImagesSize(res.getDimensionPixelSize(R.dimen.miniNoelshackWidthDefault), res.getDimensionPixelSize(R.dimen.miniNoelshackHeightDefault), true);
     }
 
-    public int getCurrentItemIDSelected() {
-        return currentItemIDSelected;
+    public int getCurrentItemIdSelected() {
+        return currentItemIdSelected;
     }
 
     //pas d'intérêt que tout le monde puisse accéder aux messages, seul le .isEmpty() est important sur cette liste.
@@ -224,6 +223,15 @@ public class JVCTopicAdapter extends BaseAdapter {
         avatarSize = newSize;
     }
 
+    public void setStickerSize(int newSize) {
+        jvcImageGetter.setStickerSize(newSize);
+    }
+
+    public void setMiniNoeslahckSizeByWidth(int newWidth) {
+        int newHeight = Utils.roundToInt(newWidth * 0.75);
+        downloaderForImage.setImagesSize(newWidth, newHeight, true);
+    }
+
     public void enableSurvey(String newSurveyTitle) {
         showSurvey = true;
         surveyTitle = newSurveyTitle;
@@ -262,7 +270,7 @@ public class JVCTopicAdapter extends BaseAdapter {
 
     private ContentHolder updateHolderWithNewItem(ContentHolder holder, JVCParser.MessageInfos item, boolean isARealNewItem) {
         if (isARealNewItem && showSpoilDefault) {
-            item.listOfSpoilIDToShow.add(-1);
+            item.listOfSpoilIdToShow.add(-1);
         }
 
         holder.infoLineContent = new SpannableString(Undeprecator.htmlFromHtml(JVCParser.createMessageInfoLineFromInfos(item, currentSettings)));
@@ -324,7 +332,7 @@ public class JVCTopicAdapter extends BaseAdapter {
             Utils.replaceSpanByAnotherSpan(spannable, holdingStringSpan, new ClickableSpan() {
                 @Override
                 public void onClick(View view) {
-                    updateListOfSpoidIDToShow(infosOfMessage, holdingStringSpan.getString());
+                    updateListOfSpoidIdToShow(infosOfMessage, holdingStringSpan.getString());
                 }
 
                 @Override
@@ -337,33 +345,33 @@ public class JVCTopicAdapter extends BaseAdapter {
         return spannable;
     }
 
-    private void updateListOfSpoidIDToShow(JVCParser.MessageInfos infosOfMessage, String instructionForUpdate) {
+    private void updateListOfSpoidIdToShow(JVCParser.MessageInfos infosOfMessage, String instructionForUpdate) {
         boolean openSpoil = instructionForUpdate.startsWith("o");
-        int spoilID;
+        int spoilId;
 
         try {
-            spoilID = Integer.parseInt(instructionForUpdate.substring(1));
+            spoilId = Integer.parseInt(instructionForUpdate.substring(1));
         } catch (Exception e) {
-            spoilID = -1;
+            spoilId = -1;
         }
 
-        if (spoilID >= 0) {
+        if (spoilId >= 0) {
             if (openSpoil) {
-                infosOfMessage.listOfSpoilIDToShow.add(spoilID);
+                infosOfMessage.listOfSpoilIdToShow.add(spoilId);
             } else {
-                infosOfMessage.listOfSpoilIDToShow.remove(spoilID);
+                infosOfMessage.listOfSpoilIdToShow.remove(spoilId);
             }
             updateThisItem(infosOfMessage, false);
             notifyDataSetChanged();
         }
     }
 
-    private void setColorBackgroundOfThisItem(View backrgoundView, @ColorRes int colorID) {
+    private void setColorBackgroundOfThisItem(View backrgoundView, @ColorRes int colorId) {
         if (backrgoundView instanceof CardView) {
             CardView currentBackgroundView = (CardView) backrgoundView;
-            currentBackgroundView.setCardBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), colorID));
+            currentBackgroundView.setCardBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), colorId));
         } else {
-            backrgoundView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), colorID));
+            backrgoundView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), colorId));
         }
     }
 
@@ -457,7 +465,7 @@ public class JVCTopicAdapter extends BaseAdapter {
                     viewHolder.avatarImage.setImageDrawable(null);
                     viewHolder.avatarImage.setImageDrawable(currentContent.avatarImageDrawable);
                     
-                    if (avatarLayoutParams.width != avatarSize && avatarSize != -1) {
+                    if (avatarLayoutParams.width != avatarSize && avatarSize >= 0) {
                         avatarLayoutParams.height = avatarSize;
                         avatarLayoutParams.width = avatarSize;
                         /*Ligne nécessaire ?*/
@@ -508,7 +516,7 @@ public class JVCTopicAdapter extends BaseAdapter {
 
         @Override
         public int getLeadingMargin(boolean first) {
-            return (int) (stripeWidth + gap);
+            return Utils.roundToInt(stripeWidth + gap);
         }
 
         @Override
