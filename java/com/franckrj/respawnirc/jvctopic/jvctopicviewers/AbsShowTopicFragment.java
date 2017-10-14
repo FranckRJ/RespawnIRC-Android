@@ -109,6 +109,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected void initializeSettings() {
         int avatarSizeInDP;
         int stickerSizeInDP;
+        int miniNoelshackWidthInDP;
 
         try {
             avatarSizeInDP = Integer.valueOf(PrefsManager.getString(PrefsManager.StringPref.Names.AVATAR_SIZE));
@@ -120,6 +121,11 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         } catch (Exception e) {
             stickerSizeInDP = -1;
         }
+        try {
+            miniNoelshackWidthInDP = Integer.valueOf(PrefsManager.getString(PrefsManager.StringPref.Names.MINI_NOELSHACK_WIDTH));
+        } catch (Exception e) {
+            miniNoelshackWidthInDP = -1;
+        }
 
         try {
             showNoelshackImageAdv = Integer.valueOf(PrefsManager.getString(PrefsManager.StringPref.Names.SHOW_NOELSHACK_IMAGE));
@@ -129,10 +135,13 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
 
         updateSettingsDependingOnConnection();
         if (avatarSizeInDP >= 0) {
-            adapterForTopic.setAvatarSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, avatarSizeInDP, getResources().getDisplayMetrics()));
+            adapterForTopic.setAvatarSize(Utils.roundToInt(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, avatarSizeInDP, getResources().getDisplayMetrics())));
         }
         if (stickerSizeInDP >= 0) {
-            adapterForTopic.setStickerSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, stickerSizeInDP, getResources().getDisplayMetrics()));
+            adapterForTopic.setStickerSize(Utils.roundToInt(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, stickerSizeInDP, getResources().getDisplayMetrics())));
+        }
+        if (miniNoelshackWidthInDP >= 0) {
+            adapterForTopic.setMiniNoeslahckSizeByWidth(Utils.roundToInt(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, miniNoelshackWidthInDP, getResources().getDisplayMetrics())));
         }
 
         currentSettings.maxNumberOfOverlyQuotes = Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MAX_NUMBER_OF_OVERLY_QUOTE));

@@ -149,9 +149,9 @@ public class JVCTopicAdapter extends BaseAdapter {
         downloaderForImage.setParentActivity(parentActivity);
         downloaderForImage.setListenerForDownloadFinished(listenerForDownloadFinished);
         downloaderForImage.setImagesCacheDir(parentActivity.getCacheDir());
-        downloaderForImage.setImagesSize(res.getDimensionPixelSize(R.dimen.imagesWidth), res.getDimensionPixelSize(R.dimen.imagesHeight));
-        downloaderForImage.setDefaultDrawable(Undeprecator.resourcesGetDrawable(res, ThemeManager.getDrawableRes(ThemeManager.DrawableName.DOWNLOAD_IMAGE)), true);
-        downloaderForImage.setDeletedDrawable(Undeprecator.resourcesGetDrawable(res, deletedDrawableRes), true);
+        downloaderForImage.setDefaultDrawable(Undeprecator.resourcesGetDrawable(res, ThemeManager.getDrawableRes(ThemeManager.DrawableName.DOWNLOAD_IMAGE)));
+        downloaderForImage.setDeletedDrawable(Undeprecator.resourcesGetDrawable(res, deletedDrawableRes));
+        downloaderForImage.setImagesSize(res.getDimensionPixelSize(R.dimen.miniNoelshackWidthDefault), res.getDimensionPixelSize(R.dimen.miniNoelshackHeightDefault), true);
     }
 
     public int getCurrentItemIDSelected() {
@@ -225,6 +225,11 @@ public class JVCTopicAdapter extends BaseAdapter {
 
     public void setStickerSize(int newSize) {
         jvcImageGetter.setStickerSize(newSize);
+    }
+
+    public void setMiniNoeslahckSizeByWidth(int newWidth) {
+        int newHeight = Utils.roundToInt(newWidth * 0.75);
+        downloaderForImage.setImagesSize(newWidth, newHeight, true);
     }
 
     public void enableSurvey(String newSurveyTitle) {
@@ -511,7 +516,7 @@ public class JVCTopicAdapter extends BaseAdapter {
 
         @Override
         public int getLeadingMargin(boolean first) {
-            return (int) (stripeWidth + gap);
+            return Utils.roundToInt(stripeWidth + gap);
         }
 
         @Override

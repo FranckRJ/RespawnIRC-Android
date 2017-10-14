@@ -45,5 +45,6 @@
     <string name="settingsBackIsOpenDrawer" translatable="false">settings.backIsOpenDrawer</string>
     <string name="settingsAvatarSize" translatable="false">settings.avatarSize</string>
     <string name="settingsStickerSize" translatable="false">settings.stickerSize</string>
+    <string name="settingsMiniNoelshackWidth" translatable="false">settings.miniNoelshackWidth</string>
     <string name="settingsSaveLastRowUsedInsertstuff" translatable="false">settings.saveLastRowUsedInsertstuff</string>
 </resources>

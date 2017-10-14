@@ -33,6 +33,10 @@ public class Utils {
         return String.format("#%08X", Undeprecator.resourcesGetColor(baseActivity.getResources(), resID));
     }
 
+    public static int roundToInt(double valToRound) {
+        return (int) (valToRound + 0.5);
+    }
+
     public static boolean stringsAreEquals(String str1, String str2) {
         return (str1 == null ? str2 == null : str1.equals(str2));
     }

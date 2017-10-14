@@ -3,8 +3,8 @@
     <dimen name="quoteStripSize">2dp</dimen>
     <dimen name="sizeBetweenTextAndArrow">5dp</dimen>
     <dimen name="quoteStripGap">4dp</dimen>
-    <dimen name="imagesWidth">102dp</dimen>
-    <dimen name="imagesHeight">77dp</dimen>
+    <dimen name="miniNoelshackWidthDefault">102dp</dimen>
+    <dimen name="miniNoelshackHeightDefault">77dp</dimen>
     <dimen name="paddingOfMessageListView">4dp</dimen>
     <dimen name="paddingOfNavigationMenuListView">4dp</dimen>
     <dimen name="paddingForCompoundDrawableNavigationMenu">16dp</dimen>

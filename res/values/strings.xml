@@ -215,6 +215,7 @@
     <string name="replyTitleInSurveyManager">Rep n°%1$s :</string>
     <string name="addReply">Ajouter une réponse</string>
     <string name="stickerSizeTitle">Taille des stickers (en dp)</string>
+    <string name="miniNoelshackWidthTitle">Largeur des miniatures noelshack (en dp)</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

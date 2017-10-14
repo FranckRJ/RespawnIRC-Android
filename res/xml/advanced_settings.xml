@@ -46,6 +46,11 @@
             android:key="@string/settingsStickerSize"
             android:title="@string/stickerSizeTitle"
             android:numeric="integer"/>
+
+        <EditTextPreference
+            android:key="@string/settingsMiniNoelshackWidth"
+            android:title="@string/miniNoelshackWidthTitle"
+            android:numeric="integer"/>
     </PreferenceCategory>
 
     <PreferenceCategory
