@@ -44,11 +44,11 @@ import com.franckrj.respawnirc.utils.Utils;
 import java.util.ArrayList;
 
 public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCTopicGetter.NewForumAndTopicNameAvailable,
-                                                                    PopupMenu.OnMenuItemClickListener, JVCTopicModeForumGetter.NewNumbersOfPagesListener,
-                                                                    ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCTopicAdapter.URLClicked,
-                                                                    AbsJVCTopicGetter.NewReasonForTopicLock, InsertStuffDialogFragment.StuffInserted,
-                                                                    PageNavigationUtil.PageNavigationFunctions, AddOrRemoveThingToFavs.ActionToFavsEnded, AbsJVCTopicGetter.TopicLinkChanged,
-                                                                    AbsShowTopicFragment.NewSurveyNeedToBeShown, JVCTopicAdapter.PseudoClicked, AbsJVCTopicGetter.NewPseudoOfAuthorAvailable {
+                                                                        PopupMenu.OnMenuItemClickListener, JVCTopicModeForumGetter.NewNumbersOfPagesListener,
+                                                                        ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCTopicAdapter.URLClicked,
+                                                                        AbsJVCTopicGetter.NewReasonForTopicLock, InsertStuffDialogFragment.StuffInserted,
+                                                                        PageNavigationUtil.PageNavigationFunctions, AddOrRemoveThingToFavs.ActionToFavsEnded, AbsJVCTopicGetter.TopicLinkChanged,
+                                                                        AbsShowTopicFragment.NewSurveyNeedToBeShown, JVCTopicAdapter.PseudoClicked, AbsJVCTopicGetter.NewPseudoOfAuthorAvailable {
     public static final String EXTRA_TOPIC_LINK = "com.franckrj.respawnirc.EXTRA_TOPIC_LINK";
     public static final String EXTRA_TOPIC_NAME = "com.franckrj.respawnirc.EXTRA_TOPIC_NAME";
     public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.EXTRA_FORUM_NAME";
@@ -85,7 +85,12 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
     private final JVCMessageToTopicSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageToTopicSender.NewMessageWantEditListener() {
         @Override
-        public void initializeEditMode(String newMessageToEdit, boolean messageIsAnError) {
+        public void editThisMessage(String messageID) {
+            startEditThisMessage(messageID, false);
+        }
+
+        @Override
+        public void initializeEditMode(String newMessageToEdit, boolean messageIsAnError, boolean useMessageToEdit) {
             if (reasonOfLock == null) {
                 messageSendButton.setEnabled(true);
 
@@ -95,7 +100,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                     }
                     messageSendButton.setImageResource(ThemeManager.getDrawableRes(ThemeManager.DrawableName.CONTENT_SEND));
                     showErrorWhenSendingMessage(newMessageToEdit);
-                } else {
+                } else if (useMessageToEdit) {
                     messageSendEdit.setText(newMessageToEdit);
                     messageSendEdit.setSelection(newMessageToEdit.length());
                 }
@@ -270,6 +275,24 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             pageNavigation.setLastPageNumber(pageNavigation.getLastSupposedPageNumber());
             pageNavigation.notifyDataSetChanged();
             pageNavigation.updateCurrentItemAndButtonsToCurrentLink();
+        }
+    }
+
+    private void startEditThisMessage(String messageID, boolean useMessageToEdit) {
+        boolean infoForEditAreGetted = false;
+
+        if (messageSendButton.isEnabled() && getCurrentFragment().getLatestAjaxInfos().list != null) {
+            messageSendButton.setEnabled(false);
+            messageSendButton.setImageResource(ThemeManager.getDrawableRes(ThemeManager.DrawableName.CONTENT_EDIT));
+            infoForEditAreGetted = senderForMessages.getInfosForEditMessage(messageID, getCurrentFragment().getLatestAjaxInfos().list, cookieListInAString, useMessageToEdit);
+        }
+
+        if (!infoForEditAreGetted) {
+            if (!messageSendButton.isEnabled()) {
+                Toast.makeText(this, R.string.errorMessageAlreadySending, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -533,21 +556,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                         messageSendButton.setImageResource(ThemeManager.getDrawableRes(ThemeManager.DrawableName.CONTENT_SEND));
                         messageSendEdit.setText("");
                     } else {
-                        boolean infoForEditAreGetted = false;
-                        if (messageSendButton.isEnabled() && getCurrentFragment().getLatestAjaxInfos().list != null) {
-                            String idOfMessage = Long.toString(getCurrentFragment().getCurrentItemSelected().id);
-                            messageSendButton.setEnabled(false);
-                            messageSendButton.setImageResource(ThemeManager.getDrawableRes(ThemeManager.DrawableName.CONTENT_EDIT));
-                            infoForEditAreGetted = senderForMessages.getInfosForEditMessage(idOfMessage, getCurrentFragment().getLatestAjaxInfos().list, cookieListInAString);
-                        }
-
-                        if (!infoForEditAreGetted) {
-                            if (!messageSendButton.isEnabled()) {
-                                Toast.makeText(this, R.string.errorMessageAlreadySending, Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
-                            }
-                        }
+                        startEditThisMessage(Long.toString(getCurrentFragment().getCurrentItemSelected().id), true);
                     }
                 } else {
                     Toast.makeText(this, R.string.errorTopicIsLocked, Toast.LENGTH_SHORT).show();
