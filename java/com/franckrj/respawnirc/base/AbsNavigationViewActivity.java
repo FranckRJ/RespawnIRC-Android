@@ -76,17 +76,17 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected final AdapterView.OnItemClickListener itemInNavigationClickedListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            int currentItemID = adapterForNavigationMenu.getItemIDOfRow((int) id);
-            int currentGroupID = adapterForNavigationMenu.getGroupIDOfRow((int) id);
+            int currentItemId = adapterForNavigationMenu.getItemIdOfRow((int) id);
+            int currentGroupId = adapterForNavigationMenu.getGroupIdOfRow((int) id);
 
-            if ((currentItemID == ITEM_ID_REFRESH_FORUM_FAV || currentItemID == ITEM_ID_REFRESH_TOPIC_FAV) && currentGroupID == GROUP_ID_BASIC) {
+            if ((currentItemId == ITEM_ID_REFRESH_FORUM_FAV || currentItemId == ITEM_ID_REFRESH_TOPIC_FAV) && currentGroupId == GROUP_ID_BASIC) {
                 if (!pseudoOfUser.isEmpty()) {
                     Bundle argForFrag = new Bundle();
                     RefreshFavDialogFragment refreshFavsDialogFragment = new RefreshFavDialogFragment();
 
                     argForFrag.putString(RefreshFavDialogFragment.ARG_PSEUDO, pseudoOfUser);
                     argForFrag.putString(RefreshFavDialogFragment.ARG_COOKIE_LIST, PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
-                    if (currentItemID == ITEM_ID_REFRESH_FORUM_FAV) {
+                    if (currentItemId == ITEM_ID_REFRESH_FORUM_FAV) {
                         argForFrag.putInt(RefreshFavDialogFragment.ARG_FAV_TYPE, RefreshFavDialogFragment.FAV_FORUM);
                     } else {
                         argForFrag.putInt(RefreshFavDialogFragment.ARG_FAV_TYPE, RefreshFavDialogFragment.FAV_TOPIC);
@@ -97,22 +97,22 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                 } else {
                     Toast.makeText(AbsNavigationViewActivity.this, R.string.errorConnectNeeded, Toast.LENGTH_SHORT).show();
                 }
-            } else if (currentGroupID == GROUP_ID_FORUM_FAV) {
+            } else if (currentGroupId == GROUP_ID_FORUM_FAV) {
                 lastItemSelected = ITEM_ID_FORUM_FAV_SELECTED;
                 newFavIsSelectedByLongClick = false;
-                newFavSelected = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.FORUM_FAV_LINK, String.valueOf(currentItemID));
+                newFavSelected = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.FORUM_FAV_LINK, String.valueOf(currentItemId));
                 newForumOrTopicToRead(newFavSelected, true, false, false);
                 layoutForDrawer.closeDrawer(GravityCompat.START);
                 adapterForNavigationMenu.setRowSelected((int) id);
-            } else if (currentGroupID == GROUP_ID_TOPIC_FAV) {
+            } else if (currentGroupId == GROUP_ID_TOPIC_FAV) {
                 lastItemSelected = ITEM_ID_TOPIC_FAV_SELECTED;
                 newFavIsSelectedByLongClick = false;
-                newFavSelected = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.TOPIC_FAV_LINK, String.valueOf(currentItemID));
+                newFavSelected = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.TOPIC_FAV_LINK, String.valueOf(currentItemId));
                 newForumOrTopicToRead(newFavSelected, false, false, false);
                 layoutForDrawer.closeDrawer(GravityCompat.START);
                 adapterForNavigationMenu.setRowSelected((int) id);
             } else {
-                lastItemSelected = currentItemID;
+                lastItemSelected = currentItemId;
                 layoutForDrawer.closeDrawer(GravityCompat.START);
                 adapterForNavigationMenu.setRowSelected((int) id);
             }
@@ -123,13 +123,13 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected final AdapterView.OnItemLongClickListener itemInNavigationLongClickedListener = new AdapterView.OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            int currentItemID = adapterForNavigationMenu.getItemIDOfRow((int) id);
-            int currentGroupID = adapterForNavigationMenu.getGroupIDOfRow((int) id);
+            int currentItemId = adapterForNavigationMenu.getItemIdOfRow((int) id);
+            int currentGroupId = adapterForNavigationMenu.getGroupIdOfRow((int) id);
 
-            if (currentGroupID == GROUP_ID_TOPIC_FAV) {
+            if (currentGroupId == GROUP_ID_TOPIC_FAV) {
                 lastItemSelected = ITEM_ID_TOPIC_FAV_SELECTED;
                 newFavIsSelectedByLongClick = true;
-                newFavSelected = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.TOPIC_FAV_LINK, String.valueOf(currentItemID));
+                newFavSelected = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.TOPIC_FAV_LINK, String.valueOf(currentItemId));
                 newForumOrTopicToRead(newFavSelected, false, false, true);
                 layoutForDrawer.closeDrawer(GravityCompat.START);
                 adapterForNavigationMenu.setRowSelected((int) id);
@@ -162,108 +162,108 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.home);
-                tmpItemInfo.drawableResID = R.drawable.ic_action_action_home_dark_zoom;
+                tmpItemInfo.drawableResId = R.drawable.ic_action_action_home_dark_zoom;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = true;
-                tmpItemInfo.itemID = ITEM_ID_HOME;
-                tmpItemInfo.groupID = GROUP_ID_BASIC;
+                tmpItemInfo.itemId = ITEM_ID_HOME;
+                tmpItemInfo.groupId = GROUP_ID_BASIC;
                 listOfMenuItemInfoForHome.add(tmpItemInfo);
                 listOfMenuItemInfoForForum.add(tmpItemInfo);
             }
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.forum);
-                tmpItemInfo.drawableResID = R.drawable.ic_action_communication_forum_dark_zoom;
+                tmpItemInfo.drawableResId = R.drawable.ic_action_communication_forum_dark_zoom;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = true;
-                tmpItemInfo.itemID = ITEM_ID_FORUM;
-                tmpItemInfo.groupID = GROUP_ID_BASIC;
+                tmpItemInfo.itemId = ITEM_ID_FORUM;
+                tmpItemInfo.groupId = GROUP_ID_BASIC;
                 listOfMenuItemInfoForForum.add(tmpItemInfo);
             }
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.showMP);
-                tmpItemInfo.drawableResID = R.drawable.ic_action_content_mail_dark_zoom;
+                tmpItemInfo.drawableResId = R.drawable.ic_action_content_mail_dark_zoom;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = false;
-                tmpItemInfo.itemID = ITEM_ID_SHOWMP;
-                tmpItemInfo.groupID = GROUP_ID_BASIC;
+                tmpItemInfo.itemId = ITEM_ID_SHOWMP;
+                tmpItemInfo.groupId = GROUP_ID_BASIC;
                 listOfMenuItemInfoForHome.add(tmpItemInfo);
                 listOfMenuItemInfoForForum.add(tmpItemInfo);
             }
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.preference);
-                tmpItemInfo.drawableResID = R.drawable.ic_action_action_settings_dark_zoom;
+                tmpItemInfo.drawableResId = R.drawable.ic_action_action_settings_dark_zoom;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = true;
-                tmpItemInfo.itemID = ITEM_ID_PREF;
-                tmpItemInfo.groupID = GROUP_ID_BASIC;
+                tmpItemInfo.itemId = ITEM_ID_PREF;
+                tmpItemInfo.groupId = GROUP_ID_BASIC;
                 listOfMenuItemInfoForHome.add(tmpItemInfo);
                 listOfMenuItemInfoForForum.add(tmpItemInfo);
             }
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.forumFav);
-                tmpItemInfo.drawableResID = 0;
+                tmpItemInfo.drawableResId = 0;
                 tmpItemInfo.isHeader = true;
                 tmpItemInfo.isEnabled = true;
-                tmpItemInfo.itemID = -1;
-                tmpItemInfo.groupID = -1;
+                tmpItemInfo.itemId = -1;
+                tmpItemInfo.groupId = -1;
                 listOfMenuItemInfoForHome.add(tmpItemInfo);
                 listOfMenuItemInfoForForum.add(tmpItemInfo);
             }
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.refresh);
-                tmpItemInfo.drawableResID = R.drawable.ic_action_navigation_refresh;
+                tmpItemInfo.drawableResId = R.drawable.ic_action_navigation_refresh;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = true;
-                tmpItemInfo.itemID = ITEM_ID_REFRESH_FORUM_FAV;
-                tmpItemInfo.groupID = GROUP_ID_BASIC;
+                tmpItemInfo.itemId = ITEM_ID_REFRESH_FORUM_FAV;
+                tmpItemInfo.groupId = GROUP_ID_BASIC;
                 listOfMenuItemInfoForHome.add(tmpItemInfo);
                 listOfMenuItemInfoForForum.add(tmpItemInfo);
             }
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.topicFav);
-                tmpItemInfo.drawableResID = 0;
+                tmpItemInfo.drawableResId = 0;
                 tmpItemInfo.isHeader = true;
                 tmpItemInfo.isEnabled = true;
-                tmpItemInfo.itemID = -1;
-                tmpItemInfo.groupID = -1;
+                tmpItemInfo.itemId = -1;
+                tmpItemInfo.groupId = -1;
                 listOfMenuItemInfoForHome.add(tmpItemInfo);
                 listOfMenuItemInfoForForum.add(tmpItemInfo);
             }
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.refresh);
-                tmpItemInfo.drawableResID = R.drawable.ic_action_navigation_refresh;
+                tmpItemInfo.drawableResId = R.drawable.ic_action_navigation_refresh;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = true;
-                tmpItemInfo.itemID = ITEM_ID_REFRESH_TOPIC_FAV;
-                tmpItemInfo.groupID = GROUP_ID_BASIC;
+                tmpItemInfo.itemId = ITEM_ID_REFRESH_TOPIC_FAV;
+                tmpItemInfo.groupId = GROUP_ID_BASIC;
                 listOfMenuItemInfoForHome.add(tmpItemInfo);
                 listOfMenuItemInfoForForum.add(tmpItemInfo);
             }
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.connectWithAnotherAccount);
-                tmpItemInfo.drawableResID = R.drawable.ic_action_content_add_dark_zoom;
+                tmpItemInfo.drawableResId = R.drawable.ic_action_content_add_dark_zoom;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = true;
-                tmpItemInfo.itemID = ITEM_ID_CONNECT;
-                tmpItemInfo.groupID = GROUP_ID_BASIC;
+                tmpItemInfo.itemId = ITEM_ID_CONNECT;
+                tmpItemInfo.groupId = GROUP_ID_BASIC;
                 listOfMenuItemInfoForConnect.add(tmpItemInfo);
             }
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.connnectAsModoText);
-                tmpItemInfo.drawableResID = R.drawable.ic_action_action_empty;
+                tmpItemInfo.drawableResId = R.drawable.ic_action_action_empty;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = true;
-                tmpItemInfo.itemID = ITEM_ID_CONNECT_AS_MODO;
-                tmpItemInfo.groupID = GROUP_ID_BASIC;
+                tmpItemInfo.itemId = ITEM_ID_CONNECT_AS_MODO;
+                tmpItemInfo.groupId = GROUP_ID_BASIC;
                 listOfMenuItemInfoForConnect.add(tmpItemInfo);
             }
         }
@@ -271,11 +271,11 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         if (showGTAMenuItem == null) {
             showGTAMenuItem = new NavigationMenuAdapter.MenuItemInfo();
             showGTAMenuItem.textContent = getString(R.string.gta);
-            showGTAMenuItem.drawableResID = R.drawable.ic_action_report_dark_zoom;
+            showGTAMenuItem.drawableResId = R.drawable.ic_action_report_dark_zoom;
             showGTAMenuItem.isHeader = false;
             showGTAMenuItem.isEnabled = true;
-            showGTAMenuItem.itemID = ITEM_ID_SHOWGTA;
-            showGTAMenuItem.groupID = GROUP_ID_BASIC;
+            showGTAMenuItem.itemId = ITEM_ID_SHOWGTA;
+            showGTAMenuItem.groupId = GROUP_ID_BASIC;
         }
     }
 
@@ -315,12 +315,12 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         }
 
         if (!isInNavigationConnectMode) {
-            int positionOfShowMpItem = adapterForNavigationMenu.getPositionDependingOfID(ITEM_ID_SHOWMP, GROUP_ID_BASIC);
-            int positionOfShowGTAItem = adapterForNavigationMenu.getPositionDependingOfID(ITEM_ID_SHOWGTA, GROUP_ID_BASIC);
+            int positionOfShowMpItem = adapterForNavigationMenu.getPositionDependingOnId(ITEM_ID_SHOWMP, GROUP_ID_BASIC);
+            int positionOfShowGTAItem = adapterForNavigationMenu.getPositionDependingOnId(ITEM_ID_SHOWGTA, GROUP_ID_BASIC);
 
             updateFavsInNavigationMenu(false);
             adapterForNavigationMenu.setRowEnabled(positionOfShowMpItem, !pseudoOfUser.isEmpty());
-            adapterForNavigationMenu.setRowSelected(adapterForNavigationMenu.getPositionDependingOfID(idOfBaseActivity, GROUP_ID_BASIC));
+            adapterForNavigationMenu.setRowSelected(adapterForNavigationMenu.getPositionDependingOnId(idOfBaseActivity, GROUP_ID_BASIC));
 
             if (!showMpStringContent.isEmpty()) {
                 adapterForNavigationMenu.setRowText(positionOfShowMpItem, showMpStringContent);
@@ -336,7 +336,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                 pseudoTextNavigation.setTextColor(Undeprecator.resourcesGetColor(getResources(), R.color.colorPseudoModoThemeDark));
 
                 if (positionOfShowGTAItem == -1) {
-                    int positionOfPrefItem = adapterForNavigationMenu.getPositionDependingOfID(ITEM_ID_PREF, GROUP_ID_BASIC);
+                    int positionOfPrefItem = adapterForNavigationMenu.getPositionDependingOnId(ITEM_ID_PREF, GROUP_ID_BASIC);
                     currentListOfMenuItem.add(positionOfPrefItem, showGTAMenuItem);
                 }
             } else {
@@ -360,29 +360,29 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         int positionOfRefreshFavItem;
 
         adapterForNavigationMenu.removeAllItemsFromGroup(GROUP_ID_FORUM_FAV);
-        positionOfRefreshFavItem = adapterForNavigationMenu.getPositionDependingOfID(ITEM_ID_REFRESH_FORUM_FAV, GROUP_ID_BASIC);
+        positionOfRefreshFavItem = adapterForNavigationMenu.getPositionDependingOnId(ITEM_ID_REFRESH_FORUM_FAV, GROUP_ID_BASIC);
         for (int i = 0; i < currentForumFavArraySize; ++i) {
             NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
             tmpItemInfo.textContent = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.FORUM_FAV_NAME, String.valueOf(i));
-            tmpItemInfo.drawableResID = 0;
+            tmpItemInfo.drawableResId = 0;
             tmpItemInfo.isHeader = false;
             tmpItemInfo.isEnabled = true;
-            tmpItemInfo.itemID = i;
-            tmpItemInfo.groupID = GROUP_ID_FORUM_FAV;
+            tmpItemInfo.itemId = i;
+            tmpItemInfo.groupId = GROUP_ID_FORUM_FAV;
             currentListOfMenuItem.add(positionOfRefreshFavItem, tmpItemInfo);
             ++positionOfRefreshFavItem;
         }
 
         adapterForNavigationMenu.removeAllItemsFromGroup(GROUP_ID_TOPIC_FAV);
-        positionOfRefreshFavItem = adapterForNavigationMenu.getPositionDependingOfID(ITEM_ID_REFRESH_TOPIC_FAV, GROUP_ID_BASIC);
+        positionOfRefreshFavItem = adapterForNavigationMenu.getPositionDependingOnId(ITEM_ID_REFRESH_TOPIC_FAV, GROUP_ID_BASIC);
         for (int i = 0; i < currentTopicFavArraySize; ++i) {
             NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
             tmpItemInfo.textContent = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.TOPIC_FAV_NAME, String.valueOf(i));
-            tmpItemInfo.drawableResID = 0;
+            tmpItemInfo.drawableResId = 0;
             tmpItemInfo.isHeader = false;
             tmpItemInfo.isEnabled = true;
-            tmpItemInfo.itemID = i;
-            tmpItemInfo.groupID = GROUP_ID_TOPIC_FAV;
+            tmpItemInfo.itemId = i;
+            tmpItemInfo.groupId = GROUP_ID_TOPIC_FAV;
             currentListOfMenuItem.add(positionOfRefreshFavItem, tmpItemInfo);
             ++positionOfRefreshFavItem;
         }
@@ -393,7 +393,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     }
 
     protected void updateMpNumberShowed(String newNumber) {
-        int positionOfShowMpItem = adapterForNavigationMenu.getPositionDependingOfID(ITEM_ID_SHOWMP, GROUP_ID_BASIC);
+        int positionOfShowMpItem = adapterForNavigationMenu.getPositionDependingOnId(ITEM_ID_SHOWMP, GROUP_ID_BASIC);
 
         if (newNumber == null) {
             showMpStringContent = getString(R.string.showMP);
@@ -461,7 +461,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                             break;
                     }
                 }
-                adapterForNavigationMenu.setRowSelected(adapterForNavigationMenu.getPositionDependingOfID(idOfBaseActivity, GROUP_ID_BASIC));
+                adapterForNavigationMenu.setRowSelected(adapterForNavigationMenu.getPositionDependingOnId(idOfBaseActivity, GROUP_ID_BASIC));
                 adapterForNavigationMenu.updateList();
 
                 if (isInNavigationConnectMode) {

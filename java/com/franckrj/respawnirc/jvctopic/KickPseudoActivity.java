@@ -69,7 +69,7 @@ public class KickPseudoActivity extends AbsHomeIsBackActivity {
             currentTaskForKick = null;
 
             if (!Utils.stringIsEmptyOrNull(reqResult)) {
-                String potentialError = JVCParser.getErrorMessageInJSONMode(reqResult);
+                String potentialError = JVCParser.getErrorMessageInJsonMode(reqResult);
 
                 if (potentialError != null) {
                     Toast.makeText(KickPseudoActivity.this, potentialError, Toast.LENGTH_SHORT).show();

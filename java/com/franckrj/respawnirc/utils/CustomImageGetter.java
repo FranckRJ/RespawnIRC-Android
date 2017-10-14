@@ -28,7 +28,7 @@ public class CustomImageGetter implements Html.ImageGetter {
     public Drawable getDrawable(String source) {
         if (!source.startsWith("http")) {
             Drawable drawable;
-            int resID;
+            int resId;
             Resources res = parentActivity.getResources();
             boolean needToBeBig = false;
 
@@ -36,15 +36,15 @@ public class CustomImageGetter implements Html.ImageGetter {
                 source = source.substring(("big-").length());
                 needToBeBig = true;
             }
-            resID = res.getIdentifier(source.substring(0, source.lastIndexOf(".")), "drawable", parentActivity.getPackageName());
+            resId = res.getIdentifier(source.substring(0, source.lastIndexOf(".")), "drawable", parentActivity.getPackageName());
 
             try {
                 if (needToBeBig) {
-                    Bitmap tmpBitmap = BitmapFactory.decodeResource(res, resID);
+                    Bitmap tmpBitmap = BitmapFactory.decodeResource(res, resId);
                     tmpBitmap = Bitmap.createScaledBitmap(tmpBitmap, tmpBitmap.getWidth() * 2, tmpBitmap.getHeight() * 2, false);
                     drawable = new BitmapDrawable(res, tmpBitmap);
                 } else {
-                    drawable = Undeprecator.resourcesGetDrawable(res, resID);
+                    drawable = Undeprecator.resourcesGetDrawable(res, resId);
                 }
             } catch (Exception e) {
                 drawable = deletedDrawable;

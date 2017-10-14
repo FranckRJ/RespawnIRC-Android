@@ -25,12 +25,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Utils {
-    public static String resColorToString(int resID, Activity baseActivity) {
-        return String.format("#%06X", 0xFFFFFF & Undeprecator.resourcesGetColor(baseActivity.getResources(), resID));
+    public static String resColorToString(int resId, Activity baseActivity) {
+        return String.format("#%06X", 0xFFFFFF & Undeprecator.resourcesGetColor(baseActivity.getResources(), resId));
     }
 
-    public static String resColorToStringWithAlpha(int resID, Activity baseActivity) {
-        return String.format("#%08X", Undeprecator.resourcesGetColor(baseActivity.getResources(), resID));
+    public static String resColorToStringWithAlpha(int resId, Activity baseActivity) {
+        return String.format("#%08X", Undeprecator.resourcesGetColor(baseActivity.getResources(), resId));
     }
 
     public static int roundToInt(double valToRound) {

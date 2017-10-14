@@ -50,7 +50,7 @@ public class LockTopicActivity extends AbsHomeIsBackActivity {
             currentTaskForLock = null;
 
             if (!Utils.stringIsEmptyOrNull(reqResult)) {
-                String potentialError = JVCParser.getErrorMessageInJSONMode(reqResult);
+                String potentialError = JVCParser.getErrorMessageInJsonMode(reqResult);
 
                 if (potentialError != null) {
                     Toast.makeText(LockTopicActivity.this, potentialError, Toast.LENGTH_SHORT).show();

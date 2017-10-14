@@ -66,7 +66,7 @@ public class AddOrRemoveThingToFavs extends AbsWebRequestAsyncTask<String, Void,
         pageContent = WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_forum_prefere.php", "GET", "id_forum=" + forumId + "&id_topic=" + topicId + "&action=" + actionToDo + "&type=" + typeOfAction + "&" + ajaxInfos, currentWebInfos);
 
         if (!Utils.stringIsEmptyOrNull(pageContent)) {
-            return JVCParser.getErrorMessageInJSONMode(pageContent);
+            return JVCParser.getErrorMessageInJsonMode(pageContent);
         }
         return null;
     }

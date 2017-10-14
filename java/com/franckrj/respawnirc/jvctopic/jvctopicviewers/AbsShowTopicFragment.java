@@ -100,7 +100,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         public void onClick(View view) {
             if (adapterForTopic.getShowSurvey()) {
                 if (getActivity() instanceof NewSurveyNeedToBeShown) {
-                    ((NewSurveyNeedToBeShown) getActivity()).getNewSurveyInfos(JVCParser.specialCharToNormalChar(absGetterForTopic.getSurveyTitleInHtml()), absGetterForTopic.getTopicID(), absGetterForTopic.getLatestAjaxInfos().list, absGetterForTopic.getListOfSurveyReplysWithInfos());
+                    ((NewSurveyNeedToBeShown) getActivity()).getNewSurveyInfos(JVCParser.specialCharToNormalChar(absGetterForTopic.getSurveyTitleInHtml()), absGetterForTopic.getTopicId(), absGetterForTopic.getLatestAjaxInfos().list, absGetterForTopic.getListOfSurveyReplysWithInfos());
                 }
             }
         }
@@ -220,43 +220,43 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         JVCParser.MessageInfos currentItem;
         switch (item.getItemId()) {
             case R.id.menu_show_spoil_message:
-                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
-                currentItem.listOfSpoilIDToShow.add(-1);
+                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIdSelected());
+                currentItem.listOfSpoilIdToShow.add(-1);
                 adapterForTopic.updateThisItem(currentItem, false);
                 adapterForTopic.notifyDataSetChanged();
                 return true;
             case R.id.menu_hide_spoil_message:
-                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
-                currentItem.listOfSpoilIDToShow.clear();
+                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIdSelected());
+                currentItem.listOfSpoilIdToShow.clear();
                 adapterForTopic.updateThisItem(currentItem, false);
                 adapterForTopic.notifyDataSetChanged();
                 return true;
             case R.id.menu_show_quote_message:
-                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
+                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIdSelected());
                 currentItem.showOverlyQuote = true;
                 adapterForTopic.updateThisItem(currentItem, false);
                 adapterForTopic.notifyDataSetChanged();
                 return true;
             case R.id.menu_hide_quote_message:
-                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
+                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIdSelected());
                 currentItem.showOverlyQuote = false;
                 adapterForTopic.updateThisItem(currentItem, false);
                 adapterForTopic.notifyDataSetChanged();
                 return true;
             case R.id.menu_show_ugly_images_message:
-                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
+                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIdSelected());
                 currentItem.showUglyImages = true;
                 adapterForTopic.updateThisItem(currentItem, false);
                 adapterForTopic.notifyDataSetChanged();
                 return true;
             case R.id.menu_hide_ugly_images_message:
-                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
+                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIdSelected());
                 currentItem.showUglyImages = false;
                 adapterForTopic.updateThisItem(currentItem, false);
                 adapterForTopic.notifyDataSetChanged();
                 return true;
             case R.id.menu_show_blacklisted_message:
-                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
+                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIdSelected());
                 currentItem.pseudoIsBlacklisted = false;
                 adapterForTopic.updateThisItem(currentItem, false);
                 adapterForTopic.notifyDataSetChanged();
@@ -279,7 +279,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     }
 
     public JVCParser.MessageInfos getCurrentItemSelected() {
-        return adapterForTopic.getItem(adapterForTopic.getCurrentItemIDSelected());
+        return adapterForTopic.getItem(adapterForTopic.getCurrentItemIdSelected());
     }
 
     public Boolean getIsInFavs() {
@@ -290,8 +290,8 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         return absGetterForTopic.getUserCanLockTopic();
     }
 
-    public String getTopicID() {
-        return absGetterForTopic.getTopicID();
+    public String getTopicId() {
+        return absGetterForTopic.getTopicId();
     }
 
     public void setIsInFavs(Boolean newVal) {
@@ -444,7 +444,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     }
 
     public interface NewSurveyNeedToBeShown {
-        void getNewSurveyInfos(String surveyTitle, String topicID, String ajaxInfos, ArrayList<JVCParser.SurveyReplyInfos> listOfReplysWithInfos);
+        void getNewSurveyInfos(String surveyTitle, String topicId, String ajaxInfos, ArrayList<JVCParser.SurveyReplyInfos> listOfReplysWithInfos);
     }
 
     protected abstract void initializeGetterForMessages();

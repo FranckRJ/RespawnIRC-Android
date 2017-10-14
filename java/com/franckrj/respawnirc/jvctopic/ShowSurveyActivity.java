@@ -97,7 +97,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
 
     private boolean analyzeSurveyContent(String pageContent) {
         if (!Utils.stringIsEmptyOrNull(pageContent)) {
-            String errorContent = JVCParser.getErrorMessageInJSONMode(pageContent);
+            String errorContent = JVCParser.getErrorMessageInJsonMode(pageContent);
 
             if (errorContent == null) {
                 JVCParser.SurveyInfos infosForSurvey = JVCParser.getSurveyInfosFromSurveyBlock(JVCParser.getRealSurveyContent(pageContent));

@@ -40,7 +40,7 @@ public class JVCMessageToTopicSender {
                 } else if (!isInEdit) {
                     errorWhenSending = JVCParser.getErrorMessage(reqResult);
                 } else {
-                    errorWhenSending = JVCParser.getErrorMessageInJSONMode(reqResult);
+                    errorWhenSending = JVCParser.getErrorMessageInJsonMode(reqResult);
                 }
             }
 
@@ -73,7 +73,7 @@ public class JVCMessageToTopicSender {
 
                 if (newMessageEdit.isEmpty()) {
                     messageIsAnError = true;
-                    newMessageEdit = JVCParser.getErrorMessageInJSONMode(reqResult);
+                    newMessageEdit = JVCParser.getErrorMessageInJsonMode(reqResult);
                     if (newMessageEdit == null) {
                         newMessageEdit = "";
                     }
@@ -153,15 +153,15 @@ public class JVCMessageToTopicSender {
 
     public boolean sendThisMessage(String messageToSend, String urlToSend, String latestListOfInput, String cookieListInAString) {
         if (currentAsyncTaskForSendMessage == null) {
-            InfosOfSend infosOfLastSend = new InfosOfSend();
-            infosOfLastSend.messageSended = messageToSend;
-            infosOfLastSend.urlUsed = urlToSend;
-            infosOfLastSend.listOfInputUsed = latestListOfInput;
-            infosOfLastSend.cookiesUsed = cookieListInAString;
+            InfosOfSend infosForCurrentSend = new InfosOfSend();
+            infosForCurrentSend.messageSended = messageToSend;
+            infosForCurrentSend.urlUsed = urlToSend;
+            infosForCurrentSend.listOfInputUsed = latestListOfInput;
+            infosForCurrentSend.cookiesUsed = cookieListInAString;
 
             currentAsyncTaskForSendMessage = new PostJVCMessage();
             currentAsyncTaskForSendMessage.setRequestIsFinishedListener(postMessageIsFinishedListener);
-            currentAsyncTaskForSendMessage.execute(infosOfLastSend);
+            currentAsyncTaskForSendMessage.execute(infosForCurrentSend);
             return true;
         } else {
             return false;

@@ -33,11 +33,11 @@ public final class JVCParser {
     private static final Pattern modoConnectFormPattern = Pattern.compile("(<form role=\"form\" action=\"\" method=\"post\" id=\"form_connexion\" class=\"form-connect-jv\" autocomplete=\"off\">.*?</form>)", Pattern.DOTALL);
     private static final Pattern inputFormPattern = Pattern.compile("<input (type|name|value)=\"([^\"]*)\" (type|name|value)=\"([^\"]*)\" (type|name|value)=\"([^\"]*)\"/>");
     private static final Pattern dateMessagePattern = Pattern.compile("<div class=\"bloc-date-msg\">([^<]*<span class=\"JvCare [^ ]* lien-jv\" target=\"_blank\">)?[^a-zA-Z0-9]*([^ ]* [^ ]* [^ ]* [^ ]* ([0-9:]*))");
-    private static final Pattern messageIDPattern = Pattern.compile("<div class=\"bloc-message-forum[^\"]*\" data-id=\"([^\"]*)\">");
+    private static final Pattern messageIdPattern = Pattern.compile("<div class=\"bloc-message-forum[^\"]*\" data-id=\"([^\"]*)\">");
     private static final Pattern unicodeInTextPattern = Pattern.compile("\\\\u([a-zA-Z0-9]{4})");
     private static final Pattern alertPattern = Pattern.compile("<div class=\"alert-row\">([^<]*)</div>");
     private static final Pattern errorBlocPattern = Pattern.compile("<div class=\"bloc-erreur\">([^<]*)</div>");
-    private static final Pattern errorInJSONModePattern = Pattern.compile("\"erreur\":\\[\"([^\"]*)\"");
+    private static final Pattern errorInJsonModePattern = Pattern.compile("\"erreur\":\\[\"([^\"]*)\"");
     private static final Pattern codeBlockPattern = Pattern.compile("<pre class=\"pre-jv\"><code class=\"code-jv\">([^<]*)</code></pre>");
     private static final Pattern codeLinePattern = Pattern.compile("<code class=\"code-jv\">(.*?)</code>", Pattern.DOTALL);
     private static final Pattern spoilLinePattern = Pattern.compile("<span class=\"bloc-spoil-jv en-ligne\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
@@ -65,7 +65,7 @@ public final class JVCParser {
     private static final Pattern favPattern = Pattern.compile("<li><a href=\"([^\"]*)\">([^<]*)</a></li>");
     private static final Pattern forumInSearchPagePattern = Pattern.compile("<a class=\"list-search-forum-name\" href=\"([^\"]*)\"[^>]*>(.*?)</a>");
     private static final Pattern isInFavPattern = Pattern.compile("<span class=\"picto-favoris([^\"]*)\"");
-    private static final Pattern topicIDInTopicPagePattern = Pattern.compile("<div (.*?)data-topic-id=\"([^\"]*)\">");
+    private static final Pattern topicIdInTopicPagePattern = Pattern.compile("<div (.*?)data-topic-id=\"([^\"]*)\">");
     private static final Pattern lockReasonPattern = Pattern.compile("<div class=\"message-lock-topic\">[^<]*<span>([^<]*)</span>");
     private static final Pattern surveyTitlePattern = Pattern.compile("<div class=\"intitule-sondage\">([^<]*)</div>");
     private static final Pattern surveyResultPattern = Pattern.compile("<div class=\"pied-result\">([^<]*)</div>");
@@ -220,7 +220,7 @@ public final class JVCParser {
         }
     }
 
-    public static String getForumIDOfThisForum(String forumLink) {
+    public static String getForumIdOfThisForum(String forumLink) {
         Matcher forumLinkNumberMatcher = pageForumLinkNumberPattern.matcher(forumLink);
 
         if (forumLinkNumberMatcher.find()) {
@@ -230,7 +230,7 @@ public final class JVCParser {
         }
     }
 
-    public static String getForumIDOfThisTopic(String topicLink) {
+    public static String getForumIdOfThisTopic(String topicLink) {
         Matcher topicLinkNumberMatcher = pageTopicLinkNumberPattern.matcher(topicLink);
 
         if (topicLinkNumberMatcher.find()) {
@@ -240,11 +240,11 @@ public final class JVCParser {
         }
     }
 
-    public static String getTopicIDInThisTopicPage(String topicContent) {
-        Matcher topicIDInTopicPageMatcher = topicIDInTopicPagePattern.matcher(topicContent);
+    public static String getTopicIdInThisTopicPage(String topicContent) {
+        Matcher topicIdInTopicPageMatcher = topicIdInTopicPagePattern.matcher(topicContent);
 
-        if (topicIDInTopicPageMatcher.find()) {
-            return topicIDInTopicPageMatcher.group(2);
+        if (topicIdInTopicPageMatcher.find()) {
+            return topicIdInTopicPageMatcher.group(2);
         } else {
             return "";
         }
@@ -521,7 +521,7 @@ public final class JVCParser {
         }
     }
 
-    public static String getSurveyHTMLTitleFromPage(String pageSource) {
+    public static String getSurveyHtmlTitleFromPage(String pageSource) {
         Matcher surveyTitleMatcher = surveyTitlePattern.matcher(pageSource);
 
         if (surveyTitleMatcher.find()) {
@@ -569,8 +569,8 @@ public final class JVCParser {
         return "Erreur : la connexion à échouée.";
     }
 
-    public static String getErrorMessageInJSONMode(String pageSource) {
-        Matcher errorMatcher = errorInJSONModePattern.matcher(pageSource);
+    public static String getErrorMessageInJsonMode(String pageSource) {
+        Matcher errorMatcher = errorInJsonModePattern.matcher(pageSource);
 
         if (errorMatcher.find()) {
             return "Erreur : " + specialCharToNormalChar(parsingAjaxMessages(errorMatcher.group(1))).trim();
@@ -786,11 +786,11 @@ public final class JVCParser {
         String finalMessage = settings.secondLineFormat;
         SpoilTagsInfos infosOfSpoilTags = new SpoilTagsInfos();
         infosOfSpoilTags.containSpoil = thisMessageInfo.messageContentContainSpoil;
-        infosOfSpoilTags.listOfSpoilIDToShow = thisMessageInfo.listOfSpoilIDToShow;
-        infosOfSpoilTags.lastIDOfSpoil = -1;
+        infosOfSpoilTags.listOfSpoilIdToShow = thisMessageInfo.listOfSpoilIdToShow;
+        infosOfSpoilTags.lastIdOfSpoil = -1;
 
         finalMessage = finalMessage.replace("<%MESSAGE_MESSAGE%>", parseMessageToPrettyMessage(thisMessageInfo.messageNotParsed, settings, infosOfSpoilTags, thisMessageInfo.showOverlyQuote, thisMessageInfo.showUglyImages));
-        thisMessageInfo.lastIDOfSpoilInMessage = infosOfSpoilTags.lastIDOfSpoil;
+        thisMessageInfo.lastIdOfSpoilInMessage = infosOfSpoilTags.lastIdOfSpoil;
         if (!thisMessageInfo.lastTimeEdit.isEmpty()) {
             finalMessage = finalMessage.replace("<%EDIT_ALL%>", settings.addBeforeEdit + thisMessageInfo.lastTimeEdit.trim() + settings.addAfterEdit);
         } else {
@@ -804,8 +804,8 @@ public final class JVCParser {
     public static String createSignatureFromInfos(MessageInfos thisMessageInfo, Settings settings) {
         SpoilTagsInfos infosOfSpoilTags = new SpoilTagsInfos();
         infosOfSpoilTags.containSpoil = thisMessageInfo.signatureContainSpoil;
-        infosOfSpoilTags.listOfSpoilIDToShow = thisMessageInfo.listOfSpoilIDToShow;
-        infosOfSpoilTags.lastIDOfSpoil = thisMessageInfo.lastIDOfSpoilInMessage;
+        infosOfSpoilTags.listOfSpoilIdToShow = thisMessageInfo.listOfSpoilIdToShow;
+        infosOfSpoilTags.lastIdOfSpoil = thisMessageInfo.lastIdOfSpoilInMessage;
         return "<small>" + parseMessageToPrettyMessage(thisMessageInfo.signatureNotParsed, settings, infosOfSpoilTags, true, true) + "</small>";
     }
 
@@ -840,10 +840,10 @@ public final class JVCParser {
         }
 
         if (infosOfSpoilTag.containSpoil) {
-            BuildSpoilTag spoilTagBuilder = new BuildSpoilTag(infosOfSpoilTag.listOfSpoilIDToShow, infosOfSpoilTag.lastIDOfSpoil);
+            BuildSpoilTag spoilTagBuilder = new BuildSpoilTag(infosOfSpoilTag.listOfSpoilIdToShow, infosOfSpoilTag.lastIdOfSpoil);
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "", "", new RemoveFirstsAndLastsP(), spoilTagBuilder);
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p>", "</p>",  new RemoveFirstsAndLastsP(), spoilTagBuilder);
-            infosOfSpoilTag.lastIDOfSpoil = spoilTagBuilder.getLastIDUsedForSpoil();
+            infosOfSpoilTag.lastIdOfSpoil = spoilTagBuilder.getLastIdUsedForSpoil();
         }
 
         ToolForParsing.removeDivAndAdaptParagraphInMessage(messageInBuilder);
@@ -925,7 +925,7 @@ public final class JVCParser {
         Matcher avatarMatcher = avatarPattern.matcher(thisEntireMessage);
         Matcher dateMessageMatcher = dateMessagePattern.matcher(thisEntireMessage);
         Matcher lastEditMessageMatcher = lastEditMessagePattern.matcher(thisEntireMessage);
-        Matcher messageIDMatcher = messageIDPattern.matcher(thisEntireMessage);
+        Matcher messageIdMatcher = messageIdPattern.matcher(thisEntireMessage);
 
         newMessageInfo.pseudoIsBlacklisted = pseudoIsBlacklistedMatcher.find();
         newMessageInfo.messageIsDeleted = messageIsDeletedMatcher.find();
@@ -951,12 +951,12 @@ public final class JVCParser {
             newMessageInfo.avatarLink = "http://" + avatarMatcher.group(2);
         }
 
-        if (messageMatcher.find() && messageIDMatcher.find() && dateMessageMatcher.find()) {
+        if (messageMatcher.find() && messageIdMatcher.find() && dateMessageMatcher.find()) {
             newMessageInfo.messageNotParsed = messageMatcher.group(1);
             newMessageInfo.dateTime = dateMessageMatcher.group(3);
             newMessageInfo.wholeDate = dateMessageMatcher.group(2);
             newMessageInfo.containUglyImages = ToolForParsing.hasUglyImagesInNotPrettyMessage(newMessageInfo.messageNotParsed);
-            newMessageInfo.id = Long.parseLong(messageIDMatcher.group(1));
+            newMessageInfo.id = Long.parseLong(messageIdMatcher.group(1));
 
             newMessageInfo.messageContentContainSpoil = newMessageInfo.messageNotParsed.contains("<span class=\"contenu-spoil\">");
             newMessageInfo.signatureContainSpoil = newMessageInfo.signatureNotParsed.contains("<span class=\"contenu-spoil\">");
@@ -1312,8 +1312,8 @@ public final class JVCParser {
         public boolean containUglyImages = false;
         public boolean showUglyImages = false;
         public long id = 0;
-        public int lastIDOfSpoilInMessage = -1;
-        public ArraySet<Integer> listOfSpoilIDToShow = new ArraySet<>();
+        public int lastIdOfSpoilInMessage = -1;
+        public ArraySet<Integer> listOfSpoilIdToShow = new ArraySet<>();
 
         public static final Parcelable.Creator<MessageInfos> CREATOR = new Parcelable.Creator<MessageInfos>() {
             @Override
@@ -1351,11 +1351,11 @@ public final class JVCParser {
             containUglyImages = (in.readByte() == 1);
             showUglyImages = (in.readByte() == 1);
             id = in.readLong();
-            lastIDOfSpoilInMessage = in.readInt();
+            lastIdOfSpoilInMessage = in.readInt();
 
-            final int sizeOfListOfSpoidIDToShow = in.readInt();
-            for (int i = 0; i < sizeOfListOfSpoidIDToShow; ++i) {
-                listOfSpoilIDToShow.add(in.readInt());
+            final int sizeOfListOfSpoidIdToShow = in.readInt();
+            for (int i = 0; i < sizeOfListOfSpoidIdToShow; ++i) {
+                listOfSpoilIdToShow.add(in.readInt());
             }
         }
 
@@ -1385,11 +1385,11 @@ public final class JVCParser {
             out.writeByte((byte)(containUglyImages ? 1 : 0));
             out.writeByte((byte)(showUglyImages ? 1 : 0));
             out.writeLong(id);
-            out.writeInt(lastIDOfSpoilInMessage);
+            out.writeInt(lastIdOfSpoilInMessage);
 
-            out.writeInt(listOfSpoilIDToShow.size());
-            for (int i = 0; i < listOfSpoilIDToShow.size(); ++i) {
-                out.writeInt(listOfSpoilIDToShow.valueAt(i));
+            out.writeInt(listOfSpoilIdToShow.size());
+            for (int i = 0; i < listOfSpoilIdToShow.size(); ++i) {
+                out.writeInt(listOfSpoilIdToShow.valueAt(i));
             }
         }
 
@@ -1631,25 +1631,25 @@ public final class JVCParser {
         private final String spoilButtonCode = "<bg_spoil_button><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "000000" : "FFFFFF") +
                                                "\">&nbsp;SPOIL&nbsp;</font></bg_spoil_button>";
 
-        private ArraySet<Integer> listOfSpoilIDToShow = null;
+        private ArraySet<Integer> listOfSpoilIdToShow = null;
         private boolean showAllSpoils = false;
-        private int lastIDUsed = -1;
+        private int lastIdUsed = -1;
 
-        public BuildSpoilTag(ArraySet<Integer> newListOfSpoilIDToShow, int newLastIDUsed) {
-            listOfSpoilIDToShow = newListOfSpoilIDToShow;
-            showAllSpoils = listOfSpoilIDToShow.contains(-1);
-            lastIDUsed = newLastIDUsed;
+        public BuildSpoilTag(ArraySet<Integer> newListOfSpoilIdToShow, int newLastIdUsed) {
+            listOfSpoilIdToShow = newListOfSpoilIdToShow;
+            showAllSpoils = listOfSpoilIdToShow.contains(-1);
+            lastIdUsed = newLastIdUsed;
         }
 
-        public int getLastIDUsedForSpoil() {
-            return lastIDUsed;
+        public int getLastIdUsedForSpoil() {
+            return lastIdUsed;
         }
 
         @Override
         public String changeString(String baseString) {
-            //lastIDUsed + 1 est l'ID utilisé pour la balise actuelle
-            String id = String.valueOf(++lastIDUsed);
-            boolean showThisSpoil = showAllSpoils || listOfSpoilIDToShow.contains(lastIDUsed);
+            //lastIdUsed + 1 est l'ID utilisé pour la balise actuelle
+            String id = String.valueOf(++lastIdUsed);
+            boolean showThisSpoil = showAllSpoils || listOfSpoilIdToShow.contains(lastIdUsed);
 
             if (showThisSpoil) {
                 return "<holdstring_c" + id + ">" + spoilButtonCode + "</holdstring_c" + id + ">" + "<bg_spoil_content><font color=\"#" +
@@ -1705,8 +1705,8 @@ public final class JVCParser {
     }
 
     private static class SpoilTagsInfos {
-        public ArraySet<Integer> listOfSpoilIDToShow = null;
+        public ArraySet<Integer> listOfSpoilIdToShow = null;
         public boolean containSpoil = false;
-        public int lastIDOfSpoil = -1;
+        public int lastIdOfSpoil = -1;
     }
 }
