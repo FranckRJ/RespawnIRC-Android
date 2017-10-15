@@ -102,8 +102,8 @@ public class PrefsManager {
         addBoolPref(BoolPref.Names.SAVE_LAST_ROW_USED_INSERTSTUFF, currentContext.getString(R.string.settingsSaveLastRowUsedInsertstuff), true);
 
         addStringPref(StringPref.Names.MAX_NUMBER_OF_OVERLY_QUOTE, currentContext.getString(R.string.settingsMaxNumberOfOverlyQuote), "2", 0, 15);
-        addStringPref(StringPref.Names.SHOW_AVATAR_MODE_FORUM, currentContext.getString(R.string.settingsShowAvatarModeForum), "1");
-        addStringPref(StringPref.Names.SHOW_NOELSHACK_IMAGE, currentContext.getString(R.string.settingsShowNoelshackImage), "1");
+        addStringPref(StringPref.Names.SHOW_AVATAR_MODE_FORUM, currentContext.getString(R.string.settingsShowAvatarModeForum), "0");
+        addStringPref(StringPref.Names.SHOW_NOELSHACK_IMAGE, currentContext.getString(R.string.settingsShowNoelshackImage), "0");
         addStringPref(StringPref.Names.REFRESH_TOPIC_TIME, currentContext.getString(R.string.settingsRefreshTopicTime), "10000", 2500, 60000);
         addStringPref(StringPref.Names.MAX_NUMBER_OF_MESSAGES, currentContext.getString(R.string.settingsMaxNumberOfMessages), "60", 1, 120);
         addStringPref(StringPref.Names.INITIAL_NUMBER_OF_MESSAGES, currentContext.getString(R.string.settingsInitialNumberOfMessages), "10", 1, 20);

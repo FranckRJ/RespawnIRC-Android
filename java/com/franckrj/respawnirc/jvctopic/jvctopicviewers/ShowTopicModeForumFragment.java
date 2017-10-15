@@ -134,7 +134,7 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
         try {
             showAvatarAdv = Integer.valueOf(PrefsManager.getString(PrefsManager.StringPref.Names.SHOW_AVATAR_MODE_FORUM));
         } catch (Exception e) {
-            showAvatarAdv = 2;
+            showAvatarAdv = 0;
         }
 
         cardDesignIsEnabled = (ThemeManager.getThemeUsed() != ThemeManager.ThemeName.BLACK_THEME && PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_CARD_DESIGN_MODE_FORUM)) ||

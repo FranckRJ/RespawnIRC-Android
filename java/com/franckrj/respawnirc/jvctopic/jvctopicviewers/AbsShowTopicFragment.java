@@ -43,7 +43,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected SwipeRefreshLayout swipeRefresh = null;
     protected ShareActionProvider shareAction = null;
     protected boolean allMessagesShowedAreFromIgnoredPseudos = false;
-    protected int showNoelshackImageAdv = 1;
+    protected int showNoelshackImageAdv = 0;
     protected boolean showRefreshWhenMessagesShowed = true;
     protected boolean isInErrorMode = false;
     protected boolean cardDesignIsEnabled = false;
@@ -130,7 +130,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         try {
             showNoelshackImageAdv = Integer.valueOf(PrefsManager.getString(PrefsManager.StringPref.Names.SHOW_NOELSHACK_IMAGE));
         } catch (Exception e) {
-            showNoelshackImageAdv = 1;
+            showNoelshackImageAdv = 0;
         }
 
         updateSettingsDependingOnConnection();
