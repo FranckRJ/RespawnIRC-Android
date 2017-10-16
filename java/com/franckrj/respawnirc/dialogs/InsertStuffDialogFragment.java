@@ -28,8 +28,9 @@ import com.franckrj.respawnirc.utils.LongClickableSpan;
 import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
 
+import java.util.ArrayList;
+
 public class InsertStuffDialogFragment extends DialogFragment {
-    private static final int MAX_NUMBER_OF_ROW = 21;
     private static Spanned[] listOfSpanForTextView = null;
     private static SimpleArrayMap<String, String> listOfSmileyNamesForFileName = null;
     private static boolean textDecorationRowGeneratedForDarkTheme = false;
@@ -37,7 +38,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
     private TextView mainTextView = null;
     private ScrollView scrollViewOfButtons = null;
     private Html.ImageGetter jvcImageGetter = null;
-    private ImageView[] listOfCategoryButtons = new ImageView[MAX_NUMBER_OF_ROW];
+    private ArrayList<ImageView> listOfCategoryButtons = new ArrayList<>();
     private int oldRowNumber = 1;
 
     private final View.OnClickListener categoryButtonClickedListener = new View.OnClickListener() {
@@ -48,8 +49,8 @@ public class InsertStuffDialogFragment extends DialogFragment {
                 newRowNumber = (int) v.getTag();
                 if (newRowNumber < 0) {
                     newRowNumber = 0;
-                } else if (newRowNumber >= MAX_NUMBER_OF_ROW) {
-                    newRowNumber = MAX_NUMBER_OF_ROW - 1;
+                } else if (newRowNumber >= listOfCategoryButtons.size()) {
+                    newRowNumber = listOfCategoryButtons.size() - 1;
                 }
             } catch (Exception e) {
                 //rien
@@ -59,11 +60,11 @@ public class InsertStuffDialogFragment extends DialogFragment {
     };
 
     private void selectThisRow(int rowToUse) {
-        listOfCategoryButtons[oldRowNumber].setBackgroundColor(Undeprecator.resourcesGetColor(getResources(), android.R.color.transparent));
-        listOfCategoryButtons[rowToUse].setBackgroundColor(Undeprecator.resourcesGetColor(getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.MORE_DARKER_BACKGROUND_COLOR)));
+        listOfCategoryButtons.get(oldRowNumber).setBackgroundColor(Undeprecator.resourcesGetColor(getResources(), android.R.color.transparent));
+        listOfCategoryButtons.get(rowToUse).setBackgroundColor(Undeprecator.resourcesGetColor(getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.MORE_DARKER_BACKGROUND_COLOR)));
         initializeSpanForTextViewIfNeeded(jvcImageGetter, rowToUse);
         mainTextView.setText(replaceUrlSpans(listOfSpanForTextView[rowToUse]));
-        scrollViewOfButtons.requestChildFocus(listOfCategoryButtons[rowToUse], listOfCategoryButtons[rowToUse]);
+        scrollViewOfButtons.requestChildFocus(listOfCategoryButtons.get(rowToUse), listOfCategoryButtons.get(rowToUse));
         oldRowNumber = rowToUse;
         PrefsManager.putInt(PrefsManager.IntPref.Names.LAST_ROW_SELECTED_INSERTSTUFF, oldRowNumber);
         PrefsManager.applyChanges();
@@ -149,8 +150,8 @@ public class InsertStuffDialogFragment extends DialogFragment {
 
     private void initializeSpanForTextViewIfNeeded(Html.ImageGetter withThisImageGetter, int row) {
         if (listOfSpanForTextView == null) {
-            listOfSpanForTextView = new Spanned[MAX_NUMBER_OF_ROW];
-            for (int i = 0; i < MAX_NUMBER_OF_ROW; ++i) {
+            listOfSpanForTextView = new Spanned[listOfCategoryButtons.size()];
+            for (int i = 0; i < listOfCategoryButtons.size(); ++i) {
                 listOfSpanForTextView[i] = null;
             }
         }
@@ -221,23 +222,6 @@ public class InsertStuffDialogFragment extends DialogFragment {
                     appendAnotherStuff("sticker_zuc_es", textForShowAllStuff, false);
                     break;
                 case 3:
-                    //lapin
-                    appendAnotherStuff("sticker_1jc3_en", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1jc3_fr", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1jc5", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1jcg", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1jch", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1jcl", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1leb", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1lej_en", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1lej_fr", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1leq_en", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1leq_fr", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1li3", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1li4", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1li5", textForShowAllStuff, false);
-                    break;
-                case 4:
                     //bourge
                     appendAnotherStuff("sticker_1jnc", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1jnd", textForShowAllStuff, false);
@@ -248,7 +232,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
                     appendAnotherStuff("sticker_1jni", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1jnj", textForShowAllStuff, false);
                     break;
-                case 5:
+                case 4:
                     //lama
                     appendAnotherStuff("sticker_1kgu", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1kgv", textForShowAllStuff, false);
@@ -259,7 +243,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
                     appendAnotherStuff("sticker_1kh0", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1kh1", textForShowAllStuff, false);
                     break;
-                case 6:
+                case 5:
                     //hap
                     appendAnotherStuff("sticker_1kkg", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1kkh", textForShowAllStuff, false);
@@ -270,7 +254,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
                     appendAnotherStuff("sticker_1kkm", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1kkn", textForShowAllStuff, false);
                     break;
-                case 7:
+                case 6:
                     //noel
                     appendAnotherStuff("sticker_1kko", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1kkp", textForShowAllStuff, false);
@@ -281,7 +265,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
                     appendAnotherStuff("sticker_1kku", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1kkv", textForShowAllStuff, false);
                     break;
-                case 8:
+                case 7:
                     //chat
                     appendAnotherStuff("sticker_1kky", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1kkz", textForShowAllStuff, false);
@@ -298,7 +282,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
                     appendAnotherStuff("sticker_1kla", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1klb", textForShowAllStuff, false);
                     break;
-                case 9:
+                case 8:
                     //orc
                     appendAnotherStuff("sticker_1lga", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1lgb", textForShowAllStuff, false);
@@ -309,7 +293,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
                     appendAnotherStuff("sticker_1lgg", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1lgh", textForShowAllStuff, false);
                     break;
-                case 10:
+                case 9:
                     //dom
                     appendAnotherStuff("sticker_1ljj", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1ljl", textForShowAllStuff, false);
@@ -325,7 +309,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
                     appendAnotherStuff("sticker_1rzv", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1rzw", textForShowAllStuff, false);
                     break;
-                case 11:
+                case 10:
                     //aventurier
                     appendAnotherStuff("sticker_1lm9", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1lma", textForShowAllStuff, false);
@@ -336,7 +320,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
                     appendAnotherStuff("sticker_1lmf", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1lmg", textForShowAllStuff, false);
                     break;
-                case 12:
+                case 11:
                     //saumon
                     appendAnotherStuff("sticker_1lmh", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1lmi", textForShowAllStuff, false);
@@ -361,7 +345,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
                     appendAnotherStuff("sticker_1nua", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1nub", textForShowAllStuff, false);
                     break;
-                case 13:
+                case 12:
                     //bureau
                     appendAnotherStuff("sticker_1lt7", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1lt8", textForShowAllStuff, false);
@@ -372,42 +356,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
                     appendAnotherStuff("sticker_1ltd", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1lte", textForShowAllStuff, false);
                     break;
-                case 14:
-                    //xmen
-                    appendAnotherStuff("sticker_1mid_fr", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1mie_fr", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1mif", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1mig_fr", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1mih_fr", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1mii_fr", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1mij_fr", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1mik", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1mil", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1mim", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1min", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1mio", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1mip", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1miq", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1mir", textForShowAllStuff, false);
-                    break;
-                case 15:
-                    //xbox
-                    appendAnotherStuff("sticker_1my4", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1my5", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1my6", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1my7", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1my8", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1my9", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1mya", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1myb", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1myc", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1myd", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1mye", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1myf", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1myx", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1n28", textForShowAllStuff, false);
-                    break;
-                case 16:
+                case 13:
                     //foot
                     appendAnotherStuff("sticker_1n1m_de", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1n1m_es", textForShowAllStuff, false);
@@ -439,7 +388,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
                     appendAnotherStuff("sticker_1n1t_fr", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1n1t_it", textForShowAllStuff, false);
                     break;
-                case 17:
+                case 14:
                     //store
                     appendAnotherStuff("sticker_1n2c", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1n2d", textForShowAllStuff, false);
@@ -453,22 +402,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
                     appendAnotherStuff("sticker_1n2n", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1n2o", textForShowAllStuff, false);
                     break;
-                case 18:
-                    //brice
-                    appendAnotherStuff("sticker_1ntp", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1ntq", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1ntr", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1nts", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1ntt", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1ntu", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1ntv", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1ntw", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1ntx", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1nty", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1ntz", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1nu0", textForShowAllStuff, false);
-                    break;
-                case 19:
+                case 15:
                     //pixel
                     appendAnotherStuff("sticker_1o2k", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1o33", textForShowAllStuff, false);
@@ -479,7 +413,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
                     appendAnotherStuff("sticker_1o66", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1o67", textForShowAllStuff, false);
                     break;
-                case 20:
+                case 16:
                     //gym
                     appendAnotherStuff("sticker_1ptd", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1rob", textForShowAllStuff, false);
@@ -578,46 +512,42 @@ public class InsertStuffDialogFragment extends DialogFragment {
 
         jvcImageGetter = new CustomImageGetter(getActivity(), deletedDrawable, null);
 
-        if (PrefsManager.getBool(PrefsManager.BoolPref.Names.SAVE_LAST_ROW_USED_INSERTSTUFF)) {
-            oldRowNumber = PrefsManager.getInt(PrefsManager.IntPref.Names.LAST_ROW_SELECTED_INSERTSTUFF);
-        }
-
-        if (oldRowNumber >= MAX_NUMBER_OF_ROW) {
-            oldRowNumber = MAX_NUMBER_OF_ROW - 1;
-        } else if (oldRowNumber < 0) {
-            oldRowNumber = 0;
-        }
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         @SuppressLint("InflateParams")
         View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_insertstuff, null);
         scrollViewOfButtons = mainView.findViewById(R.id.list_scrollview_insertstuff);
         mainTextView = mainView.findViewById(R.id.showstuff_text_insertstuff);
-        listOfCategoryButtons[0] = mainView.findViewById(R.id.smiley_button_insertstuff);
-        listOfCategoryButtons[1] = mainView.findViewById(R.id.textformat_button_insertstuff);
-        listOfCategoryButtons[2] = mainView.findViewById(R.id.sticker_1_button_insertstuff);
-        listOfCategoryButtons[3] = mainView.findViewById(R.id.sticker_2_button_insertstuff);
-        listOfCategoryButtons[4] = mainView.findViewById(R.id.sticker_3_button_insertstuff);
-        listOfCategoryButtons[5] = mainView.findViewById(R.id.sticker_4_button_insertstuff);
-        listOfCategoryButtons[6] = mainView.findViewById(R.id.sticker_5_button_insertstuff);
-        listOfCategoryButtons[7] = mainView.findViewById(R.id.sticker_6_button_insertstuff);
-        listOfCategoryButtons[8] = mainView.findViewById(R.id.sticker_7_button_insertstuff);
-        listOfCategoryButtons[9] = mainView.findViewById(R.id.sticker_8_button_insertstuff);
-        listOfCategoryButtons[10] = mainView.findViewById(R.id.sticker_9_button_insertstuff);
-        listOfCategoryButtons[11] = mainView.findViewById(R.id.sticker_10_button_insertstuff);
-        listOfCategoryButtons[12] = mainView.findViewById(R.id.sticker_11_button_insertstuff);
-        listOfCategoryButtons[13] = mainView.findViewById(R.id.sticker_12_button_insertstuff);
-        listOfCategoryButtons[14] = mainView.findViewById(R.id.sticker_13_button_insertstuff);
-        listOfCategoryButtons[15] = mainView.findViewById(R.id.sticker_14_button_insertstuff);
-        listOfCategoryButtons[16] = mainView.findViewById(R.id.sticker_15_button_insertstuff);
-        listOfCategoryButtons[17] = mainView.findViewById(R.id.sticker_16_button_insertstuff);
-        listOfCategoryButtons[18] = mainView.findViewById(R.id.sticker_17_button_insertstuff);
-        listOfCategoryButtons[19] = mainView.findViewById(R.id.sticker_18_button_insertstuff);
-        listOfCategoryButtons[20] = mainView.findViewById(R.id.sticker_19_button_insertstuff);
+        listOfCategoryButtons.add((ImageView) mainView.findViewById(R.id.smiley_button_insertstuff));
+        listOfCategoryButtons.add((ImageView) mainView.findViewById(R.id.textformat_button_insertstuff));
+        listOfCategoryButtons.add((ImageView) mainView.findViewById(R.id.sticker_1_button_insertstuff));
+        listOfCategoryButtons.add((ImageView) mainView.findViewById(R.id.sticker_2_button_insertstuff));
+        listOfCategoryButtons.add((ImageView) mainView.findViewById(R.id.sticker_3_button_insertstuff));
+        listOfCategoryButtons.add((ImageView) mainView.findViewById(R.id.sticker_4_button_insertstuff));
+        listOfCategoryButtons.add((ImageView) mainView.findViewById(R.id.sticker_5_button_insertstuff));
+        listOfCategoryButtons.add((ImageView) mainView.findViewById(R.id.sticker_6_button_insertstuff));
+        listOfCategoryButtons.add((ImageView) mainView.findViewById(R.id.sticker_7_button_insertstuff));
+        listOfCategoryButtons.add((ImageView) mainView.findViewById(R.id.sticker_8_button_insertstuff));
+        listOfCategoryButtons.add((ImageView) mainView.findViewById(R.id.sticker_9_button_insertstuff));
+        listOfCategoryButtons.add((ImageView) mainView.findViewById(R.id.sticker_10_button_insertstuff));
+        listOfCategoryButtons.add((ImageView) mainView.findViewById(R.id.sticker_11_button_insertstuff));
+        listOfCategoryButtons.add((ImageView) mainView.findViewById(R.id.sticker_12_button_insertstuff));
+        listOfCategoryButtons.add((ImageView) mainView.findViewById(R.id.sticker_13_button_insertstuff));
+        listOfCategoryButtons.add((ImageView) mainView.findViewById(R.id.sticker_14_button_insertstuff));
+        listOfCategoryButtons.add((ImageView) mainView.findViewById(R.id.sticker_15_button_insertstuff));
 
-        for (int i = 0; i < MAX_NUMBER_OF_ROW; ++i) {
-            listOfCategoryButtons[i].setTag(i);
-            listOfCategoryButtons[i].setOnClickListener(categoryButtonClickedListener);
+        for (int i = 0; i < listOfCategoryButtons.size(); ++i) {
+            listOfCategoryButtons.get(i).setTag(i);
+            listOfCategoryButtons.get(i).setOnClickListener(categoryButtonClickedListener);
+        }
+
+        if (PrefsManager.getBool(PrefsManager.BoolPref.Names.SAVE_LAST_ROW_USED_INSERTSTUFF)) {
+            oldRowNumber = PrefsManager.getInt(PrefsManager.IntPref.Names.LAST_ROW_SELECTED_INSERTSTUFF);
+        }
+
+        if (oldRowNumber >= listOfCategoryButtons.size()) {
+            oldRowNumber = listOfCategoryButtons.size() - 1;
+        } else if (oldRowNumber < 0) {
+            oldRowNumber = 0;
         }
 
         mainTextView.setMovementMethod(LongClickLinkMovementMethod.getInstance());
