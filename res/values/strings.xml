@@ -17,7 +17,7 @@
     <string name="preference">Préférences</string>
     <string name="maxNumberOfMessagesTitle">Nb de messages affichés au max</string>
     <string name="initialNumberOfMessagesTitle">Nb de messages affichés au 1er chargement</string>
-    <string name="settingsGeneralTitle">Général</string>
+    <string name="general">Général</string>
     <string name="refreshTopicTimeTitle">Temps avant màj des messages (en ms)</string>
     <string name="loadTopicFromOldInfos">Poursuivre la lecture</string>
     <string name="help">Aide</string>
@@ -40,11 +40,11 @@
     <string name="choosePageNumber">Choisir un numéro de page</string>
     <string name="topicOrForumLink">Lien du topic/forum…</string>
     <string name="openTopicOrForumLink">Ouvrir un lien de topic/forum</string>
-    <string name="topicAlternateBackgroundColorTitle">Alterner le fond des messages</string>
+    <string name="topicAlternateBackgroundColorTitle">Alterner la couleur de fond des messages</string>
     <string name="topicIcon">Icone de topic</string>
     <string name="showQuoteMessage">Afficher les citations imbriquées</string>
     <string name="hideQuoteMessage">Cacher les citations imbriquées</string>
-    <string name="maxNumberOfOverlyQuoteTitle">Nb max de citations imbriquées</string>
+    <string name="maxNumberOfOverlyQuoteTitle">Nombre max de citations imbriquées</string>
     <string name="warningNotConnected">Vous ne vous êtes pas connecté</string>
     <string name="errorQuoteAlreadyRunning">Erreur, citation déjà en cours.</string>
     <string name="errorInfosMissings">Erreur, informations manquantes (rechargez la page ?).</string>
@@ -126,9 +126,9 @@
     <string name="showUglyImagesMessage">Afficher les images nuisibles</string>
     <string name="light">Clair</string>
     <string name="dark">Sombre</string>
-    <string name="theme">Theme</string>
+    <string name="theme">Thème</string>
     <string name="black">Noir</string>
-    <string name="style">Apparence</string>
+    <string name="messageStyle">Apparence et contenu des messages</string>
     <string name="settingsModeForumTitle">Mode forum</string>
     <string name="settingsModeIRCTitle">Mode IRC</string>
     <string name="imageLink">Images / Liens</string>
@@ -137,7 +137,7 @@
     <string name="author">Auteur</string>
     <string name="search">Rechercher</string>
     <string name="errorSearchImpossible">Erreur, recherche impossible.</string>
-    <string name="forumAlternateBackgroundColorTitle">Alterner le fond des topics</string>
+    <string name="forumAlternateBackgroundColorTitle">Alterner la couleur de fond des topics</string>
     <string name="enableSmoothScrollTitle">Activer le smoothscroll</string>
     <string name="whenPossibleSummary">(lorsque possible)</string>
     <string name="enableGoToBottomOnLoadTitle">Fin de page lors d\'un clique long</string>
@@ -179,19 +179,20 @@
     <string name="allTopicsAreFromIgnoredPseudo">Tous les topics de cette page proviennent de pseudos ignorés.</string>
     <string name="separationBetweenMessagesTitle">Séparation entre les messages</string>
     <string name="blackThemeOnlySummary">(uniquement pour le thème noir)</string>
-    <string name="styleModeForum">Apparence (mode forum)</string>
     <string name="advanced">Avancé</string>
     <string name="ignore">Ignorer</string>
     <string name="errorYouCantIgnoreYourself">Erreur, vous ne pouvez pas vous ignorer.</string>
     <string name="pseudoIgnored">%1$s ignoré !</string>
     <string name="pseudoIsAlreadyIgnored">Erreur, le pseudo est déjà ignoré.</string>
-    <string name="ignoreTopicTooTitle">Cacher les topics des pseudos ignorés</string>
+    <string name="ignoreTopicTooTitle">Cacher les topics également</string>
+    <string name="manageIgnoreList">Gérer la liste des ignorés</string>
     <string name="ignoreList">Liste des ignorés</string>
+    <string name="ignored">Ignorés</string>
     <string name="delete">Supprimer</string>
     <string name="youAreAlreadyConnectedAsModo">Vous êtes déjà connecté à la modération.</string>
     <string name="enableFastRefreshOfImagesTitle">Activer l\'affichage rapide des images</string>
     <string name="enableFastRefreshOfImagesSummary">(augmente l\'utilisation des ressources CPU)</string>
-    <string name="hideTotallyMessagesOfIgnoredPseudosTitle">Cacher totalement les messages des ignorés</string>
+    <string name="hideTotallyMessagesOfIgnoredPseudosTitle">Cacher totalement les messages</string>
     <string name="noPseudoIgnoredInList">La liste des pseudos ignorés est vide.</string>
     <string name="showWebsite">Voir le site web</string>
     <string name="enableColorDeletedMessagesTitle">Colorer les messages supprimés</string>
@@ -215,7 +216,8 @@
     <string name="replyTitleInSurveyManager">Rep n°%1$s :</string>
     <string name="addReply">Ajouter une réponse</string>
     <string name="stickerSizeTitle">Taille des stickers (en dp)</string>
-    <string name="miniNoelshackWidthTitle">Largeur des miniatures noelshack (en dp)</string>
+    <string name="miniNoelshackWidthTitle">Largeur des miniatures (en dp)</string>
+    <string name="avatarsAndStickers">Avatars / Stickers</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

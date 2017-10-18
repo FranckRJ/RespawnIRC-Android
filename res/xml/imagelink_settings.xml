@@ -3,6 +3,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
+        android:title="@string/avatarsAndStickers">
+        <EditTextPreference
+            android:key="@string/settingsAvatarSize"
+            android:title="@string/avatarSizeTitle"
+            android:numeric="integer"/>
+
+        <EditTextPreference
+            android:key="@string/settingsStickerSize"
+            android:title="@string/stickerSizeTitle"
+            android:numeric="integer"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/noelshack">
         <ListPreference
             android:key="@string/settingsShowNoelshackImage"
@@ -11,6 +24,11 @@
             android:entries="@array/choicesForConnectionReadable"
             android:entryValues="@array/choicesForConnectionValue"/>
 
+        <EditTextPreference
+            android:key="@string/settingsMiniNoelshackWidth"
+            android:title="@string/miniNoelshackWidthTitle"
+            android:numeric="integer"/>
+
         <CheckBoxPreference
             android:key="@string/settingsShowOverviewOnImageClick"
             android:title="@string/showOverviewOnImageClickTitle"/>
@@ -18,21 +36,17 @@
         <CheckBoxPreference
             android:key="@string/settingsUseDirectNoelshackLink"
             android:title="@string/useDirectNoelshackLinkTitle"/>
-
-        <CheckBoxPreference
-            android:key="@string/settingsHideUglyImages"
-            android:title="@string/hideUglyImagesTitle"/>
     </PreferenceCategory>
 
     <PreferenceCategory
         android:title="@string/link">
         <CheckBoxPreference
-            android:key="@string/settingsShortenLongLink"
-            android:title="@string/shortenLongLinkTitle"/>
-
-        <CheckBoxPreference
             android:key="@string/settingsUseInternalNavigator"
             android:title="@string/useInternalNavigatorTitle"/>
+
+        <CheckBoxPreference
+            android:key="@string/settingsShortenLongLink"
+            android:title="@string/shortenLongLinkTitle"/>
     </PreferenceCategory>
 
 </PreferenceScreen>
