@@ -46,7 +46,7 @@ import java.util.ArrayList;
 public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCTopicGetter.NewForumAndTopicNameAvailable,
                                                                         PopupMenu.OnMenuItemClickListener, JVCTopicModeForumGetter.NewNumbersOfPagesListener,
                                                                         ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCTopicAdapter.URLClicked,
-                                                                        AbsJVCTopicGetter.NewReasonForTopicLock, InsertStuffDialogFragment.StuffInserted,
+                                                                        AbsJVCTopicGetter.NewReasonForTopicLock, InsertStuffDialogFragment.StuffInserted, MessageContextMenuDialogFragment.NewPseudoIgnored,
                                                                         PageNavigationUtil.PageNavigationFunctions, AddOrRemoveThingToFavs.ActionToFavsEnded, AbsJVCTopicGetter.TopicLinkChanged,
                                                                         AbsShowTopicFragment.NewSurveyNeedToBeShown, JVCTopicAdapter.PseudoClicked, AbsJVCTopicGetter.NewPseudoOfAuthorAvailable {
     public static final String EXTRA_TOPIC_LINK = "com.franckrj.respawnirc.EXTRA_TOPIC_LINK";
@@ -791,6 +791,14 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         pseudoOfAuthor = newPseudoOfAuthor;
         if (currentFrag != null) {
             currentFrag.setPseudoOfAuthor(pseudoOfAuthor);
+        }
+    }
+
+    @Override
+    public void onIgnoreNewPseudo(String newPseudoIgnored) {
+        AbsShowTopicFragment currentFrag = getCurrentFragment();
+        if (currentFrag != null) {
+            currentFrag.ignoreThisPseudoFromListOfMessages(newPseudoIgnored);
         }
     }
 }

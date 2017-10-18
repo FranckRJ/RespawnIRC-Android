@@ -302,6 +302,15 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         currentSettings.pseudoOfAuthor = newPseudoOfAuthor;
     }
 
+    public void ignoreThisPseudoFromListOfMessages(String pseudoToIgnore) {
+        if (hideTotallyMessagesOfIgnoredPseudos) {
+            adapterForTopic.removeItemsWithThisPseudo(pseudoToIgnore);
+        } else {
+            adapterForTopic.blacklistItemsWithThisPseudo(pseudoToIgnore);
+        }
+        adapterForTopic.notifyDataSetChanged();
+    }
+
     @Override
     public void clearContent() {
         absGetterForTopic.stopAllCurrentTask();

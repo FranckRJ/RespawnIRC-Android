@@ -78,6 +78,10 @@ public class MessageContextMenuDialogFragment extends DialogFragment {
                             if (IgnoreListManager.addPseudoToIgnoredList(pseudoOfMessage)) {
                                 IgnoreListManager.saveListOfIgnoredPseudos();
                                 Toast.makeText(getActivity(), getString(R.string.pseudoIgnored, pseudoOfMessage), Toast.LENGTH_SHORT).show();
+
+                                if (getActivity() instanceof NewPseudoIgnored) {
+                                    ((NewPseudoIgnored) getActivity()).onIgnoreNewPseudo(pseudoOfMessage);
+                                }
                             } else {
                                 Toast.makeText(getActivity(), R.string.pseudoIsAlreadyIgnored, Toast.LENGTH_SHORT).show();
                             }
@@ -115,5 +119,9 @@ public class MessageContextMenuDialogFragment extends DialogFragment {
         });
 
         return builder.create();
+    }
+
+    public interface NewPseudoIgnored {
+        void onIgnoreNewPseudo(String newPseudoIgnored);
     }
 }

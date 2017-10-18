@@ -252,6 +252,26 @@ public class JVCTopicAdapter extends BaseAdapter {
         listOfContentForMessages.remove(0);
     }
 
+    public void removeItemsWithThisPseudo(String pseudoToUse) {
+        for (int i = 0; i < listOfMessages.size(); ) {
+            if (listOfMessages.get(i).pseudo.toLowerCase().equals(pseudoToUse.toLowerCase())) {
+                listOfMessages.remove(i);
+                listOfContentForMessages.remove(i);
+            } else {
+                ++i;
+            }
+        }
+    }
+
+    public void blacklistItemsWithThisPseudo(String pseudoToUse) {
+        for (int i = 0; i < listOfMessages.size(); ++i) {
+            if (listOfMessages.get(i).pseudo.toLowerCase().equals(pseudoToUse.toLowerCase())) {
+                listOfMessages.get(i).pseudoIsBlacklisted = true;
+                updateHolderWithNewItem(listOfContentForMessages.get(i), listOfMessages.get(i), false);
+            }
+        }
+    }
+
     public void addItem(JVCParser.MessageInfos item, boolean isANewItem) {
         listOfContentForMessages.add(updateHolderWithNewItem(new ContentHolder(), item, isANewItem));
         listOfMessages.add(item);
