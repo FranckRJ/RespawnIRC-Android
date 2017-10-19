@@ -33,19 +33,25 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers implement
         @Override
         public boolean onPreferenceClick(Preference preference) {
             if (getActivity() instanceof NewSettingsFileNeedALoad) {
-                if (preference.getKey().equals(getString(R.string.subScreenSettingsStyle))) {
-                    ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.style_settings, preference.getTitle().toString());
+                if (preference.getKey().equals(getString(R.string.subScreenSettingsGeneral))) {
+                    ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.general_settings, preference.getTitle().toString());
                     return true;
-                } else if (preference.getKey().equals(getString(R.string.subScreenSettingsImageLink))) {
-                    ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.imagelink_settings, preference.getTitle().toString());
+                } else if (preference.getKey().equals(getString(R.string.subScreenSettingsTheme))) {
+                    ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.theme_settings, preference.getTitle().toString());
+                    return true;
+                } else if (preference.getKey().equals(getString(R.string.subScreenSettingsMessageStyle))) {
+                    ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.messagestyle_settings, preference.getTitle().toString());
                     return true;
                 } else if (preference.getKey().equals(getString(R.string.subScreenSettingsBehaviour))) {
                     ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.behaviour_settings, preference.getTitle().toString());
                     return true;
-                } else if (preference.getKey().equals(getString(R.string.subScreenSettingsAdvanced))) {
-                    ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.advanced_settings, preference.getTitle().toString());
+                } else if (preference.getKey().equals(getString(R.string.subScreenSettingsImageLink))) {
+                    ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.imagelink_settings, preference.getTitle().toString());
                     return true;
-                } else if (preference.getKey().equals(getString(R.string.subScreenSettingsIgnoreList))) {
+                } else if (preference.getKey().equals(getString(R.string.subScreenSettingsIgnored))) {
+                    ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.ignored_settings, preference.getTitle().toString());
+                    return true;
+                } else if (preference.getKey().equals(getString(R.string.subScreenSettingsManageIgnoreList))) {
                     startActivity(new Intent(getActivity(), ManageIgnoreListActivity.class));
                     return true;
                 } else if (preference.getKey().equals(getString(R.string.subScreenSettingsHelp))) {
@@ -53,7 +59,7 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers implement
                     helpDialogFragment.show(getActivity().getSupportFragmentManager(), "HelpSettingsDialogFragment");
                     return true;
                 } else if (preference.getKey().equals(getString(R.string.subScreenSettingsShowWebsite))) {
-                    Utils.openLinkInExternalNavigator("https://pijon.fr/RespawnIRC-Android/", getActivity());
+                    Utils.openLinkInExternalBrowser("https://pijon.fr/RespawnIRC-Android/", getActivity());
                     return true;
                 }
             }

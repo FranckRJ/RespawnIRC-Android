@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="preference_file_key" translatable="false">com.franckrj.respawnirc.PREFERENCE_FILE_KEY</string>
+    <string name="subScreenSettingsGeneral" translatable="false">subScreenSettings.general</string>
+    <string name="subScreenSettingsTheme" translatable="false">subScreenSettings.theme</string>
+    <string name="subScreenSettingsMessageStyle" translatable="false">subScreenSettings.messageStyle</string>
+    <string name="subScreenSettingsBehaviour" translatable="false">subScreenSettings.behaviour</string>
+    <string name="subScreenSettingsImageLink" translatable="false">subScreenSettings.imageLink</string>
+    <string name="subScreenSettingsIgnored" translatable="false">subScreenSettings.ignored</string>
+    <string name="subScreenSettingsManageIgnoreList" translatable="false">subScreenSettings.manageIgnoreList</string>
+    <string name="subScreenSettingsShowWebsite" translatable="false">subScreenSettings.showWebsite</string>
+    <string name="subScreenSettingsHelp" translatable="false">subScreenSettings.help</string>
     <string name="settingsMaxNumberOfMessages" translatable="false">settings.maxNumberOfMessages</string>
     <string name="settingsInitialNumberOfMessages" translatable="false">settings.initialNumberOfMessages</string>
     <string name="settingsRefreshTopicTime" translatable="false">settings.refreshTopicTime</string>
@@ -9,7 +18,6 @@
     <string name="settingsMaxNumberOfOverlyQuote" translatable="false">settings.maxNumberOfOverlyQuote</string>
     <string name="settingsShowNoelshackImage" translatable="false">settings.showNoelshackImageAdv</string>
     <string name="settingsTransformStickerToSmiley" translatable="false">settings.transformStickerToSmiley</string>
-    <string name="settingsUseInternalNavigator" translatable="false">settings.useInternalNavigator</string>
     <string name="settingsUseDirectNoelshackLink" translatable="false">settings.useDirectNoelshackLink</string>
     <string name="settingsShowOverviewOnImageClick" translatable="false">settings.showOverviewOnImageClick</string>
     <string name="settingsShortenLongLink" translatable="false">settings.shortenLongLink</string>
@@ -22,17 +30,10 @@
     <string name="settingsSeparationBetweenMessagesBlackThemeModeForum" translatable="false">settings.separationBetweenMessagesBlackThemeModeForum</string>
     <string name="settingsHideUglyImages" translatable="false">settings.hideUglyImages</string>
     <string name="settingsThemeUsed" translatable="false">settings.themeUsed</string>
-    <string name="subScreenSettingsStyle" translatable="false">subScreenSettings.style</string>
-    <string name="subScreenSettingsImageLink" translatable="false">subScreenSettings.imageLink</string>
-    <string name="subScreenSettingsBehaviour" translatable="false">subScreenSettings.behaviour</string>
-    <string name="subScreenSettingsAdvanced" translatable="false">subScreenSettings.advanced</string>
-    <string name="subScreenSettingsIgnoreList" translatable="false">subScreenSettings.ignoreList</string>
     <string name="settingsForumAlternateBackgroundColor" translatable="false">settings.forumAlternateBackgroundColor</string>
     <string name="settingsEnableSmoothScroll" translatable="false">settings.enableSmoothScroll</string>
     <string name="settingsEnableGoToBottomOnLoad" translatable="false">settings.enableGoToBottomOnLoad</string>
     <string name="settingsEnableAutoScrollModeForum" translatable="false">settings.enableAutoScrollModeForum</string>
-    <string name="subScreenSettingsHelp" translatable="false">subScreenSettings.help</string>
-    <string name="subScreenSettingsShowWebsite" translatable="false">subScreenSettings.showWebsite</string>
     <string name="settingsDefaultShowSpoilVal" translatable="false">settings.defaultShowSpoilVal</string>
     <string name="settingsMarkAuthorPseudoModeForum" translatable="false">settings.markAuthorPseudoModeForum</string>
     <string name="settingsPostAsModoWhenPossible" translatable="false">settings.postAsModoWhenPossible</string>
@@ -47,4 +48,5 @@
     <string name="settingsStickerSize" translatable="false">settings.stickerSize</string>
     <string name="settingsMiniNoelshackWidth" translatable="false">settings.miniNoelshackWidth</string>
     <string name="settingsSaveLastRowUsedInsertstuff" translatable="false">settings.saveLastRowUsedInsertstuff</string>
+    <string name="settingsLinkTypeForInternalBrowser" translatable="false">settings.linkTypeForInternalBrowser</string>
 </resources>

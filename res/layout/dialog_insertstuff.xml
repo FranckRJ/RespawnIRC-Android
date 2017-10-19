@@ -63,7 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:padding="8dp"
-                android:src="@drawable/sticker_1li4"
+                android:src="@drawable/sticker_1jnd"
                 android:scaleType="fitCenter"
                 android:contentDescription="@string/insertStuff"/>
             <ImageView
@@ -71,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:padding="8dp"
-                android:src="@drawable/sticker_1jnd"
+                android:src="@drawable/sticker_1kgu"
                 android:scaleType="fitCenter"
                 android:contentDescription="@string/insertStuff"/>
             <ImageView
@@ -79,7 +79,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:padding="8dp"
-                android:src="@drawable/sticker_1kgu"
+                android:src="@drawable/sticker_1kkh"
                 android:scaleType="fitCenter"
                 android:contentDescription="@string/insertStuff"/>
             <ImageView
@@ -87,7 +87,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:padding="8dp"
-                android:src="@drawable/sticker_1kkh"
+                android:src="@drawable/sticker_1kkr"
                 android:scaleType="fitCenter"
                 android:contentDescription="@string/insertStuff"/>
             <ImageView
@@ -95,7 +95,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:padding="8dp"
-                android:src="@drawable/sticker_1kkr"
+                android:src="@drawable/sticker_1kl6"
                 android:scaleType="fitCenter"
                 android:contentDescription="@string/insertStuff"/>
             <ImageView
@@ -103,7 +103,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:padding="8dp"
-                android:src="@drawable/sticker_1kl6"
+                android:src="@drawable/sticker_1lgg"
                 android:scaleType="fitCenter"
                 android:contentDescription="@string/insertStuff"/>
             <ImageView
@@ -111,7 +111,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:padding="8dp"
-                android:src="@drawable/sticker_1lgg"
+                android:src="@drawable/sticker_1ljl"
                 android:scaleType="fitCenter"
                 android:contentDescription="@string/insertStuff"/>
             <ImageView
@@ -119,7 +119,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:padding="8dp"
-                android:src="@drawable/sticker_1ljl"
+                android:src="@drawable/sticker_1lm9"
                 android:scaleType="fitCenter"
                 android:contentDescription="@string/insertStuff"/>
             <ImageView
@@ -127,7 +127,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:padding="8dp"
-                android:src="@drawable/sticker_1lm9"
+                android:src="@drawable/sticker_1nub"
                 android:scaleType="fitCenter"
                 android:contentDescription="@string/insertStuff"/>
             <ImageView
@@ -135,7 +135,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:padding="8dp"
-                android:src="@drawable/sticker_1nub"
+                android:src="@drawable/sticker_1ltd"
                 android:scaleType="fitCenter"
                 android:contentDescription="@string/insertStuff"/>
             <ImageView
@@ -143,7 +143,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:padding="8dp"
-                android:src="@drawable/sticker_1ltd"
+                android:src="@drawable/sticker_1n1p_fr"
                 android:scaleType="fitCenter"
                 android:contentDescription="@string/insertStuff"/>
             <ImageView
@@ -151,7 +151,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:padding="8dp"
-                android:src="@drawable/sticker_1mir"
+                android:src="@drawable/sticker_1n2c"
                 android:scaleType="fitCenter"
                 android:contentDescription="@string/insertStuff"/>
             <ImageView
@@ -159,43 +159,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:padding="8dp"
-                android:src="@drawable/sticker_1n28"
-                android:scaleType="fitCenter"
-                android:contentDescription="@string/insertStuff"/>
-            <ImageView
-                android:id="@+id/sticker_15_button_insertstuff"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:padding="8dp"
-                android:src="@drawable/sticker_1n1p_fr"
-                android:scaleType="fitCenter"
-                android:contentDescription="@string/insertStuff"/>
-            <ImageView
-                android:id="@+id/sticker_16_button_insertstuff"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:padding="8dp"
-                android:src="@drawable/sticker_1n2c"
-                android:scaleType="fitCenter"
-                android:contentDescription="@string/insertStuff"/>
-            <ImageView
-                android:id="@+id/sticker_17_button_insertstuff"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:padding="8dp"
-                android:src="@drawable/sticker_1ntq"
-                android:scaleType="fitCenter"
-                android:contentDescription="@string/insertStuff"/>
-            <ImageView
-                android:id="@+id/sticker_18_button_insertstuff"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:padding="8dp"
                 android:src="@drawable/sticker_1o33"
                 android:scaleType="fitCenter"
                 android:contentDescription="@string/insertStuff"/>
             <ImageView
-                android:id="@+id/sticker_19_button_insertstuff"
+                android:id="@+id/sticker_15_button_insertstuff"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:padding="8dp"

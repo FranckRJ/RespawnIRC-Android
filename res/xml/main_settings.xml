@@ -5,14 +5,19 @@
     <PreferenceCategory
         android:title="@string/preference">
         <Preference
-            android:key="@string/subScreenSettingsStyle"
+            android:key="@string/subScreenSettingsGeneral"
             android:persistent="false"
-            android:title="@string/style"/>
+            android:title="@string/general"/>
 
         <Preference
-            android:key="@string/subScreenSettingsImageLink"
+            android:key="@string/subScreenSettingsTheme"
             android:persistent="false"
-            android:title="@string/imageLink"/>
+            android:title="@string/theme"/>
+
+        <Preference
+            android:key="@string/subScreenSettingsMessageStyle"
+            android:persistent="false"
+            android:title="@string/messageStyle"/>
 
         <Preference
             android:key="@string/subScreenSettingsBehaviour"
@@ -20,14 +25,14 @@
             android:title="@string/behaviour"/>
 
         <Preference
-            android:key="@string/subScreenSettingsAdvanced"
+            android:key="@string/subScreenSettingsImageLink"
             android:persistent="false"
-            android:title="@string/advanced"/>
+            android:title="@string/imageLink"/>
 
         <Preference
-            android:key="@string/subScreenSettingsIgnoreList"
+            android:key="@string/subScreenSettingsIgnored"
             android:persistent="false"
-            android:title="@string/ignoreList"/>
+            android:title="@string/ignored"/>
     </PreferenceCategory>
 
     <PreferenceCategory

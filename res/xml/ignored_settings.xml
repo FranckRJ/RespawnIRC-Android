@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/general">
+        <CheckBoxPreference
+            android:key="@string/settingsHideTotallyMessagesOfIgnoredPseudos"
+            android:title="@string/hideTotallyMessagesOfIgnoredPseudosTitle"/>
+
+        <CheckBoxPreference
+            android:key="@string/settingsIgnoreTopicToo"
+            android:title="@string/ignoreTopicTooTitle"/>
+
+        <Preference
+            android:key="@string/subScreenSettingsManageIgnoreList"
+            android:persistent="false"
+            android:title="@string/manageIgnoreList"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

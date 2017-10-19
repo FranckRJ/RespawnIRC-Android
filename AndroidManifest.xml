@@ -91,7 +91,7 @@
             android:label="@string/ignoreList"/>
 
         <activity
-            android:name=".WebNavigatorActivity"
+            android:name=".WebBrowserActivity"
             android:label="@string/app_name"/>
 
     </application>

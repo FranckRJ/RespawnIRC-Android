@@ -3,12 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="@string/settingsGeneralTitle">
-        <EditTextPreference
-            android:key="@string/settingsMaxNumberOfOverlyQuote"
-            android:title="@string/maxNumberOfOverlyQuoteTitle"
-            android:numeric="integer"/>
-
+        android:title="@string/general">
         <CheckBoxPreference
             android:key="@string/settingsEnableSmoothScroll"
             android:title="@string/enableSmoothScrollTitle"
@@ -18,10 +13,6 @@
             android:key="@string/settingsEnableGoToBottomOnLoad"
             android:title="@string/enableGoToBottomOnLoadTitle"
             android:summary="@string/enableGoToBottomOnLoadSummary"/>
-
-        <CheckBoxPreference
-            android:key="@string/settingsDefaultShowSpoilVal"
-            android:title="@string/defaultShowSpoilValTitle"/>
 
         <CheckBoxPreference
             android:key="@string/settingsPostAsModoWhenPossible"
@@ -47,6 +38,10 @@
             android:key="@string/settingsRefreshTopicTime"
             android:title="@string/refreshTopicTimeTitle"
             android:numeric="integer"/>
+
+        <CheckBoxPreference
+            android:key="@string/settingsShowRefreshWhenMessagesShowedModeIRC"
+            android:title="@string/showRefreshWhenMessagesShowedModeIRCTitle"/>
 
         <EditTextPreference
             android:key="@string/settingsMaxNumberOfMessages"
