@@ -129,18 +129,15 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
 
     @Override
     protected void initializeAdapter() {
-        int showAvatarAdv;
+        PrefsManager.ShowImageType showAvatarType = new PrefsManager.ShowImageType(PrefsManager.ShowImageType.ALWAYS);
 
-        try {
-            showAvatarAdv = Integer.valueOf(PrefsManager.getString(PrefsManager.StringPref.Names.SHOW_AVATAR_MODE_FORUM));
-        } catch (Exception e) {
-            showAvatarAdv = 0;
-        }
+        showAvatarType.setTypeFromString(PrefsManager.getString(PrefsManager.StringPref.Names.SHOW_AVATAR_MODE_FORUM));
 
         cardDesignIsEnabled = (ThemeManager.getThemeUsed() != ThemeManager.ThemeName.BLACK_THEME && PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_CARD_DESIGN_MODE_FORUM)) ||
                               (ThemeManager.getThemeUsed() == ThemeManager.ThemeName.BLACK_THEME && !PrefsManager.getBool(PrefsManager.BoolPref.Names.SEPARATION_BETWEEN_MESSAGES_BLACK_THEM_MODE_FORUM));
 
-        if (showAvatarAdv == 0 || (showAvatarAdv == 1 && NetworkBroadcastReceiver.getIsConnectedWithWifi())) {
+        if (showAvatarType.type == PrefsManager.ShowImageType.ALWAYS ||
+                (showAvatarType.type == PrefsManager.ShowImageType.WIFI_ONLY && NetworkBroadcastReceiver.getIsConnectedWithWifi())) {
             if (cardDesignIsEnabled) {
                 adapterForTopic.setIdOfLayoutToUse(R.layout.jvcmessages_avatars_card_rowforum);
             } else {

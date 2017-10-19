@@ -218,9 +218,9 @@
     <string name="stickerSizeTitle">Taille des stickers (en dp)</string>
     <string name="miniNoelshackWidthTitle">Largeur des miniatures (en dp)</string>
     <string name="avatarsAndStickers">Avatars / Stickers</string>
-    <string name="noLinks">Aucun lien</string>
-    <string name="jvcLinksOnly">Les liens JVC uniquement</string>
     <string name="allLinks">Tous les liens</string>
+    <string name="jvcLinksOnly">Les liens JVC uniquement</string>
+    <string name="noLinks">Aucun lien</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
@@ -247,9 +247,9 @@
         <item>@string/black</item>
     </string-array>
     <string-array name="choicesForLinkTypeForInternalBrowser">
-        <item>@string/noLinks</item>
-        <item>@string/jvcLinksOnly</item>
         <item>@string/allLinks</item>
+        <item>@string/jvcLinksOnly</item>
+        <item>@string/noLinks</item>
     </string-array>
     <string-array name="threeChoicesValue">
         <item>"0"</item>

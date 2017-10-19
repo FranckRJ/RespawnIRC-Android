@@ -43,7 +43,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected SwipeRefreshLayout swipeRefresh = null;
     protected ShareActionProvider shareAction = null;
     protected boolean allMessagesShowedAreFromIgnoredPseudos = false;
-    protected int showNoelshackImageAdv = 0;
+    protected PrefsManager.ShowImageType showNoelshackImageType = new PrefsManager.ShowImageType(PrefsManager.ShowImageType.ALWAYS);
     protected boolean showRefreshWhenMessagesShowed = true;
     protected boolean isInErrorMode = false;
     protected boolean cardDesignIsEnabled = false;
@@ -54,7 +54,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected final AbsJVCTopicGetter.NewGetterStateListener listenerForNewGetterState = new AbsJVCTopicGetter.NewGetterStateListener() {
         @Override
         public void newStateSetted(int newState) {
-            if (showNoelshackImageAdv == 1 && newState == AbsJVCTopicGetter.STATE_LOADING) {
+            if (showNoelshackImageType.type == PrefsManager.ShowImageType.WIFI_ONLY && newState == AbsJVCTopicGetter.STATE_LOADING) {
                 updateSettingsDependingOnConnection();
             }
 
@@ -112,28 +112,24 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         int miniNoelshackWidthInDP;
 
         try {
-            avatarSizeInDP = Integer.valueOf(PrefsManager.getString(PrefsManager.StringPref.Names.AVATAR_SIZE));
+            avatarSizeInDP = Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.AVATAR_SIZE));
         } catch (Exception e) {
             avatarSizeInDP = -1;
         }
         try {
-            stickerSizeInDP = Integer.valueOf(PrefsManager.getString(PrefsManager.StringPref.Names.STICKER_SIZE));
+            stickerSizeInDP = Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.STICKER_SIZE));
         } catch (Exception e) {
             stickerSizeInDP = -1;
         }
         try {
-            miniNoelshackWidthInDP = Integer.valueOf(PrefsManager.getString(PrefsManager.StringPref.Names.MINI_NOELSHACK_WIDTH));
+            miniNoelshackWidthInDP = Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MINI_NOELSHACK_WIDTH));
         } catch (Exception e) {
             miniNoelshackWidthInDP = -1;
         }
 
-        try {
-            showNoelshackImageAdv = Integer.valueOf(PrefsManager.getString(PrefsManager.StringPref.Names.SHOW_NOELSHACK_IMAGE));
-        } catch (Exception e) {
-            showNoelshackImageAdv = 0;
-        }
-
+        showNoelshackImageType.setTypeFromString(PrefsManager.getString(PrefsManager.StringPref.Names.SHOW_NOELSHACK_IMAGE));
         updateSettingsDependingOnConnection();
+
         if (avatarSizeInDP >= 0) {
             adapterForTopic.setAvatarSize(Utils.roundToInt(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, avatarSizeInDP, getResources().getDisplayMetrics())));
         }
@@ -161,8 +157,8 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     }
 
     protected void updateSettingsDependingOnConnection() {
-        if (showNoelshackImageAdv != 1) {
-            currentSettings.showNoelshackImages = (showNoelshackImageAdv == 0);
+        if (showNoelshackImageType.type != PrefsManager.ShowImageType.WIFI_ONLY) {
+            currentSettings.showNoelshackImages = (showNoelshackImageType.type == PrefsManager.ShowImageType.ALWAYS);
         } else {
             currentSettings.showNoelshackImages = NetworkBroadcastReceiver.getIsConnectedWithWifi();
         }
