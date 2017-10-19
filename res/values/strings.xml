@@ -88,7 +88,7 @@
     <string name="topicTitlePlaceHolder">Titre…</string>
     <string name="pastLastTopicSended">Coller le dernier topic envoyé</string>
     <string name="showMP">Consulter les MP</string>
-    <string name="useInternalNavigatorTitle">Navigateur interne par défaut</string>
+    <string name="linkTypeForInternalBrowserTitle">Utiliser le navigateur interne pour :</string>
     <string name="noelshack">Noelshack</string>
     <string name="link">Liens</string>
     <string name="useDirectNoelshackLinkTitle">Utiliser les liens directs</string>
@@ -218,6 +218,9 @@
     <string name="stickerSizeTitle">Taille des stickers (en dp)</string>
     <string name="miniNoelshackWidthTitle">Largeur des miniatures (en dp)</string>
     <string name="avatarsAndStickers">Avatars / Stickers</string>
+    <string name="noLinks">Aucun lien</string>
+    <string name="jvcLinksOnly">Les liens JVC uniquement</string>
+    <string name="allLinks">Tous les liens</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
@@ -238,17 +241,17 @@
         <item>@string/wifiOnly</item>
         <item>@string/never</item>
     </string-array>
-    <string-array name="choicesForConnectionValue">
-        <item>"0"</item>
-        <item>"1"</item>
-        <item>"2"</item>
-    </string-array>
     <string-array name="choicesForThemesReadable">
         <item>@string/light</item>
         <item>@string/dark</item>
         <item>@string/black</item>
     </string-array>
-    <string-array name="choicesForThemesValue">
+    <string-array name="choicesForLinkTypeForInternalBrowser">
+        <item>@string/noLinks</item>
+        <item>@string/jvcLinksOnly</item>
+        <item>@string/allLinks</item>
+    </string-array>
+    <string-array name="threeChoicesValue">
         <item>"0"</item>
         <item>"1"</item>
         <item>"2"</item>

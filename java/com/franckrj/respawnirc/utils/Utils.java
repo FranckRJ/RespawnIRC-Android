@@ -17,7 +17,7 @@ import android.widget.EditText;
 
 import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
-import com.franckrj.respawnirc.WebNavigatorActivity;
+import com.franckrj.respawnirc.WebBrowserActivity;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -101,7 +101,19 @@ public class Utils {
         return newList;
     }
 
-    public static void openLinkInExternalNavigator(String link, Activity parentActivity) {
+    public static void openCorrespondingBrowser(PrefsManager.LinkType linkTypeToOpenInternalBrowser, String link, Activity parentActivity) {
+        boolean itsAJVCLink = link.matches("(?i)^http(s)?://(www\\.)?jeuxvideo\\.com$") ||
+                              link.matches("(?i)^http(s)?://(www\\.)?jeuxvideo\\.com/.*");
+
+        if (linkTypeToOpenInternalBrowser.type == PrefsManager.LinkType.ALL_LINKS ||
+                (linkTypeToOpenInternalBrowser.type == PrefsManager.LinkType.JVC_LINKS_ONLY && itsAJVCLink)) {
+            openLinkInInternalBrowser(link, parentActivity);
+        } else {
+            openLinkInExternalBrowser(link, parentActivity);
+        }
+    }
+
+    public static void openLinkInExternalBrowser(String link, Activity parentActivity) {
         try {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
             parentActivity.startActivity(browserIntent);
@@ -110,10 +122,10 @@ public class Utils {
         }
     }
 
-    public static void openLinkInInternalNavigator(String link, Activity parentActivity) {
-        Intent newNavigatorIntent = new Intent(parentActivity, WebNavigatorActivity.class);
-        newNavigatorIntent.putExtra(WebNavigatorActivity.EXTRA_URL_LOAD, link);
-        parentActivity.startActivity(newNavigatorIntent);
+    public static void openLinkInInternalBrowser(String link, Activity parentActivity) {
+        Intent newBrowserIntent = new Intent(parentActivity, WebBrowserActivity.class);
+        newBrowserIntent.putExtra(WebBrowserActivity.EXTRA_URL_LOAD, link);
+        parentActivity.startActivity(newBrowserIntent);
     }
 
     public static void putStringInClipboard(String textToCopy, Activity fromThisActivity) {

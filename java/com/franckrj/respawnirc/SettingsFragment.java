@@ -59,7 +59,7 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers implement
                     helpDialogFragment.show(getActivity().getSupportFragmentManager(), "HelpSettingsDialogFragment");
                     return true;
                 } else if (preference.getKey().equals(getString(R.string.subScreenSettingsShowWebsite))) {
-                    Utils.openLinkInExternalNavigator("https://pijon.fr/RespawnIRC-Android/", getActivity());
+                    Utils.openLinkInExternalBrowser("https://pijon.fr/RespawnIRC-Android/", getActivity());
                     return true;
                 }
             }

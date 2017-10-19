@@ -443,10 +443,10 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                             startActivity(new Intent(AbsNavigationViewActivity.this, ConnectAsModoActivity.class));
                             break;
                         case ITEM_ID_SHOWMP:
-                            Utils.openLinkInInternalNavigator("http://www.jeuxvideo.com/messages-prives/boite-reception.php", AbsNavigationViewActivity.this);
+                            Utils.openLinkInInternalBrowser("http://www.jeuxvideo.com/messages-prives/boite-reception.php", AbsNavigationViewActivity.this);
                             break;
                         case ITEM_ID_SHOWGTA:
-                            Utils.openLinkInInternalNavigator("http://www.jeuxvideo.com/gta/hp_alerte.php", AbsNavigationViewActivity.this);
+                            Utils.openLinkInInternalBrowser("http://www.jeuxvideo.com/gta/hp_alerte.php", AbsNavigationViewActivity.this);
                             break;
                         case ITEM_ID_PREF:
                             startActivity(new Intent(AbsNavigationViewActivity.this, SettingsActivity.class));

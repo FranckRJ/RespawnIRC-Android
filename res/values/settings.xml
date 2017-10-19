@@ -18,7 +18,6 @@
     <string name="settingsMaxNumberOfOverlyQuote" translatable="false">settings.maxNumberOfOverlyQuote</string>
     <string name="settingsShowNoelshackImage" translatable="false">settings.showNoelshackImageAdv</string>
     <string name="settingsTransformStickerToSmiley" translatable="false">settings.transformStickerToSmiley</string>
-    <string name="settingsUseInternalNavigator" translatable="false">settings.useInternalNavigator</string>
     <string name="settingsUseDirectNoelshackLink" translatable="false">settings.useDirectNoelshackLink</string>
     <string name="settingsShowOverviewOnImageClick" translatable="false">settings.showOverviewOnImageClick</string>
     <string name="settingsShortenLongLink" translatable="false">settings.shortenLongLink</string>
@@ -49,4 +48,5 @@
     <string name="settingsStickerSize" translatable="false">settings.stickerSize</string>
     <string name="settingsMiniNoelshackWidth" translatable="false">settings.miniNoelshackWidth</string>
     <string name="settingsSaveLastRowUsedInsertstuff" translatable="false">settings.saveLastRowUsedInsertstuff</string>
+    <string name="settingsLinkTypeForInternalBrowser" translatable="false">settings.linkTypeForInternalBrowser</string>
 </resources>

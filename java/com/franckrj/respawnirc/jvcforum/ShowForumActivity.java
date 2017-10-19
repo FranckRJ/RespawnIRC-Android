@@ -44,7 +44,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     private ShareActionProvider shareAction = null;
     private boolean refreshNeededOnNextResume = false;
     private boolean dontConsumeRefreshOnNextResume = false;
-    private boolean useInternalNavigatorForDefaultOpening = false;
+    private PrefsManager.LinkType linkTypeForInternalBrowser = new PrefsManager.LinkType(PrefsManager.LinkType.NO_LINKS);
     private String currentNumberOfMP = null;
     private boolean postAsModoWhenPossible = true;
 
@@ -219,7 +219,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         }
         dontConsumeRefreshOnNextResume = false;
 
-        useInternalNavigatorForDefaultOpening = PrefsManager.getBool(PrefsManager.BoolPref.Names.USE_INTERNAL_NAVIGATOR);
+        linkTypeForInternalBrowser.setTypeFromString(PrefsManager.getString(PrefsManager.StringPref.Names.LINK_TYPE_FOR_INTERNAL_BROWSER));
         postAsModoWhenPossible = PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE);
     }
 
@@ -295,11 +295,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
                 startActivity(newSearchTopicIntent);
                 return true;
             case R.id.action_open_in_browser_showforum:
-                if (!useInternalNavigatorForDefaultOpening) {
-                    Utils.openLinkInExternalNavigator(pageNavigation.getCurrentPageLink(), this);
-                } else {
-                    Utils.openLinkInInternalNavigator(pageNavigation.getCurrentPageLink(), this);
-                }
+                Utils.openCorrespondingBrowser(linkTypeForInternalBrowser, pageNavigation.getCurrentPageLink(), this);
                 return true;
             case R.id.action_send_topic_showforum:
                 Intent newSendTopicIntent = new Intent(this, SendTopicToForumActivity.class);

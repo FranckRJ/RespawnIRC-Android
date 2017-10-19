@@ -22,7 +22,7 @@
             android:title="@string/showNoelshackImageTitle"
             android:summary="%s"
             android:entries="@array/choicesForConnectionReadable"
-            android:entryValues="@array/choicesForConnectionValue"/>
+            android:entryValues="@array/threeChoicesValue"/>
 
         <EditTextPreference
             android:key="@string/settingsMiniNoelshackWidth"
@@ -40,9 +40,12 @@
 
     <PreferenceCategory
         android:title="@string/link">
-        <CheckBoxPreference
-            android:key="@string/settingsUseInternalNavigator"
-            android:title="@string/useInternalNavigatorTitle"/>
+        <ListPreference
+            android:key="@string/settingsLinkTypeForInternalBrowser"
+            android:title="@string/linkTypeForInternalBrowserTitle"
+            android:summary="%s"
+            android:entries="@array/choicesForLinkTypeForInternalBrowser"
+            android:entryValues="@array/threeChoicesValue"/>
 
         <CheckBoxPreference
             android:key="@string/settingsShortenLongLink"

@@ -11,13 +11,13 @@
         android:layout_height="match_parent">
 
         <include
-            android:id="@+id/toolbar_webnavigator"
+            android:id="@+id/toolbar_webbrowser"
             layout="@layout/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <WebView
-            android:id="@+id/webview_webnavigator"
+            android:id="@+id/webview_webbrowser"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

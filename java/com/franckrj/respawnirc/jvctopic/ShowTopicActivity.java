@@ -76,7 +76,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     private String reasonOfLock = null;
     private ImageButton insertStuffButton = null;
     private PageNavigationUtil pageNavigation = new PageNavigationUtil(this);
-    private boolean useInternalNavigatorForDefaultOpening = false;
+    private PrefsManager.LinkType linkTypeForInternalBrowser = new PrefsManager.LinkType(PrefsManager.LinkType.NO_LINKS);
     private boolean convertNoelshackLinkToDirectLink = false;
     private boolean showOverviewOnImageClick = false;
     private boolean goToLastPageAfterLoading = false;
@@ -254,7 +254,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         cookieListInAString = PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST);
         lastMessageSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_MESSAGE_SENDED);
         goToBottomOnLoadIsEnabled = PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_GO_TO_BOTTOM_ON_LOAD);
-        useInternalNavigatorForDefaultOpening = PrefsManager.getBool(PrefsManager.BoolPref.Names.USE_INTERNAL_NAVIGATOR);
+        linkTypeForInternalBrowser.setTypeFromString(PrefsManager.getString(PrefsManager.StringPref.Names.LINK_TYPE_FOR_INTERNAL_BROWSER));
         convertNoelshackLinkToDirectLink = PrefsManager.getBool(PrefsManager.BoolPref.Names.USE_DIRECT_NOELSHACK_LINK);
         showOverviewOnImageClick = PrefsManager.getBool(PrefsManager.BoolPref.Names.SHOW_OVERVIEW_ON_IMAGE_CLICK);
         postAsModoWhenPossible = PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE);
@@ -467,11 +467,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 startActivityForResult(newLockTopicIntent, LOCK_TOPIC_REQUEST_CODE);
                 return true;
             case R.id.action_open_in_browser_showtopic:
-                if (!useInternalNavigatorForDefaultOpening) {
-                    Utils.openLinkInExternalNavigator(pageNavigation.getCurrentPageLink(), this);
-                } else {
-                    Utils.openLinkInInternalNavigator(pageNavigation.getCurrentPageLink(), this);
-                }
+                Utils.openCorrespondingBrowser(linkTypeForInternalBrowser, pageNavigation.getCurrentPageLink(), this);
                 return true;
             case R.id.action_past_last_message_sended_showtopic:
                 if (reasonOfLock == null) {
@@ -692,11 +688,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 showImageDialogFragment.setArguments(argForFrag);
                 showImageDialogFragment.show(getSupportFragmentManager(), "ShowImageDialogFragment");
             } else {
-                if (!useInternalNavigatorForDefaultOpening) {
-                    Utils.openLinkInExternalNavigator(link, this);
-                } else {
-                    Utils.openLinkInInternalNavigator(link, this);
-                }
+                Utils.openCorrespondingBrowser(linkTypeForInternalBrowser, link, this);
             }
         } else {
             Bundle argForFrag = new Bundle();
@@ -779,7 +771,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         argForFrag.putString(MessageContextMenuDialogFragment.ARG_PSEUDO_MESSAGE, messageClicked.pseudo);
         argForFrag.putString(MessageContextMenuDialogFragment.ARG_PSEUDO_USER, pseudoOfUser);
         argForFrag.putString(MessageContextMenuDialogFragment.ARG_MESSAGE_ID, String.valueOf(messageClicked.id));
-        argForFrag.putBoolean(MessageContextMenuDialogFragment.ARG_USE_INTERNAL_BROWSER, useInternalNavigatorForDefaultOpening);
+        argForFrag.putInt(MessageContextMenuDialogFragment.ARG_LINK_TYPE_FOR_INTERNAL_BROWSER, linkTypeForInternalBrowser.type);
         argForFrag.putString(MessageContextMenuDialogFragment.ARG_MESSAGE_CONTENT, messageClicked.messageNotParsed);
         messageMenuDialogFragment.setArguments(argForFrag);
         messageMenuDialogFragment.show(getSupportFragmentManager(), "MessageContextMenuDialogFragment");

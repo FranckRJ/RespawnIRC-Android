@@ -75,7 +75,6 @@ public class PrefsManager {
         addBoolPref(BoolPref.Names.SHOW_OVERVIEW_ON_IMAGE_CLICK, currentContext.getString(R.string.settingsShowOverviewOnImageClick), true);
         addBoolPref(BoolPref.Names.USE_DIRECT_NOELSHACK_LINK, currentContext.getString(R.string.settingsUseDirectNoelshackLink), false);
         addBoolPref(BoolPref.Names.SHORTEN_LONG_LINK, currentContext.getString(R.string.settingsShortenLongLink), true);
-        addBoolPref(BoolPref.Names.USE_INTERNAL_NAVIGATOR, currentContext.getString(R.string.settingsUseInternalNavigator), false);
         addBoolPref(BoolPref.Names.SHOW_SIGNATURE_MODE_FORUM, currentContext.getString(R.string.settingsShowSignatureModeForum), true);
         addBoolPref(BoolPref.Names.SHOW_SIGNATURE_MODE_IRC, currentContext.getString(R.string.settingsShowSignatureModeIRC), false);
         addBoolPref(BoolPref.Names.TOPIC_ALTERNATE_BACKGROUND_MODE_FORUM, currentContext.getString(R.string.settingsTopicAlternateBackgroundColorModeForum), true);
@@ -111,6 +110,7 @@ public class PrefsManager {
         addStringPref(StringPref.Names.AVATAR_SIZE, currentContext.getString(R.string.settingsAvatarSize), "45", 40, 60);
         addStringPref(StringPref.Names.STICKER_SIZE, currentContext.getString(R.string.settingsStickerSize), "50", 35, 70);
         addStringPref(StringPref.Names.MINI_NOELSHACK_WIDTH, currentContext.getString(R.string.settingsMiniNoelshackWidth), "68", 68, 136);
+        addStringPref(StringPref.Names.LINK_TYPE_FOR_INTERNAL_BROWSER, currentContext.getString(R.string.settingsLinkTypeForInternalBrowser), "0");
     }
 
     public static boolean getBool(BoolPref.Names prefName) {
@@ -264,7 +264,6 @@ public class PrefsManager {
             SHOW_OVERVIEW_ON_IMAGE_CLICK,
             USE_DIRECT_NOELSHACK_LINK,
             SHORTEN_LONG_LINK,
-            USE_INTERNAL_NAVIGATOR,
             SHOW_SIGNATURE_MODE_FORUM, SHOW_SIGNATURE_MODE_IRC,
             TOPIC_ALTERNATE_BACKGROUND_MODE_FORUM, TOPIC_ALTERNATE_BACKGROUND_MODE_IRC, FORUM_ALTERNATE_BACKGROUND,
             TOPIC_CLEAR_ON_REFRESH_MODE_FORUM,
@@ -339,7 +338,8 @@ public class PrefsManager {
             MAX_NUMBER_OF_MESSAGES, INITIAL_NUMBER_OF_MESSAGES,
             THEME_USED,
             IGNORED_PSEUDOS_IN_LC_LIST,
-            AVATAR_SIZE, STICKER_SIZE, MINI_NOELSHACK_WIDTH
+            AVATAR_SIZE, STICKER_SIZE, MINI_NOELSHACK_WIDTH,
+            LINK_TYPE_FOR_INTERNAL_BROWSER
         }
     }
 
@@ -354,6 +354,32 @@ public class PrefsManager {
 
         public enum Names {
             OLD_LAST_ID_OF_MESSAGE
+        }
+    }
+
+    public static class LinkType {
+        public static final int NO_LINKS = 0;
+        public static final int JVC_LINKS_ONLY = 1;
+        public static final int ALL_LINKS = 2;
+
+        private final int defaultType;
+        public int type;
+
+        public LinkType(int newDefaultType) {
+            defaultType = newDefaultType;
+            type = defaultType;
+        }
+
+        public int getDefaultType() {
+            return defaultType;
+        }
+
+        public void setTypeFromString(String newType) {
+            try {
+                type = Integer.parseInt(newType);
+            } catch (Exception e) {
+                type = defaultType;
+            }
         }
     }
 }

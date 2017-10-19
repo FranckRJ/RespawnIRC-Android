@@ -33,7 +33,7 @@
             android:title="@string/showAvatarTitle"
             android:summary="@string/needToBeEnabledOnJVCFirstSummaryWithString"
             android:entries="@array/choicesForConnectionReadable"
-            android:entryValues="@array/choicesForConnectionValue"/>
+            android:entryValues="@array/threeChoicesValue"/>
 
         <CheckBoxPreference
             android:key="@string/settingsShowSignatureModeForum"

@@ -11,13 +11,14 @@ import android.widget.Toast;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.IgnoreListManager;
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Utils;
 
 public class MessageContextMenuDialogFragment extends DialogFragment {
     public static final String ARG_PSEUDO_MESSAGE = "com.franckrj.respawnirc.messagecontextmenudialogfragment.pseudo_message";
     public static final String ARG_PSEUDO_USER = "com.franckrj.respawnirc.messagecontextmenudialogfragment.pseudo_user";
     public static final String ARG_MESSAGE_ID = "com.franckrj.respawnirc.messagecontextmenudialogfragment.message_id";
-    public static final String ARG_USE_INTERNAL_BROWSER = "com.franckrj.respawnirc.messagecontextmenudialogfragment.use_internal_browser";
+    public static final String ARG_LINK_TYPE_FOR_INTERNAL_BROWSER = "com.franckrj.respawnirc.messagecontextmenudialogfragment.link_type_for_internal_browser";
     public static final String ARG_MESSAGE_CONTENT = "com.franckrj.respawnirc.messagecontextmenudialogfragment.message_content";
 
     private static final int POS_OPEN_CDV = 0;
@@ -31,7 +32,7 @@ public class MessageContextMenuDialogFragment extends DialogFragment {
     private String pseudoOfMessage;
     private String pseudoOfUser;
     private String idOfMessage;
-    private boolean useInternalBrowser;
+    private PrefsManager.LinkType linkTypeForInternalBrowser = new PrefsManager.LinkType(PrefsManager.LinkType.NO_LINKS);
     private String messageNotParsed;
 
     @NonNull
@@ -45,13 +46,13 @@ public class MessageContextMenuDialogFragment extends DialogFragment {
             pseudoOfMessage = currentArgs.getString(ARG_PSEUDO_MESSAGE, getString(R.string.waitingText));
             pseudoOfUser = currentArgs.getString(ARG_PSEUDO_USER, "");
             idOfMessage = currentArgs.getString(ARG_MESSAGE_ID, "0");
-            useInternalBrowser = currentArgs.getBoolean(ARG_USE_INTERNAL_BROWSER, false);
+            linkTypeForInternalBrowser.type = currentArgs.getInt(ARG_LINK_TYPE_FOR_INTERNAL_BROWSER, linkTypeForInternalBrowser.getDefaultType());
             messageNotParsed = currentArgs.getString(ARG_MESSAGE_CONTENT, "");
         } else {
             pseudoOfMessage = getString(R.string.waitingText);
             pseudoOfUser = "";
             idOfMessage = "0";
-            useInternalBrowser = false;
+            linkTypeForInternalBrowser.type = linkTypeForInternalBrowser.getDefaultType();
             messageNotParsed = "";
         }
 
@@ -62,15 +63,11 @@ public class MessageContextMenuDialogFragment extends DialogFragment {
                 switch (which) {
                     case POS_OPEN_CDV: {
                         String link = "http://www.jeuxvideo.com/profil/" + pseudoOfMessage.toLowerCase() + "?mode=infos";
-                        if (useInternalBrowser) {
-                            Utils.openLinkInInternalNavigator(link, getActivity());
-                        } else {
-                            Utils.openLinkInExternalNavigator(link, getActivity());
-                        }
+                        Utils.openCorrespondingBrowser(linkTypeForInternalBrowser, link, getActivity());
                         break;
                     }
                     case POS_SEND_MP: {
-                        Utils.openLinkInInternalNavigator("http://www.jeuxvideo.com/messages-prives/nouveau.php?all_dest=" + pseudoOfMessage, getActivity());
+                        Utils.openLinkInInternalBrowser("http://www.jeuxvideo.com/messages-prives/nouveau.php?all_dest=" + pseudoOfMessage, getActivity());
                         break;
                     }
                     case POS_IGNORE: {
@@ -101,7 +98,7 @@ public class MessageContextMenuDialogFragment extends DialogFragment {
                         break;
                     }
                     case POS_DDB: {
-                        Utils.openLinkInInternalNavigator("http://www.jeuxvideo.com/" + pseudoOfMessage.toLowerCase() + "/forums/message/" + idOfMessage, getActivity());
+                        Utils.openLinkInInternalBrowser("http://www.jeuxvideo.com/" + pseudoOfMessage.toLowerCase() + "/forums/message/" + idOfMessage, getActivity());
                         break;
                     }
                     case POS_SELECT_TEXT: {

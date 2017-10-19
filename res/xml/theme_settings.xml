@@ -9,7 +9,7 @@
             android:title="@string/theme"
             android:summary="%s"
             android:entries="@array/choicesForThemesReadable"
-            android:entryValues="@array/choicesForThemesValue"/>
+            android:entryValues="@array/threeChoicesValue"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

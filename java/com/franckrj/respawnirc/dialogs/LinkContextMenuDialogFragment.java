@@ -39,10 +39,10 @@ public class LinkContextMenuDialogFragment extends DialogFragment {
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case POS_OPEN_IN_WEB_BROWSER:
-                        Utils.openLinkInExternalNavigator(urlOfLink, getActivity());
+                        Utils.openLinkInExternalBrowser(urlOfLink, getActivity());
                         break;
                     case POS_OPEN_IN_INTERN_BROWSER:
-                        Utils.openLinkInInternalNavigator(urlOfLink, getActivity());
+                        Utils.openLinkInInternalBrowser(urlOfLink, getActivity());
                         break;
                     case POS_COPY:
                         Utils.putStringInClipboard(urlOfLink, getActivity());
