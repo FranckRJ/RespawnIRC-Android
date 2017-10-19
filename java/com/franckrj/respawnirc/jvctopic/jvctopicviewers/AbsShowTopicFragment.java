@@ -305,6 +305,10 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             adapterForTopic.blacklistItemsWithThisPseudo(pseudoToIgnore);
         }
         adapterForTopic.notifyDataSetChanged();
+
+        if (adapterForTopic.getAllItems().isEmpty()) {
+            setErrorBackgroundMessageForAllMessageIgnored();
+        }
     }
 
     @Override
