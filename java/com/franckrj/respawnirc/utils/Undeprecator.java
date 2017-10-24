@@ -10,20 +10,10 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.text.Html;
 import android.text.Spanned;
-import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.WebSettings;
 
 public class Undeprecator {
-    public static void viewSetBackgroundDrawable(View view, Drawable drawable) {
-        if (Build.VERSION.SDK_INT >= 16) {
-            view.setBackground(drawable);
-        } else {
-            //noinspection deprecation
-            view.setBackgroundDrawable(drawable);
-        }
-    }
-
     @ColorInt
     public static int resourcesGetColor(Resources resources, @ColorRes int colorId) {
         if (Build.VERSION.SDK_INT >= 23) {

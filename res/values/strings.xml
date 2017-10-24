@@ -221,6 +221,7 @@
     <string name="allLinks">Tous les liens</string>
     <string name="jvcLinksOnly">Les liens JVC uniquement</string>
     <string name="noLinks">Aucun lien</string>
+    <string name="header">entête</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

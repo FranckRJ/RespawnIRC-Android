@@ -21,6 +21,7 @@
         <item name="themedDividerColor">@color/dividerColorThemeLight</item>
         <item name="themedClearIcon">@drawable/ic_action_clear_light</item>
         <item name="themedBackgroundAvatar">@drawable/avatar_image_border_light</item>
+        <item name="themedNavigationHeaderBackground">@drawable/navigation_header_background_light</item>
     </style>
     <style name="AppTheme.Light.Real" parent="AppTheme.Light.Base"/>
 
@@ -45,6 +46,7 @@
         <item name="themedDividerColor">@color/dividerColorThemeDark</item>
         <item name="themedClearIcon">@drawable/ic_action_clear_dark</item>
         <item name="themedBackgroundAvatar">@drawable/avatar_image_border_dark</item>
+        <item name="themedNavigationHeaderBackground">@drawable/navigation_header_background_dark</item>
     </style>
     <style name="AppTheme.Dark.Real" parent="AppTheme.Dark.Base"/>
 
@@ -69,6 +71,7 @@
         <item name="themedDividerColor">@color/dividerColorThemeDark</item>
         <item name="themedClearIcon">@drawable/ic_action_clear_dark</item>
         <item name="themedBackgroundAvatar">@drawable/avatar_image_border_black</item>
+        <item name="themedNavigationHeaderBackground">@drawable/navigation_header_background_dark</item>
     </style>
     <style name="AppTheme.Black.Real" parent="AppTheme.Black.Base"/>
 
