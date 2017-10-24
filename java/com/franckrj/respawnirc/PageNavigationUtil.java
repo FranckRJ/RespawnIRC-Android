@@ -29,6 +29,7 @@ public class PageNavigationUtil {
     private ScreenSlidePagerAdapter adapterForPagerView = null;
     private boolean showNavigationButtons = true;
     private AppCompatActivity parentActivity = null;
+    private PageNavigationFunctions funcForPageNav = null;
     private boolean loadNeedToBeDoneOnPageCreate = false;
     private boolean goToBottomOnNextLoad = false;
     private boolean dontLoadOnFirstTimeForNextFragCreate = false;
@@ -53,8 +54,8 @@ public class PageNavigationUtil {
                 }
             }
 
-            if (parentActivity instanceof PageNavigationFunctions) {
-                ((PageNavigationFunctions) parentActivity).extendPageSelection(buttonView);
+            if (funcForPageNav != null) {
+                funcForPageNav.extendPageSelection(buttonView);
             }
         }
     };
@@ -67,6 +68,9 @@ public class PageNavigationUtil {
 
         @Override
         public void onPageSelected(int position) {
+            if (funcForPageNav != null) {
+                funcForPageNav.onNewPageSelected(position);
+            }
             loadPageForThisFragment(position);
             updateNavigationButtons();
         }
@@ -86,6 +90,11 @@ public class PageNavigationUtil {
 
     public PageNavigationUtil(AppCompatActivity newParentActivity) {
         parentActivity = newParentActivity;
+        if (parentActivity instanceof PageNavigationFunctions) {
+            funcForPageNav = (PageNavigationFunctions) parentActivity;
+        } else {
+            funcForPageNav = null;
+        }
     }
 
     public void initializeLayoutForAllNavigationButtons(View newLayout, View newShadow) {
@@ -157,22 +166,22 @@ public class PageNavigationUtil {
     }
 
     public void updateCurrentItemAndButtonsToCurrentLink() {
-        if (!currentLink.isEmpty() && parentActivity instanceof PageNavigationFunctions) {
-            pagerView.setCurrentItem(((PageNavigationFunctions) parentActivity).getShowablePageNumberForThisLink(currentLink) - 1);
+        if (!currentLink.isEmpty() && funcForPageNav != null) {
+            pagerView.setCurrentItem(funcForPageNav.getShowablePageNumberForThisLink(currentLink) - 1);
             updateNavigationButtons();
         }
     }
 
     public void loadPageForThisFragment(int position) {
-        if (!currentLink.isEmpty() && parentActivity instanceof PageNavigationFunctions) {
+        if (!currentLink.isEmpty() && funcForPageNav != null) {
             AbsShowSomethingFragment currentFragment = adapterForPagerView.getFragment(position);
             if (currentFragment != null) {
-                ((PageNavigationFunctions) parentActivity).doThingsBeforeLoadOnFragment(currentFragment);
+                funcForPageNav.doThingsBeforeLoadOnFragment(currentFragment);
                 if (goToBottomOnNextLoad) {
                     currentFragment.enableGoToBottomAtPageLoading();
                     goToBottomOnNextLoad = false;
                 }
-                currentFragment.setPageLink(((PageNavigationFunctions) parentActivity).setShowedPageNumberForThisLink(currentLink, position + 1));
+                currentFragment.setPageLink(funcForPageNav.setShowedPageNumberForThisLink(currentLink, position + 1));
             } else {
                 loadNeedToBeDoneOnPageCreate = true;
             }
@@ -215,22 +224,22 @@ public class PageNavigationUtil {
     }
 
     public final String getCurrentPageLink() {
-        if (parentActivity instanceof PageNavigationFunctions) {
-            return ((PageNavigationFunctions) parentActivity).setShowedPageNumberForThisLink(currentLink, pagerView.getCurrentItem() + 1);
+        if (funcForPageNav != null) {
+            return funcForPageNav.setShowedPageNumberForThisLink(currentLink, pagerView.getCurrentItem() + 1);
         }
         return currentLink;
     }
 
     public final String getFirstPageLink() {
-        if (parentActivity instanceof PageNavigationFunctions) {
-            return ((PageNavigationFunctions) parentActivity).setShowedPageNumberForThisLink(currentLink, 1);
+        if (funcForPageNav != null) {
+            return funcForPageNav.setShowedPageNumberForThisLink(currentLink, 1);
         }
         return currentLink;
     }
 
     public final int getLastSupposedPageNumber() {
-        if (parentActivity instanceof PageNavigationFunctions) {
-            return ((PageNavigationFunctions) parentActivity).getShowablePageNumberForThisLink(currentLink);
+        if (funcForPageNav != null) {
+            return funcForPageNav.getShowablePageNumberForThisLink(currentLink);
         }
         return 1;
     }
@@ -294,10 +303,10 @@ public class PageNavigationUtil {
 
         @Override
         public Fragment getItem(int position) {
-            if (parentActivity instanceof PageNavigationFunctions) {
+            if (funcForPageNav != null) {
                 if (loadNeedToBeDoneOnPageCreate && position == pagerView.getCurrentItem() && !currentLink.isEmpty()) {
-                    AbsShowSomethingFragment tmpFragment = ((PageNavigationFunctions) parentActivity).createNewFragmentForRead(((PageNavigationFunctions) parentActivity).setShowedPageNumberForThisLink(currentLink, position + 1));
-                    ((PageNavigationFunctions) parentActivity).doThingsBeforeLoadOnFragment(tmpFragment);
+                    AbsShowSomethingFragment tmpFragment = funcForPageNav.createNewFragmentForRead(funcForPageNav.setShowedPageNumberForThisLink(currentLink, position + 1));
+                    funcForPageNav.doThingsBeforeLoadOnFragment(tmpFragment);
                     if (goToBottomOnNextLoad) {
                         tmpFragment.enableGoToBottomAtPageLoading();
                         goToBottomOnNextLoad = false;
@@ -309,7 +318,7 @@ public class PageNavigationUtil {
                     loadNeedToBeDoneOnPageCreate = false;
                     return tmpFragment;
                 } else {
-                    return ((PageNavigationFunctions) parentActivity).createNewFragmentForRead(null);
+                    return funcForPageNav.createNewFragmentForRead(null);
                 }
             } else {
                 return new Fragment();
@@ -336,6 +345,7 @@ public class PageNavigationUtil {
     public interface PageNavigationFunctions {
         void extendPageSelection(View buttonView);
         AbsShowSomethingFragment createNewFragmentForRead(String possibleLink);
+        void onNewPageSelected(int position);
         void doThingsBeforeLoadOnFragment(AbsShowSomethingFragment thisFragment);
         int getShowablePageNumberForThisLink(String link);
         String setShowedPageNumberForThisLink(String link, int newPageNumber);
