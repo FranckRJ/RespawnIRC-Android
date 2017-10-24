@@ -90,6 +90,8 @@
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/splashscreen</item>
+        <!-- uniquement pour la couleur de la statusbar, parce que flemme de faire un theme special v21 etc -->
+        <item name="colorPrimaryDark">@color/splashBackgroundColorDarker</item>
     </style>
 
     <style name="ColorAccentIsLinkColor">
