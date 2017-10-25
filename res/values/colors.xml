@@ -25,6 +25,7 @@
     <color name="navigationIconColorThemeLight">#90000000</color>
     <color name="dividerColorThemeLight">#50808080</color>
     <color name="deletedMessagesBackgroundColorThemeLight">#CFF3FE</color>
+    <color name="surveyMessagesBackgroundColorThemeLight">#FFF0DB</color>
     <!-- Dark Theme -->
     <color name="shadowColorThemeDark">#80000000</color>
     <color name="colorPrimaryThemeDark">#212121</color>
@@ -46,6 +47,7 @@
     <color name="navigationIconColorThemeDark">#78000000</color>
     <color name="dividerColorThemeDark">#90808080</color>
     <color name="deletedMessagesBackgroundColorThemeDark">#023A4B</color>
+    <color name="surveyMessagesBackgroundColorThemeDark">#4D2E00</color>
     <!-- Black Theme -->
     <color name="colorPrimaryThemeBlack">#151515</color>
     <color name="colorPrimaryDarkerThemeBlack">#000000</color>

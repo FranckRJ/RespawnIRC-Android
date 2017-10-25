@@ -440,7 +440,7 @@ public class JVCTopicAdapter extends BaseAdapter {
             viewHolder.infoLine.setText(Undeprecator.htmlFromHtml(advertiseForSurveyToShow));
             convertView.setOnClickListener(onSurveyClickListener);
             viewHolder.infoLine.setOnClickListener(onSurveyClickListener);
-            setColorBackgroundOfThisItem(convertView, ThemeManager.getColorRes(ThemeManager.ColorName.ALT_BACKGROUND_COLOR));
+            setColorBackgroundOfThisItem(convertView, ThemeManager.getColorRes(ThemeManager.ColorName.SURVEY_MESSAGE_BACKGROUND_COLOR));
         } else {
             final int realPosition = position - (showSurvey ? 1 : 0);
             final ContentHolder currentContent = listOfContentForMessages.get(realPosition);

@@ -83,6 +83,8 @@ public class ThemeManager {
                     }
                 case DELETED_MESSAGE_BACKGROUND_COLOR:
                     return R.color.deletedMessagesBackgroundColorThemeDark;
+                case SURVEY_MESSAGE_BACKGROUND_COLOR:
+                    return R.color.surveyMessagesBackgroundColorThemeDark;
                 case LINK_COLOR:
                     return R.color.linkColorThemeDark;
                 case TOPIC_NAME_COLOR:
@@ -128,6 +130,8 @@ public class ThemeManager {
                     return R.color.altBackgroundColorThemeLight;
                 case DELETED_MESSAGE_BACKGROUND_COLOR:
                     return R.color.deletedMessagesBackgroundColorThemeLight;
+                case SURVEY_MESSAGE_BACKGROUND_COLOR:
+                    return R.color.surveyMessagesBackgroundColorThemeLight;
                 case LINK_COLOR:
                     return R.color.linkColorThemeLight;
                 case TOPIC_NAME_COLOR:
@@ -207,7 +211,8 @@ public class ThemeManager {
 
     public enum ColorName {
         COLOR_PRIMARY, COLOR_PRIMARY_DARK, COLOR_ACCENT,
-        DEFAULT_BACKGROUND_COLOR, DARKER_BACKGROUND_COLOR, MORE_DARKER_BACKGROUND_COLOR, ALT_BACKGROUND_COLOR, DELETED_MESSAGE_BACKGROUND_COLOR,
+        DEFAULT_BACKGROUND_COLOR, DARKER_BACKGROUND_COLOR, MORE_DARKER_BACKGROUND_COLOR,
+        ALT_BACKGROUND_COLOR, DELETED_MESSAGE_BACKGROUND_COLOR, SURVEY_MESSAGE_BACKGROUND_COLOR,
         LINK_COLOR, TOPIC_NAME_COLOR, COLOR_QUOTE_BACKGROUND,
         COLOR_PSEUDO_USER, COLOR_PSEUDO_OTHER_MODE_FORUM, COLOR_PSEUDO_OTHER_MODE_IRC, COLOR_PSEUDO_MODO, COLOR_PSEUDO_ADMIN,
         HEADER_TEXT_COLOR, NAVIGATION_ICON_COLOR
