@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -14,26 +15,41 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/toolbar_showsurvey">
+
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <LinearLayout
+                android:layout_height="wrap_content"
+                android:padding="4dp">
+
+                <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <TextView
-                        android:id="@+id/content_showsurvey"
+                    card_view:cardUseCompatPadding="true"
+                    card_view:cardElevation="2dp"
+                    card_view:cardCornerRadius="2dp">
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="4dp"/>
-                    <Button
-                        android:id="@+id/button_vote_showsurvey"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        android:text="@string/vote"/>
-                </LinearLayout>
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/content_showsurvey"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="4dp"/>
+
+                        <Button
+                            android:id="@+id/button_vote_showsurvey"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:text="@string/vote"/>
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
             </ScrollView>
+
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <include
