@@ -710,8 +710,12 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     @Override
     public void getNewLockReason(String newReason) {
         if (!Utils.stringsAreEquals(reasonOfLock, newReason)) {
+            int newXPaddingForMessageSend;
+            int yPaddingForMessageSend = getResources().getDimensionPixelSize(R.dimen.yPaddingSendMessageEditTextNormal);
             reasonOfLock = newReason;
+
             if (reasonOfLock == null) {
+                newXPaddingForMessageSend = getResources().getDimensionPixelSize(R.dimen.xPaddingSendMessageEditTextNormal);
                 insertStuffButton.setVisibility(View.VISIBLE);
                 messageSendButton.setVisibility(View.VISIBLE);
                 messageSendButton.setEnabled(true);
@@ -722,6 +726,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 messageSendEdit.setText("");
                 messageSendEdit.setOnClickListener(null);
             } else {
+                newXPaddingForMessageSend = getResources().getDimensionPixelSize(R.dimen.xPaddingSendMessageEditTextTopicLock);
                 insertStuffButton.setVisibility(View.GONE);
                 messageSendButton.setVisibility(View.GONE);
                 messageSendButton.setEnabled(false);
@@ -732,6 +737,9 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 messageSendEdit.setText(getString(R.string.topicLockedForReason, Utils.truncateString(reasonOfLock, 80, getString(R.string.waitingText))));
                 messageSendEdit.setOnClickListener(lockReasonCLickedListener);
             }
+
+            messageSendEdit.setPadding(newXPaddingForMessageSend, yPaddingForMessageSend,
+                                       newXPaddingForMessageSend, yPaddingForMessageSend);
         }
     }
 
