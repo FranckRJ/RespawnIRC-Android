@@ -73,6 +73,7 @@ public final class JVCParser {
     private static final Pattern surveyReplyWithInfosPattern = Pattern.compile("<a href=\"#\" class=\"btn-sondage-reponse\" data-id-sondage=\"([^\"]*)\" data-id-reponse=\"([^\"]*)\">(.*?)</a>", Pattern.DOTALL);
     private static final Pattern realSurveyContentPattern = Pattern.compile("\"html\":\"(.*?)\"\\}");
     private static final Pattern numberOfMpJVCPattern = Pattern.compile("<div class=\".*?account-mp.*?\">[^<]*<span[^c]*class=\"account-number-mp[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
+    private static final Pattern numberOfNotifJVCPattern = Pattern.compile("<div class=\".*?account-notif.*?\">[^<]*<span[^c]*class=\"account-number-notif[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
     private static final Pattern overlyJVCQuotePattern = Pattern.compile("(<(/)?blockquote>)");
     private static final Pattern overlyBetterQuotePattern = Pattern.compile("<(/)?blockquote>");
     private static final Pattern jvcLinkPattern = Pattern.compile("<a href=\"([^\"]*)\"( )?( title=\"[^\"]*\")?>.*?</a>");
@@ -487,11 +488,21 @@ public final class JVCParser {
         return currentNames;
     }
 
-    public static String getNumberOfMPFromPage(String pageSource) {
+    public static String getNumberOfMpFromPage(String pageSource) {
         Matcher numberOfMpJVCMatcher = numberOfMpJVCPattern.matcher(pageSource);
 
         if (numberOfMpJVCMatcher.find()) {
             return numberOfMpJVCMatcher.group(1);
+        } else {
+            return null;
+        }
+    }
+
+    public static String getNumberOfNotifFromPage(String pageSource) {
+        Matcher numberOfNotifJVCMatcher = numberOfNotifJVCPattern.matcher(pageSource);
+
+        if (numberOfNotifJVCMatcher.find()) {
+            return numberOfNotifJVCMatcher.group(1);
         } else {
             return null;
         }

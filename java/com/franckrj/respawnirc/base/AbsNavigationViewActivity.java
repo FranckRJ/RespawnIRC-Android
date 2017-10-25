@@ -39,14 +39,15 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected static final int ITEM_ID_HOME = 0;
     protected static final int ITEM_ID_FORUM = 1;
     protected static final int ITEM_ID_SHOWMP = 2;
-    protected static final int ITEM_ID_SHOWGTA = 3;
-    protected static final int ITEM_ID_PREF = 4;
-    protected static final int ITEM_ID_FORUM_FAV_SELECTED = 5;
-    protected static final int ITEM_ID_REFRESH_FORUM_FAV = 6;
-    protected static final int ITEM_ID_TOPIC_FAV_SELECTED = 7;
-    protected static final int ITEM_ID_REFRESH_TOPIC_FAV = 8;
-    protected static final int ITEM_ID_CONNECT = 9;
-    protected static final int ITEM_ID_CONNECT_AS_MODO = 10;
+    protected static final int ITEM_ID_SHOWNOTIF = 3;
+    protected static final int ITEM_ID_SHOWGTA = 4;
+    protected static final int ITEM_ID_PREF = 5;
+    protected static final int ITEM_ID_FORUM_FAV_SELECTED = 6;
+    protected static final int ITEM_ID_REFRESH_FORUM_FAV = 7;
+    protected static final int ITEM_ID_TOPIC_FAV_SELECTED = 8;
+    protected static final int ITEM_ID_REFRESH_TOPIC_FAV = 9;
+    protected static final int ITEM_ID_CONNECT = 10;
+    protected static final int ITEM_ID_CONNECT_AS_MODO = 11;
     protected static final int MODE_HOME = 0;
     protected static final int MODE_FORUM = 1;
     protected static final int MODE_CONNECT = 2;
@@ -70,6 +71,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected int currentNavigationMenuMode = -1;
     protected ArrayList<NavigationMenuAdapter.MenuItemInfo> currentListOfMenuItem = null;
     protected String showMpStringContent = "";
+    protected String showNotifStringContent = "";
     protected boolean backIsOpenDrawer = false;
     protected boolean userIsModo = false;
 
@@ -116,7 +118,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                 layoutForDrawer.closeDrawer(GravityCompat.START);
                 adapterForNavigationMenu.setRowSelected((int) id);
             }
-            adapterForNavigationMenu.updateList();
+            adapterForNavigationMenu.notifyDataSetChanged();
         }
     };
 
@@ -133,7 +135,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                 newForumOrTopicToRead(newFavSelected, false, false, true);
                 layoutForDrawer.closeDrawer(GravityCompat.START);
                 adapterForNavigationMenu.setRowSelected((int) id);
-                adapterForNavigationMenu.updateList();
+                adapterForNavigationMenu.notifyDataSetChanged();
                 return true;
             }
 
@@ -182,11 +184,22 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             }
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
-                tmpItemInfo.textContent = getString(R.string.showMP);
+                tmpItemInfo.textContent = getString(R.string.showMp);
                 tmpItemInfo.drawableResId = R.drawable.ic_action_content_mail_dark_zoom;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = false;
                 tmpItemInfo.itemId = ITEM_ID_SHOWMP;
+                tmpItemInfo.groupId = GROUP_ID_BASIC;
+                listOfMenuItemInfoForHome.add(tmpItemInfo);
+                listOfMenuItemInfoForForum.add(tmpItemInfo);
+            }
+            {
+                NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
+                tmpItemInfo.textContent = getString(R.string.showNotif);
+                tmpItemInfo.drawableResId = R.drawable.ic_action_star_dark_zoom;
+                tmpItemInfo.isHeader = false;
+                tmpItemInfo.isEnabled = false;
+                tmpItemInfo.itemId = ITEM_ID_SHOWNOTIF;
                 tmpItemInfo.groupId = GROUP_ID_BASIC;
                 listOfMenuItemInfoForHome.add(tmpItemInfo);
                 listOfMenuItemInfoForForum.add(tmpItemInfo);
@@ -316,14 +329,19 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
 
         if (!isInNavigationConnectMode) {
             int positionOfShowMpItem = adapterForNavigationMenu.getPositionDependingOnId(ITEM_ID_SHOWMP, GROUP_ID_BASIC);
+            int positionOfShowNotifItem = adapterForNavigationMenu.getPositionDependingOnId(ITEM_ID_SHOWNOTIF, GROUP_ID_BASIC);
             int positionOfShowGTAItem = adapterForNavigationMenu.getPositionDependingOnId(ITEM_ID_SHOWGTA, GROUP_ID_BASIC);
 
             updateFavsInNavigationMenu(false);
             adapterForNavigationMenu.setRowEnabled(positionOfShowMpItem, !pseudoOfUser.isEmpty());
+            adapterForNavigationMenu.setRowEnabled(positionOfShowNotifItem, !pseudoOfUser.isEmpty());
             adapterForNavigationMenu.setRowSelected(adapterForNavigationMenu.getPositionDependingOnId(idOfBaseActivity, GROUP_ID_BASIC));
 
             if (!showMpStringContent.isEmpty()) {
                 adapterForNavigationMenu.setRowText(positionOfShowMpItem, showMpStringContent);
+            }
+            if (!showNotifStringContent.isEmpty()) {
+                adapterForNavigationMenu.setRowText(positionOfShowNotifItem, showNotifStringContent);
             }
 
             if (pseudoOfUser.isEmpty()) {
@@ -351,7 +369,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_action_navigation_expand_less_dark));
         }
 
-        adapterForNavigationMenu.updateList();
+        adapterForNavigationMenu.notifyDataSetChanged();
     }
 
     private void updateFavsInNavigationMenu(boolean needToUpdateAdapter) {
@@ -388,22 +406,37 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         }
 
         if (needToUpdateAdapter) {
-            adapterForNavigationMenu.updateList();
+            adapterForNavigationMenu.notifyDataSetChanged();
         }
     }
 
-    protected void updateMpNumberShowed(String newNumber) {
+    protected void updateMpAndNotifNumberShowed(String newNumberOfMp, String newNumberOfNotif) {
+        boolean itemChanged = false;
         int positionOfShowMpItem = adapterForNavigationMenu.getPositionDependingOnId(ITEM_ID_SHOWMP, GROUP_ID_BASIC);
+        int positionOfShowNotifItem = adapterForNavigationMenu.getPositionDependingOnId(ITEM_ID_SHOWNOTIF, GROUP_ID_BASIC);
 
-        if (newNumber == null) {
-            showMpStringContent = getString(R.string.showMP);
+        if (newNumberOfMp == null) {
+            showMpStringContent = getString(R.string.showMp);
         } else {
-            showMpStringContent = getString(R.string.showMPWithNumber, newNumber);
+            showMpStringContent = getString(R.string.showMpWithNumber, newNumberOfMp);
+        }
+        if (newNumberOfNotif == null) {
+            showNotifStringContent = getString(R.string.showNotif);
+        } else {
+            showNotifStringContent = getString(R.string.showNotifWithNumber, newNumberOfNotif);
         }
 
         if (positionOfShowMpItem != -1) {
             adapterForNavigationMenu.setRowText(positionOfShowMpItem, showMpStringContent);
-            adapterForNavigationMenu.updateList();
+            itemChanged = true;
+        }
+        if (positionOfShowNotifItem != -1) {
+            adapterForNavigationMenu.setRowText(positionOfShowNotifItem, showNotifStringContent);
+            itemChanged = true;
+        }
+
+        if (itemChanged) {
+            adapterForNavigationMenu.notifyDataSetChanged();
         }
     }
 
@@ -445,6 +478,9 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                         case ITEM_ID_SHOWMP:
                             Utils.openLinkInInternalBrowser("http://www.jeuxvideo.com/messages-prives/boite-reception.php", AbsNavigationViewActivity.this);
                             break;
+                        case ITEM_ID_SHOWNOTIF:
+                            Utils.openLinkInInternalBrowser("http://www.jeuxvideo.com/profil/" + pseudoOfUser.toLowerCase() + "?mode=abonnements", AbsNavigationViewActivity.this);
+                            break;
                         case ITEM_ID_SHOWGTA:
                             Utils.openLinkInInternalBrowser("http://www.jeuxvideo.com/gta/hp_alerte.php", AbsNavigationViewActivity.this);
                             break;
@@ -462,7 +498,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                     }
                 }
                 adapterForNavigationMenu.setRowSelected(adapterForNavigationMenu.getPositionDependingOnId(idOfBaseActivity, GROUP_ID_BASIC));
-                adapterForNavigationMenu.updateList();
+                adapterForNavigationMenu.notifyDataSetChanged();
 
                 if (isInNavigationConnectMode) {
                     isInNavigationConnectMode = false;

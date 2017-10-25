@@ -28,7 +28,7 @@ import com.franckrj.respawnirc.utils.Utils;
 
 public class ShowForumActivity extends AbsNavigationViewActivity implements ShowForumFragment.NewTopicWantRead, JVCForumGetter.NewForumNameAvailable,
                                                     JVCForumGetter.ForumLinkChanged, PageNavigationUtil.PageNavigationFunctions,
-                                                    AddOrRemoveThingToFavs.ActionToFavsEnded, JVCForumGetter.NewNumberOfMPSetted {
+                                                    AddOrRemoveThingToFavs.ActionToFavsEnded, JVCForumGetter.NewNumberOfMpAndNotifSetted {
     public static final String EXTRA_NEW_LINK = "com.franckrj.respawnirc.EXTRA_NEW_LINK";
     public static final String EXTRA_GO_TO_LAST_PAGE = "com.franckrj.respawnirc.EXTRA_GO_TO_LAST_PAGE";
     public static final String EXTRA_ITS_FIRST_START = "com.franckrj.respawnirc.EXTRA_ITS_FIRST_START";
@@ -36,7 +36,8 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     private static final int SEND_TOPIC_REQUEST_CODE = 156;
     private static final String SAVE_CURRENT_FORUM_TITLE = "saveCurrentForumTitle";
     private static final String SAVE_REFRESH_NEEDED_NEXT_RESUME = "saveRefreshNeededOnNextResume";
-    private static final String SAVE_CURRENT_NUMBER_OF_MP = "saveCurrentNumberOfMP";
+    private static final String SAVE_CURRENT_NUMBER_OF_MP = "saveCurrentNumberOfMp";
+    private static final String SAVE_CURRENT_NUMBER_OF_NOTIF = "saveCurrentNumberOfNotif";
 
     private String currentTitle = "";
     private AddOrRemoveThingToFavs currentTaskForFavs = null;
@@ -45,7 +46,8 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     private boolean refreshNeededOnNextResume = false;
     private boolean dontConsumeRefreshOnNextResume = false;
     private PrefsManager.LinkType linkTypeForInternalBrowser = new PrefsManager.LinkType(PrefsManager.LinkType.NO_LINKS);
-    private String currentNumberOfMP = null;
+    private String currentNumberOfMp = null;
+    private String currentNumberOfNotif = null;
     private boolean postAsModoWhenPossible = true;
 
     private final View.OnLongClickListener showForumTitleListener = new View.OnLongClickListener() {
@@ -180,7 +182,8 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         } else {
             currentTitle = savedInstanceState.getString(SAVE_CURRENT_FORUM_TITLE, getString(R.string.app_name));
             refreshNeededOnNextResume = savedInstanceState.getBoolean(SAVE_REFRESH_NEEDED_NEXT_RESUME, false);
-            getNewNumberOfMP(savedInstanceState.getString(SAVE_CURRENT_NUMBER_OF_MP, null));
+            getNewNumberOfMpAndNotif(savedInstanceState.getString(SAVE_CURRENT_NUMBER_OF_MP, null),
+                                     savedInstanceState.getString(SAVE_CURRENT_NUMBER_OF_NOTIF, null));
             pageNavigation.updateNavigationButtons();
         }
         setTitle(currentTitle);
@@ -238,7 +241,8 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         super.onSaveInstanceState(outState);
         outState.putString(SAVE_CURRENT_FORUM_TITLE, currentTitle);
         outState.putBoolean(SAVE_REFRESH_NEEDED_NEXT_RESUME, refreshNeededOnNextResume);
-        outState.putString(SAVE_CURRENT_NUMBER_OF_MP, currentNumberOfMP);
+        outState.putString(SAVE_CURRENT_NUMBER_OF_MP, currentNumberOfMp);
+        outState.putString(SAVE_CURRENT_NUMBER_OF_NOTIF, currentNumberOfNotif);
     }
 
     @Override
@@ -428,8 +432,9 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     }
 
     @Override
-    public void getNewNumberOfMP(String newNumber) {
-        currentNumberOfMP = newNumber;
-        updateMpNumberShowed(newNumber);
+    public void getNewNumberOfMpAndNotif(String newNumberOfMp, String newNumberOfNotif) {
+        currentNumberOfMp = newNumberOfMp;
+        currentNumberOfNotif = newNumberOfNotif;
+        updateMpAndNotifNumberShowed(currentNumberOfMp, currentNumberOfNotif);
     }
 }

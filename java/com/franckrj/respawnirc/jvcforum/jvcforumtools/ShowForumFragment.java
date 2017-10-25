@@ -246,8 +246,8 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         if (getActivity() instanceof JVCForumGetter.ForumLinkChanged) {
             getterForForum.setListenerForForumLinkChanged((JVCForumGetter.ForumLinkChanged) getActivity());
         }
-        if (getActivity() instanceof JVCForumGetter.NewNumberOfMPSetted) {
-            getterForForum.setListenerForNewNumberOfMP((JVCForumGetter.NewNumberOfMPSetted) getActivity());
+        if (getActivity() instanceof JVCForumGetter.NewNumberOfMpAndNotifSetted) {
+            getterForForum.setListenerForNewNumberOfMpAndNotif((JVCForumGetter.NewNumberOfMpAndNotifSetted) getActivity());
         }
 
         errorBackgroundMessage.setVisibility(View.GONE);
