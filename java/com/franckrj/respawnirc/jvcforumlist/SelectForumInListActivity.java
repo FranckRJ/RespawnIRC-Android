@@ -170,6 +170,8 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
             if (adapterForForumList.getGroupCount() == 0) {
                 noResultFoundTextView.setVisibility(View.VISIBLE);
             }
+        } else {
+            updateMpAndNotifNumberShowed(null, null);
         }
 
         if (PrefsManager.getBool(PrefsManager.BoolPref.Names.IS_FIRST_LAUNCH)) {
