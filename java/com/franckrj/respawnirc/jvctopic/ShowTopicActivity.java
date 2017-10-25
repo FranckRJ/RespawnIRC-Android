@@ -644,6 +644,14 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     }
 
     @Override
+    public void onNewPageSelected(int position) {
+        if (position != pageNavigation.getLastPage() - 1) {
+            goToLastPageAfterLoading = false;
+            pageNavigation.setGoToBottomOnNextLoad(false);
+        }
+    }
+
+    @Override
     public void doThingsBeforeLoadOnFragment(AbsShowSomethingFragment thisFragment) {
         ((AbsShowTopicFragment) thisFragment).setPseudoOfAuthor(pseudoOfAuthor);
     }

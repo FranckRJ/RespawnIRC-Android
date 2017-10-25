@@ -841,8 +841,8 @@ public final class JVCParser {
 
         if (infosOfSpoilTag.containSpoil) {
             BuildSpoilTag spoilTagBuilder = new BuildSpoilTag(infosOfSpoilTag.listOfSpoilIdToShow, infosOfSpoilTag.lastIdOfSpoil);
-            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "", "", new RemoveFirstsAndLastsP(), spoilTagBuilder);
-            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p>", "</p>",  new RemoveFirstsAndLastsP(), spoilTagBuilder);
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "", "", new RemoveFirstsAndLastsPAndBr(), spoilTagBuilder);
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p>", "</p>",  new RemoveFirstsAndLastsPAndBr(), spoilTagBuilder);
             infosOfSpoilTag.lastIdOfSpoil = spoilTagBuilder.getLastIdUsedForSpoil();
         }
 
@@ -877,8 +877,8 @@ public final class JVCParser {
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longLinkPattern, 1, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 3, "", "", null, null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "&lt;spoil&gt;", "&lt;/spoil&gt;", new RemoveFirstsAndLastsP(), null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p>&lt;spoil&gt;", "&lt;/spoil&gt;</p>",  new RemoveFirstsAndLastsP(), null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "&lt;spoil&gt;", "&lt;/spoil&gt;", new RemoveFirstsAndLastsPAndBr(), null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p>&lt;spoil&gt;", "&lt;/spoil&gt;</p>",  new RemoveFirstsAndLastsPAndBr(), null);
         ToolForParsing.removeDivAndAdaptParagraphInMessage(messageInBuilder);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, surroundedBlockquotePattern, -1, "<br /><br />", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvCarePattern, 1, "", "", null, null);
@@ -1551,14 +1551,14 @@ public final class JVCParser {
         }
     }
 
-    private static class RemoveFirstsAndLastsP implements Utils.StringModifier {
+    private static class RemoveFirstsAndLastsPAndBr implements Utils.StringModifier {
         @Override
         public String changeString(String baseString) {
-            while (baseString.startsWith("<p>")) {
-                baseString = baseString.substring(3);
+            while (baseString.startsWith("<p>") || baseString.startsWith("<br />")) {
+                baseString = baseString.substring(baseString.indexOf(">") + 1);
             }
-            while (baseString.endsWith("</p>")) {
-                baseString = baseString.substring(0, baseString.length() - 4);
+            while (baseString.endsWith("</p>") || baseString.endsWith("<br />")) {
+                baseString = baseString.substring(0, baseString.lastIndexOf("<"));
             }
             return baseString;
         }

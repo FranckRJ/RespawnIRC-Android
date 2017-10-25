@@ -15,4 +15,5 @@
     <attr name="themedDividerColor" format="reference"/>
     <attr name="themedClearIcon" format="reference"/>
     <attr name="themedBackgroundAvatar" format="reference"/>
+    <attr name="themedNavigationHeaderBackground" format="reference"/>
 </resources>

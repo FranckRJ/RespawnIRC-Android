@@ -235,6 +235,11 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
     }
 
     @Override
+    public void onNewPageSelected(int position) {
+        //rien
+    }
+
+    @Override
     public void doThingsBeforeLoadOnFragment(AbsShowSomethingFragment thisFragment) {
         //rien
     }

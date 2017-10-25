@@ -489,12 +489,6 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         layoutForDrawer.addDrawerListener(toggleForDrawer);
         layoutForDrawer.setDrawerShadow(ThemeManager.getDrawableRes(ThemeManager.DrawableName.SHADOW_DRAWER), GravityCompat.START);
         updateNavigationMenu();
-
-        if (Build.VERSION.SDK_INT > 15) {
-            Undeprecator.viewSetBackgroundDrawable(navigationHeader, Undeprecator.resourcesGetDrawable(getResources(), ThemeManager.getDrawableRes(ThemeManager.DrawableName.NAVIGATION_HEADER_BACKGROUND)));
-        } else {
-            navigationHeader.setBackgroundColor(Undeprecator.resourcesGetColor(getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PRIMARY_DARK)));
-        }
     }
 
     @Override
