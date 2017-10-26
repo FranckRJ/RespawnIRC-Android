@@ -42,9 +42,9 @@ public final class JVCParser {
     private static final Pattern errorInJsonModePattern = Pattern.compile("\"erreur\":\\[\"([^\"]*)\"");
     private static final Pattern codeBlockPattern = Pattern.compile("<pre class=\"pre-jv\"><code class=\"code-jv\">([^<]*)</code></pre>");
     private static final Pattern codeLinePattern = Pattern.compile("<code class=\"code-jv\">(.*?)</code>", Pattern.DOTALL);
-    private static final Pattern spoilLinePattern = Pattern.compile("<span class=\"bloc-spoil-jv en-ligne\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
-    private static final Pattern spoilBlockPattern = Pattern.compile("<span class=\"bloc-spoil-jv\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
-    private static final Pattern spoilOverlyPattern = Pattern.compile("(<span class=\"bloc-spoil-jv[^\"]*\">.*?<span class=\"contenu-spoil\">|</span></span>)", Pattern.DOTALL);
+    private static final Pattern spoilLinePattern = Pattern.compile("<div class=\"bloc-spoil-jv en-ligne\">.*?<div class=\"contenu-spoil\">(.*?)</div></div>", Pattern.DOTALL);
+    private static final Pattern spoilBlockPattern = Pattern.compile("<div class=\"bloc-spoil-jv\">.*?<div class=\"contenu-spoil\">(.*?)</div></div>", Pattern.DOTALL);
+    private static final Pattern spoilOverlyPattern = Pattern.compile("(<div class=\"bloc-spoil-jv[^\"]*\">.*?<div class=\"contenu-spoil\">|</div></div>)", Pattern.DOTALL);
     private static final Pattern pageTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/[0-9]*-([0-9]*)-([0-9]*)-)([0-9]*)(-[0-9]*-[0-9]*-[0-9]*-[^\\.]*\\.htm)");
     private static final Pattern pageForumLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/[0-9]*-([0-9]*)-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-[^\\.]*\\.htm)");
     private static final Pattern pageSearchTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/recherche/forums/[0-9]*-[0-9]*-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-.*)");
@@ -846,7 +846,9 @@ public final class JVCParser {
 
         if (infosOfSpoilTag.containSpoil) {
             BuildSpoilTag spoilTagBuilder = new BuildSpoilTag(infosOfSpoilTag.listOfSpoilIdToShow, infosOfSpoilTag.lastIdOfSpoil);
+            spoilTagBuilder.setItsForSpoilBlock(false);
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "", "", new RemoveFirstsAndLastsPAndBr(), spoilTagBuilder);
+            spoilTagBuilder.setItsForSpoilBlock(true);
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p>", "</p>",  new RemoveFirstsAndLastsPAndBr(), spoilTagBuilder);
             infosOfSpoilTag.lastIdOfSpoil = spoilTagBuilder.getLastIdUsedForSpoil();
         }
@@ -963,8 +965,8 @@ public final class JVCParser {
             newMessageInfo.containUglyImages = ToolForParsing.hasUglyImagesInNotPrettyMessage(newMessageInfo.messageNotParsed);
             newMessageInfo.id = Long.parseLong(messageIdMatcher.group(1));
 
-            newMessageInfo.messageContentContainSpoil = newMessageInfo.messageNotParsed.contains("<span class=\"contenu-spoil\">");
-            newMessageInfo.signatureContainSpoil = newMessageInfo.signatureNotParsed.contains("<span class=\"contenu-spoil\">");
+            newMessageInfo.messageContentContainSpoil = newMessageInfo.messageNotParsed.contains("<div class=\"contenu-spoil\">");
+            newMessageInfo.signatureContainSpoil = newMessageInfo.signatureNotParsed.contains("<div class=\"contenu-spoil\">");
 
             newMessageInfo.messageNotParsed = makeBasicMessageParse(newMessageInfo.messageNotParsed, newMessageInfo.messageContentContainSpoil);
             newMessageInfo.signatureNotParsed = makeBasicMessageParse(newMessageInfo.signatureNotParsed, newMessageInfo.signatureContainSpoil);
@@ -1090,7 +1092,7 @@ public final class JVCParser {
             int lastOffsetOfTag = 0;
 
             while (spoilOverlyMatcher.find(lastOffsetOfTag)) {
-                boolean itsEndingTag = spoilOverlyMatcher.group().equals("</span></span>");
+                boolean itsEndingTag = spoilOverlyMatcher.group().equals("</div></div>");
 
                 if (!itsEndingTag) {
                     ++currentSpoilTagDeepness;
@@ -1649,9 +1651,10 @@ public final class JVCParser {
         private final String spoilButtonCode = "<bg_spoil_button><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "000000" : "FFFFFF") +
                                                "\">&nbsp;SPOIL&nbsp;</font></bg_spoil_button>";
 
-        private ArraySet<Integer> listOfSpoilIdToShow = null;
+        private final ArraySet<Integer> listOfSpoilIdToShow;
         private boolean showAllSpoils = false;
         private int lastIdUsed = -1;
+        private boolean itsForSpoilBlock = false;
 
         public BuildSpoilTag(ArraySet<Integer> newListOfSpoilIdToShow, int newLastIdUsed) {
             listOfSpoilIdToShow = newListOfSpoilIdToShow;
@@ -1663,6 +1666,10 @@ public final class JVCParser {
             return lastIdUsed;
         }
 
+        public void setItsForSpoilBlock(boolean newVal) {
+            itsForSpoilBlock = newVal;
+        }
+
         @Override
         public String changeString(String baseString) {
             //lastIdUsed + 1 est l'ID utilisé pour la balise actuelle
@@ -1671,7 +1678,8 @@ public final class JVCParser {
 
             if (showThisSpoil) {
                 return "<holdstring_c" + id + ">" + spoilButtonCode + "</holdstring_c" + id + ">" + "<bg_spoil_content><font color=\"#" +
-                        (ThemeManager.getThemeUsedIsDark() ? "FFFFFF" : "000000") + "\"> " + baseString + "</font></bg_spoil_content>";
+                        (ThemeManager.getThemeUsedIsDark() ? "FFFFFF" : "000000") + "\">" + (itsForSpoilBlock ? "<br />" : " ") +
+                        baseString + "</font></bg_spoil_content>";
             } else {
                 return "<holdstring_o" + id + ">" + spoilButtonCode + "</holdstring_o" + id + ">";
             }
