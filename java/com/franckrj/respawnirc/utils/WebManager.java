@@ -13,16 +13,16 @@ public class WebManager {
     private static String userAgentString = "ResdroidIRC";
 
     public static void generateNewUserAgent() {
-        String newUserAgent = "";
+        StringBuilder newUserAgentBuilder = new StringBuilder();
         String baseForUserAgent = "RespawnIRC jeuxvideo.com bonjour logiciel";
         Random rand = new Random();
         int newSize = rand.nextInt(20) + 30;
 
         for (int i = 0; i < newSize; ++i) {
-            newUserAgent += baseForUserAgent.charAt(rand.nextInt(baseForUserAgent.length()));
+            newUserAgentBuilder.append(baseForUserAgent.charAt(rand.nextInt(baseForUserAgent.length())));
         }
 
-        userAgentString = newUserAgent;
+        userAgentString = newUserAgentBuilder.toString();
     }
 
     public static String sendRequestWithMultipleTrys(String linkToPage, String requestMethod, String requestParameters, WebInfos currentInfos, int maxNumberOfTrys) {

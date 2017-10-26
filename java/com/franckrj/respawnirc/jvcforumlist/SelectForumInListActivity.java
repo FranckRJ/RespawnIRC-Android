@@ -1,6 +1,5 @@
 package com.franckrj.respawnirc.jvcforumlist;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -9,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
@@ -238,9 +236,8 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
             public boolean onMenuItemActionExpand(MenuItem item) {
                 if (!searchTextIsOpened) {
                     searchTextIsOpened = true;
-                    InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     textForSearch.requestFocus();
-                    inputManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+                    Utils.showSoftKeyboard(SelectForumInListActivity.this);
                 }
                 return true;
             }

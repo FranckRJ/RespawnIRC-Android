@@ -51,6 +51,8 @@ public abstract class AbsWebRequestAsyncTask<Params, Progress, Result> extends A
         if (requestIsFinishedListener != null) {
             requestIsFinishedListener.onRequestIsFinished(reqResult);
         }
+        requestIsStartedListener = null;
+        requestIsFinishedListener = null;
     }
 
     public interface RequestIsStarted {

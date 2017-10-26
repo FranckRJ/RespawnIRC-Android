@@ -257,21 +257,23 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
             if (infosOfSend.length == 1) {
                 WebManager.WebInfos currentWebInfos = initWebInfos(infosOfSend[0].cookieList, false);
                 String pageContent;
-                String requestBuilded = "titre_topic=" + Utils.encodeStringToUrlString(infosOfSend[0].topicTitle) + "&message_topic=" + Utils.encodeStringToUrlString(infosOfSend[0].topicContent) + infosOfSend[0].listOfInputsInAstring;
+                StringBuilder requestBuilder = new StringBuilder("titre_topic=").append(Utils.encodeStringToUrlString(infosOfSend[0].topicTitle))
+                                                                                .append("&message_topic=").append(Utils.encodeStringToUrlString(infosOfSend[0].topicContent))
+                                                                                .append(infosOfSend[0].listOfInputsInAstring);
 
                 if (!Utils.stringIsEmptyOrNull(infosOfSend[0].surveyTitle)) {
-                    requestBuilded += "&submit_sondage=1&question_sondage=" + Utils.encodeStringToUrlString(infosOfSend[0].surveyTitle);
+                    requestBuilder.append("&submit_sondage=1&question_sondage=").append(Utils.encodeStringToUrlString(infosOfSend[0].surveyTitle));
 
                     for (String thisReply : infosOfSend[0].surveyReplysList) {
                         if (!Utils.stringIsEmptyOrNull(thisReply)) {
-                            requestBuilded += "&reponse_sondage[]=" + Utils.encodeStringToUrlString(thisReply);
+                            requestBuilder.append("&reponse_sondage[]=").append(Utils.encodeStringToUrlString(thisReply));
                         }
                     }
                 } else {
-                    requestBuilded += "&submit_sondage=0&question_sondage=&reponse_sondage[]=";
+                    requestBuilder.append("&submit_sondage=0&question_sondage=&reponse_sondage[]=");
                 }
 
-                pageContent = WebManager.sendRequestWithMultipleTrys(infosOfSend[0].linkToSend, "POST", requestBuilded, currentWebInfos, 2);
+                pageContent = WebManager.sendRequestWithMultipleTrys(infosOfSend[0].linkToSend, "POST", requestBuilder.toString(), currentWebInfos, 2);
 
                 if (infosOfSend[0].linkToSend.equals(currentWebInfos.currentUrl)) {
                     pageContent = "respawnirc:resendneeded";

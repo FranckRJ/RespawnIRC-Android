@@ -1,7 +1,6 @@
 package com.franckrj.respawnirc.utils;
 
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 public class StickerConverter {
     public static ArrayList<InfoForConvert> ruleForNoLangageSticker = null;
@@ -88,24 +87,50 @@ public class StickerConverter {
 
     public static void convertStickerWithThisRule(StringBuilder messageToConvert, ArrayList<InfoForConvert> ruleToFollow) {
         if (ruleToFollow != null) {
-            for (InfoForConvert thisInfo : ruleToFollow) {
-                JVCParser.ToolForParsing.parseThisMessageWithThisPattern(messageToConvert, thisInfo.base, -1, thisInfo.replacement, "", null, null);
-            }
+            JVCParser.ToolForParsing.parseThisMessageWithThisPattern(messageToConvert, JVCParser.stickerPattern, 1, "", "", new StickerConverterModifier(ruleToFollow), null);
         }
     }
 
     private static class InfoForConvert {
-        private Pattern base;
-        private String replacement;
+        public String stickerIdToReplace;
+        public String replacement;
 
-        private InfoForConvert(String baseString, String replacementString, boolean itsAConvertToSmiley) {
-            base = Pattern.compile("<img class=\"img-stickers\" src=\"http://jv\\.stkr\\.fr/p[^/]*/" + baseString + "\".*?/>");
+        private InfoForConvert(String newBaseStickerId, String replacementString, boolean itsAConvertToSmiley) {
+            stickerIdToReplace = newBaseStickerId;
 
             if (itsAConvertToSmiley) {
                 replacement = "<img src=\"http://image.jeuxvideo.com/smileys_img/" + replacementString + "\" alt=\"\" data-code=\"\" title=\"\" />";
             } else {
-                replacement = "<img class=\"img-stickers\" src=\"http://jv.stkr.fr/p/" + replacementString + "\"/>";
+                replacement = "<img class=\"img-stickers\" src=\"" + replacementString + "\"/>";
             }
+        }
+    }
+
+    private static class StickerConverterModifier implements Utils.StringModifier {
+        private final ArrayList<InfoForConvert> ruleToFollow;
+
+        public StickerConverterModifier(ArrayList<InfoForConvert> newRuleToFollow) {
+            ruleToFollow = newRuleToFollow;
+        }
+
+        @Override
+        public String changeString(String baseString) {
+            String idOfCurrentSticker = baseString;
+
+            if (idOfCurrentSticker.endsWith("/")) {
+                idOfCurrentSticker = idOfCurrentSticker.substring(0, idOfCurrentSticker.length() - 1);
+            }
+            if (idOfCurrentSticker.contains("/")) {
+                idOfCurrentSticker = idOfCurrentSticker.substring(idOfCurrentSticker.lastIndexOf("/") + 1);
+            }
+
+            for (InfoForConvert thisInfo : ruleToFollow) {
+                if (idOfCurrentSticker.equals(thisInfo.stickerIdToReplace)) {
+                    return thisInfo.replacement;
+                }
+            }
+
+            return "<img class=\"img-stickers\" src=\"" + baseString + "\"/>";
         }
     }
 }

@@ -56,8 +56,8 @@ public class JVCTopicModeForumGetter extends AbsJVCTopicGetter {
         listenerForNewNumbersOfPages = thisListener;
     }
 
-    public boolean startGetMessagesOfThisPage(String newUrlOfPage) {
-        return startGetMessagesOfThisPage(newUrlOfPage, false);
+    public void startGetMessagesOfThisPage(String newUrlOfPage) {
+        startGetMessagesOfThisPage(newUrlOfPage, false);
     }
 
     public boolean startGetMessagesOfThisPage(String newUrlOfPage, boolean useBiggerTimeoutTime) {

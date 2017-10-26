@@ -143,15 +143,27 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
 
             colorValueOfPercentage = Integer.toHexString(colorValueInNumber);
 
-            while (colorValueOfPercentage.length() < 2) {
-                colorValueOfPercentage = "0" + colorValueOfPercentage;
+            if (colorValueOfPercentage.length() < 2) {
+                StringBuilder colorValueOfPercentageBuilder = new StringBuilder(colorValueOfPercentage);
+
+                while (colorValueOfPercentageBuilder.length() < 2) {
+                    colorValueOfPercentageBuilder.insert(0, "0");
+                }
+
+                colorValueOfPercentage = colorValueOfPercentageBuilder.toString();
             }
         } catch (Exception e) {
             colorValueOfPercentage = "00";
         }
 
-        while (numberOfPercentage.length() < spaceToTake) {
-            numberOfPercentage = " " + numberOfPercentage; //alt+255 pour l'espace
+        if (numberOfPercentage.length() < spaceToTake) {
+            StringBuilder numberOfPercentageBuilder = new StringBuilder(numberOfPercentage);
+
+            while (numberOfPercentageBuilder.length() < spaceToTake) {
+                numberOfPercentageBuilder.insert(0, " "); //alt+255 pour l'espace
+            }
+
+            numberOfPercentage = numberOfPercentageBuilder.toString();
         }
 
         if (ThemeManager.getThemeUsedIsDark()) {

@@ -22,8 +22,8 @@ public class IgnoreListManager {
         return listOfIgnoredPseudosInLC.add(pseudoToAdd.toLowerCase());
     }
 
-    public static boolean removePseudoFromIgnoredList(String pseudoToRemove) {
-        return listOfIgnoredPseudosInLC.remove(pseudoToRemove.toLowerCase());
+    public static void removePseudoFromIgnoredList(String pseudoToRemove) {
+        listOfIgnoredPseudosInLC.remove(pseudoToRemove.toLowerCase());
     }
 
     public static void loadListOfIgnoredPseudos() {
