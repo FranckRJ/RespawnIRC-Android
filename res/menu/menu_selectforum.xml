@@ -5,7 +5,7 @@
     <item
         android:id="@+id/action_search_selectforum"
         android:title="@string/forumSearch"
-        android:icon="@drawable/ic_action_action_search"
+        android:icon="@drawable/ic_search_dark"
         app:showAsAction="collapseActionView|always"
         app:actionLayout="@layout/actionbar_search_edittext_searchlayout"/>
     <item

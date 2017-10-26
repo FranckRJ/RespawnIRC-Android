@@ -165,15 +165,15 @@ public class ThemeManager {
                 case SHADOW_DRAWER:
                     return R.drawable.shadow_drawer_dark;
                 case EXPAND_MORE:
-                    return R.drawable.ic_action_navigation_expand_more_dark;
+                    return R.drawable.ic_expand_more_dark;
                 case EXPAND_LESS:
-                    return R.drawable.ic_action_navigation_expand_less_dark;
+                    return R.drawable.ic_expand_less_dark;
                 case ARROW_DROP_DOWN:
-                    return R.drawable.ic_action_navigation_arrow_drop_down_dark;
+                    return R.drawable.ic_arrow_drop_down_dark;
                 case CONTENT_SEND:
-                    return R.drawable.ic_action_content_send_dark;
+                    return R.drawable.ic_msg_send_dark;
                 case CONTENT_EDIT:
-                    return R.drawable.ic_action_content_edit_dark;
+                    return R.drawable.ic_msg_send_edit_dark;
                 case TOPIC_LOCK_ICON:
                     return R.drawable.icon_topic_lock_dark;
                 case DELETED_IMAGE:
@@ -181,22 +181,22 @@ public class ThemeManager {
                 case DOWNLOAD_IMAGE:
                     return R.drawable.image_download_dark;
                 default:
-                    return R.drawable.ic_action_navigation_arrow_drop_down_dark;
+                    return R.drawable.ic_arrow_drop_down_dark;
             }
         } else {
             switch (thisDrawable) {
                 case SHADOW_DRAWER:
                     return R.drawable.shadow_drawer_light;
                 case EXPAND_MORE:
-                    return R.drawable.ic_action_navigation_expand_more_light;
+                    return R.drawable.ic_expand_more_light;
                 case EXPAND_LESS:
-                    return R.drawable.ic_action_navigation_expand_less_light;
+                    return R.drawable.ic_expand_less_light;
                 case ARROW_DROP_DOWN:
-                    return R.drawable.ic_action_navigation_arrow_drop_down_light;
+                    return R.drawable.ic_arrow_drop_down_light;
                 case CONTENT_SEND:
-                    return R.drawable.ic_action_content_send_light;
+                    return R.drawable.ic_msg_send_light;
                 case CONTENT_EDIT:
-                    return R.drawable.ic_action_content_edit_light;
+                    return R.drawable.ic_msg_send_edit_light;
                 case TOPIC_LOCK_ICON:
                     return R.drawable.icon_topic_lock_light;
                 case DELETED_IMAGE:
@@ -204,7 +204,7 @@ public class ThemeManager {
                 case DOWNLOAD_IMAGE:
                     return R.drawable.image_download_light;
                 default:
-                    return R.drawable.ic_action_navigation_arrow_drop_down_light;
+                    return R.drawable.ic_arrow_drop_down_light;
             }
         }
     }

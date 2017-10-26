@@ -164,7 +164,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.home);
-                tmpItemInfo.drawableResId = R.drawable.ic_action_action_home_dark_zoom;
+                tmpItemInfo.drawableResId = R.drawable.ic_home_dark_zoom;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = true;
                 tmpItemInfo.itemId = ITEM_ID_HOME;
@@ -175,7 +175,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.forum);
-                tmpItemInfo.drawableResId = R.drawable.ic_action_communication_forum_dark_zoom;
+                tmpItemInfo.drawableResId = R.drawable.ic_forum_dark_zoom;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = true;
                 tmpItemInfo.itemId = ITEM_ID_FORUM;
@@ -185,7 +185,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.showMp);
-                tmpItemInfo.drawableResId = R.drawable.ic_action_content_mail_dark_zoom;
+                tmpItemInfo.drawableResId = R.drawable.ic_mail_dark_zoom;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = false;
                 tmpItemInfo.itemId = ITEM_ID_SHOWMP;
@@ -196,7 +196,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.showNotif);
-                tmpItemInfo.drawableResId = R.drawable.ic_action_star_dark_zoom;
+                tmpItemInfo.drawableResId = R.drawable.ic_star_dark_zoom;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = false;
                 tmpItemInfo.itemId = ITEM_ID_SHOWNOTIF;
@@ -207,7 +207,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.preference);
-                tmpItemInfo.drawableResId = R.drawable.ic_action_action_settings_dark_zoom;
+                tmpItemInfo.drawableResId = R.drawable.ic_settings_dark_zoom;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = true;
                 tmpItemInfo.itemId = ITEM_ID_PREF;
@@ -229,7 +229,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.refresh);
-                tmpItemInfo.drawableResId = R.drawable.ic_action_navigation_refresh;
+                tmpItemInfo.drawableResId = R.drawable.ic_refresh_dark_zoom;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = true;
                 tmpItemInfo.itemId = ITEM_ID_REFRESH_FORUM_FAV;
@@ -251,7 +251,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.refresh);
-                tmpItemInfo.drawableResId = R.drawable.ic_action_navigation_refresh;
+                tmpItemInfo.drawableResId = R.drawable.ic_refresh_dark_zoom;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = true;
                 tmpItemInfo.itemId = ITEM_ID_REFRESH_TOPIC_FAV;
@@ -262,7 +262,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.connectWithAnotherAccount);
-                tmpItemInfo.drawableResId = R.drawable.ic_action_content_add_dark_zoom;
+                tmpItemInfo.drawableResId = R.drawable.ic_add_dark_zoom;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = true;
                 tmpItemInfo.itemId = ITEM_ID_CONNECT;
@@ -272,7 +272,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.connnectAsModoText);
-                tmpItemInfo.drawableResId = R.drawable.ic_action_action_empty;
+                tmpItemInfo.drawableResId = R.drawable.ic_empty;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = true;
                 tmpItemInfo.itemId = ITEM_ID_CONNECT_AS_MODO;
@@ -284,7 +284,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         if (showGTAMenuItem == null) {
             showGTAMenuItem = new NavigationMenuAdapter.MenuItemInfo();
             showGTAMenuItem.textContent = getString(R.string.gta);
-            showGTAMenuItem.drawableResId = R.drawable.ic_action_report_dark_zoom;
+            showGTAMenuItem.drawableResId = R.drawable.ic_report_dark_zoom;
             showGTAMenuItem.isHeader = false;
             showGTAMenuItem.isEnabled = true;
             showGTAMenuItem.itemId = ITEM_ID_SHOWGTA;
@@ -345,9 +345,9 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             }
 
             if (pseudoOfUser.isEmpty()) {
-                contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_action_content_add_circle_outline));
+                contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_add_circle_outline_dark));
             } else {
-                contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_action_navigation_expand_more_dark));
+                contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_expand_more_dark));
             }
 
             if (userIsModo && !pseudoOfUser.isEmpty()) {
@@ -366,7 +366,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             }
         } else {
             adapterForNavigationMenu.setRowSelected(-1);
-            contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_action_navigation_expand_less_dark));
+            contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_expand_less_dark));
         }
 
         adapterForNavigationMenu.notifyDataSetChanged();

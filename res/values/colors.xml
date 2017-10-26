@@ -44,7 +44,7 @@
     <color name="darkerBackgroundColorThemeDark">#303030</color>
     <color name="moreDarkerBackgroundColorThemeDark">#151515</color>
     <color name="headerTextColorThemeDark">#90FFFFFF</color>
-    <color name="navigationIconColorThemeDark">#78000000</color>
+    <color name="navigationIconColorThemeDark">#78101010</color>
     <color name="dividerColorThemeDark">#90808080</color>
     <color name="deletedMessagesBackgroundColorThemeDark">#023A4B</color>
     <color name="surveyMessagesBackgroundColorThemeDark">#4D2E00</color>

@@ -13,13 +13,13 @@
         <item name="themedDarkerBackgroundColor">@color/darkerBackgroundColorThemeLight</item>
         <item name="themedMoreDarkerBackgroundColor">@color/moreDarkerBackgroundColorThemeLight</item>
         <item name="themedLinkColor">@color/linkColorThemeLight</item>
-        <item name="themedNavigationMore">@drawable/ic_action_navigation_more_light</item>
-        <item name="themedForumIcon">@drawable/ic_action_communication_forum_light</item>
-        <item name="themedContentAdd">@drawable/ic_action_content_add_light</item>
+        <item name="themedNavigationMore">@drawable/ic_more_light</item>
+        <item name="themedForumIcon">@drawable/ic_forum_light</item>
+        <item name="themedContentAdd">@drawable/ic_add_light</item>
         <item name="themedTextFormatGeneral">@drawable/textformat_general_light</item>
-        <item name="themedContentSendIcon">@drawable/ic_action_content_send_light</item>
+        <item name="themedContentSendIcon">@drawable/ic_msg_send_light</item>
         <item name="themedDividerColor">@color/dividerColorThemeLight</item>
-        <item name="themedClearIcon">@drawable/ic_action_clear_light</item>
+        <item name="themedClearIcon">@drawable/ic_clear_light</item>
         <item name="themedBackgroundAvatar">@drawable/avatar_image_border_light</item>
         <item name="themedNavigationHeaderBackground">@drawable/navigation_header_background_light</item>
     </style>
@@ -38,13 +38,13 @@
         <item name="themedDarkerBackgroundColor">@color/darkerBackgroundColorThemeDark</item>
         <item name="themedMoreDarkerBackgroundColor">@color/moreDarkerBackgroundColorThemeDark</item>
         <item name="themedLinkColor">@color/linkColorThemeDark</item>
-        <item name="themedNavigationMore">@drawable/ic_action_navigation_more_dark</item>
-        <item name="themedForumIcon">@drawable/ic_action_communication_forum_dark</item>
-        <item name="themedContentAdd">@drawable/ic_action_content_add_dark</item>
+        <item name="themedNavigationMore">@drawable/ic_more_dark</item>
+        <item name="themedForumIcon">@drawable/ic_forum_dark</item>
+        <item name="themedContentAdd">@drawable/ic_add_dark</item>
         <item name="themedTextFormatGeneral">@drawable/textformat_general_dark</item>
-        <item name="themedContentSendIcon">@drawable/ic_action_content_send_dark</item>
+        <item name="themedContentSendIcon">@drawable/ic_msg_send_dark</item>
         <item name="themedDividerColor">@color/dividerColorThemeDark</item>
-        <item name="themedClearIcon">@drawable/ic_action_clear_dark</item>
+        <item name="themedClearIcon">@drawable/ic_clear_dark</item>
         <item name="themedBackgroundAvatar">@drawable/avatar_image_border_dark</item>
         <item name="themedNavigationHeaderBackground">@drawable/navigation_header_background_dark</item>
     </style>
@@ -63,13 +63,13 @@
         <item name="themedDarkerBackgroundColor">@color/darkerBackgroundColorThemeBlack</item>
         <item name="themedMoreDarkerBackgroundColor">@color/moreDarkerBackgroundColorThemeBlack</item>
         <item name="themedLinkColor">@color/linkColorThemeDark</item>
-        <item name="themedNavigationMore">@drawable/ic_action_navigation_more_dark</item>
-        <item name="themedForumIcon">@drawable/ic_action_communication_forum_dark</item>
-        <item name="themedContentAdd">@drawable/ic_action_content_add_dark</item>
+        <item name="themedNavigationMore">@drawable/ic_more_dark</item>
+        <item name="themedForumIcon">@drawable/ic_forum_dark</item>
+        <item name="themedContentAdd">@drawable/ic_add_dark</item>
         <item name="themedTextFormatGeneral">@drawable/textformat_general_dark</item>
-        <item name="themedContentSendIcon">@drawable/ic_action_content_send_dark</item>
+        <item name="themedContentSendIcon">@drawable/ic_msg_send_dark</item>
         <item name="themedDividerColor">@color/dividerColorThemeDark</item>
-        <item name="themedClearIcon">@drawable/ic_action_clear_dark</item>
+        <item name="themedClearIcon">@drawable/ic_clear_dark</item>
         <item name="themedBackgroundAvatar">@drawable/avatar_image_border_black</item>
         <item name="themedNavigationHeaderBackground">@drawable/navigation_header_background_dark</item>
     </style>

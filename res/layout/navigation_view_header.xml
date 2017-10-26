@@ -27,7 +27,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_action_content_add_circle_outline"
+        android:src="@drawable/ic_add_circle_outline_dark"
         android:contentDescription="@string/connectToJVC"/>
 
 </RelativeLayout>
