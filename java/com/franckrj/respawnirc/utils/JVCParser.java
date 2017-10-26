@@ -11,6 +11,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class JVCParser {
+    public static final Pattern stickerPattern = Pattern.compile("<img class=\"img-stickers\" src=\"([^\"]*)\".*?/>");
+
     private static final Pattern ajaxListTimestampPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_timestamp_liste_(messages|topics)\" id=\"ajax_timestamp_liste_(messages|topics)\" value=\"([^\"]*)\" />");
     private static final Pattern ajaxListHashPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_hash_liste_(messages|topics)\" id=\"ajax_hash_liste_(messages|topics)\" value=\"([^\"]*)\" />");
     private static final Pattern ajaxModTimestampPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_timestamp_moderation_forum\" id=\"ajax_timestamp_moderation_forum\" value=\"([^\"]*)\" />");
@@ -26,7 +28,7 @@ public final class JVCParser {
     private static final Pattern messageIsDeletedPattern = Pattern.compile("<div class=\"bloc-message-forum msg-supprime[^\"]*\" data-id=\"");
     private static final Pattern pseudoInfosPattern = Pattern.compile("<span class=\"JvCare [^ ]* bloc-pseudo-msg text-([^\"]*)\" target=\"_blank\">[^a-zA-Z0-9_\\[\\]-]*([a-zA-Z0-9_\\[\\]-]*)[^<]*</span>");
     private static final Pattern idAliasPattern = Pattern.compile("data-id-alias=\"([0-9]+)\">");
-    private static final Pattern messagePattern = Pattern.compile("<div class=\"bloc-contenu\"><div class=\"txt-msg  text-[^-]*-forum \">((.*?)(?=<div class=\"info-edition-msg\">)|(.*?)(?=<div class=\"signature-msg)|(.*))", Pattern.DOTALL);
+    private static final Pattern messagePattern = Pattern.compile("<div class=\"bloc-contenu\"><div class=\"txt-msg +text-[^-]*-forum \">((.*?)(?=<div class=\"info-edition-msg\">)|(.*?)(?=<div class=\"signature-msg)|(.*))", Pattern.DOTALL);
     private static final Pattern currentPagePattern = Pattern.compile("<span class=\"page-active\">([^<]*)</span>");
     private static final Pattern pageLinkPattern = Pattern.compile("<span><a href=\"([^\"]*)\" class=\"lien-jv\">([0-9]*)</a></span>");
     private static final Pattern topicFormPattern = Pattern.compile("(<form role=\"form\" class=\"form-post-topic[^\"]*\" method=\"post\" action=\"\".*?>.*?</form>)", Pattern.DOTALL);
@@ -43,7 +45,6 @@ public final class JVCParser {
     private static final Pattern spoilLinePattern = Pattern.compile("<span class=\"bloc-spoil-jv en-ligne\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
     private static final Pattern spoilBlockPattern = Pattern.compile("<span class=\"bloc-spoil-jv\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
     private static final Pattern spoilOverlyPattern = Pattern.compile("(<span class=\"bloc-spoil-jv[^\"]*\">.*?<span class=\"contenu-spoil\">|</span></span>)", Pattern.DOTALL);
-    private static final Pattern stickerPattern = Pattern.compile("<img class=\"img-stickers\" src=\"(http://jv\\.stkr\\.fr/p[^/]*/([^\"]*))\".*?/>");
     private static final Pattern pageTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/[0-9]*-([0-9]*)-([0-9]*)-)([0-9]*)(-[0-9]*-[0-9]*-[0-9]*-[^\\.]*\\.htm)");
     private static final Pattern pageForumLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/[0-9]*-([0-9]*)-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-[^\\.]*\\.htm)");
     private static final Pattern pageSearchTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/recherche/forums/[0-9]*-[0-9]*-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-.*)");
@@ -409,13 +410,17 @@ public final class JVCParser {
 
         while (favMatcher.find(lastOffset)) {
             NameAndLink newFav = new NameAndLink();
+            String tmpLink = favMatcher.group(1);
             newFav.name = specialCharToNormalChar(favMatcher.group(2));
-            newFav.link = favMatcher.group(1);
-            if (newFav.link.startsWith("/forums/")) {
-                newFav.link = "http://www.jeuxvideo.com" + newFav.link;
-            } else if (!newFav.link.startsWith("http:")) {
-                newFav.link = "http:" + newFav.link;
+
+            if (tmpLink.startsWith("/forums/")) {
+                newFav.link = "http://www.jeuxvideo.com" + tmpLink;
+            } else if (!tmpLink.startsWith("http:")) {
+                newFav.link = "http:" + tmpLink;
+            } else {
+                newFav.link = tmpLink;
             }
+
             listOfFav.add(newFav);
             lastOffset = favMatcher.end();
         }
@@ -821,7 +826,7 @@ public final class JVCParser {
         if (settings.transformStickerToSmiley) {
             StickerConverter.convertStickerWithThisRule(messageInBuilder, StickerConverter.ruleForStickerToSmiley);
         }
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, stickerPattern, 2, "<img src=\"sticker_", ".png\"/>", new ConvertStringToString("-", "_"), null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, stickerPattern, 1, "<img src=\"sticker_", ".png\"/>", new ConvertUrlToStickerId(), new ConvertStringToString("-", "_"));
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, smileyPattern, 2, "<img src=\"smiley_", "\"/>", null, null);
 
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, youtubeVideoPattern, 2, "<a href=\"http://youtu.be/", "\">http://youtu.be/", 2, "</a>");
@@ -869,7 +874,7 @@ public final class JVCParser {
 
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeBlockPattern, 1, "<p>&lt;code&gt;", "&lt;/code&gt;</p>", new ConvertStringToString("\n", "<br />"), new ConvertStringToString("  ", "&nbsp;&nbsp;"));
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeLinePattern, 1, "&lt;code&gt;", "&lt;/code&gt;", new ConvertStringToString("  ", "&nbsp;&nbsp;"), null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, stickerPattern, 2, "[[sticker:p/", "]]", null, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, stickerPattern, 1, "[[sticker:p/", "]]", new ConvertUrlToStickerId(), null);
         ToolForParsing.replaceStringByAnother(messageInBuilder, "\n", "");
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, smileyPattern, 3, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, youtubeVideoPattern, 2, "http://youtu.be/", "", null, null);
@@ -1559,6 +1564,19 @@ public final class JVCParser {
             }
             while (baseString.endsWith("</p>") || baseString.endsWith("<br />")) {
                 baseString = baseString.substring(0, baseString.lastIndexOf("<"));
+            }
+            return baseString;
+        }
+    }
+
+    private static class ConvertUrlToStickerId implements Utils.StringModifier {
+        @Override
+        public String changeString(String baseString) {
+            if (baseString.endsWith("/")) {
+                baseString = baseString.substring(0, baseString.length() - 1);
+            }
+            if (baseString.contains("/")) {
+                return baseString.substring(baseString.lastIndexOf("/") + 1);
             }
             return baseString;
         }

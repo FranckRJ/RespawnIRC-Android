@@ -49,10 +49,13 @@ public class MainActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= 25) {
             ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
-            int sizeOfForumFavArray = PrefsManager.getInt(PrefsManager.IntPref.Names.FORUM_FAV_ARRAY_SIZE);
 
-            if (sizeOfForumFavArray > 0 && shortcutManager.getDynamicShortcuts().size() == 0) {
-                Utils.updateShortcuts(this, shortcutManager, sizeOfForumFavArray);
+            if (shortcutManager != null) {
+                int sizeOfForumFavArray = PrefsManager.getInt(PrefsManager.IntPref.Names.FORUM_FAV_ARRAY_SIZE);
+
+                if (sizeOfForumFavArray > 0 && shortcutManager.getDynamicShortcuts().size() == 0) {
+                    Utils.updateShortcuts(this, shortcutManager, sizeOfForumFavArray);
+                }
             }
         }
 
