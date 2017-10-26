@@ -57,10 +57,17 @@ public class Utils {
         return thisString.isEmpty();
     }
 
+    public static void showSoftKeyboard(Activity forThisActivity) {
+        InputMethodManager inputManager = (InputMethodManager) forThisActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputManager != null) {
+            inputManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
+
     public static void hideSoftKeyboard(Activity fromThisActivity) {
         InputMethodManager inputManager = (InputMethodManager) fromThisActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         View focusedView = fromThisActivity.getCurrentFocus();
-        if (focusedView != null) {
+        if (inputManager != null && focusedView != null) {
             inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
@@ -101,6 +108,18 @@ public class Utils {
         return newList;
     }
 
+    public static String imageLinkToFileName(String link) {
+        if (link.startsWith("http://image.noelshack.com/minis/")) {
+            return "img_nlsk_mini_" + link.substring(("http://image.noelshack.com/minis/").length()).replace("/", "_");
+        } else if (link.startsWith("http://image.noelshack.com/fichiers/")) {
+            return "img_nlsk_big_" + link.substring(("http://image.noelshack.com/fichiers/").length()).replace("/", "_");
+        } else if (link.startsWith("http://image.jeuxvideo.com/avatar")) {
+            return "img_vtr_" + link.substring(("http://image.jeuxvideo.com/avatar").length()).replace("/", "_");
+        } else {
+            return "";
+        }
+    }
+
     public static void openCorrespondingBrowser(PrefsManager.LinkType linkTypeToOpenInternalBrowser, String link, Activity parentActivity) {
         boolean itsAJVCLink = link.matches("(?i)^http(s)?://(www\\.)?jeuxvideo\\.com$") ||
                               link.matches("(?i)^http(s)?://(www\\.)?jeuxvideo\\.com/.*");
@@ -130,8 +149,11 @@ public class Utils {
 
     public static void putStringInClipboard(String textToCopy, Activity fromThisActivity) {
         ClipboardManager clipboard = (ClipboardManager) fromThisActivity.getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText(textToCopy, textToCopy);
-        clipboard.setPrimaryClip(clip);
+
+        if (clipboard != null) {
+            ClipData clip = ClipData.newPlainText(textToCopy, textToCopy);
+            clipboard.setPrimaryClip(clip);
+        }
     }
 
     public static void insertStringInEditText(EditText currentEditText, String stringToInsert, int posOfCenterFromEnd) {

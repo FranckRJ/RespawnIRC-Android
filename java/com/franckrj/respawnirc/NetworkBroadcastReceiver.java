@@ -11,7 +11,11 @@ public class NetworkBroadcastReceiver extends BroadcastReceiver {
 
     public static void updateConnectionInfos(Context context) {
         ConnectivityManager connectManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = connectManager.getActiveNetworkInfo();
+        NetworkInfo activeNetwork = null;
+
+        if (connectManager != null) {
+            activeNetwork = connectManager.getActiveNetworkInfo();
+        }
 
         //noinspection SimplifiableIfStatement
         if (activeNetwork != null) {

@@ -5,21 +5,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.support.v4.util.SimpleArrayMap;
-import android.support.v7.graphics.drawable.DrawableWrapper;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 
-public class ImageDownloader {
+public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChanged {
     private SimpleArrayMap<String, DrawableWrapper> listOfDrawable = new SimpleArrayMap<>();
     private ArrayList<ImageGetterAsyncTask> listOfCurrentsTasks = new ArrayList<>();
     private Drawable defaultDrawable = null;
@@ -80,7 +73,7 @@ public class ImageDownloader {
 
         if (drawable == null) {
             try {
-                File newFile = new File(imagesCacheDir, imageLinkToFileName(link));
+                File newFile = new File(imagesCacheDir, Utils.imageLinkToFileName(link));
                 if (newFile.exists()) {
                     drawable = new DrawableWrapper(new BitmapDrawable(parentActivity.getResources(), loadBitmapFromCache(newFile.getPath())));
                 }
@@ -106,25 +99,15 @@ public class ImageDownloader {
 
     public void stopAllCurrentTasks() {
         for (ImageGetterAsyncTask taskIterator : listOfCurrentsTasks) {
+            taskIterator.setRequestStatusChangedListener(null);
             taskIterator.cancel(false);
         }
         listOfCurrentsTasks.clear();
     }
 
-    private String imageLinkToFileName(String link) {
-        if (link.startsWith("http://image.noelshack.com/minis/")) {
-            return "img_nlsk_mini_" + link.substring(("http://image.noelshack.com/minis/").length()).replace("/", "_");
-        } else if (link.startsWith("http://image.noelshack.com/fichiers/")) {
-            return "img_nlsk_big_" + link.substring(("http://image.noelshack.com/fichiers/").length()).replace("/", "_");
-        } else if (link.startsWith("http://image.jeuxvideo.com/avatar")) {
-            return "img_vtr_" + link.substring(("http://image.jeuxvideo.com/avatar").length()).replace("/", "_");
-        } else {
-            return "";
-        }
-    }
-
     private void startDownloadOfThisFileInThisWrapper(String linkToFile, DrawableWrapper thisWrapper) {
-        ImageGetterAsyncTask getterForImage = new ImageGetterAsyncTask(thisWrapper, linkToFile, imagesCacheDir.getPath());
+        ImageGetterAsyncTask getterForImage = new ImageGetterAsyncTask(thisWrapper, linkToFile, imagesCacheDir.getPath(), scaleLargeImages);
+        getterForImage.setRequestStatusChangedListener(this);
         listOfCurrentsTasks.add(getterForImage);
         getterForImage.execute();
         ++numberOfFilesDownloading;
@@ -184,85 +167,27 @@ public class ImageDownloader {
         return inSampleSize;
     }
 
-    private class ImageGetterAsyncTask extends AsyncTask<Void, Integer, String> {
-        final DrawableWrapper wrapperForDrawable;
-        final String fileDownloadPath;
-        final String fileLocalPath;
-        final boolean itsABigFile;
-
-        public ImageGetterAsyncTask(DrawableWrapper newWrapper, String link, String cacheDirPath) {
-            wrapperForDrawable = newWrapper;
-            fileDownloadPath = link;
-            fileLocalPath = (cacheDirPath + "/" + imageLinkToFileName(fileDownloadPath)).replace("//", "/");
-            itsABigFile = scaleLargeImages;
+    @Override
+    public void onRequestProgress(Integer currentProgress, ImageGetterAsyncTask taskThatProgress) {
+        if (listenerForCurrentProgress != null) {
+            listenerForCurrentProgress.newCurrentProgress(currentProgress, taskThatProgress.getFileDownloadPath());
         }
+    }
 
-        @Override
-        protected String doInBackground(Void... params) {
+    @Override
+    public void onRequestFinished(String resultFileName, ImageGetterAsyncTask taskThatIsFinished) {
+        if (!resultFileName.isEmpty()) {
             try {
-                int lenghtOfFile = 0;
-                URL url = new URL(fileDownloadPath);
-
-                if (itsABigFile) {
-                    URLConnection conection = url.openConnection();
-                    conection.connect();
-                    lenghtOfFile = conection.getContentLength();
-                }
-
-                InputStream input = new BufferedInputStream(url.openStream(), 8192);
-                OutputStream output = new FileOutputStream(fileLocalPath);
-                byte data[] = new byte[8192];
-                long total = 0;
-                int count;
-
-                while ((count = input.read(data)) != -1 && !isCancelled()) {
-                    total += count;
-                    output.write(data, 0, count);
-
-                    if (lenghtOfFile > 0) {
-                        publishProgress(Utils.roundToInt((total * 100) / lenghtOfFile));
-                    }
-                }
-
-                output.flush();
-                output.close();
-                input.close();
-
-                if (isCancelled()) {
-                    File file = new File(fileLocalPath);
-                    //noinspection ResultOfMethodCallIgnored
-                    file.delete();
-                    return "";
-                }
-
-                return fileLocalPath;
+                BitmapDrawable drawableToUse = new BitmapDrawable(parentActivity.getResources(), loadBitmapFromCache(resultFileName));
+                drawableToUse.setBounds(0, 0, imagesWidth, imagesHeight);
+                taskThatIsFinished.getWrapperForDrawable().setWrappedDrawable(drawableToUse);
             } catch (Exception e) {
-                return "";
+                taskThatIsFinished.getWrapperForDrawable().setWrappedDrawable(deletedDrawable);
             }
+        } else {
+            taskThatIsFinished.getWrapperForDrawable().setWrappedDrawable(deletedDrawable);
         }
-
-        @Override
-        protected void onProgressUpdate(Integer... progress) {
-            if (progress.length > 0 && listenerForCurrentProgress != null) {
-                listenerForCurrentProgress.newCurrentProgress(progress[0], fileDownloadPath);
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String resultFileName) {
-            if (!resultFileName.isEmpty()) {
-                try {
-                    BitmapDrawable drawableToUse = new BitmapDrawable(parentActivity.getResources(), loadBitmapFromCache(resultFileName));
-                    drawableToUse.setBounds(0, 0, imagesWidth, imagesHeight);
-                    wrapperForDrawable.setWrappedDrawable(drawableToUse);
-                } catch (Exception e) {
-                    wrapperForDrawable.setWrappedDrawable(deletedDrawable);
-                }
-            } else {
-                wrapperForDrawable.setWrappedDrawable(deletedDrawable);
-            }
-            downloadOfAFileEnded(this);
-        }
+        downloadOfAFileEnded(taskThatIsFinished);
     }
 
     public interface DownloadFinished {
@@ -273,3 +198,5 @@ public class ImageDownloader {
         void newCurrentProgress(int progressInPercent, String fileLink);
     }
 }
+
+

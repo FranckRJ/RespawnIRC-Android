@@ -135,8 +135,8 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
         isLoadingFirstPage = false;
     }
 
-    public boolean startGetMessages(int timerBeforeStart) {
-        return startGetMessages(timerBeforeStart, false);
+    public void startGetMessages(int timerBeforeStart) {
+        startGetMessages(timerBeforeStart, false);
     }
 
     public boolean startGetMessages(int timerBeforeStart, boolean useBiggerTimeoutTime) {
