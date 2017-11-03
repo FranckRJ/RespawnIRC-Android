@@ -31,7 +31,8 @@
 
         <CheckBoxPreference
             android:key="@string/settingsHideUglyImages"
-            android:title="@string/hideUglyImagesTitle"/>
+            android:title="@string/hideUglyImagesTitle"
+            android:summary="@string/hideUglyImagesSummary"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

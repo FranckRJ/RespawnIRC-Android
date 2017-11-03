@@ -124,6 +124,7 @@
     <string name="never">Jamais</string>
     <string name="enableCardDesignTitle">Affichage avec des cartes</string>
     <string name="hideUglyImagesTitle">Cacher les images nuisibles</string>
+    <string name="hideUglyImagesSummary">(cache une partie des images noelshack)</string>
     <string name="hideUglyImagesMessage">Cacher les images nuisibles</string>
     <string name="showUglyImagesMessage">Afficher les images nuisibles</string>
     <string name="light">Clair</string>
