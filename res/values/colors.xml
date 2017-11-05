@@ -32,7 +32,7 @@
     <color name="colorPrimaryDarkerThemeDark">#141414</color>
     <color name="colorAccentThemeDark">#888888</color>
     <color name="colorQuoteBackgroundThemeDark">#10FFFFFF</color>
-    <color name="altBackgroundColorThemeDark">#2E2E2E</color>
+    <color name="altBackgroundColorThemeDark">#242424</color>
     <color name="linkColorThemeDark">#4DA6FF</color>
     <color name="topicNameColorThemeDark">#EEEEEE</color>
     <color name="colorPseudoUserThemeDark">#80BFFF</color>
