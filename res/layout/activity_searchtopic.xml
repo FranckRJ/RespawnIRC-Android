@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/toolbar_searchtopic"
-            android:background="?attr/themedDarkerBackgroundColor">
+            android:background="?attr/themedDefaultBackgroundColor">
             <Button
                 android:id="@+id/firstpage_button_searchtopic"
                 android:layout_width="wrap_content"
@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/navigation_layout_searchtopic"
             android:orientation="horizontal"
-            android:background="?attr/themedDarkerBackgroundColor"
+            android:background="?attr/themedDefaultBackgroundColor"
             android:gravity="end">
             <RadioButton
                 android:id="@+id/topicmode_radio_searchtopic"

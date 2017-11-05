@@ -53,8 +53,6 @@ public class ThemeManager {
             switch (thisColor) {
                 case COLOR_PRIMARY:
                     return R.color.colorPrimaryThemeDark;
-                case COLOR_PRIMARY_DARK:
-                    return R.color.colorPrimaryDarkerThemeDark;
                 case COLOR_ACCENT:
                     return R.color.colorAccentThemeDark;
                 case DEFAULT_BACKGROUND_COLOR:
@@ -63,17 +61,17 @@ public class ThemeManager {
                     } else {
                         return R.color.defaultBackgroundColorThemeDark;
                     }
+                case WINDOW_BACKGROUND_COLOR:
+                    if (themeUsed == ThemeName.BLACK_THEME) {
+                        return R.color.windowBackgroundColorThemeBlack;
+                    } else {
+                        return R.color.windowBackgroundColorThemeDark;
+                    }
                 case DARKER_BACKGROUND_COLOR:
                     if (themeUsed == ThemeName.BLACK_THEME) {
                         return R.color.darkerBackgroundColorThemeBlack;
                     } else {
                         return R.color.darkerBackgroundColorThemeDark;
-                    }
-                case MORE_DARKER_BACKGROUND_COLOR:
-                    if (themeUsed == ThemeName.BLACK_THEME) {
-                        return R.color.moreDarkerBackgroundColorThemeBlack;
-                    } else {
-                        return R.color.moreDarkerBackgroundColorThemeDark;
                     }
                 case ALT_BACKGROUND_COLOR:
                     if (themeUsed == ThemeName.BLACK_THEME) {
@@ -116,16 +114,14 @@ public class ThemeManager {
             switch (thisColor) {
                 case COLOR_PRIMARY:
                     return R.color.colorPrimaryThemeLight;
-                case COLOR_PRIMARY_DARK:
-                    return R.color.colorPrimaryDarkerThemeLight;
                 case COLOR_ACCENT:
                     return R.color.colorAccentThemeLight;
                 case DEFAULT_BACKGROUND_COLOR:
                     return R.color.defaultBackgroundColorThemeLight;
+                case WINDOW_BACKGROUND_COLOR:
+                    return R.color.windowBackgroundColorThemeLight;
                 case DARKER_BACKGROUND_COLOR:
                     return R.color.darkerBackgroundColorThemeLight;
-                case MORE_DARKER_BACKGROUND_COLOR:
-                    return R.color.moreDarkerBackgroundColorThemeLight;
                 case ALT_BACKGROUND_COLOR:
                     return R.color.altBackgroundColorThemeLight;
                 case DELETED_MESSAGE_BACKGROUND_COLOR:
@@ -210,8 +206,8 @@ public class ThemeManager {
     }
 
     public enum ColorName {
-        COLOR_PRIMARY, COLOR_PRIMARY_DARK, COLOR_ACCENT,
-        DEFAULT_BACKGROUND_COLOR, DARKER_BACKGROUND_COLOR, MORE_DARKER_BACKGROUND_COLOR,
+        COLOR_PRIMARY, COLOR_ACCENT,
+        DEFAULT_BACKGROUND_COLOR, WINDOW_BACKGROUND_COLOR, DARKER_BACKGROUND_COLOR,
         ALT_BACKGROUND_COLOR, DELETED_MESSAGE_BACKGROUND_COLOR, SURVEY_MESSAGE_BACKGROUND_COLOR,
         LINK_COLOR, TOPIC_NAME_COLOR, COLOR_QUOTE_BACKGROUND,
         COLOR_PSEUDO_USER, COLOR_PSEUDO_OTHER_MODE_FORUM, COLOR_PSEUDO_OTHER_MODE_IRC, COLOR_PSEUDO_MODO, COLOR_PSEUDO_ADMIN,

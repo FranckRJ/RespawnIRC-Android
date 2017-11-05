@@ -488,7 +488,7 @@ public class JVCForumListAdapter extends BaseExpandableListAdapter implements Ex
             holder = (ViewHolder) convertView.getTag();
         }
 
-        convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.DARKER_BACKGROUND_COLOR)));
+        convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.WINDOW_BACKGROUND_COLOR)));
         holder.itemOne.setTypeface(null, Typeface.NORMAL);
         holder.itemOne.setPaintFlags(holder.itemOne.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
         holder.itemOne.setText(childTitle);

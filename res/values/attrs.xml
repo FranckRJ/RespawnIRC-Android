@@ -3,7 +3,6 @@
     <attr name="themedOverlayPopupTheme" format="reference"/>
     <attr name="themedDefaultBackgroundColor" format="reference"/>
     <attr name="themedDarkerBackgroundColor" format="reference"/>
-    <attr name="themedMoreDarkerBackgroundColor" format="reference"/>
     <attr name="themedLinkColor" format="reference"/>
     <attr name="themedShadowBottom" format="reference"/>
     <attr name="themedShadowTop" format="reference"/>
