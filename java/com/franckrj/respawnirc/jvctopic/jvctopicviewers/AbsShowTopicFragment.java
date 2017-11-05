@@ -1,6 +1,7 @@
 package com.franckrj.respawnirc.jvctopic.jvctopicviewers;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.ShareActionProvider;
@@ -374,10 +375,19 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         errorBackgroundMessage.setVisibility(View.GONE);
         swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
         if (cardDesignIsEnabled) {
-            int paddingForMsgList = getResources().getDimensionPixelSize(R.dimen.paddingOfMessageListView);
+            int paddingForMsgList = getResources().getDimensionPixelSize(R.dimen.marginOfCards);
+            int dividerSizeForMsgList = paddingForMsgList;
+
+            if (Build.VERSION.SDK_INT < 21) {
+                int cardElevation = getResources().getDimensionPixelSize(R.dimen.elevationOfCards);
+
+                paddingForMsgList -= cardElevation;
+                dividerSizeForMsgList -= (cardElevation * 2);
+            }
+
             jvcMsgList.setPadding(paddingForMsgList, paddingForMsgList, paddingForMsgList, paddingForMsgList);
             jvcMsgList.setDivider(null);
-            jvcMsgList.setDividerHeight(0);
+            jvcMsgList.setDividerHeight(dividerSizeForMsgList);
         } else {
             jvcMsgList.setPadding(0, 0, 0, 2); //pour corriger un bug de smoothscroll
         }

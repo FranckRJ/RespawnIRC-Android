@@ -1,5 +1,6 @@
 package com.franckrj.respawnirc.jvctopic;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
@@ -206,6 +207,12 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
         voteButton.setOnClickListener(voteButtonClickedListener);
         swipeRefresh.setEnabled(false);
         swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
+
+        if (Build.VERSION.SDK_INT < 21) {
+            int newScrollViewPadding = getResources().getDimensionPixelSize(R.dimen.marginOfCards) - getResources().getDimensionPixelSize(R.dimen.elevationOfCards);
+            View scrollView = findViewById(R.id.scrollview_showsurvey);
+            scrollView.setPadding(newScrollViewPadding, newScrollViewPadding, newScrollViewPadding, newScrollViewPadding);
+        }
 
         if (savedInstanceState != null) {
             mainCardView.setVisibility(savedInstanceState.getBoolean(SAVE_MAIN_CARD_IS_VISIBLE, false) ? View.VISIBLE : View.GONE);
