@@ -28,8 +28,10 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
     public static final String EXTRA_COOKIES = "com.franckrj.respawnirc.showsurveyactivity.EXTRA_COOKIES";
 
     private static final String SAVE_VOTE_BUTTON_IS_VISIBLE = "saveVoteButtonIsVisible";
+    private static final String SAVE_MAIN_CARD_IS_VISIBLE = "saveMainCardIsVisible";
     private static final String SAVE_CONTENT_FOR_SURVEY = "saveContentForSurvey";
 
+    private View mainCardView = null;
     private TextView contentText = null;
     private Button voteButton = null;
     private SwipeRefreshLayout swipeRefresh = null;
@@ -68,6 +70,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
         @Override
         public void onRequestIsFinished(String reqResult) {
             swipeRefresh.setRefreshing(false);
+            mainCardView.setVisibility(View.VISIBLE);
 
             if (listOfReplysWithInfos.isEmpty()) {
                 voteButton.setVisibility(View.GONE);
@@ -193,16 +196,19 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
 
         ActionBar myActionBar = getSupportActionBar();
 
+        mainCardView = findViewById(R.id.card_showsurvey);
         contentText = findViewById(R.id.content_showsurvey);
         voteButton = findViewById(R.id.button_vote_showsurvey);
         swipeRefresh = findViewById(R.id.swiperefresh_showsurvey);
 
+        mainCardView.setVisibility(View.GONE);
         voteButton.setVisibility(View.GONE);
         voteButton.setOnClickListener(voteButtonClickedListener);
         swipeRefresh.setEnabled(false);
         swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
 
         if (savedInstanceState != null) {
+            mainCardView.setVisibility(savedInstanceState.getBoolean(SAVE_MAIN_CARD_IS_VISIBLE, false) ? View.VISIBLE : View.GONE);
             voteButton.setVisibility(savedInstanceState.getBoolean(SAVE_VOTE_BUTTON_IS_VISIBLE, false) ? View.VISIBLE : View.GONE);
             contentForSurvey = savedInstanceState.getString(SAVE_CONTENT_FOR_SURVEY, "");
             contentText.setText(Undeprecator.htmlFromHtml(contentForSurvey));
@@ -238,6 +244,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putBoolean(SAVE_MAIN_CARD_IS_VISIBLE, mainCardView.getVisibility() == View.VISIBLE);
         outState.putBoolean(SAVE_VOTE_BUTTON_IS_VISIBLE, voteButton.getVisibility() == View.VISIBLE);
         outState.putString(SAVE_CONTENT_FOR_SURVEY, contentForSurvey);
     }
