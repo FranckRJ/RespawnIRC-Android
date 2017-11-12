@@ -126,7 +126,10 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers implement
             }
         } else if (key.equals(getString(R.string.settingsThemeUsed))) {
             ThemeManager.updateThemeUsed();
-            getActivity().recreate();
+
+            if (getActivity() != null) {
+                getActivity().recreate();
+            }
         }
 
         updatePrefSummary(pref);

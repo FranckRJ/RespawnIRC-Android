@@ -79,7 +79,7 @@ public class DrawableWrapper extends Drawable implements Drawable.Callback {
 
     @Override
     public void jumpToCurrentState() {
-        DrawableCompat.jumpToCurrentState(mDrawable);
+        mDrawable.jumpToCurrentState();
     }
 
     @NonNull

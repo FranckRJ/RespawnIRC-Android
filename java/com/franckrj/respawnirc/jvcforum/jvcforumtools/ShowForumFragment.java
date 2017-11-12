@@ -1,6 +1,7 @@
 package com.franckrj.respawnirc.jvcforum.jvcforumtools;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -212,7 +213,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View mainView = inflater.inflate(R.layout.fragment_showforum, container, false);
 
@@ -315,7 +316,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(SAVE_ALL_TOPICS_SHOWED, adapterForForum.getAllItems());
         outState.putBoolean(SAVE_TOPICS_ARE_FROM_IGNORED_PSEUDOS, allTopicsShowedAreFromIgnoredPseudos);
