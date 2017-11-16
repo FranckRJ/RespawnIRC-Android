@@ -129,12 +129,12 @@
     <string name="showUglyImagesMessage">Afficher les images nuisibles</string>
     <string name="light">Clair</string>
     <string name="dark">Sombre</string>
-    <string name="theme">Thème</string>
+    <string name="themeAndColors">Thème / Couleurs</string>
     <string name="black">Noir</string>
     <string name="messageStyle">Apparence et contenu des messages</string>
     <string name="settingsModeForumTitle">Mode forum</string>
     <string name="settingsModeIRCTitle">Mode IRC</string>
-    <string name="imageLink">Images / Liens</string>
+    <string name="imageAndLink">Images / Liens</string>
     <string name="behaviour">Comportement</string>
     <string name="topic">Sujet</string>
     <string name="author">Auteur</string>
@@ -225,6 +225,9 @@
     <string name="jvcLinksOnly">Les liens JVC uniquement</string>
     <string name="noLinks">Aucun lien</string>
     <string name="header">entête</string>
+    <string name="lightThemeColors">Couleurs du thème clair</string>
+    <string name="primaryColor">Couleur principale</string>
+    <string name="theme">Thème</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

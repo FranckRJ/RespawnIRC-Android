@@ -4,8 +4,8 @@
         <item name="android:windowAnimationStyle">@style/AppActivityAnimation</item>
         <item name="themedShadowBottom">@drawable/shadow_bottom_light</item>
         <item name="themedShadowTop">@drawable/shadow_top_light</item>
-        <item name="colorPrimary">@color/colorPrimaryThemeLight</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDarkerThemeLight</item>
+        <item name="colorPrimary">@color/colorPrimaryIndigo</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerIndigo</item>
         <item name="colorAccent">@color/colorAccentThemeLight</item>
         <item name="android:windowBackground">@color/windowBackgroundColorThemeLight</item>
         <item name="themedOverlayPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
@@ -91,10 +91,40 @@
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/splashscreen</item>
         <!-- uniquement pour la couleur de la statusbar, parce que flemme de faire un theme special v21 etc -->
-        <item name="colorPrimaryDark">@color/splashBackgroundColorDarker</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerJVC</item>
     </style>
 
     <style name="ColorAccentIsLinkColor">
         <item name="colorAccent">?attr/themedLinkColor</item>
+    </style>
+
+    <style name="PrimaryColorIsRed">
+        <item name="colorPrimary">@color/colorPrimaryRed</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerRed</item>
+    </style>
+
+    <style name="PrimaryColorIsPink">
+        <item name="colorPrimary">@color/colorPrimaryPink</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerPink</item>
+    </style>
+
+    <style name="PrimaryColorIsPurple">
+        <item name="colorPrimary">@color/colorPrimaryPurple</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerPurple</item>
+    </style>
+
+    <style name="PrimaryColorIsDeepPurple">
+        <item name="colorPrimary">@color/colorPrimaryDeepPurple</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerDeepPurple</item>
+    </style>
+
+    <style name="PrimaryColorIsIndigo">
+        <item name="colorPrimary">@color/colorPrimaryIndigo</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerIndigo</item>
+    </style>
+
+    <style name="PrimaryColorIsJVC">
+        <item name="colorPrimary">@color/colorPrimaryJVC</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerJVC</item>
     </style>
 </resources>

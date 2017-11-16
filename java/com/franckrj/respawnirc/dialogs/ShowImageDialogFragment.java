@@ -71,7 +71,7 @@ public class ShowImageDialogFragment extends DialogFragment {
             dismiss();
         } else {
             Drawable deletedDrawable;
-            Resources res = getActivity().getResources();
+            Resources res = getResources();
             DisplayMetrics metrics = new DisplayMetrics();
 
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);

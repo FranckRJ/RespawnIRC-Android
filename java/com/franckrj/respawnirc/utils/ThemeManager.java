@@ -1,13 +1,23 @@
 package com.franckrj.respawnirc.utils;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 
 import com.franckrj.respawnirc.R;
 
 public class ThemeManager {
+    private static final int COLOR_ID_RED = 0;
+    private static final int COLOR_ID_PINK = 1;
+    private static final int COLOR_ID_PURPLE = 2;
+    private static final int COLOR_ID_DEEPPURPLE = 3;
+    private static final int COLOR_ID_INDIGO = 4;
+    private static final int COLOR_ID_JVC = 5;
+
     private static ThemeName themeUsed = ThemeName.LIGHT_THEME;
+    private static int colorPrimaryIdUsed = COLOR_ID_INDIGO;
+    private static @ColorRes int realColorPrimaryResIdUsed = 0;
 
     public static void updateThemeUsed() {
         String themeStringId = PrefsManager.getString(PrefsManager.StringPref.Names.THEME_USED);
@@ -25,6 +35,22 @@ public class ThemeManager {
         }
     }
 
+    public static void updatePrimaryColorUsed(Resources res) {
+        int[] arrayOfColors = res.getIntArray(R.array.choicesForPrimaryColor);
+        int currentPrimaryColor = PrefsManager.getInt(PrefsManager.IntPref.Names.PRIMARY_COLOR_OF_LIGHT_THEME);
+
+        realColorPrimaryResIdUsed = 0;
+
+        for (int i = 0; i < arrayOfColors.length; ++i) {
+            if (arrayOfColors[i] == currentPrimaryColor) {
+                colorPrimaryIdUsed = i;
+                return;
+            }
+        }
+
+        colorPrimaryIdUsed = COLOR_ID_INDIGO;
+    }
+
     public static void changeActivityTheme(Activity thisActivity) {
         switch (themeUsed) {
             case DARK_THEME:
@@ -36,6 +62,41 @@ public class ThemeManager {
             default:
                 thisActivity.setTheme(R.style.AppTheme_Light_Real);
                 break;
+        }
+    }
+
+    public static void changeActivityPrimaryColorIfNeeded(Activity thisActivity) {
+        if (themeUsed == ThemeName.LIGHT_THEME) {
+            switch (colorPrimaryIdUsed) {
+                case COLOR_ID_RED:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsRed, true);
+                    realColorPrimaryResIdUsed = R.color.colorPrimaryRed;
+                    break;
+                case COLOR_ID_PINK:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsPink, true);
+                    realColorPrimaryResIdUsed = R.color.colorPrimaryPink;
+                    break;
+                case COLOR_ID_PURPLE:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsPurple, true);
+                    realColorPrimaryResIdUsed = R.color.colorPrimaryPurple;
+                    break;
+                case COLOR_ID_DEEPPURPLE:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsDeepPurple, true);
+                    realColorPrimaryResIdUsed = R.color.colorPrimaryDeepPurple;
+                    break;
+                case COLOR_ID_INDIGO:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsIndigo, true);
+                    realColorPrimaryResIdUsed = R.color.colorPrimaryIndigo;
+                    break;
+                case COLOR_ID_JVC:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsJVC, true);
+                    realColorPrimaryResIdUsed = R.color.colorPrimaryJVC;
+                    break;
+                default:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsIndigo, true);
+                    realColorPrimaryResIdUsed = R.color.colorPrimaryIndigo;
+                    break;
+            }
         }
     }
 
@@ -113,7 +174,11 @@ public class ThemeManager {
         } else {
             switch (thisColor) {
                 case COLOR_PRIMARY:
-                    return R.color.colorPrimaryThemeLight;
+                    if (realColorPrimaryResIdUsed != 0) {
+                        return realColorPrimaryResIdUsed;
+                    } else {
+                        return R.color.colorPrimaryIndigo;
+                    }
                 case COLOR_ACCENT:
                     return R.color.colorAccentThemeLight;
                 case DEFAULT_BACKGROUND_COLOR:
@@ -149,7 +214,7 @@ public class ThemeManager {
                 case NAVIGATION_ICON_COLOR:
                     return R.color.navigationIconColorThemeLight;
                 default:
-                    return R.color.colorPrimaryThemeLight;
+                    return R.color.colorPrimaryIndigo;
             }
         }
     }

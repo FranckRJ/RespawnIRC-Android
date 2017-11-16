@@ -17,24 +17,24 @@ public class PrefsManager {
     private static SimpleArrayMap<StringPref.Names, StringPref> listOfStringPrefs = new SimpleArrayMap<>();
     private static SimpleArrayMap<LongPref.Names, LongPref> listOfLongPrefs = new SimpleArrayMap<>();
 
-    private static void addBoolPref(BoolPref.Names nameOfPref, String prefStringValue, boolean prefDefautlValue) {
-        listOfBoolPrefs.put(nameOfPref, new BoolPref(prefStringValue, prefDefautlValue));
+    private static void addBoolPref(BoolPref.Names nameOfPref, String prefStringValue, boolean prefDefaultValue) {
+        listOfBoolPrefs.put(nameOfPref, new BoolPref(prefStringValue, prefDefaultValue));
     }
 
-    private static void addIntPref(IntPref.Names nameOfPref, String prefStringValue, int prefDefautlValue) {
-        listOfIntPrefs.put(nameOfPref, new IntPref(prefStringValue, prefDefautlValue));
+    private static void addIntPref(IntPref.Names nameOfPref, String prefStringValue, int prefDefaultValue) {
+        listOfIntPrefs.put(nameOfPref, new IntPref(prefStringValue, prefDefaultValue));
     }
 
-    private static void addStringPref(StringPref.Names nameOfPref, String prefStringValue, String prefDefautlValue) {
-        listOfStringPrefs.put(nameOfPref, new StringPref(prefStringValue, prefDefautlValue));
+    private static void addStringPref(StringPref.Names nameOfPref, String prefStringValue, String prefDefaultValue) {
+        listOfStringPrefs.put(nameOfPref, new StringPref(prefStringValue, prefDefaultValue));
     }
 
-    private static void addStringPref(StringPref.Names nameOfPref, String prefStringValue, String prefDefautlValue, int newMinVal, int newMaxVal) {
-        listOfStringPrefs.put(nameOfPref, new StringPref(prefStringValue, prefDefautlValue, newMinVal, newMaxVal));
+    private static void addStringPref(StringPref.Names nameOfPref, String prefStringValue, String prefDefaultValue, int newMinVal, int newMaxVal) {
+        listOfStringPrefs.put(nameOfPref, new StringPref(prefStringValue, prefDefaultValue, newMinVal, newMaxVal));
     }
 
-    private static void addLongPref(LongPref.Names nameOfPref, String prefStringValue, long prefDefautlValue) {
-        listOfLongPrefs.put(nameOfPref, new LongPref(prefStringValue, prefDefautlValue));
+    private static void addLongPref(LongPref.Names nameOfPref, String prefStringValue, long prefDefaultValue) {
+        listOfLongPrefs.put(nameOfPref, new LongPref(prefStringValue, prefDefaultValue));
     }
 
     @SuppressLint("CommitPrefEdits")
@@ -99,6 +99,8 @@ public class PrefsManager {
         addBoolPref(BoolPref.Names.COLOR_PSEUDO_OF_USER_IN_MESSAGE, currentContext.getString(R.string.settingsColorPseudoOfUserInMessage), true);
         addBoolPref(BoolPref.Names.BACK_IS_OPEN_DRAWER, currentContext.getString(R.string.settingsBackIsOpenDrawer), false);
         addBoolPref(BoolPref.Names.SAVE_LAST_ROW_USED_INSERTSTUFF, currentContext.getString(R.string.settingsSaveLastRowUsedInsertstuff), true);
+
+        addIntPref(IntPref.Names.PRIMARY_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsPrimaryColorOfLightTheme), 0);
 
         addStringPref(StringPref.Names.MAX_NUMBER_OF_OVERLY_QUOTE, currentContext.getString(R.string.settingsMaxNumberOfOverlyQuote), "2", 0, 15);
         addStringPref(StringPref.Names.SHOW_AVATAR_MODE_FORUM, currentContext.getString(R.string.settingsShowAvatarModeForum), String.valueOf(ShowImageType.ALWAYS));
@@ -297,7 +299,8 @@ public class PrefsManager {
             LAST_ACTIVITY_VIEWED,
             CURRENT_TOPIC_MODE,
             FORUM_FAV_ARRAY_SIZE, TOPIC_FAV_ARRAY_SIZE,
-            LAST_ROW_SELECTED_INSERTSTUFF
+            LAST_ROW_SELECTED_INSERTSTUFF,
+            PRIMARY_COLOR_OF_LIGHT_THEME
         }
     }
 

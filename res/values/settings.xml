@@ -49,4 +49,5 @@
     <string name="settingsMiniNoelshackWidth" translatable="false">settings.miniNoelshackWidth</string>
     <string name="settingsSaveLastRowUsedInsertstuff" translatable="false">settings.saveLastRowUsedInsertstuff</string>
     <string name="settingsLinkTypeForInternalBrowser" translatable="false">settings.linkTypeForInternalBrowser</string>
+    <string name="settingsPrimaryColorOfLightTheme" translatable="false">settings.primaryColorOfLightTheme</string>
 </resources>
