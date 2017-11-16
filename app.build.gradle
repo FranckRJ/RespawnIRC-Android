@@ -7,8 +7,8 @@ android {
         applicationId "com.franckrj.respawnirc"
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 37
-        versionName "1.8.3"
+        versionCode 38
+        versionName "1.9b1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -30,4 +30,5 @@ dependencies {
     implementation 'com.android.support:design:27.0.1'
     implementation 'com.android.support:recyclerview-v7:27.0.1'
     implementation 'com.takisoft.fix:preference-v7:27.0.1.0'
+    implementation 'com.takisoft.fix:preference-v7-colorpicker:27.0.1.0'
 }
