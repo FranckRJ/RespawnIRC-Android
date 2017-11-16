@@ -167,20 +167,24 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers implement
 
     /* Le but de la clef temporaire est de ne pas sauvegarder l'option par défaut si c'est celle ci
      * qui est retourné par "PrefsManager.getX()". La clef temporaire n'est pas vide pour empêcher
-     * des possibles crash (des histoires de requireKey() etc). */
+     * des possibles crash (des histoires de requireKey() etc). Elle est unique par type de pref pour
+     * ne pas causer de crash lors de l'assignation d'un string à ce qui était précédement un bool. */
     private void updatePrefDefaultValue(Preference pref) {
         String realPrefKey = pref.getKey();
-        pref.setKey("tmpKey");
         if (pref instanceof CheckBoxPreference) {
+            pref.setKey("tmpKeyBool");
             CheckBoxPreference checkBoxPref = (CheckBoxPreference) pref;
             checkBoxPref.setChecked(PrefsManager.getBool(realPrefKey));
         } else if (pref instanceof SwitchPreferenceCompat) {
+            pref.setKey("tmpKeyBool");
             SwitchPreferenceCompat switchPref = (SwitchPreferenceCompat) pref;
             switchPref.setChecked(PrefsManager.getBool(realPrefKey));
         } else if (pref instanceof EditTextPreference) {
+            pref.setKey("tmpKeyString");
             EditTextPreference editTextPref = (EditTextPreference) pref;
             editTextPref.setText(PrefsManager.getString(realPrefKey));
         } else if (pref instanceof ListPreference) {
+            pref.setKey("tmpKeyString");
             ListPreference listPref = (ListPreference) pref;
             listPref.setValue(PrefsManager.getString(realPrefKey));
         }
