@@ -13,7 +13,22 @@ public class ThemeManager {
     private static final int COLOR_ID_PURPLE = 2;
     private static final int COLOR_ID_DEEPPURPLE = 3;
     private static final int COLOR_ID_INDIGO = 4;
-    private static final int COLOR_ID_JVC = 5;
+    private static final int COLOR_ID_BLUE = 5;
+    private static final int COLOR_ID_LIGHTBLUE = 6;
+    private static final int COLOR_ID_CYAN = 7;
+    private static final int COLOR_ID_TEAL = 8;
+    private static final int COLOR_ID_GREEN = 9;
+    private static final int COLOR_ID_LIGHTGREEN = 10;
+    private static final int COLOR_ID_LIME = 11;
+    private static final int COLOR_ID_YELLOW = 12;
+    private static final int COLOR_ID_AMBER = 13;
+    private static final int COLOR_ID_ORANGE = 14;
+    private static final int COLOR_ID_DEEPORANGE = 15;
+    private static final int COLOR_ID_BROWN = 16;
+    private static final int COLOR_ID_GREY = 17;
+    private static final int COLOR_ID_BLUEGREY = 18;
+    private static final int COLOR_ID_JVC = 19;
+    private static final int COLOR_ID_BLACK = 20;
 
     private static ThemeName themeUsed = ThemeName.LIGHT_THEME;
     private static int colorPrimaryIdUsed = COLOR_ID_INDIGO;
@@ -88,9 +103,69 @@ public class ThemeManager {
                     thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsIndigo, true);
                     realColorPrimaryResIdUsed = R.color.colorPrimaryIndigo;
                     break;
+                case COLOR_ID_BLUE:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsBlue, true);
+                    realColorPrimaryResIdUsed = R.color.colorPrimaryBlue;
+                    break;
+                case COLOR_ID_LIGHTBLUE:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsLightBlue, true);
+                    realColorPrimaryResIdUsed = R.color.colorPrimaryLightBlue;
+                    break;
+                case COLOR_ID_CYAN:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsCyan, true);
+                    realColorPrimaryResIdUsed = R.color.colorPrimaryCyan;
+                    break;
+                case COLOR_ID_TEAL:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsTeal, true);
+                    realColorPrimaryResIdUsed = R.color.colorPrimaryTeal;
+                    break;
+                case COLOR_ID_GREEN:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsGreen, true);
+                    realColorPrimaryResIdUsed = R.color.colorPrimaryGreen;
+                    break;
+                case COLOR_ID_LIGHTGREEN:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsLightGreen, true);
+                    realColorPrimaryResIdUsed = R.color.colorPrimaryLightGreen;
+                    break;
+                case COLOR_ID_LIME:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsLime, true);
+                    realColorPrimaryResIdUsed = R.color.colorPrimaryLime;
+                    break;
+                case COLOR_ID_YELLOW:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsYellow, true);
+                    realColorPrimaryResIdUsed = R.color.colorPrimaryYellow;
+                    break;
+                case COLOR_ID_AMBER:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsAmber, true);
+                    realColorPrimaryResIdUsed = R.color.colorPrimaryAmber;
+                    break;
+                case COLOR_ID_ORANGE:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsOrange, true);
+                    realColorPrimaryResIdUsed = R.color.colorPrimaryOrange;
+                    break;
+                case COLOR_ID_DEEPORANGE:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsDeepOrange, true);
+                    realColorPrimaryResIdUsed = R.color.colorPrimaryDeepOrange;
+                    break;
+                case COLOR_ID_BROWN:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsBrown, true);
+                    realColorPrimaryResIdUsed = R.color.colorPrimaryBrown;
+                    break;
+                case COLOR_ID_GREY:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsGrey, true);
+                    realColorPrimaryResIdUsed = R.color.colorPrimaryGrey;
+                    break;
+                case COLOR_ID_BLUEGREY:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsBlueGrey, true);
+                    realColorPrimaryResIdUsed = R.color.colorPrimaryBlueGrey;
+                    break;
                 case COLOR_ID_JVC:
                     thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsJVC, true);
                     realColorPrimaryResIdUsed = R.color.colorPrimaryJVC;
+                    break;
+                case COLOR_ID_BLACK:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsBlack, true);
+                    realColorPrimaryResIdUsed = R.color.colorPrimaryBlack;
                     break;
                 default:
                     thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsIndigo, true);

@@ -123,8 +123,83 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerIndigo</item>
     </style>
 
+    <style name="PrimaryColorIsBlue">
+        <item name="colorPrimary">@color/colorPrimaryBlue</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerBlue</item>
+    </style>
+
+    <style name="PrimaryColorIsLightBlue">
+        <item name="colorPrimary">@color/colorPrimaryLightBlue</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerLightBlue</item>
+    </style>
+
+    <style name="PrimaryColorIsCyan">
+        <item name="colorPrimary">@color/colorPrimaryCyan</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerCyan</item>
+    </style>
+
+    <style name="PrimaryColorIsTeal">
+        <item name="colorPrimary">@color/colorPrimaryTeal</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerTeal</item>
+    </style>
+
+    <style name="PrimaryColorIsGreen">
+        <item name="colorPrimary">@color/colorPrimaryGreen</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerGreen</item>
+    </style>
+
+    <style name="PrimaryColorIsLightGreen">
+        <item name="colorPrimary">@color/colorPrimaryLightGreen</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerLightGreen</item>
+    </style>
+
+    <style name="PrimaryColorIsLime">
+        <item name="colorPrimary">@color/colorPrimaryLime</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerLime</item>
+    </style>
+
+    <style name="PrimaryColorIsYellow">
+        <item name="colorPrimary">@color/colorPrimaryYellow</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerYellow</item>
+    </style>
+
+    <style name="PrimaryColorIsAmber">
+        <item name="colorPrimary">@color/colorPrimaryAmber</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerAmber</item>
+    </style>
+
+    <style name="PrimaryColorIsOrange">
+        <item name="colorPrimary">@color/colorPrimaryOrange</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerOrange</item>
+    </style>
+
+    <style name="PrimaryColorIsDeepOrange">
+        <item name="colorPrimary">@color/colorPrimaryDeepOrange</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerDeepOrange</item>
+    </style>
+
+    <style name="PrimaryColorIsBrown">
+        <item name="colorPrimary">@color/colorPrimaryBrown</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerBrown</item>
+    </style>
+
+    <style name="PrimaryColorIsGrey">
+        <item name="colorPrimary">@color/colorPrimaryGrey</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerGrey</item>
+    </style>
+
+    <style name="PrimaryColorIsBlueGrey">
+        <item name="colorPrimary">@color/colorPrimaryBlueGrey</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerBlueGrey</item>
+    </style>
+
     <style name="PrimaryColorIsJVC">
         <item name="colorPrimary">@color/colorPrimaryJVC</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerJVC</item>
+    </style>
+
+    <style name="PrimaryColorIsBlack">
+        <item name="colorPrimary">@color/colorPrimaryBlack</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerBlack</item>
     </style>
 </resources>

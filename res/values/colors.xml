@@ -63,8 +63,38 @@
     <color name="colorPrimaryDarkerDeepPurple">#512DA8</color>
     <color name="colorPrimaryIndigo">#3F51B5</color>
     <color name="colorPrimaryDarkerIndigo">#303F9F</color>
+    <color name="colorPrimaryBlue">#2196F3</color>
+    <color name="colorPrimaryDarkerBlue">#1976D2</color>
+    <color name="colorPrimaryLightBlue">#03A9F4</color>
+    <color name="colorPrimaryDarkerLightBlue">#0288D1</color>
+    <color name="colorPrimaryCyan">#00BCD4</color>
+    <color name="colorPrimaryDarkerCyan">#0097A7</color>
+    <color name="colorPrimaryTeal">#009688</color>
+    <color name="colorPrimaryDarkerTeal">#00796B</color>
+    <color name="colorPrimaryGreen">#4CAF50</color>
+    <color name="colorPrimaryDarkerGreen">#388E3C</color>
+    <color name="colorPrimaryLightGreen">#8BC34A</color>
+    <color name="colorPrimaryDarkerLightGreen">#689F38</color>
+    <color name="colorPrimaryLime">#CDDC39</color>
+    <color name="colorPrimaryDarkerLime">#AFB42B</color>
+    <color name="colorPrimaryYellow">#FFEB3B</color>
+    <color name="colorPrimaryDarkerYellow">#FBC02D</color>
+    <color name="colorPrimaryAmber">#FFC107</color>
+    <color name="colorPrimaryDarkerAmber">#FFA000</color>
+    <color name="colorPrimaryOrange">#FF9800</color>
+    <color name="colorPrimaryDarkerOrange">#F57C00</color>
+    <color name="colorPrimaryDeepOrange">#FF5722</color>
+    <color name="colorPrimaryDarkerDeepOrange">#E64A19</color>
+    <color name="colorPrimaryBrown">#795548</color>
+    <color name="colorPrimaryDarkerBrown">#5D4037</color>
+    <color name="colorPrimaryGrey">#9E9E9E</color>
+    <color name="colorPrimaryDarkerGrey">#616161</color>
+    <color name="colorPrimaryBlueGrey">#607D8B</color>
+    <color name="colorPrimaryDarkerBlueGrey">#455A64</color>
     <color name="colorPrimaryJVC">#002F46</color>
     <color name="colorPrimaryDarkerJVC">#002233</color>
+    <color name="colorPrimaryBlack">#000000</color>
+    <color name="colorPrimaryDarkerBlack">#000000</color>
 
     <integer-array name="choicesForPrimaryColor">
         <item>@color/colorPrimaryRed</item>
@@ -72,6 +102,21 @@
         <item>@color/colorPrimaryPurple</item>
         <item>@color/colorPrimaryDeepPurple</item>
         <item>@color/colorPrimaryIndigo</item>
+        <item>@color/colorPrimaryBlue</item>
+        <item>@color/colorPrimaryLightBlue</item>
+        <item>@color/colorPrimaryCyan</item>
+        <item>@color/colorPrimaryTeal</item>
+        <item>@color/colorPrimaryGreen</item>
+        <item>@color/colorPrimaryLightGreen</item>
+        <item>@color/colorPrimaryLime</item>
+        <item>@color/colorPrimaryYellow</item>
+        <item>@color/colorPrimaryAmber</item>
+        <item>@color/colorPrimaryOrange</item>
+        <item>@color/colorPrimaryDeepOrange</item>
+        <item>@color/colorPrimaryBrown</item>
+        <item>@color/colorPrimaryGrey</item>
+        <item>@color/colorPrimaryBlueGrey</item>
         <item>@color/colorPrimaryJVC</item>
+        <item>@color/colorPrimaryBlack</item>
     </integer-array>
 </resources>
