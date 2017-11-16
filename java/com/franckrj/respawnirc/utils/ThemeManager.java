@@ -243,6 +243,8 @@ public class ThemeManager {
                     return R.color.headerTextColorThemeDark;
                 case NAVIGATION_ICON_COLOR:
                     return R.color.navigationIconColorThemeDark;
+                case SELECTED_STICKER_TYPE_COLOR:
+                    return R.color.selectedStickerTypeColorThemeDark;
                 default:
                     return R.color.colorPrimaryThemeDark;
             }
@@ -288,6 +290,8 @@ public class ThemeManager {
                     return R.color.headerTextColorThemeLight;
                 case NAVIGATION_ICON_COLOR:
                     return R.color.navigationIconColorThemeLight;
+                case SELECTED_STICKER_TYPE_COLOR:
+                    return R.color.selectedStickerTypeColorThemeLight;
                 default:
                     return R.color.colorPrimaryIndigo;
             }
@@ -351,7 +355,8 @@ public class ThemeManager {
         ALT_BACKGROUND_COLOR, DELETED_MESSAGE_BACKGROUND_COLOR, SURVEY_MESSAGE_BACKGROUND_COLOR,
         LINK_COLOR, TOPIC_NAME_COLOR, COLOR_QUOTE_BACKGROUND,
         COLOR_PSEUDO_USER, COLOR_PSEUDO_OTHER_MODE_FORUM, COLOR_PSEUDO_OTHER_MODE_IRC, COLOR_PSEUDO_MODO, COLOR_PSEUDO_ADMIN,
-        HEADER_TEXT_COLOR, NAVIGATION_ICON_COLOR
+        HEADER_TEXT_COLOR, NAVIGATION_ICON_COLOR,
+        SELECTED_STICKER_TYPE_COLOR
     }
 
     public enum DrawableName {

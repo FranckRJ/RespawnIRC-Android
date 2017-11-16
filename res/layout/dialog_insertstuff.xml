@@ -22,7 +22,7 @@
         android:layout_toStartOf="@+id/list_scrollview_insertstuff"
         android:layout_width="2dp"
         android:layout_height="match_parent"
-        android:background="?attr/themedDarkerBackgroundColor"/>
+        android:background="?attr/themedSelectedStickerTypeColor"/>
     <ScrollView
         android:id="@+id/list_scrollview_insertstuff"
         android:layout_width="60dp"

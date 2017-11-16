@@ -61,7 +61,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
 
     private void selectThisRow(int rowToUse) {
         listOfCategoryButtons.get(oldRowNumber).setBackgroundColor(Undeprecator.resourcesGetColor(getResources(), android.R.color.transparent));
-        listOfCategoryButtons.get(rowToUse).setBackgroundColor(Undeprecator.resourcesGetColor(getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.DARKER_BACKGROUND_COLOR)));
+        listOfCategoryButtons.get(rowToUse).setBackgroundColor(Undeprecator.resourcesGetColor(getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.SELECTED_STICKER_TYPE_COLOR)));
         initializeSpanForTextViewIfNeeded(jvcImageGetter, rowToUse);
         mainTextView.setText(replaceUrlSpans(listOfSpanForTextView[rowToUse]));
         scrollViewOfButtons.requestChildFocus(listOfCategoryButtons.get(rowToUse), listOfCategoryButtons.get(rowToUse));
