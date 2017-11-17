@@ -6,7 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.ColorRes;
+import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.v7.widget.CardView;
 import android.text.Layout;
@@ -322,10 +322,10 @@ public class JVCTopicAdapter extends BaseAdapter {
 
         QuoteSpan[] quoteSpanArray = spannable.getSpans(0, spannable.length(), QuoteSpan.class);
         for (QuoteSpan quoteSpan : quoteSpanArray) {
-            Utils.replaceSpanByAnotherSpan(spannable, quoteSpan, new CustomQuoteSpan(Undeprecator.resourcesGetColor(parentActivity.getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_QUOTE_BACKGROUND)),
-                    Undeprecator.resourcesGetColor(parentActivity.getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PRIMARY)),
-                    parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripSize),
-                    parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripGap)));
+            Utils.replaceSpanByAnotherSpan(spannable, quoteSpan, new CustomQuoteSpan(ThemeManager.getColorInt(ThemeManager.ColorName.COLOR_QUOTE_BACKGROUND, parentActivity.getResources()),
+                                                                                     ThemeManager.getColorInt(ThemeManager.ColorName.COLOR_PRIMARY, parentActivity.getResources()),
+                                                                                     parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripSize),
+                                                                                     parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripGap)));
         }
 
         URLSpan[] urlSpanArray = spannable.getSpans(0, spannable.length(), URLSpan.class);
@@ -386,12 +386,12 @@ public class JVCTopicAdapter extends BaseAdapter {
         }
     }
 
-    private void setColorBackgroundOfThisItem(View backrgoundView, @ColorRes int colorId) {
+    private void setColorBackgroundOfThisItem(View backrgoundView, @ColorInt int colorValue) {
         if (backrgoundView instanceof CardView) {
             CardView currentBackgroundView = (CardView) backrgoundView;
-            currentBackgroundView.setCardBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), colorId));
+            currentBackgroundView.setCardBackgroundColor(colorValue);
         } else {
-            backrgoundView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), colorId));
+            backrgoundView.setBackgroundColor(colorValue);
         }
     }
 
@@ -440,7 +440,7 @@ public class JVCTopicAdapter extends BaseAdapter {
             viewHolder.infoLine.setText(Undeprecator.htmlFromHtml(advertiseForSurveyToShow));
             convertView.setOnClickListener(onSurveyClickListener);
             viewHolder.infoLine.setOnClickListener(onSurveyClickListener);
-            setColorBackgroundOfThisItem(convertView, ThemeManager.getColorRes(ThemeManager.ColorName.SURVEY_MESSAGE_BACKGROUND_COLOR));
+            setColorBackgroundOfThisItem(convertView, ThemeManager.getColorInt(ThemeManager.ColorName.SURVEY_MESSAGE_BACKGROUND_COLOR, parentActivity.getResources()));
         } else {
             final int realPosition = position - (showSurvey ? 1 : 0);
             final ContentHolder currentContent = listOfContentForMessages.get(realPosition);
@@ -510,11 +510,11 @@ public class JVCTopicAdapter extends BaseAdapter {
             }
 
             if (colorDeletedMessages && currentContent.messageIsDeleted) {
-                setColorBackgroundOfThisItem(convertView, ThemeManager.getColorRes(ThemeManager.ColorName.DELETED_MESSAGE_BACKGROUND_COLOR));
+                setColorBackgroundOfThisItem(convertView, ThemeManager.getColorInt(ThemeManager.ColorName.DELETED_MESSAGE_BACKGROUND_COLOR, parentActivity.getResources()));
             } else if (realPosition % 2 == 0 || !alternateBackgroundColor) {
-                setColorBackgroundOfThisItem(convertView, ThemeManager.getColorRes(ThemeManager.ColorName.DEFAULT_BACKGROUND_COLOR));
+                setColorBackgroundOfThisItem(convertView, ThemeManager.getColorInt(ThemeManager.ColorName.DEFAULT_BACKGROUND_COLOR, parentActivity.getResources()));
             } else {
-                setColorBackgroundOfThisItem(convertView, ThemeManager.getColorRes(ThemeManager.ColorName.ALT_BACKGROUND_COLOR));
+                setColorBackgroundOfThisItem(convertView, ThemeManager.getColorInt(ThemeManager.ColorName.ALT_BACKGROUND_COLOR, parentActivity.getResources()));
             }
         }
 

@@ -161,10 +161,10 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
     protected void initializeSettings() {
         super.initializeSettings();
         currentSettings.firstLineFormat = "[<%DATE_COLOR_START%><%DATE_TIME%><%DATE_COLOR_END%>] &lt;<%PSEUDO_COLOR_START%><%PSEUDO_PSEUDO%><%PSEUDO_COLOR_END%>&gt;";
-        currentSettings.colorPseudoUser = Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PSEUDO_USER), getActivity());
-        currentSettings.colorPseudoOther = Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PSEUDO_OTHER_MODE_IRC), getActivity());
-        currentSettings.colorPseudoModo = Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PSEUDO_MODO), getActivity());
-        currentSettings.colorPseudoAdmin = Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PSEUDO_ADMIN), getActivity());
+        currentSettings.colorPseudoUser = Utils.colorToString(ThemeManager.getColorInt(ThemeManager.ColorName.COLOR_PSEUDO_USER, getActivity().getResources()));
+        currentSettings.colorPseudoOther = Utils.colorToString(ThemeManager.getColorInt(ThemeManager.ColorName.COLOR_PSEUDO_OTHER_MODE_IRC, getActivity().getResources()));
+        currentSettings.colorPseudoModo = Utils.colorToString(ThemeManager.getColorInt(ThemeManager.ColorName.COLOR_PSEUDO_MODO, getActivity().getResources()));
+        currentSettings.colorPseudoAdmin = Utils.colorToString(ThemeManager.getColorInt(ThemeManager.ColorName.COLOR_PSEUDO_ADMIN, getActivity().getResources()));
         currentSettings.applyMarkToPseudoAuthor = false;
         currentSettings.secondLineFormat = "<%MESSAGE_MESSAGE%>";
         currentSettings.addBeforeEdit = "";

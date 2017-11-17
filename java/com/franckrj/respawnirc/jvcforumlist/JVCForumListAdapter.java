@@ -488,7 +488,7 @@ public class JVCForumListAdapter extends BaseExpandableListAdapter implements Ex
             holder = (ViewHolder) convertView.getTag();
         }
 
-        convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.WINDOW_BACKGROUND_COLOR)));
+        convertView.setBackgroundColor(ThemeManager.getColorInt(ThemeManager.ColorName.WINDOW_BACKGROUND_COLOR, parentActivity.getResources()));
         holder.itemOne.setTypeface(null, Typeface.NORMAL);
         holder.itemOne.setPaintFlags(holder.itemOne.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
         holder.itemOne.setText(childTitle);
@@ -533,7 +533,7 @@ public class JVCForumListAdapter extends BaseExpandableListAdapter implements Ex
             holder = (ViewHolder) convertView.getTag();
         }
 
-        convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.DEFAULT_BACKGROUND_COLOR)));
+        convertView.setBackgroundColor(ThemeManager.getColorInt(ThemeManager.ColorName.DEFAULT_BACKGROUND_COLOR, parentActivity.getResources()));
         holder.itemOne.setText(groupTitle);
         holder.imageButtonExpand.setImageResource(isExpanded ? ThemeManager.getDrawableRes(ThemeManager.DrawableName.EXPAND_LESS) : ThemeManager.getDrawableRes(ThemeManager.DrawableName.EXPAND_MORE));
 
