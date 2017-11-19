@@ -87,8 +87,8 @@
     <string name="sendATopic">Poster un topic</string>
     <string name="topicTitlePlaceHolder">Titre…</string>
     <string name="pastLastTopicSended">Coller le dernier topic envoyé</string>
-    <string name="showMp">Consulter les MP</string>
-    <string name="showNotif">Consulter les notif</string>
+    <string name="showMp">Messages privés</string>
+    <string name="showNotif">Notifications</string>
     <string name="linkTypeForInternalBrowserTitle">Utiliser le navigateur interne pour :</string>
     <string name="noelshack">Noelshack</string>
     <string name="link">Liens</string>
@@ -102,8 +102,8 @@
     <string name="areYouSure">Êtes-vous sûr ?</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
-    <string name="showMpWithNumber">Consulter les MP   (%1$s)</string>
-    <string name="showNotifWithNumber">Consulter les notif   (%1$s)</string>
+    <string name="showMpWithNumber">Messages privés   (%1$s)</string>
+    <string name="showNotifWithNumber">Notifications   (%1$s)</string>
     <string name="openCDV">Ouvrir la CDV</string>
     <string name="copyPseudo">Copier le pseudo</string>
     <string name="copyPermalink">Copier le lien permanent</string>
