@@ -49,6 +49,8 @@
     <string name="settingsMiniNoelshackWidth" translatable="false">settings.miniNoelshackWidth</string>
     <string name="settingsSaveLastRowUsedInsertstuff" translatable="false">settings.saveLastRowUsedInsertstuff</string>
     <string name="settingsLinkTypeForInternalBrowser" translatable="false">settings.linkTypeForInternalBrowser</string>
-    <string name="settingsPrimaryColorOfLightTheme" translatable="false">settings.primaryColorOfLightTheme</string>
-    <string name="settingsAltColorOfLightTheme" translatable="false">settings.altColorOfLightTheme</string>
+    <string name="settingsPrimaryColorOfLightTheme" translatable="false">settings.customColor.primaryColorOfLightTheme</string>
+    <string name="settingsAltColorOfLightTheme" translatable="false">settings.customColor.altColorOfLightTheme</string>
+    <string name="settingsSurveyColorOfLightTheme" translatable="false">settings.customColor.surveyColorOfLightTheme</string>
+    <string name="settingsDeletedColorOfLightTheme" translatable="false">settings.customColor.deletedColorOfLightTheme</string>
 </resources>

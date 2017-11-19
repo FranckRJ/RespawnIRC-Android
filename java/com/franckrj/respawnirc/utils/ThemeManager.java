@@ -35,7 +35,9 @@ public class ThemeManager {
 
     private static ThemeName themeUsed = ThemeName.LIGHT_THEME;
     private static int colorPrimaryIdUsedForThemeLight = COLOR_ID_INDIGO;
-    private static @ColorInt int realColorAltUsedForLightTheme = 0;
+    private static @ColorInt int realAltColorUsedForLightTheme = 0;
+    private static @ColorInt int realSurveyColorUsedForLightTheme = 0;
+    private static @ColorInt int realDeletedColorUsedForLightTheme = 0;
 
     public static void updateThemeUsed() {
         String themeStringId = PrefsManager.getString(PrefsManager.StringPref.Names.THEME_USED);
@@ -56,7 +58,9 @@ public class ThemeManager {
     public static void updateColorsUsed(Resources res) {
         int[] arrayOfColors = res.getIntArray(R.array.choicesForPrimaryColor);
         int primaryColorChoosed = PrefsManager.getInt(PrefsManager.IntPref.Names.PRIMARY_COLOR_OF_LIGHT_THEME);
-        realColorAltUsedForLightTheme = PrefsManager.getInt(PrefsManager.IntPref.Names.ALT_COLOR_OF_LIGHT_THEME);
+        realAltColorUsedForLightTheme = PrefsManager.getInt(PrefsManager.IntPref.Names.ALT_COLOR_OF_LIGHT_THEME);
+        realSurveyColorUsedForLightTheme = PrefsManager.getInt(PrefsManager.IntPref.Names.SURVEY_COLOR_OF_LIGHT_THEME);
+        realDeletedColorUsedForLightTheme = PrefsManager.getInt(PrefsManager.IntPref.Names.DELETED_COLOR_OF_LIGHT_THEME);
 
         for (int i = 0; i < arrayOfColors.length; ++i) {
             if (arrayOfColors[i] == primaryColorChoosed) {
@@ -169,8 +173,27 @@ public class ThemeManager {
 
     @ColorInt
     public static int getColorInt(@AttrRes int thisAttrColor, Context fromThisContext) {
-        if (thisAttrColor == R.attr.themedAltBackgroundColor && realColorAltUsedForLightTheme != 0 && themeUsed == ThemeName.LIGHT_THEME) {
-            return realColorAltUsedForLightTheme;
+        if (themeUsed == ThemeName.LIGHT_THEME) {
+            switch (thisAttrColor) {
+                case R.attr.themedAltBackgroundColor:
+                    if (realAltColorUsedForLightTheme != 0) {
+                        return realAltColorUsedForLightTheme;
+                    } else {
+                        break;
+                    }
+                case R.attr.themedSurveyMessageBackgroundColor:
+                    if (realSurveyColorUsedForLightTheme != 0) {
+                        return realSurveyColorUsedForLightTheme;
+                    } else {
+                        break;
+                    }
+                case R.attr.themedDeletedMessageBackgroundColor:
+                    if (realDeletedColorUsedForLightTheme != 0) {
+                        return realDeletedColorUsedForLightTheme;
+                    } else {
+                        break;
+                    }
+            }
         }
 
         if (fromThisContext != null) {

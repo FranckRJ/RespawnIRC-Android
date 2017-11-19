@@ -23,8 +23,8 @@
         <item name="themedNavigationHeaderBackground">@drawable/navigation_header_background_light</item>
         <item name="themedSelectedStickerTypeColor">@color/selectedStickerTypeColorThemeLight</item>
         <item name="themedAltBackgroundColor">@color/colorAltDefault</item>
-        <item name="themedDeletedMessageBackgroundColor">@color/deletedMessagesBackgroundColorThemeLight</item>
-        <item name="themedSurveyMessageBackgroundColor">@color/surveyMessagesBackgroundColorThemeLight</item>
+        <item name="themedDeletedMessageBackgroundColor">@color/defaultDeletedMessageColor</item>
+        <item name="themedSurveyMessageBackgroundColor">@color/defaultSurveyMessageColor</item>
         <item name="themedTopicNameColor">@color/topicNameColorThemeLight</item>
         <item name="themedQuoteBackgroundColor">@color/colorQuoteBackgroundThemeLight</item>
         <item name="themedPseudoUserColor">@color/colorPseudoUserThemeLight</item>

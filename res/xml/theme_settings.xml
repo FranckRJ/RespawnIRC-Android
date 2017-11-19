@@ -23,9 +23,21 @@
 
         <ColorPickerPreference
             android:key="@string/settingsAltColorOfLightTheme"
-            android:title="@string/altColorOfMessagesAndTopics"
+            android:title="@string/altColorOfMessages"
             app:pref_currentColor="@color/colorAltDefault"
             app:pref_colors="@array/choicesForAltColor"/>
+
+        <ColorPickerPreference
+            android:key="@string/settingsSurveyColorOfLightTheme"
+            android:title="@string/surveyMessageColor"
+            app:pref_currentColor="@color/defaultSurveyMessageColor"
+            app:pref_colors="@array/choicesForSurveyColor"/>
+
+        <ColorPickerPreference
+            android:key="@string/settingsDeletedColorOfLightTheme"
+            android:title="@string/deletedMessageColor"
+            app:pref_currentColor="@color/defaultDeletedMessageColor"
+            app:pref_colors="@array/choicesForDeleteColor"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

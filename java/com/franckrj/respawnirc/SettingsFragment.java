@@ -135,7 +135,7 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers implement
                 ThemeManager.updateColorsUsed(getResources());
                 getActivity().recreate();
             }
-        } else if (key.equals(getString(R.string.settingsAltColorOfLightTheme))) {
+        } else if (key.startsWith("settings.customColor.")) {
             if (getActivity() != null) {
                 ThemeManager.updateColorsUsed(getResources());
             }
