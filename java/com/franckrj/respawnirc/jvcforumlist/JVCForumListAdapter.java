@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.JVCParser;
-import com.franckrj.respawnirc.utils.Undeprecator;
 
 import java.util.ArrayList;
 
@@ -488,7 +487,7 @@ public class JVCForumListAdapter extends BaseExpandableListAdapter implements Ex
             holder = (ViewHolder) convertView.getTag();
         }
 
-        convertView.setBackgroundColor(ThemeManager.getColorInt(ThemeManager.ColorName.WINDOW_BACKGROUND_COLOR, parentActivity.getResources()));
+        convertView.setBackgroundColor(ThemeManager.getColorInt(android.R.attr.windowBackground, parentActivity));
         holder.itemOne.setTypeface(null, Typeface.NORMAL);
         holder.itemOne.setPaintFlags(holder.itemOne.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
         holder.itemOne.setText(childTitle);
@@ -533,7 +532,7 @@ public class JVCForumListAdapter extends BaseExpandableListAdapter implements Ex
             holder = (ViewHolder) convertView.getTag();
         }
 
-        convertView.setBackgroundColor(ThemeManager.getColorInt(ThemeManager.ColorName.DEFAULT_BACKGROUND_COLOR, parentActivity.getResources()));
+        convertView.setBackgroundColor(ThemeManager.getColorInt(R.attr.themedDefaultBackgroundColor, parentActivity));
         holder.itemOne.setText(groupTitle);
         holder.imageButtonExpand.setImageResource(isExpanded ? ThemeManager.getDrawableRes(ThemeManager.DrawableName.EXPAND_LESS) : ThemeManager.getDrawableRes(ThemeManager.DrawableName.EXPAND_MORE));
 

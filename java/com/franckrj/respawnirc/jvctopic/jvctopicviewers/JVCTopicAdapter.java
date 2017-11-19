@@ -322,8 +322,8 @@ public class JVCTopicAdapter extends BaseAdapter {
 
         QuoteSpan[] quoteSpanArray = spannable.getSpans(0, spannable.length(), QuoteSpan.class);
         for (QuoteSpan quoteSpan : quoteSpanArray) {
-            Utils.replaceSpanByAnotherSpan(spannable, quoteSpan, new CustomQuoteSpan(ThemeManager.getColorInt(ThemeManager.ColorName.COLOR_QUOTE_BACKGROUND, parentActivity.getResources()),
-                                                                                     ThemeManager.getColorInt(ThemeManager.ColorName.COLOR_PRIMARY, parentActivity.getResources()),
+            Utils.replaceSpanByAnotherSpan(spannable, quoteSpan, new CustomQuoteSpan(ThemeManager.getColorInt(R.attr.themedQuoteBackgroundColor, parentActivity),
+                                                                                     ThemeManager.getColorInt(R.attr.colorPrimary, parentActivity),
                                                                                      parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripSize),
                                                                                      parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripGap)));
         }
@@ -440,7 +440,7 @@ public class JVCTopicAdapter extends BaseAdapter {
             viewHolder.infoLine.setText(Undeprecator.htmlFromHtml(advertiseForSurveyToShow));
             convertView.setOnClickListener(onSurveyClickListener);
             viewHolder.infoLine.setOnClickListener(onSurveyClickListener);
-            setColorBackgroundOfThisItem(convertView, ThemeManager.getColorInt(ThemeManager.ColorName.SURVEY_MESSAGE_BACKGROUND_COLOR, parentActivity.getResources()));
+            setColorBackgroundOfThisItem(convertView, ThemeManager.getColorInt(R.attr.themedSurveyMessageBackgroundColor, parentActivity));
         } else {
             final int realPosition = position - (showSurvey ? 1 : 0);
             final ContentHolder currentContent = listOfContentForMessages.get(realPosition);
@@ -510,11 +510,11 @@ public class JVCTopicAdapter extends BaseAdapter {
             }
 
             if (colorDeletedMessages && currentContent.messageIsDeleted) {
-                setColorBackgroundOfThisItem(convertView, ThemeManager.getColorInt(ThemeManager.ColorName.DELETED_MESSAGE_BACKGROUND_COLOR, parentActivity.getResources()));
+                setColorBackgroundOfThisItem(convertView, ThemeManager.getColorInt(R.attr.themedDeletedMessageBackgroundColor, parentActivity));
             } else if (realPosition % 2 == 0 || !alternateBackgroundColor) {
-                setColorBackgroundOfThisItem(convertView, ThemeManager.getColorInt(ThemeManager.ColorName.DEFAULT_BACKGROUND_COLOR, parentActivity.getResources()));
+                setColorBackgroundOfThisItem(convertView, ThemeManager.getColorInt(R.attr.themedDefaultBackgroundColor, parentActivity));
             } else {
-                setColorBackgroundOfThisItem(convertView, ThemeManager.getColorInt(ThemeManager.ColorName.ALT_BACKGROUND_COLOR, parentActivity.getResources()));
+                setColorBackgroundOfThisItem(convertView, ThemeManager.getColorInt(R.attr.themedAltBackgroundColor, parentActivity));
             }
         }
 

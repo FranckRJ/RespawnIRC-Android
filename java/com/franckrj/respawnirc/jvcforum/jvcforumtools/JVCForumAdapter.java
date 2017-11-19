@@ -65,15 +65,15 @@ public class JVCForumAdapter extends BaseAdapter {
     public void addItem(JVCParser.TopicInfos item) {
         String textForAuthor;
         ContentHolder thisHolder = new ContentHolder();
-        thisHolder.firstLineContent = Undeprecator.htmlFromHtml("<b><font color=\"" + Utils.colorToString(ThemeManager.getColorInt(ThemeManager.ColorName.TOPIC_NAME_COLOR, parentActivity.getResources())) +
+        thisHolder.firstLineContent = Undeprecator.htmlFromHtml("<b><font color=\"" + Utils.colorToString(ThemeManager.getColorInt(R.attr.themedTopicNameColor, parentActivity)) +
                                         "\">" + item.htmlName + "</font> (" + item.nbOfMessages + ")</b>");
         switch (item.authorType) {
             case "modo":
-                textForAuthor = "<small><font color=\"" + Utils.colorToString(ThemeManager.getColorInt(ThemeManager.ColorName.COLOR_PSEUDO_MODO, parentActivity.getResources())) + "\">" + item.author + "</font></small>";
+                textForAuthor = "<small><font color=\"" + Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoModoColor, parentActivity)) + "\">" + item.author + "</font></small>";
                 break;
             case "admin":
             case "staff":
-                textForAuthor = "<small><font color=\"" + Utils.colorToString(ThemeManager.getColorInt(ThemeManager.ColorName.COLOR_PSEUDO_ADMIN, parentActivity.getResources())) + "\">" + item.author + "</font></small>";
+                textForAuthor = "<small><font color=\"" + Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoAdminColor, parentActivity)) + "\">" + item.author + "</font></small>";
                 break;
             default:
                 textForAuthor = "<small>" + item.author + "</small>";
@@ -149,9 +149,9 @@ public class JVCForumAdapter extends BaseAdapter {
         }
 
         if (position % 2 == 0 && alternateBackgroundColor) {
-            convertView.setBackgroundColor(ThemeManager.getColorInt(ThemeManager.ColorName.ALT_BACKGROUND_COLOR, parentActivity.getResources()));
+            convertView.setBackgroundColor(ThemeManager.getColorInt(R.attr.themedAltBackgroundColor, parentActivity));
         } else {
-            convertView.setBackgroundColor(ThemeManager.getColorInt(ThemeManager.ColorName.DEFAULT_BACKGROUND_COLOR, parentActivity.getResources()));
+            convertView.setBackgroundColor(ThemeManager.getColorInt(R.attr.themedDefaultBackgroundColor, parentActivity));
         }
 
         return convertView;

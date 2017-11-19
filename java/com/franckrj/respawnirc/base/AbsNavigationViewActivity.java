@@ -513,10 +513,10 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         contextConnectImageNavigation = navigationHeader.findViewById(R.id.context_connect_image_navigation_header);
         adapterForNavigationMenu = new NavigationMenuAdapter(this);
         adapterForNavigationMenu.setBackgroundColors(Undeprecator.resourcesGetColor(getResources(), (ThemeManager.getThemeUsedIsDark() ? android.R.color.white : android.R.color.black)),
-                ThemeManager.getColorInt(ThemeManager.ColorName.NAVIGATION_ICON_COLOR, getResources()), ThemeManager.getColorInt(ThemeManager.ColorName.COLOR_ACCENT, getResources()) & 0x40FFFFFF,
+                ThemeManager.getColorInt(R.attr.themedNavigationIconColor, this), ThemeManager.getColorInt(R.attr.colorAccent, this) & 0x40FFFFFF,
                 Undeprecator.resourcesGetColor(getResources(), android.R.color.transparent));
         adapterForNavigationMenu.setFontColors(Undeprecator.resourcesGetColor(getResources(), (ThemeManager.getThemeUsedIsDark() ? android.R.color.white : android.R.color.black)),
-                ThemeManager.getColorInt(ThemeManager.ColorName.HEADER_TEXT_COLOR, getResources()));
+                ThemeManager.getColorInt(R.attr.themedHeaderTextColor, this));
         navigationMenuList.setHeaderView(navigationHeader);
         navigationMenuList.setAdapter(adapterForNavigationMenu);
         navigationMenuList.setOnItemClickListener(itemInNavigationClickedListener);

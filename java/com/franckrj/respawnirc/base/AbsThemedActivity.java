@@ -16,7 +16,7 @@ public abstract class AbsThemedActivity extends AppCompatActivity {
     protected static ActivityManager.TaskDescription generalTaskDesc = null;
     protected static @ColorInt int colorUsedForGenerateTaskDesc = 0;
     protected ThemeManager.ThemeName lastThemeUsed = null;
-    protected @ColorInt int lastColorPrimaryUsed = 0;
+    protected int lastColorPrimaryUsed = -1;
     protected @StyleRes int colorAccentStyle = 0;
 
     @Override
@@ -24,7 +24,7 @@ public abstract class AbsThemedActivity extends AppCompatActivity {
         ThemeManager.changeActivityTheme(this);
         ThemeManager.changeActivityPrimaryColorIfNeeded(this);
         lastThemeUsed = ThemeManager.getThemeUsed();
-        lastColorPrimaryUsed = ThemeManager.getColorInt(ThemeManager.ColorName.COLOR_PRIMARY, getResources());
+        lastColorPrimaryUsed = ThemeManager.getColorPrimaryIdUsed();
 
         if (colorAccentStyle != 0) {
             getTheme().applyStyle(colorAccentStyle, true);
@@ -33,9 +33,9 @@ public abstract class AbsThemedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         if (Build.VERSION.SDK_INT >= 21) {
-            if (generalTaskDesc == null || colorUsedForGenerateTaskDesc != ThemeManager.getColorInt(ThemeManager.ColorName.COLOR_PRIMARY, getResources())) {
+            if (generalTaskDesc == null || colorUsedForGenerateTaskDesc != ThemeManager.getColorInt(R.attr.colorPrimary, this)) {
                 Bitmap appIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_rirc);
-                colorUsedForGenerateTaskDesc = ThemeManager.getColorInt(ThemeManager.ColorName.COLOR_PRIMARY, getResources());
+                colorUsedForGenerateTaskDesc = ThemeManager.getColorInt(R.attr.colorPrimary, this);
                 generalTaskDesc = new ActivityManager.TaskDescription(getString(R.string.app_name), appIcon, colorUsedForGenerateTaskDesc);
             }
             setTaskDescription(generalTaskDesc);
@@ -46,8 +46,7 @@ public abstract class AbsThemedActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
 
-        if ((lastColorPrimaryUsed != ThemeManager.getColorInt(ThemeManager.ColorName.COLOR_PRIMARY, getResources())) ||
-                (lastThemeUsed != ThemeManager.getThemeUsed())) {
+        if ((lastThemeUsed != ThemeManager.getThemeUsed()) || (lastColorPrimaryUsed != ThemeManager.getColorPrimaryIdUsed())) {
             recreate();
         }
     }

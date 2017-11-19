@@ -11,7 +11,7 @@
     <color name="topicNameColorThemeLight">#006BD7</color>
     <color name="colorPseudoUserThemeLight">#3399ff</color>
     <color name="colorPseudoOtherModeForumThemeLight">#80000000</color>
-    <color name="colorPseudoOtherModeIRCThemeLight">#000025</color>
+    <color name="colorPseudoOtherModeIrcThemeLight">#000025</color>
     <color name="colorPseudoModoThemeLight">#3A9D23</color>
     <color name="colorPseudoAdminThemeLight">#DB0F0F</color>
     <color name="defaultBackgroundColorThemeLight">#FAFAFA</color>
@@ -34,7 +34,7 @@
     <color name="topicNameColorThemeDark">#EEEEEE</color>
     <color name="colorPseudoUserThemeDark">#80BFFF</color>
     <color name="colorPseudoOtherModeForumThemeDark">#00FFFFFF</color>
-    <color name="colorPseudoOtherModeIRCThemeDark">#EEEEFF</color>
+    <color name="colorPseudoOtherModeIrcThemeDark">#EEEEFF</color>
     <color name="colorPseudoModoThemeDark">#4CD12E</color>
     <color name="colorPseudoAdminThemeDark">#F24040</color>
     <color name="defaultBackgroundColorThemeDark">#292929</color>

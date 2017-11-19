@@ -1,10 +1,12 @@
 package com.franckrj.respawnirc.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
+import android.support.annotation.AttrRes;
 import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
+import android.util.TypedValue;
 
 import com.franckrj.respawnirc.R;
 
@@ -33,7 +35,6 @@ public class ThemeManager {
 
     private static ThemeName themeUsed = ThemeName.LIGHT_THEME;
     private static int colorPrimaryIdUsed = COLOR_ID_INDIGO;
-    private static @ColorInt Integer realColorPrimaryUsed = null;
 
     public static void updateThemeUsed() {
         String themeStringId = PrefsManager.getString(PrefsManager.StringPref.Names.THEME_USED);
@@ -53,10 +54,10 @@ public class ThemeManager {
 
     public static void updatePrimaryColorUsed(Resources res) {
         int[] arrayOfColors = res.getIntArray(R.array.choicesForPrimaryColor);
-        realColorPrimaryUsed = PrefsManager.getInt(PrefsManager.IntPref.Names.PRIMARY_COLOR_OF_LIGHT_THEME);
+        int primaryColorChoosed = PrefsManager.getInt(PrefsManager.IntPref.Names.PRIMARY_COLOR_OF_LIGHT_THEME);
 
         for (int i = 0; i < arrayOfColors.length; ++i) {
-            if (arrayOfColors[i] == realColorPrimaryUsed) {
+            if (arrayOfColors[i] == primaryColorChoosed) {
                 colorPrimaryIdUsed = i;
                 return;
             }
@@ -156,127 +157,26 @@ public class ThemeManager {
         return themeUsed;
     }
 
+    public static int getColorPrimaryIdUsed() {
+        return colorPrimaryIdUsed;
+    }
+
     public static boolean getThemeUsedIsDark() {
         return themeUsed == ThemeName.DARK_THEME || themeUsed == ThemeName.BLACK_THEME;
     }
 
     @ColorInt
-    public static int getColorInt(ColorName thisColor, Resources res) {
-        if (thisColor == ColorName.COLOR_PRIMARY && themeUsed == ThemeName.LIGHT_THEME && realColorPrimaryUsed != null) {
-            return realColorPrimaryUsed;
-        }
-        return Undeprecator.resourcesGetColor(res, getColorRes(thisColor));
-    }
+    public static int getColorInt(@AttrRes int thisAttrColor, Context fromThisContext) {
+        if (fromThisContext != null) {
+            TypedValue typedValue = new TypedValue();
+            boolean valueIsFound = fromThisContext.getTheme().resolveAttribute(thisAttrColor, typedValue, true);
 
-    @ColorRes
-    private static int getColorRes(ColorName thisColor) {
-        if (getThemeUsedIsDark()) {
-            switch (thisColor) {
-                case COLOR_PRIMARY:
-                    return R.color.colorPrimaryThemeDark;
-                case COLOR_ACCENT:
-                    return R.color.colorAccentThemeDark;
-                case DEFAULT_BACKGROUND_COLOR:
-                    if (themeUsed == ThemeName.BLACK_THEME) {
-                        return R.color.defaultBackgroundColorThemeBlack;
-                    } else {
-                        return R.color.defaultBackgroundColorThemeDark;
-                    }
-                case WINDOW_BACKGROUND_COLOR:
-                    if (themeUsed == ThemeName.BLACK_THEME) {
-                        return R.color.windowBackgroundColorThemeBlack;
-                    } else {
-                        return R.color.windowBackgroundColorThemeDark;
-                    }
-                case DARKER_BACKGROUND_COLOR:
-                    if (themeUsed == ThemeName.BLACK_THEME) {
-                        return R.color.darkerBackgroundColorThemeBlack;
-                    } else {
-                        return R.color.darkerBackgroundColorThemeDark;
-                    }
-                case ALT_BACKGROUND_COLOR:
-                    if (themeUsed == ThemeName.BLACK_THEME) {
-                        return R.color.altBackgroundColorThemeBlack;
-                    } else {
-                        return R.color.altBackgroundColorThemeDark;
-                    }
-                case DELETED_MESSAGE_BACKGROUND_COLOR:
-                    return R.color.deletedMessagesBackgroundColorThemeDark;
-                case SURVEY_MESSAGE_BACKGROUND_COLOR:
-                    return R.color.surveyMessagesBackgroundColorThemeDark;
-                case LINK_COLOR:
-                    return R.color.linkColorThemeDark;
-                case TOPIC_NAME_COLOR:
-                    return R.color.topicNameColorThemeDark;
-                case COLOR_QUOTE_BACKGROUND:
-                    if (themeUsed == ThemeName.BLACK_THEME) {
-                        return R.color.colorQuoteBackgroundThemeBlack;
-                    } else {
-                        return R.color.colorQuoteBackgroundThemeDark;
-                    }
-                case COLOR_PSEUDO_USER:
-                    return R.color.colorPseudoUserThemeDark;
-                case COLOR_PSEUDO_OTHER_MODE_FORUM:
-                    return R.color.colorPseudoOtherModeForumThemeDark;
-                case COLOR_PSEUDO_OTHER_MODE_IRC:
-                    return R.color.colorPseudoOtherModeIRCThemeDark;
-                case COLOR_PSEUDO_MODO:
-                    return R.color.colorPseudoModoThemeDark;
-                case COLOR_PSEUDO_ADMIN:
-                    return R.color.colorPseudoAdminThemeDark;
-                case HEADER_TEXT_COLOR:
-                    return R.color.headerTextColorThemeDark;
-                case NAVIGATION_ICON_COLOR:
-                    return R.color.navigationIconColorThemeDark;
-                case SELECTED_STICKER_TYPE_COLOR:
-                    return R.color.selectedStickerTypeColorThemeDark;
-                default:
-                    return R.color.colorPrimaryThemeDark;
-            }
-        } else {
-            switch (thisColor) {
-                case COLOR_PRIMARY:
-                    return R.color.colorPrimaryIndigo;
-                case COLOR_ACCENT:
-                    return R.color.colorAccentThemeLight;
-                case DEFAULT_BACKGROUND_COLOR:
-                    return R.color.defaultBackgroundColorThemeLight;
-                case WINDOW_BACKGROUND_COLOR:
-                    return R.color.windowBackgroundColorThemeLight;
-                case DARKER_BACKGROUND_COLOR:
-                    return R.color.darkerBackgroundColorThemeLight;
-                case ALT_BACKGROUND_COLOR:
-                    return R.color.altBackgroundColorThemeLight;
-                case DELETED_MESSAGE_BACKGROUND_COLOR:
-                    return R.color.deletedMessagesBackgroundColorThemeLight;
-                case SURVEY_MESSAGE_BACKGROUND_COLOR:
-                    return R.color.surveyMessagesBackgroundColorThemeLight;
-                case LINK_COLOR:
-                    return R.color.linkColorThemeLight;
-                case TOPIC_NAME_COLOR:
-                    return R.color.topicNameColorThemeLight;
-                case COLOR_QUOTE_BACKGROUND:
-                    return R.color.colorQuoteBackgroundThemeLight;
-                case COLOR_PSEUDO_USER:
-                    return R.color.colorPseudoUserThemeLight;
-                case COLOR_PSEUDO_OTHER_MODE_FORUM:
-                    return R.color.colorPseudoOtherModeForumThemeLight;
-                case COLOR_PSEUDO_OTHER_MODE_IRC:
-                    return R.color.colorPseudoOtherModeIRCThemeLight;
-                case COLOR_PSEUDO_MODO:
-                    return R.color.colorPseudoModoThemeLight;
-                case COLOR_PSEUDO_ADMIN:
-                    return R.color.colorPseudoAdminThemeLight;
-                case HEADER_TEXT_COLOR:
-                    return R.color.headerTextColorThemeLight;
-                case NAVIGATION_ICON_COLOR:
-                    return R.color.navigationIconColorThemeLight;
-                case SELECTED_STICKER_TYPE_COLOR:
-                    return R.color.selectedStickerTypeColorThemeLight;
-                default:
-                    return R.color.colorPrimaryIndigo;
+            if (valueIsFound) {
+                return typedValue.data;
             }
         }
+
+        return 0;
     }
 
     @DrawableRes
@@ -328,16 +228,6 @@ public class ThemeManager {
                     return R.drawable.ic_arrow_drop_down_light;
             }
         }
-    }
-
-    public enum ColorName {
-        COLOR_PRIMARY, COLOR_ACCENT,
-        DEFAULT_BACKGROUND_COLOR, WINDOW_BACKGROUND_COLOR, DARKER_BACKGROUND_COLOR,
-        ALT_BACKGROUND_COLOR, DELETED_MESSAGE_BACKGROUND_COLOR, SURVEY_MESSAGE_BACKGROUND_COLOR,
-        LINK_COLOR, TOPIC_NAME_COLOR, COLOR_QUOTE_BACKGROUND,
-        COLOR_PSEUDO_USER, COLOR_PSEUDO_OTHER_MODE_FORUM, COLOR_PSEUDO_OTHER_MODE_IRC, COLOR_PSEUDO_MODO, COLOR_PSEUDO_ADMIN,
-        HEADER_TEXT_COLOR, NAVIGATION_ICON_COLOR,
-        SELECTED_STICKER_TYPE_COLOR
     }
 
     public enum DrawableName {

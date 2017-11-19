@@ -16,4 +16,16 @@
     <attr name="themedBackgroundAvatar" format="reference"/>
     <attr name="themedNavigationHeaderBackground" format="reference"/>
     <attr name="themedSelectedStickerTypeColor" format="reference"/>
+    <attr name="themedAltBackgroundColor" format="reference"/>
+    <attr name="themedDeletedMessageBackgroundColor" format="reference"/>
+    <attr name="themedSurveyMessageBackgroundColor" format="reference"/>
+    <attr name="themedTopicNameColor" format="reference"/>
+    <attr name="themedQuoteBackgroundColor" format="reference"/>
+    <attr name="themedPseudoUserColor" format="reference"/>
+    <attr name="themedPseudoOtherModeForumColor" format="reference"/>
+    <attr name="themedPseudoOtherModeIrcColor" format="reference"/>
+    <attr name="themedPseudoModoColor" format="reference"/>
+    <attr name="themedPseudoAdminColor" format="reference"/>
+    <attr name="themedHeaderTextColor" format="reference"/>
+    <attr name="themedNavigationIconColor" format="reference"/>
 </resources>
