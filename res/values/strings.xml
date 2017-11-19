@@ -228,6 +228,7 @@
     <string name="lightThemeColors">Couleurs du thème clair</string>
     <string name="primaryColor">Couleur principale</string>
     <string name="theme">Thème</string>
+    <string name="altColorOfMessagesAndTopics">Couleur alternative des messages / topics</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

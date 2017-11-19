@@ -1,6 +1,7 @@
 package com.franckrj.respawnirc.jvcforum.jvcforumtools;
 
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.IgnoreListManager;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
+import com.franckrj.respawnirc.utils.ThemeManager;
 
 import java.util.ArrayList;
 
@@ -38,6 +40,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     private boolean ignoreTopicToo = true;
     private boolean clearTopicsOnRefresh = true;
     private boolean isInErrorMode = false;
+    private @ColorInt int currentAltColor = 0;
 
     private final AdapterView.OnItemClickListener listenerForItemClickedInListView = new AdapterView.OnItemClickListener() {
         @Override
@@ -149,6 +152,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         getterForForum.setCookieListInAString(PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
         pseudoOfUserInLC = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER).toLowerCase();
         ignoreTopicToo = PrefsManager.getBool(PrefsManager.BoolPref.Names.IGNORE_TOPIC_TOO);
+        currentAltColor = ThemeManager.getColorInt(R.attr.themedAltBackgroundColor, getActivity());
         clearTopicsOnRefresh = true;
     }
 
@@ -296,10 +300,12 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     public void onResume() {
         super.onResume();
         boolean oldAlternateBackgroundColor = adapterForForum.getAlternateBackgroundColor();
+        @ColorInt int oldAltColor = currentAltColor;
         reloadSettings();
         isInErrorMode = false;
 
-        if (oldAlternateBackgroundColor != adapterForForum.getAlternateBackgroundColor()) {
+        if (oldAlternateBackgroundColor != adapterForForum.getAlternateBackgroundColor() ||
+                oldAltColor != currentAltColor) {
             adapterForForum.notifyDataSetChanged();
         }
 

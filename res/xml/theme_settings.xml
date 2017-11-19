@@ -20,6 +20,12 @@
             android:title="@string/primaryColor"
             app:pref_currentColor="@color/colorPrimaryIndigo"
             app:pref_colors="@array/choicesForPrimaryColor"/>
+
+        <ColorPickerPreference
+            android:key="@string/settingsAltColorOfLightTheme"
+            android:title="@string/altColorOfMessagesAndTopics"
+            app:pref_currentColor="@color/colorAltDefault"
+            app:pref_colors="@array/choicesForAltColor"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -34,7 +34,8 @@ public class ThemeManager {
     private static final int COLOR_ID_BLACK = 20;
 
     private static ThemeName themeUsed = ThemeName.LIGHT_THEME;
-    private static int colorPrimaryIdUsed = COLOR_ID_INDIGO;
+    private static int colorPrimaryIdUsedForThemeLight = COLOR_ID_INDIGO;
+    private static @ColorInt int realColorAltUsedForLightTheme = 0;
 
     public static void updateThemeUsed() {
         String themeStringId = PrefsManager.getString(PrefsManager.StringPref.Names.THEME_USED);
@@ -52,18 +53,19 @@ public class ThemeManager {
         }
     }
 
-    public static void updatePrimaryColorUsed(Resources res) {
+    public static void updateColorsUsed(Resources res) {
         int[] arrayOfColors = res.getIntArray(R.array.choicesForPrimaryColor);
         int primaryColorChoosed = PrefsManager.getInt(PrefsManager.IntPref.Names.PRIMARY_COLOR_OF_LIGHT_THEME);
+        realColorAltUsedForLightTheme = PrefsManager.getInt(PrefsManager.IntPref.Names.ALT_COLOR_OF_LIGHT_THEME);
 
         for (int i = 0; i < arrayOfColors.length; ++i) {
             if (arrayOfColors[i] == primaryColorChoosed) {
-                colorPrimaryIdUsed = i;
+                colorPrimaryIdUsedForThemeLight = i;
                 return;
             }
         }
 
-        colorPrimaryIdUsed = COLOR_ID_INDIGO;
+        colorPrimaryIdUsedForThemeLight = COLOR_ID_INDIGO;
     }
 
     public static void changeActivityTheme(Activity thisActivity) {
@@ -82,7 +84,7 @@ public class ThemeManager {
 
     public static void changeActivityPrimaryColorIfNeeded(Activity thisActivity) {
         if (themeUsed == ThemeName.LIGHT_THEME) {
-            switch (colorPrimaryIdUsed) {
+            switch (colorPrimaryIdUsedForThemeLight) {
                 case COLOR_ID_RED:
                     thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsRed, true);
                     break;
@@ -157,8 +159,8 @@ public class ThemeManager {
         return themeUsed;
     }
 
-    public static int getColorPrimaryIdUsed() {
-        return colorPrimaryIdUsed;
+    public static int getColorPrimaryIdUsedForThemeLight() {
+        return colorPrimaryIdUsedForThemeLight;
     }
 
     public static boolean getThemeUsedIsDark() {
@@ -167,6 +169,10 @@ public class ThemeManager {
 
     @ColorInt
     public static int getColorInt(@AttrRes int thisAttrColor, Context fromThisContext) {
+        if (thisAttrColor == R.attr.themedAltBackgroundColor && realColorAltUsedForLightTheme != 0 && themeUsed == ThemeName.LIGHT_THEME) {
+            return realColorAltUsedForLightTheme;
+        }
+
         if (fromThisContext != null) {
             TypedValue typedValue = new TypedValue();
             boolean valueIsFound = fromThisContext.getTheme().resolveAttribute(thisAttrColor, typedValue, true);

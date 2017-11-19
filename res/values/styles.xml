@@ -22,7 +22,7 @@
         <item name="themedBackgroundAvatar">@drawable/avatar_image_border_light</item>
         <item name="themedNavigationHeaderBackground">@drawable/navigation_header_background_light</item>
         <item name="themedSelectedStickerTypeColor">@color/selectedStickerTypeColorThemeLight</item>
-        <item name="themedAltBackgroundColor">@color/altBackgroundColorThemeLight</item>
+        <item name="themedAltBackgroundColor">@color/colorAltDefault</item>
         <item name="themedDeletedMessageBackgroundColor">@color/deletedMessagesBackgroundColorThemeLight</item>
         <item name="themedSurveyMessageBackgroundColor">@color/surveyMessagesBackgroundColorThemeLight</item>
         <item name="themedTopicNameColor">@color/topicNameColorThemeLight</item>
