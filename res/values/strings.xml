@@ -231,6 +231,8 @@
     <string name="altColorOfMessages">Couleur alternative des messages</string>
     <string name="surveyMessageColor">Couleur du message des sondages</string>
     <string name="deletedMessageColor">Couleur des messages supprimés</string>
+    <string name="megaByteNumber">%1$.2f Mo</string>
+    <string name="kiloByteNumber">%1$.2f Ko</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
