@@ -11,27 +11,35 @@ import android.util.TypedValue;
 import com.franckrj.respawnirc.R;
 
 public class ThemeManager {
-    private static final int COLOR_ID_RED = 0;
-    private static final int COLOR_ID_PINK = 1;
-    private static final int COLOR_ID_PURPLE = 2;
-    private static final int COLOR_ID_DEEPPURPLE = 3;
-    private static final int COLOR_ID_INDIGO = 4;
-    private static final int COLOR_ID_BLUE = 5;
-    private static final int COLOR_ID_LIGHTBLUE = 6;
-    private static final int COLOR_ID_CYAN = 7;
-    private static final int COLOR_ID_TEAL = 8;
-    private static final int COLOR_ID_GREEN = 9;
-    private static final int COLOR_ID_LIGHTGREEN = 10;
-    private static final int COLOR_ID_LIME = 11;
-    private static final int COLOR_ID_YELLOW = 12;
-    private static final int COLOR_ID_AMBER = 13;
-    private static final int COLOR_ID_ORANGE = 14;
-    private static final int COLOR_ID_DEEPORANGE = 15;
-    private static final int COLOR_ID_BROWN = 16;
-    private static final int COLOR_ID_GREY = 17;
-    private static final int COLOR_ID_BLUEGREY = 18;
-    private static final int COLOR_ID_JVC = 19;
-    private static final int COLOR_ID_BLACK = 20;
+    private static final int COLOR_ID_REALRED = 0;
+    private static final int COLOR_ID_RED = 1;
+    private static final int COLOR_ID_PINK = 2;
+    private static final int COLOR_ID_SOFTPURPLE = 3;
+    private static final int COLOR_ID_PURPLE = 4;
+    private static final int COLOR_ID_DEEPPURPLE = 5;
+    private static final int COLOR_ID_INDIGO = 6;
+    private static final int COLOR_ID_BLUE = 7;
+    private static final int COLOR_ID_LIGHTBLUE = 8;
+    private static final int COLOR_ID_SOFTBLUE = 9;
+    private static final int COLOR_ID_CYAN = 10;
+    private static final int COLOR_ID_TEAL = 11;
+    private static final int COLOR_ID_PRESTOGREEN = 12;
+    private static final int COLOR_ID_REALGREEN = 13;
+    private static final int COLOR_ID_REALLIGHTGREEN = 14;
+    private static final int COLOR_ID_GREEN = 15;
+    private static final int COLOR_ID_LIGHTGREEN = 16;
+    private static final int COLOR_ID_LIME = 17;
+    private static final int COLOR_ID_YELLOW = 18;
+    private static final int COLOR_ID_AMBER = 19;
+    private static final int COLOR_ID_ORANGE = 20;
+    private static final int COLOR_ID_DEEPORANGE = 21;
+    private static final int COLOR_ID_SOFTORANGE = 22;
+    private static final int COLOR_ID_BROWN = 23;
+    private static final int COLOR_ID_GREY = 24;
+    private static final int COLOR_ID_BLUEGREY = 25;
+    private static final int COLOR_ID_JVC = 26;
+    private static final int COLOR_ID_SOFTBLACK = 27;
+    private static final int COLOR_ID_BLACK = 28;
 
     private static ThemeName themeUsed = ThemeName.LIGHT_THEME;
     private static int colorPrimaryIdUsedForThemeLight = COLOR_ID_INDIGO;
@@ -89,11 +97,17 @@ public class ThemeManager {
     public static void changeActivityPrimaryColorIfNeeded(Activity thisActivity) {
         if (themeUsed == ThemeName.LIGHT_THEME) {
             switch (colorPrimaryIdUsedForThemeLight) {
+                case COLOR_ID_REALRED:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsRealRed, true);
+                    break;
                 case COLOR_ID_RED:
                     thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsRed, true);
                     break;
                 case COLOR_ID_PINK:
                     thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsPink, true);
+                    break;
+                case COLOR_ID_SOFTPURPLE:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsSoftPurple, true);
                     break;
                 case COLOR_ID_PURPLE:
                     thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsPurple, true);
@@ -110,11 +124,23 @@ public class ThemeManager {
                 case COLOR_ID_LIGHTBLUE:
                     thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsLightBlue, true);
                     break;
+                case COLOR_ID_SOFTBLUE:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsSoftBlue, true);
+                    break;
                 case COLOR_ID_CYAN:
                     thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsCyan, true);
                     break;
                 case COLOR_ID_TEAL:
                     thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsTeal, true);
+                    break;
+                case COLOR_ID_PRESTOGREEN:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsPrestoGreen, true);
+                    break;
+                case COLOR_ID_REALGREEN:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsRealGreen, true);
+                    break;
+                case COLOR_ID_REALLIGHTGREEN:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsRealLightGreen, true);
                     break;
                 case COLOR_ID_GREEN:
                     thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsGreen, true);
@@ -137,6 +163,9 @@ public class ThemeManager {
                 case COLOR_ID_DEEPORANGE:
                     thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsDeepOrange, true);
                     break;
+                case COLOR_ID_SOFTORANGE:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsSoftOrange, true);
+                    break;
                 case COLOR_ID_BROWN:
                     thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsBrown, true);
                     break;
@@ -148,6 +177,9 @@ public class ThemeManager {
                     break;
                 case COLOR_ID_JVC:
                     thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsJVC, true);
+                    break;
+                case COLOR_ID_SOFTBLACK:
+                    thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsSoftBlack, true);
                     break;
                 case COLOR_ID_BLACK:
                     thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsBlack, true);

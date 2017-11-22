@@ -52,6 +52,10 @@
     <color name="windowBackgroundColorThemeBlack">#000000</color>
     <color name="darkerBackgroundColorThemeBlack">#424242</color>
     <!-- General Theme Colors -->
+    <color name="colorPrimaryRealRed">#C41915</color>
+    <color name="colorPrimaryDarkerRealRed">#9C1410</color>
+    <color name="colorAltRealRed">#FDE8E8</color>
+    <color name="colorAltDarkerRealRed">#FAD2D1</color>
     <color name="colorPrimaryRed">#F44336</color>
     <color name="colorPrimaryDarkerRed">#D32F2F</color>
     <color name="colorAltRed">#FFEBEE</color>
@@ -60,6 +64,10 @@
     <color name="colorPrimaryDarkerPink">#C2185B</color>
     <color name="colorAltPink">#FCE4EC</color>
     <color name="colorAltDarkerPink">#F8BBD0</color>
+    <color name="colorPrimarySoftPurple">#A969CA</color>
+    <color name="colorPrimaryDarkerSoftPurple">#8754A1</color>
+    <color name="colorAltSoftPurple">#F4ECF8</color>
+    <color name="colorAltDarkerSoftPurple">#EAD9F2</color>
     <color name="colorPrimaryPurple">#9C27B0</color>
     <color name="colorPrimaryDarkerPurple">#7B1FA2</color>
     <color name="colorAltPurple">#F3E5F5</color>
@@ -80,6 +88,10 @@
     <color name="colorPrimaryDarkerLightBlue">#0288D1</color>
     <color name="colorAltLightBlue">#E1F5FE</color>
     <color name="colorAltDarkerLightBlue">#B3E5FC</color>
+    <color name="colorPrimarySoftBlue">#199ACA</color>
+    <color name="colorPrimaryDarkerSoftBlue">#147BA1</color>
+    <color name="colorAltSoftBlue">#E8F7FC</color>
+    <color name="colorAltDarkerSoftBlue">#D2EFF9</color>
     <color name="colorPrimaryCyan">#00BCD4</color>
     <color name="colorPrimaryDarkerCyan">#0097A7</color>
     <color name="colorAltCyan">#E0F7FA</color>
@@ -88,6 +100,18 @@
     <color name="colorPrimaryDarkerTeal">#00796B</color>
     <color name="colorAltTeal">#E0F2F1</color>
     <color name="colorAltDarkerTeal">#B2DFDB</color>
+    <color name="colorPrimaryPrestoGreen">#00AA8D</color>
+    <color name="colorPrimaryDarkerPrestoGreen">#008975</color>
+    <color name="colorAltPrestoGreen">#E6FFFB</color>
+    <color name="colorAltDarkerPrestoGreen">#CCFFF6</color>
+    <color name="colorPrimaryRealGreen">#13874B</color>
+    <color name="colorPrimaryDarkerRealGreen">#0F6C3C</color>
+    <color name="colorAltRealGreen">#E9FCF2</color>
+    <color name="colorAltDarkerRealGreen">#D2F9E5</color>
+    <color name="colorPrimaryRealLightGreen">#20AA66</color>
+    <color name="colorPrimaryDarkerRealLightGreen">#198851</color>
+    <color name="colorAltRealLightGreen">#EAFBF2</color>
+    <color name="colorAltDarkerRealLightGreen">#D4F7E6</color>
     <color name="colorPrimaryGreen">#4CAF50</color>
     <color name="colorPrimaryDarkerGreen">#388E3C</color>
     <color name="colorAltGreen">#E8F5E9</color>
@@ -116,6 +140,10 @@
     <color name="colorPrimaryDarkerDeepOrange">#E64A19</color>
     <color name="colorAltDeepOrange">#FBE9E7</color>
     <color name="colorAltDarkerDeepOrange">#FFCCBC</color>
+    <color name="colorPrimarySoftOrange">#EC6C20</color>
+    <color name="colorPrimaryDarkerSoftOrange">#BC5619</color>
+    <color name="colorAltSoftOrange">#FDEFE8</color>
+    <color name="colorAltDarkerSoftOrange">#FBE0D0</color>
     <color name="colorPrimaryBrown">#795548</color>
     <color name="colorPrimaryDarkerBrown">#5D4037</color>
     <color name="colorAltBrown">#EFEBE9</color>
@@ -132,6 +160,10 @@
     <color name="colorPrimaryDarkerJVC">#002233</color>
     <color name="colorAltJVC">#E6F7FF</color>
     <color name="colorAltDarkerJVC">#CCEEFF</color>
+    <color name="colorPrimarySoftBlack">#333333</color>
+    <color name="colorPrimaryDarkerSoftBlack">#282828</color>
+    <color name="colorAltSoftBlack">#F2F2F2</color>
+    <color name="colorAltDarkerSoftBlack">#E6E6E6</color>
     <color name="colorPrimaryBlack">#000000</color>
     <color name="colorPrimaryDarkerBlack">#000000</color>
     <color name="colorAltBlack">#E0E0E0</color>
@@ -141,15 +173,21 @@
     <color name="defaultDeletedMessageColor">#CFF3FE</color>
 
     <integer-array name="choicesForPrimaryColor">
+        <item>@color/colorPrimaryRealRed</item>
         <item>@color/colorPrimaryRed</item>
         <item>@color/colorPrimaryPink</item>
+        <item>@color/colorPrimarySoftPurple</item>
         <item>@color/colorPrimaryPurple</item>
         <item>@color/colorPrimaryDeepPurple</item>
         <item>@color/colorPrimaryIndigo</item>
         <item>@color/colorPrimaryBlue</item>
         <item>@color/colorPrimaryLightBlue</item>
+        <item>@color/colorPrimarySoftBlue</item>
         <item>@color/colorPrimaryCyan</item>
         <item>@color/colorPrimaryTeal</item>
+        <item>@color/colorPrimaryPrestoGreen</item>
+        <item>@color/colorPrimaryRealGreen</item>
+        <item>@color/colorPrimaryRealLightGreen</item>
         <item>@color/colorPrimaryGreen</item>
         <item>@color/colorPrimaryLightGreen</item>
         <item>@color/colorPrimaryLime</item>
@@ -157,23 +195,31 @@
         <item>@color/colorPrimaryAmber</item>
         <item>@color/colorPrimaryOrange</item>
         <item>@color/colorPrimaryDeepOrange</item>
+        <item>@color/colorPrimarySoftOrange</item>
         <item>@color/colorPrimaryBrown</item>
         <item>@color/colorPrimaryGrey</item>
         <item>@color/colorPrimaryBlueGrey</item>
         <item>@color/colorPrimaryJVC</item>
+        <item>@color/colorPrimarySoftBlack</item>
         <item>@color/colorPrimaryBlack</item>
     </integer-array>
 
     <integer-array name="choicesForAltColor">
+        <item>@color/colorAltRealRed</item>
         <item>@color/colorAltRed</item>
         <item>@color/colorAltPink</item>
+        <item>@color/colorAltSoftPurple</item>
         <item>@color/colorAltPurple</item>
         <item>@color/colorAltDeepPurple</item>
         <item>@color/colorAltIndigo</item>
         <item>@color/colorAltBlue</item>
         <item>@color/colorAltLightBlue</item>
+        <item>@color/colorAltSoftBlue</item>
         <item>@color/colorAltCyan</item>
         <item>@color/colorAltTeal</item>
+        <item>@color/colorAltPrestoGreen</item>
+        <item>@color/colorAltRealGreen</item>
+        <item>@color/colorAltRealLightGreen</item>
         <item>@color/colorAltGreen</item>
         <item>@color/colorAltLightGreen</item>
         <item>@color/colorAltLime</item>
@@ -181,24 +227,32 @@
         <item>@color/colorAltAmber</item>
         <item>@color/colorAltOrange</item>
         <item>@color/colorAltDeepOrange</item>
+        <item>@color/colorAltSoftOrange</item>
         <item>@color/colorAltBrown</item>
         <item>@color/colorAltGrey</item>
         <item>@color/colorAltBlueGrey</item>
         <item>@color/colorAltJVC</item>
+        <item>@color/colorAltSoftBlack</item>
         <item>@color/colorAltBlack</item>
         <item>@color/colorAltDefault</item>
     </integer-array>
 
     <integer-array name="choicesForSurveyColor">
+        <item>@color/colorAltDarkerRealRed</item>
         <item>@color/colorAltDarkerRed</item>
         <item>@color/colorAltDarkerPink</item>
+        <item>@color/colorAltDarkerSoftPurple</item>
         <item>@color/colorAltDarkerPurple</item>
         <item>@color/colorAltDarkerDeepPurple</item>
         <item>@color/colorAltDarkerIndigo</item>
         <item>@color/colorAltDarkerBlue</item>
         <item>@color/colorAltDarkerLightBlue</item>
+        <item>@color/colorAltDarkerSoftBlue</item>
         <item>@color/colorAltDarkerCyan</item>
         <item>@color/colorAltDarkerTeal</item>
+        <item>@color/colorAltDarkerPrestoGreen</item>
+        <item>@color/colorAltDarkerRealGreen</item>
+        <item>@color/colorAltDarkerRealLightGreen</item>
         <item>@color/colorAltDarkerGreen</item>
         <item>@color/colorAltDarkerLightGreen</item>
         <item>@color/colorAltDarkerLime</item>
@@ -206,24 +260,32 @@
         <item>@color/colorAltDarkerAmber</item>
         <item>@color/colorAltDarkerOrange</item>
         <item>@color/colorAltDarkerDeepOrange</item>
+        <item>@color/colorAltDarkerSoftOrange</item>
         <item>@color/colorAltDarkerBrown</item>
         <item>@color/colorAltDarkerGrey</item>
         <item>@color/colorAltDarkerBlueGrey</item>
         <item>@color/colorAltDarkerJVC</item>
+        <item>@color/colorAltDarkerSoftBlack</item>
         <item>@color/colorAltDarkerBlack</item>
         <item>@color/defaultSurveyMessageColor</item>
     </integer-array>
 
     <integer-array name="choicesForDeleteColor">
+        <item>@color/colorAltDarkerRealRed</item>
         <item>@color/colorAltDarkerRed</item>
         <item>@color/colorAltDarkerPink</item>
+        <item>@color/colorAltDarkerSoftPurple</item>
         <item>@color/colorAltDarkerPurple</item>
         <item>@color/colorAltDarkerDeepPurple</item>
         <item>@color/colorAltDarkerIndigo</item>
         <item>@color/colorAltDarkerBlue</item>
         <item>@color/colorAltDarkerLightBlue</item>
+        <item>@color/colorAltDarkerSoftBlue</item>
         <item>@color/colorAltDarkerCyan</item>
         <item>@color/colorAltDarkerTeal</item>
+        <item>@color/colorAltDarkerPrestoGreen</item>
+        <item>@color/colorAltDarkerRealGreen</item>
+        <item>@color/colorAltDarkerRealLightGreen</item>
         <item>@color/colorAltDarkerGreen</item>
         <item>@color/colorAltDarkerLightGreen</item>
         <item>@color/colorAltDarkerLime</item>
@@ -231,10 +293,12 @@
         <item>@color/colorAltDarkerAmber</item>
         <item>@color/colorAltDarkerOrange</item>
         <item>@color/colorAltDarkerDeepOrange</item>
+        <item>@color/colorAltDarkerSoftOrange</item>
         <item>@color/colorAltDarkerBrown</item>
         <item>@color/colorAltDarkerGrey</item>
         <item>@color/colorAltDarkerBlueGrey</item>
         <item>@color/colorAltDarkerJVC</item>
+        <item>@color/colorAltDarkerSoftBlack</item>
         <item>@color/colorAltDarkerBlack</item>
         <item>@color/defaultDeletedMessageColor</item>
     </integer-array>

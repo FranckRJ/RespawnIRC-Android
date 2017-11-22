@@ -112,6 +112,11 @@
         <item name="colorAccent">?attr/themedLinkColor</item>
     </style>
 
+    <style name="PrimaryColorIsRealRed">
+        <item name="colorPrimary">@color/colorPrimaryRealRed</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerRealRed</item>
+    </style>
+
     <style name="PrimaryColorIsRed">
         <item name="colorPrimary">@color/colorPrimaryRed</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerRed</item>
@@ -120,6 +125,11 @@
     <style name="PrimaryColorIsPink">
         <item name="colorPrimary">@color/colorPrimaryPink</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerPink</item>
+    </style>
+
+    <style name="PrimaryColorIsSoftPurple">
+        <item name="colorPrimary">@color/colorPrimarySoftPurple</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerSoftPurple</item>
     </style>
 
     <style name="PrimaryColorIsPurple">
@@ -147,6 +157,11 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerLightBlue</item>
     </style>
 
+    <style name="PrimaryColorIsSoftBlue">
+        <item name="colorPrimary">@color/colorPrimarySoftBlue</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerSoftBlue</item>
+    </style>
+
     <style name="PrimaryColorIsCyan">
         <item name="colorPrimary">@color/colorPrimaryCyan</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerCyan</item>
@@ -155,6 +170,21 @@
     <style name="PrimaryColorIsTeal">
         <item name="colorPrimary">@color/colorPrimaryTeal</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerTeal</item>
+    </style>
+
+    <style name="PrimaryColorIsPrestoGreen">
+        <item name="colorPrimary">@color/colorPrimaryPrestoGreen</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerPrestoGreen</item>
+    </style>
+
+    <style name="PrimaryColorIsRealGreen">
+        <item name="colorPrimary">@color/colorPrimaryRealGreen</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerRealGreen</item>
+    </style>
+
+    <style name="PrimaryColorIsRealLightGreen">
+        <item name="colorPrimary">@color/colorPrimaryRealLightGreen</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerRealLightGreen</item>
     </style>
 
     <style name="PrimaryColorIsGreen">
@@ -192,6 +222,11 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerDeepOrange</item>
     </style>
 
+    <style name="PrimaryColorIsSoftOrange">
+        <item name="colorPrimary">@color/colorPrimarySoftOrange</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerSoftOrange</item>
+    </style>
+
     <style name="PrimaryColorIsBrown">
         <item name="colorPrimary">@color/colorPrimaryBrown</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerBrown</item>
@@ -210,6 +245,11 @@
     <style name="PrimaryColorIsJVC">
         <item name="colorPrimary">@color/colorPrimaryJVC</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerJVC</item>
+    </style>
+
+    <style name="PrimaryColorIsSoftBlack">
+        <item name="colorPrimary">@color/colorPrimarySoftBlack</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerSoftBlack</item>
     </style>
 
     <style name="PrimaryColorIsBlack">
