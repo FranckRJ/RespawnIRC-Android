@@ -10,6 +10,7 @@ android {
         versionCode 38
         versionName "1.9b1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        resConfigs "fr"
     }
     buildTypes {
         release {
