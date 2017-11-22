@@ -512,11 +512,9 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         pseudoTextNavigation = navigationHeader.findViewById(R.id.pseudo_text_navigation_header);
         contextConnectImageNavigation = navigationHeader.findViewById(R.id.context_connect_image_navigation_header);
         adapterForNavigationMenu = new NavigationMenuAdapter(this);
-        adapterForNavigationMenu.setBackgroundColors(Undeprecator.resourcesGetColor(getResources(), (ThemeManager.getThemeUsedIsDark() ? android.R.color.white : android.R.color.black)),
-                ThemeManager.getColorInt(R.attr.themedNavigationIconColor, this), ThemeManager.getColorInt(R.attr.colorAccent, this) & 0x40FFFFFF,
-                Undeprecator.resourcesGetColor(getResources(), android.R.color.transparent));
-        adapterForNavigationMenu.setFontColors(Undeprecator.resourcesGetColor(getResources(), (ThemeManager.getThemeUsedIsDark() ? android.R.color.white : android.R.color.black)),
-                ThemeManager.getColorInt(R.attr.themedHeaderTextColor, this));
+        adapterForNavigationMenu.setBackgroundColors((ThemeManager.getThemeUsedIsDark() ? Color.WHITE : Color.BLACK), ThemeManager.getColorInt(R.attr.themedNavigationIconColor, this),
+                ThemeManager.getColorInt(R.attr.colorAccent, this) & 0x40FFFFFF, Color.TRANSPARENT);
+        adapterForNavigationMenu.setFontColors((ThemeManager.getThemeUsedIsDark() ? Color.WHITE : Color.BLACK), ThemeManager.getColorInt(R.attr.themedHeaderTextColor, this));
         navigationMenuList.setHeaderView(navigationHeader);
         navigationMenuList.setAdapter(adapterForNavigationMenu);
         navigationMenuList.setOnItemClickListener(itemInNavigationClickedListener);

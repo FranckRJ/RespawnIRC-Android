@@ -3,6 +3,7 @@ package com.franckrj.respawnirc.dialogs;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -60,7 +61,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
     };
 
     private void selectThisRow(int rowToUse) {
-        listOfCategoryButtons.get(oldRowNumber).setBackgroundColor(Undeprecator.resourcesGetColor(getResources(), android.R.color.transparent));
+        listOfCategoryButtons.get(oldRowNumber).setBackgroundColor(Color.TRANSPARENT);
         listOfCategoryButtons.get(rowToUse).setBackgroundColor(ThemeManager.getColorInt(R.attr.themedSelectedStickerTypeColor, getActivity()));
         initializeSpanForTextViewIfNeeded(jvcImageGetter, rowToUse);
         mainTextView.setText(replaceUrlSpans(listOfSpanForTextView[rowToUse]));
