@@ -43,6 +43,7 @@ public class ThemeManager {
 
     private static ThemeName themeUsed = ThemeName.LIGHT_THEME;
     private static int colorPrimaryIdUsedForThemeLight = COLOR_ID_INDIGO;
+    private static @ColorInt int realTopicNameColorUsedForLightTheme = 0;
     private static @ColorInt int realAltColorUsedForLightTheme = 0;
     private static @ColorInt int realSurveyColorUsedForLightTheme = 0;
     private static @ColorInt int realDeletedColorUsedForLightTheme = 0;
@@ -66,6 +67,7 @@ public class ThemeManager {
     public static void updateColorsUsed(Resources res) {
         int[] arrayOfColors = res.getIntArray(R.array.choicesForPrimaryColor);
         int primaryColorChoosed = PrefsManager.getInt(PrefsManager.IntPref.Names.PRIMARY_COLOR_OF_LIGHT_THEME);
+        realTopicNameColorUsedForLightTheme = PrefsManager.getInt(PrefsManager.IntPref.Names.TOPIC_NAME_COLOR_OF_LIGHT_THEME);
         realAltColorUsedForLightTheme = PrefsManager.getInt(PrefsManager.IntPref.Names.ALT_COLOR_OF_LIGHT_THEME);
         realSurveyColorUsedForLightTheme = PrefsManager.getInt(PrefsManager.IntPref.Names.SURVEY_COLOR_OF_LIGHT_THEME);
         realDeletedColorUsedForLightTheme = PrefsManager.getInt(PrefsManager.IntPref.Names.DELETED_COLOR_OF_LIGHT_THEME);
@@ -207,6 +209,12 @@ public class ThemeManager {
     public static int getColorInt(@AttrRes int thisAttrColor, Context fromThisContext) {
         if (themeUsed == ThemeName.LIGHT_THEME) {
             switch (thisAttrColor) {
+                case R.attr.themedTopicNameColor:
+                    if (realTopicNameColorUsedForLightTheme != 0) {
+                        return realTopicNameColorUsedForLightTheme;
+                    } else {
+                        break;
+                    }
                 case R.attr.themedAltBackgroundColor:
                     if (realAltColorUsedForLightTheme != 0) {
                         return realAltColorUsedForLightTheme;

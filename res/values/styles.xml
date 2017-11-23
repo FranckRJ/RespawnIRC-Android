@@ -22,10 +22,10 @@
         <item name="themedBackgroundAvatar">@drawable/avatar_image_border_light</item>
         <item name="themedNavigationHeaderBackground">@drawable/navigation_header_background_light</item>
         <item name="themedSelectedStickerTypeColor">@color/selectedStickerTypeColorThemeLight</item>
-        <item name="themedAltBackgroundColor">@color/colorAltDefault</item>
-        <item name="themedDeletedMessageBackgroundColor">@color/defaultDeletedMessageColor</item>
-        <item name="themedSurveyMessageBackgroundColor">@color/defaultSurveyMessageColor</item>
-        <item name="themedTopicNameColor">@color/topicNameColorThemeLight</item>
+        <item name="themedAltBackgroundColor">@color/defaultColorAltThemeLight</item>
+        <item name="themedDeletedMessageBackgroundColor">@color/defaultDeletedMessageColorThemeLight</item>
+        <item name="themedSurveyMessageBackgroundColor">@color/defaultSurveyMessageColorThemeLight</item>
+        <item name="themedTopicNameColor">@color/defaultTopicNameColorThemeLight</item>
         <item name="themedQuoteBackgroundColor">@color/colorQuoteBackgroundThemeLight</item>
         <item name="themedPseudoUserColor">@color/colorPseudoUserThemeLight</item>
         <item name="themedPseudoOtherModeForumColor">@color/colorPseudoOtherModeForumThemeLight</item>

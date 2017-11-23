@@ -233,6 +233,7 @@
     <string name="deletedMessageColor">Couleur des messages supprimés</string>
     <string name="megaByteNumber">%1$.2f Mo</string>
     <string name="kiloByteNumber">%1$.2f Ko</string>
+    <string name="topicNameColor">Couleur du nom des topics</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

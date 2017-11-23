@@ -7,7 +7,6 @@
     <color name="colorAccentThemeLight">#757575</color>
     <color name="colorQuoteBackgroundThemeLight">#10000000</color>
     <color name="linkColorThemeLight">#006BD7</color>
-    <color name="topicNameColorThemeLight">#006BD7</color>
     <color name="colorPseudoUserThemeLight">#3399ff</color>
     <color name="colorPseudoOtherModeForumThemeLight">#80000000</color>
     <color name="colorPseudoOtherModeIrcThemeLight">#000025</color>
@@ -168,9 +167,10 @@
     <color name="colorPrimaryDarkerBlack">#000000</color>
     <color name="colorAltBlack">#E0E0E0</color>
     <color name="colorAltDarkerBlack">#BDBDBD</color>
-    <color name="colorAltDefault">#EEF5FC</color>
-    <color name="defaultSurveyMessageColor">#FFF0DB</color>
-    <color name="defaultDeletedMessageColor">#CFF3FE</color>
+    <color name="defaultTopicNameColorThemeLight">#006BD7</color>
+    <color name="defaultColorAltThemeLight">#EEF5FC</color>
+    <color name="defaultSurveyMessageColorThemeLight">#FFF0DB</color>
+    <color name="defaultDeletedMessageColorThemeLight">#CFF3FE</color>
 
     <integer-array name="choicesForPrimaryColor">
         <item>@color/colorPrimaryRealRed</item>
@@ -204,6 +204,39 @@
         <item>@color/colorPrimaryBlack</item>
     </integer-array>
 
+    <integer-array name="choicesForTopicNameColor">
+        <item>@color/colorPrimaryRealRed</item>
+        <item>@color/colorPrimaryRed</item>
+        <item>@color/colorPrimaryPink</item>
+        <item>@color/colorPrimarySoftPurple</item>
+        <item>@color/colorPrimaryPurple</item>
+        <item>@color/colorPrimaryDeepPurple</item>
+        <item>@color/colorPrimaryIndigo</item>
+        <item>@color/colorPrimaryBlue</item>
+        <item>@color/colorPrimaryLightBlue</item>
+        <item>@color/colorPrimarySoftBlue</item>
+        <item>@color/colorPrimaryCyan</item>
+        <item>@color/colorPrimaryTeal</item>
+        <item>@color/colorPrimaryPrestoGreen</item>
+        <item>@color/colorPrimaryRealGreen</item>
+        <item>@color/colorPrimaryRealLightGreen</item>
+        <item>@color/colorPrimaryGreen</item>
+        <item>@color/colorPrimaryLightGreen</item>
+        <item>@color/colorPrimaryLime</item>
+        <item>@color/colorPrimaryYellow</item>
+        <item>@color/colorPrimaryAmber</item>
+        <item>@color/colorPrimaryOrange</item>
+        <item>@color/colorPrimaryDeepOrange</item>
+        <item>@color/colorPrimarySoftOrange</item>
+        <item>@color/colorPrimaryBrown</item>
+        <item>@color/colorPrimaryGrey</item>
+        <item>@color/colorPrimaryBlueGrey</item>
+        <item>@color/colorPrimaryJVC</item>
+        <item>@color/colorPrimarySoftBlack</item>
+        <item>@color/colorPrimaryBlack</item>
+        <item>@color/defaultTopicNameColorThemeLight</item>
+    </integer-array>
+
     <integer-array name="choicesForAltColor">
         <item>@color/colorAltRealRed</item>
         <item>@color/colorAltRed</item>
@@ -234,7 +267,7 @@
         <item>@color/colorAltJVC</item>
         <item>@color/colorAltSoftBlack</item>
         <item>@color/colorAltBlack</item>
-        <item>@color/colorAltDefault</item>
+        <item>@color/defaultColorAltThemeLight</item>
     </integer-array>
 
     <integer-array name="choicesForSurveyColor">
@@ -267,7 +300,7 @@
         <item>@color/colorAltDarkerJVC</item>
         <item>@color/colorAltDarkerSoftBlack</item>
         <item>@color/colorAltDarkerBlack</item>
-        <item>@color/defaultSurveyMessageColor</item>
+        <item>@color/defaultSurveyMessageColorThemeLight</item>
     </integer-array>
 
     <integer-array name="choicesForDeleteColor">
@@ -300,6 +333,6 @@
         <item>@color/colorAltDarkerJVC</item>
         <item>@color/colorAltDarkerSoftBlack</item>
         <item>@color/colorAltDarkerBlack</item>
-        <item>@color/defaultDeletedMessageColor</item>
+        <item>@color/defaultDeletedMessageColorThemeLight</item>
     </integer-array>
 </resources>

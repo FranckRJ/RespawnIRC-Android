@@ -40,6 +40,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     private boolean ignoreTopicToo = true;
     private boolean clearTopicsOnRefresh = true;
     private boolean isInErrorMode = false;
+    private @ColorInt int currentTopicNameColor = 0;
     private @ColorInt int currentAltColor = 0;
 
     private final AdapterView.OnItemClickListener listenerForItemClickedInListView = new AdapterView.OnItemClickListener() {
@@ -152,6 +153,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         getterForForum.setCookieListInAString(PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
         pseudoOfUserInLC = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER).toLowerCase();
         ignoreTopicToo = PrefsManager.getBool(PrefsManager.BoolPref.Names.IGNORE_TOPIC_TOO);
+        currentTopicNameColor = ThemeManager.getColorInt(R.attr.themedTopicNameColor, getActivity());
         currentAltColor = ThemeManager.getColorInt(R.attr.themedAltBackgroundColor, getActivity());
         clearTopicsOnRefresh = true;
     }
@@ -300,12 +302,17 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     public void onResume() {
         super.onResume();
         boolean oldAlternateBackgroundColor = adapterForForum.getAlternateBackgroundColor();
+        @ColorInt int oldTopicNameColor = currentTopicNameColor;
         @ColorInt int oldAltColor = currentAltColor;
         reloadSettings();
         isInErrorMode = false;
 
+        if (oldTopicNameColor != currentTopicNameColor) {
+            adapterForForum.recreateAllItems();
+        }
+
         if (oldAlternateBackgroundColor != adapterForForum.getAlternateBackgroundColor() ||
-                oldAltColor != currentAltColor) {
+                oldTopicNameColor != currentTopicNameColor || oldAltColor != currentAltColor) {
             adapterForForum.notifyDataSetChanged();
         }
 

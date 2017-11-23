@@ -63,10 +63,25 @@ public class JVCForumAdapter extends BaseAdapter {
     }
 
     public void addItem(JVCParser.TopicInfos item) {
+        listOfTopics.add(item);
+        listOfContentForTopics.add(createHolderForItem(item));
+    }
+
+    public void recreateAllItems() {
+        listOfContentForTopics.clear();
+
+        for (JVCParser.TopicInfos thisItem : listOfTopics) {
+            listOfContentForTopics.add(createHolderForItem(thisItem));
+        }
+    }
+
+    private ContentHolder createHolderForItem(JVCParser.TopicInfos item) {
         String textForAuthor;
         ContentHolder thisHolder = new ContentHolder();
+
         thisHolder.firstLineContent = Undeprecator.htmlFromHtml("<b><font color=\"" + Utils.colorToString(ThemeManager.getColorInt(R.attr.themedTopicNameColor, parentActivity)) +
-                                        "\">" + item.htmlName + "</font> (" + item.nbOfMessages + ")</b>");
+                "\">" + item.htmlName + "</font> (" + item.nbOfMessages + ")</b>");
+
         switch (item.authorType) {
             case "modo":
                 textForAuthor = "<small><font color=\"" + Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoModoColor, parentActivity)) + "\">" + item.author + "</font></small>";
@@ -79,10 +94,11 @@ public class JVCForumAdapter extends BaseAdapter {
                 textForAuthor = "<small>" + item.author + "</small>";
                 break;
         }
+
         thisHolder.secondLineContent = Undeprecator.htmlFromHtml(textForAuthor);
         thisHolder.thirdLineContent = Undeprecator.htmlFromHtml("<small>" + item.wholeDate + "</small>");
-        listOfTopics.add(item);
-        listOfContentForTopics.add(thisHolder);
+
+        return thisHolder;
     }
 
     @Override

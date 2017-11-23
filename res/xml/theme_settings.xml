@@ -22,21 +22,27 @@
             app:pref_colors="@array/choicesForPrimaryColor"/>
 
         <ColorPickerPreference
+            android:key="@string/settingsTopicNameColorOfLightTheme"
+            android:title="@string/topicNameColor"
+            app:pref_currentColor="@color/defaultTopicNameColorThemeLight"
+            app:pref_colors="@array/choicesForTopicNameColor"/>
+
+        <ColorPickerPreference
             android:key="@string/settingsAltColorOfLightTheme"
             android:title="@string/altColorOfMessages"
-            app:pref_currentColor="@color/colorAltDefault"
+            app:pref_currentColor="@color/defaultColorAltThemeLight"
             app:pref_colors="@array/choicesForAltColor"/>
 
         <ColorPickerPreference
             android:key="@string/settingsSurveyColorOfLightTheme"
             android:title="@string/surveyMessageColor"
-            app:pref_currentColor="@color/defaultSurveyMessageColor"
+            app:pref_currentColor="@color/defaultSurveyMessageColorThemeLight"
             app:pref_colors="@array/choicesForSurveyColor"/>
 
         <ColorPickerPreference
             android:key="@string/settingsDeletedColorOfLightTheme"
             android:title="@string/deletedMessageColor"
-            app:pref_currentColor="@color/defaultDeletedMessageColor"
+            app:pref_currentColor="@color/defaultDeletedMessageColorThemeLight"
             app:pref_colors="@array/choicesForDeleteColor"/>
     </PreferenceCategory>
 
