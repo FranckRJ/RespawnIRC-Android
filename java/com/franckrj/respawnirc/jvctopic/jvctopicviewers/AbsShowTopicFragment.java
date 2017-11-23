@@ -390,7 +390,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             jvcMsgList.setDivider(null);
             jvcMsgList.setDividerHeight(dividerSizeForMsgList);
         } else {
-            jvcMsgList.setPadding(0, 0, 0, 2); //pour corriger un bug de smoothscroll
+            jvcMsgList.setPadding(0, 0, 0, 3); //pour corriger un bug de smoothscroll
         }
         jvcMsgList.setClipToPadding(false);
         jvcMsgList.setAdapter(adapterForTopic);

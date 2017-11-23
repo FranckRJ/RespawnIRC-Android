@@ -63,7 +63,7 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
                 } else {
                     allMessagesShowedAreFromIgnoredPseudos = false;
 
-                    if (autoScrollIsEnabled && (scrolledAtTheEnd || goToBottomAtPageLoading)) {
+                    if (goToBottomAtPageLoading || (autoScrollIsEnabled && scrolledAtTheEnd)) {
                         if (smoothScrollIsEnabled && scrolledAtTheEnd) { //s'il y avait des messages affichés avant et qu'on était en bas de page, smoothscroll
                             jvcMsgList.smoothScrollToPosition(adapterForTopic.getCount() - 1);
                         } else {
