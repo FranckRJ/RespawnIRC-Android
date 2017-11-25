@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="60"
                 android:layout_margin="4dp"
-                android:text="@string/manageSurvey"/>
+                android:text="@string/createSurvey"/>
         </LinearLayout>
 
         <include

@@ -38,6 +38,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
     private SendTopicInfos currentInfos = new SendTopicInfos();
     private EditText topicTitleEdit = null;
     private EditText topicContentEdit = null;
+    private Button manageSurveyButton = null;
     private String lastTopicTitleSended = "";
     private String lastTopicContentSended = "";
     private String lastSurveyTitleSended = "";
@@ -123,6 +124,14 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
         }
     }
 
+    private void updateManageSurveyButtonText() {
+        if (Utils.stringIsEmptyOrNull(currentInfos.surveyTitle)) {
+            manageSurveyButton.setText(R.string.createSurvey);
+        } else {
+            manageSurveyButton.setText(R.string.manageSurvey);
+        }
+    }
+
     private void stopAllCurrentTasks() {
         if (currentAsyncTaskForSendTopic != null) {
             currentAsyncTaskForSendTopic.clearListenersAndCancel();
@@ -139,7 +148,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
         ActionBar myActionBar = getSupportActionBar();
 
         Button insertStuffButton = findViewById(R.id.insertstuff_button_sendtopic);
-        Button manageSurveyButton = findViewById(R.id.managesurvey_button_sendtopic);
+        manageSurveyButton = findViewById(R.id.managesurvey_button_sendtopic);
         topicTitleEdit = findViewById(R.id.topic_title_edit_sendtopic);
         topicContentEdit = findViewById(R.id.topic_content_edit_sendtopic);
 
@@ -176,6 +185,8 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
         lastTopicContentSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_TOPIC_CONTENT_SENDED);
         lastSurveyTitleSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_SURVEY_TITLE_SENDED);
         lastSurveyReplySendedInAString = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_SURVEY_REPLY_SENDED_IN_A_STRING);
+
+        updateManageSurveyButtonText();
     }
 
     @Override
@@ -223,6 +234,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
                                                                                  return Utils.decodeUrlStringToString(baseString);
                                                                              }
                                                                          });
+                updateManageSurveyButtonText();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
