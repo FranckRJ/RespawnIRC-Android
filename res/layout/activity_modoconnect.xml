@@ -29,20 +29,28 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="4dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:hint="@string/modoPassword"/>
+                    android:hint="@string/modoPassword"
+                    android:background="?attr/themedDefaultBackgroundColor"/>
+
+                <View
+                    android:id="@+id/separator_modoconnect"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_below="@id/password_text_modoconnect"
+                    android:background="?attr/themedDarkerBackgroundColor"/>
 
                 <Button
                     android:id="@+id/validate_button_modoconnect"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/password_text_modoconnect"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
+                    android:layout_below="@+id/separator_modoconnect"
+                    android:layout_margin="4dp"
                     android:text="@string/validate"/>
             </RelativeLayout>
         </android.support.v4.widget.SwipeRefreshLayout>

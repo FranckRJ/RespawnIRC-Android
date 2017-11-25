@@ -17,6 +17,7 @@
             layout="@layout/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="4dp"
@@ -27,7 +28,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:focusable="true"
-            android:focusableInTouchMode="true">
+            android:focusableInTouchMode="true"
+            android:background="?attr/themedDefaultBackgroundColor">
                 <EditText
                     android:id="@+id/pseudo_text_connect"
                     android:layout_width="0dp"
@@ -43,6 +45,11 @@
                     android:text="@string/endConnect"
                     android:onClick="saveCookies"/>
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="?attr/themedDarkerBackgroundColor"/>
 
         <WebView
             android:id="@+id/webview_connect"

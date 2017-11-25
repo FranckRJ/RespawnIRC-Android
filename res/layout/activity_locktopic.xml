@@ -14,20 +14,31 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_below="@+id/toolbar_locktopic"
-            android:layout_margin="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="4dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
             android:gravity="bottom"
             android:inputType="textMultiLine|textCapSentences"
             android:minLines="2"
             android:maxLines="3"
-            android:hint="@string/reasonOfLock"/>
+            android:hint="@string/reasonOfLock"
+            android:background="?attr/themedDefaultBackgroundColor"/>
+
+        <View
+            android:id="@+id/separator_locktopic"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@id/reason_edit_locktopic"
+            android:background="?attr/themedDarkerBackgroundColor"/>
 
         <Button
             android:id="@+id/lock_button_locktopic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/reason_edit_locktopic"
+            android:layout_below="@id/separator_locktopic"
             android:text="@string/lock"
-            android:layout_margin="16dp"/>
+            android:layout_margin="4dp"/>
 
         <include
             android:id="@+id/toolbar_locktopic"
