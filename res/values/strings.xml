@@ -45,7 +45,7 @@
     <string name="showQuoteMessage">Afficher les citations imbriquées</string>
     <string name="hideQuoteMessage">Cacher les citations imbriquées</string>
     <string name="maxNumberOfOverlyQuoteTitle">Nombre max de citations imbriquées</string>
-    <string name="warningNotConnected">Vous ne vous êtes pas connecté</string>
+    <string name="warningNotConnected">Vous ne vous êtes pas connecté !</string>
     <string name="errorQuoteAlreadyRunning">Erreur, citation déjà en cours.</string>
     <string name="errorInfosMissings">Erreur, informations manquantes (rechargez la page ?).</string>
     <string name="errorMessageAlreadySending">Erreur, envoie ou édition d\'un message actuellement en cours.</string>
@@ -62,7 +62,7 @@
     <string name="errorDuringFetchFavs">Erreur durant la récupération des favoris.</string>
     <string name="topicFav">Topics favoris</string>
     <string name="deleteMessage">Supprimer</string>
-    <string name="supressSuccess">Message supprimé</string>
+    <string name="supressSuccess">Message supprimé.</string>
     <string name="errorDeleteAlreadyRunning">Erreur, suppression déjà en cours.</string>
     <string name="openInExternalBrowser">Ouvrir dans le navigateur externe</string>
     <string name="openInInternBrowser">Ouvrir dans le navigateur interne</string>
@@ -77,8 +77,8 @@
     <string name="addToFavs">Ajouter aux favoris</string>
     <string name="removeOfFavs">Retirer des favoris</string>
     <string name="errorActionAlreadyRunning">Erreur, action déjà en cours.</string>
-    <string name="favAdded">Favori ajouté</string>
-    <string name="favRemoved">Favori retiré</string>
+    <string name="favAdded">Favori ajouté.</string>
+    <string name="favRemoved">Favori retiré.</string>
     <string name="topicLockedForReason">Sujet fermé : %1$s</string>
     <string name="errorTopicIsLocked">Erreur, le topic est fermé.</string>
     <string name="transformStickerToSmileyTitle">Changer les stickers en smiley</string>
@@ -109,8 +109,8 @@
     <string name="copyPermalink">Copier le lien permanent</string>
     <string name="selectText">Sélectionner du texte</string>
     <string name="copyUrl">Copier l\'URL</string>
-    <string name="copyDone">Copie effectuée</string>
-    <string name="allTextCopied">Copie de l\'intégralité du texte</string>
+    <string name="copyDone">Copie effectuée.</string>
+    <string name="allTextCopied">Copie de l\'intégralité du texte.</string>
     <string name="insertStuff">Insérer…</string>
     <string name="shortenLongLinkTitle">Raccourcir les liens longs</string>
     <string name="showRefreshWhenMessagesShowedModeIRCTitle">Toujours afficher l\'icône de refresh</string>
@@ -155,14 +155,14 @@
     <string name="vote">Voter</string>
     <string name="errorVoteInvalide">Erreur, vote invalide.</string>
     <string name="errorVoteAlreadyRunning">Erreur, vote déjà en cours.</string>
-    <string name="voteRegistered">Vote enregistré !</string>
+    <string name="voteRegistered">Vote enregistré.</string>
     <string name="sendMp">Envoyer un MP</string>
     <string name="showForumAndTopicNames">Forum : %1$s\n\nTopic : %2$s</string>
     <string name="showForumNames">Forum : %1$s</string>
     <string name="modoPassword">Mot de passe de modération</string>
     <string name="validate">Valider</string>
     <string name="connnectAsModoText">Se connecter à la modération</string>
-    <string name="connectionSuccessful">Connexion réussie</string>
+    <string name="connectionSuccessful">Connexion réussie.</string>
     <string name="showBlacklistedMessage">Afficher le message</string>
     <string name="postAsModoWhenPossibleTitle">Poster en tant que modérateur</string>
     <string name="postAsModoWhenPossibleSummary">(uniquement lorsque vous êtes connecté en tant que modo sur les forums que vous modérez)</string>
@@ -185,7 +185,7 @@
     <string name="advanced">Avancé</string>
     <string name="ignore">Ignorer</string>
     <string name="errorYouCantIgnoreYourself">Erreur, vous ne pouvez pas vous ignorer.</string>
-    <string name="pseudoIgnored">%1$s ignoré !</string>
+    <string name="pseudoIgnored">%1$s ignoré.</string>
     <string name="pseudoIsAlreadyIgnored">Erreur, le pseudo est déjà ignoré.</string>
     <string name="ignoreTopicTooTitle">Cacher les topics également</string>
     <string name="manageIgnoreList">Gérer la liste des ignorés</string>
@@ -208,7 +208,7 @@
     <string name="keepEmptyToNotUse">Laisser vide pour ne pas utiliser</string>
     <string name="surveyTitlePlaceholder">Titre (vide pour ne pas créer de sondage)</string>
     <string name="warningChangesNotSaved">Attention, vos changements n\'ont pas été sauvegardés !</string>
-    <string name="kickSuccessful">Kick effectué</string>
+    <string name="kickSuccessful">Kick effectué.</string>
     <string name="colorPseudoOfUserInInfoTitle">Colorer votre pseudo</string>
     <string name="colorPseudoOfUserInMessageTitle">Colorer votre pseudo dans les messages</string>
     <string name="backIsOpenDrawerTitle">Retour pour ouvrir le menu latéral</string>
