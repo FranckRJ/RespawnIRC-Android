@@ -43,6 +43,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
     private String lastTopicContentSended = "";
     private String lastSurveyTitleSended = "";
     private String lastSurveyReplySendedInAString = "";
+    private boolean saveTopicsAsDraft = true;
 
     private final View.OnClickListener insertStuffButtonClicked = new View.OnClickListener() {
         @Override
@@ -99,13 +100,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
 
         if (currentAsyncTaskForSendTopic == null) {
             lastSurveyTitleSended = currentInfos.surveyTitle;
-            lastSurveyReplySendedInAString = TextUtils.join("&", Utils.mapStringArrayList(currentInfos.surveyReplysList,
-                                                                                          new Utils.StringModifier() {
-                                                                                              @Override
-                                                                                              public String changeString(String baseString) {
-                                                                                                  return Utils.encodeStringToUrlString(baseString);
-                                                                                              }
-                                                                                          }));
+            lastSurveyReplySendedInAString = surveyReplyListToString(currentInfos.surveyReplysList);
             lastTopicTitleSended = topicTitleEdit.getText().toString();
             lastTopicContentSended = topicContentEdit.getText().toString();
 
@@ -125,7 +120,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
     }
 
     private void updateManageSurveyButtonText() {
-        if (Utils.stringIsEmptyOrNull(currentInfos.surveyTitle)) {
+        if (currentInfos.surveyTitle.isEmpty()) {
             manageSurveyButton.setText(R.string.createSurvey);
         } else {
             manageSurveyButton.setText(R.string.manageSurvey);
@@ -137,6 +132,28 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
             currentAsyncTaskForSendTopic.clearListenersAndCancel();
             currentAsyncTaskForSendTopic = null;
         }
+    }
+
+    private static String surveyReplyListToString(ArrayList<String> thisSurveyReplyList) {
+        return TextUtils.join("&", Utils.mapStringArrayList(thisSurveyReplyList,
+                                                                     new Utils.StringModifier() {
+                                                                         @Override
+                                                                         public String changeString(String baseString) {
+                                                                             return Utils.encodeStringToUrlString(baseString);
+                                                                         }
+                                                                     }));
+    }
+
+    private static ArrayList<String> surveyReplyStringToList(String thisSurveyReplyString) {
+        ArrayList<String> tmpList = Utils.mapStringArrayList(Arrays.asList(thisSurveyReplyString.split("&")),
+                                                             new Utils.StringModifier() {
+                                                                 @Override
+                                                                 public String changeString(String baseString) {
+                                                                     return Utils.decodeUrlStringToString(baseString);
+                                                                 }
+                                                             });
+        tmpList.removeAll(Arrays.asList("", null));
+        return tmpList;
     }
 
     @Override
@@ -174,24 +191,39 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
             if (tmpListOfReply != null) {
                 currentInfos.surveyReplysList = tmpListOfReply;
             }
+        } else {
+            currentInfos.cookieList = PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST);
+            lastTopicTitleSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_TOPIC_TITLE_SENDED);
+            lastTopicContentSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_TOPIC_CONTENT_SENDED);
+            lastSurveyTitleSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_SURVEY_TITLE_SENDED);
+            lastSurveyReplySendedInAString = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_SURVEY_REPLY_SENDED_IN_A_STRING);
+            saveTopicsAsDraft = PrefsManager.getBool(PrefsManager.BoolPref.Names.AUTO_SAVE_MESSAGES_AND_TOPICS_AS_DRAFT);
+
+            if (saveTopicsAsDraft) {
+                topicTitleEdit.setText(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_TITLE_DRAFT));
+                topicContentEdit.setText(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_CONTENT_DRAFT));
+                currentInfos.surveyTitle = PrefsManager.getString(PrefsManager.StringPref.Names.SURVEY_TITLE_DRAFT);
+                currentInfos.surveyReplysList = surveyReplyStringToList(PrefsManager.getString(PrefsManager.StringPref.Names.SURVEY_REPLY_IN_A_STRING_DRAFT));
+            }
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        currentInfos.cookieList = PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST);
-        lastTopicTitleSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_TOPIC_TITLE_SENDED);
-        lastTopicContentSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_TOPIC_CONTENT_SENDED);
-        lastSurveyTitleSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_SURVEY_TITLE_SENDED);
-        lastSurveyReplySendedInAString = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_SURVEY_REPLY_SENDED_IN_A_STRING);
-
         updateManageSurveyButtonText();
     }
 
     @Override
     public void onPause() {
         stopAllCurrentTasks();
+
+        PrefsManager.putString(PrefsManager.StringPref.Names.TOPIC_TITLE_DRAFT, topicTitleEdit.getText().toString());
+        PrefsManager.putString(PrefsManager.StringPref.Names.TOPIC_CONTENT_DRAFT, topicContentEdit.getText().toString());
+        PrefsManager.putString(PrefsManager.StringPref.Names.SURVEY_TITLE_DRAFT, currentInfos.surveyTitle);
+        PrefsManager.putString(PrefsManager.StringPref.Names.SURVEY_REPLY_IN_A_STRING_DRAFT, surveyReplyListToString(currentInfos.surveyReplysList));
+        PrefsManager.applyChanges();
+
         super.onPause();
     }
 
@@ -227,18 +259,21 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
                 topicTitleEdit.setText(lastTopicTitleSended);
                 topicContentEdit.setText(lastTopicContentSended);
                 currentInfos.surveyTitle = lastSurveyTitleSended;
-                currentInfos.surveyReplysList = Utils.mapStringArrayList(Arrays.asList(lastSurveyReplySendedInAString.split("&")),
-                                                                         new Utils.StringModifier() {
-                                                                             @Override
-                                                                             public String changeString(String baseString) {
-                                                                                 return Utils.decodeUrlStringToString(baseString);
-                                                                             }
-                                                                         });
+                currentInfos.surveyReplysList = surveyReplyStringToList(lastSurveyReplySendedInAString);
                 updateManageSurveyButtonText();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (saveTopicsAsDraft && (!topicTitleEdit.getText().toString().isEmpty() || !topicContentEdit.getText().toString().isEmpty() ||
+                                  !currentInfos.surveyTitle.isEmpty() || !currentInfos.surveyReplysList.isEmpty())) {
+            Toast.makeText(this, getString(R.string.topicDraftSaved), Toast.LENGTH_SHORT).show();
+        }
+        super.onBackPressed();
     }
 
     @Override

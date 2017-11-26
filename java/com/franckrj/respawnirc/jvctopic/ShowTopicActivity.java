@@ -82,6 +82,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     private boolean goToLastPageAfterLoading = false;
     private boolean goToBottomOnLoadIsEnabled = true;
     private boolean postAsModoWhenPossible = true;
+    private boolean saveMessagesAsDraft = true;
 
     private final JVCMessageToTopicSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageToTopicSender.NewMessageWantEditListener() {
         @Override
@@ -258,6 +259,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         convertNoelshackLinkToDirectLink = PrefsManager.getBool(PrefsManager.BoolPref.Names.USE_DIRECT_NOELSHACK_LINK);
         showOverviewOnImageClick = PrefsManager.getBool(PrefsManager.BoolPref.Names.SHOW_OVERVIEW_ON_IMAGE_CLICK);
         postAsModoWhenPossible = PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE);
+        saveMessagesAsDraft = PrefsManager.getBool(PrefsManager.BoolPref.Names.AUTO_SAVE_MESSAGES_AND_TOPICS_AS_DRAFT);
     }
 
     private void updateShowNavigationButtons() {
@@ -365,6 +367,10 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             }
 
             updateLastPageAndCurrentItemAndButtonsToCurrentLink();
+
+            if (saveMessagesAsDraft) {
+                messageSendEdit.setText(PrefsManager.getString(PrefsManager.StringPref.Names.MESSAGE_DRAFT));
+            }
         } else {
             currentTitles.forum = savedInstanceState.getString(SAVE_CURRENT_FORUM_TITLE_FOR_TOPIC, getString(R.string.app_name));
             currentTitles.topic = savedInstanceState.getString(SAVE_CURRENT_TOPIC_TITLE_FOR_TOPIC, "");
@@ -398,11 +404,15 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     @Override
     public void onPause() {
         stopAllCurrentTask();
+
         if (!pageNavigation.getCurrentLinkIsEmpty()) {
             PrefsManager.putString(PrefsManager.StringPref.Names.TOPIC_URL_TO_FETCH, pageNavigation.getCurrentPageLink());
             PrefsManager.putString(PrefsManager.StringPref.Names.PSEUDO_OF_AUTHOR_OF_TOPIC, pseudoOfAuthor);
-            PrefsManager.applyChanges();
         }
+
+        PrefsManager.putString(PrefsManager.StringPref.Names.MESSAGE_DRAFT, messageSendEdit.getText().toString());
+        PrefsManager.applyChanges();
+
         super.onPause();
     }
 
@@ -477,6 +487,14 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (saveMessagesAsDraft && !messageSendEdit.getText().toString().isEmpty()) {
+            Toast.makeText(this, getString(R.string.messageDraftSaved), Toast.LENGTH_SHORT).show();
+        }
+        super.onBackPressed();
     }
 
     @Override

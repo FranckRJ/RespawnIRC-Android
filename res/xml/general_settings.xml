@@ -13,6 +13,10 @@
             android:title="@string/saveLastRowUsedInsertstuffTitle"/>
 
         <CheckBoxPreference
+            android:key="@string/settingsAutoSaveMessagesAndTopicsAsDraft"
+            android:title="@string/autoSaveMessagesAsDraftTitle"/>
+
+        <CheckBoxPreference
             android:key="@string/settingsForumAlternateBackgroundColor"
             android:title="@string/forumAlternateBackgroundColorTitle"/>
     </PreferenceCategory>

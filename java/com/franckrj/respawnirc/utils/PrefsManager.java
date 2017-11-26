@@ -68,6 +68,11 @@ public class PrefsManager {
         addStringPref(StringPref.Names.LAST_SURVEY_TITLE_SENDED, "pref.lastSurveyTitleSended", "");
         addStringPref(StringPref.Names.LAST_SURVEY_REPLY_SENDED_IN_A_STRING, "pref.lastSurveyReplySendedInAString", "");
         addStringPref(StringPref.Names.IGNORED_PSEUDOS_IN_LC_LIST, "pref.ignoredPseudosInLCList", "");
+        addStringPref(StringPref.Names.MESSAGE_DRAFT, "pref.messageDraft", "");
+        addStringPref(StringPref.Names.TOPIC_TITLE_DRAFT, "pref.topicTitleDraft", "");
+        addStringPref(StringPref.Names.TOPIC_CONTENT_DRAFT, "pref.topicContentDraft", "");
+        addStringPref(StringPref.Names.SURVEY_TITLE_DRAFT, "pref.surveyTitleDraft", "");
+        addStringPref(StringPref.Names.SURVEY_REPLY_IN_A_STRING_DRAFT, "pref.surveyReplyInAStringDraft", "");
 
         addLongPref(LongPref.Names.OLD_LAST_ID_OF_MESSAGE, "pref.oldLastIdOfMessage", 0);
 
@@ -99,6 +104,7 @@ public class PrefsManager {
         addBoolPref(BoolPref.Names.COLOR_PSEUDO_OF_USER_IN_MESSAGE, currentContext.getString(R.string.settingsColorPseudoOfUserInMessage), true);
         addBoolPref(BoolPref.Names.BACK_IS_OPEN_DRAWER, currentContext.getString(R.string.settingsBackIsOpenDrawer), false);
         addBoolPref(BoolPref.Names.SAVE_LAST_ROW_USED_INSERTSTUFF, currentContext.getString(R.string.settingsSaveLastRowUsedInsertstuff), true);
+        addBoolPref(BoolPref.Names.AUTO_SAVE_MESSAGES_AND_TOPICS_AS_DRAFT, currentContext.getString(R.string.settingsAutoSaveMessagesAndTopicsAsDraft), true);
 
         addIntPref(IntPref.Names.PRIMARY_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsPrimaryColorOfLightTheme), 0);
         addIntPref(IntPref.Names.TOPIC_NAME_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsTopicNameColorOfLightTheme), 0);
@@ -286,7 +292,8 @@ public class PrefsManager {
             WEBVIEW_CACHE_NEED_TO_BE_CLEAR,
             COLOR_PSEUDO_OF_USER_IN_INFO, COLOR_PSEUDO_OF_USER_IN_MESSAGE,
             BACK_IS_OPEN_DRAWER,
-            SAVE_LAST_ROW_USED_INSERTSTUFF
+            SAVE_LAST_ROW_USED_INSERTSTUFF,
+            AUTO_SAVE_MESSAGES_AND_TOPICS_AS_DRAFT
         }
     }
 
@@ -347,7 +354,8 @@ public class PrefsManager {
             THEME_USED,
             IGNORED_PSEUDOS_IN_LC_LIST,
             AVATAR_SIZE, STICKER_SIZE, MINI_NOELSHACK_WIDTH,
-            LINK_TYPE_FOR_INTERNAL_BROWSER
+            LINK_TYPE_FOR_INTERNAL_BROWSER,
+            MESSAGE_DRAFT, TOPIC_TITLE_DRAFT, TOPIC_CONTENT_DRAFT, SURVEY_TITLE_DRAFT, SURVEY_REPLY_IN_A_STRING_DRAFT
         }
     }
 

@@ -235,6 +235,9 @@
     <string name="kiloByteNumber">%1$.2f Ko</string>
     <string name="topicNameColor">Couleur du nom des topics</string>
     <string name="createSurvey">Créer un sondage</string>
+    <string name="autoSaveMessagesAsDraftTitle">Sauvegarde des messages en cours d\'écriture</string>
+    <string name="messageDraftSaved">Brouillon du message sauvegardé.</string>
+    <string name="topicDraftSaved">Brouillon du topic sauvegardé.</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
