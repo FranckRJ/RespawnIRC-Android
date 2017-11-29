@@ -74,6 +74,17 @@
     </style>
     <style name="AppTheme.Dark.Real" parent="AppTheme.Dark.Base"/>
 
+    <style name="AppTheme.Grey.Base" parent="AppTheme.Dark.Base">
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerThemeGrey</item>
+        <item name="colorAccent">@color/colorAccentThemeGrey</item>
+        <item name="android:windowBackground">@color/windowBackgroundColorThemeGrey</item>
+        <item name="themedDefaultBackgroundColor">@color/defaultBackgroundColorThemeGrey</item>
+        <item name="themedDividerColor">@color/dividerColorThemeGrey</item>
+        <item name="themedBackgroundAvatar">@drawable/avatar_image_border_grey</item>
+        <item name="themedAltBackgroundColor">@color/altBackgroundColorThemeGrey</item>
+    </style>
+    <style name="AppTheme.Grey.Real" parent="AppTheme.Grey.Base"/>
+
     <style name="AppTheme.Black.Base" parent="AppTheme.Dark.Base">
         <item name="colorPrimary">@color/colorPrimaryThemeBlack</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerThemeBlack</item>

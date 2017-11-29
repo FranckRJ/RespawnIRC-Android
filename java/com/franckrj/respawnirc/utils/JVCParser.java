@@ -1659,7 +1659,7 @@ public final class JVCParser {
     }
 
     private static class BuildSpoilTag implements Utils.StringModifier {
-        private final String spoilButtonCode = "<bg_spoil_button><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "000000" : "FFFFFF") +
+        private final String spoilButtonCode = "<bg_spoil_button><font color=\"#" + (ThemeManager.currentThemeUseDarkColors() ? "000000" : "FFFFFF") +
                                                "\">&nbsp;SPOIL&nbsp;</font></bg_spoil_button>";
 
         private final ArraySet<Integer> listOfSpoilIdToShow;
@@ -1689,7 +1689,7 @@ public final class JVCParser {
 
             if (showThisSpoil) {
                 return "<holdstring_c" + id + ">" + spoilButtonCode + "</holdstring_c" + id + ">" + "<bg_spoil_content><font color=\"#" +
-                        (ThemeManager.getThemeUsedIsDark() ? "FFFFFF" : "000000") + "\">" + (itsForSpoilBlock ? "<br />" : " ") +
+                        (ThemeManager.currentThemeUseDarkColors() ? "FFFFFF" : "000000") + "\">" + (itsForSpoilBlock ? "<br />" : " ") +
                         baseString + "</font></bg_spoil_content>";
             } else {
                 return "<holdstring_o" + id + ">" + spoilButtonCode + "</holdstring_o" + id + ">";

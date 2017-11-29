@@ -156,7 +156,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
                 listOfSpanForTextView[i] = null;
             }
         }
-        if (listOfSpanForTextView[row] == null || (row == 1 && textDecorationRowGeneratedForDarkTheme != ThemeManager.getThemeUsedIsDark())) {
+        if (listOfSpanForTextView[row] == null || (row == 1 && textDecorationRowGeneratedForDarkTheme != ThemeManager.currentThemeUseDarkColors())) {
             StringBuilder textForShowAllStuff = new StringBuilder();
             switch (row) {
                 case 0:
@@ -178,7 +178,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
                     break;
                 case 1:
                     //textformat
-                    textDecorationRowGeneratedForDarkTheme = ThemeManager.getThemeUsedIsDark();
+                    textDecorationRowGeneratedForDarkTheme = ThemeManager.currentThemeUseDarkColors();
                     if (textDecorationRowGeneratedForDarkTheme) {
                         appendAnotherStuff("textformat_bold_dark", textForShowAllStuff, false);
                         appendAnotherStuff("textformat_italic_dark", textForShowAllStuff, false);

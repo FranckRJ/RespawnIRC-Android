@@ -52,10 +52,16 @@ public class ThemeManager {
         String themeStringId = PrefsManager.getString(PrefsManager.StringPref.Names.THEME_USED);
 
         switch (themeStringId) {
+            case "0":
+                themeUsed = ThemeName.LIGHT_THEME;
+                break;
             case "1":
-                themeUsed = ThemeName.DARK_THEME;
+                themeUsed = ThemeName.GREY_THEME;
                 break;
             case "2":
+                themeUsed = ThemeName.DARK_THEME;
+                break;
+            case "3":
                 themeUsed = ThemeName.BLACK_THEME;
                 break;
             default:
@@ -84,6 +90,12 @@ public class ThemeManager {
 
     public static void changeActivityTheme(Activity thisActivity) {
         switch (themeUsed) {
+            case LIGHT_THEME:
+                thisActivity.setTheme(R.style.AppTheme_Light_Real);
+                break;
+            case GREY_THEME:
+                thisActivity.setTheme(R.style.AppTheme_Grey_Real);
+                break;
             case DARK_THEME:
                 thisActivity.setTheme(R.style.AppTheme_Dark_Real);
                 break;
@@ -201,8 +213,8 @@ public class ThemeManager {
         return colorPrimaryIdUsedForThemeLight;
     }
 
-    public static boolean getThemeUsedIsDark() {
-        return themeUsed == ThemeName.DARK_THEME || themeUsed == ThemeName.BLACK_THEME;
+    public static boolean currentThemeUseDarkColors() {
+        return themeUsed != ThemeName.LIGHT_THEME;
     }
 
     @ColorInt
@@ -250,7 +262,7 @@ public class ThemeManager {
 
     @DrawableRes
     public static int getDrawableRes(DrawableName thisDrawable) {
-        if (getThemeUsedIsDark()) {
+        if (currentThemeUseDarkColors()) {
             switch (thisDrawable) {
                 case SHADOW_DRAWER:
                     return R.drawable.shadow_drawer_dark;
@@ -309,6 +321,6 @@ public class ThemeManager {
     }
 
     public enum ThemeName {
-        LIGHT_THEME, DARK_THEME, BLACK_THEME
+        LIGHT_THEME, GREY_THEME, DARK_THEME, BLACK_THEME
     }
 }

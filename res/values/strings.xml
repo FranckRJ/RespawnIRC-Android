@@ -238,6 +238,7 @@
     <string name="autoSaveMessagesAsDraftTitle">Sauvegarde des messages en cours d\'écriture</string>
     <string name="messageDraftSaved">Brouillon du message sauvegardé.</string>
     <string name="topicDraftSaved">Brouillon du topic sauvegardé.</string>
+    <string name="grey">Gris</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>
@@ -260,6 +261,7 @@
     </string-array>
     <string-array name="choicesForThemesReadable">
         <item>@string/light</item>
+        <item>@string/grey</item>
         <item>@string/dark</item>
         <item>@string/black</item>
     </string-array>
@@ -272,6 +274,12 @@
         <item>"0"</item>
         <item>"1"</item>
         <item>"2"</item>
+    </string-array>
+    <string-array name="fourChoicesValue">
+        <item>"0"</item>
+        <item>"1"</item>
+        <item>"2"</item>
+        <item>"3"</item>
     </string-array>
     <string-array name="kickMotives">
         <item>@string/selectMotive</item>

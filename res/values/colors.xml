@@ -42,6 +42,13 @@
     <color name="deletedMessagesBackgroundColorThemeDark">#023A4B</color>
     <color name="surveyMessagesBackgroundColorThemeDark">#1F292E</color>
     <color name="selectedStickerTypeColorThemeDark">#212121</color>
+    <!-- Grey Theme -->
+    <color name="colorPrimaryDarkerThemeGrey">#000000</color>
+    <color name="colorAccentThemeGrey">#EEEEEE</color>
+    <color name="altBackgroundColorThemeGrey">#4A4A4A</color>
+    <color name="defaultBackgroundColorThemeGrey">#424242</color>
+    <color name="windowBackgroundColorThemeGrey">#303030</color>
+    <color name="dividerColorThemeGrey">#90808080</color>
     <!-- Black Theme -->
     <color name="colorPrimaryThemeBlack">#151515</color>
     <color name="colorPrimaryDarkerThemeBlack">#000000</color>

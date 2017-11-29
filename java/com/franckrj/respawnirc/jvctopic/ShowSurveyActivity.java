@@ -141,7 +141,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
         try {
             int colorValueInNumber = Utils.roundToInt(Integer.parseInt(numberOfPercentage) * 2.5); //la couleur de l'int sera entre rouge 0 et rouge 250.
 
-            if (ThemeManager.getThemeUsedIsDark()) {
+            if (ThemeManager.currentThemeUseDarkColors()) {
                 colorValueInNumber = 250 - colorValueInNumber; //inversion pour les thèmes sombres
             }
 
@@ -170,7 +170,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
             numberOfPercentage = numberOfPercentageBuilder.toString();
         }
 
-        if (ThemeManager.getThemeUsedIsDark()) {
+        if (ThemeManager.currentThemeUseDarkColors()) {
             return "<font face=\"monospace\" color=\"#FF" + colorValueOfPercentage + colorValueOfPercentage +"\">" + numberOfPercentage + "</font>%";
         } else {
             return "<font face=\"monospace\" color=\"#" + colorValueOfPercentage + "0000\">" + numberOfPercentage + "</font>%";

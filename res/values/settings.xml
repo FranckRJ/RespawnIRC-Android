@@ -29,7 +29,7 @@
     <string name="settingsEnableCardDesignModeForum" translatable="false">settings.enableCardDesignModeForum</string>
     <string name="settingsSeparationBetweenMessagesBlackThemeModeForum" translatable="false">settings.separationBetweenMessagesBlackThemeModeForum</string>
     <string name="settingsHideUglyImages" translatable="false">settings.hideUglyImages</string>
-    <string name="settingsThemeUsed" translatable="false">settings.themeUsed</string>
+    <string name="settingsThemeUsed" translatable="false">settings.themeUsedV2</string>
     <string name="settingsForumAlternateBackgroundColor" translatable="false">settings.forumAlternateBackgroundColor</string>
     <string name="settingsEnableSmoothScroll" translatable="false">settings.enableSmoothScroll</string>
     <string name="settingsEnableGoToBottomOnLoad" translatable="false">settings.enableGoToBottomOnLoad</string>

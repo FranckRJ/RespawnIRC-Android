@@ -17,9 +17,9 @@ public class CustomTagHandler implements Html.TagHandler {
         if (tag.toLowerCase().equals("s")) {
             processAddOfSpan(opening, output, new StrikethroughSpan());
         } else if (tag.toLowerCase().equals("bg_spoil_button")) {
-            processAddOfSpan(opening, output, new BackgroundColorSpan(ThemeManager.getThemeUsedIsDark() ? Color.WHITE : Color.BLACK));
+            processAddOfSpan(opening, output, new BackgroundColorSpan(ThemeManager.currentThemeUseDarkColors() ? Color.WHITE : Color.BLACK));
         } else if (tag.toLowerCase().equals("bg_spoil_content")) {
-            processAddOfSpan(opening, output, new BackgroundColorSpan(ThemeManager.getThemeUsedIsDark() ? almostDimGray : Color.LTGRAY));
+            processAddOfSpan(opening, output, new BackgroundColorSpan(ThemeManager.currentThemeUseDarkColors() ? almostDimGray : Color.LTGRAY));
         } else if (tag.toLowerCase().startsWith("holdstring_")) {
             String stringToHold = tag.substring(tag.indexOf("_") + 1);
             processAddOfSpan(opening, output, new HoldingStringSpan(stringToHold));
