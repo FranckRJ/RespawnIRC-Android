@@ -410,9 +410,13 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             PrefsManager.putString(PrefsManager.StringPref.Names.PSEUDO_OF_AUTHOR_OF_TOPIC, pseudoOfAuthor);
         }
 
-        PrefsManager.putString(PrefsManager.StringPref.Names.MESSAGE_DRAFT, messageSendEdit.getText().toString());
-        PrefsManager.applyChanges();
+        if (reasonOfLock == null) {
+            PrefsManager.putString(PrefsManager.StringPref.Names.MESSAGE_DRAFT, messageSendEdit.getText().toString());
+        }
 
+        /* Si reasonOfLock != null cela veut dire que la page a chargé et donc que pageNavigation.getCurrentLinkIsEmpty() == false.
+         * Donc dans tous les cas il y a des changements de préférences à appliquer.*/
+        PrefsManager.applyChanges();
         super.onPause();
     }
 
@@ -491,7 +495,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
     @Override
     public void onBackPressed() {
-        if (saveMessagesAsDraft && !messageSendEdit.getText().toString().isEmpty()) {
+        if (saveMessagesAsDraft && reasonOfLock == null && !messageSendEdit.getText().toString().isEmpty()) {
             Toast.makeText(this, getString(R.string.messageDraftSaved), Toast.LENGTH_SHORT).show();
         }
         super.onBackPressed();
