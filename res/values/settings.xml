@@ -53,6 +53,6 @@
     <string name="settingsAltColorOfLightTheme" translatable="false">settings.customColor.altColorOfLightTheme</string>
     <string name="settingsSurveyColorOfLightTheme" translatable="false">settings.customColor.surveyColorOfLightTheme</string>
     <string name="settingsDeletedColorOfLightTheme" translatable="false">settings.customColor.deletedColorOfLightTheme</string>
-    <string name="settingsTopicNameColorOfLightTheme" translatable="false">settings.customColor.topicNameColorOfLightTheme</string>
+    <string name="settingsTopicNameAndLinkColorOfLightTheme" translatable="false">settings.customColor.topicNameAndLinkColorOfLightTheme</string>
     <string name="settingsAutoSaveMessagesAndTopicsAsDraft" translatable="false">settings.autoSaveMessagesAndTopicsAsDraft</string>
 </resources>

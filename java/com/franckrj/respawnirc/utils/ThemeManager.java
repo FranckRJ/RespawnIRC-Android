@@ -40,10 +40,11 @@ public class ThemeManager {
     private static final int COLOR_ID_JVC = 26;
     private static final int COLOR_ID_SOFTBLACK = 27;
     private static final int COLOR_ID_BLACK = 28;
+    private static final int COLOR_ID_DEFAULT = 29;
 
     private static ThemeName themeUsed = ThemeName.LIGHT_THEME;
-    private static int colorPrimaryIdUsedForThemeLight = COLOR_ID_INDIGO;
-    private static @ColorInt int realTopicNameColorUsedForLightTheme = 0;
+    private static int primaryColorIdUsedForThemeLight = COLOR_ID_INDIGO;
+    private static int topicNameAndLinkColorIdUsedForThemeLight = COLOR_ID_DEFAULT;
     private static @ColorInt int realAltColorUsedForLightTheme = 0;
     private static @ColorInt int realSurveyColorUsedForLightTheme = 0;
     private static @ColorInt int realDeletedColorUsedForLightTheme = 0;
@@ -71,21 +72,36 @@ public class ThemeManager {
     }
 
     public static void updateColorsUsed(Resources res) {
-        int[] arrayOfColors = res.getIntArray(R.array.choicesForPrimaryColor);
+        int[] arrayOfPrimaryColors = res.getIntArray(R.array.choicesForPrimaryColor);
+        int[] arrayOfTopicNameAndLinkColors = res.getIntArray(R.array.choicesForTopicNameAndLinkColor);
         int primaryColorChoosed = PrefsManager.getInt(PrefsManager.IntPref.Names.PRIMARY_COLOR_OF_LIGHT_THEME);
-        realTopicNameColorUsedForLightTheme = PrefsManager.getInt(PrefsManager.IntPref.Names.TOPIC_NAME_COLOR_OF_LIGHT_THEME);
+        int topicNameAndLinkColorChoosed = PrefsManager.getInt(PrefsManager.IntPref.Names.TOPIC_NAME_AND_LINK_COLOR_OF_LIGHT_THEME);
         realAltColorUsedForLightTheme = PrefsManager.getInt(PrefsManager.IntPref.Names.ALT_COLOR_OF_LIGHT_THEME);
         realSurveyColorUsedForLightTheme = PrefsManager.getInt(PrefsManager.IntPref.Names.SURVEY_COLOR_OF_LIGHT_THEME);
         realDeletedColorUsedForLightTheme = PrefsManager.getInt(PrefsManager.IntPref.Names.DELETED_COLOR_OF_LIGHT_THEME);
 
-        for (int i = 0; i < arrayOfColors.length; ++i) {
-            if (arrayOfColors[i] == primaryColorChoosed) {
-                colorPrimaryIdUsedForThemeLight = i;
-                return;
+        primaryColorIdUsedForThemeLight = -1;
+        topicNameAndLinkColorIdUsedForThemeLight = -1;
+
+        for (int i = 0; i < arrayOfPrimaryColors.length; ++i) {
+            if (arrayOfPrimaryColors[i] == primaryColorChoosed) {
+                primaryColorIdUsedForThemeLight = i;
+                break;
+            }
+        }
+        for (int i = 0; i < arrayOfTopicNameAndLinkColors.length; ++i) {
+            if (arrayOfTopicNameAndLinkColors[i] == topicNameAndLinkColorChoosed) {
+                topicNameAndLinkColorIdUsedForThemeLight = i;
+                break;
             }
         }
 
-        colorPrimaryIdUsedForThemeLight = COLOR_ID_INDIGO;
+        if (primaryColorIdUsedForThemeLight == -1) {
+            primaryColorIdUsedForThemeLight = COLOR_ID_INDIGO;
+        }
+        if (topicNameAndLinkColorIdUsedForThemeLight == -1) {
+            topicNameAndLinkColorIdUsedForThemeLight = COLOR_ID_DEFAULT;
+        }
     }
 
     public static void changeActivityTheme(Activity thisActivity) {
@@ -108,9 +124,9 @@ public class ThemeManager {
         }
     }
 
-    public static void changeActivityPrimaryColorIfNeeded(Activity thisActivity) {
+    public static void changeActivityThemedColorsIfNeeded(Activity thisActivity) {
         if (themeUsed == ThemeName.LIGHT_THEME) {
-            switch (colorPrimaryIdUsedForThemeLight) {
+            switch (primaryColorIdUsedForThemeLight) {
                 case COLOR_ID_REALRED:
                     thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsRealRed, true);
                     break;
@@ -198,8 +214,103 @@ public class ThemeManager {
                 case COLOR_ID_BLACK:
                     thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsBlack, true);
                     break;
+                case COLOR_ID_DEFAULT:
                 default:
                     thisActivity.getTheme().applyStyle(R.style.PrimaryColorIsIndigo, true);
+                    break;
+            }
+
+            switch (topicNameAndLinkColorIdUsedForThemeLight) {
+                case COLOR_ID_REALRED:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsRealRed, true);
+                    break;
+                case COLOR_ID_RED:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsRed, true);
+                    break;
+                case COLOR_ID_PINK:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsPink, true);
+                    break;
+                case COLOR_ID_SOFTPURPLE:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsSoftPurple, true);
+                    break;
+                case COLOR_ID_PURPLE:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsPurple, true);
+                    break;
+                case COLOR_ID_DEEPPURPLE:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsDeepPurple, true);
+                    break;
+                case COLOR_ID_INDIGO:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsIndigo, true);
+                    break;
+                case COLOR_ID_BLUE:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsBlue, true);
+                    break;
+                case COLOR_ID_LIGHTBLUE:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsLightBlue, true);
+                    break;
+                case COLOR_ID_SOFTBLUE:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsSoftBlue, true);
+                    break;
+                case COLOR_ID_CYAN:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsCyan, true);
+                    break;
+                case COLOR_ID_TEAL:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsTeal, true);
+                    break;
+                case COLOR_ID_PRESTOGREEN:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsPrestoGreen, true);
+                    break;
+                case COLOR_ID_REALGREEN:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsRealGreen, true);
+                    break;
+                case COLOR_ID_REALLIGHTGREEN:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsRealLightGreen, true);
+                    break;
+                case COLOR_ID_GREEN:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsGreen, true);
+                    break;
+                case COLOR_ID_LIGHTGREEN:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsLightGreen, true);
+                    break;
+                case COLOR_ID_LIME:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsLime, true);
+                    break;
+                case COLOR_ID_YELLOW:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsYellow, true);
+                    break;
+                case COLOR_ID_AMBER:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsAmber, true);
+                    break;
+                case COLOR_ID_ORANGE:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsOrange, true);
+                    break;
+                case COLOR_ID_DEEPORANGE:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsDeepOrange, true);
+                    break;
+                case COLOR_ID_SOFTORANGE:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsSoftOrange, true);
+                    break;
+                case COLOR_ID_BROWN:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsBrown, true);
+                    break;
+                case COLOR_ID_GREY:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsGrey, true);
+                    break;
+                case COLOR_ID_BLUEGREY:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsBlueGrey, true);
+                    break;
+                case COLOR_ID_JVC:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsJVC, true);
+                    break;
+                case COLOR_ID_SOFTBLACK:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsSoftBlack, true);
+                    break;
+                case COLOR_ID_BLACK:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsBlack, true);
+                    break;
+                case COLOR_ID_DEFAULT:
+                default:
+                    thisActivity.getTheme().applyStyle(R.style.TopicNameAndLinkColorIsDefault, true);
                     break;
             }
         }
@@ -209,8 +320,8 @@ public class ThemeManager {
         return themeUsed;
     }
 
-    public static int getColorPrimaryIdUsedForThemeLight() {
-        return colorPrimaryIdUsedForThemeLight;
+    public static int getPrimaryColorIdUsedForThemeLight() {
+        return primaryColorIdUsedForThemeLight;
     }
 
     public static boolean currentThemeUseDarkColors() {
@@ -221,12 +332,6 @@ public class ThemeManager {
     public static int getColorInt(@AttrRes int thisAttrColor, Context fromThisContext) {
         if (themeUsed == ThemeName.LIGHT_THEME) {
             switch (thisAttrColor) {
-                case R.attr.themedTopicNameColor:
-                    if (realTopicNameColorUsedForLightTheme != 0) {
-                        return realTopicNameColorUsedForLightTheme;
-                    } else {
-                        break;
-                    }
                 case R.attr.themedAltBackgroundColor:
                     if (realAltColorUsedForLightTheme != 0) {
                         return realAltColorUsedForLightTheme;

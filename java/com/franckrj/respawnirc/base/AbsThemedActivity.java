@@ -22,9 +22,9 @@ public abstract class AbsThemedActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         ThemeManager.changeActivityTheme(this);
-        ThemeManager.changeActivityPrimaryColorIfNeeded(this);
+        ThemeManager.changeActivityThemedColorsIfNeeded(this);
         lastThemeUsed = ThemeManager.getThemeUsed();
-        lastColorPrimaryUsed = ThemeManager.getColorPrimaryIdUsedForThemeLight();
+        lastColorPrimaryUsed = ThemeManager.getPrimaryColorIdUsedForThemeLight();
 
         if (colorAccentStyle != 0) {
             getTheme().applyStyle(colorAccentStyle, true);
@@ -46,7 +46,7 @@ public abstract class AbsThemedActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
 
-        if ((lastThemeUsed != ThemeManager.getThemeUsed()) || (lastColorPrimaryUsed != ThemeManager.getColorPrimaryIdUsedForThemeLight())) {
+        if ((lastThemeUsed != ThemeManager.getThemeUsed()) || (lastColorPrimaryUsed != ThemeManager.getPrimaryColorIdUsedForThemeLight())) {
             recreate();
         }
     }

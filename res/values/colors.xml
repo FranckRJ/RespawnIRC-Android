@@ -6,7 +6,6 @@
     <color name="shadowColorThemeLight">#50000000</color>
     <color name="colorAccentThemeLight">#757575</color>
     <color name="colorQuoteBackgroundThemeLight">#10000000</color>
-    <color name="linkColorThemeLight">#006BD7</color>
     <color name="colorPseudoUserThemeLight">#3399ff</color>
     <color name="colorPseudoOtherModeForumThemeLight">#80000000</color>
     <color name="colorPseudoOtherModeIrcThemeLight">#000025</color>
@@ -174,7 +173,7 @@
     <color name="colorPrimaryDarkerBlack">#000000</color>
     <color name="colorAltBlack">#E0E0E0</color>
     <color name="colorAltDarkerBlack">#BDBDBD</color>
-    <color name="defaultTopicNameColorThemeLight">#006BD7</color>
+    <color name="defaultTopicNameAndLinkColorThemeLight">#006BD7</color>
     <color name="defaultColorAltThemeLight">#EEF5FC</color>
     <color name="defaultSurveyMessageColorThemeLight">#FFF0DB</color>
     <color name="defaultDeletedMessageColorThemeLight">#CFF3FE</color>
@@ -211,7 +210,7 @@
         <item>@color/colorPrimaryBlack</item>
     </integer-array>
 
-    <integer-array name="choicesForTopicNameColor">
+    <integer-array name="choicesForTopicNameAndLinkColor">
         <item>@color/colorPrimaryRealRed</item>
         <item>@color/colorPrimaryRed</item>
         <item>@color/colorPrimaryPink</item>
@@ -241,7 +240,7 @@
         <item>@color/colorPrimaryJVC</item>
         <item>@color/colorPrimarySoftBlack</item>
         <item>@color/colorPrimaryBlack</item>
-        <item>@color/defaultTopicNameColorThemeLight</item>
+        <item>@color/defaultTopicNameAndLinkColorThemeLight</item>
     </integer-array>
 
     <integer-array name="choicesForAltColor">

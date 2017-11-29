@@ -11,7 +11,7 @@
         <item name="themedOverlayPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
         <item name="themedDefaultBackgroundColor">@color/defaultBackgroundColorThemeLight</item>
         <item name="themedDarkerBackgroundColor">@color/darkerBackgroundColorThemeLight</item>
-        <item name="themedLinkColor">@color/linkColorThemeLight</item>
+        <item name="themedLinkColor">@color/defaultTopicNameAndLinkColorThemeLight</item>
         <item name="themedNavigationMore">@drawable/ic_more_light</item>
         <item name="themedForumIcon">@drawable/ic_forum_light</item>
         <item name="themedContentAdd">@drawable/ic_add_light</item>
@@ -25,7 +25,7 @@
         <item name="themedAltBackgroundColor">@color/defaultColorAltThemeLight</item>
         <item name="themedDeletedMessageBackgroundColor">@color/defaultDeletedMessageColorThemeLight</item>
         <item name="themedSurveyMessageBackgroundColor">@color/defaultSurveyMessageColorThemeLight</item>
-        <item name="themedTopicNameColor">@color/defaultTopicNameColorThemeLight</item>
+        <item name="themedTopicNameColor">@color/defaultTopicNameAndLinkColorThemeLight</item>
         <item name="themedQuoteBackgroundColor">@color/colorQuoteBackgroundThemeLight</item>
         <item name="themedPseudoUserColor">@color/colorPseudoUserThemeLight</item>
         <item name="themedPseudoOtherModeForumColor">@color/colorPseudoOtherModeForumThemeLight</item>
@@ -128,9 +128,19 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerRealRed</item>
     </style>
 
+    <style name="TopicNameAndLinkColorIsRealRed">
+        <item name="themedLinkColor">@color/colorPrimaryRealRed</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryRealRed</item>
+    </style>
+
     <style name="PrimaryColorIsRed">
         <item name="colorPrimary">@color/colorPrimaryRed</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerRed</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsRed">
+        <item name="themedLinkColor">@color/colorPrimaryRed</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryRed</item>
     </style>
 
     <style name="PrimaryColorIsPink">
@@ -138,9 +148,19 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerPink</item>
     </style>
 
+    <style name="TopicNameAndLinkColorIsPink">
+        <item name="themedLinkColor">@color/colorPrimaryPink</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryPink</item>
+    </style>
+
     <style name="PrimaryColorIsSoftPurple">
         <item name="colorPrimary">@color/colorPrimarySoftPurple</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerSoftPurple</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsSoftPurple">
+        <item name="themedLinkColor">@color/colorPrimarySoftPurple</item>
+        <item name="themedTopicNameColor">@color/colorPrimarySoftPurple</item>
     </style>
 
     <style name="PrimaryColorIsPurple">
@@ -148,9 +168,19 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerPurple</item>
     </style>
 
+    <style name="TopicNameAndLinkColorIsPurple">
+        <item name="themedLinkColor">@color/colorPrimaryPurple</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryPurple</item>
+    </style>
+
     <style name="PrimaryColorIsDeepPurple">
         <item name="colorPrimary">@color/colorPrimaryDeepPurple</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerDeepPurple</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsDeepPurple">
+        <item name="themedLinkColor">@color/colorPrimaryDeepPurple</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryDeepPurple</item>
     </style>
 
     <style name="PrimaryColorIsIndigo">
@@ -158,9 +188,19 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerIndigo</item>
     </style>
 
+    <style name="TopicNameAndLinkColorIsIndigo">
+        <item name="themedLinkColor">@color/colorPrimaryIndigo</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryIndigo</item>
+    </style>
+
     <style name="PrimaryColorIsBlue">
         <item name="colorPrimary">@color/colorPrimaryBlue</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerBlue</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsBlue">
+        <item name="themedLinkColor">@color/colorPrimaryBlue</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryBlue</item>
     </style>
 
     <style name="PrimaryColorIsLightBlue">
@@ -168,9 +208,19 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerLightBlue</item>
     </style>
 
+    <style name="TopicNameAndLinkColorIsLightBlue">
+        <item name="themedLinkColor">@color/colorPrimaryLightBlue</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryLightBlue</item>
+    </style>
+
     <style name="PrimaryColorIsSoftBlue">
         <item name="colorPrimary">@color/colorPrimarySoftBlue</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerSoftBlue</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsSoftBlue">
+        <item name="themedLinkColor">@color/colorPrimarySoftBlue</item>
+        <item name="themedTopicNameColor">@color/colorPrimarySoftBlue</item>
     </style>
 
     <style name="PrimaryColorIsCyan">
@@ -178,9 +228,19 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerCyan</item>
     </style>
 
+    <style name="TopicNameAndLinkColorIsCyan">
+        <item name="themedLinkColor">@color/colorPrimaryCyan</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryCyan</item>
+    </style>
+
     <style name="PrimaryColorIsTeal">
         <item name="colorPrimary">@color/colorPrimaryTeal</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerTeal</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsTeal">
+        <item name="themedLinkColor">@color/colorPrimaryTeal</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryTeal</item>
     </style>
 
     <style name="PrimaryColorIsPrestoGreen">
@@ -188,9 +248,19 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerPrestoGreen</item>
     </style>
 
+    <style name="TopicNameAndLinkColorIsPrestoGreen">
+        <item name="themedLinkColor">@color/colorPrimaryPrestoGreen</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryPrestoGreen</item>
+    </style>
+
     <style name="PrimaryColorIsRealGreen">
         <item name="colorPrimary">@color/colorPrimaryRealGreen</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerRealGreen</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsRealGreen">
+        <item name="themedLinkColor">@color/colorPrimaryRealGreen</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryRealGreen</item>
     </style>
 
     <style name="PrimaryColorIsRealLightGreen">
@@ -198,9 +268,19 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerRealLightGreen</item>
     </style>
 
+    <style name="TopicNameAndLinkColorIsRealLightGreen">
+        <item name="themedLinkColor">@color/colorPrimaryRealLightGreen</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryRealLightGreen</item>
+    </style>
+
     <style name="PrimaryColorIsGreen">
         <item name="colorPrimary">@color/colorPrimaryGreen</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerGreen</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsGreen">
+        <item name="themedLinkColor">@color/colorPrimaryGreen</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryGreen</item>
     </style>
 
     <style name="PrimaryColorIsLightGreen">
@@ -208,9 +288,19 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerLightGreen</item>
     </style>
 
+    <style name="TopicNameAndLinkColorIsLightGreen">
+        <item name="themedLinkColor">@color/colorPrimaryLightGreen</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryLightGreen</item>
+    </style>
+
     <style name="PrimaryColorIsLime">
         <item name="colorPrimary">@color/colorPrimaryLime</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerLime</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsLime">
+        <item name="themedLinkColor">@color/colorPrimaryLime</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryLime</item>
     </style>
 
     <style name="PrimaryColorIsYellow">
@@ -218,9 +308,19 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerYellow</item>
     </style>
 
+    <style name="TopicNameAndLinkColorIsYellow">
+        <item name="themedLinkColor">@color/colorPrimaryYellow</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryYellow</item>
+    </style>
+
     <style name="PrimaryColorIsAmber">
         <item name="colorPrimary">@color/colorPrimaryAmber</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerAmber</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsAmber">
+        <item name="themedLinkColor">@color/colorPrimaryAmber</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryAmber</item>
     </style>
 
     <style name="PrimaryColorIsOrange">
@@ -228,9 +328,19 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerOrange</item>
     </style>
 
+    <style name="TopicNameAndLinkColorIsOrange">
+        <item name="themedLinkColor">@color/colorPrimaryOrange</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryOrange</item>
+    </style>
+
     <style name="PrimaryColorIsDeepOrange">
         <item name="colorPrimary">@color/colorPrimaryDeepOrange</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerDeepOrange</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsDeepOrange">
+        <item name="themedLinkColor">@color/colorPrimaryDeepOrange</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryDeepOrange</item>
     </style>
 
     <style name="PrimaryColorIsSoftOrange">
@@ -238,9 +348,19 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerSoftOrange</item>
     </style>
 
+    <style name="TopicNameAndLinkColorIsSoftOrange">
+        <item name="themedLinkColor">@color/colorPrimarySoftOrange</item>
+        <item name="themedTopicNameColor">@color/colorPrimarySoftOrange</item>
+    </style>
+
     <style name="PrimaryColorIsBrown">
         <item name="colorPrimary">@color/colorPrimaryBrown</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerBrown</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsBrown">
+        <item name="themedLinkColor">@color/colorPrimaryBrown</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryBrown</item>
     </style>
 
     <style name="PrimaryColorIsGrey">
@@ -248,9 +368,19 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerGrey</item>
     </style>
 
+    <style name="TopicNameAndLinkColorIsGrey">
+        <item name="themedLinkColor">@color/colorPrimaryGrey</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryGrey</item>
+    </style>
+
     <style name="PrimaryColorIsBlueGrey">
         <item name="colorPrimary">@color/colorPrimaryBlueGrey</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerBlueGrey</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsBlueGrey">
+        <item name="themedLinkColor">@color/colorPrimaryBlueGrey</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryBlueGrey</item>
     </style>
 
     <style name="PrimaryColorIsJVC">
@@ -258,13 +388,33 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerJVC</item>
     </style>
 
+    <style name="TopicNameAndLinkColorIsJVC">
+        <item name="themedLinkColor">@color/colorPrimaryJVC</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryJVC</item>
+    </style>
+
     <style name="PrimaryColorIsSoftBlack">
         <item name="colorPrimary">@color/colorPrimarySoftBlack</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerSoftBlack</item>
     </style>
 
+    <style name="TopicNameAndLinkColorIsSoftBlack">
+        <item name="themedLinkColor">@color/colorPrimarySoftBlack</item>
+        <item name="themedTopicNameColor">@color/colorPrimarySoftBlack</item>
+    </style>
+
     <style name="PrimaryColorIsBlack">
         <item name="colorPrimary">@color/colorPrimaryBlack</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerBlack</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsBlack">
+        <item name="themedLinkColor">@color/colorPrimaryBlack</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryBlack</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsDefault">
+        <item name="themedLinkColor">@color/defaultTopicNameAndLinkColorThemeLight</item>
+        <item name="themedTopicNameColor">@color/defaultTopicNameAndLinkColorThemeLight</item>
     </style>
 </resources>

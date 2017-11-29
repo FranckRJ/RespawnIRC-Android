@@ -130,7 +130,8 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers implement
             if (getActivity() != null) {
                 getActivity().recreate();
             }
-        } else if (key.equals(getString(R.string.settingsPrimaryColorOfLightTheme))) {
+        } else if (key.equals(getString(R.string.settingsPrimaryColorOfLightTheme)) ||
+                   key.equals(getString(R.string.settingsTopicNameAndLinkColorOfLightTheme))) {
             if (getActivity() != null) {
                 ThemeManager.updateColorsUsed(getResources());
                 getActivity().recreate();

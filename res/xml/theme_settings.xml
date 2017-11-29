@@ -22,10 +22,10 @@
             app:pref_colors="@array/choicesForPrimaryColor"/>
 
         <ColorPickerPreference
-            android:key="@string/settingsTopicNameColorOfLightTheme"
-            android:title="@string/topicNameColor"
-            app:pref_currentColor="@color/defaultTopicNameColorThemeLight"
-            app:pref_colors="@array/choicesForTopicNameColor"/>
+            android:key="@string/settingsTopicNameAndLinkColorOfLightTheme"
+            android:title="@string/topicNameAndLinkColor"
+            app:pref_currentColor="@color/defaultTopicNameAndLinkColorThemeLight"
+            app:pref_colors="@array/choicesForTopicNameAndLinkColor"/>
 
         <ColorPickerPreference
             android:key="@string/settingsAltColorOfLightTheme"
