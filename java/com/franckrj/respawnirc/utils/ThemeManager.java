@@ -324,6 +324,10 @@ public class ThemeManager {
         return primaryColorIdUsedForThemeLight;
     }
 
+    public static int getTopicNameAndLinkColorIdUsedForThemeLight() {
+        return topicNameAndLinkColorIdUsedForThemeLight;
+    }
+
     public static boolean currentThemeUseDarkColors() {
         return themeUsed != ThemeName.LIGHT_THEME;
     }

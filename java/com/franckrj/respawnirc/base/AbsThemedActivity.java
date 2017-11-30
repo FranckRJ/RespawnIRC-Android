@@ -16,7 +16,8 @@ public abstract class AbsThemedActivity extends AppCompatActivity {
     protected static ActivityManager.TaskDescription generalTaskDesc = null;
     protected static @ColorInt int colorUsedForGenerateTaskDesc = 0;
     protected ThemeManager.ThemeName lastThemeUsed = null;
-    protected int lastColorPrimaryUsed = -1;
+    protected int lastPrimaryColorUsed = -1;
+    protected int lastTopicNameAndLinkColorUsed = -1;
     protected @StyleRes int colorAccentStyle = 0;
 
     @Override
@@ -24,7 +25,8 @@ public abstract class AbsThemedActivity extends AppCompatActivity {
         ThemeManager.changeActivityTheme(this);
         ThemeManager.changeActivityThemedColorsIfNeeded(this);
         lastThemeUsed = ThemeManager.getThemeUsed();
-        lastColorPrimaryUsed = ThemeManager.getPrimaryColorIdUsedForThemeLight();
+        lastPrimaryColorUsed = ThemeManager.getPrimaryColorIdUsedForThemeLight();
+        lastTopicNameAndLinkColorUsed = ThemeManager.getTopicNameAndLinkColorIdUsedForThemeLight();
 
         if (colorAccentStyle != 0) {
             getTheme().applyStyle(colorAccentStyle, true);
@@ -46,7 +48,8 @@ public abstract class AbsThemedActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
 
-        if ((lastThemeUsed != ThemeManager.getThemeUsed()) || (lastColorPrimaryUsed != ThemeManager.getPrimaryColorIdUsedForThemeLight())) {
+        if ((lastThemeUsed != ThemeManager.getThemeUsed()) || (lastPrimaryColorUsed != ThemeManager.getPrimaryColorIdUsedForThemeLight()) ||
+                (lastTopicNameAndLinkColorUsed != ThemeManager.getTopicNameAndLinkColorIdUsedForThemeLight())) {
             recreate();
         }
     }
