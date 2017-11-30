@@ -16,6 +16,7 @@ public abstract class AbsThemedActivity extends AppCompatActivity {
     protected static ActivityManager.TaskDescription generalTaskDesc = null;
     protected static @ColorInt int colorUsedForGenerateTaskDesc = 0;
     protected ThemeManager.ThemeName lastThemeUsed = null;
+    protected boolean toolbarTextColorIsInverted = false;
     protected int lastPrimaryColorUsed = -1;
     protected int lastTopicNameAndLinkColorUsed = -1;
     protected @StyleRes int colorAccentStyle = 0;
@@ -23,8 +24,10 @@ public abstract class AbsThemedActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         ThemeManager.changeActivityTheme(this);
+        ThemeManager.changeActivityToolbarTextColor(this);
         ThemeManager.changeActivityThemedColorsIfNeeded(this);
         lastThemeUsed = ThemeManager.getThemeUsed();
+        toolbarTextColorIsInverted = ThemeManager.getToolbarTextColorIsInvertedForThemeLight();
         lastPrimaryColorUsed = ThemeManager.getPrimaryColorIdUsedForThemeLight();
         lastTopicNameAndLinkColorUsed = ThemeManager.getTopicNameAndLinkColorIdUsedForThemeLight();
 
@@ -49,7 +52,8 @@ public abstract class AbsThemedActivity extends AppCompatActivity {
         super.onResume();
 
         if ((lastThemeUsed != ThemeManager.getThemeUsed()) || (lastPrimaryColorUsed != ThemeManager.getPrimaryColorIdUsedForThemeLight()) ||
-                (lastTopicNameAndLinkColorUsed != ThemeManager.getTopicNameAndLinkColorIdUsedForThemeLight())) {
+                (lastTopicNameAndLinkColorUsed != ThemeManager.getTopicNameAndLinkColorIdUsedForThemeLight()) ||
+                (toolbarTextColorIsInverted != ThemeManager.getToolbarTextColorIsInvertedForThemeLight())) {
             recreate();
         }
     }

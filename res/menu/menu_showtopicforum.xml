@@ -5,7 +5,7 @@
     <item
         android:id="@+id/action_reload_topic_showtopicforum"
         android:title="@string/refresh"
-        android:icon="@drawable/ic_refresh_dark"
+        android:icon="?attr/themedToolbarRefreshIcon"
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_switch_to_IRC_mode_showtopicforum"

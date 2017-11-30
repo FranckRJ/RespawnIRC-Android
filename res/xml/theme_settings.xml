@@ -21,6 +21,10 @@
             app:pref_currentColor="@color/colorPrimaryIndigo"
             app:pref_colors="@array/choicesForPrimaryColor"/>
 
+        <CheckBoxPreference
+            android:key="@string/settingsInvertToolbarTextColor"
+            android:title="@string/invertToolbarTextColorTitle"/>
+
         <ColorPickerPreference
             android:key="@string/settingsTopicNameAndLinkColorOfLightTheme"
             android:title="@string/topicNameAndLinkColor"

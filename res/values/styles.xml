@@ -34,6 +34,12 @@
         <item name="themedPseudoAdminColor">@color/colorPseudoAdminThemeLight</item>
         <item name="themedHeaderTextColor">@color/headerTextColorThemeLight</item>
         <item name="themedNavigationIconColor">@color/navigationIconColorThemeLight</item>
+        <item name="themedToolbarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="themedToolbarSearchCursor">@drawable/cursor_white</item>
+        <item name="themedToolbarRefreshIcon">@drawable/ictb_refresh_dark</item>
+        <item name="themedToolbarSendIcon">@drawable/ictb_send_dark</item>
+        <item name="themedToolbarHelpIcon">@drawable/ictb_help_dark</item>
+        <item name="themedToolbarSearchIcon">@drawable/ictb_search_dark</item>
     </style>
     <style name="AppTheme.Light.Real" parent="AppTheme.Light.Base"/>
 
@@ -71,6 +77,12 @@
         <item name="themedPseudoAdminColor">@color/colorPseudoAdminThemeDark</item>
         <item name="themedHeaderTextColor">@color/headerTextColorThemeDark</item>
         <item name="themedNavigationIconColor">@color/navigationIconColorThemeDark</item>
+        <item name="themedToolbarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="themedToolbarSearchCursor">@drawable/cursor_white</item>
+        <item name="themedToolbarRefreshIcon">@drawable/ictb_refresh_dark</item>
+        <item name="themedToolbarSendIcon">@drawable/ictb_send_dark</item>
+        <item name="themedToolbarHelpIcon">@drawable/ictb_help_dark</item>
+        <item name="themedToolbarSearchIcon">@drawable/ictb_search_dark</item>
     </style>
     <style name="AppTheme.Dark.Real" parent="AppTheme.Dark.Base"/>
 
@@ -117,6 +129,24 @@
         <item name="android:windowBackground">@drawable/splashscreen</item>
         <!-- uniquement pour la couleur de la statusbar, parce que flemme de faire un theme special v21 etc -->
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerJVC</item>
+    </style>
+
+    <style name="ToolbarIsDark">
+        <item name="themedToolbarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="themedToolbarSearchCursor">@drawable/cursor_white</item>
+        <item name="themedToolbarRefreshIcon">@drawable/ictb_refresh_dark</item>
+        <item name="themedToolbarSendIcon">@drawable/ictb_send_dark</item>
+        <item name="themedToolbarHelpIcon">@drawable/ictb_help_dark</item>
+        <item name="themedToolbarSearchIcon">@drawable/ictb_search_dark</item>
+    </style>
+
+    <style name="ToolbarIsLight">
+        <item name="themedToolbarTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>
+        <item name="themedToolbarSearchCursor">@drawable/cursor_black</item>
+        <item name="themedToolbarRefreshIcon">@drawable/ictb_refresh_light</item>
+        <item name="themedToolbarSendIcon">@drawable/ictb_send_light</item>
+        <item name="themedToolbarHelpIcon">@drawable/ictb_help_light</item>
+        <item name="themedToolbarSearchIcon">@drawable/ictb_search_light</item>
     </style>
 
     <style name="ColorAccentIsLinkColor">

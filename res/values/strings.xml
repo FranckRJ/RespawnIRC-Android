@@ -238,6 +238,7 @@
     <string name="messageDraftSaved">Brouillon du message sauvegardé.</string>
     <string name="topicDraftSaved">Brouillon du topic sauvegardé.</string>
     <string name="grey">Gris</string>
+    <string name="invertToolbarTextColorTitle">Inverser la couleur du texte de la toolbar</string>
 
     <string-array name="choicesForLinkContextMenu">
         <item>@string/openInExternalBrowser</item>

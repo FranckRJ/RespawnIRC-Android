@@ -28,4 +28,10 @@
     <attr name="themedPseudoAdminColor" format="reference"/>
     <attr name="themedHeaderTextColor" format="reference"/>
     <attr name="themedNavigationIconColor" format="reference"/>
+    <attr name="themedToolbarTheme" format="reference"/>
+    <attr name="themedToolbarSearchCursor" format="reference"/>
+    <attr name="themedToolbarRefreshIcon" format="reference"/>
+    <attr name="themedToolbarSendIcon" format="reference"/>
+    <attr name="themedToolbarHelpIcon" format="reference"/>
+    <attr name="themedToolbarSearchIcon" format="reference"/>
 </resources>

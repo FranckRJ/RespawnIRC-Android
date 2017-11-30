@@ -5,7 +5,7 @@
     <item
         android:id="@+id/action_send_topic_sendtopic"
         android:title="@string/sendATopic"
-        android:icon="@drawable/ic_send_dark"
+        android:icon="?attr/themedToolbarSendIcon"
         app:showAsAction="always"/>
     <item
         android:id="@+id/action_past_last_topic_sended_sendtopic"

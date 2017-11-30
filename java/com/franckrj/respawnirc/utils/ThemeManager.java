@@ -43,6 +43,7 @@ public class ThemeManager {
     private static final int COLOR_ID_DEFAULT = 29;
 
     private static ThemeName themeUsed = ThemeName.LIGHT_THEME;
+    private static boolean toolbarTextColorIsInvertedForThemeLight = false;
     private static int primaryColorIdUsedForThemeLight = COLOR_ID_INDIGO;
     private static int topicNameAndLinkColorIdUsedForThemeLight = COLOR_ID_DEFAULT;
     private static @ColorInt int realAltColorUsedForLightTheme = 0;
@@ -69,6 +70,10 @@ public class ThemeManager {
                 themeUsed = ThemeName.LIGHT_THEME;
                 break;
         }
+    }
+
+    public static void updateToolbarTextColor() {
+        toolbarTextColorIsInvertedForThemeLight = PrefsManager.getBool(PrefsManager.BoolPref.Names.INVERT_TOOLBAR_TEXT_COLOR);
     }
 
     public static void updateColorsUsed(Resources res) {
@@ -121,6 +126,16 @@ public class ThemeManager {
             default:
                 thisActivity.setTheme(R.style.AppTheme_Light_Real);
                 break;
+        }
+    }
+
+    public static void changeActivityToolbarTextColor(Activity thisActivity) {
+        if (themeUsed == ThemeName.LIGHT_THEME) {
+            if (toolbarTextColorIsInvertedForThemeLight) {
+                thisActivity.getTheme().applyStyle(R.style.ToolbarIsLight, true);
+            } else {
+                thisActivity.getTheme().applyStyle(R.style.ToolbarIsDark, true);
+            }
         }
     }
 
@@ -318,6 +333,10 @@ public class ThemeManager {
 
     public static ThemeName getThemeUsed() {
         return themeUsed;
+    }
+
+    public static boolean getToolbarTextColorIsInvertedForThemeLight() {
+        return toolbarTextColorIsInvertedForThemeLight;
     }
 
     public static int getPrimaryColorIdUsedForThemeLight() {

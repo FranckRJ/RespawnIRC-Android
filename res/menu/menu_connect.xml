@@ -5,6 +5,6 @@
     <item
         android:id="@+id/action_showhelp_connect"
         android:title="@string/help"
-        android:icon="@drawable/ic_help_dark"
+        android:icon="?attr/themedToolbarHelpIcon"
         app:showAsAction="always"/>
 </menu>

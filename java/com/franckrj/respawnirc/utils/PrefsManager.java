@@ -105,6 +105,7 @@ public class PrefsManager {
         addBoolPref(BoolPref.Names.BACK_IS_OPEN_DRAWER, currentContext.getString(R.string.settingsBackIsOpenDrawer), false);
         addBoolPref(BoolPref.Names.SAVE_LAST_ROW_USED_INSERTSTUFF, currentContext.getString(R.string.settingsSaveLastRowUsedInsertstuff), true);
         addBoolPref(BoolPref.Names.AUTO_SAVE_MESSAGES_AND_TOPICS_AS_DRAFT, currentContext.getString(R.string.settingsAutoSaveMessagesAndTopicsAsDraft), true);
+        addBoolPref(BoolPref.Names.INVERT_TOOLBAR_TEXT_COLOR, currentContext.getString(R.string.settingsInvertToolbarTextColor), false);
 
         addIntPref(IntPref.Names.PRIMARY_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsPrimaryColorOfLightTheme), 0);
         addIntPref(IntPref.Names.TOPIC_NAME_AND_LINK_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsTopicNameAndLinkColorOfLightTheme), 0);
@@ -293,7 +294,8 @@ public class PrefsManager {
             COLOR_PSEUDO_OF_USER_IN_INFO, COLOR_PSEUDO_OF_USER_IN_MESSAGE,
             BACK_IS_OPEN_DRAWER,
             SAVE_LAST_ROW_USED_INSERTSTUFF,
-            AUTO_SAVE_MESSAGES_AND_TOPICS_AS_DRAFT
+            AUTO_SAVE_MESSAGES_AND_TOPICS_AS_DRAFT,
+            INVERT_TOOLBAR_TEXT_COLOR
         }
     }
 
