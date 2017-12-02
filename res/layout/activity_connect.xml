@@ -29,15 +29,18 @@
             android:orientation="horizontal"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:background="?attr/themedDefaultBackgroundColor">
+            android:background="?attr/themedDefaultBackgroundColor"
+            android:gravity="center_vertical">
                 <EditText
                     android:id="@+id/pseudo_text_connect"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:padding="8dp"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:hint="@string/pseudoForConnect"/>
+                    android:hint="@string/pseudoForConnect"
+                    android:background="@android:color/transparent"/>
 
                 <Button
                     android:layout_width="wrap_content"
