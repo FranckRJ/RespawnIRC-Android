@@ -506,8 +506,6 @@ public class InsertStuffDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        super.onCreateDialog(savedInstanceState);
-
         Drawable deletedDrawable = Undeprecator.resourcesGetDrawable(getResources(), ThemeManager.getDrawableRes(ThemeManager.DrawableName.DELETED_IMAGE));
         deletedDrawable.setBounds(0, 0, deletedDrawable.getIntrinsicWidth(), deletedDrawable.getIntrinsicHeight());
 

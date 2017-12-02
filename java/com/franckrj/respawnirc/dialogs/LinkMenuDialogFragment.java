@@ -11,8 +11,8 @@ import android.widget.Toast;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.Utils;
 
-public class LinkContextMenuDialogFragment extends DialogFragment {
-    public static final String ARG_URL = "com.franckrj.respawnirc.linkcontextmenudialogfragment.url";
+public class LinkMenuDialogFragment extends DialogFragment {
+    public static final String ARG_URL = "com.franckrj.respawnirc.linkmenudialogfragment.url";
 
     private static final int POS_OPEN_IN_WEB_BROWSER = 0;
     private static final int POS_OPEN_IN_INTERN_BROWSER = 1;
@@ -23,7 +23,6 @@ public class LinkContextMenuDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        super.onCreateDialog(savedInstanceState);
         Bundle currentArgs = getArguments();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -34,7 +33,7 @@ public class LinkContextMenuDialogFragment extends DialogFragment {
         }
 
         builder.setTitle(urlOfLink);
-        builder.setItems(R.array.choicesForLinkContextMenu, new DialogInterface.OnClickListener() {
+        builder.setItems(R.array.choicesForLinkMenu, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {

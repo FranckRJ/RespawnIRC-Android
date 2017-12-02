@@ -53,7 +53,6 @@ public class ChoosePageNumberDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        super.onCreateDialog(savedInstanceState);
         AlertDialog alertToShow;
         Window currentWindow;
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

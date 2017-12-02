@@ -240,12 +240,12 @@
     <string name="grey">Gris</string>
     <string name="invertToolbarTextColorTitle">Inverser la couleur du texte de la toolbar</string>
 
-    <string-array name="choicesForLinkContextMenu">
+    <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>
         <item>@string/openInInternBrowser</item>
         <item>@string/copy</item>
     </string-array>
-    <string-array name="choicesForMessageContextMenu">
+    <string-array name="choicesForMessageMenu">
         <item>@string/openCDV</item>
         <item>@string/sendMp</item>
         <item>@string/ignore</item>

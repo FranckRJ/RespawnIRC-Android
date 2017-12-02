@@ -14,12 +14,12 @@ import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Utils;
 
-public class MessageContextMenuDialogFragment extends DialogFragment {
-    public static final String ARG_PSEUDO_MESSAGE = "com.franckrj.respawnirc.messagecontextmenudialogfragment.pseudo_message";
-    public static final String ARG_PSEUDO_USER = "com.franckrj.respawnirc.messagecontextmenudialogfragment.pseudo_user";
-    public static final String ARG_MESSAGE_ID = "com.franckrj.respawnirc.messagecontextmenudialogfragment.message_id";
-    public static final String ARG_LINK_TYPE_FOR_INTERNAL_BROWSER = "com.franckrj.respawnirc.messagecontextmenudialogfragment.link_type_for_internal_browser";
-    public static final String ARG_MESSAGE_CONTENT = "com.franckrj.respawnirc.messagecontextmenudialogfragment.message_content";
+public class MessageMenuDialogFragment extends DialogFragment {
+    public static final String ARG_PSEUDO_MESSAGE = "com.franckrj.respawnirc.messagemenudialogfragment.pseudo_message";
+    public static final String ARG_PSEUDO_USER = "com.franckrj.respawnirc.messagemenudialogfragment.pseudo_user";
+    public static final String ARG_MESSAGE_ID = "com.franckrj.respawnirc.messagemenudialogfragment.message_id";
+    public static final String ARG_LINK_TYPE_FOR_INTERNAL_BROWSER = "com.franckrj.respawnirc.messagemenudialogfragment.link_type_for_internal_browser";
+    public static final String ARG_MESSAGE_CONTENT = "com.franckrj.respawnirc.messagemenudialogfragment.message_content";
 
     private static final int POS_OPEN_CDV = 0;
     private static final int POS_SEND_MP = 1;
@@ -38,7 +38,6 @@ public class MessageContextMenuDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        super.onCreateDialog(savedInstanceState);
         Bundle currentArgs = getArguments();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -57,7 +56,7 @@ public class MessageContextMenuDialogFragment extends DialogFragment {
         }
 
         builder.setTitle(pseudoOfMessage);
-        builder.setItems(R.array.choicesForMessageContextMenu, new DialogInterface.OnClickListener() {
+        builder.setItems(R.array.choicesForMessageMenu, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {

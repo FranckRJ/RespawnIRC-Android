@@ -44,7 +44,6 @@ public class ChooseTopicOrForumLinkDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        super.onCreateDialog(savedInstanceState);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         @SuppressLint("InflateParams")
         View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_choosetopicorforumlink, null);

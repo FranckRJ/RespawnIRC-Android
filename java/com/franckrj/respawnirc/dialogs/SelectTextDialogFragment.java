@@ -24,7 +24,6 @@ public class SelectTextDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        super.onCreateDialog(savedInstanceState);
         Bundle currentArgs = getArguments();
         String textContent = "";
         boolean textIsHtml = false;

@@ -20,8 +20,8 @@ import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
 import com.franckrj.respawnirc.dialogs.ChoosePageNumberDialogFragment;
-import com.franckrj.respawnirc.dialogs.LinkContextMenuDialogFragment;
-import com.franckrj.respawnirc.dialogs.MessageContextMenuDialogFragment;
+import com.franckrj.respawnirc.dialogs.LinkMenuDialogFragment;
+import com.franckrj.respawnirc.dialogs.MessageMenuDialogFragment;
 import com.franckrj.respawnirc.dialogs.InsertStuffDialogFragment;
 import com.franckrj.respawnirc.dialogs.SelectTextDialogFragment;
 import com.franckrj.respawnirc.dialogs.ShowImageDialogFragment;
@@ -46,7 +46,7 @@ import java.util.ArrayList;
 public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCTopicGetter.NewForumAndTopicNameAvailable,
                                                                         PopupMenu.OnMenuItemClickListener, JVCTopicModeForumGetter.NewNumbersOfPagesListener,
                                                                         ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCTopicAdapter.URLClicked,
-                                                                        AbsJVCTopicGetter.NewReasonForTopicLock, InsertStuffDialogFragment.StuffInserted, MessageContextMenuDialogFragment.NewPseudoIgnored,
+                                                                        AbsJVCTopicGetter.NewReasonForTopicLock, InsertStuffDialogFragment.StuffInserted, MessageMenuDialogFragment.NewPseudoIgnored,
                                                                         PageNavigationUtil.PageNavigationFunctions, AddOrRemoveThingToFavs.ActionToFavsEnded, AbsJVCTopicGetter.TopicLinkChanged,
                                                                         AbsShowTopicFragment.NewSurveyNeedToBeShown, JVCTopicAdapter.PseudoClicked, AbsJVCTopicGetter.NewPseudoOfAuthorAvailable {
     public static final String EXTRA_TOPIC_LINK = "com.franckrj.respawnirc.EXTRA_TOPIC_LINK";
@@ -722,10 +722,10 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             }
         } else {
             Bundle argForFrag = new Bundle();
-            LinkContextMenuDialogFragment linkMenuDialogFragment = new LinkContextMenuDialogFragment();
-            argForFrag.putString(LinkContextMenuDialogFragment.ARG_URL, link);
+            LinkMenuDialogFragment linkMenuDialogFragment = new LinkMenuDialogFragment();
+            argForFrag.putString(LinkMenuDialogFragment.ARG_URL, link);
             linkMenuDialogFragment.setArguments(argForFrag);
-            linkMenuDialogFragment.show(getSupportFragmentManager(), "LinkContextMenuDialogFragment");
+            linkMenuDialogFragment.show(getSupportFragmentManager(), "LinkMenuDialogFragment");
         }
     }
 
@@ -805,14 +805,14 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     @Override
     public void getMessageOfPseudoClicked(JVCParser.MessageInfos messageClicked) {
         Bundle argForFrag = new Bundle();
-        MessageContextMenuDialogFragment messageMenuDialogFragment = new MessageContextMenuDialogFragment();
-        argForFrag.putString(MessageContextMenuDialogFragment.ARG_PSEUDO_MESSAGE, messageClicked.pseudo);
-        argForFrag.putString(MessageContextMenuDialogFragment.ARG_PSEUDO_USER, pseudoOfUser);
-        argForFrag.putString(MessageContextMenuDialogFragment.ARG_MESSAGE_ID, String.valueOf(messageClicked.id));
-        argForFrag.putInt(MessageContextMenuDialogFragment.ARG_LINK_TYPE_FOR_INTERNAL_BROWSER, linkTypeForInternalBrowser.type);
-        argForFrag.putString(MessageContextMenuDialogFragment.ARG_MESSAGE_CONTENT, messageClicked.messageNotParsed);
+        MessageMenuDialogFragment messageMenuDialogFragment = new MessageMenuDialogFragment();
+        argForFrag.putString(MessageMenuDialogFragment.ARG_PSEUDO_MESSAGE, messageClicked.pseudo);
+        argForFrag.putString(MessageMenuDialogFragment.ARG_PSEUDO_USER, pseudoOfUser);
+        argForFrag.putString(MessageMenuDialogFragment.ARG_MESSAGE_ID, String.valueOf(messageClicked.id));
+        argForFrag.putInt(MessageMenuDialogFragment.ARG_LINK_TYPE_FOR_INTERNAL_BROWSER, linkTypeForInternalBrowser.type);
+        argForFrag.putString(MessageMenuDialogFragment.ARG_MESSAGE_CONTENT, messageClicked.messageNotParsed);
         messageMenuDialogFragment.setArguments(argForFrag);
-        messageMenuDialogFragment.show(getSupportFragmentManager(), "MessageContextMenuDialogFragment");
+        messageMenuDialogFragment.show(getSupportFragmentManager(), "MessageMenuDialogFragment");
     }
 
     @Override

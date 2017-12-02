@@ -239,7 +239,6 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers implement
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            super.onCreateDialog(savedInstanceState);
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle(R.string.help).setMessage(R.string.help_dialog_settings)
                     .setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
