@@ -5,7 +5,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/image_is_forum_jvcforums_text_row"
+        android:id="@+id/image_forum_jvcforums_text_row"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -15,29 +15,16 @@
         android:contentDescription="@string/isForum"/>
 
     <TextView
-        android:id="@+id/item_one_jvcforums_text_row"
+        android:id="@+id/title_forum_jvcforums_text_row"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_toRightOf="@+id/image_is_forum_jvcforums_text_row"
-        android:layout_toEndOf="@+id/image_is_forum_jvcforums_text_row"
-        android:layout_toLeftOf="@+id/image_button_expand_jvcforums_text_row"
-        android:layout_toStartOf="@+id/image_button_expand_jvcforums_text_row"
-        android:layout_centerVertical="true"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp"/>
-
-    <ImageView
-        android:id="@+id/image_button_expand_jvcforums_text_row"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/image_forum_jvcforums_text_row"
+        android:layout_toEndOf="@+id/image_forum_jvcforums_text_row"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
-        android:paddingRight="8dp"
-        android:paddingLeft="8dp"
-        android:src="@drawable/ic_expand_more_dark"
-        android:contentDescription="@string/expandList"/>
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:textStyle="bold"/>
 
 </RelativeLayout>

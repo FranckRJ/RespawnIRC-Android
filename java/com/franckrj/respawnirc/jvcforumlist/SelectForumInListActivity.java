@@ -8,9 +8,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.franckrj.respawnirc.MainActivity;
@@ -27,8 +28,7 @@ import com.franckrj.respawnirc.utils.WebManager;
 
 import java.util.ArrayList;
 
-public class SelectForumInListActivity extends AbsNavigationViewActivity implements ChooseTopicOrForumLinkDialogFragment.NewTopicOrForumSelected,
-                                                                              JVCForumListAdapter.NewForumSelected {
+public class SelectForumInListActivity extends AbsNavigationViewActivity implements ChooseTopicOrForumLinkDialogFragment.NewTopicOrForumSelected {
     private static final String SAVE_SEARCH_FORUM_CONTENT = "saveSearchForumContent";
     private static final String SAVE_SEARCH_TEXT_IS_OPENED = "saveSearchTextIsOpened";
 
@@ -65,6 +65,13 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
             adapterForForumList.clearListOfForums();
             noResultFoundTextView.setVisibility(View.GONE);
             swipeRefresh.setRefreshing(true);
+        }
+    };
+
+    private final AdapterView.OnItemClickListener forumClickedInListView = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            readNewTopicOrForum(adapterForForumList.getForumLinkAtThisPos(position), false);
         }
     };
 
@@ -155,17 +162,16 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         swipeRefresh.setEnabled(false);
         swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
 
-        ExpandableListView forumListView = findViewById(R.id.forum_expendable_list_selectforum);
+        ListView forumListView = findViewById(R.id.forum_list_selectforum);
         adapterForForumList = new JVCForumListAdapter(this);
         forumListView.setAdapter(adapterForForumList);
-        forumListView.setOnGroupClickListener(adapterForForumList);
-        forumListView.setOnChildClickListener(adapterForForumList);
+        forumListView.setOnItemClickListener(forumClickedInListView);
 
         if (savedInstanceState != null) {
             lastSearchedText = savedInstanceState.getString(SAVE_SEARCH_FORUM_CONTENT, null);
             searchTextIsOpened = savedInstanceState.getBoolean(SAVE_SEARCH_TEXT_IS_OPENED, false);
             adapterForForumList.loadFromBundle(savedInstanceState);
-            if (adapterForForumList.getGroupCount() == 0) {
+            if (lastSearchedText != null && adapterForForumList.getCount() == 0) {
                 noResultFoundTextView.setVisibility(View.VISIBLE);
             }
         } else {
@@ -277,11 +283,6 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         if (isWhenDrawerIsClosed) {
             readNewTopicOrForum(link, fromLongClick);
         }
-    }
-
-    @Override
-    public void getNewForumLink(String link) {
-        readNewTopicOrForum(link, false);
     }
 
     @Override

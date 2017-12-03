@@ -25,14 +25,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/toolbar_selectforum">
-            <ExpandableListView
-                android:id="@+id/forum_expendable_list_selectforum"
+            <ListView
+                android:id="@+id/forum_list_selectforum"
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
                 android:divider="@android:color/darker_gray"
                 android:dividerHeight="1dp"
-                android:drawSelectorOnTop="true"
-                android:groupIndicator="@null"/>
+                android:drawSelectorOnTop="true"/>
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <include
