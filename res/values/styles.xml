@@ -40,6 +40,8 @@
         <item name="themedToolbarSendIcon">@drawable/ictb_send_dark</item>
         <item name="themedToolbarHelpIcon">@drawable/ictb_help_dark</item>
         <item name="themedToolbarSearchIcon">@drawable/ictb_search_dark</item>
+        <item name="themedForumListCatTitleColor">@color/forumListCatTitleColorThemeLight</item>
+        <item name="themedForumListDropDownArrow">@drawable/ic_arrow_drop_down_orange</item>
     </style>
     <style name="AppTheme.Light.Real" parent="AppTheme.Light.Base"/>
 
@@ -83,6 +85,8 @@
         <item name="themedToolbarSendIcon">@drawable/ictb_send_dark</item>
         <item name="themedToolbarHelpIcon">@drawable/ictb_help_dark</item>
         <item name="themedToolbarSearchIcon">@drawable/ictb_search_dark</item>
+        <item name="themedForumListCatTitleColor">@color/forumListCatTitleColorThemeDark</item>
+        <item name="themedForumListDropDownArrow">@drawable/ic_arrow_drop_down_dark</item>
     </style>
     <style name="AppTheme.Dark.Real" parent="AppTheme.Dark.Base"/>
 

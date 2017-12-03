@@ -29,17 +29,12 @@ public class JVCForumListAdapter extends BaseAdapter {
     }
 
     public void setNewListOfForums(ArrayList<JVCParser.NameAndLink> newListOfForums) {
-        currentListOfForums = newListOfForums;
-
-        if (currentListOfForums == null) {
+        if (newListOfForums == null) {
             currentListOfForums = new ArrayList<>();
+        } else {
+            currentListOfForums = newListOfForums;
         }
 
-        notifyDataSetChanged();
-    }
-
-    public void clearListOfForums() {
-        currentListOfForums = new ArrayList<>();
         notifyDataSetChanged();
     }
 

@@ -2,6 +2,7 @@ package com.franckrj.respawnirc.jvcforumlist;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.transition.TransitionManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -12,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.franckrj.respawnirc.MainActivity;
@@ -31,6 +33,7 @@ import java.util.ArrayList;
 public class SelectForumInListActivity extends AbsNavigationViewActivity implements ChooseTopicOrForumLinkDialogFragment.NewTopicOrForumSelected {
     private static final String SAVE_SEARCH_FORUM_CONTENT = "saveSearchForumContent";
     private static final String SAVE_SEARCH_TEXT_IS_OPENED = "saveSearchTextIsOpened";
+    private static final String SAVE_DEFAULT_FORUMLIST_IS_VISIBLE = "saveDefaultForumlistIsVisible";
 
     private JVCForumListAdapter adapterForForumList = null;
     private EditText textForSearch = null;
@@ -38,6 +41,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
     private GetSearchedForums currentAsyncTaskForGetSearchedForums = null;
     private SwipeRefreshLayout swipeRefresh = null;
     private TextView noResultFoundTextView = null;
+    private ScrollView defaultForumListLayout = null;
     private String lastSearchedText = null;
     private boolean searchTextIsOpened = false;
 
@@ -62,8 +66,9 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
     private final AbsWebRequestAsyncTask.RequestIsStarted getSearchedForumsIsStartedListener = new AbsWebRequestAsyncTask.RequestIsStarted() {
         @Override
         public void onRequestIsStarted() {
-            adapterForForumList.clearListOfForums();
+            adapterForForumList.setNewListOfForums(null);
             noResultFoundTextView.setVisibility(View.GONE);
+            defaultForumListLayout.setVisibility(View.GONE);
             swipeRefresh.setRefreshing(true);
         }
     };
@@ -95,16 +100,13 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
                 }
             }
 
-            if (newListOfForums == null) {
-                newListOfForums = new ArrayList<>();
-            }
-
             adapterForForumList.setNewListOfForums(newListOfForums);
-            if (!newListOfForums.isEmpty()) {
-                noResultFoundTextView.setVisibility(View.GONE);
-            } else {
+            if (adapterForForumList.getCount() == 0) {
                 noResultFoundTextView.setVisibility(View.VISIBLE);
+            } else {
+                noResultFoundTextView.setVisibility(View.GONE);
             }
+            defaultForumListLayout.setVisibility(View.GONE);
         }
     };
 
@@ -118,6 +120,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
                 stopAllCurrentTasks();
                 adapterForForumList.setNewListOfForums(null);
                 noResultFoundTextView.setVisibility(View.GONE);
+                defaultForumListLayout.setVisibility(View.VISIBLE);
             } else if (currentAsyncTaskForGetSearchedForums == null) {
                 currentAsyncTaskForGetSearchedForums = new GetSearchedForums();
                 currentAsyncTaskForGetSearchedForums.setRequestIsStartedListener(getSearchedForumsIsStartedListener);
@@ -156,11 +159,28 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }
 
-        noResultFoundTextView = findViewById(R.id.text_noresultfound_selectforum);
         swipeRefresh = findViewById(R.id.swiperefresh_selectforum);
-        noResultFoundTextView.setVisibility(View.GONE);
+        noResultFoundTextView = findViewById(R.id.text_noresultfound_selectforum);
+        defaultForumListLayout = findViewById(R.id.default_forumlist_layout_selectforum);
         swipeRefresh.setEnabled(false);
         swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
+        noResultFoundTextView.setVisibility(View.GONE);
+
+        //TODO: Tout ce bloc c'est du tempo, à changer
+        View jvcCatTitle = findViewById(R.id.forumlist_cat_jvc_selectforum);
+        jvcCatTitle.setOnClickListener(new View.OnClickListener() {
+            private final View jvcContent = findViewById(R.id.forumlist_content_jvc_selectforum);
+
+            @Override
+            public void onClick(View view) {
+                TransitionManager.beginDelayedTransition(defaultForumListLayout);
+                if (jvcContent.getVisibility() == View.VISIBLE) {
+                    jvcContent.setVisibility(View.GONE);
+                } else {
+                    jvcContent.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         ListView forumListView = findViewById(R.id.forum_list_selectforum);
         adapterForForumList = new JVCForumListAdapter(this);
@@ -171,8 +191,11 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
             lastSearchedText = savedInstanceState.getString(SAVE_SEARCH_FORUM_CONTENT, null);
             searchTextIsOpened = savedInstanceState.getBoolean(SAVE_SEARCH_TEXT_IS_OPENED, false);
             adapterForForumList.loadFromBundle(savedInstanceState);
-            if (lastSearchedText != null && adapterForForumList.getCount() == 0) {
-                noResultFoundTextView.setVisibility(View.VISIBLE);
+            if (!savedInstanceState.getBoolean(SAVE_DEFAULT_FORUMLIST_IS_VISIBLE, true)) {
+                if (adapterForForumList.getCount() == 0) {
+                    noResultFoundTextView.setVisibility(View.VISIBLE);
+                }
+                defaultForumListLayout.setVisibility(View.GONE);
             }
         } else {
             updateMpAndNotifNumberShowed(null, null);
@@ -205,6 +228,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         adapterForForumList.saveToBundle(outState);
 
         outState.putBoolean(SAVE_SEARCH_TEXT_IS_OPENED, searchTextIsOpened);
+        outState.putBoolean(SAVE_DEFAULT_FORUMLIST_IS_VISIBLE, (defaultForumListLayout.getVisibility() == View.VISIBLE));
         outState.putString(SAVE_SEARCH_FORUM_CONTENT, null);
         if (textForSearch != null && searchExpandableItem != null) {
             if (searchExpandableItem.isActionViewExpanded()) {
@@ -234,6 +258,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
                 stopAllCurrentTasks();
                 adapterForForumList.setNewListOfForums(null);
                 noResultFoundTextView.setVisibility(View.GONE);
+                defaultForumListLayout.setVisibility(View.VISIBLE);
                 Utils.hideSoftKeyboard(SelectForumInListActivity.this);
                 return true;
             }

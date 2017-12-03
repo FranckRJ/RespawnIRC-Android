@@ -34,4 +34,6 @@
     <attr name="themedToolbarSendIcon" format="reference"/>
     <attr name="themedToolbarHelpIcon" format="reference"/>
     <attr name="themedToolbarSearchIcon" format="reference"/>
+    <attr name="themedForumListCatTitleColor" format="reference"/>
+    <attr name="themedForumListDropDownArrow" format="reference"/>
 </resources>

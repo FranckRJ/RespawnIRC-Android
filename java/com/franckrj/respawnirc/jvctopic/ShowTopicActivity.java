@@ -310,7 +310,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
         ActionBar myActionBar = getSupportActionBar();
         Drawable arrowDrawable = Undeprecator.resourcesGetDrawable(getResources(), ThemeManager.getDrawableRes(ThemeManager.DrawableName.ARROW_DROP_DOWN));
-        arrowDrawable.setBounds(0, 0, arrowDrawable.getIntrinsicWidth() / 2, arrowDrawable.getIntrinsicHeight() / 2);
+        arrowDrawable.setBounds(0, 0, arrowDrawable.getIntrinsicWidth(), arrowDrawable.getIntrinsicHeight());
 
         messageSendLayout = findViewById(R.id.sendmessage_layout_showtopic);
         messageSendEdit = findViewById(R.id.sendmessage_text_showtopic);

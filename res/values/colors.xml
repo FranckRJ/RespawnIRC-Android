@@ -18,6 +18,7 @@
     <color name="navigationIconColorThemeLight">#90000000</color>
     <color name="dividerColorThemeLight">#50808080</color>
     <color name="selectedStickerTypeColorThemeLight">#D0D0D0</color>
+    <color name="forumListCatTitleColorThemeLight">#FF572E</color>
     <!-- Dark Theme -->
     <color name="shadowColorThemeDark">#80000000</color>
     <color name="colorPrimaryThemeDark">#212121</color>
@@ -41,6 +42,7 @@
     <color name="deletedMessagesBackgroundColorThemeDark">#023A4B</color>
     <color name="surveyMessagesBackgroundColorThemeDark">#1F292E</color>
     <color name="selectedStickerTypeColorThemeDark">#212121</color>
+    <color name="forumListCatTitleColorThemeDark">#FFFFFF</color>
     <!-- Grey Theme -->
     <color name="colorPrimaryDarkerThemeGrey">#000000</color>
     <color name="colorAccentThemeGrey">#EEEEEE</color>
