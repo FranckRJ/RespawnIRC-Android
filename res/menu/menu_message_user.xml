@@ -9,5 +9,5 @@
         android:title="@string/editMessage"/>
     <item
         android:id="@+id/menu_delete_message"
-        android:title="@string/deleteMessage"/>
+        android:title="@string/delete"/>
 </menu>

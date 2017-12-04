@@ -109,7 +109,8 @@ public class JVCMessageInTopicAction {
             lastDeleteInfos.latestAjaxInfosMod = latestAjaxInfos.mod;
             lastDeleteInfos.cookieListInAString = cookieListInAString;
 
-            builder.setTitle(R.string.deleteMessage).setMessage(R.string.areYouSure).setPositiveButton(R.string.yes, onClickInDeleteConfirmationPopupListener).setNegativeButton(R.string.no, null).show();
+            builder.setTitle(R.string.deleteMessage).setMessage(R.string.areYouSure).setPositiveButton(R.string.yes, onClickInDeleteConfirmationPopupListener)
+                                                                                    .setNegativeButton(R.string.no, null).show();
         } else {
             if (currentTaskDeleteMessage != null) {
                 Toast.makeText(parentActivity, R.string.errorDeleteAlreadyRunning, Toast.LENGTH_SHORT).show();

@@ -1,11 +1,13 @@
 package com.franckrj.respawnirc.jvctopic;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -200,6 +202,58 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         }
     };
 
+    private final View.OnLongClickListener showSendmessageActionListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View buttonView) {
+            PopupMenu popup = new PopupMenu(ShowTopicActivity.this, buttonView);
+            MenuItem postAsModoItem;
+
+            popup.getMenuInflater().inflate(R.menu.menu_sendmessage_action, popup.getMenu());
+            popup.setOnMenuItemClickListener(onSendmessageActionClickedListener);
+            postAsModoItem = popup.getMenu().findItem(R.id.enable_postasmodo_sendmessage_action);
+
+            if (postAsModoItem != null) {
+                postAsModoItem.setChecked(PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE));
+            }
+
+            popup.show();
+
+            return true;
+        }
+    };
+
+    private final PopupMenu.OnMenuItemClickListener onSendmessageActionClickedListener = new PopupMenu.OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.enable_postasmodo_sendmessage_action:
+                    /* La valeur de isChecked est inversée car le changement d'état ne se fait pas automatiquement
+                     * donc c'est la valeur avant d'avoir cliqué qui est retournée. */
+                    PrefsManager.putBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE, !item.isChecked());
+                    PrefsManager.applyChanges();
+                    return true;
+                case R.id.delete_message_sendmessage_action:
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ShowTopicActivity.this);
+                    builder.setTitle(R.string.deleteMessage).setMessage(R.string.deleteCurrentWritedMessageWarning)
+                           .setPositiveButton(R.string.yes, onClickInDeleteCurrentWritedMessageConfirmationListener).setNegativeButton(R.string.no, null).show();
+                    return true;
+                default:
+                    return false;
+            }
+        }
+    };
+
+    private final DialogInterface.OnClickListener onClickInDeleteCurrentWritedMessageConfirmationListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            if (which == DialogInterface.BUTTON_POSITIVE)  {
+                messageSendEdit.setText("");
+                Utils.hideSoftKeyboard(ShowTopicActivity.this);
+                messageSendLayout.requestFocus();
+            }
+        }
+    };
+
     private final JVCMessageInTopicAction.NewMessageIsQuoted messageIsQuotedListener = new JVCMessageInTopicAction.NewMessageIsQuoted() {
         @Override
         public void getNewMessageQuoted(String messageQuoted) {
@@ -333,6 +387,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         messageSendButton.setOnClickListener(sendMessageToTopicListener);
         messageSendButton.setOnLongClickListener(refreshFromSendButton);
         insertStuffButton.setOnClickListener(selectStickerClickedListener);
+        insertStuffButton.setOnLongClickListener(showSendmessageActionListener);
 
         pageNavigation.setCurrentLink(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_URL_TO_FETCH));
         pseudoOfAuthor = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_AUTHOR_OF_TOPIC);
