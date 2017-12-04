@@ -28,10 +28,10 @@ public class MainActivity extends AppCompatActivity {
         String linkToOpen = null;
 
         //vidage du cache des webviews
-        if (PrefsManager.getBool(PrefsManager.BoolPref.Names.WEBVIEW_CACHE_NEED_TO_BE_CLEAR)) {
+        if (PrefsManager.getInt(PrefsManager.IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED) > 10) {
             WebView obj = new WebView(this);
             obj.clearCache(true);
-            PrefsManager.putBool(PrefsManager.BoolPref.Names.WEBVIEW_CACHE_NEED_TO_BE_CLEAR, false);
+            PrefsManager.putInt(PrefsManager.IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED, 0);
             PrefsManager.applyChanges();
         }
 

@@ -92,7 +92,8 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
 
         jvcWebView.loadUrl("https://www.jeuxvideo.com/login");
 
-        PrefsManager.putBool(PrefsManager.BoolPref.Names.WEBVIEW_CACHE_NEED_TO_BE_CLEAR, true);
+        PrefsManager.putInt(PrefsManager.IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED,
+                PrefsManager.getInt(PrefsManager.IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED) + 1);
         PrefsManager.applyChanges();
     }
 
