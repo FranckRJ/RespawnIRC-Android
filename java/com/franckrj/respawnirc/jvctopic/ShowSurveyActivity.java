@@ -133,7 +133,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
         }
     }
 
-    private String addStyleToPercentage(String percentageToStyle) {
+    private static String addStyleToPercentage(String percentageToStyle) {
         final int spaceToTake = ("100").length();
         String numberOfPercentage = percentageToStyle.substring(0, percentageToStyle.indexOf(" "));
         String colorValueOfPercentage;

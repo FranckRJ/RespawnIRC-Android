@@ -71,7 +71,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
         PrefsManager.applyChanges();
     }
 
-    private void initializeListOfSmileyName() {
+    private static void initializeListOfSmileyName() {
         if (listOfSmileyNamesForFileName == null) {
             listOfSmileyNamesForFileName = new SimpleArrayMap<>();
             listOfSmileyNamesForFileName.put("1", ":)");
@@ -433,7 +433,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
         }
     }
 
-    private void appendAnotherStuff(String newStuffToAppend, StringBuilder toThisStringBuilder, boolean previewHasToBeBig) {
+    private static void appendAnotherStuff(String newStuffToAppend, StringBuilder toThisStringBuilder, boolean previewHasToBeBig) {
         toThisStringBuilder.append("<a href=\"").append(newStuffToAppend).append("\"><img src=\"");
         if (previewHasToBeBig) {
             toThisStringBuilder.append("big-");
@@ -444,7 +444,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
         }
     }
 
-    private void sendWhichInsertIsNeeded(String thisUrl, StuffInserted toThisListener) {
+    private static void sendWhichInsertIsNeeded(String thisUrl, StuffInserted toThisListener) {
         if (thisUrl.startsWith("sticker_")) {
             String newSticker = "[[sticker:p/" + thisUrl.replace("sticker_", "").replace("_", "-") + "]]";
             toThisListener.getStringInserted(newSticker, 0);

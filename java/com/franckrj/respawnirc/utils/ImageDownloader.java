@@ -153,7 +153,7 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
         }
     }
 
-    public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         int height = options.outHeight;
         int width = options.outWidth;
         int inSampleSize = 1;
