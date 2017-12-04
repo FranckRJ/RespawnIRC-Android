@@ -40,19 +40,18 @@
             android:id="@+id/default_forumlist_layout_selectforum"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar_selectforum"
-            android:padding="@dimen/marginOfCards"
-            android:clipToPadding="false"
-            android:scrollbarStyle="outsideOverlay">
+            android:layout_below="@+id/toolbar_selectforum">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="@dimen/marginOfCards"
+                android:clipToPadding="false"
                 android:orientation="vertical">
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     card_view:cardElevation="@dimen/elevationOfCards"
-                    card_view:cardCornerRadius="2dp"
+                    card_view:cardCornerRadius="@dimen/cornerRadiusOfCards"
                     card_view:cardBackgroundColor="?attr/themedDefaultBackgroundColor">
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -96,7 +95,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     card_view:cardElevation="@dimen/elevationOfCards"
-                    card_view:cardCornerRadius="2dp"
+                    card_view:cardCornerRadius="@dimen/cornerRadiusOfCards"
                     card_view:cardBackgroundColor="?attr/themedDefaultBackgroundColor">
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -160,7 +159,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     card_view:cardElevation="@dimen/elevationOfCards"
-                    card_view:cardCornerRadius="2dp"
+                    card_view:cardCornerRadius="@dimen/cornerRadiusOfCards"
                     card_view:cardBackgroundColor="?attr/themedDefaultBackgroundColor">
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -203,7 +202,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     card_view:cardElevation="@dimen/elevationOfCards"
-                    card_view:cardCornerRadius="2dp"
+                    card_view:cardCornerRadius="@dimen/cornerRadiusOfCards"
                     card_view:cardBackgroundColor="?attr/themedDefaultBackgroundColor">
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -246,7 +245,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     card_view:cardElevation="@dimen/elevationOfCards"
-                    card_view:cardCornerRadius="2dp"
+                    card_view:cardCornerRadius="@dimen/cornerRadiusOfCards"
                     card_view:cardBackgroundColor="?attr/themedDefaultBackgroundColor">
                     <LinearLayout
                         android:layout_width="match_parent"

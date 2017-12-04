@@ -7,6 +7,7 @@
     <dimen name="miniNoelshackHeightDefault">77dp</dimen>
     <dimen name="marginOfCards">8dp</dimen>
     <dimen name="elevationOfCards">2dp</dimen>
+    <dimen name="cornerRadiusOfCards">2dp</dimen>
     <dimen name="paddingOfNavigationMenuListView">4dp</dimen>
     <dimen name="paddingForCompoundDrawableNavigationMenu">16dp</dimen>
     <dimen name="xPaddingSendMessageEditTextTopicLock">10dp</dimen>
