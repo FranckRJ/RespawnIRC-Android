@@ -521,7 +521,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         navigationMenuList.setOnItemLongClickListener(itemInNavigationLongClickedListener);
         navigationHeader.setOnClickListener(headerClickedListener);
         layoutForDrawer.addDrawerListener(toggleForDrawer);
-        layoutForDrawer.setDrawerShadow(ThemeManager.getDrawableRes(ThemeManager.DrawableName.SHADOW_DRAWER), GravityCompat.START);
+        layoutForDrawer.setDrawerShadow(ThemeManager.getDrawable(R.attr.themedShadowDrawer, this), GravityCompat.START);
         updateNavigationMenu();
     }
 

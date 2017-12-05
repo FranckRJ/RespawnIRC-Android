@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
 import android.support.v7.widget.CardView;
 import android.text.Layout;
 import android.text.Spannable;
@@ -137,7 +136,6 @@ public class JVCTopicAdapter extends BaseAdapter {
     };
 
     public JVCTopicAdapter(Activity newParentActivity, JVCParser.Settings newSettings) {
-        @DrawableRes int deletedDrawableRes = ThemeManager.getDrawableRes(ThemeManager.DrawableName.DELETED_IMAGE);
         Resources res;
 
         parentActivity = newParentActivity;
@@ -145,12 +143,12 @@ public class JVCTopicAdapter extends BaseAdapter {
         serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         res = parentActivity.getResources();
 
-        jvcImageGetter = new CustomImageGetter(parentActivity, Undeprecator.resourcesGetDrawable(res, deletedDrawableRes), downloaderForImage);
+        jvcImageGetter = new CustomImageGetter(parentActivity, ThemeManager.getDrawable(R.attr.themedDeletedImage, parentActivity), downloaderForImage);
         downloaderForImage.setParentActivity(parentActivity);
         downloaderForImage.setListenerForDownloadFinished(listenerForDownloadFinished);
         downloaderForImage.setImagesCacheDir(parentActivity.getCacheDir());
-        downloaderForImage.setDefaultDrawable(Undeprecator.resourcesGetDrawable(res, ThemeManager.getDrawableRes(ThemeManager.DrawableName.DOWNLOAD_IMAGE)));
-        downloaderForImage.setDeletedDrawable(Undeprecator.resourcesGetDrawable(res, deletedDrawableRes));
+        downloaderForImage.setDefaultDrawable(ThemeManager.getDrawable(R.attr.themedDownloadImage, parentActivity));
+        downloaderForImage.setDeletedDrawable(ThemeManager.getDrawable(R.attr.themedDeletedImage, parentActivity));
         downloaderForImage.setImagesSize(res.getDimensionPixelSize(R.dimen.miniNoelshackWidthDefault), res.getDimensionPixelSize(R.dimen.miniNoelshackHeightDefault), true);
     }
 

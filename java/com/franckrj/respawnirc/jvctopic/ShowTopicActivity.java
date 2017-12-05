@@ -40,7 +40,6 @@ import com.franckrj.respawnirc.utils.AddOrRemoveThingToFavs;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.ThemeManager;
-import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
@@ -101,7 +100,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                     if (newMessageToEdit.isEmpty()) {
                         newMessageToEdit = getString(R.string.errorCantGetEditInfos);
                     }
-                    messageSendButton.setImageResource(ThemeManager.getDrawableRes(ThemeManager.DrawableName.CONTENT_SEND));
+                    messageSendButton.setImageDrawable(ThemeManager.getDrawable(R.attr.themedContentSendIcon, ShowTopicActivity.this));
                     showErrorWhenSendingMessage(newMessageToEdit);
                 } else if (useMessageToEdit) {
                     messageSendEdit.setText(newMessageToEdit);
@@ -116,7 +115,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         public void lastMessageIsSended(String withThisError) {
             if (reasonOfLock == null) {
                 messageSendButton.setEnabled(true);
-                messageSendButton.setImageResource(ThemeManager.getDrawableRes(ThemeManager.DrawableName.CONTENT_SEND));
+                messageSendButton.setImageDrawable(ThemeManager.getDrawable(R.attr.themedContentSendIcon, ShowTopicActivity.this));
 
                 if (withThisError != null) {
                     showErrorWhenSendingMessage(withThisError);
@@ -339,7 +338,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
         if (messageSendButton.isEnabled() && getCurrentFragment().getLatestAjaxInfos().list != null) {
             messageSendButton.setEnabled(false);
-            messageSendButton.setImageResource(ThemeManager.getDrawableRes(ThemeManager.DrawableName.CONTENT_EDIT));
+            messageSendButton.setImageDrawable(ThemeManager.getDrawable(R.attr.themedContentEditIcon, this));
             infoForEditAreGetted = senderForMessages.getInfosForEditMessage(messageID, getCurrentFragment().getLatestAjaxInfos().list, cookieListInAString, useMessageToEdit);
         }
 
@@ -363,7 +362,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         initToolbar(R.id.custom_toolbar).setOnLongClickListener(showForumAndTopicTitleListener);
 
         ActionBar myActionBar = getSupportActionBar();
-        Drawable arrowDrawable = Undeprecator.resourcesGetDrawable(getResources(), ThemeManager.getDrawableRes(ThemeManager.DrawableName.ARROW_DROP_DOWN));
+        Drawable arrowDrawable = ThemeManager.getDrawable(R.attr.themedArrowDropDown, this);
         arrowDrawable.setBounds(0, 0, arrowDrawable.getIntrinsicWidth(), arrowDrawable.getIntrinsicHeight());
 
         messageSendLayout = findViewById(R.id.sendmessage_layout_showtopic);
@@ -437,7 +436,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             senderForMessages.loadFromBundle(savedInstanceState);
 
             if (senderForMessages.getIsInEdit()) {
-                messageSendButton.setImageResource(ThemeManager.getDrawableRes(ThemeManager.DrawableName.CONTENT_EDIT));
+                messageSendButton.setImageDrawable(ThemeManager.getDrawable(R.attr.themedContentEditIcon, this));
             }
 
             pageNavigation.updateNavigationButtons();
@@ -626,7 +625,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                     if (senderForMessages.getIsInEdit()) {
                         senderForMessages.cancelEdit();
                         messageSendButton.setEnabled(true);
-                        messageSendButton.setImageResource(ThemeManager.getDrawableRes(ThemeManager.DrawableName.CONTENT_SEND));
+                        messageSendButton.setImageDrawable(ThemeManager.getDrawable(R.attr.themedContentSendIcon, this));
                         messageSendEdit.setText("");
                     } else {
                         startEditThisMessage(Long.toString(getCurrentFragment().getCurrentItemSelected().id), true);

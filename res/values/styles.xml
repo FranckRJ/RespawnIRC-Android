@@ -17,6 +17,7 @@
         <item name="themedContentAdd">@drawable/ic_add_light</item>
         <item name="themedTextFormatGeneral">@drawable/textformat_general_light</item>
         <item name="themedContentSendIcon">@drawable/ic_msg_send_light</item>
+        <item name="themedContentEditIcon">@drawable/ic_msg_send_edit_light</item>
         <item name="themedDividerColor">@color/dividerColorThemeLight</item>
         <item name="themedClearIcon">@drawable/ic_clear_light</item>
         <item name="themedBackgroundAvatar">@drawable/avatar_image_border_light</item>
@@ -42,6 +43,11 @@
         <item name="themedToolbarSearchIcon">@drawable/ictb_search_dark</item>
         <item name="themedForumListCatTitleColor">@color/forumListCatTitleColorThemeLight</item>
         <item name="themedForumListDropDownArrow">@drawable/ic_arrow_drop_down_orange</item>
+        <item name="themedShadowDrawer">@drawable/shadow_drawer_light</item>
+        <item name="themedDeletedImage">@drawable/image_deleted_light</item>
+        <item name="themedDownloadImage">@drawable/image_download_light</item>
+        <item name="themedArrowDropDown">@drawable/ic_arrow_drop_down_light</item>
+        <item name="themedTopicLockIcon">@drawable/icon_topic_lock_light</item>
     </style>
     <style name="AppTheme.Light.Real" parent="AppTheme.Light.Base"/>
 
@@ -62,6 +68,7 @@
         <item name="themedContentAdd">@drawable/ic_add_dark</item>
         <item name="themedTextFormatGeneral">@drawable/textformat_general_dark</item>
         <item name="themedContentSendIcon">@drawable/ic_msg_send_dark</item>
+        <item name="themedContentEditIcon">@drawable/ic_msg_send_edit_dark</item>
         <item name="themedDividerColor">@color/dividerColorThemeDark</item>
         <item name="themedClearIcon">@drawable/ic_clear_dark</item>
         <item name="themedBackgroundAvatar">@drawable/avatar_image_border_dark</item>
@@ -87,6 +94,11 @@
         <item name="themedToolbarSearchIcon">@drawable/ictb_search_dark</item>
         <item name="themedForumListCatTitleColor">@color/forumListCatTitleColorThemeDark</item>
         <item name="themedForumListDropDownArrow">@drawable/ic_arrow_drop_down_dark</item>
+        <item name="themedShadowDrawer">@drawable/shadow_drawer_dark</item>
+        <item name="themedDeletedImage">@drawable/image_deleted_dark</item>
+        <item name="themedDownloadImage">@drawable/image_download_dark</item>
+        <item name="themedArrowDropDown">@drawable/ic_arrow_drop_down_dark</item>
+        <item name="themedTopicLockIcon">@drawable/icon_topic_lock_dark</item>
     </style>
     <style name="AppTheme.Dark.Real" parent="AppTheme.Dark.Base"/>
 

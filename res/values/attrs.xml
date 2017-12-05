@@ -11,6 +11,7 @@
     <attr name="themedContentAdd" format="reference"/>
     <attr name="themedTextFormatGeneral" format="reference"/>
     <attr name="themedContentSendIcon" format="reference"/>
+    <attr name="themedContentEditIcon" format="reference"/>
     <attr name="themedDividerColor" format="reference"/>
     <attr name="themedClearIcon" format="reference"/>
     <attr name="themedBackgroundAvatar" format="reference"/>
@@ -36,4 +37,9 @@
     <attr name="themedToolbarSearchIcon" format="reference"/>
     <attr name="themedForumListCatTitleColor" format="reference"/>
     <attr name="themedForumListDropDownArrow" format="reference"/>
+    <attr name="themedShadowDrawer" format="reference"/>
+    <attr name="themedDeletedImage" format="reference"/>
+    <attr name="themedDownloadImage" format="reference"/>
+    <attr name="themedArrowDropDown" format="reference"/>
+    <attr name="themedTopicLockIcon" format="reference"/>
 </resources>

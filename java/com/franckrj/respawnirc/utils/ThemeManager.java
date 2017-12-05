@@ -3,9 +3,11 @@ package com.franckrj.respawnirc.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.AttrRes;
 import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
 import android.util.TypedValue;
 
 import com.franckrj.respawnirc.R;
@@ -388,64 +390,17 @@ public class ThemeManager {
         return 0;
     }
 
-    @DrawableRes
-    public static int getDrawableRes(DrawableName thisDrawable) {
-        if (currentThemeUseDarkColors()) {
-            switch (thisDrawable) {
-                case SHADOW_DRAWER:
-                    return R.drawable.shadow_drawer_dark;
-                case EXPAND_MORE:
-                    return R.drawable.ic_expand_more_dark;
-                case EXPAND_LESS:
-                    return R.drawable.ic_expand_less_dark;
-                case ARROW_DROP_DOWN:
-                    return R.drawable.ic_arrow_drop_down_dark;
-                case CONTENT_SEND:
-                    return R.drawable.ic_msg_send_dark;
-                case CONTENT_EDIT:
-                    return R.drawable.ic_msg_send_edit_dark;
-                case TOPIC_LOCK_ICON:
-                    return R.drawable.icon_topic_lock_dark;
-                case DELETED_IMAGE:
-                    return R.drawable.image_deleted_dark;
-                case DOWNLOAD_IMAGE:
-                    return R.drawable.image_download_dark;
-                default:
-                    return R.drawable.ic_arrow_drop_down_dark;
-            }
-        } else {
-            switch (thisDrawable) {
-                case SHADOW_DRAWER:
-                    return R.drawable.shadow_drawer_light;
-                case EXPAND_MORE:
-                    return R.drawable.ic_expand_more_light;
-                case EXPAND_LESS:
-                    return R.drawable.ic_expand_less_light;
-                case ARROW_DROP_DOWN:
-                    return R.drawable.ic_arrow_drop_down_light;
-                case CONTENT_SEND:
-                    return R.drawable.ic_msg_send_light;
-                case CONTENT_EDIT:
-                    return R.drawable.ic_msg_send_edit_light;
-                case TOPIC_LOCK_ICON:
-                    return R.drawable.icon_topic_lock_light;
-                case DELETED_IMAGE:
-                    return R.drawable.image_deleted_light;
-                case DOWNLOAD_IMAGE:
-                    return R.drawable.image_download_light;
-                default:
-                    return R.drawable.ic_arrow_drop_down_light;
+    public static Drawable getDrawable(@AttrRes int thisAttrDrawable, Context fromThisContext) {
+        if (fromThisContext != null) {
+            TypedValue typedValue = new TypedValue();
+            boolean valueIsFound = fromThisContext.getTheme().resolveAttribute(thisAttrDrawable, typedValue, true);
+
+            if (valueIsFound) {
+                return fromThisContext.getResources().getDrawable(typedValue.resourceId);
             }
         }
-    }
 
-    public enum DrawableName {
-        SHADOW_DRAWER,
-        EXPAND_MORE, EXPAND_LESS,
-        ARROW_DROP_DOWN,
-        CONTENT_SEND, CONTENT_EDIT,
-        TOPIC_LOCK_ICON,
-        DELETED_IMAGE, DOWNLOAD_IMAGE
+        return new ColorDrawable(Color.TRANSPARENT);
     }
 
     public enum ThemeName {

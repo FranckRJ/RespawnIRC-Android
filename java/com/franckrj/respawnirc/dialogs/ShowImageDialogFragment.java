@@ -2,7 +2,6 @@ package com.franckrj.respawnirc.dialogs;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
@@ -22,7 +21,6 @@ import android.widget.TextView;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.ImageDownloader;
 import com.franckrj.respawnirc.utils.ThemeManager;
-import com.franckrj.respawnirc.utils.Undeprecator;
 
 public class ShowImageDialogFragment extends DialogFragment {
     public static final String ARG_IMAGE_LINK = "com.franckrj.respawnirc.showimagedialogfragment.ARG_IMAGE_LINK";
@@ -86,12 +84,11 @@ public class ShowImageDialogFragment extends DialogFragment {
             dismiss();
         } else {
             Drawable deletedDrawable;
-            Resources res = getResources();
             DisplayMetrics metrics = new DisplayMetrics();
 
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-            deletedDrawable = Undeprecator.resourcesGetDrawable(res, ThemeManager.getDrawableRes(ThemeManager.DrawableName.DELETED_IMAGE));
+            deletedDrawable = ThemeManager.getDrawable(R.attr.themedDeletedImage, getActivity());
             deletedDrawable.setBounds(0, 0, deletedDrawable.getIntrinsicWidth(), deletedDrawable.getIntrinsicHeight());
 
             downloaderForImage.setParentActivity(getActivity());
