@@ -13,22 +13,19 @@
 
         <FrameLayout
             android:id="@+id/content_frame_settings"
-            android:layout_below="@+id/toolbar_settings"
+            android:layout_below="@+id/custom_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-
-        <include
-            android:id="@+id/toolbar_settings"
-            layout="@layout/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="4dp"
             android:background="?attr/themedShadowTop"
-            android:layout_below="@+id/toolbar_settings"/>
+            android:layout_below="@+id/custom_toolbar"/>
+
+        <include
+            android:id="@+id/custom_toolbar"
+            layout="@layout/toolbar"/>
 
     </RelativeLayout>
 

@@ -47,7 +47,7 @@ public class ManageIgnoreListActivity extends AbsHomeIsBackActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manageignorelist);
-        initToolbar(R.id.toolbar_manageignorelist);
+        initToolbar(R.id.custom_toolbar);
 
         adapterForIgnoreList = new IgnoreListAdapter(this);
         RecyclerView ignoreListView = findViewById(R.id.ignore_list_manageignorelist);

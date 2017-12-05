@@ -17,7 +17,7 @@ public class SettingsActivity extends AbsHomeIsBackActivity implements SettingsF
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        initToolbar(R.id.toolbar_settings);
+        initToolbar(R.id.custom_toolbar);
 
         if (savedInstanceState == null) {
             int idOfFileToLoad = R.xml.main_settings;

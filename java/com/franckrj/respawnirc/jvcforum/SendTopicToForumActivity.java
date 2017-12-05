@@ -160,7 +160,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sendtopic);
-        initToolbar(R.id.toolbar_sendtopic);
+        initToolbar(R.id.custom_toolbar);
 
         ActionBar myActionBar = getSupportActionBar();
 

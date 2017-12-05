@@ -97,7 +97,7 @@ public class KickPseudoActivity extends AbsHomeIsBackActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kickpseudo);
-        initToolbar(R.id.toolbar_kickpseudo);
+        initToolbar(R.id.custom_toolbar);
 
         boolean errorWhenFillingInfos = false;
 

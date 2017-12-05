@@ -16,18 +16,18 @@
             android:layout_below="@+id/header_layout_showtopic"
             android:layout_above="@+id/sendmessage_layout_showtopic"/>
 
-        <include
-            android:id="@+id/toolbar_showtopic"
-            layout="@layout/toolbar"
+        <View
+            android:id="@+id/shadow_header_showtopic"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"/>
+            android:layout_height="4dp"
+            android:background="?attr/themedShadowTop"
+            android:layout_below="@+id/header_layout_showtopic"/>
 
         <RelativeLayout
             android:id="@+id/header_layout_showtopic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/toolbar_showtopic"
+            android:layout_below="@+id/custom_toolbar"
             android:background="?attr/themedDefaultBackgroundColor">
             <Button
                 android:id="@+id/firstpage_button_showtopic"
@@ -87,21 +87,9 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:background="?attr/themedShadowTop"
-            android:layout_below="@+id/toolbar_showtopic"/>
-
-        <View
-            android:id="@+id/shadow_header_showtopic"
-            android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:background="?attr/themedShadowTop"
-            android:layout_below="@+id/header_layout_showtopic"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="4dp"
             android:background="?attr/themedShadowBottom"
             android:layout_above="@+id/sendmessage_layout_showtopic"/>
+
         <LinearLayout
             android:id="@+id/sendmessage_layout_showtopic"
             android:layout_width="match_parent"
@@ -144,6 +132,16 @@
                 android:padding="6dp"
                 android:contentDescription="@string/messagePost"/>
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:background="?attr/themedShadowTop"
+            android:layout_below="@+id/custom_toolbar"/>
+
+        <include
+            android:id="@+id/custom_toolbar"
+            layout="@layout/toolbar"/>
 
     </RelativeLayout>
 

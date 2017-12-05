@@ -94,7 +94,7 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_searchtopic);
-        initToolbar(R.id.toolbar_searchtopic);
+        initToolbar(R.id.custom_toolbar);
 
         pageNavigation.initializePagerView((ViewPager) findViewById(R.id.pager_searchtopic));
         pageNavigation.initializeNavigationButtons((Button) findViewById(R.id.firstpage_button_searchtopic), (Button) findViewById(R.id.previouspage_button_searchtopic),

@@ -123,7 +123,7 @@ public class ConnectAsModoActivity extends AbsHomeIsBackActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modoconnect);
-        initToolbar(R.id.toolbar_modoconnect);
+        initToolbar(R.id.custom_toolbar);
 
         swipeRefresh = findViewById(R.id.swiperefresh_modoconnect);
         modoPasswordText = findViewById(R.id.password_text_modoconnect);

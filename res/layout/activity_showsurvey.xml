@@ -14,7 +14,7 @@
             android:id="@+id/swiperefresh_showsurvey"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar_showsurvey">
+            android:layout_below="@+id/custom_toolbar">
 
             <ScrollView
                 android:id="@+id/scrollview_showsurvey"
@@ -56,18 +56,15 @@
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
-        <include
-            android:id="@+id/toolbar_showsurvey"
-            layout="@layout/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"/>
-
         <View
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:layout_below="@+id/toolbar_showsurvey"
+            android:layout_below="@+id/custom_toolbar"
             android:background="?attr/themedShadowTop"/>
+
+        <include
+            android:id="@+id/custom_toolbar"
+            layout="@layout/toolbar"/>
 
     </RelativeLayout>
 

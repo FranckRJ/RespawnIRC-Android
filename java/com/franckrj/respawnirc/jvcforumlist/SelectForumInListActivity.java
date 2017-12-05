@@ -297,7 +297,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
     @Override
     protected void initializeViewAndToolbar() {
         setContentView(R.layout.activity_selectforum);
-        initToolbar(R.id.toolbar_selectforum);
+        initToolbar(R.id.custom_toolbar);
 
         layoutForDrawer = findViewById(R.id.layout_drawer_selectforum);
         navigationMenuList = findViewById(R.id.navigation_menu_selectforum);

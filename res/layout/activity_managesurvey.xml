@@ -12,7 +12,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/toolbar_managesurvey"
+            android:layout_below="@+id/custom_toolbar"
             android:layout_alignParentBottom="true"
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
@@ -53,18 +53,15 @@
                 android:scrollbars="vertical"/>
         </LinearLayout>
 
-        <include
-            android:id="@+id/toolbar_managesurvey"
-            layout="@layout/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"/>
-
         <View
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:layout_below="@+id/toolbar_managesurvey"
+            android:layout_below="@+id/custom_toolbar"
             android:background="?attr/themedShadowTop"/>
+
+        <include
+            android:id="@+id/custom_toolbar"
+            layout="@layout/toolbar"/>
 
     </RelativeLayout>
 

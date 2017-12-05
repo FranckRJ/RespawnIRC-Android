@@ -71,7 +71,7 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect);
-        initToolbar(R.id.toolbar_connect);
+        initToolbar(R.id.custom_toolbar);
 
         WebView jvcWebView = findViewById(R.id.webview_connect);
         pseudoText = findViewById(R.id.pseudo_text_connect);
