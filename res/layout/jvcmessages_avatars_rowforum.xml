@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:padding="6dp"/>
-        <View
+        <Space
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1"/>

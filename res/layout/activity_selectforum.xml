@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_drawer_selectforum"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -35,7 +34,6 @@
                 android:drawSelectorOnTop="true"/>
         </android.support.v4.widget.SwipeRefreshLayout>
 
-        <!-- TODO: Toute cette vue c'est du tempo, à changer -->
         <ScrollView
             android:id="@+id/default_forumlist_layout_selectforum"
             android:layout_width="match_parent"
@@ -47,238 +45,33 @@
                 android:padding="@dimen/marginOfCards"
                 android:clipToPadding="false"
                 android:orientation="vertical">
-                <android.support.v7.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    card_view:cardElevation="@dimen/elevationOfCards"
-                    card_view:cardCornerRadius="@dimen/cornerRadiusOfCards"
-                    card_view:cardBackgroundColor="?attr/themedDefaultBackgroundColor">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="16dp"
-                            android:paddingRight="16dp"
-                            android:paddingTop="12dp"
-                            android:paddingBottom="12dp">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentTop="true"
-                                android:layout_alignParentStart="true"
-                                android:layout_alignParentLeft="true"
-                                android:text="FORUMS BLABLA"
-                                android:textColor="?attr/themedForumListCatTitleColor"
-                                android:textStyle="bold"/>
 
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentTop="true"
-                                android:layout_alignParentRight="true"
-                                android:layout_alignParentEnd="true"
-                                android:src="?attr/themedForumListDropDownArrow"
-                                android:contentDescription="@string/expandList"/>
-                        </RelativeLayout>
-                    </LinearLayout>
-                </android.support.v7.widget.CardView>
+                <include layout="@layout/forumlist_cardcat_blabla"/>
 
                 <Space
                     android:layout_width="0dp"
                     android:layout_height="@dimen/marginOfCards"/>
 
-                <android.support.v7.widget.CardView
-                    android:id="@+id/blablablablablabalbal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    card_view:cardElevation="@dimen/elevationOfCards"
-                    card_view:cardCornerRadius="@dimen/cornerRadiusOfCards"
-                    card_view:cardBackgroundColor="?attr/themedDefaultBackgroundColor">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <RelativeLayout
-                            android:id="@+id/forumlist_cat_jvc_selectforum"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="16dp"
-                            android:paddingRight="16dp"
-                            android:paddingTop="12dp"
-                            android:paddingBottom="12dp">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentTop="true"
-                                android:layout_alignParentStart="true"
-                                android:layout_alignParentLeft="true"
-                                android:text="JEUXVIDEO.COM"
-                                android:textColor="?attr/themedForumListCatTitleColor"
-                                android:textStyle="bold"/>
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentTop="true"
-                                android:layout_alignParentRight="true"
-                                android:layout_alignParentEnd="true"
-                                android:src="?attr/themedForumListDropDownArrow"
-                                android:contentDescription="@string/expandList"/>
-                        </RelativeLayout>
-
-                        <LinearLayout
-                            android:id="@+id/forumlist_content_jvc_selectforum"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="16dp"
-                            android:paddingRight="16dp"
-                            android:paddingBottom="12dp"
-                            android:orientation="vertical"
-                            android:visibility="gone">
-                            <Button
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="POTENTIEL FORUM"/>
-
-                            <Button
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="AUTRE POTENTIEL FORUM"/>
-                        </LinearLayout>
-                    </LinearLayout>
-                </android.support.v7.widget.CardView>
+                <include layout="@layout/forumlist_cardcat_jvc"/>
 
                 <Space
                     android:layout_width="0dp"
                     android:layout_height="@dimen/marginOfCards"/>
 
-                <android.support.v7.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    card_view:cardElevation="@dimen/elevationOfCards"
-                    card_view:cardCornerRadius="@dimen/cornerRadiusOfCards"
-                    card_view:cardBackgroundColor="?attr/themedDefaultBackgroundColor">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="16dp"
-                            android:paddingRight="16dp"
-                            android:paddingTop="12dp"
-                            android:paddingBottom="12dp">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentTop="true"
-                                android:layout_alignParentStart="true"
-                                android:layout_alignParentLeft="true"
-                                android:text="LE JEU VIDÉO"
-                                android:textColor="?attr/themedForumListCatTitleColor"
-                                android:textStyle="bold"/>
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentTop="true"
-                                android:layout_alignParentRight="true"
-                                android:layout_alignParentEnd="true"
-                                android:src="?attr/themedForumListDropDownArrow"
-                                android:contentDescription="@string/expandList"/>
-                        </RelativeLayout>
-                    </LinearLayout>
-                </android.support.v7.widget.CardView>
+                <include layout="@layout/forumlist_cardcat_videogame"/>
 
                 <Space
                     android:layout_width="0dp"
                     android:layout_height="@dimen/marginOfCards"/>
 
-                <android.support.v7.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    card_view:cardElevation="@dimen/elevationOfCards"
-                    card_view:cardCornerRadius="@dimen/cornerRadiusOfCards"
-                    card_view:cardBackgroundColor="?attr/themedDefaultBackgroundColor">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="16dp"
-                            android:paddingRight="16dp"
-                            android:paddingTop="12dp"
-                            android:paddingBottom="12dp">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentTop="true"
-                                android:layout_alignParentStart="true"
-                                android:layout_alignParentLeft="true"
-                                android:text="MACHINES"
-                                android:textColor="?attr/themedForumListCatTitleColor"
-                                android:textStyle="bold"/>
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentTop="true"
-                                android:layout_alignParentRight="true"
-                                android:layout_alignParentEnd="true"
-                                android:src="?attr/themedForumListDropDownArrow"
-                                android:contentDescription="@string/expandList"/>
-                        </RelativeLayout>
-                    </LinearLayout>
-                </android.support.v7.widget.CardView>
+                <include layout="@layout/forumlist_cardcat_hardware"/>
 
                 <Space
                     android:layout_width="0dp"
                     android:layout_height="@dimen/marginOfCards"/>
 
-                <android.support.v7.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    card_view:cardElevation="@dimen/elevationOfCards"
-                    card_view:cardCornerRadius="@dimen/cornerRadiusOfCards"
-                    card_view:cardBackgroundColor="?attr/themedDefaultBackgroundColor">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="16dp"
-                            android:paddingRight="16dp"
-                            android:paddingTop="12dp"
-                            android:paddingBottom="12dp">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentTop="true"
-                                android:layout_alignParentStart="true"
-                                android:layout_alignParentLeft="true"
-                                android:text="PASSIONS"
-                                android:textColor="?attr/themedForumListCatTitleColor"
-                                android:textStyle="bold"/>
+                <include layout="@layout/forumlist_cardcat_hobbies"/>
 
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentTop="true"
-                                android:layout_alignParentRight="true"
-                                android:layout_alignParentEnd="true"
-                                android:src="?attr/themedForumListDropDownArrow"
-                                android:contentDescription="@string/expandList"/>
-                        </RelativeLayout>
-                    </LinearLayout>
-                </android.support.v7.widget.CardView>
             </LinearLayout>
         </ScrollView>
 

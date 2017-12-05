@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="forumlistCatTitleBlabla" translatable="false">FORUMS BLABLA</string>
+    <string name="forumlistCatTitleHardware" translatable="false">MACHINES</string>
+    <string name="forumlistCatTitleHobbies" translatable="false">PASSIONS</string>
+    <string name="forumlistCatTitleJvc" translatable="false">JEUXVIDEO.COM</string>
+    <string name="forumlistCatTitleVideogame" translatable="false">LE JEU VIDÉO</string>
+</resources>
