@@ -13,7 +13,7 @@
             android:id="@+id/kickinfos_layout_kickpseudo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/custom_toolbar"
+            android:layout_below="@+id/toolbar_kickpseudo"
             android:orientation="vertical"
             android:background="?attr/themedDefaultBackgroundColor">
             <LinearLayout
@@ -71,11 +71,11 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:layout_below="@+id/custom_toolbar"
+            android:layout_below="@+id/toolbar_kickpseudo"
             android:background="?attr/themedShadowTop"/>
 
         <include
-            android:id="@+id/custom_toolbar"
+            android:id="@+id/toolbar_kickpseudo"
             layout="@layout/toolbar"/>
 
     </RelativeLayout>

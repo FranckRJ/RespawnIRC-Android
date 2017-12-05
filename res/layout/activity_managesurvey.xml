@@ -12,7 +12,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/custom_toolbar"
+            android:layout_below="@+id/toolbar_managesurvey"
             android:layout_alignParentBottom="true"
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
@@ -56,11 +56,11 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:layout_below="@+id/custom_toolbar"
+            android:layout_below="@+id/toolbar_managesurvey"
             android:background="?attr/themedShadowTop"/>
 
         <include
-            android:id="@+id/custom_toolbar"
+            android:id="@+id/toolbar_managesurvey"
             layout="@layout/toolbar"/>
 
     </RelativeLayout>

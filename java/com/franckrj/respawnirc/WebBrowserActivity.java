@@ -40,7 +40,7 @@ public class WebBrowserActivity extends AbsToolbarActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webbrowser);
-        initToolbar(R.id.custom_toolbar);
+        initToolbar(R.id.toolbar_webbrowser);
 
         String cookies = PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST);
 

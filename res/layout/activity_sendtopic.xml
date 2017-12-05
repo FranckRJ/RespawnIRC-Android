@@ -13,7 +13,7 @@
             android:id="@+id/layout_topicinfos_sendtopic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/custom_toolbar"
+            android:layout_below="@+id/toolbar_sendtopic"
             android:orientation="vertical"
             android:background="?attr/themedDefaultBackgroundColor">
             <EditText
@@ -74,11 +74,11 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:layout_below="@+id/custom_toolbar"
+            android:layout_below="@+id/toolbar_sendtopic"
             android:background="?attr/themedShadowTop"/>
 
         <include
-            android:id="@+id/custom_toolbar"
+            android:id="@+id/toolbar_sendtopic"
             layout="@layout/toolbar"/>
 
     </RelativeLayout>

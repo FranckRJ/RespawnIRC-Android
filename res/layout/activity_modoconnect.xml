@@ -13,7 +13,7 @@
             android:id="@+id/swiperefresh_modoconnect"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/custom_toolbar">
+            android:layout_below="@+id/toolbar_modoconnect">
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -52,10 +52,10 @@
             android:layout_width="match_parent"
             android:layout_height="4dp"
             android:background="?attr/themedShadowTop"
-            android:layout_below="@+id/custom_toolbar"/>
+            android:layout_below="@+id/toolbar_modoconnect"/>
 
         <include
-            android:id="@+id/custom_toolbar"
+            android:id="@+id/toolbar_modoconnect"
             layout="@layout/toolbar"/>
 
     </RelativeLayout>

@@ -27,7 +27,7 @@
             android:id="@+id/header_layout_showtopic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/custom_toolbar"
+            android:layout_below="@+id/toolbar_showtopic"
             android:background="?attr/themedDefaultBackgroundColor">
             <Button
                 android:id="@+id/firstpage_button_showtopic"
@@ -137,10 +137,10 @@
             android:layout_width="match_parent"
             android:layout_height="4dp"
             android:background="?attr/themedShadowTop"
-            android:layout_below="@+id/custom_toolbar"/>
+            android:layout_below="@+id/toolbar_showtopic"/>
 
         <include
-            android:id="@+id/custom_toolbar"
+            android:id="@+id/toolbar_showtopic"
             layout="@layout/toolbar"/>
 
     </RelativeLayout>

@@ -14,7 +14,7 @@
             android:id="@+id/text_noresultfound_selectforum"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/custom_toolbar"
+            android:layout_below="@+id/toolbar_selectforum"
             android:padding="16dp"
             android:gravity="center"
             android:textStyle="bold"
@@ -24,7 +24,7 @@
             android:id="@+id/swiperefresh_selectforum"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/custom_toolbar">
+            android:layout_below="@+id/toolbar_selectforum">
             <ListView
                 android:id="@+id/forum_list_selectforum"
                 android:layout_height="match_parent"
@@ -38,7 +38,7 @@
             android:id="@+id/default_forumlist_layout_selectforum"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/custom_toolbar">
+            android:layout_below="@+id/toolbar_selectforum">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -79,10 +79,10 @@
             android:layout_width="match_parent"
             android:layout_height="4dp"
             android:background="?attr/themedShadowTop"
-            android:layout_below="@+id/custom_toolbar"/>
+            android:layout_below="@+id/toolbar_selectforum"/>
 
         <include
-            android:id="@+id/custom_toolbar"
+            android:id="@+id/toolbar_selectforum"
             layout="@layout/toolbar"/>
 
     </RelativeLayout>

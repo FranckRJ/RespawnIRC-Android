@@ -335,7 +335,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     @Override
     protected void initializeViewAndToolbar() {
         setContentView(R.layout.activity_showforum);
-        initToolbar(R.id.custom_toolbar).setOnLongClickListener(showForumTitleListener);
+        initToolbar(R.id.toolbar_showforum).setOnLongClickListener(showForumTitleListener);
 
         layoutForDrawer = findViewById(R.id.layout_drawer_showforum);
         navigationMenuList = findViewById(R.id.navigation_menu_showforum);

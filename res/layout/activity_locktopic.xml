@@ -13,7 +13,7 @@
             android:id="@+id/reason_edit_locktopic"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_below="@+id/custom_toolbar"
+            android:layout_below="@+id/toolbar_locktopic"
             android:paddingTop="8dp"
             android:paddingBottom="4dp"
             android:paddingLeft="4dp"
@@ -43,11 +43,11 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:layout_below="@+id/custom_toolbar"
+            android:layout_below="@+id/toolbar_locktopic"
             android:background="?attr/themedShadowTop"/>
 
         <include
-            android:id="@+id/custom_toolbar"
+            android:id="@+id/toolbar_locktopic"
             layout="@layout/toolbar"/>
 
     </RelativeLayout>

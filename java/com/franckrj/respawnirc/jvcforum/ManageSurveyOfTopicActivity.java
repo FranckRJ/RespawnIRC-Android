@@ -57,7 +57,7 @@ public class ManageSurveyOfTopicActivity extends AbsHomeIsBackActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_managesurvey);
-        initToolbar(R.id.custom_toolbar);
+        initToolbar(R.id.toolbar_managesurvey);
 
         Button validateButton = findViewById(R.id.validate_button_managesurvey);
         Button addReplyButton = findViewById(R.id.addreply_button_managesurvey);

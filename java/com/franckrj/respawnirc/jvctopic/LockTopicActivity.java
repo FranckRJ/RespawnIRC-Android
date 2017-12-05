@@ -78,7 +78,7 @@ public class LockTopicActivity extends AbsHomeIsBackActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locktopic);
-        initToolbar(R.id.custom_toolbar);
+        initToolbar(R.id.toolbar_locktopic);
 
         boolean errorWhenFillingInfos = false;
 

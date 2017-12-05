@@ -13,7 +13,7 @@
             android:id="@+id/text_emptylist_manageignorelist"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/custom_toolbar"
+            android:layout_below="@+id/toolbar_manageignorelist"
             android:padding="16dp"
             android:gravity="center"
             android:textStyle="bold"
@@ -23,17 +23,17 @@
             android:id="@+id/ignore_list_manageignorelist"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/custom_toolbar"
+            android:layout_below="@+id/toolbar_manageignorelist"
             android:scrollbars="vertical"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="4dp"
             android:background="?attr/themedShadowTop"
-            android:layout_below="@+id/custom_toolbar"/>
+            android:layout_below="@+id/toolbar_manageignorelist"/>
 
         <include
-            android:id="@+id/custom_toolbar"
+            android:id="@+id/toolbar_manageignorelist"
             layout="@layout/toolbar"/>
 
     </RelativeLayout>

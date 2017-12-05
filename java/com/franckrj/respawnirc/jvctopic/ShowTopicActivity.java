@@ -359,7 +359,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showtopic);
-        initToolbar(R.id.custom_toolbar).setOnLongClickListener(showForumAndTopicTitleListener);
+        initToolbar(R.id.toolbar_showtopic).setOnLongClickListener(showForumAndTopicTitleListener);
 
         ActionBar myActionBar = getSupportActionBar();
         Drawable arrowDrawable = ThemeManager.getDrawable(R.attr.themedArrowDropDown, this);

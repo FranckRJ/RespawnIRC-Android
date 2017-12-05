@@ -193,7 +193,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showsurvey);
-        initToolbar(R.id.custom_toolbar);
+        initToolbar(R.id.toolbar_showsurvey);
 
         ActionBar myActionBar = getSupportActionBar();
 

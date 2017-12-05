@@ -25,7 +25,7 @@
             android:id="@+id/navigation_layout_searchtopic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/custom_toolbar"
+            android:layout_below="@+id/toolbar_searchtopic"
             android:background="?attr/themedDefaultBackgroundColor">
             <Button
                 android:id="@+id/firstpage_button_searchtopic"
@@ -112,10 +112,10 @@
             android:layout_width="match_parent"
             android:layout_height="4dp"
             android:background="?attr/themedShadowTop"
-            android:layout_below="@+id/custom_toolbar"/>
+            android:layout_below="@+id/toolbar_searchtopic"/>
 
         <include
-            android:id="@+id/custom_toolbar"
+            android:id="@+id/toolbar_searchtopic"
             layout="@layout/toolbar"/>
 
     </RelativeLayout>
