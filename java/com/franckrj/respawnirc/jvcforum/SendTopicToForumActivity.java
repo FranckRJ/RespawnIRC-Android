@@ -154,6 +154,15 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
         }
     }
 
+    private void initializeSettings() {
+        currentInfos.cookieList = PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST);
+        lastTopicTitleSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_TOPIC_TITLE_SENDED);
+        lastTopicContentSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_TOPIC_CONTENT_SENDED);
+        lastSurveyTitleSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_SURVEY_TITLE_SENDED);
+        lastSurveyReplySendedInAString = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_SURVEY_REPLY_SENDED_IN_A_STRING);
+        saveTopicsAsDraft = PrefsManager.getBool(PrefsManager.BoolPref.Names.AUTO_SAVE_MESSAGES_AND_TOPICS_AS_DRAFT);
+    }
+
     private static String surveyReplyListToString(ArrayList<String> thisSurveyReplyList) {
         return TextUtils.join("&", Utils.mapStringArrayList(thisSurveyReplyList,
                                                                      new Utils.StringModifier() {
@@ -204,6 +213,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
             }
         }
 
+        initializeSettings();
         if (savedInstanceState != null) {
             ArrayList<String> tmpListOfReply = savedInstanceState.getStringArrayList(SAVE_SURVEY_REPLY_LIST);
             currentInfos.surveyTitle = savedInstanceState.getString(SAVE_SURVEY_TITLE, "");
@@ -212,13 +222,6 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
                 currentInfos.surveyReplysList = tmpListOfReply;
             }
         } else {
-            currentInfos.cookieList = PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST);
-            lastTopicTitleSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_TOPIC_TITLE_SENDED);
-            lastTopicContentSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_TOPIC_CONTENT_SENDED);
-            lastSurveyTitleSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_SURVEY_TITLE_SENDED);
-            lastSurveyReplySendedInAString = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_SURVEY_REPLY_SENDED_IN_A_STRING);
-            saveTopicsAsDraft = PrefsManager.getBool(PrefsManager.BoolPref.Names.AUTO_SAVE_MESSAGES_AND_TOPICS_AS_DRAFT);
-
             if (saveTopicsAsDraft) {
                 topicTitleEdit.setText(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_TITLE_DRAFT));
                 topicContentEdit.setText(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_CONTENT_DRAFT));
