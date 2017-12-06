@@ -91,6 +91,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
                 Toast.makeText(SendTopicToForumActivity.this, JVCParser.getErrorMessage(reqResult), Toast.LENGTH_SHORT).show();
             }
 
+            clearAllTopicIncludingSurvey();
             finish();
         }
     };
@@ -125,6 +126,13 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
         } else {
             manageSurveyButton.setText(R.string.manageSurvey);
         }
+    }
+
+    private void clearAllTopicIncludingSurvey() {
+        topicTitleEdit.setText("");
+        topicContentEdit.setText("");
+        currentInfos.surveyTitle = "";
+        currentInfos.surveyReplysList.clear();
     }
 
     private void stopAllCurrentTasks() {
