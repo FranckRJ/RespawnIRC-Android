@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -166,8 +167,19 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
     }
 
     private BaseForumlistInfos initForumlistCategoryCard(@IdRes final int categoryId, @IdRes final int contentId, @IdRes final int arrowId) {
-        final BaseForumlistInfos currentForumlist = new BaseForumlistInfos(findViewById(contentId), (ImageView) findViewById(arrowId));
+        final BaseForumlistInfos currentForumlist = new BaseForumlistInfos((ViewGroup) findViewById(contentId), (ImageView) findViewById(arrowId));
         View category = findViewById(categoryId);
+
+        for (int i = 0; i < currentForumlist.getNumberOfForumButton(); ++i) {
+            currentForumlist.getForumButtonAt(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (view.getTag() != null && view.getTag() instanceof String) {
+                        readNewTopicOrForum((String) view.getTag(), false);
+                    }
+                }
+            });
+        }
 
         category.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -389,10 +401,10 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
     }
 
     private class BaseForumlistInfos {
-        private final View content;
+        private final ViewGroup content;
         private final ImageView arrow;
 
-        public BaseForumlistInfos(View newContent, ImageView newArrow) {
+        public BaseForumlistInfos(ViewGroup newContent, ImageView newArrow) {
             content = newContent;
             arrow = newArrow;
         }
@@ -409,6 +421,14 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
                 content.setVisibility(View.GONE);
                 arrow.setImageDrawable(ThemeManager.getDrawable(R.attr.themedForumListDropDownArrow, SelectForumInListActivity.this));
             }
+        }
+
+        public int getNumberOfForumButton() {
+            return content.getChildCount();
+        }
+
+        public View getForumButtonAt(int index) {
+            return content.getChildAt(index);
         }
     }
 }
