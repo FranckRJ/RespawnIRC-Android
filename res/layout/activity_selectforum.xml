@@ -42,7 +42,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/marginOfCards"
+                android:padding="@dimen/spaceAroundSingleCard"
                 android:clipToPadding="false"
                 android:orientation="vertical">
 
@@ -50,25 +50,25 @@
 
                 <Space
                     android:layout_width="0dp"
-                    android:layout_height="@dimen/marginOfCards"/>
+                    android:layout_height="@dimen/spaceBetweenTwoCards"/>
 
                 <include layout="@layout/forumlist_cardcat_jvc"/>
 
                 <Space
                     android:layout_width="0dp"
-                    android:layout_height="@dimen/marginOfCards"/>
+                    android:layout_height="@dimen/spaceBetweenTwoCards"/>
 
                 <include layout="@layout/forumlist_cardcat_videogame"/>
 
                 <Space
                     android:layout_width="0dp"
-                    android:layout_height="@dimen/marginOfCards"/>
+                    android:layout_height="@dimen/spaceBetweenTwoCards"/>
 
                 <include layout="@layout/forumlist_cardcat_hardware"/>
 
                 <Space
                     android:layout_width="0dp"
-                    android:layout_height="@dimen/marginOfCards"/>
+                    android:layout_height="@dimen/spaceBetweenTwoCards"/>
 
                 <include layout="@layout/forumlist_cardcat_hobbies"/>
 

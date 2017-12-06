@@ -1,7 +1,6 @@
 package com.franckrj.respawnirc.jvctopic.jvctopicviewers;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -376,15 +375,8 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         errorBackgroundMessage.setVisibility(View.GONE);
         swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
         if (cardDesignIsEnabled) {
-            int paddingForMsgList = getResources().getDimensionPixelSize(R.dimen.marginOfCards);
-            int dividerSizeForMsgList = paddingForMsgList;
-
-            if (Build.VERSION.SDK_INT < 21) {
-                int cardElevation = getResources().getDimensionPixelSize(R.dimen.elevationOfCards);
-
-                paddingForMsgList -= cardElevation;
-                dividerSizeForMsgList -= (cardElevation * 2);
-            }
+            int paddingForMsgList = getResources().getDimensionPixelSize(R.dimen.spaceAroundSingleCard);
+            int dividerSizeForMsgList = getResources().getDimensionPixelSize(R.dimen.spaceBetweenTwoCards);
 
             jvcMsgList.setPadding(paddingForMsgList, paddingForMsgList, paddingForMsgList, paddingForMsgList);
             jvcMsgList.setDivider(null);
