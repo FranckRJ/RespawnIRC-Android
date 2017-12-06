@@ -16,7 +16,7 @@
     <attr name="themedClearIcon" format="reference"/>
     <attr name="themedBackgroundAvatar" format="reference"/>
     <attr name="themedNavigationHeaderBackground" format="reference"/>
-    <attr name="themedSelectedStickerTypeColor" format="reference"/>
+    <attr name="themedDarkerPopupBackgroundColor" format="reference"/>
     <attr name="themedAltBackgroundColor" format="reference"/>
     <attr name="themedDeletedMessageBackgroundColor" format="reference"/>
     <attr name="themedSurveyMessageBackgroundColor" format="reference"/>

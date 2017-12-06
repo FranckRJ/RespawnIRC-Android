@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.TextView;
@@ -35,8 +36,29 @@ public class SelectTextDialogFragment extends DialogFragment {
         }
 
         @SuppressLint("InflateParams")
-        View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_selecttext, null);
+        final View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_selecttext, null);
+        NestedScrollView mainScrollView = mainView.findViewById(R.id.scrollview_selecttext);
         textShowed = mainView.findViewById(R.id.text_selecttext);
+
+        mainScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            final View topLine = mainView.findViewById(R.id.line_top_selecttext);
+            final View bottomLine = mainView.findViewById(R.id.line_bottom_selecttext);
+
+            @Override
+            public void onScrollChange(NestedScrollView scrollView, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY == 0) {
+                    topLine.setVisibility(View.INVISIBLE);
+                } else {
+                    topLine.setVisibility(View.VISIBLE);
+                }
+
+                if (scrollY == (scrollView.getChildAt(0).getMeasuredHeight() - scrollView.getMeasuredHeight())) {
+                    bottomLine.setVisibility(View.INVISIBLE);
+                } else {
+                    bottomLine.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         if (textIsHtml) {
             textShowed.setText(Undeprecator.htmlFromHtml(textContent));

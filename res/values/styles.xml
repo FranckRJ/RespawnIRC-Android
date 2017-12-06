@@ -22,7 +22,7 @@
         <item name="themedClearIcon">@drawable/ic_clear_light</item>
         <item name="themedBackgroundAvatar">@drawable/avatar_image_border_light</item>
         <item name="themedNavigationHeaderBackground">@drawable/navigation_header_background_light</item>
-        <item name="themedSelectedStickerTypeColor">@color/selectedStickerTypeColorThemeLight</item>
+        <item name="themedDarkerPopupBackgroundColor">@color/darkerPopupBackgroundColorThemeLight</item>
         <item name="themedAltBackgroundColor">@color/defaultColorAltThemeLight</item>
         <item name="themedDeletedMessageBackgroundColor">@color/defaultDeletedMessageColorThemeLight</item>
         <item name="themedSurveyMessageBackgroundColor">@color/defaultSurveyMessageColorThemeLight</item>
@@ -74,7 +74,7 @@
         <item name="themedClearIcon">@drawable/ic_clear_dark</item>
         <item name="themedBackgroundAvatar">@drawable/avatar_image_border_dark</item>
         <item name="themedNavigationHeaderBackground">@drawable/navigation_header_background_dark</item>
-        <item name="themedSelectedStickerTypeColor">@color/selectedStickerTypeColorThemeDark</item>
+        <item name="themedDarkerPopupBackgroundColor">@color/darkerPopupBackgroundColorThemeDark</item>
         <item name="themedAltBackgroundColor">@color/altBackgroundColorThemeDark</item>
         <item name="themedDeletedMessageBackgroundColor">@color/deletedMessagesBackgroundColorThemeDark</item>
         <item name="themedSurveyMessageBackgroundColor">@color/surveyMessagesBackgroundColorThemeDark</item>
