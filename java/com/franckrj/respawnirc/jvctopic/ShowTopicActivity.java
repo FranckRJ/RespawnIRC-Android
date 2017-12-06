@@ -234,7 +234,8 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 case R.id.delete_message_sendmessage_action:
                     AlertDialog.Builder builder = new AlertDialog.Builder(ShowTopicActivity.this);
                     builder.setTitle(R.string.deleteMessage).setMessage(R.string.deleteCurrentWritedMessageWarning)
-                           .setPositiveButton(R.string.yes, onClickInDeleteCurrentWritedMessageConfirmationListener).setNegativeButton(R.string.no, null).show();
+                           .setPositiveButton(R.string.yes, onClickInDeleteCurrentWritedMessageConfirmationListener).setNegativeButton(R.string.no, null);
+                    builder.show();
                     return true;
                 default:
                     return false;

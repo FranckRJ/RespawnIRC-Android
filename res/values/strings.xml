@@ -241,6 +241,8 @@
     <string name="grey">Gris</string>
     <string name="invertToolbarTextColorTitle">Inverser la couleur du texte de la toolbar</string>
     <string name="deleteCurrentWritedMessageWarning">Êtes-vous sûr de vouloir supprimer le message que vous êtes entrain d\'écrire ?</string>
+    <string name="deleteTopic">Supprimer le topic</string>
+    <string name="deleteWholeTopicWarning">Êtes-vous sûr de vouloir supprimer le topic que vous êtes entrain d\'écrire ainsi que son sondage ?</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>

@@ -1,9 +1,11 @@
 package com.franckrj.respawnirc.jvcforum;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -91,8 +93,17 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
                 Toast.makeText(SendTopicToForumActivity.this, JVCParser.getErrorMessage(reqResult), Toast.LENGTH_SHORT).show();
             }
 
-            clearAllTopicIncludingSurvey();
+            clearWholeTopicIncludingSurvey();
             finish();
+        }
+    };
+
+    private final DialogInterface.OnClickListener onClickInClearWholeTopicConfirmationListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            if (which == DialogInterface.BUTTON_POSITIVE)  {
+                clearWholeTopicIncludingSurvey();
+            }
         }
     };
 
@@ -128,11 +139,12 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
         }
     }
 
-    private void clearAllTopicIncludingSurvey() {
+    private void clearWholeTopicIncludingSurvey() {
         topicTitleEdit.setText("");
         topicContentEdit.setText("");
         currentInfos.surveyTitle = "";
         currentInfos.surveyReplysList.clear();
+        updateManageSurveyButtonText();
     }
 
     private void stopAllCurrentTasks() {
@@ -269,6 +281,12 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
                 currentInfos.surveyTitle = lastSurveyTitleSended;
                 currentInfos.surveyReplysList = surveyReplyStringToList(lastSurveyReplySendedInAString);
                 updateManageSurveyButtonText();
+                return true;
+            case R.id.action_clear_whole_topic_and_survey_sendtopic:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.deleteTopic).setMessage(R.string.deleteWholeTopicWarning)
+                        .setPositiveButton(R.string.yes, onClickInClearWholeTopicConfirmationListener).setNegativeButton(R.string.no, null);
+                builder.show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

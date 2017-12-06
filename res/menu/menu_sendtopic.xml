@@ -10,4 +10,7 @@
     <item
         android:id="@+id/action_past_last_topic_sended_sendtopic"
         android:title="@string/pastLastTopicSended"/>
+    <item
+        android:id="@+id/action_clear_whole_topic_and_survey_sendtopic"
+        android:title="@string/deleteTopic"/>
 </menu>
