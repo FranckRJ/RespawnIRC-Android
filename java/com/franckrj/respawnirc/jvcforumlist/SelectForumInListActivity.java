@@ -2,6 +2,7 @@ package com.franckrj.respawnirc.jvcforumlist;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.transition.TransitionManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
@@ -12,6 +13,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -25,6 +27,7 @@ import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.base.AbsNavigationViewActivity;
 import com.franckrj.respawnirc.utils.PrefsManager;
+import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
@@ -34,6 +37,11 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
     private static final String SAVE_SEARCH_FORUM_CONTENT = "saveSearchForumContent";
     private static final String SAVE_SEARCH_TEXT_IS_OPENED = "saveSearchTextIsOpened";
     private static final String SAVE_DEFAULT_FORUMLIST_IS_VISIBLE = "saveDefaultForumlistIsVisible";
+    private static final String SAVE_FORUMLIST_CAT_BLABLA_IS_OPENED = "saveForumlistCatBlablaIsOpened";
+    private static final String SAVE_FORUMLIST_CAT_JVC_IS_OPENED = "saveForumlistCatJvcIsOpened";
+    private static final String SAVE_FORUMLIST_CAT_VIDEOGAME_IS_OPENED = "saveForumlistCatVideogameIsOpened";
+    private static final String SAVE_FORUMLIST_CAT_HARDWARE_IS_OPENED = "saveForumlistCatHardwareIsOpened";
+    private static final String SAVE_FORUMLIST_CAT_HOBBIES_IS_OPENED = "saveForumlistCatHobbiesIsOpened";
 
     private JVCForumListAdapter adapterForForumList = null;
     private EditText textForSearch = null;
@@ -42,6 +50,11 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
     private SwipeRefreshLayout swipeRefresh = null;
     private TextView noResultFoundTextView = null;
     private ScrollView defaultForumListLayout = null;
+    private ForumlistInfos forumlistCatBlabla = null;
+    private ForumlistInfos forumlistCatJvc = null;
+    private ForumlistInfos forumlistCatVideogame = null;
+    private ForumlistInfos forumlistCatHardware = null;
+    private ForumlistInfos forumlistCatHobbies = null;
     private String lastSearchedText = null;
     private boolean searchTextIsOpened = false;
 
@@ -151,6 +164,25 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         swipeRefresh.setRefreshing(false);
     }
 
+    private ForumlistInfos initForumlistCategoryCard(@IdRes final int categoryId, @IdRes final int contentId, @IdRes final int arrowId) {
+        final ForumlistInfos currentForumlist = new ForumlistInfos(findViewById(contentId), (ImageView) findViewById(arrowId));
+        View category = findViewById(categoryId);
+
+        category.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TransitionManager.beginDelayedTransition(defaultForumListLayout);
+                if (currentForumlist.isOpened()) {
+                    currentForumlist.setOpened(false);
+                } else {
+                    currentForumlist.setOpened(true);
+                }
+            }
+        });
+
+        return currentForumlist;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -166,21 +198,11 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
         noResultFoundTextView.setVisibility(View.GONE);
 
-        //TODO: Tout ce bloc c'est du tempo, à changer
-        View jvcCatTitle = findViewById(R.id.forumlist_cat_jvc_selectforum);
-        jvcCatTitle.setOnClickListener(new View.OnClickListener() {
-            private final View jvcContent = findViewById(R.id.forumlist_content_jvc_selectforum);
-
-            @Override
-            public void onClick(View view) {
-                TransitionManager.beginDelayedTransition(defaultForumListLayout);
-                if (jvcContent.getVisibility() == View.VISIBLE) {
-                    jvcContent.setVisibility(View.GONE);
-                } else {
-                    jvcContent.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+        forumlistCatBlabla = initForumlistCategoryCard(R.id.forumlist_cat_blabla_selectforum, R.id.forumlist_content_blabla_selectforum, R.id.forumlist_arrow_blabla_selectforum);
+        forumlistCatJvc = initForumlistCategoryCard(R.id.forumlist_cat_jvc_selectforum, R.id.forumlist_content_jvc_selectforum, R.id.forumlist_arrow_jvc_selectforum);
+        forumlistCatVideogame = initForumlistCategoryCard(R.id.forumlist_cat_videogame_selectforum, R.id.forumlist_content_videogame_selectforum, R.id.forumlist_arrow_videogame_selectforum);
+        forumlistCatHardware = initForumlistCategoryCard(R.id.forumlist_cat_hardware_selectforum, R.id.forumlist_content_hardware_selectforum, R.id.forumlist_arrow_hardware_selectforum);
+        forumlistCatHobbies = initForumlistCategoryCard(R.id.forumlist_cat_hobbies_selectforum, R.id.forumlist_content_hobbies_selectforum, R.id.forumlist_arrow_hobbies_selectforum);
 
         ListView forumListView = findViewById(R.id.forum_list_selectforum);
         adapterForForumList = new JVCForumListAdapter(this);
@@ -191,11 +213,28 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
             lastSearchedText = savedInstanceState.getString(SAVE_SEARCH_FORUM_CONTENT, null);
             searchTextIsOpened = savedInstanceState.getBoolean(SAVE_SEARCH_TEXT_IS_OPENED, false);
             adapterForForumList.loadFromBundle(savedInstanceState);
+
             if (!savedInstanceState.getBoolean(SAVE_DEFAULT_FORUMLIST_IS_VISIBLE, true)) {
                 if (adapterForForumList.getCount() == 0) {
                     noResultFoundTextView.setVisibility(View.VISIBLE);
                 }
                 defaultForumListLayout.setVisibility(View.GONE);
+            }
+
+            if (savedInstanceState.getBoolean(SAVE_FORUMLIST_CAT_BLABLA_IS_OPENED, false)) {
+                forumlistCatBlabla.setOpened(true);
+            }
+            if (savedInstanceState.getBoolean(SAVE_FORUMLIST_CAT_JVC_IS_OPENED, false)) {
+                forumlistCatJvc.setOpened(true);
+            }
+            if (savedInstanceState.getBoolean(SAVE_FORUMLIST_CAT_VIDEOGAME_IS_OPENED, false)) {
+                forumlistCatVideogame.setOpened(true);
+            }
+            if (savedInstanceState.getBoolean(SAVE_FORUMLIST_CAT_HARDWARE_IS_OPENED, false)) {
+                forumlistCatHardware.setOpened(true);
+            }
+            if (savedInstanceState.getBoolean(SAVE_FORUMLIST_CAT_HOBBIES_IS_OPENED, false)) {
+                forumlistCatHobbies.setOpened(true);
             }
         } else {
             updateMpAndNotifNumberShowed(null, null);
@@ -229,6 +268,11 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
 
         outState.putBoolean(SAVE_SEARCH_TEXT_IS_OPENED, searchTextIsOpened);
         outState.putBoolean(SAVE_DEFAULT_FORUMLIST_IS_VISIBLE, (defaultForumListLayout.getVisibility() == View.VISIBLE));
+        outState.putBoolean(SAVE_FORUMLIST_CAT_BLABLA_IS_OPENED, forumlistCatBlabla.isOpened());
+        outState.putBoolean(SAVE_FORUMLIST_CAT_JVC_IS_OPENED, forumlistCatJvc.isOpened());
+        outState.putBoolean(SAVE_FORUMLIST_CAT_VIDEOGAME_IS_OPENED, forumlistCatVideogame.isOpened());
+        outState.putBoolean(SAVE_FORUMLIST_CAT_HARDWARE_IS_OPENED, forumlistCatHardware.isOpened());
+        outState.putBoolean(SAVE_FORUMLIST_CAT_HOBBIES_IS_OPENED, forumlistCatHobbies.isOpened());
         outState.putString(SAVE_SEARCH_FORUM_CONTENT, null);
         if (textForSearch != null && searchExpandableItem != null) {
             if (searchExpandableItem.isActionViewExpanded()) {
@@ -331,6 +375,30 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
                 }
             } else {
                 return null;
+            }
+        }
+    }
+
+    private class ForumlistInfos {
+        private final View content;
+        private final ImageView arrow;
+
+        public ForumlistInfos(View newContent, ImageView newArrow) {
+            content = newContent;
+            arrow = newArrow;
+        }
+
+        public boolean isOpened() {
+            return content.getVisibility() == View.VISIBLE;
+        }
+
+        public void setOpened(boolean newVal) {
+            if (newVal) {
+                content.setVisibility(View.VISIBLE);
+                arrow.setImageDrawable(ThemeManager.getDrawable(R.attr.themedForumListDropUpArrow, SelectForumInListActivity.this));
+            } else {
+                content.setVisibility(View.GONE);
+                arrow.setImageDrawable(ThemeManager.getDrawable(R.attr.themedForumListDropDownArrow, SelectForumInListActivity.this));
             }
         }
     }
