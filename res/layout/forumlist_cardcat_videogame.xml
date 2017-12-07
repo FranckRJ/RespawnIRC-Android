@@ -53,6 +53,7 @@
             app:columnCount="3"
             android:visibility="gone">
             <Button
+                android:theme="?attr/themedButtonPurpleStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnSpan="3"
@@ -69,6 +70,7 @@
                 android:background="?attr/themedDarkerBackgroundColor"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -76,6 +78,7 @@
                 android:tag="@string/forumlistVideoGameFpsAndTpsLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -83,6 +86,7 @@
                 android:tag="@string/forumlistVideoGameSimulationLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -90,6 +94,7 @@
                 android:tag="@string/forumlistVideoGameRpgLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -97,6 +102,7 @@
                 android:tag="@string/forumlistVideoGameMusicLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -104,6 +110,7 @@
                 android:tag="@string/forumlistVideoGameStrLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -111,6 +118,7 @@
                 android:tag="@string/forumlistVideoGameMagazineLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -118,6 +126,7 @@
                 android:tag="@string/forumlistVideoGameFightingLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -125,6 +134,7 @@
                 android:tag="@string/forumlistVideoGameImportLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -132,6 +142,7 @@
                 android:tag="@string/forumlistVideoGameRacingLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -139,6 +150,7 @@
                 android:tag="@string/forumlistVideoGameHerosLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -146,6 +158,7 @@
                 android:tag="@string/forumlistVideoGameAdventureLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -153,6 +166,7 @@
                 android:tag="@string/forumlistVideoGameBusinessLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnSpan="2"
@@ -161,6 +175,7 @@
                 android:tag="@string/forumlistVideoGameSportsLink"/>
 
             <Button
+                android:theme="?attr/themedButtonOrangeStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnSpan="3"
@@ -177,6 +192,7 @@
                 android:background="?attr/themedDarkerBackgroundColor"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -184,6 +200,7 @@
                 android:tag="@string/forumlistVideoGameNdsLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -191,6 +208,7 @@
                 android:tag="@string/forumlistVideoGameDreamcastLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -198,6 +216,7 @@
                 android:tag="@string/forumlistVideoGamePs2Link"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -205,6 +224,7 @@
                 android:tag="@string/forumlistVideoGameN64Link"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -212,6 +232,7 @@
                 android:tag="@string/forumlistVideoGameXboxLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -219,6 +240,7 @@
                 android:tag="@string/forumlistVideoGameMegadriveLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -226,6 +248,7 @@
                 android:tag="@string/forumlistVideoGameGamecubeLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -233,6 +256,7 @@
                 android:tag="@string/forumlistVideoGameSnesLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -240,6 +264,7 @@
                 android:tag="@string/forumlistVideoGameGbaLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -247,6 +272,7 @@
                 android:tag="@string/forumlistVideoGameSaturnLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -254,6 +280,7 @@
                 android:tag="@string/forumlistVideoGamePs1Link"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -261,6 +288,7 @@
                 android:tag="@string/forumlistVideoGameGameboyLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnSpan="2"
@@ -269,6 +297,7 @@
                 android:tag="@string/forumlistVideoGamePspLink"/>
 
             <Button
+                android:theme="?attr/themedButtonBlueStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnSpan="3"
@@ -277,6 +306,7 @@
                 android:tag="@string/forumlistVideoGameConsolesWarLink"/>
 
             <Button
+                android:theme="?attr/themedButtonRedStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnSpan="3"
@@ -293,6 +323,7 @@
                 android:background="?attr/themedDarkerBackgroundColor"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -300,6 +331,7 @@
                 android:tag="@string/forumlistVideoGameE3Link"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -307,6 +339,7 @@
                 android:tag="@string/forumlistVideoGameGamescomLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -314,6 +347,7 @@
                 android:tag="@string/forumlistVideoGameTgsLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -321,6 +355,7 @@
                 android:tag="@string/forumlistVideoGamePgwLink"/>
 
             <Button
+                android:theme="?attr/themedButtonPurpleStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnSpan="3"
@@ -329,6 +364,7 @@
                 android:tag="@string/forumlistVideoGameIndiesLink"/>
 
             <Button
+                android:theme="?attr/themedButtonGreenStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnSpan="3"
@@ -337,6 +373,7 @@
                 android:tag="@string/forumlistVideoGameFtpLink"/>
 
             <Button
+                android:theme="?attr/themedButtonOrangeStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnSpan="3"
@@ -353,6 +390,7 @@
                 android:background="?attr/themedDarkerBackgroundColor"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnSpan="2"
@@ -361,6 +399,7 @@
                 android:tag="@string/forumlistVideoGameEsportLink"/>
 
             <Button
+                android:theme="?attr/themedButtonRedStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnSpan="3"
@@ -377,6 +416,7 @@
                 android:background="?attr/themedDarkerBackgroundColor"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnSpan="2"
@@ -385,6 +425,7 @@
                 android:tag="@string/forumlistVideoGameCollectorsLink"/>
 
             <Button
+                android:theme="?attr/themedButtonBlueStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnSpan="3"

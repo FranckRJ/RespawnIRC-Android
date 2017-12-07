@@ -49,6 +49,12 @@
         <item name="themedDownloadImage">@drawable/image_download_light</item>
         <item name="themedArrowDropDown">@drawable/ic_arrow_drop_down_light</item>
         <item name="themedTopicLockIcon">@drawable/icon_topic_lock_light</item>
+        <item name="themedButtonSubForumStyle">@style/ButtonSubForumStyle</item>
+        <item name="themedButtonBlueStyle">@style/ButtonBlueStyle</item>
+        <item name="themedButtonRedStyle">@style/ButtonRedStyle</item>
+        <item name="themedButtonOrangeStyle">@style/ButtonOrangeStyle</item>
+        <item name="themedButtonGreenStyle">@style/ButtonGreenStyle</item>
+        <item name="themedButtonPurpleStyle">@style/ButtonPurpleStyle</item>
     </style>
     <style name="AppTheme.Light.Real" parent="AppTheme.Light.Base"/>
 
@@ -101,6 +107,12 @@
         <item name="themedDownloadImage">@drawable/image_download_dark</item>
         <item name="themedArrowDropDown">@drawable/ic_arrow_drop_down_dark</item>
         <item name="themedTopicLockIcon">@drawable/icon_topic_lock_dark</item>
+        <item name="themedButtonSubForumStyle">@style/ButtonSubForumDarkStyle</item>
+        <item name="themedButtonBlueStyle">@style/ButtonForumDarkStyle</item>
+        <item name="themedButtonRedStyle">@style/ButtonForumDarkStyle</item>
+        <item name="themedButtonOrangeStyle">@style/ButtonForumDarkStyle</item>
+        <item name="themedButtonGreenStyle">@style/ButtonForumDarkStyle</item>
+        <item name="themedButtonPurpleStyle">@style/ButtonForumDarkStyle</item>
     </style>
     <style name="AppTheme.Dark.Real" parent="AppTheme.Dark.Base"/>
 
@@ -113,6 +125,12 @@
         <item name="themedDividerColor">@color/dividerColorThemeGrey</item>
         <item name="themedBackgroundAvatar">@drawable/avatar_image_border_grey</item>
         <item name="themedAltBackgroundColor">@color/altBackgroundColorThemeGrey</item>
+        <item name="themedButtonSubForumStyle">@style/ButtonSubForumGreyAndBlackStyle</item>
+        <item name="themedButtonBlueStyle">@style/ButtonForumGreyStyle</item>
+        <item name="themedButtonRedStyle">@style/ButtonForumGreyStyle</item>
+        <item name="themedButtonOrangeStyle">@style/ButtonForumGreyStyle</item>
+        <item name="themedButtonGreenStyle">@style/ButtonForumGreyStyle</item>
+        <item name="themedButtonPurpleStyle">@style/ButtonForumGreyStyle</item>
     </style>
     <style name="AppTheme.Grey.Real" parent="AppTheme.Grey.Base"/>
 
@@ -125,6 +143,12 @@
         <item name="themedBackgroundAvatar">@drawable/avatar_image_border_black</item>
         <item name="themedAltBackgroundColor">@color/altBackgroundColorThemeBlack</item>
         <item name="themedQuoteBackgroundColor">@color/colorQuoteBackgroundThemeBlack</item>
+        <item name="themedButtonSubForumStyle">@style/ButtonSubForumGreyAndBlackStyle</item>
+        <item name="themedButtonBlueStyle">@style/ButtonForumBlackStyle</item>
+        <item name="themedButtonRedStyle">@style/ButtonForumBlackStyle</item>
+        <item name="themedButtonOrangeStyle">@style/ButtonForumBlackStyle</item>
+        <item name="themedButtonGreenStyle">@style/ButtonForumBlackStyle</item>
+        <item name="themedButtonPurpleStyle">@style/ButtonForumBlackStyle</item>
     </style>
     <style name="AppTheme.Black.Real" parent="AppTheme.Black.Base"/>
 
@@ -166,6 +190,72 @@
         <item name="themedToolbarSendIcon">@drawable/ictb_send_light</item>
         <item name="themedToolbarHelpIcon">@drawable/ictb_help_light</item>
         <item name="themedToolbarSearchIcon">@drawable/ictb_search_light</item>
+    </style>
+
+    <style name="ButtonForumDarkStyle">
+        <item name="colorButtonNormal">@color/forumListDarkerForumColorThemeDark</item>
+        <item name="colorControlHighlight">@color/forumListForumColorThemeDark</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ButtonForumGreyStyle">
+        <item name="colorButtonNormal">@color/forumListDarkerForumColorThemeGrey</item>
+        <item name="colorControlHighlight">@color/forumListForumColorThemeGrey</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ButtonForumBlackStyle">
+        <item name="colorButtonNormal">@color/forumListDarkerForumColorThemeBlack</item>
+        <item name="colorControlHighlight">@color/forumListForumColorThemeBlack</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ButtonSubForumDarkStyle">
+        <item name="colorButtonNormal">@color/colorPrimaryBlack</item>
+        <item name="colorControlHighlight">@color/colorPrimarySoftBlack</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ButtonSubForumGreyAndBlackStyle">
+        <item name="colorButtonNormal">@color/colorPrimaryDarkerSoftBlack</item>
+        <item name="colorControlHighlight">@color/colorPrimarySoftBlack</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ButtonSubForumStyle">
+        <item name="colorButtonNormal">@color/forumListSubForumColorThemeLight</item>
+        <item name="colorControlHighlight">@color/forumListDarkerSubForumColorThemeLight</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ButtonBlueStyle">
+        <item name="colorButtonNormal">@color/colorPrimaryIndigo</item>
+        <item name="colorControlHighlight">@color/colorPrimaryDarkerIndigo</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ButtonRedStyle">
+        <item name="colorButtonNormal">@color/colorPrimaryRealRed</item>
+        <item name="colorControlHighlight">@color/colorPrimaryDarkerRealRed</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ButtonOrangeStyle">
+        <item name="colorButtonNormal">@color/colorPrimarySoftOrange</item>
+        <item name="colorControlHighlight">@color/colorPrimaryDarkerSoftOrange</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ButtonGreenStyle">
+        <item name="colorButtonNormal">@color/colorPrimaryRealGreen</item>
+        <item name="colorControlHighlight">@color/colorPrimaryDarkerRealGreen</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ButtonPurpleStyle">
+        <item name="colorButtonNormal">@color/colorPrimaryDeepPurple</item>
+        <item name="colorControlHighlight">@color/colorPrimaryDarkerDeepPurple</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="ColorAccentIsLinkColor">

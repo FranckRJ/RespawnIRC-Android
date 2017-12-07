@@ -19,6 +19,8 @@
     <color name="dividerColorThemeLight">#50808080</color>
     <color name="darkerPopupBackgroundColorThemeLight">#D0D0D0</color>
     <color name="forumListCatTitleColorThemeLight">#FF572E</color>
+    <color name="forumListSubForumColorThemeLight">#48566B</color>
+    <color name="forumListDarkerSubForumColorThemeLight">#333D4D</color>
     <!-- Dark Theme -->
     <color name="shadowColorThemeDark">#80000000</color>
     <color name="colorPrimaryThemeDark">#212121</color>
@@ -43,6 +45,8 @@
     <color name="surveyMessagesBackgroundColorThemeDark">#1F292E</color>
     <color name="darkerPopupBackgroundColorThemeDark">#212121</color>
     <color name="forumListCatTitleColorThemeDark">#FFFFFF</color>
+    <color name="forumListForumColorThemeDark">#737373</color>
+    <color name="forumListDarkerForumColorThemeDark">#595959</color>
     <!-- Grey Theme -->
     <color name="colorPrimaryDarkerThemeGrey">#000000</color>
     <color name="colorAccentThemeGrey">#EEEEEE</color>
@@ -51,6 +55,8 @@
     <color name="windowBackgroundColorThemeGrey">#303030</color>
     <color name="darkerBackgroundColorThemeGrey">#151515</color>
     <color name="dividerColorThemeGrey">#90808080</color>
+    <color name="forumListForumColorThemeGrey">#8c8c8c</color>
+    <color name="forumListDarkerForumColorThemeGrey">#737373</color>
     <!-- Black Theme -->
     <color name="colorPrimaryThemeBlack">#151515</color>
     <color name="colorPrimaryDarkerThemeBlack">#000000</color>
@@ -59,6 +65,8 @@
     <color name="defaultBackgroundColorThemeBlack">#000000</color>
     <color name="windowBackgroundColorThemeBlack">#000000</color>
     <color name="darkerBackgroundColorThemeBlack">#424242</color>
+    <color name="forumListForumColorThemeBlack">#595959</color>
+    <color name="forumListDarkerForumColorThemeBlack">#404040</color>
     <!-- General Theme Colors -->
     <color name="colorPrimaryRealRed">#C41915</color>
     <color name="colorPrimaryDarkerRealRed">#9C1410</color>

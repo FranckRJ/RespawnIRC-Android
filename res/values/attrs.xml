@@ -43,4 +43,10 @@
     <attr name="themedDownloadImage" format="reference"/>
     <attr name="themedArrowDropDown" format="reference"/>
     <attr name="themedTopicLockIcon" format="reference"/>
+    <attr name="themedButtonSubForumStyle" format="reference"/>
+    <attr name="themedButtonBlueStyle" format="reference"/>
+    <attr name="themedButtonRedStyle" format="reference"/>
+    <attr name="themedButtonOrangeStyle" format="reference"/>
+    <attr name="themedButtonGreenStyle" format="reference"/>
+    <attr name="themedButtonPurpleStyle" format="reference"/>
 </resources>

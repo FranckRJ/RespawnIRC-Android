@@ -53,6 +53,7 @@
             app:columnCount="3"
             android:visibility="gone">
             <Button
+                android:theme="?attr/themedButtonBlueStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnSpan="3"
@@ -69,6 +70,7 @@
                 android:background="?attr/themedDarkerBackgroundColor"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -76,6 +78,7 @@
                 android:tag="@string/forumlistJvcRedacAndYouLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -83,6 +86,7 @@
                 android:tag="@string/forumlistJvcSuggestionsJvcLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -90,6 +94,7 @@
                 android:tag="@string/forumlistJvcStoreJvcLink"/>
 
             <Button
+                android:theme="?attr/themedButtonSubForumStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
@@ -97,6 +102,7 @@
                 android:tag="@string/forumlistJvcSurveysLink"/>
 
             <Button
+                android:theme="?attr/themedButtonRedStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnSpan="3"
@@ -105,6 +111,7 @@
                 android:tag="@string/forumlistJvcContribUsersLink"/>
 
             <Button
+                android:theme="?attr/themedButtonOrangeStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnSpan="3"
