@@ -35,7 +35,7 @@
     <color name="colorPseudoAdminThemeDark">#F24040</color>
     <color name="defaultBackgroundColorThemeDark">#292929</color>
     <color name="windowBackgroundColorThemeDark">#1C1E20</color>
-    <color name="darkerBackgroundColorThemeDark">#151515</color>
+    <color name="darkerBackgroundColorThemeDark">#000000</color>
     <color name="headerTextColorThemeDark">#90FFFFFF</color>
     <color name="navigationIconColorThemeDark">#78101010</color>
     <color name="dividerColorThemeDark">#60808080</color>
@@ -49,6 +49,7 @@
     <color name="altBackgroundColorThemeGrey">#4A4A4A</color>
     <color name="defaultBackgroundColorThemeGrey">#424242</color>
     <color name="windowBackgroundColorThemeGrey">#303030</color>
+    <color name="darkerBackgroundColorThemeGrey">#151515</color>
     <color name="dividerColorThemeGrey">#90808080</color>
     <!-- Black Theme -->
     <color name="colorPrimaryThemeBlack">#151515</color>

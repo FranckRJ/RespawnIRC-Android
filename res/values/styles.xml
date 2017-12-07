@@ -109,6 +109,7 @@
         <item name="colorAccent">@color/colorAccentThemeGrey</item>
         <item name="android:windowBackground">@color/windowBackgroundColorThemeGrey</item>
         <item name="themedDefaultBackgroundColor">@color/defaultBackgroundColorThemeGrey</item>
+        <item name="themedDarkerBackgroundColor">@color/darkerBackgroundColorThemeGrey</item>
         <item name="themedDividerColor">@color/dividerColorThemeGrey</item>
         <item name="themedBackgroundAvatar">@drawable/avatar_image_border_grey</item>
         <item name="themedAltBackgroundColor">@color/altBackgroundColorThemeGrey</item>
