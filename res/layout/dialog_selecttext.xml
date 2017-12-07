@@ -13,8 +13,7 @@
         android:id="@+id/line_top_selecttext"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?attr/themedDarkerPopupBackgroundColor"
-        android:visibility="invisible"/>
+        android:background="?attr/themedDarkerPopupBackgroundColor"/>
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scrollview_selecttext"
@@ -34,7 +33,6 @@
         android:id="@+id/line_bottom_selecttext"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?attr/themedDarkerPopupBackgroundColor"
-        android:visibility="invisible"/>
+        android:background="?attr/themedDarkerPopupBackgroundColor"/>
 
 </LinearLayout>

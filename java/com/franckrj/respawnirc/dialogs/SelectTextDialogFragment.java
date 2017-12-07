@@ -21,6 +21,22 @@ public class SelectTextDialogFragment extends DialogFragment {
     public static final String ARG_TEXT_IS_HTML = "com.franckrj.respawnirc.selecttextdialogfragment.text_is_html";
 
     private TextView textShowed = null;
+    private View topLine = null;
+    private View bottomLine = null;
+
+    private void updateLineShowedFromThiScrollView(NestedScrollView scrollView, int scrollY) {
+        if (scrollY == 0) {
+            topLine.setVisibility(View.INVISIBLE);
+        } else {
+            topLine.setVisibility(View.VISIBLE);
+        }
+
+        if (scrollY == (scrollView.getChildAt(0).getMeasuredHeight() - scrollView.getMeasuredHeight())) {
+            bottomLine.setVisibility(View.INVISIBLE);
+        } else {
+            bottomLine.setVisibility(View.VISIBLE);
+        }
+    }
 
     @NonNull
     @Override
@@ -37,26 +53,15 @@ public class SelectTextDialogFragment extends DialogFragment {
 
         @SuppressLint("InflateParams")
         final View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_selecttext, null);
-        NestedScrollView mainScrollView = mainView.findViewById(R.id.scrollview_selecttext);
+        final NestedScrollView mainScrollView = mainView.findViewById(R.id.scrollview_selecttext);
+        topLine = mainView.findViewById(R.id.line_top_selecttext);
+        bottomLine = mainView.findViewById(R.id.line_bottom_selecttext);
         textShowed = mainView.findViewById(R.id.text_selecttext);
 
         mainScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            final View topLine = mainView.findViewById(R.id.line_top_selecttext);
-            final View bottomLine = mainView.findViewById(R.id.line_bottom_selecttext);
-
             @Override
             public void onScrollChange(NestedScrollView scrollView, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY == 0) {
-                    topLine.setVisibility(View.INVISIBLE);
-                } else {
-                    topLine.setVisibility(View.VISIBLE);
-                }
-
-                if (scrollY == (scrollView.getChildAt(0).getMeasuredHeight() - scrollView.getMeasuredHeight())) {
-                    bottomLine.setVisibility(View.INVISIBLE);
-                } else {
-                    bottomLine.setVisibility(View.VISIBLE);
-                }
+                updateLineShowedFromThiScrollView(scrollView, scrollY);
             }
         });
 
@@ -90,6 +95,13 @@ public class SelectTextDialogFragment extends DialogFragment {
                         dialog.dismiss();
                     }
                 });
+
+        mainScrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                updateLineShowedFromThiScrollView(mainScrollView, mainScrollView.getScrollY());
+            }
+        });
 
         return builder.create();
     }
