@@ -8,11 +8,11 @@
 
     <string name="forumlistBlablaBelow15Years" translatable="false">Moins de 15 ans</string>
     <string name="forumlistBlablaBelow15YearsLink" translatable="false">http://www.jeuxvideo.com/forums/0-15-0-1-0-1-0-blabla-moins-de-15-ans.htm</string>
-    <string name="forumlistBlabla1518Years" translatable="false">15-18 ans</string>
+    <string name="forumlistBlabla1518Years" translatable="false">15 - 18 ans</string>
     <string name="forumlistBlabla1518YearsLink" translatable="false">http://www.jeuxvideo.com/forums/0-50-0-1-0-1-0-blabla-15-18-ans.htm</string>
-    <string name="forumlistBlabla1825Years" translatable="false">18-25 ans</string>
+    <string name="forumlistBlabla1825Years" translatable="false">18 - 25 ans</string>
     <string name="forumlistBlabla1825YearsLink" translatable="false">http://www.jeuxvideo.com/forums/0-51-0-1-0-1-0-blabla-18-25-ans.htm</string>
-    <string name="forumlistBlabla2535Years" translatable="false">25-35 ans</string>
+    <string name="forumlistBlabla2535Years" translatable="false">25 - 35 ans</string>
     <string name="forumlistBlabla2535YearsLink" translatable="false">http://www.jeuxvideo.com/forums/0-52-0-1-0-1-0-blabla-25-35-ans.htm</string>
     <string name="forumlistBlablaAbove35Years" translatable="false">Plus de 35 ans</string>
     <string name="forumlistBlablaAbove35YearsLink" translatable="false">http://www.jeuxvideo.com/forums/0-53-0-1-0-1-0-blabla-35-ans-et-plus.htm</string>
@@ -122,4 +122,166 @@
     <string name="forumlistVideoGameCollectorsLink" translatable="false">http://www.jeuxvideo.com/forums/0-64-0-1-0-1-0-collectionneurs.htm</string>
     <string name="forumlistVideoGameHandicap" translatable="false"><![CDATA[Jeu vidéo & handicap]]></string>
     <string name="forumlistVideoGameHandicapLink" translatable="false">http://www.jeuxvideo.com/forums/0-74-0-1-0-1-0-jeux-video-et-handicap.htm</string>
+
+    <string name="forumlistHardwarePc" translatable="false">Jeux PC</string>
+    <string name="forumlistHardwarePcLink" translatable="false">http://www.jeuxvideo.com/forums/0-3000397-0-1-0-1-0-jeux-pc.htm</string>
+    <string name="forumlistHardwareDlOnPc" translatable="false">Plateforme de Téléchargement PC</string>
+    <string name="forumlistHardwareDlOnPcLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000040-0-1-0-1-0-plateforme-de-telechargement-pc.htm</string>
+    <string name="forumlistHardwareOculusRift" translatable="false">Oculus Rift</string>
+    <string name="forumlistHardwareOculusRiftLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000046-0-1-0-1-0-oculus-rift.htm</string>
+    <string name="forumlistHardwarePs4" translatable="false">PlayStation 4</string>
+    <string name="forumlistHardwarePs4Link" translatable="false">http://www.jeuxvideo.com/forums/0-1000043-0-1-0-1-0-playstation-4.htm</string>
+    <string name="forumlistHardwarePsVr" translatable="false">Playstation VR</string>
+    <string name="forumlistHardwarePsVrLink" translatable="false">http://www.jeuxvideo.com/forums/0-3000032-0-1-0-1-0-playstation-vr.htm</string>
+    <string name="forumlistHardwarePs3" translatable="false">PlayStation 3</string>
+    <string name="forumlistHardwarePs3Link" translatable="false">http://www.jeuxvideo.com/forums/0-60-0-1-0-1-0-playstation-3.htm</string>
+    <string name="forumlistHardwarePsVita" translatable="false">PlayStation Vita</string>
+    <string name="forumlistHardwarePsVitaLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000006-0-1-0-1-0-playstation-vita.htm</string>
+    <string name="forumlistHardwarePsStore" translatable="false">PlayStation Store</string>
+    <string name="forumlistHardwarePsStoreLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000015-0-1-0-1-0-playstation-store.htm</string>
+    <string name="forumlistHardwareSmartphone" translatable="false"><![CDATA[Smartphones & tablettes]]></string>
+    <string name="forumlistHardwareSmartphoneLink" translatable="false">http://www.jeuxvideo.com/forums/0-17-0-1-0-1-0-smartphones-tablettes.htm</string>
+    <string name="forumlistHardwareAndroid" translatable="false">Android</string>
+    <string name="forumlistHardwareAndroidLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000005-0-1-0-1-0-android.htm</string>
+    <string name="forumlistHardwareWindowsPhone" translatable="false">Windows Phone</string>
+    <string name="forumlistHardwareWindowsPhoneLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000041-0-1-0-1-0-windows-phone.htm</string>
+    <string name="forumlistHardwareIThings" translatable="false">iPhone / iPod / iPad / Watch</string>
+    <string name="forumlistHardwareIThingsLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000029-0-1-0-1-0-iphone-ipod-ipad-watch.htm</string>
+    <string name="forumlistHardwareXBoxOne" translatable="false">Xbox One</string>
+    <string name="forumlistHardwareXBoxOneLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000044-0-1-0-1-0-xbox-one.htm</string>
+    <string name="forumlistHardwareXBox360" translatable="false">Xbox 360</string>
+    <string name="forumlistHardwareXBox360Link" translatable="false">http://www.jeuxvideo.com/forums/0-61-0-1-0-1-0-xbox-360.htm</string>
+    <string name="forumlistHardwareXbla" translatable="false">Xbox Live Arcade</string>
+    <string name="forumlistHardwareXblaLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000000-0-1-0-1-0-xbox-live-arcade.htm</string>
+    <string name="forumlistHardwareXboxOriginals" translatable="false">Xbox Originals</string>
+    <string name="forumlistHardwareXboxOriginalsLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000023-0-1-0-1-0-xbox-originals.htm</string>
+    <string name="forumlistHardwareNSwitch" translatable="false">Nintendo Switch</string>
+    <string name="forumlistHardwareNSwitchLink" translatable="false">http://www.jeuxvideo.com/forums/0-3007199-0-1-0-1-0-nintendo-switch.htm</string>
+    <string name="forumlistHardwareWiiU" translatable="false">Wii U</string>
+    <string name="forumlistHardwareWiiULink" translatable="false">http://www.jeuxvideo.com/forums/0-1000011-0-1-0-1-0-wii-u.htm</string>
+    <string name="forumlistHardwareWii" translatable="false">Wii</string>
+    <string name="forumlistHardwareWiiLink" translatable="false">http://www.jeuxvideo.com/forums/0-62-0-1-0-1-0-wii.htm</string>
+    <string name="forumlistHardwareWiiWare" translatable="false"><![CDATA[Wii Ware & Console virtuelle]]></string>
+    <string name="forumlistHardwareWiiWareLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000024-0-1-0-1-0-wii-ware-console-virtuelle.htm</string>
+    <string name="forumlistHardware3Ds" translatable="false">3DS</string>
+    <string name="forumlistHardware3DsLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000039-0-1-0-1-0-nintendo-3ds.htm</string>
+
+    <string name="forumlistHobbiesComputers" translatable="false">Informatique</string>
+    <string name="forumlistHobbiesComputersLink" translatable="false">http://www.jeuxvideo.com/forums/0-1-0-1-0-1-0-informatique.htm</string>
+    <string name="forumlistHobbiesComputerParts" translatable="false">Matériel informatique</string>
+    <string name="forumlistHobbiesComputerPartsLink" translatable="false">http://www.jeuxvideo.com/forums/0-6-0-1-0-1-0-materiel-informatique.htm</string>
+    <string name="forumlistHobbiesWebDev" translatable="false">Création de sites web</string>
+    <string name="forumlistHobbiesWebDevLink" translatable="false">http://www.jeuxvideo.com/forums/0-30-0-1-0-1-0-creation-de-sites-web.htm</string>
+    <string name="forumlistHobbiesMac" translatable="false">Mac</string>
+    <string name="forumlistHobbiesMacLink" translatable="false">http://www.jeuxvideo.com/forums/0-11-0-1-0-1-0-macintosh.htm</string>
+    <string name="forumlistHobbiesGameDev" translatable="false">Création de jeux</string>
+    <string name="forumlistHobbiesGameDevLink" translatable="false">http://www.jeuxvideo.com/forums/0-31-0-1-0-1-0-creation-de-jeux.htm</string>
+    <string name="forumlistHobbiesLinux" translatable="false">Linux</string>
+    <string name="forumlistHobbiesLinuxLink" translatable="false">http://www.jeuxvideo.com/forums/0-38-0-1-0-1-0-linux.htm</string>
+    <string name="forumlistHobbiesProgramming" translatable="false">Programmation</string>
+    <string name="forumlistHobbiesProgrammingLink" translatable="false">http://www.jeuxvideo.com/forums/0-47-0-1-0-1-0-programmation.htm</string>
+    <string name="forumlistHobbiesSteamOs" translatable="false">Steam OS</string>
+    <string name="forumlistHobbiesSteamOsLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000048-0-1-0-1-0-steamos.htm</string>
+    <string name="forumlistHobbiesInternet" translatable="false">Internet</string>
+    <string name="forumlistHobbiesInternetLink" translatable="false">http://www.jeuxvideo.com/forums/0-90-0-1-0-1-0-internet.htm</string>
+    <string name="forumlistHobbiesSport" translatable="false">Sport</string>
+    <string name="forumlistHobbiesSportLink" translatable="false">http://www.jeuxvideo.com/forums/0-24-0-1-0-1-0-sport.htm</string>
+    <string name="forumlistHobbiesFootball" translatable="false">Football</string>
+    <string name="forumlistHobbiesFootballLink" translatable="false">http://www.jeuxvideo.com/forums/0-20-0-1-0-1-0-football.htm</string>
+    <string name="forumlistHobbiesBoxing" translatable="false">Boxe</string>
+    <string name="forumlistHobbiesBoxingLink" translatable="false">http://www.jeuxvideo.com/forums/0-88-0-1-0-1-0-boxe.htm</string>
+    <string name="forumlistHobbiesCatch" translatable="false">Catch</string>
+    <string name="forumlistHobbiesCatchLink" translatable="false">http://www.jeuxvideo.com/forums/0-79-0-1-0-1-0-catch.htm</string>
+    <string name="forumlistHobbiesCycling" translatable="false">Cyclisme</string>
+    <string name="forumlistHobbiesCyclingLink" translatable="false">http://www.jeuxvideo.com/forums/0-46-0-1-0-1-0-cyclisme.htm</string>
+    <string name="forumlistHobbiesBodybuilding" translatable="false"><![CDATA[Musculation & nutrition]]></string>
+    <string name="forumlistHobbiesBodybuildingLink" translatable="false">http://www.jeuxvideo.com/forums/0-78-0-1-0-1-0-musculation-nutrition.htm</string>
+    <string name="forumlistHobbiesMechanicSports" translatable="false">Sports mécaniques</string>
+    <string name="forumlistHobbiesMechanicSportsLink" translatable="false">http://www.jeuxvideo.com/forums/0-22-0-1-0-1-0-sports-mecaniques.htm</string>
+    <string name="forumlistHobbiesTennis" translatable="false">Tennis</string>
+    <string name="forumlistHobbiesTennisLink" translatable="false">http://www.jeuxvideo.com/forums/0-33-0-1-0-1-0-tennis.htm</string>
+    <string name="forumlistHobbiesBoardSports" translatable="false">Sports de glisse</string>
+    <string name="forumlistHobbiesBoardSportsLink" translatable="false">http://www.jeuxvideo.com/forums/0-23-0-1-0-1-0-sports-de-glisse.htm</string>
+    <string name="forumlistHobbiesBasket" translatable="false">Basket</string>
+    <string name="forumlistHobbiesBasketLink" translatable="false">http://www.jeuxvideo.com/forums/0-29-0-1-0-1-0-basket.htm</string>
+    <string name="forumlistHobbiesTableTennis" translatable="false">Tennis de table</string>
+    <string name="forumlistHobbiesTableTennisLink" translatable="false">http://www.jeuxvideo.com/forums/0-82-0-1-0-1-0-tennis-de-table.htm</string>
+    <string name="forumlistHobbiesRugby" translatable="false">Rugby</string>
+    <string name="forumlistHobbiesRugbyLink" translatable="false">http://www.jeuxvideo.com/forums/0-21-0-1-0-1-0-rugby.htm</string>
+    <string name="forumlistHobbiesFightingSports" translatable="false">Arts martiaux / Sports de combat</string>
+    <string name="forumlistHobbiesFightingSportsLink" translatable="false">http://www.jeuxvideo.com/forums/0-45-0-1-0-1-0-arts-martiaux-sports-de-combat.htm</string>
+    <string name="forumlistHobbiesArt" translatable="false">Art</string>
+    <string name="forumlistHobbiesArtLink" translatable="false">http://www.jeuxvideo.com/forums/0-3000476-0-1-0-1-0-art.htm</string>
+    <string name="forumlistHobbiesCinema" translatable="false">Cinéma</string>
+    <string name="forumlistHobbiesCinemaLink" translatable="false">http://www.jeuxvideo.com/forums/0-26-0-1-0-1-0-cinema.htm</string>
+    <string name="forumlistHobbiesBooks" translatable="false">Livres</string>
+    <string name="forumlistHobbiesBooksLink" translatable="false">http://www.jeuxvideo.com/forums/0-34-0-1-0-1-0-livres.htm</string>
+    <string name="forumlistHobbiesTvShows" translatable="false"><![CDATA[Télévision & séries]]></string>
+    <string name="forumlistHobbiesTvShowsLink" translatable="false">http://www.jeuxvideo.com/forums/0-32-0-1-0-1-0-television-series.htm</string>
+    <string name="forumlistHobbiesPhoto" translatable="false">Photographie</string>
+    <string name="forumlistHobbiesPhotoLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000009-0-1-0-1-0-photographie.htm</string>
+    <string name="forumlistHobbiesAnimation" translatable="false">Animation</string>
+    <string name="forumlistHobbiesAnimationLink" translatable="false">http://www.jeuxvideo.com/forums/0-98-0-1-0-1-0-animation.htm</string>
+    <string name="forumlistHobbiesMusic" translatable="false">Musique</string>
+    <string name="forumlistHobbiesMusicLink" translatable="false">http://www.jeuxvideo.com/forums/0-25-0-1-0-1-0-musique.htm</string>
+    <string name="forumlistHobbiesComics" translatable="false">BD - Mangas - Comics</string>
+    <string name="forumlistHobbiesComicsLink" translatable="false">http://www.jeuxvideo.com/forums/0-27-0-1-0-1-0-bd-mangas-comics.htm</string>
+    <string name="forumlistHobbiesCulture" translatable="false"><![CDATA[Savoir & Culture]]></string>
+    <string name="forumlistHobbiesCultureLink" translatable="false">http://www.jeuxvideo.com/forums/0-3000481-0-1-0-1-0-savoir-culture.htm</string>
+    <string name="forumlistHobbiesSchool" translatable="false"><![CDATA[Cours & devoirs]]></string>
+    <string name="forumlistHobbiesSchoolLink" translatable="false">http://www.jeuxvideo.com/forums/0-35-0-1-0-1-0-cours-et-devoirs.htm</string>
+    <string name="forumlistHobbiesPhilo" translatable="false">Philosophie</string>
+    <string name="forumlistHobbiesPhiloLink" translatable="false">http://www.jeuxvideo.com/forums/0-68-0-1-0-1-0-philosophie.htm</string>
+    <string name="forumlistHobbiesJob" translatable="false"><![CDATA[Métiers & Orientation]]></string>
+    <string name="forumlistHobbiesJobLink" translatable="false">http://www.jeuxvideo.com/forums/0-70-0-1-0-1-0-metiers-orientation.htm</string>
+    <string name="forumlistHobbiesNature" translatable="false"><![CDATA[Environnement & Nature]]></string>
+    <string name="forumlistHobbiesNatureLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000001-0-1-0-1-0-environnement-nature.htm</string>
+    <string name="forumlistHobbiesHistory" translatable="false">Histoire</string>
+    <string name="forumlistHobbiesHistoryLink" translatable="false">http://www.jeuxvideo.com/forums/0-59-0-1-0-1-0-histoire.htm</string>
+    <string name="forumlistHobbiesPolitic" translatable="false">Politique</string>
+    <string name="forumlistHobbiesPoliticLink" translatable="false">http://www.jeuxvideo.com/forums/0-55-0-1-0-1-0-politique.htm</string>
+    <string name="forumlistHobbiesFinance" translatable="false">Finance</string>
+    <string name="forumlistHobbiesFinanceLink" translatable="false">http://www.jeuxvideo.com/forums/0-3011927-0-1-0-1-0-finance.htm</string>
+    <string name="forumlistHobbiesScience" translatable="false"><![CDATA[Sciences & Techno]]></string>
+    <string name="forumlistHobbiesScienceLink" translatable="false">http://www.jeuxvideo.com/forums/0-65-0-1-0-1-0-sciences-technologies.htm</string>
+    <string name="forumlistHobbiesAstronomy" translatable="false">Astronomie</string>
+    <string name="forumlistHobbiesAstronomyLink" translatable="false">http://www.jeuxvideo.com/forums/0-57-0-1-0-1-0-astronomie.htm</string>
+    <string name="forumlistHobbiesActivities" translatable="false">Loisirs</string>
+    <string name="forumlistHobbiesActivitiesLink" translatable="false">http://www.jeuxvideo.com/forums/0-3000473-0-1-0-1-0-loisirs.htm</string>
+    <string name="forumlistHobbiesCar" translatable="false">Automobiles</string>
+    <string name="forumlistHobbiesCarLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000019-0-1-0-1-0-automobiles.htm</string>
+    <string name="forumlistHobbiesHumor" translatable="false">Humour</string>
+    <string name="forumlistHobbiesHumorLink" translatable="false">http://www.jeuxvideo.com/forums/0-54-0-1-0-1-0-humour.htm</string>
+    <string name="forumlistHobbiesTraveling" translatable="false">Voyages</string>
+    <string name="forumlistHobbiesTravelingLink" translatable="false">http://www.jeuxvideo.com/forums/0-80-0-1-0-1-0-voyages.htm</string>
+    <string name="forumlistHobbiesAviation" translatable="false">Aviation</string>
+    <string name="forumlistHobbiesAviationLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000004-0-1-0-1-0-aviation.htm</string>
+    <string name="forumlistHobbiesParanormal" translatable="false">Paranormal</string>
+    <string name="forumlistHobbiesParanormalLink" translatable="false">http://www.jeuxvideo.com/forums/0-89-0-1-0-1-0-paranormal.htm</string>
+    <string name="forumlistHobbiesGames" translatable="false">Jeux</string>
+    <string name="forumlistHobbiesGamesLink" translatable="false">http://www.jeuxvideo.com/forums/0-71-0-1-0-1-0-jeux.htm</string>
+    <string name="forumlistHobbiesAnimals" translatable="false"><![CDATA[Nature & Animaux]]></string>
+    <string name="forumlistHobbiesAnimalsLink" translatable="false">http://www.jeuxvideo.com/forums/0-39-0-1-0-1-0-nature-et-animaux.htm</string>
+    <string name="forumlistHobbiesCooking" translatable="false"><![CDATA[Cuisine & Pâtisserie]]></string>
+    <string name="forumlistHobbiesCookingLink" translatable="false">http://www.jeuxvideo.com/forums/0-67-0-1-0-1-0-cuisine-et-patisserie.htm</string>
+    <string name="forumlistHobbiesTvDevices" translatable="false">TV - HiFi- Home Cinema</string>
+    <string name="forumlistHobbiesTvDevicesLink" translatable="false">http://www.jeuxvideo.com/forums/0-28-0-1-0-1-0-tv-hifi-home-cinema.htm</string>
+    <string name="forumlistHobbiesCreation" translatable="false">Création</string>
+    <string name="forumlistHobbiesCreationLink" translatable="false">http://www.jeuxvideo.com/forums/0-3000405-0-1-0-1-0-creation.htm</string>
+    <string name="forumlistHobbiesWriting" translatable="false">Écriture</string>
+    <string name="forumlistHobbiesWritingLink" translatable="false">http://www.jeuxvideo.com/forums/0-58-0-1-0-1-0-ecriture.htm</string>
+    <string name="forumlistHobbiesModeling" translatable="false">Modélisme</string>
+    <string name="forumlistHobbiesModelingLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000031-0-1-0-1-0-modelisme.htm</string>
+    <string name="forumlistHobbiesPcTuning" translatable="false">Tuning PC</string>
+    <string name="forumlistHobbiesPcTuningLink" translatable="false">http://www.jeuxvideo.com/forums/0-66-0-1-0-1-0-tuning-pc.htm</string>
+    <string name="forumlistHobbiesVideoMontage" translatable="false">Montage vidéo</string>
+    <string name="forumlistHobbiesVideoMontageLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000030-0-1-0-1-0-montage-video.htm</string>
+    <string name="forumlistHobbiesGraphicArts" translatable="false">Arts Graphiques</string>
+    <string name="forumlistHobbiesGraphicArtsLink" translatable="false">http://www.jeuxvideo.com/forums/0-48-0-1-0-1-0-arts-graphiques.htm</string>
+    <string name="forumlistHobbiesNews" translatable="false">Actualités</string>
+    <string name="forumlistHobbiesNewsLink" translatable="false">http://www.jeuxvideo.com/forums/0-69-0-1-0-1-0-actualites.htm</string>
+    <string name="forumlistHobbiesHealth" translatable="false"><![CDATA[Santé & Bien-être]]></string>
+    <string name="forumlistHobbiesHealthLink" translatable="false">http://www.jeuxvideo.com/forums/0-3002340-0-1-0-1-0-sante-et-bien-etre.htm</string>
+    <string name="forumlistHobbiesSexuality" translatable="false">Sexualité</string>
+    <string name="forumlistHobbiesSexualityLink" translatable="false">http://www.jeuxvideo.com/forums/0-3002014-0-1-0-1-0-sexualite.htm</string>
 </resources>

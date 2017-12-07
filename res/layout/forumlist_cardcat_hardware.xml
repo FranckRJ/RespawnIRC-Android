@@ -43,24 +43,240 @@
                 android:contentDescription="@string/expandList"/>
         </RelativeLayout>
 
-        <LinearLayout
+        <android.support.v7.widget.GridLayout
             android:id="@+id/forumlist_content_hardware_selectforum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingBottom="12dp"
-            android:orientation="vertical"
+            app:columnCount="3"
             android:visibility="gone">
             <Button
-                android:layout_width="match_parent"
+                android:theme="?attr/themedButtonPurpleStyle"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="POTENTIEL FORUM"/>
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHardwarePc"
+                android:tag="@string/forumlistHardwarePcLink"/>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="0dp"
+                app:layout_rowSpan="2"
+                app:layout_rowWeight="1"
+                android:layout_margin="4dp"
+                android:background="?attr/themedDarkerBackgroundColor"/>
 
             <Button
-                android:layout_width="match_parent"
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="AUTRE POTENTIEL FORUM"/>
-        </LinearLayout>
+                app:layout_columnSpan="2"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHardwareDlOnPc"
+                android:tag="@string/forumlistHardwareDlOnPcLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="2"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHardwareOculusRift"
+                android:tag="@string/forumlistHardwareOculusRiftLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonBlueStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHardwarePs4"
+                android:tag="@string/forumlistHardwarePs4Link"/>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="0dp"
+                app:layout_rowWeight="1"
+                android:layout_margin="4dp"
+                android:background="?attr/themedDarkerBackgroundColor"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="2"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHardwarePsVr"
+                android:tag="@string/forumlistHardwarePsVrLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonBlueStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHardwarePs3"
+                android:tag="@string/forumlistHardwarePs3Link"/>
+
+            <Button
+                android:theme="?attr/themedButtonBlueStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHardwarePsVita"
+                android:tag="@string/forumlistHardwarePsVitaLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonBlueStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHardwarePsStore"
+                android:tag="@string/forumlistHardwarePsStoreLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonOrangeStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHardwareSmartphone"
+                android:tag="@string/forumlistHardwareSmartphoneLink"/>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="0dp"
+                app:layout_rowSpan="2"
+                app:layout_rowWeight="1"
+                android:layout_margin="4dp"
+                android:background="?attr/themedDarkerBackgroundColor"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHardwareAndroid"
+                android:tag="@string/forumlistHardwareAndroidLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHardwareWindowsPhone"
+                android:tag="@string/forumlistHardwareWindowsPhoneLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="2"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHardwareIThings"
+                android:tag="@string/forumlistHardwareIThingsLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonGreenStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHardwareXBoxOne"
+                android:tag="@string/forumlistHardwareXBoxOneLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonGreenStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHardwareXBox360"
+                android:tag="@string/forumlistHardwareXBox360Link"/>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="0dp"
+                app:layout_rowWeight="1"
+                android:layout_margin="4dp"
+                android:background="?attr/themedDarkerBackgroundColor"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHardwareXbla"
+                android:tag="@string/forumlistHardwareXblaLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHardwareXboxOriginals"
+                android:tag="@string/forumlistHardwareXboxOriginalsLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonRedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHardwareNSwitch"
+                android:tag="@string/forumlistHardwareNSwitchLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonRedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHardwareWiiU"
+                android:tag="@string/forumlistHardwareWiiULink"/>
+
+            <Button
+                android:theme="?attr/themedButtonRedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHardwareWii"
+                android:tag="@string/forumlistHardwareWiiLink"/>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="0dp"
+                app:layout_rowWeight="1"
+                android:layout_margin="4dp"
+                android:background="?attr/themedDarkerBackgroundColor"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="2"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHardwareWiiWare"
+                android:tag="@string/forumlistHardwareWiiWareLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonRedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHardware3Ds"
+                android:tag="@string/forumlistHardware3DsLink"/>
+        </android.support.v7.widget.GridLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

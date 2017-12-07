@@ -43,24 +43,607 @@
                 android:contentDescription="@string/expandList"/>
         </RelativeLayout>
 
-        <LinearLayout
+        <android.support.v7.widget.GridLayout
             android:id="@+id/forumlist_content_hobbies_selectforum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingBottom="12dp"
-            android:orientation="vertical"
+            app:columnCount="3"
             android:visibility="gone">
             <Button
-                android:layout_width="match_parent"
+                android:theme="?attr/themedButtonOrangeStyle"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="POTENTIEL FORUM"/>
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHobbiesComputers"
+                android:tag="@string/forumlistHobbiesComputersLink"/>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="0dp"
+                app:layout_rowSpan="4"
+                app:layout_rowWeight="1"
+                android:layout_margin="4dp"
+                android:background="?attr/themedDarkerBackgroundColor"/>
 
             <Button
-                android:layout_width="match_parent"
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="AUTRE POTENTIEL FORUM"/>
-        </LinearLayout>
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesComputerParts"
+                android:tag="@string/forumlistHobbiesComputerPartsLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesWebDev"
+                android:tag="@string/forumlistHobbiesWebDevLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesMac"
+                android:tag="@string/forumlistHobbiesMacLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesGameDev"
+                android:tag="@string/forumlistHobbiesGameDevLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesLinux"
+                android:tag="@string/forumlistHobbiesLinuxLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesProgramming"
+                android:tag="@string/forumlistHobbiesProgrammingLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesSteamOs"
+                android:tag="@string/forumlistHobbiesSteamOsLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesInternet"
+                android:tag="@string/forumlistHobbiesInternetLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonBlueStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHobbiesSport"
+                android:tag="@string/forumlistHobbiesSportLink"/>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="0dp"
+                app:layout_rowSpan="6"
+                app:layout_rowWeight="1"
+                android:layout_margin="4dp"
+                android:background="?attr/themedDarkerBackgroundColor"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesFootball"
+                android:tag="@string/forumlistHobbiesFootballLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesBoxing"
+                android:tag="@string/forumlistHobbiesBoxingLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesCatch"
+                android:tag="@string/forumlistHobbiesCatchLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesCycling"
+                android:tag="@string/forumlistHobbiesCyclingLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesBodybuilding"
+                android:tag="@string/forumlistHobbiesBodybuildingLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesMechanicSports"
+                android:tag="@string/forumlistHobbiesMechanicSportsLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesTennis"
+                android:tag="@string/forumlistHobbiesTennisLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesBoardSports"
+                android:tag="@string/forumlistHobbiesBoardSportsLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesBasket"
+                android:tag="@string/forumlistHobbiesBasketLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesTableTennis"
+                android:tag="@string/forumlistHobbiesTableTennisLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesRugby"
+                android:tag="@string/forumlistHobbiesRugbyLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesFightingSports"
+                android:tag="@string/forumlistHobbiesFightingSportsLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonGreenStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHobbiesArt"
+                android:tag="@string/forumlistHobbiesArtLink"/>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="0dp"
+                app:layout_rowSpan="4"
+                app:layout_rowWeight="1"
+                android:layout_margin="4dp"
+                android:background="?attr/themedDarkerBackgroundColor"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesCinema"
+                android:tag="@string/forumlistHobbiesCinemaLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesBooks"
+                android:tag="@string/forumlistHobbiesBooksLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesTvShows"
+                android:tag="@string/forumlistHobbiesTvShowsLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesPhoto"
+                android:tag="@string/forumlistHobbiesPhotoLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesAnimation"
+                android:tag="@string/forumlistHobbiesAnimationLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesMusic"
+                android:tag="@string/forumlistHobbiesMusicLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="2"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHobbiesComics"
+                android:tag="@string/forumlistHobbiesComicsLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonRedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHobbiesCulture"
+                android:tag="@string/forumlistHobbiesCultureLink"/>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="0dp"
+                app:layout_rowSpan="3"
+                app:layout_rowWeight="1"
+                android:layout_margin="4dp"
+                android:background="?attr/themedDarkerBackgroundColor"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesSchool"
+                android:tag="@string/forumlistHobbiesSchoolLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesPhilo"
+                android:tag="@string/forumlistHobbiesPhiloLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesJob"
+                android:tag="@string/forumlistHobbiesJobLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesNature"
+                android:tag="@string/forumlistHobbiesNatureLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesHistory"
+                android:tag="@string/forumlistHobbiesHistoryLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesPolitic"
+                android:tag="@string/forumlistHobbiesPoliticLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonPurpleStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHobbiesFinance"
+                android:tag="@string/forumlistHobbiesFinanceLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonBlueStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHobbiesScience"
+                android:tag="@string/forumlistHobbiesScienceLink"/>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="0dp"
+                app:layout_rowWeight="1"
+                android:layout_margin="4dp"
+                android:background="?attr/themedDarkerBackgroundColor"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="2"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHobbiesAstronomy"
+                android:tag="@string/forumlistHobbiesAstronomyLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonOrangeStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHobbiesActivities"
+                android:tag="@string/forumlistHobbiesActivitiesLink"/>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="0dp"
+                app:layout_rowSpan="5"
+                app:layout_rowWeight="1"
+                android:layout_margin="4dp"
+                android:background="?attr/themedDarkerBackgroundColor"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesCar"
+                android:tag="@string/forumlistHobbiesCarLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesHumor"
+                android:tag="@string/forumlistHobbiesHumorLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesTraveling"
+                android:tag="@string/forumlistHobbiesTravelingLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesAviation"
+                android:tag="@string/forumlistHobbiesAviationLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesParanormal"
+                android:tag="@string/forumlistHobbiesParanormalLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesGames"
+                android:tag="@string/forumlistHobbiesGamesLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesAnimals"
+                android:tag="@string/forumlistHobbiesAnimalsLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesCooking"
+                android:tag="@string/forumlistHobbiesCookingLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="2"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHobbiesTvDevices"
+                android:tag="@string/forumlistHobbiesTvDevicesLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonGreenStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHobbiesCreation"
+                android:tag="@string/forumlistHobbiesCreationLink"/>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="0dp"
+                app:layout_rowSpan="3"
+                app:layout_rowWeight="1"
+                android:layout_margin="4dp"
+                android:background="?attr/themedDarkerBackgroundColor"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesWriting"
+                android:tag="@string/forumlistHobbiesWritingLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesModeling"
+                android:tag="@string/forumlistHobbiesModelingLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesPcTuning"
+                android:tag="@string/forumlistHobbiesPcTuningLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistHobbiesVideoMontage"
+                android:tag="@string/forumlistHobbiesVideoMontageLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="2"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHobbiesGraphicArts"
+                android:tag="@string/forumlistHobbiesGraphicArtsLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonPurpleStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHobbiesNews"
+                android:tag="@string/forumlistHobbiesNewsLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonRedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHobbiesHealth"
+                android:tag="@string/forumlistHobbiesHealthLink"/>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="0dp"
+                app:layout_rowWeight="1"
+                android:layout_margin="4dp"
+                android:background="?attr/themedDarkerBackgroundColor"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="2"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHobbiesSexuality"
+                android:tag="@string/forumlistHobbiesSexualityLink"/>
+        </android.support.v7.widget.GridLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

@@ -74,6 +74,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGameFpsAndTps"
                 android:tag="@string/forumlistVideoGameFpsAndTpsLink"/>
 
@@ -82,6 +83,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGameSimulation"
                 android:tag="@string/forumlistVideoGameSimulationLink"/>
 
@@ -90,6 +92,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGameRpg"
                 android:tag="@string/forumlistVideoGameRpgLink"/>
 
@@ -98,6 +101,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGameMusic"
                 android:tag="@string/forumlistVideoGameMusicLink"/>
 
@@ -106,6 +110,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGameStr"
                 android:tag="@string/forumlistVideoGameStrLink"/>
 
@@ -114,6 +119,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGameMagazine"
                 android:tag="@string/forumlistVideoGameMagazineLink"/>
 
@@ -122,6 +128,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGameFighting"
                 android:tag="@string/forumlistVideoGameFightingLink"/>
 
@@ -130,6 +137,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGameImport"
                 android:tag="@string/forumlistVideoGameImportLink"/>
 
@@ -138,6 +146,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGameRacing"
                 android:tag="@string/forumlistVideoGameRacingLink"/>
 
@@ -146,6 +155,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGameHeros"
                 android:tag="@string/forumlistVideoGameHerosLink"/>
 
@@ -154,6 +164,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGameAdventure"
                 android:tag="@string/forumlistVideoGameAdventureLink"/>
 
@@ -162,6 +173,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGameBusiness"
                 android:tag="@string/forumlistVideoGameBusinessLink"/>
 
@@ -196,6 +208,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGameNds"
                 android:tag="@string/forumlistVideoGameNdsLink"/>
 
@@ -204,6 +217,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGameDreamcast"
                 android:tag="@string/forumlistVideoGameDreamcastLink"/>
 
@@ -212,6 +226,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGamePs2"
                 android:tag="@string/forumlistVideoGamePs2Link"/>
 
@@ -220,6 +235,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGameN64"
                 android:tag="@string/forumlistVideoGameN64Link"/>
 
@@ -228,6 +244,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGameXbox"
                 android:tag="@string/forumlistVideoGameXboxLink"/>
 
@@ -236,6 +253,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGameMegadrive"
                 android:tag="@string/forumlistVideoGameMegadriveLink"/>
 
@@ -244,6 +262,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGameGamecube"
                 android:tag="@string/forumlistVideoGameGamecubeLink"/>
 
@@ -252,6 +271,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGameSnes"
                 android:tag="@string/forumlistVideoGameSnesLink"/>
 
@@ -260,6 +280,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGameGba"
                 android:tag="@string/forumlistVideoGameGbaLink"/>
 
@@ -268,6 +289,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGameSaturn"
                 android:tag="@string/forumlistVideoGameSaturnLink"/>
 
@@ -276,6 +298,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGamePs1"
                 android:tag="@string/forumlistVideoGamePs1Link"/>
 
@@ -284,6 +307,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGameGameboy"
                 android:tag="@string/forumlistVideoGameGameboyLink"/>
 
@@ -327,6 +351,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGameE3"
                 android:tag="@string/forumlistVideoGameE3Link"/>
 
@@ -335,6 +360,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGameGamescom"
                 android:tag="@string/forumlistVideoGameGamescomLink"/>
 
@@ -343,6 +369,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGameTgs"
                 android:tag="@string/forumlistVideoGameTgsLink"/>
 
@@ -351,6 +378,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
                 android:text="@string/forumlistVideoGamePgw"
                 android:tag="@string/forumlistVideoGamePgwLink"/>
 
@@ -384,7 +412,6 @@
             <View
                 android:layout_width="2dp"
                 android:layout_height="0dp"
-                app:layout_rowSpan="1"
                 app:layout_rowWeight="1"
                 android:layout_margin="4dp"
                 android:background="?attr/themedDarkerBackgroundColor"/>
@@ -410,7 +437,6 @@
             <View
                 android:layout_width="2dp"
                 android:layout_height="0dp"
-                app:layout_rowSpan="1"
                 app:layout_rowWeight="1"
                 android:layout_margin="4dp"
                 android:background="?attr/themedDarkerBackgroundColor"/>
