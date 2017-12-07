@@ -105,6 +105,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 } else if (useMessageToEdit) {
                     messageSendEdit.setText(newMessageToEdit);
                     messageSendEdit.setSelection(newMessageToEdit.length());
+                    messageSendEdit.requestFocus();
                 }
             }
         }
@@ -628,6 +629,8 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                         messageSendButton.setEnabled(true);
                         messageSendButton.setImageDrawable(ThemeManager.getDrawable(R.attr.themedContentSendIcon, this));
                         messageSendEdit.setText("");
+                        Utils.hideSoftKeyboard(ShowTopicActivity.this);
+                        messageSendLayout.requestFocus();
                     } else {
                         startEditThisMessage(Long.toString(getCurrentFragment().getCurrentItemSelected().id), true);
                     }
