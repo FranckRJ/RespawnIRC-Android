@@ -206,7 +206,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
 
         swipeRefresh = findViewById(R.id.swiperefresh_selectforum);
         noResultFoundTextView = findViewById(R.id.text_noresultfound_selectforum);
-        baseForumListLayout = findViewById(R.id.default_forumlist_layout_selectforum);
+        baseForumListLayout = findViewById(R.id.base_forumlist_layout_selectforum);
         swipeRefresh.setEnabled(false);
         swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
         noResultFoundTextView.setVisibility(View.GONE);

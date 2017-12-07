@@ -7,11 +7,11 @@
     <string name="forumlistCatTitleVideogame" translatable="false">LE JEU VIDÉO</string>
     <string name="forumlistBlablaBelow15Years" translatable="false">MOINS DE 15 ANS</string>
     <string name="forumlistBlablaBelow15YearsLink" translatable="false">http://www.jeuxvideo.com/forums/0-15-0-1-0-1-0-blabla-moins-de-15-ans.htm</string>
-    <string name="forumlistBlabla1518Years" translatable="false">15–18 ANS</string>
+    <string name="forumlistBlabla1518Years" translatable="false">15-18 ANS</string>
     <string name="forumlistBlabla1518YearsLink" translatable="false">http://www.jeuxvideo.com/forums/0-50-0-1-0-1-0-blabla-15-18-ans.htm</string>
-    <string name="forumlistBlabla1825Years" translatable="false">18–25 ANS</string>
+    <string name="forumlistBlabla1825Years" translatable="false">18-25 ANS</string>
     <string name="forumlistBlabla1825YearsLink" translatable="false">http://www.jeuxvideo.com/forums/0-51-0-1-0-1-0-blabla-18-25-ans.htm</string>
-    <string name="forumlistBlabla2535Years" translatable="false">25–35 ANS</string>
+    <string name="forumlistBlabla2535Years" translatable="false">25-35 ANS</string>
     <string name="forumlistBlabla2535YearsLink" translatable="false">http://www.jeuxvideo.com/forums/0-52-0-1-0-1-0-blabla-25-35-ans.htm</string>
     <string name="forumlistBlablaAbove35Years" translatable="false">PLUS DE 35 ANS</string>
     <string name="forumlistBlablaAbove35YearsLink" translatable="false">http://www.jeuxvideo.com/forums/0-53-0-1-0-1-0-blabla-35-ans-et-plus.htm</string>
@@ -23,5 +23,4 @@
     <string name="forumlistBlablaQuebecLink" translatable="false">http://www.jeuxvideo.com/forums/0-83-0-1-0-1-0-quebec.htm</string>
     <string name="forumlistBlablaJapan" translatable="false">JAPON</string>
     <string name="forumlistBlablaJapanLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000034-0-1-0-1-0-japon.htm</string>
-
 </resources>
