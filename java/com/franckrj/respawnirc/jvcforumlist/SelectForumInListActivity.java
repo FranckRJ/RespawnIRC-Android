@@ -67,6 +67,15 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         }
     };
 
+    private final View.OnClickListener baseForumButtonClickedListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (view.getTag() != null && view.getTag() instanceof String) {
+                readNewTopicOrForum((String) view.getTag(), false);
+            }
+        }
+    };
+
     private final TextView.OnEditorActionListener actionInSearchEditTextListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -171,14 +180,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         View category = findViewById(categoryId);
 
         for (int i = 0; i < currentForumlist.getNumberOfForumButton(); ++i) {
-            currentForumlist.getForumButtonAt(i).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (view.getTag() != null && view.getTag() instanceof String) {
-                        readNewTopicOrForum((String) view.getTag(), false);
-                    }
-                }
-            });
+            currentForumlist.getForumButtonAt(i).setOnClickListener(baseForumButtonClickedListener);
         }
 
         category.setOnClickListener(new View.OnClickListener() {

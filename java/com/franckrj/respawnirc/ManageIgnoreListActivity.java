@@ -81,6 +81,18 @@ public class ManageIgnoreListActivity extends AbsHomeIsBackActivity {
         private ArrayList<String> listOfIgnoredPseudos = new ArrayList<>();
         private OnPseudoRemovedListener listenerForPseudoRemoved = null;
 
+        private final View.OnClickListener removeButtonClickedListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (view.getTag() != null && view.getTag() instanceof Integer) {
+                    int position = (Integer) view.getTag();
+                    if (position != -1) {
+                        removeItem(position);
+                    }
+                }
+            }
+        };
+
         public IgnoreListAdapter(Activity parentActivity) {
             serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
@@ -130,26 +142,19 @@ public class ManageIgnoreListActivity extends AbsHomeIsBackActivity {
         public class IgnoreViewHolder extends RecyclerView.ViewHolder {
             private TextView mainText = null;
             private ImageButton actionButton = null;
-            private int position = -1;
 
             public IgnoreViewHolder(View mainView) {
                 super(mainView);
                 mainText = mainView.findViewById(R.id.text_main_ignorelist_row);
                 actionButton = mainView.findViewById(R.id.image_button_action_ignorelist_row);
 
-                actionButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (position != -1) {
-                            removeItem(position);
-                        }
-                    }
-                });
+                actionButton.setTag(-1);
+                actionButton.setOnClickListener(removeButtonClickedListener);
             }
 
             public void setCurrentPseudo(String newPseudo, int newPosition) {
                 mainText.setText(newPseudo);
-                position = newPosition;
+                actionButton.setTag(newPosition);
             }
         }
 
