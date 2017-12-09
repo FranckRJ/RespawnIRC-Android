@@ -23,10 +23,12 @@ public class ManageSurveyOfTopicActivity extends AbsHomeIsBackActivity {
     public static final String EXTRA_SURVEY_REPLYS_LIST = "com.franckrj.respawnirc.managesurveyactivity.EXTRA_SURVEY_REPLYS_LIST";
 
     private static final String SAVE_LIST_OF_REPLY_CONTENT = "saveListOfReplyContent";
+    private static final long MAX_TIME_USER_HAVE_TO_LEAVE_IN_MS = 3_500;
 
     private RecyclerView listOfReplys = null;
     private SurveyReplysAdapter adapterForReplys = null;
     private EditText titleEdit = null;
+    private long lastTimeUserTryToLeaveInMs = -MAX_TIME_USER_HAVE_TO_LEAVE_IN_MS;
 
     private final View.OnClickListener validateButtonClicked = new View.OnClickListener() {
         @Override
@@ -110,7 +112,14 @@ public class ManageSurveyOfTopicActivity extends AbsHomeIsBackActivity {
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(this, getString(R.string.warningChangesNotSaved), Toast.LENGTH_LONG).show();
-        super.onBackPressed();
+        long currentTimeInMs = System.currentTimeMillis();
+
+        if (currentTimeInMs - lastTimeUserTryToLeaveInMs < MAX_TIME_USER_HAVE_TO_LEAVE_IN_MS) {
+            super.onBackPressed();
+        } else {
+            Toast.makeText(this, getString(R.string.pressBackTwoTimesToLeaveSurvey), Toast.LENGTH_LONG).show();
+        }
+
+        lastTimeUserTryToLeaveInMs = currentTimeInMs;
     }
 }

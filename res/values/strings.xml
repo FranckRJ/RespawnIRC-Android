@@ -208,7 +208,7 @@
     <string name="manageSurvey">Gérer le sondage</string>
     <string name="titleWithColon">Titre :</string>
     <string name="surveyTitlePlaceholder">(vide pour ne pas créer de sondage)</string>
-    <string name="warningChangesNotSaved">Attention, vos changements n\'ont pas été sauvegardés !</string>
+    <string name="pressBackTwoTimesToLeaveSurvey">Appuyez une deuxième fois sur retour pour quitter sans valider le sondage (les modifications seront perdues).</string>
     <string name="kickSuccessful">Kick effectué.</string>
     <string name="colorPseudoOfUserInInfoTitle">Colorer votre pseudo</string>
     <string name="colorPseudoOfUserInMessageTitle">Colorer votre pseudo dans les messages</string>
