@@ -271,6 +271,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
                 messageSendEdit.setText(currentMessage);
                 messageSendEdit.setSelection(currentMessage.length());
+                messageSendEdit.requestFocus();
             }
         }
     };
