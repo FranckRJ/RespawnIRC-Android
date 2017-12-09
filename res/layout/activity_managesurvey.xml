@@ -10,33 +10,50 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/button_layout_managesurvey"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/toolbar_managesurvey"
-            android:layout_alignParentBottom="true"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/validate_button_managesurvey"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <Button
-                    android:id="@+id/validate_button_managesurvey"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="40"
-                    android:layout_margin="4dp"
-                    android:text="@string/validate"/>
-                <Button
-                    android:id="@+id/addreply_button_managesurvey"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="60"
-                    android:layout_margin="4dp"
-                    android:text="@string/addReply"/>
-            </LinearLayout>
+                android:layout_weight="40"
+                android:layout_margin="4dp"
+                android:text="@string/validate"/>
+            <Button
+                android:id="@+id/addreply_button_managesurvey"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="60"
+                android:layout_margin="4dp"
+                android:text="@string/addReply"/>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/button_edit_separator_managesurvey"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@+id/button_layout_managesurvey"
+            android:background="?attr/themedDarkerBackgroundColor"/>
+
+        <LinearLayout
+            android:id="@+id/title_layout_managesurvey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/button_edit_separator_managesurvey"
+            android:padding="8dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="?attr/themedDefaultBackgroundColor">
+            <TextView
+                android:id="@+id/reply_title_replysurveyrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/titleWithColon"/>
 
             <EditText
                 android:id="@+id/title_edit_managesurvey"
@@ -44,14 +61,23 @@
                 android:layout_height="wrap_content"
                 android:inputType="text|textCapSentences"
                 android:maxLines="1"
-                android:hint="@string/surveyTitlePlaceholder"/>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/reply_list_managesurvey"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="vertical"/>
+                android:hint="@string/surveyTitlePlaceholder"
+                android:background="@android:color/transparent"/>
         </LinearLayout>
+
+        <View
+            android:id="@+id/edit_list_separator_managesurvey"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@+id/title_layout_managesurvey"
+            android:background="?attr/themedDarkerBackgroundColor"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/reply_list_managesurvey"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/edit_list_separator_managesurvey"
+            android:scrollbars="vertical"/>
 
         <View
             android:layout_width="match_parent"

@@ -16,13 +16,16 @@ import com.franckrj.respawnirc.R;
 import java.util.ArrayList;
 
 public class SurveyReplysAdapter extends RecyclerView.Adapter<SurveyReplysAdapter.ReplyViewHolder> {
-    private Activity parentActivity = null;
     private ArrayList<String> listOfReplyContent = new ArrayList<>();
     private LayoutInflater serviceInflater = null;
+    /* Ces deux variables sont une tentative d'optimisation probablement inutile. */
+    private String replyTitleModel = "";
+    private String replyContentHintModel = "";
 
-    public SurveyReplysAdapter(Activity newParentActivity) {
-        parentActivity = newParentActivity;
+    public SurveyReplysAdapter(Activity parentActivity) {
         serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        replyTitleModel = parentActivity.getString(R.string.replyTitleInSurveyManager);
+        replyContentHintModel = parentActivity.getString(R.string.replyTitleInSurveyHint);
     }
 
     public void setReplys(ArrayList<String> newListOfReplyContent) {
@@ -87,7 +90,8 @@ public class SurveyReplysAdapter extends RecyclerView.Adapter<SurveyReplysAdapte
 
         public void setCurrentReply(String content, int newPos) {
             replyPos = newPos;
-            replyTitle.setText(parentActivity.getString(R.string.replyTitleInSurveyManager, String.valueOf(replyPos + 1)));
+            replyTitle.setText(replyTitleModel.replace("%n%", String.valueOf(replyPos + 1)));
+            replyContent.setHint(replyContentHintModel.replace("%n%", String.valueOf(replyPos + 1)));
             replyContent.setText(content);
         }
     }

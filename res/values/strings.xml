@@ -206,8 +206,8 @@
     <string name="errorReasonMissing">Erreur, raison manquante.</string>
     <string name="goToDirectLinkForDDB">Accéder au message (DDB)</string>
     <string name="manageSurvey">Gérer le sondage</string>
-    <string name="keepEmptyToNotUse">Laisser vide pour ne pas utiliser</string>
-    <string name="surveyTitlePlaceholder">Titre (vide pour ne pas créer de sondage)</string>
+    <string name="titleWithColon">Titre :</string>
+    <string name="surveyTitlePlaceholder">(vide pour ne pas créer de sondage)</string>
     <string name="warningChangesNotSaved">Attention, vos changements n\'ont pas été sauvegardés !</string>
     <string name="kickSuccessful">Kick effectué.</string>
     <string name="colorPseudoOfUserInInfoTitle">Colorer votre pseudo</string>
@@ -217,7 +217,8 @@
     <string name="avatarSizeTitle">Taille des avatars (en dp)</string>
     <string name="saveLastRowUsedInsertstuffTitle">Se souvenir du dernier type de sticker utilisé</string>
     <string name="errorThereIsACaptcha">Erreur, les captchas ne sont pas supportés. Veuillez ré-essayer dans quelques instants.</string>
-    <string name="replyTitleInSurveyManager">Rep n°%1$s :</string>
+    <string name="replyTitleInSurveyManager">%n% :</string>
+    <string name="replyTitleInSurveyHint">Réponse n°%n%</string>
     <string name="addReply">Ajouter une réponse</string>
     <string name="stickerSizeTitle">Taille des stickers (en dp)</string>
     <string name="miniNoelshackWidthTitle">Largeur des miniatures (en dp)</string>

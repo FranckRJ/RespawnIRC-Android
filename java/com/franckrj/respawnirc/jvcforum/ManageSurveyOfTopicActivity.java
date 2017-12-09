@@ -3,6 +3,7 @@ package com.franckrj.respawnirc.jvcforum;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -23,6 +24,7 @@ public class ManageSurveyOfTopicActivity extends AbsHomeIsBackActivity {
 
     private static final String SAVE_LIST_OF_REPLY_CONTENT = "saveListOfReplyContent";
 
+    private RecyclerView listOfReplys = null;
     private SurveyReplysAdapter adapterForReplys = null;
     private EditText titleEdit = null;
 
@@ -50,6 +52,7 @@ public class ManageSurveyOfTopicActivity extends AbsHomeIsBackActivity {
         @Override
         public void onClick(View view) {
             adapterForReplys.addReply("");
+            listOfReplys.smoothScrollToPosition(adapterForReplys.getItemCount());
         }
     };
 
@@ -61,12 +64,13 @@ public class ManageSurveyOfTopicActivity extends AbsHomeIsBackActivity {
 
         Button validateButton = findViewById(R.id.validate_button_managesurvey);
         Button addReplyButton = findViewById(R.id.addreply_button_managesurvey);
-        RecyclerView listOfReplys = findViewById(R.id.reply_list_managesurvey);
+        listOfReplys = findViewById(R.id.reply_list_managesurvey);
         titleEdit = findViewById(R.id.title_edit_managesurvey);
 
         adapterForReplys = new SurveyReplysAdapter(this);
         validateButton.setOnClickListener(validateButtonClicked);
         addReplyButton.setOnClickListener(addReplyButtonClicked);
+        listOfReplys.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         listOfReplys.setLayoutManager(new LinearLayoutManager(this));
         listOfReplys.setAdapter(adapterForReplys);
 
