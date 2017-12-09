@@ -23,8 +23,11 @@ import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
 
 public class ConnectActivity extends AbsHomeIsBackActivity {
+    private static final long MAX_TIME_USER_HAVE_TO_LEAVE_IN_MS = 3_500;
+
     private EditText pseudoText = null;
     private HelpConnectDialogFragment helpDialogFragment = null;
+    private long lastTimeUserTryToLeaveInMs = -MAX_TIME_USER_HAVE_TO_LEAVE_IN_MS;
 
     public void saveCookies(View buttonView) {
         if (!pseudoText.getText().toString().isEmpty()) {
@@ -117,8 +120,16 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(this, getString(R.string.warningNotConnected), Toast.LENGTH_LONG).show();
-        super.onBackPressed();
+        long currentTimeInMs = System.currentTimeMillis();
+
+        if (currentTimeInMs - lastTimeUserTryToLeaveInMs < MAX_TIME_USER_HAVE_TO_LEAVE_IN_MS) {
+            Toast.makeText(this, getString(R.string.warningNotConnected), Toast.LENGTH_LONG).show();
+            super.onBackPressed();
+        } else {
+            Toast.makeText(this, getString(R.string.pressBackTwoTimesToLeaveConnect), Toast.LENGTH_LONG).show();
+        }
+
+        lastTimeUserTryToLeaveInMs = currentTimeInMs;
     }
 
     public static class HelpConnectDialogFragment extends DialogFragment {

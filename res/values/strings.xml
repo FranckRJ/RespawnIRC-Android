@@ -45,7 +45,7 @@
     <string name="showQuoteMessage">Afficher les citations imbriquées</string>
     <string name="hideQuoteMessage">Cacher les citations imbriquées</string>
     <string name="maxNumberOfOverlyQuoteTitle">Nombre max de citations imbriquées</string>
-    <string name="warningNotConnected">Vous ne vous êtes pas connecté !</string>
+    <string name="warningNotConnected">ATTENTION : Vous n\'êtes pas connecté !</string>
     <string name="errorQuoteAlreadyRunning">Erreur, citation déjà en cours.</string>
     <string name="errorInfosMissings">Erreur, informations manquantes (rechargez la page ?).</string>
     <string name="errorMessageAlreadySending">Erreur, envoie ou édition d\'un message actuellement en cours.</string>
@@ -244,6 +244,7 @@
     <string name="deleteCurrentWritedMessageWarning">Êtes-vous sûr de vouloir supprimer le message que vous êtes entrain d\'écrire ?</string>
     <string name="deleteTopic">Supprimer le topic</string>
     <string name="deleteWholeTopicWarning">Êtes-vous sûr de vouloir supprimer le topic que vous êtes entrain d\'écrire ainsi que son sondage ?</string>
+    <string name="pressBackTwoTimesToLeaveConnect">Appuyez une deuxième fois sur retour pour quitter sans terminer votre connexion.</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>
