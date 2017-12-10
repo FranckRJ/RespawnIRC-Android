@@ -1,11 +1,15 @@
 package com.franckrj.respawnirc.jvcforum;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,6 +51,21 @@ public class ManageSurveyOfTopicActivity extends AbsHomeIsBackActivity {
             data.putStringArrayListExtra(EXTRA_SURVEY_REPLYS_LIST, replysList);
             setResult(Activity.RESULT_OK, data);
             finish();
+        }
+    };
+
+    private final DialogInterface.OnClickListener onClickInClearWholeSurveyConfirmationListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            if (which == DialogInterface.BUTTON_POSITIVE) {
+                Intent data = new Intent();
+
+                data.putExtra(EXTRA_SURVEY_TITLE, "");
+                data.putStringArrayListExtra(EXTRA_SURVEY_REPLYS_LIST, new ArrayList<String>());
+
+                setResult(Activity.RESULT_OK, data);
+                finish();
+            }
         }
     };
 
@@ -108,6 +127,27 @@ public class ManageSurveyOfTopicActivity extends AbsHomeIsBackActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putStringArrayList(SAVE_LIST_OF_REPLY_CONTENT, adapterForReplys.getReplyContentList());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_managesurvey, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_clear_whole_survey_managesurvey:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.deleteSurvey).setMessage(R.string.deleteWholeSurveyWarning)
+                        .setPositiveButton(R.string.yes, onClickInClearWholeSurveyConfirmationListener).setNegativeButton(R.string.no, null);
+                builder.show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

@@ -235,7 +235,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 case R.id.delete_message_sendmessage_action:
                     AlertDialog.Builder builder = new AlertDialog.Builder(ShowTopicActivity.this);
                     builder.setTitle(R.string.deleteMessage).setMessage(R.string.deleteCurrentWritedMessageWarning)
-                           .setPositiveButton(R.string.yes, onClickInDeleteCurrentWritedMessageConfirmationListener).setNegativeButton(R.string.no, null);
+                            .setPositiveButton(R.string.yes, onClickInDeleteCurrentWritedMessageConfirmationListener).setNegativeButton(R.string.no, null);
                     builder.show();
                     return true;
                 default:
@@ -247,7 +247,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     private final DialogInterface.OnClickListener onClickInDeleteCurrentWritedMessageConfirmationListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            if (which == DialogInterface.BUTTON_POSITIVE)  {
+            if (which == DialogInterface.BUTTON_POSITIVE) {
                 messageSendEdit.setText("");
                 Utils.hideSoftKeyboard(ShowTopicActivity.this);
                 messageSendLayout.requestFocus();

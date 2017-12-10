@@ -101,7 +101,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
     private final DialogInterface.OnClickListener onClickInClearWholeTopicConfirmationListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            if (which == DialogInterface.BUTTON_POSITIVE)  {
+            if (which == DialogInterface.BUTTON_POSITIVE) {
                 clearWholeTopicIncludingSurvey();
             }
         }

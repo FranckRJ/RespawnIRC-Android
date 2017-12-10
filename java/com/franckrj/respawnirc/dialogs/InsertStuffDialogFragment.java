@@ -553,12 +553,12 @@ public class InsertStuffDialogFragment extends DialogFragment {
         selectThisRow(oldRowNumber);
 
         builder.setTitle(R.string.insertStuff).setView(mainView)
-            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.dismiss();
-                }
-            });
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
         return builder.create();
     }
 

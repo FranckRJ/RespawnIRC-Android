@@ -21,7 +21,7 @@ public class JVCMessageInTopicAction {
     private final DialogInterface.OnClickListener onClickInDeleteConfirmationPopupListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            if (which == DialogInterface.BUTTON_POSITIVE)  {
+            if (which == DialogInterface.BUTTON_POSITIVE) {
                 currentTaskDeleteMessage = new DeleteJVCMessage();
                 currentTaskDeleteMessage.setRequestIsFinishedListener(deleteMessageIsFinishedListener);
                 currentTaskDeleteMessage.execute(lastDeleteInfos.idOfMessage, lastDeleteInfos.latestAjaxInfosMod, lastDeleteInfos.cookieListInAString);
@@ -110,7 +110,7 @@ public class JVCMessageInTopicAction {
             lastDeleteInfos.cookieListInAString = cookieListInAString;
 
             builder.setTitle(R.string.deleteMessage).setMessage(R.string.areYouSure)
-                   .setPositiveButton(R.string.yes, onClickInDeleteConfirmationPopupListener).setNegativeButton(R.string.no, null);
+                    .setPositiveButton(R.string.yes, onClickInDeleteConfirmationPopupListener).setNegativeButton(R.string.no, null);
             builder.show();
         } else {
             if (currentTaskDeleteMessage != null) {
