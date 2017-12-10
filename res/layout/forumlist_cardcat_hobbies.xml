@@ -42,12 +42,11 @@
         </RelativeLayout>
 
         <android.support.v7.widget.GridLayout
-            android:id="@+id/forumlist_content_hobbies_selectforum"
+            android:id="@+id/forumlist_content_1_hobbies_selectforum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:paddingBottom="12dp"
             app:columnCount="3"
             android:visibility="gone">
             <Button
@@ -343,7 +342,17 @@
                 app:layout_columnWeight="1"
                 android:text="@string/forumlistHobbiesComics"
                 android:tag="@string/forumlistHobbiesComicsLink"/>
+        </android.support.v7.widget.GridLayout>
 
+        <android.support.v7.widget.GridLayout
+            android:id="@+id/forumlist_content_2_hobbies_selectforum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="12dp"
+            app:columnCount="3"
+            android:visibility="gone">
             <Button
                 android:theme="?attr/themedButtonRedStyle"
                 android:layout_width="0dp"

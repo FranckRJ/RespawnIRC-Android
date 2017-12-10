@@ -42,12 +42,11 @@
         </RelativeLayout>
 
         <android.support.v7.widget.GridLayout
-            android:id="@+id/forumlist_content_videogame_selectforum"
+            android:id="@+id/forumlist_content_1_videogame_selectforum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:paddingBottom="12dp"
             app:columnCount="3"
             android:visibility="gone">
             <Button
@@ -317,7 +316,17 @@
                 app:layout_columnWeight="1"
                 android:text="@string/forumlistVideoGamePsp"
                 android:tag="@string/forumlistVideoGamePspLink"/>
+        </android.support.v7.widget.GridLayout>
 
+        <android.support.v7.widget.GridLayout
+            android:id="@+id/forumlist_content_2_videogame_selectforum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="12dp"
+            app:columnCount="3"
+            android:visibility="gone">
             <Button
                 android:theme="?attr/themedButtonBlueStyle"
                 android:layout_width="0dp"

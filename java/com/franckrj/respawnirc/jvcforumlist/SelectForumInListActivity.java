@@ -175,8 +175,11 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         swipeRefresh.setRefreshing(false);
     }
 
-    private BaseForumlistInfos initForumlistCategoryCard(@IdRes final int categoryId, @IdRes final int contentId, @IdRes final int arrowId) {
-        final BaseForumlistInfos currentForumlist = new BaseForumlistInfos((ViewGroup) findViewById(contentId), (ImageView) findViewById(arrowId));
+    private BaseForumlistInfos initForumlistCategoryCard(@IdRes final int categoryId, @IdRes final int contentId, @IdRes final int otherContentId, @IdRes final int arrowId) {
+        final ViewGroup contentView = findViewById(contentId);
+        final ViewGroup otherContentView = (ViewGroup) (otherContentId == 0 ? null : findViewById(otherContentId));
+        final ImageView arrowView = findViewById(arrowId);
+        final BaseForumlistInfos currentForumlist = new BaseForumlistInfos(contentView, otherContentView, arrowView);
         View category = findViewById(categoryId);
 
         for (int i = 0; i < currentForumlist.getNumberOfForumButton(); ++i) {
@@ -187,11 +190,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
             @Override
             public void onClick(View view) {
                 TransitionManager.beginDelayedTransition(baseForumListLayout);
-                if (currentForumlist.isOpened()) {
-                    currentForumlist.setOpened(false);
-                } else {
-                    currentForumlist.setOpened(true);
-                }
+                currentForumlist.setOpened(!currentForumlist.isOpened());
             }
         });
 
@@ -213,11 +212,16 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
         noResultFoundTextView.setVisibility(View.GONE);
 
-        baseForumlistCatBlabla = initForumlistCategoryCard(R.id.forumlist_cat_blabla_selectforum, R.id.forumlist_content_blabla_selectforum, R.id.forumlist_arrow_blabla_selectforum);
-        baseForumlistCatJvc = initForumlistCategoryCard(R.id.forumlist_cat_jvc_selectforum, R.id.forumlist_content_jvc_selectforum, R.id.forumlist_arrow_jvc_selectforum);
-        baseForumlistCatVideogame = initForumlistCategoryCard(R.id.forumlist_cat_videogame_selectforum, R.id.forumlist_content_videogame_selectforum, R.id.forumlist_arrow_videogame_selectforum);
-        baseForumlistCatHardware = initForumlistCategoryCard(R.id.forumlist_cat_hardware_selectforum, R.id.forumlist_content_hardware_selectforum, R.id.forumlist_arrow_hardware_selectforum);
-        baseForumlistCatHobbies = initForumlistCategoryCard(R.id.forumlist_cat_hobbies_selectforum, R.id.forumlist_content_hobbies_selectforum, R.id.forumlist_arrow_hobbies_selectforum);
+        baseForumlistCatBlabla = initForumlistCategoryCard(R.id.forumlist_cat_blabla_selectforum, R.id.forumlist_content_blabla_selectforum,
+                                                           0, R.id.forumlist_arrow_blabla_selectforum);
+        baseForumlistCatJvc = initForumlistCategoryCard(R.id.forumlist_cat_jvc_selectforum, R.id.forumlist_content_jvc_selectforum,
+                                                        0, R.id.forumlist_arrow_jvc_selectforum);
+        baseForumlistCatVideogame = initForumlistCategoryCard(R.id.forumlist_cat_videogame_selectforum, R.id.forumlist_content_1_videogame_selectforum,
+                                                              R.id.forumlist_content_2_videogame_selectforum, R.id.forumlist_arrow_videogame_selectforum);
+        baseForumlistCatHardware = initForumlistCategoryCard(R.id.forumlist_cat_hardware_selectforum, R.id.forumlist_content_hardware_selectforum,
+                                                             0, R.id.forumlist_arrow_hardware_selectforum);
+        baseForumlistCatHobbies = initForumlistCategoryCard(R.id.forumlist_cat_hobbies_selectforum, R.id.forumlist_content_1_hobbies_selectforum,
+                                                            R.id.forumlist_content_2_hobbies_selectforum, R.id.forumlist_arrow_hobbies_selectforum);
 
         ListView forumListView = findViewById(R.id.forum_list_selectforum);
         adapterForForumList = new JVCForumListAdapter(this);
@@ -404,10 +408,12 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
 
     private class BaseForumlistInfos {
         private final ViewGroup content;
+        private final ViewGroup otherContent;
         private final ImageView arrow;
 
-        public BaseForumlistInfos(ViewGroup newContent, ImageView newArrow) {
+        public BaseForumlistInfos(ViewGroup newContent, ViewGroup newOtherContent, ImageView newArrow) {
             content = newContent;
+            otherContent = newOtherContent;
             arrow = newArrow;
         }
 
@@ -418,9 +424,15 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         public void setOpened(boolean newVal) {
             if (newVal) {
                 content.setVisibility(View.VISIBLE);
+                if (otherContent != null) {
+                    otherContent.setVisibility(View.VISIBLE);
+                }
                 arrow.setImageDrawable(ThemeManager.getDrawable(R.attr.themedForumListDropUpArrow, SelectForumInListActivity.this));
             } else {
                 content.setVisibility(View.GONE);
+                if (otherContent != null) {
+                    otherContent.setVisibility(View.GONE);
+                }
                 arrow.setImageDrawable(ThemeManager.getDrawable(R.attr.themedForumListDropDownArrow, SelectForumInListActivity.this));
             }
         }
