@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="160dp"
-    android:background="?attr/themedNavigationHeaderBackground"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="?attr/themedNavigationHeaderBackground">
 
     <TextView
         android:id="@+id/pseudo_text_navigation_header"

@@ -13,11 +13,9 @@
             android:id="@+id/reason_edit_locktopic"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:layout_marginTop="4dp"
+            android:padding="8dp"
             android:layout_below="@+id/toolbar_locktopic"
-            android:paddingTop="8dp"
-            android:paddingBottom="4dp"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
             android:gravity="bottom"
             android:inputType="textMultiLine|textCapSentences"
             android:minLines="2"
@@ -36,9 +34,9 @@
             android:id="@+id/lock_button_locktopic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="4dp"
             android:layout_below="@id/separator_locktopic"
-            android:text="@string/lock"
-            android:layout_margin="4dp"/>
+            android:text="@string/lock"/>
 
         <View
             android:layout_width="match_parent"

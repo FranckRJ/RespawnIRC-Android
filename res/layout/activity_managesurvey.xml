@@ -42,8 +42,8 @@
             android:id="@+id/title_layout_managesurvey"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/button_edit_separator_managesurvey"
             android:padding="8dp"
+            android:layout_below="@+id/button_edit_separator_managesurvey"
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:background="?attr/themedDefaultBackgroundColor">

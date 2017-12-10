@@ -14,8 +14,8 @@
             android:id="@+id/text_noresultfound_selectforum"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar_selectforum"
             android:padding="16dp"
+            android:layout_below="@+id/toolbar_selectforum"
             android:gravity="center"
             android:textStyle="bold"
             android:text="@string/noResultFound"/>

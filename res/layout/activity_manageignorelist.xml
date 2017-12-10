@@ -13,8 +13,8 @@
             android:id="@+id/text_emptylist_manageignorelist"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar_manageignorelist"
             android:padding="16dp"
+            android:layout_below="@+id/toolbar_manageignorelist"
             android:gravity="center"
             android:textStyle="bold"
             android:text="@string/noPseudoIgnoredInList"/>

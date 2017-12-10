@@ -19,13 +19,13 @@
         android:id="@+id/title_forum_jvcforums_text_row"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_toRightOf="@+id/image_forum_jvcforums_text_row"
-        android:layout_toEndOf="@+id/image_forum_jvcforums_text_row"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/image_forum_jvcforums_text_row"
+        android:layout_toEndOf="@+id/image_forum_jvcforums_text_row"
+        android:layout_centerVertical="true"
         android:textStyle="bold"/>
 
 </RelativeLayout>

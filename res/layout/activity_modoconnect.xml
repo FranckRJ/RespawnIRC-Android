@@ -14,38 +14,33 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/toolbar_modoconnect">
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
                 <EditText
                     android:id="@+id/password_text_modoconnect"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="4dp"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="4dp"
+                    android:layout_marginTop="4dp"
+                    android:padding="8dp"
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:hint="@string/modoPassword"
                     android:background="?attr/themedDefaultBackgroundColor"/>
 
                 <View
-                    android:id="@+id/separator_modoconnect"
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:layout_below="@id/password_text_modoconnect"
                     android:background="?attr/themedDarkerBackgroundColor"/>
 
                 <Button
                     android:id="@+id/validate_button_modoconnect"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/separator_modoconnect"
                     android:layout_margin="4dp"
                     android:text="@string/validate"/>
-            </RelativeLayout>
+            </LinearLayout>
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <View

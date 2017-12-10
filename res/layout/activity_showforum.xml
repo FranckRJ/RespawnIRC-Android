@@ -37,8 +37,7 @@
                 android:layout_marginLeft="4dp"
                 android:layout_marginStart="4dp"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"/>
+                android:layout_alignParentLeft="true"/>
             <Button
                 android:id="@+id/previouspage_button_showforum"
                 android:layout_width="wrap_content"
@@ -47,7 +46,6 @@
                 android:minWidth="0dp"
                 android:layout_toLeftOf="@+id/currentpage_button_showforum"
                 android:layout_toStartOf="@+id/currentpage_button_showforum"
-                android:layout_alignParentTop="true"
                 android:text="@string/previousPageText"/>
             <Button
                 android:id="@+id/currentpage_button_showforum"
@@ -58,7 +56,6 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_centerHorizontal="true"
-                android:layout_alignParentTop="true"
                 android:text="@string/waitingText"/>
             <Button
                 android:id="@+id/nextpage_button_showforum"
@@ -68,7 +65,6 @@
                 android:minWidth="0dp"
                 android:layout_toRightOf="@+id/currentpage_button_showforum"
                 android:layout_toEndOf="@+id/currentpage_button_showforum"
-                android:layout_alignParentTop="true"
                 android:text="@string/nextPageText"/>
         </RelativeLayout>
 
