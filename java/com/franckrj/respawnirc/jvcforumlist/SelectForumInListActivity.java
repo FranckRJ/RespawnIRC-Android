@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -182,8 +183,13 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         final BaseForumlistInfos currentForumlist = new BaseForumlistInfos(contentView, otherContentView, arrowView);
         View category = findViewById(categoryId);
 
-        for (int i = 0; i < currentForumlist.getNumberOfForumButton(); ++i) {
-            currentForumlist.getForumButtonAt(i).setOnClickListener(baseForumButtonClickedListener);
+        final int contentChildCount = currentForumlist.getNumberOfContentChildView();
+        for (int i = 0; i < contentChildCount; ++i) {
+            View currentContentChild = currentForumlist.getContentChildViewAt(i);
+
+            if (currentContentChild instanceof Button) {
+                currentContentChild.setOnClickListener(baseForumButtonClickedListener);
+            }
         }
 
         category.setOnClickListener(new View.OnClickListener() {
@@ -410,11 +416,14 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         private final ViewGroup content;
         private final ViewGroup otherContent;
         private final ImageView arrow;
+        private final int baseContentChildCount;
 
         public BaseForumlistInfos(ViewGroup newContent, ViewGroup newOtherContent, ImageView newArrow) {
             content = newContent;
             otherContent = newOtherContent;
             arrow = newArrow;
+
+            baseContentChildCount = content.getChildCount();
         }
 
         public boolean isOpened() {
@@ -437,12 +446,22 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
             }
         }
 
-        public int getNumberOfForumButton() {
-            return content.getChildCount();
+        public int getNumberOfContentChildView() {
+            int numberOfContentChildView = content.getChildCount();
+
+            if (otherContent != null) {
+                numberOfContentChildView += otherContent.getChildCount();
+            }
+
+            return numberOfContentChildView;
         }
 
-        public View getForumButtonAt(int index) {
-            return content.getChildAt(index);
+        public View getContentChildViewAt(int index) {
+            if (index < baseContentChildCount) {
+                return content.getChildAt(index);
+            } else {
+                return otherContent.getChildAt(index - baseContentChildCount);
+            }
         }
     }
 }
