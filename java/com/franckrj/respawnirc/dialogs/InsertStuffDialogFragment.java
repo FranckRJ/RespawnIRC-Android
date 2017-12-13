@@ -3,6 +3,7 @@ package com.franckrj.respawnirc.dialogs;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -60,8 +61,8 @@ public class InsertStuffDialogFragment extends DialogFragment {
     };
 
     private void selectThisRow(int rowToUse) {
-        listOfCategoryButtons.get(oldRowNumber).setBackgroundColor(Undeprecator.resourcesGetColor(getResources(), android.R.color.transparent));
-        listOfCategoryButtons.get(rowToUse).setBackgroundColor(Undeprecator.resourcesGetColor(getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.MORE_DARKER_BACKGROUND_COLOR)));
+        listOfCategoryButtons.get(oldRowNumber).setBackgroundColor(Color.TRANSPARENT);
+        listOfCategoryButtons.get(rowToUse).setBackgroundColor(ThemeManager.getColorInt(R.attr.themedDarkerPopupBackgroundColor, getActivity()));
         initializeSpanForTextViewIfNeeded(jvcImageGetter, rowToUse);
         mainTextView.setText(replaceUrlSpans(listOfSpanForTextView[rowToUse]));
         scrollViewOfButtons.requestChildFocus(listOfCategoryButtons.get(rowToUse), listOfCategoryButtons.get(rowToUse));
@@ -70,7 +71,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
         PrefsManager.applyChanges();
     }
 
-    private void initializeListOfSmileyName() {
+    private static void initializeListOfSmileyName() {
         if (listOfSmileyNamesForFileName == null) {
             listOfSmileyNamesForFileName = new SimpleArrayMap<>();
             listOfSmileyNamesForFileName.put("1", ":)");
@@ -155,7 +156,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
                 listOfSpanForTextView[i] = null;
             }
         }
-        if (listOfSpanForTextView[row] == null || (row == 1 && textDecorationRowGeneratedForDarkTheme != ThemeManager.getThemeUsedIsDark())) {
+        if (listOfSpanForTextView[row] == null || (row == 1 && textDecorationRowGeneratedForDarkTheme != ThemeManager.currentThemeUseDarkColors())) {
             StringBuilder textForShowAllStuff = new StringBuilder();
             switch (row) {
                 case 0:
@@ -177,7 +178,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
                     break;
                 case 1:
                     //textformat
-                    textDecorationRowGeneratedForDarkTheme = ThemeManager.getThemeUsedIsDark();
+                    textDecorationRowGeneratedForDarkTheme = ThemeManager.currentThemeUseDarkColors();
                     if (textDecorationRowGeneratedForDarkTheme) {
                         appendAnotherStuff("textformat_bold_dark", textForShowAllStuff, false);
                         appendAnotherStuff("textformat_italic_dark", textForShowAllStuff, false);
@@ -432,7 +433,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
         }
     }
 
-    private void appendAnotherStuff(String newStuffToAppend, StringBuilder toThisStringBuilder, boolean previewHasToBeBig) {
+    private static void appendAnotherStuff(String newStuffToAppend, StringBuilder toThisStringBuilder, boolean previewHasToBeBig) {
         toThisStringBuilder.append("<a href=\"").append(newStuffToAppend).append("\"><img src=\"");
         if (previewHasToBeBig) {
             toThisStringBuilder.append("big-");
@@ -443,7 +444,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
         }
     }
 
-    private void sendWhichInsertIsNeeded(String thisUrl, StuffInserted toThisListener) {
+    private static void sendWhichInsertIsNeeded(String thisUrl, StuffInserted toThisListener) {
         if (thisUrl.startsWith("sticker_")) {
             String newSticker = "[[sticker:p/" + thisUrl.replace("sticker_", "").replace("_", "-") + "]]";
             toThisListener.getStringInserted(newSticker, 0);
@@ -505,9 +506,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        super.onCreateDialog(savedInstanceState);
-
-        Drawable deletedDrawable = Undeprecator.resourcesGetDrawable(getActivity().getResources(), ThemeManager.getDrawableRes(ThemeManager.DrawableName.DELETED_IMAGE));
+        Drawable deletedDrawable = ThemeManager.getDrawable(R.attr.themedDeletedImage, getActivity());
         deletedDrawable.setBounds(0, 0, deletedDrawable.getIntrinsicWidth(), deletedDrawable.getIntrinsicHeight());
 
         jvcImageGetter = new CustomImageGetter(getActivity(), deletedDrawable, null);
@@ -554,12 +553,12 @@ public class InsertStuffDialogFragment extends DialogFragment {
         selectThisRow(oldRowNumber);
 
         builder.setTitle(R.string.insertStuff).setView(mainView)
-            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.dismiss();
-                }
-            });
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
         return builder.create();
     }
 

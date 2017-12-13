@@ -39,7 +39,7 @@ public class JVCForumAdapter extends BaseAdapter {
         iconMarqueOn = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_marque_on);
         iconMarqueOff = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_marque_off);
         iconDossier2 = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_dossier2);
-        iconLock = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), ThemeManager.getDrawableRes(ThemeManager.DrawableName.TOPIC_LOCK_ICON));
+        iconLock = ThemeManager.getDrawable(R.attr.themedTopicLockIcon, parentActivity);
         iconResolu = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_resolu);
         iconGhost = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_ghost);
         iconDossier1 = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_dossier1);
@@ -63,26 +63,42 @@ public class JVCForumAdapter extends BaseAdapter {
     }
 
     public void addItem(JVCParser.TopicInfos item) {
+        listOfTopics.add(item);
+        listOfContentForTopics.add(createHolderForItem(item));
+    }
+
+    public void recreateAllItems() {
+        listOfContentForTopics.clear();
+
+        for (JVCParser.TopicInfos thisItem : listOfTopics) {
+            listOfContentForTopics.add(createHolderForItem(thisItem));
+        }
+    }
+
+    private ContentHolder createHolderForItem(JVCParser.TopicInfos item) {
         String textForAuthor;
         ContentHolder thisHolder = new ContentHolder();
-        thisHolder.firstLineContent = Undeprecator.htmlFromHtml("<b><font color=\"" + Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.TOPIC_NAME_COLOR), parentActivity) +
-                                        "\">" + item.htmlName + "</font> (" + item.nbOfMessages + ")</b>");
+
+        thisHolder.firstLineContent = Undeprecator.htmlFromHtml("<b><font color=\"" + Utils.colorToString(ThemeManager.getColorInt(R.attr.themedTopicNameColor, parentActivity)) +
+                "\">" + item.htmlName + "</font> (" + item.nbOfMessages + ")</b>");
+
         switch (item.authorType) {
             case "modo":
-                textForAuthor = "<small><font color=\"" + Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PSEUDO_MODO), parentActivity) + "\">" + item.author + "</font></small>";
+                textForAuthor = "<small><font color=\"" + Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoModoColor, parentActivity)) + "\">" + item.author + "</font></small>";
                 break;
             case "admin":
             case "staff":
-                textForAuthor = "<small><font color=\"" + Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PSEUDO_ADMIN), parentActivity) + "\">" + item.author + "</font></small>";
+                textForAuthor = "<small><font color=\"" + Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoAdminColor, parentActivity)) + "\">" + item.author + "</font></small>";
                 break;
             default:
                 textForAuthor = "<small>" + item.author + "</small>";
                 break;
         }
+
         thisHolder.secondLineContent = Undeprecator.htmlFromHtml(textForAuthor);
         thisHolder.thirdLineContent = Undeprecator.htmlFromHtml("<small>" + item.wholeDate + "</small>");
-        listOfTopics.add(item);
-        listOfContentForTopics.add(thisHolder);
+
+        return thisHolder;
     }
 
     @Override
@@ -149,9 +165,9 @@ public class JVCForumAdapter extends BaseAdapter {
         }
 
         if (position % 2 == 0 && alternateBackgroundColor) {
-            convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.ALT_BACKGROUND_COLOR)));
+            convertView.setBackgroundColor(ThemeManager.getColorInt(R.attr.themedAltBackgroundColor, parentActivity));
         } else {
-            convertView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.DEFAULT_BACKGROUND_COLOR)));
+            convertView.setBackgroundColor(ThemeManager.getColorInt(R.attr.themedDefaultBackgroundColor, parentActivity));
         }
 
         return convertView;

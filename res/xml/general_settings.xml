@@ -12,6 +12,13 @@
             android:key="@string/settingsSaveLastRowUsedInsertstuff"
             android:title="@string/saveLastRowUsedInsertstuffTitle"/>
 
+        <ListPreference
+            android:key="@string/settingsSaveMessagesAndTopicsAsDraftType"
+            android:title="@string/saveMessagesAndTopicsAsDraftTypeTitle"
+            android:summary="%s"
+            android:entries="@array/choicesForSaveMessagesAndTopicsAsDraftReadable"
+            android:entryValues="@array/threeChoicesValue"/>
+
         <CheckBoxPreference
             android:key="@string/settingsForumAlternateBackgroundColor"
             android:title="@string/forumAlternateBackgroundColorTitle"/>

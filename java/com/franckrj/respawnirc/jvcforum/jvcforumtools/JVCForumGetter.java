@@ -32,8 +32,9 @@ public class JVCForumGetter {
     private JVCParser.AjaxInfos latestAjaxInfos = new JVCParser.AjaxInfos();
     private Boolean isInFavs = null;
     private String latestListOfInputInAString = null;
-    private String latestNumberOfMP = null;
-    private NewNumberOfMPSetted listenerForNewNumberOfMP = null;
+    private String latestNumberOfMp = null;
+    private String latestNumberOfNotif = null;
+    private NewNumberOfMpAndNotifSetted listenerForNewNumberOfMpAndNotif = null;
     private boolean isInSearchMode = false;
     private ErrorType lastTypeOfError = ErrorType.NONE_OR_UNKNOWN;
     private boolean userCanPostAsModo = false;
@@ -98,10 +99,12 @@ public class JVCForumGetter {
                         }
                     }
 
-                    if (!Utils.stringsAreEquals(latestNumberOfMP, reqResult.newNumberOfMp)) {
-                        latestNumberOfMP = reqResult.newNumberOfMp;
-                        if (listenerForNewNumberOfMP != null) {
-                            listenerForNewNumberOfMP.getNewNumberOfMP(latestNumberOfMP);
+                    if (!Utils.stringsAreEquals(latestNumberOfMp, reqResult.newNumberOfMp) ||
+                            !Utils.stringsAreEquals(latestNumberOfNotif, reqResult.newNumberOfNotif)) {
+                        latestNumberOfMp = reqResult.newNumberOfMp;
+                        latestNumberOfNotif = reqResult.newNumberOfNotif;
+                        if (listenerForNewNumberOfMpAndNotif != null) {
+                            listenerForNewNumberOfMpAndNotif.getNewNumberOfMpAndNotif(latestNumberOfMp, latestNumberOfNotif);
                         }
                     }
 
@@ -171,8 +174,8 @@ public class JVCForumGetter {
         listenerForForumLinkChanged = thisListener;
     }
 
-    public void setListenerForNewNumberOfMP(NewNumberOfMPSetted thisListener) {
-        listenerForNewNumberOfMP = thisListener;
+    public void setListenerForNewNumberOfMpAndNotif(NewNumberOfMpAndNotifSetted thisListener) {
+        listenerForNewNumberOfMpAndNotif = thisListener;
     }
 
     public void setUrlForForumWithoutLoading(String newUrlOfPage) {
@@ -268,7 +271,8 @@ public class JVCForumGetter {
                     newPageInfos.newLatestAjaxInfos = JVCParser.getAllAjaxInfos(pageContent);
                     newPageInfos.newIsInFavs = JVCParser.getIsInFavsFromPage(pageContent);
                     newPageInfos.newListOfInputInAString = JVCParser.getListOfInputInAStringInTopicFormForThisPage(pageContent);
-                    newPageInfos.newNumberOfMp = JVCParser.getNumberOfMPFromPage(pageContent);
+                    newPageInfos.newNumberOfMp = JVCParser.getNumberOfMpFromPage(pageContent);
+                    newPageInfos.newNumberOfNotif = JVCParser.getNumberOfNotifFromPage(pageContent);
                     if (isInSearchMode) {
                         newPageInfos.newSearchIsEmpty = JVCParser.getSearchIsEmptyInPage(pageContent);
                     }
@@ -294,6 +298,7 @@ public class JVCForumGetter {
         public Boolean newIsInFavs;
         public String newListOfInputInAString;
         public String newNumberOfMp;
+        public String newNumberOfNotif;
         public boolean newSearchIsEmpty;
         public boolean newUserCanPostAsModo;
     }
@@ -314,7 +319,7 @@ public class JVCForumGetter {
         void newStateSetted(int newState);
     }
 
-    public interface NewNumberOfMPSetted {
-        void getNewNumberOfMP(String newNumber);
+    public interface NewNumberOfMpAndNotifSetted {
+        void getNewNumberOfMpAndNotif(String newNumberOfMp, String newNumberOfNotif);
     }
 }

@@ -1,57 +1,356 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_rirc_background">#FFFFFF</color>
+    <color name="ic_shortcut_forum_background">#3385FF</color>
     <color name="lineSeparationColor">#50808080</color>
-    <color name="splashBackgroundColor">#002F46</color>
-    <color name="splashBackgroundColorDarker">#002233</color>
     <!-- Light Theme -->
     <color name="shadowColorThemeLight">#50000000</color>
-    <color name="colorPrimaryThemeLight">#3F51B5</color>
-    <color name="colorPrimaryDarkerThemeLight">#303F9F</color>
     <color name="colorAccentThemeLight">#757575</color>
     <color name="colorQuoteBackgroundThemeLight">#10000000</color>
-    <color name="altBackgroundColorThemeLight">#EEF5FC</color>
-    <color name="linkColorThemeLight">#006BD7</color>
-    <color name="topicNameColorThemeLight">#006BD7</color>
     <color name="colorPseudoUserThemeLight">#3399ff</color>
     <color name="colorPseudoOtherModeForumThemeLight">#80000000</color>
-    <color name="colorPseudoOtherModeIRCThemeLight">#000025</color>
+    <color name="colorPseudoOtherModeIrcThemeLight">#000025</color>
     <color name="colorPseudoModoThemeLight">#3A9D23</color>
     <color name="colorPseudoAdminThemeLight">#DB0F0F</color>
-    <color name="defaultBackgroundColorThemeLight">#fafafa</color>
-    <color name="darkerBackgroundColorThemeLight">#efefef</color>
-    <color name="moreDarkerBackgroundColorThemeLight">#d0d0d0</color>
+    <color name="defaultBackgroundColorThemeLight">#FAFAFA</color>
+    <color name="windowBackgroundColorThemeLight">#EFEFEF</color>
+    <color name="darkerBackgroundColorThemeLight">#D0D0D0</color>
     <color name="headerTextColorThemeLight">#90000000</color>
     <color name="navigationIconColorThemeLight">#90000000</color>
     <color name="dividerColorThemeLight">#50808080</color>
-    <color name="deletedMessagesBackgroundColorThemeLight">#CFF3FE</color>
+    <color name="darkerPopupBackgroundColorThemeLight">#D0D0D0</color>
+    <color name="forumListCatTitleColorThemeLight">#FF572E</color>
+    <color name="forumListSubForumColorThemeLight">#48566B</color>
+    <color name="forumListDarkerSubForumColorThemeLight">#333D4D</color>
     <!-- Dark Theme -->
     <color name="shadowColorThemeDark">#80000000</color>
     <color name="colorPrimaryThemeDark">#212121</color>
-    <color name="colorPrimaryDarkerThemeDark">#000000</color>
-    <color name="colorAccentThemeDark">#eeeeee</color>
+    <color name="colorPrimaryDarkerThemeDark">#141414</color>
+    <color name="colorAccentThemeDark">#888888</color>
     <color name="colorQuoteBackgroundThemeDark">#10FFFFFF</color>
-    <color name="altBackgroundColorThemeDark">#4A4A4A</color>
-    <color name="linkColorThemeDark">#4da6ff</color>
+    <color name="altBackgroundColorThemeDark">#242424</color>
+    <color name="linkColorThemeDark">#4DA6FF</color>
     <color name="topicNameColorThemeDark">#EEEEEE</color>
-    <color name="colorPseudoUserThemeDark">#80bfff</color>
+    <color name="colorPseudoUserThemeDark">#80BFFF</color>
     <color name="colorPseudoOtherModeForumThemeDark">#00FFFFFF</color>
-    <color name="colorPseudoOtherModeIRCThemeDark">#EEEEFF</color>
-    <color name="colorPseudoModoThemeDark">#4cd12e</color>
-    <color name="colorPseudoAdminThemeDark">#f24040</color>
-    <color name="defaultBackgroundColorThemeDark">#424242</color>
-    <color name="darkerBackgroundColorThemeDark">#303030</color>
-    <color name="moreDarkerBackgroundColorThemeDark">#151515</color>
+    <color name="colorPseudoOtherModeIrcThemeDark">#EEEEFF</color>
+    <color name="colorPseudoModoThemeDark">#4CD12E</color>
+    <color name="colorPseudoAdminThemeDark">#F24040</color>
+    <color name="defaultBackgroundColorThemeDark">#292929</color>
+    <color name="windowBackgroundColorThemeDark">#1C1E20</color>
+    <color name="darkerBackgroundColorThemeDark">#000000</color>
     <color name="headerTextColorThemeDark">#90FFFFFF</color>
-    <color name="navigationIconColorThemeDark">#78000000</color>
-    <color name="dividerColorThemeDark">#90808080</color>
+    <color name="navigationIconColorThemeDark">#78101010</color>
+    <color name="dividerColorThemeDark">#60808080</color>
     <color name="deletedMessagesBackgroundColorThemeDark">#023A4B</color>
+    <color name="surveyMessagesBackgroundColorThemeDark">#1F292E</color>
+    <color name="darkerPopupBackgroundColorThemeDark">#212121</color>
+    <color name="forumListCatTitleColorThemeDark">#FFFFFF</color>
+    <color name="forumListForumColorThemeDark">#737373</color>
+    <color name="forumListDarkerForumColorThemeDark">#595959</color>
+    <!-- Grey Theme -->
+    <color name="colorPrimaryDarkerThemeGrey">#000000</color>
+    <color name="colorAccentThemeGrey">#EEEEEE</color>
+    <color name="altBackgroundColorThemeGrey">#4A4A4A</color>
+    <color name="defaultBackgroundColorThemeGrey">#424242</color>
+    <color name="windowBackgroundColorThemeGrey">#303030</color>
+    <color name="darkerBackgroundColorThemeGrey">#151515</color>
+    <color name="dividerColorThemeGrey">#90808080</color>
+    <color name="forumListForumColorThemeGrey">#8c8c8c</color>
+    <color name="forumListDarkerForumColorThemeGrey">#737373</color>
     <!-- Black Theme -->
     <color name="colorPrimaryThemeBlack">#151515</color>
     <color name="colorPrimaryDarkerThemeBlack">#000000</color>
     <color name="colorQuoteBackgroundThemeBlack">#20FFFFFF</color>
     <color name="altBackgroundColorThemeBlack">#000000</color>
     <color name="defaultBackgroundColorThemeBlack">#000000</color>
-    <color name="darkerBackgroundColorThemeBlack">#000000</color>
-    <color name="moreDarkerBackgroundColorThemeBlack">#424242</color>
+    <color name="windowBackgroundColorThemeBlack">#000000</color>
+    <color name="darkerBackgroundColorThemeBlack">#424242</color>
+    <color name="forumListForumColorThemeBlack">#595959</color>
+    <color name="forumListDarkerForumColorThemeBlack">#404040</color>
+    <!-- General Theme Colors -->
+    <color name="colorPrimaryRealRed">#C41915</color>
+    <color name="colorPrimaryDarkerRealRed">#9C1410</color>
+    <color name="colorAltRealRed">#FDE8E8</color>
+    <color name="colorAltDarkerRealRed">#FAD2D1</color>
+    <color name="colorPrimaryRed">#F44336</color>
+    <color name="colorPrimaryDarkerRed">#D32F2F</color>
+    <color name="colorAltRed">#FFEBEE</color>
+    <color name="colorAltDarkerRed">#FFCDD2</color>
+    <color name="colorPrimaryPink">#E91E63</color>
+    <color name="colorPrimaryDarkerPink">#C2185B</color>
+    <color name="colorAltPink">#FCE4EC</color>
+    <color name="colorAltDarkerPink">#F8BBD0</color>
+    <color name="colorPrimarySoftPurple">#A969CA</color>
+    <color name="colorPrimaryDarkerSoftPurple">#8754A1</color>
+    <color name="colorAltSoftPurple">#F4ECF8</color>
+    <color name="colorAltDarkerSoftPurple">#EAD9F2</color>
+    <color name="colorPrimaryPurple">#9C27B0</color>
+    <color name="colorPrimaryDarkerPurple">#7B1FA2</color>
+    <color name="colorAltPurple">#F3E5F5</color>
+    <color name="colorAltDarkerPurple">#E1BEE7</color>
+    <color name="colorPrimaryDeepPurple">#673AB7</color>
+    <color name="colorPrimaryDarkerDeepPurple">#512DA8</color>
+    <color name="colorAltDeepPurple">#EDE7F6</color>
+    <color name="colorAltDarkerDeepPurple">#D1C4E9</color>
+    <color name="colorPrimaryIndigo">#3F51B5</color>
+    <color name="colorPrimaryDarkerIndigo">#303F9F</color>
+    <color name="colorAltIndigo">#E8EAF6</color>
+    <color name="colorAltDarkerIndigo">#C5CAE9</color>
+    <color name="colorPrimaryBlue">#2196F3</color>
+    <color name="colorPrimaryDarkerBlue">#1976D2</color>
+    <color name="colorAltBlue">#E3F2FD</color>
+    <color name="colorAltDarkerBlue">#BBDEFB</color>
+    <color name="colorPrimaryLightBlue">#03A9F4</color>
+    <color name="colorPrimaryDarkerLightBlue">#0288D1</color>
+    <color name="colorAltLightBlue">#E1F5FE</color>
+    <color name="colorAltDarkerLightBlue">#B3E5FC</color>
+    <color name="colorPrimarySoftBlue">#199ACA</color>
+    <color name="colorPrimaryDarkerSoftBlue">#147BA1</color>
+    <color name="colorAltSoftBlue">#E8F7FC</color>
+    <color name="colorAltDarkerSoftBlue">#D2EFF9</color>
+    <color name="colorPrimaryCyan">#00BCD4</color>
+    <color name="colorPrimaryDarkerCyan">#0097A7</color>
+    <color name="colorAltCyan">#E0F7FA</color>
+    <color name="colorAltDarkerCyan">#B2EBF2</color>
+    <color name="colorPrimaryTeal">#009688</color>
+    <color name="colorPrimaryDarkerTeal">#00796B</color>
+    <color name="colorAltTeal">#E0F2F1</color>
+    <color name="colorAltDarkerTeal">#B2DFDB</color>
+    <color name="colorPrimaryPrestoGreen">#00AA8D</color>
+    <color name="colorPrimaryDarkerPrestoGreen">#008975</color>
+    <color name="colorAltPrestoGreen">#E6FFFB</color>
+    <color name="colorAltDarkerPrestoGreen">#CCFFF6</color>
+    <color name="colorPrimaryRealGreen">#13874B</color>
+    <color name="colorPrimaryDarkerRealGreen">#0F6C3C</color>
+    <color name="colorAltRealGreen">#E9FCF2</color>
+    <color name="colorAltDarkerRealGreen">#D2F9E5</color>
+    <color name="colorPrimaryRealLightGreen">#20AA66</color>
+    <color name="colorPrimaryDarkerRealLightGreen">#198851</color>
+    <color name="colorAltRealLightGreen">#EAFBF2</color>
+    <color name="colorAltDarkerRealLightGreen">#D4F7E6</color>
+    <color name="colorPrimaryGreen">#4CAF50</color>
+    <color name="colorPrimaryDarkerGreen">#388E3C</color>
+    <color name="colorAltGreen">#E8F5E9</color>
+    <color name="colorAltDarkerGreen">#C8E6C9</color>
+    <color name="colorPrimaryLightGreen">#8BC34A</color>
+    <color name="colorPrimaryDarkerLightGreen">#689F38</color>
+    <color name="colorAltLightGreen">#F1F8E9</color>
+    <color name="colorAltDarkerLightGreen">#DCEDC8</color>
+    <color name="colorPrimaryLime">#CDDC39</color>
+    <color name="colorPrimaryDarkerLime">#AFB42B</color>
+    <color name="colorAltLime">#F9FBE7</color>
+    <color name="colorAltDarkerLime">#F0F4C3</color>
+    <color name="colorPrimaryYellow">#FFEB3B</color>
+    <color name="colorPrimaryDarkerYellow">#FBC02D</color>
+    <color name="colorAltYellow">#FFFDE7</color>
+    <color name="colorAltDarkerYellow">#FFF9C4</color>
+    <color name="colorPrimaryAmber">#FFC107</color>
+    <color name="colorPrimaryDarkerAmber">#FFA000</color>
+    <color name="colorAltAmber">#FFF8E1</color>
+    <color name="colorAltDarkerAmber">#FFECB3</color>
+    <color name="colorPrimaryOrange">#FF9800</color>
+    <color name="colorPrimaryDarkerOrange">#F57C00</color>
+    <color name="colorAltOrange">#FFF3E0</color>
+    <color name="colorAltDarkerOrange">#FFE0B2</color>
+    <color name="colorPrimaryDeepOrange">#FF5722</color>
+    <color name="colorPrimaryDarkerDeepOrange">#E64A19</color>
+    <color name="colorAltDeepOrange">#FBE9E7</color>
+    <color name="colorAltDarkerDeepOrange">#FFCCBC</color>
+    <color name="colorPrimarySoftOrange">#EC6C20</color>
+    <color name="colorPrimaryDarkerSoftOrange">#BC5619</color>
+    <color name="colorAltSoftOrange">#FDEFE8</color>
+    <color name="colorAltDarkerSoftOrange">#FBE0D0</color>
+    <color name="colorPrimaryBrown">#795548</color>
+    <color name="colorPrimaryDarkerBrown">#5D4037</color>
+    <color name="colorAltBrown">#EFEBE9</color>
+    <color name="colorAltDarkerBrown">#D7CCC8</color>
+    <color name="colorPrimaryGrey">#9E9E9E</color>
+    <color name="colorPrimaryDarkerGrey">#616161</color>
+    <color name="colorAltGrey">#F5F5F5</color>
+    <color name="colorAltDarkerGrey">#E0E0E0</color>
+    <color name="colorPrimaryBlueGrey">#607D8B</color>
+    <color name="colorPrimaryDarkerBlueGrey">#455A64</color>
+    <color name="colorAltBlueGrey">#ECEFF1</color>
+    <color name="colorAltDarkerBlueGrey">#CFD8DC</color>
+    <color name="colorPrimaryJVC">#002F46</color>
+    <color name="colorPrimaryDarkerJVC">#002233</color>
+    <color name="colorAltJVC">#E6F7FF</color>
+    <color name="colorAltDarkerJVC">#CCEEFF</color>
+    <color name="colorPrimarySoftBlack">#333333</color>
+    <color name="colorPrimaryDarkerSoftBlack">#282828</color>
+    <color name="colorAltSoftBlack">#F2F2F2</color>
+    <color name="colorAltDarkerSoftBlack">#E6E6E6</color>
+    <color name="colorPrimaryBlack">#000000</color>
+    <color name="colorPrimaryDarkerBlack">#000000</color>
+    <color name="colorAltBlack">#E0E0E0</color>
+    <color name="colorAltDarkerBlack">#BDBDBD</color>
+    <color name="defaultTopicNameAndLinkColorThemeLight">#006BD7</color>
+    <color name="defaultColorAltThemeLight">#EEF5FC</color>
+    <color name="defaultSurveyMessageColorThemeLight">#FFF0DB</color>
+    <color name="defaultDeletedMessageColorThemeLight">#CFF3FE</color>
+
+    <integer-array name="choicesForPrimaryColor">
+        <item>@color/colorPrimaryRealRed</item>
+        <item>@color/colorPrimaryRed</item>
+        <item>@color/colorPrimaryPink</item>
+        <item>@color/colorPrimarySoftPurple</item>
+        <item>@color/colorPrimaryPurple</item>
+        <item>@color/colorPrimaryDeepPurple</item>
+        <item>@color/colorPrimaryIndigo</item>
+        <item>@color/colorPrimaryBlue</item>
+        <item>@color/colorPrimaryLightBlue</item>
+        <item>@color/colorPrimarySoftBlue</item>
+        <item>@color/colorPrimaryCyan</item>
+        <item>@color/colorPrimaryTeal</item>
+        <item>@color/colorPrimaryPrestoGreen</item>
+        <item>@color/colorPrimaryRealGreen</item>
+        <item>@color/colorPrimaryRealLightGreen</item>
+        <item>@color/colorPrimaryGreen</item>
+        <item>@color/colorPrimaryLightGreen</item>
+        <item>@color/colorPrimaryLime</item>
+        <item>@color/colorPrimaryYellow</item>
+        <item>@color/colorPrimaryAmber</item>
+        <item>@color/colorPrimaryOrange</item>
+        <item>@color/colorPrimaryDeepOrange</item>
+        <item>@color/colorPrimarySoftOrange</item>
+        <item>@color/colorPrimaryBrown</item>
+        <item>@color/colorPrimaryGrey</item>
+        <item>@color/colorPrimaryBlueGrey</item>
+        <item>@color/colorPrimaryJVC</item>
+        <item>@color/colorPrimarySoftBlack</item>
+        <item>@color/colorPrimaryBlack</item>
+    </integer-array>
+
+    <integer-array name="choicesForTopicNameAndLinkColor">
+        <item>@color/colorPrimaryRealRed</item>
+        <item>@color/colorPrimaryRed</item>
+        <item>@color/colorPrimaryPink</item>
+        <item>@color/colorPrimarySoftPurple</item>
+        <item>@color/colorPrimaryPurple</item>
+        <item>@color/colorPrimaryDeepPurple</item>
+        <item>@color/colorPrimaryIndigo</item>
+        <item>@color/colorPrimaryBlue</item>
+        <item>@color/colorPrimaryLightBlue</item>
+        <item>@color/colorPrimarySoftBlue</item>
+        <item>@color/colorPrimaryCyan</item>
+        <item>@color/colorPrimaryTeal</item>
+        <item>@color/colorPrimaryPrestoGreen</item>
+        <item>@color/colorPrimaryRealGreen</item>
+        <item>@color/colorPrimaryRealLightGreen</item>
+        <item>@color/colorPrimaryGreen</item>
+        <item>@color/colorPrimaryLightGreen</item>
+        <item>@color/colorPrimaryLime</item>
+        <item>@color/colorPrimaryYellow</item>
+        <item>@color/colorPrimaryAmber</item>
+        <item>@color/colorPrimaryOrange</item>
+        <item>@color/colorPrimaryDeepOrange</item>
+        <item>@color/colorPrimarySoftOrange</item>
+        <item>@color/colorPrimaryBrown</item>
+        <item>@color/colorPrimaryGrey</item>
+        <item>@color/colorPrimaryBlueGrey</item>
+        <item>@color/colorPrimaryJVC</item>
+        <item>@color/colorPrimarySoftBlack</item>
+        <item>@color/colorPrimaryBlack</item>
+        <item>@color/defaultTopicNameAndLinkColorThemeLight</item>
+    </integer-array>
+
+    <integer-array name="choicesForAltColor">
+        <item>@color/colorAltRealRed</item>
+        <item>@color/colorAltRed</item>
+        <item>@color/colorAltPink</item>
+        <item>@color/colorAltSoftPurple</item>
+        <item>@color/colorAltPurple</item>
+        <item>@color/colorAltDeepPurple</item>
+        <item>@color/colorAltIndigo</item>
+        <item>@color/colorAltBlue</item>
+        <item>@color/colorAltLightBlue</item>
+        <item>@color/colorAltSoftBlue</item>
+        <item>@color/colorAltCyan</item>
+        <item>@color/colorAltTeal</item>
+        <item>@color/colorAltPrestoGreen</item>
+        <item>@color/colorAltRealGreen</item>
+        <item>@color/colorAltRealLightGreen</item>
+        <item>@color/colorAltGreen</item>
+        <item>@color/colorAltLightGreen</item>
+        <item>@color/colorAltLime</item>
+        <item>@color/colorAltYellow</item>
+        <item>@color/colorAltAmber</item>
+        <item>@color/colorAltOrange</item>
+        <item>@color/colorAltDeepOrange</item>
+        <item>@color/colorAltSoftOrange</item>
+        <item>@color/colorAltBrown</item>
+        <item>@color/colorAltGrey</item>
+        <item>@color/colorAltBlueGrey</item>
+        <item>@color/colorAltJVC</item>
+        <item>@color/colorAltSoftBlack</item>
+        <item>@color/colorAltBlack</item>
+        <item>@color/defaultColorAltThemeLight</item>
+    </integer-array>
+
+    <integer-array name="choicesForSurveyColor">
+        <item>@color/colorAltDarkerRealRed</item>
+        <item>@color/colorAltDarkerRed</item>
+        <item>@color/colorAltDarkerPink</item>
+        <item>@color/colorAltDarkerSoftPurple</item>
+        <item>@color/colorAltDarkerPurple</item>
+        <item>@color/colorAltDarkerDeepPurple</item>
+        <item>@color/colorAltDarkerIndigo</item>
+        <item>@color/colorAltDarkerBlue</item>
+        <item>@color/colorAltDarkerLightBlue</item>
+        <item>@color/colorAltDarkerSoftBlue</item>
+        <item>@color/colorAltDarkerCyan</item>
+        <item>@color/colorAltDarkerTeal</item>
+        <item>@color/colorAltDarkerPrestoGreen</item>
+        <item>@color/colorAltDarkerRealGreen</item>
+        <item>@color/colorAltDarkerRealLightGreen</item>
+        <item>@color/colorAltDarkerGreen</item>
+        <item>@color/colorAltDarkerLightGreen</item>
+        <item>@color/colorAltDarkerLime</item>
+        <item>@color/colorAltDarkerYellow</item>
+        <item>@color/colorAltDarkerAmber</item>
+        <item>@color/colorAltDarkerOrange</item>
+        <item>@color/colorAltDarkerDeepOrange</item>
+        <item>@color/colorAltDarkerSoftOrange</item>
+        <item>@color/colorAltDarkerBrown</item>
+        <item>@color/colorAltDarkerGrey</item>
+        <item>@color/colorAltDarkerBlueGrey</item>
+        <item>@color/colorAltDarkerJVC</item>
+        <item>@color/colorAltDarkerSoftBlack</item>
+        <item>@color/colorAltDarkerBlack</item>
+        <item>@color/defaultSurveyMessageColorThemeLight</item>
+    </integer-array>
+
+    <integer-array name="choicesForDeleteColor">
+        <item>@color/colorAltDarkerRealRed</item>
+        <item>@color/colorAltDarkerRed</item>
+        <item>@color/colorAltDarkerPink</item>
+        <item>@color/colorAltDarkerSoftPurple</item>
+        <item>@color/colorAltDarkerPurple</item>
+        <item>@color/colorAltDarkerDeepPurple</item>
+        <item>@color/colorAltDarkerIndigo</item>
+        <item>@color/colorAltDarkerBlue</item>
+        <item>@color/colorAltDarkerLightBlue</item>
+        <item>@color/colorAltDarkerSoftBlue</item>
+        <item>@color/colorAltDarkerCyan</item>
+        <item>@color/colorAltDarkerTeal</item>
+        <item>@color/colorAltDarkerPrestoGreen</item>
+        <item>@color/colorAltDarkerRealGreen</item>
+        <item>@color/colorAltDarkerRealLightGreen</item>
+        <item>@color/colorAltDarkerGreen</item>
+        <item>@color/colorAltDarkerLightGreen</item>
+        <item>@color/colorAltDarkerLime</item>
+        <item>@color/colorAltDarkerYellow</item>
+        <item>@color/colorAltDarkerAmber</item>
+        <item>@color/colorAltDarkerOrange</item>
+        <item>@color/colorAltDarkerDeepOrange</item>
+        <item>@color/colorAltDarkerSoftOrange</item>
+        <item>@color/colorAltDarkerBrown</item>
+        <item>@color/colorAltDarkerGrey</item>
+        <item>@color/colorAltDarkerBlueGrey</item>
+        <item>@color/colorAltDarkerJVC</item>
+        <item>@color/colorAltDarkerSoftBlack</item>
+        <item>@color/colorAltDarkerBlack</item>
+        <item>@color/defaultDeletedMessageColorThemeLight</item>
+    </integer-array>
 </resources>

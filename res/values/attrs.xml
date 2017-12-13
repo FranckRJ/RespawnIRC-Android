@@ -3,7 +3,6 @@
     <attr name="themedOverlayPopupTheme" format="reference"/>
     <attr name="themedDefaultBackgroundColor" format="reference"/>
     <attr name="themedDarkerBackgroundColor" format="reference"/>
-    <attr name="themedMoreDarkerBackgroundColor" format="reference"/>
     <attr name="themedLinkColor" format="reference"/>
     <attr name="themedShadowBottom" format="reference"/>
     <attr name="themedShadowTop" format="reference"/>
@@ -12,8 +11,42 @@
     <attr name="themedContentAdd" format="reference"/>
     <attr name="themedTextFormatGeneral" format="reference"/>
     <attr name="themedContentSendIcon" format="reference"/>
+    <attr name="themedContentEditIcon" format="reference"/>
     <attr name="themedDividerColor" format="reference"/>
     <attr name="themedClearIcon" format="reference"/>
     <attr name="themedBackgroundAvatar" format="reference"/>
     <attr name="themedNavigationHeaderBackground" format="reference"/>
+    <attr name="themedDarkerPopupBackgroundColor" format="reference"/>
+    <attr name="themedAltBackgroundColor" format="reference"/>
+    <attr name="themedDeletedMessageBackgroundColor" format="reference"/>
+    <attr name="themedSurveyMessageBackgroundColor" format="reference"/>
+    <attr name="themedTopicNameColor" format="reference"/>
+    <attr name="themedQuoteBackgroundColor" format="reference"/>
+    <attr name="themedPseudoUserColor" format="reference"/>
+    <attr name="themedPseudoOtherModeForumColor" format="reference"/>
+    <attr name="themedPseudoOtherModeIrcColor" format="reference"/>
+    <attr name="themedPseudoModoColor" format="reference"/>
+    <attr name="themedPseudoAdminColor" format="reference"/>
+    <attr name="themedHeaderTextColor" format="reference"/>
+    <attr name="themedNavigationIconColor" format="reference"/>
+    <attr name="themedToolbarTheme" format="reference"/>
+    <attr name="themedToolbarSearchCursor" format="reference"/>
+    <attr name="themedToolbarRefreshIcon" format="reference"/>
+    <attr name="themedToolbarSendIcon" format="reference"/>
+    <attr name="themedToolbarHelpIcon" format="reference"/>
+    <attr name="themedToolbarSearchIcon" format="reference"/>
+    <attr name="themedForumListCatTitleColor" format="reference"/>
+    <attr name="themedForumListDropDownArrow" format="reference"/>
+    <attr name="themedForumListDropUpArrow" format="reference"/>
+    <attr name="themedShadowDrawer" format="reference"/>
+    <attr name="themedDeletedImage" format="reference"/>
+    <attr name="themedDownloadImage" format="reference"/>
+    <attr name="themedArrowDropDown" format="reference"/>
+    <attr name="themedTopicLockIcon" format="reference"/>
+    <attr name="themedButtonSubForumStyle" format="reference"/>
+    <attr name="themedButtonBlueStyle" format="reference"/>
+    <attr name="themedButtonRedStyle" format="reference"/>
+    <attr name="themedButtonOrangeStyle" format="reference"/>
+    <attr name="themedButtonGreenStyle" format="reference"/>
+    <attr name="themedButtonPurpleStyle" format="reference"/>
 </resources>

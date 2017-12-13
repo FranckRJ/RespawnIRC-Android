@@ -63,7 +63,7 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
                 } else {
                     allMessagesShowedAreFromIgnoredPseudos = false;
 
-                    if (autoScrollIsEnabled && (scrolledAtTheEnd || goToBottomAtPageLoading)) {
+                    if (goToBottomAtPageLoading || (autoScrollIsEnabled && scrolledAtTheEnd)) {
                         if (smoothScrollIsEnabled && scrolledAtTheEnd) { //s'il y avait des messages affichés avant et qu'on était en bas de page, smoothscroll
                             jvcMsgList.smoothScrollToPosition(adapterForTopic.getCount() - 1);
                         } else {
@@ -163,10 +163,10 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
         super.initializeSettings();
         showRefreshWhenMessagesShowed = true;
         currentSettings.firstLineFormat = "<b><%PSEUDO_COLOR_START%><%PSEUDO_PSEUDO%><%PSEUDO_COLOR_END%></b><small><%MARK_FOR_PSEUDO%><br>Le <%DATE_COLOR_START%><%DATE_FULL%><%DATE_COLOR_END%></small>";
-        currentSettings.colorPseudoUser = Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PSEUDO_USER), getActivity());
-        currentSettings.colorPseudoOther = Utils.resColorToStringWithAlpha(ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PSEUDO_OTHER_MODE_FORUM), getActivity());
-        currentSettings.colorPseudoModo = Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PSEUDO_MODO), getActivity());
-        currentSettings.colorPseudoAdmin = Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PSEUDO_ADMIN), getActivity());
+        currentSettings.colorPseudoUser = Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoUserColor, getActivity()));
+        currentSettings.colorPseudoOther = Utils.colorToStringWithAlpha(ThemeManager.getColorInt(R.attr.themedPseudoOtherModeForumColor, getActivity()));
+        currentSettings.colorPseudoModo = Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoModoColor, getActivity()));
+        currentSettings.colorPseudoAdmin = Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoAdminColor, getActivity()));
         currentSettings.secondLineFormat = "<%MESSAGE_MESSAGE%><%EDIT_ALL%>";
         currentSettings.addBeforeEdit = "<br /><br /><small><i>";
         currentSettings.addAfterEdit = "</i></small>";

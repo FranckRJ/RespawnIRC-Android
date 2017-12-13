@@ -68,11 +68,11 @@ public class WebManager {
             urlConnection.setInstanceFollowRedirects(currentInfos.followRedirects);
 
             if (currentInfos.useBiggerTimeoutTime) {
-                urlConnection.setConnectTimeout(10000);
-                urlConnection.setReadTimeout(10000);
+                urlConnection.setConnectTimeout(15_000);
+                urlConnection.setReadTimeout(15_000);
             } else {
-                urlConnection.setConnectTimeout(5000);
-                urlConnection.setReadTimeout(5000);
+                urlConnection.setConnectTimeout(5_000);
+                urlConnection.setReadTimeout(5_000);
             }
 
             urlConnection.setRequestMethod(requestMethod);

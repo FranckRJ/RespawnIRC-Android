@@ -1,6 +1,8 @@
 package com.franckrj.respawnirc.jvcforum.jvcforumtools;
 
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -16,6 +18,7 @@ import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.IgnoreListManager;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
+import com.franckrj.respawnirc.utils.ThemeManager;
 
 import java.util.ArrayList;
 
@@ -37,6 +40,8 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     private boolean ignoreTopicToo = true;
     private boolean clearTopicsOnRefresh = true;
     private boolean isInErrorMode = false;
+    private @ColorInt int currentTopicNameColor = 0;
+    private @ColorInt int currentAltColor = 0;
 
     private final AdapterView.OnItemClickListener listenerForItemClickedInListView = new AdapterView.OnItemClickListener() {
         @Override
@@ -148,6 +153,8 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         getterForForum.setCookieListInAString(PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
         pseudoOfUserInLC = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER).toLowerCase();
         ignoreTopicToo = PrefsManager.getBool(PrefsManager.BoolPref.Names.IGNORE_TOPIC_TOO);
+        currentTopicNameColor = ThemeManager.getColorInt(R.attr.themedTopicNameColor, getActivity());
+        currentAltColor = ThemeManager.getColorInt(R.attr.themedAltBackgroundColor, getActivity());
         clearTopicsOnRefresh = true;
     }
 
@@ -212,7 +219,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View mainView = inflater.inflate(R.layout.fragment_showforum, container, false);
 
@@ -246,8 +253,8 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         if (getActivity() instanceof JVCForumGetter.ForumLinkChanged) {
             getterForForum.setListenerForForumLinkChanged((JVCForumGetter.ForumLinkChanged) getActivity());
         }
-        if (getActivity() instanceof JVCForumGetter.NewNumberOfMPSetted) {
-            getterForForum.setListenerForNewNumberOfMP((JVCForumGetter.NewNumberOfMPSetted) getActivity());
+        if (getActivity() instanceof JVCForumGetter.NewNumberOfMpAndNotifSetted) {
+            getterForForum.setListenerForNewNumberOfMpAndNotif((JVCForumGetter.NewNumberOfMpAndNotifSetted) getActivity());
         }
 
         errorBackgroundMessage.setVisibility(View.GONE);
@@ -295,10 +302,17 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     public void onResume() {
         super.onResume();
         boolean oldAlternateBackgroundColor = adapterForForum.getAlternateBackgroundColor();
+        @ColorInt int oldTopicNameColor = currentTopicNameColor;
+        @ColorInt int oldAltColor = currentAltColor;
         reloadSettings();
         isInErrorMode = false;
 
-        if (oldAlternateBackgroundColor != adapterForForum.getAlternateBackgroundColor()) {
+        if (oldTopicNameColor != currentTopicNameColor) {
+            adapterForForum.recreateAllItems();
+        }
+
+        if (oldAlternateBackgroundColor != adapterForForum.getAlternateBackgroundColor() ||
+                oldTopicNameColor != currentTopicNameColor || oldAltColor != currentAltColor) {
             adapterForForum.notifyDataSetChanged();
         }
 
@@ -315,7 +329,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(SAVE_ALL_TOPICS_SHOWED, adapterForForum.getAllItems());
         outState.putBoolean(SAVE_TOPICS_ARE_FROM_IGNORED_PSEUDOS, allTopicsShowedAreFromIgnoredPseudos);

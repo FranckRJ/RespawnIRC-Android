@@ -13,20 +13,21 @@ import org.xml.sax.XMLReader;
 public class CustomTagHandler implements Html.TagHandler {
     private static @ColorInt int almostDimGray = Color.rgb(102, 102, 102);
 
+    @Override
     public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
         if (tag.toLowerCase().equals("s")) {
             processAddOfSpan(opening, output, new StrikethroughSpan());
         } else if (tag.toLowerCase().equals("bg_spoil_button")) {
-            processAddOfSpan(opening, output, new BackgroundColorSpan(ThemeManager.getThemeUsedIsDark() ? Color.WHITE : Color.BLACK));
+            processAddOfSpan(opening, output, new BackgroundColorSpan(ThemeManager.currentThemeUseDarkColors() ? Color.WHITE : Color.BLACK));
         } else if (tag.toLowerCase().equals("bg_spoil_content")) {
-            processAddOfSpan(opening, output, new BackgroundColorSpan(ThemeManager.getThemeUsedIsDark() ? almostDimGray : Color.LTGRAY));
+            processAddOfSpan(opening, output, new BackgroundColorSpan(ThemeManager.currentThemeUseDarkColors() ? almostDimGray : Color.LTGRAY));
         } else if (tag.toLowerCase().startsWith("holdstring_")) {
             String stringToHold = tag.substring(tag.indexOf("_") + 1);
             processAddOfSpan(opening, output, new HoldingStringSpan(stringToHold));
         }
     }
 
-    private void processAddOfSpan(boolean opening, Editable output, Object thisSpan) {
+    private static void processAddOfSpan(boolean opening, Editable output, Object thisSpan) {
         int len = output.length();
 
         if (opening) {
@@ -43,7 +44,7 @@ public class CustomTagHandler implements Html.TagHandler {
         }
     }
 
-    private Object getLast(Editable text, Class spanType) {
+    private static Object getLast(Editable text, Class spanType) {
         Object[] objectArray = text.getSpans(0, text.length(), spanType);
 
         for (int i = objectArray.length - 1; i >= 0; --i) {

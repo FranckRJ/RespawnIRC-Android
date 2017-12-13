@@ -7,13 +7,11 @@
 
     <ImageView
         android:id="@+id/item_topic_icon_jvctopics_image_row"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="4dp"
-        android:paddingRight="4dp"
-        android:paddingEnd="4dp"
-        android:paddingLeft="0dp"
-        android:paddingStart="0dp"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginEnd="4dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"

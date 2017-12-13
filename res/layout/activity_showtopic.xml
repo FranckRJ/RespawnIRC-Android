@@ -16,19 +16,19 @@
             android:layout_below="@+id/header_layout_showtopic"
             android:layout_above="@+id/sendmessage_layout_showtopic"/>
 
-        <include
-            android:id="@+id/toolbar_showtopic"
-            layout="@layout/toolbar"
+        <View
+            android:id="@+id/shadow_header_showtopic"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"/>
+            android:layout_height="4dp"
+            android:background="?attr/themedShadowTop"
+            android:layout_below="@+id/header_layout_showtopic"/>
 
         <RelativeLayout
             android:id="@+id/header_layout_showtopic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/toolbar_showtopic"
-            android:background="?attr/themedDarkerBackgroundColor">
+            android:background="?attr/themedDefaultBackgroundColor">
             <Button
                 android:id="@+id/firstpage_button_showtopic"
                 android:layout_width="wrap_content"
@@ -38,8 +38,7 @@
                 android:layout_marginLeft="4dp"
                 android:layout_marginStart="4dp"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"/>
+                android:layout_alignParentLeft="true"/>
             <Button
                 android:id="@+id/previouspage_button_showtopic"
                 android:layout_width="wrap_content"
@@ -48,7 +47,6 @@
                 android:minWidth="0dp"
                 android:layout_toLeftOf="@+id/currentpage_button_showtopic"
                 android:layout_toStartOf="@+id/currentpage_button_showtopic"
-                android:layout_alignParentTop="true"
                 android:text="@string/previousPageText"/>
             <Button
                 android:id="@+id/currentpage_button_showtopic"
@@ -59,7 +57,6 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_centerHorizontal="true"
-                android:layout_alignParentTop="true"
                 android:text="@string/waitingText"/>
             <Button
                 android:id="@+id/nextpage_button_showtopic"
@@ -69,7 +66,6 @@
                 android:minWidth="0dp"
                 android:layout_toRightOf="@+id/currentpage_button_showtopic"
                 android:layout_toEndOf="@+id/currentpage_button_showtopic"
-                android:layout_alignParentTop="true"
                 android:text="@string/nextPageText"/>
             <Button
                 android:id="@+id/lastpage_button_showtopic"
@@ -80,28 +76,15 @@
                 android:layout_marginRight="4dp"
                 android:layout_marginEnd="4dp"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"/>
+                android:layout_alignParentRight="true"/>
         </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:background="?attr/themedShadowTop"
-            android:layout_below="@+id/toolbar_showtopic"/>
-
-        <View
-            android:id="@+id/shadow_header_showtopic"
-            android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:background="?attr/themedShadowTop"
-            android:layout_below="@+id/header_layout_showtopic"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="4dp"
             android:background="?attr/themedShadowBottom"
             android:layout_above="@+id/sendmessage_layout_showtopic"/>
+
         <LinearLayout
             android:id="@+id/sendmessage_layout_showtopic"
             android:layout_width="match_parent"
@@ -117,19 +100,19 @@
                 android:id="@+id/insertstuff_button_showtopic"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:padding="6dp"
                 android:scaleType="fitEnd"
                 android:src="?attr/themedContentAdd"
-                android:padding="6dp"
                 android:contentDescription="@string/insertStuff"/>
             <EditText
                 android:id="@+id/sendmessage_text_showtopic"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:paddingTop="@dimen/yPaddingSendMessageEditTextNormal"
+                android:paddingBottom="@dimen/yPaddingSendMessageEditTextNormal"
+                android:paddingLeft="@dimen/xPaddingSendMessageEditTextNormal"
+                android:paddingRight="@dimen/xPaddingSendMessageEditTextNormal"
                 android:inputType="textMultiLine|textCapSentences"
                 android:maxLines="4"
                 android:hint="@string/messagePlaceHolder"
@@ -139,11 +122,21 @@
                 android:id="@+id/sendmessage_button_showtopic"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:padding="6dp"
                 android:scaleType="fitEnd"
                 android:src="?attr/themedContentSendIcon"
-                android:padding="6dp"
                 android:contentDescription="@string/messagePost"/>
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:background="?attr/themedShadowTop"
+            android:layout_below="@+id/toolbar_showtopic"/>
+
+        <include
+            android:id="@+id/toolbar_showtopic"
+            layout="@layout/toolbar"/>
 
     </RelativeLayout>
 

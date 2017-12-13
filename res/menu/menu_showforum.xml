@@ -5,7 +5,7 @@
     <item
         android:id="@+id/action_reload_forum_showforum"
         android:title="@string/refresh"
-        android:icon="@drawable/ic_action_navigation_refresh"
+        android:icon="?attr/themedToolbarRefreshIcon"
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_change_forum_fav_value_showforum"

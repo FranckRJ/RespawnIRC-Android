@@ -4,24 +4,57 @@
         <item name="android:windowAnimationStyle">@style/AppActivityAnimation</item>
         <item name="themedShadowBottom">@drawable/shadow_bottom_light</item>
         <item name="themedShadowTop">@drawable/shadow_top_light</item>
-        <item name="colorPrimary">@color/colorPrimaryThemeLight</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDarkerThemeLight</item>
+        <item name="colorPrimary">@color/colorPrimaryIndigo</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerIndigo</item>
         <item name="colorAccent">@color/colorAccentThemeLight</item>
-        <item name="android:windowBackground">@color/darkerBackgroundColorThemeLight</item>
+        <item name="android:windowBackground">@color/windowBackgroundColorThemeLight</item>
         <item name="themedOverlayPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
         <item name="themedDefaultBackgroundColor">@color/defaultBackgroundColorThemeLight</item>
         <item name="themedDarkerBackgroundColor">@color/darkerBackgroundColorThemeLight</item>
-        <item name="themedMoreDarkerBackgroundColor">@color/moreDarkerBackgroundColorThemeLight</item>
-        <item name="themedLinkColor">@color/linkColorThemeLight</item>
-        <item name="themedNavigationMore">@drawable/ic_action_navigation_more_light</item>
-        <item name="themedForumIcon">@drawable/ic_action_communication_forum_light</item>
-        <item name="themedContentAdd">@drawable/ic_action_content_add_light</item>
+        <item name="themedLinkColor">@color/defaultTopicNameAndLinkColorThemeLight</item>
+        <item name="themedNavigationMore">@drawable/ic_more_light</item>
+        <item name="themedForumIcon">@drawable/ic_forum_light</item>
+        <item name="themedContentAdd">@drawable/ic_add_light</item>
         <item name="themedTextFormatGeneral">@drawable/textformat_general_light</item>
-        <item name="themedContentSendIcon">@drawable/ic_action_content_send_light</item>
+        <item name="themedContentSendIcon">@drawable/ic_msg_send_light</item>
+        <item name="themedContentEditIcon">@drawable/ic_msg_send_edit_light</item>
         <item name="themedDividerColor">@color/dividerColorThemeLight</item>
-        <item name="themedClearIcon">@drawable/ic_action_clear_light</item>
+        <item name="themedClearIcon">@drawable/ic_clear_light</item>
         <item name="themedBackgroundAvatar">@drawable/avatar_image_border_light</item>
         <item name="themedNavigationHeaderBackground">@drawable/navigation_header_background_light</item>
+        <item name="themedDarkerPopupBackgroundColor">@color/darkerPopupBackgroundColorThemeLight</item>
+        <item name="themedAltBackgroundColor">@color/defaultColorAltThemeLight</item>
+        <item name="themedDeletedMessageBackgroundColor">@color/defaultDeletedMessageColorThemeLight</item>
+        <item name="themedSurveyMessageBackgroundColor">@color/defaultSurveyMessageColorThemeLight</item>
+        <item name="themedTopicNameColor">@color/defaultTopicNameAndLinkColorThemeLight</item>
+        <item name="themedQuoteBackgroundColor">@color/colorQuoteBackgroundThemeLight</item>
+        <item name="themedPseudoUserColor">@color/colorPseudoUserThemeLight</item>
+        <item name="themedPseudoOtherModeForumColor">@color/colorPseudoOtherModeForumThemeLight</item>
+        <item name="themedPseudoOtherModeIrcColor">@color/colorPseudoOtherModeIrcThemeLight</item>
+        <item name="themedPseudoModoColor">@color/colorPseudoModoThemeLight</item>
+        <item name="themedPseudoAdminColor">@color/colorPseudoAdminThemeLight</item>
+        <item name="themedHeaderTextColor">@color/headerTextColorThemeLight</item>
+        <item name="themedNavigationIconColor">@color/navigationIconColorThemeLight</item>
+        <item name="themedToolbarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="themedToolbarSearchCursor">@drawable/cursor_white</item>
+        <item name="themedToolbarRefreshIcon">@drawable/ictb_refresh_dark</item>
+        <item name="themedToolbarSendIcon">@drawable/ictb_send_dark</item>
+        <item name="themedToolbarHelpIcon">@drawable/ictb_help_dark</item>
+        <item name="themedToolbarSearchIcon">@drawable/ictb_search_dark</item>
+        <item name="themedForumListCatTitleColor">@color/forumListCatTitleColorThemeLight</item>
+        <item name="themedForumListDropDownArrow">@drawable/ic_arrow_drop_down_orange</item>
+        <item name="themedForumListDropUpArrow">@drawable/ic_arrow_drop_up_orange</item>
+        <item name="themedShadowDrawer">@drawable/shadow_drawer_light</item>
+        <item name="themedDeletedImage">@drawable/image_deleted_light</item>
+        <item name="themedDownloadImage">@drawable/image_download_light</item>
+        <item name="themedArrowDropDown">@drawable/ic_arrow_drop_down_light</item>
+        <item name="themedTopicLockIcon">@drawable/icon_topic_lock_light</item>
+        <item name="themedButtonSubForumStyle">@style/ButtonSubForumStyle</item>
+        <item name="themedButtonBlueStyle">@style/ButtonBlueStyle</item>
+        <item name="themedButtonRedStyle">@style/ButtonRedStyle</item>
+        <item name="themedButtonOrangeStyle">@style/ButtonOrangeStyle</item>
+        <item name="themedButtonGreenStyle">@style/ButtonGreenStyle</item>
+        <item name="themedButtonPurpleStyle">@style/ButtonPurpleStyle</item>
     </style>
     <style name="AppTheme.Light.Real" parent="AppTheme.Light.Base"/>
 
@@ -32,46 +65,90 @@
         <item name="colorPrimary">@color/colorPrimaryThemeDark</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerThemeDark</item>
         <item name="colorAccent">@color/colorAccentThemeDark</item>
-        <item name="android:windowBackground">@color/darkerBackgroundColorThemeDark</item>
+        <item name="android:windowBackground">@color/windowBackgroundColorThemeDark</item>
         <item name="themedOverlayPopupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
         <item name="themedDefaultBackgroundColor">@color/defaultBackgroundColorThemeDark</item>
         <item name="themedDarkerBackgroundColor">@color/darkerBackgroundColorThemeDark</item>
-        <item name="themedMoreDarkerBackgroundColor">@color/moreDarkerBackgroundColorThemeDark</item>
         <item name="themedLinkColor">@color/linkColorThemeDark</item>
-        <item name="themedNavigationMore">@drawable/ic_action_navigation_more_dark</item>
-        <item name="themedForumIcon">@drawable/ic_action_communication_forum_dark</item>
-        <item name="themedContentAdd">@drawable/ic_action_content_add_dark</item>
+        <item name="themedNavigationMore">@drawable/ic_more_dark</item>
+        <item name="themedForumIcon">@drawable/ic_forum_dark</item>
+        <item name="themedContentAdd">@drawable/ic_add_dark</item>
         <item name="themedTextFormatGeneral">@drawable/textformat_general_dark</item>
-        <item name="themedContentSendIcon">@drawable/ic_action_content_send_dark</item>
+        <item name="themedContentSendIcon">@drawable/ic_msg_send_dark</item>
+        <item name="themedContentEditIcon">@drawable/ic_msg_send_edit_dark</item>
         <item name="themedDividerColor">@color/dividerColorThemeDark</item>
-        <item name="themedClearIcon">@drawable/ic_action_clear_dark</item>
+        <item name="themedClearIcon">@drawable/ic_clear_dark</item>
         <item name="themedBackgroundAvatar">@drawable/avatar_image_border_dark</item>
         <item name="themedNavigationHeaderBackground">@drawable/navigation_header_background_dark</item>
+        <item name="themedDarkerPopupBackgroundColor">@color/darkerPopupBackgroundColorThemeDark</item>
+        <item name="themedAltBackgroundColor">@color/altBackgroundColorThemeDark</item>
+        <item name="themedDeletedMessageBackgroundColor">@color/deletedMessagesBackgroundColorThemeDark</item>
+        <item name="themedSurveyMessageBackgroundColor">@color/surveyMessagesBackgroundColorThemeDark</item>
+        <item name="themedTopicNameColor">@color/topicNameColorThemeDark</item>
+        <item name="themedQuoteBackgroundColor">@color/colorQuoteBackgroundThemeDark</item>
+        <item name="themedPseudoUserColor">@color/colorPseudoUserThemeDark</item>
+        <item name="themedPseudoOtherModeForumColor">@color/colorPseudoOtherModeForumThemeDark</item>
+        <item name="themedPseudoOtherModeIrcColor">@color/colorPseudoOtherModeIrcThemeDark</item>
+        <item name="themedPseudoModoColor">@color/colorPseudoModoThemeDark</item>
+        <item name="themedPseudoAdminColor">@color/colorPseudoAdminThemeDark</item>
+        <item name="themedHeaderTextColor">@color/headerTextColorThemeDark</item>
+        <item name="themedNavigationIconColor">@color/navigationIconColorThemeDark</item>
+        <item name="themedToolbarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="themedToolbarSearchCursor">@drawable/cursor_white</item>
+        <item name="themedToolbarRefreshIcon">@drawable/ictb_refresh_dark</item>
+        <item name="themedToolbarSendIcon">@drawable/ictb_send_dark</item>
+        <item name="themedToolbarHelpIcon">@drawable/ictb_help_dark</item>
+        <item name="themedToolbarSearchIcon">@drawable/ictb_search_dark</item>
+        <item name="themedForumListCatTitleColor">@color/forumListCatTitleColorThemeDark</item>
+        <item name="themedForumListDropDownArrow">@drawable/ic_arrow_drop_down_dark</item>
+        <item name="themedForumListDropUpArrow">@drawable/ic_arrow_drop_up_dark</item>
+        <item name="themedShadowDrawer">@drawable/shadow_drawer_dark</item>
+        <item name="themedDeletedImage">@drawable/image_deleted_dark</item>
+        <item name="themedDownloadImage">@drawable/image_download_dark</item>
+        <item name="themedArrowDropDown">@drawable/ic_arrow_drop_down_dark</item>
+        <item name="themedTopicLockIcon">@drawable/icon_topic_lock_dark</item>
+        <item name="themedButtonSubForumStyle">@style/ButtonSubForumDarkStyle</item>
+        <item name="themedButtonBlueStyle">@style/ButtonForumDarkStyle</item>
+        <item name="themedButtonRedStyle">@style/ButtonForumDarkStyle</item>
+        <item name="themedButtonOrangeStyle">@style/ButtonForumDarkStyle</item>
+        <item name="themedButtonGreenStyle">@style/ButtonForumDarkStyle</item>
+        <item name="themedButtonPurpleStyle">@style/ButtonForumDarkStyle</item>
     </style>
     <style name="AppTheme.Dark.Real" parent="AppTheme.Dark.Base"/>
 
-    <style name="AppTheme.Black.Base" parent="PreferenceFixTheme.NoActionBar">
-        <item name="android:windowAnimationStyle">@style/AppActivityAnimation</item>
-        <item name="themedShadowBottom">@drawable/shadow_bottom_dark</item>
-        <item name="themedShadowTop">@drawable/shadow_top_dark</item>
+    <style name="AppTheme.Grey.Base" parent="AppTheme.Dark.Base">
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerThemeGrey</item>
+        <item name="colorAccent">@color/colorAccentThemeGrey</item>
+        <item name="android:windowBackground">@color/windowBackgroundColorThemeGrey</item>
+        <item name="themedDefaultBackgroundColor">@color/defaultBackgroundColorThemeGrey</item>
+        <item name="themedDarkerBackgroundColor">@color/darkerBackgroundColorThemeGrey</item>
+        <item name="themedDividerColor">@color/dividerColorThemeGrey</item>
+        <item name="themedBackgroundAvatar">@drawable/avatar_image_border_grey</item>
+        <item name="themedAltBackgroundColor">@color/altBackgroundColorThemeGrey</item>
+        <item name="themedButtonSubForumStyle">@style/ButtonSubForumGreyAndBlackStyle</item>
+        <item name="themedButtonBlueStyle">@style/ButtonForumGreyStyle</item>
+        <item name="themedButtonRedStyle">@style/ButtonForumGreyStyle</item>
+        <item name="themedButtonOrangeStyle">@style/ButtonForumGreyStyle</item>
+        <item name="themedButtonGreenStyle">@style/ButtonForumGreyStyle</item>
+        <item name="themedButtonPurpleStyle">@style/ButtonForumGreyStyle</item>
+    </style>
+    <style name="AppTheme.Grey.Real" parent="AppTheme.Grey.Base"/>
+
+    <style name="AppTheme.Black.Base" parent="AppTheme.Dark.Base">
         <item name="colorPrimary">@color/colorPrimaryThemeBlack</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerThemeBlack</item>
-        <item name="colorAccent">@color/colorAccentThemeDark</item>
-        <item name="android:windowBackground">@color/darkerBackgroundColorThemeBlack</item>
-        <item name="themedOverlayPopupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
+        <item name="android:windowBackground">@color/windowBackgroundColorThemeBlack</item>
         <item name="themedDefaultBackgroundColor">@color/defaultBackgroundColorThemeBlack</item>
         <item name="themedDarkerBackgroundColor">@color/darkerBackgroundColorThemeBlack</item>
-        <item name="themedMoreDarkerBackgroundColor">@color/moreDarkerBackgroundColorThemeBlack</item>
-        <item name="themedLinkColor">@color/linkColorThemeDark</item>
-        <item name="themedNavigationMore">@drawable/ic_action_navigation_more_dark</item>
-        <item name="themedForumIcon">@drawable/ic_action_communication_forum_dark</item>
-        <item name="themedContentAdd">@drawable/ic_action_content_add_dark</item>
-        <item name="themedTextFormatGeneral">@drawable/textformat_general_dark</item>
-        <item name="themedContentSendIcon">@drawable/ic_action_content_send_dark</item>
-        <item name="themedDividerColor">@color/dividerColorThemeDark</item>
-        <item name="themedClearIcon">@drawable/ic_action_clear_dark</item>
         <item name="themedBackgroundAvatar">@drawable/avatar_image_border_black</item>
-        <item name="themedNavigationHeaderBackground">@drawable/navigation_header_background_dark</item>
+        <item name="themedAltBackgroundColor">@color/altBackgroundColorThemeBlack</item>
+        <item name="themedQuoteBackgroundColor">@color/colorQuoteBackgroundThemeBlack</item>
+        <item name="themedButtonSubForumStyle">@style/ButtonSubForumGreyAndBlackStyle</item>
+        <item name="themedButtonBlueStyle">@style/ButtonForumBlackStyle</item>
+        <item name="themedButtonRedStyle">@style/ButtonForumBlackStyle</item>
+        <item name="themedButtonOrangeStyle">@style/ButtonForumBlackStyle</item>
+        <item name="themedButtonGreenStyle">@style/ButtonForumBlackStyle</item>
+        <item name="themedButtonPurpleStyle">@style/ButtonForumBlackStyle</item>
     </style>
     <style name="AppTheme.Black.Real" parent="AppTheme.Black.Base"/>
 
@@ -94,10 +171,389 @@
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/splashscreen</item>
         <!-- uniquement pour la couleur de la statusbar, parce que flemme de faire un theme special v21 etc -->
-        <item name="colorPrimaryDark">@color/splashBackgroundColorDarker</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerJVC</item>
+    </style>
+
+    <style name="ToolbarIsDark">
+        <item name="themedToolbarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="themedToolbarSearchCursor">@drawable/cursor_white</item>
+        <item name="themedToolbarRefreshIcon">@drawable/ictb_refresh_dark</item>
+        <item name="themedToolbarSendIcon">@drawable/ictb_send_dark</item>
+        <item name="themedToolbarHelpIcon">@drawable/ictb_help_dark</item>
+        <item name="themedToolbarSearchIcon">@drawable/ictb_search_dark</item>
+    </style>
+
+    <style name="ToolbarIsLight">
+        <item name="themedToolbarTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>
+        <item name="themedToolbarSearchCursor">@drawable/cursor_black</item>
+        <item name="themedToolbarRefreshIcon">@drawable/ictb_refresh_light</item>
+        <item name="themedToolbarSendIcon">@drawable/ictb_send_light</item>
+        <item name="themedToolbarHelpIcon">@drawable/ictb_help_light</item>
+        <item name="themedToolbarSearchIcon">@drawable/ictb_search_light</item>
+    </style>
+
+    <style name="ButtonForumDarkStyle">
+        <item name="colorButtonNormal">@color/forumListDarkerForumColorThemeDark</item>
+        <item name="colorControlHighlight">@color/forumListForumColorThemeDark</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ButtonForumGreyStyle">
+        <item name="colorButtonNormal">@color/forumListDarkerForumColorThemeGrey</item>
+        <item name="colorControlHighlight">@color/forumListForumColorThemeGrey</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ButtonForumBlackStyle">
+        <item name="colorButtonNormal">@color/forumListDarkerForumColorThemeBlack</item>
+        <item name="colorControlHighlight">@color/forumListForumColorThemeBlack</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ButtonSubForumDarkStyle">
+        <item name="colorButtonNormal">@color/colorPrimaryBlack</item>
+        <item name="colorControlHighlight">@color/colorPrimarySoftBlack</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ButtonSubForumGreyAndBlackStyle">
+        <item name="colorButtonNormal">@color/colorPrimaryDarkerSoftBlack</item>
+        <item name="colorControlHighlight">@color/colorPrimarySoftBlack</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ButtonSubForumStyle">
+        <item name="colorButtonNormal">@color/forumListSubForumColorThemeLight</item>
+        <item name="colorControlHighlight">@color/forumListDarkerSubForumColorThemeLight</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ButtonBlueStyle">
+        <item name="colorButtonNormal">@color/colorPrimaryIndigo</item>
+        <item name="colorControlHighlight">@color/colorPrimaryDarkerIndigo</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ButtonRedStyle">
+        <item name="colorButtonNormal">@color/colorPrimaryRealRed</item>
+        <item name="colorControlHighlight">@color/colorPrimaryDarkerRealRed</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ButtonOrangeStyle">
+        <item name="colorButtonNormal">@color/colorPrimarySoftOrange</item>
+        <item name="colorControlHighlight">@color/colorPrimaryDarkerSoftOrange</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ButtonGreenStyle">
+        <item name="colorButtonNormal">@color/colorPrimaryRealGreen</item>
+        <item name="colorControlHighlight">@color/colorPrimaryDarkerRealGreen</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ButtonPurpleStyle">
+        <item name="colorButtonNormal">@color/colorPrimaryDeepPurple</item>
+        <item name="colorControlHighlight">@color/colorPrimaryDarkerDeepPurple</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="ColorAccentIsLinkColor">
         <item name="colorAccent">?attr/themedLinkColor</item>
+    </style>
+
+    <style name="PrimaryColorIsRealRed">
+        <item name="colorPrimary">@color/colorPrimaryRealRed</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerRealRed</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsRealRed">
+        <item name="themedLinkColor">@color/colorPrimaryRealRed</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryRealRed</item>
+    </style>
+
+    <style name="PrimaryColorIsRed">
+        <item name="colorPrimary">@color/colorPrimaryRed</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerRed</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsRed">
+        <item name="themedLinkColor">@color/colorPrimaryRed</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryRed</item>
+    </style>
+
+    <style name="PrimaryColorIsPink">
+        <item name="colorPrimary">@color/colorPrimaryPink</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerPink</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsPink">
+        <item name="themedLinkColor">@color/colorPrimaryPink</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryPink</item>
+    </style>
+
+    <style name="PrimaryColorIsSoftPurple">
+        <item name="colorPrimary">@color/colorPrimarySoftPurple</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerSoftPurple</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsSoftPurple">
+        <item name="themedLinkColor">@color/colorPrimarySoftPurple</item>
+        <item name="themedTopicNameColor">@color/colorPrimarySoftPurple</item>
+    </style>
+
+    <style name="PrimaryColorIsPurple">
+        <item name="colorPrimary">@color/colorPrimaryPurple</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerPurple</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsPurple">
+        <item name="themedLinkColor">@color/colorPrimaryPurple</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryPurple</item>
+    </style>
+
+    <style name="PrimaryColorIsDeepPurple">
+        <item name="colorPrimary">@color/colorPrimaryDeepPurple</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerDeepPurple</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsDeepPurple">
+        <item name="themedLinkColor">@color/colorPrimaryDeepPurple</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryDeepPurple</item>
+    </style>
+
+    <style name="PrimaryColorIsIndigo">
+        <item name="colorPrimary">@color/colorPrimaryIndigo</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerIndigo</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsIndigo">
+        <item name="themedLinkColor">@color/colorPrimaryIndigo</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryIndigo</item>
+    </style>
+
+    <style name="PrimaryColorIsBlue">
+        <item name="colorPrimary">@color/colorPrimaryBlue</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerBlue</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsBlue">
+        <item name="themedLinkColor">@color/colorPrimaryBlue</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryBlue</item>
+    </style>
+
+    <style name="PrimaryColorIsLightBlue">
+        <item name="colorPrimary">@color/colorPrimaryLightBlue</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerLightBlue</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsLightBlue">
+        <item name="themedLinkColor">@color/colorPrimaryLightBlue</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryLightBlue</item>
+    </style>
+
+    <style name="PrimaryColorIsSoftBlue">
+        <item name="colorPrimary">@color/colorPrimarySoftBlue</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerSoftBlue</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsSoftBlue">
+        <item name="themedLinkColor">@color/colorPrimarySoftBlue</item>
+        <item name="themedTopicNameColor">@color/colorPrimarySoftBlue</item>
+    </style>
+
+    <style name="PrimaryColorIsCyan">
+        <item name="colorPrimary">@color/colorPrimaryCyan</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerCyan</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsCyan">
+        <item name="themedLinkColor">@color/colorPrimaryCyan</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryCyan</item>
+    </style>
+
+    <style name="PrimaryColorIsTeal">
+        <item name="colorPrimary">@color/colorPrimaryTeal</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerTeal</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsTeal">
+        <item name="themedLinkColor">@color/colorPrimaryTeal</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryTeal</item>
+    </style>
+
+    <style name="PrimaryColorIsPrestoGreen">
+        <item name="colorPrimary">@color/colorPrimaryPrestoGreen</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerPrestoGreen</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsPrestoGreen">
+        <item name="themedLinkColor">@color/colorPrimaryPrestoGreen</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryPrestoGreen</item>
+    </style>
+
+    <style name="PrimaryColorIsRealGreen">
+        <item name="colorPrimary">@color/colorPrimaryRealGreen</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerRealGreen</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsRealGreen">
+        <item name="themedLinkColor">@color/colorPrimaryRealGreen</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryRealGreen</item>
+    </style>
+
+    <style name="PrimaryColorIsRealLightGreen">
+        <item name="colorPrimary">@color/colorPrimaryRealLightGreen</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerRealLightGreen</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsRealLightGreen">
+        <item name="themedLinkColor">@color/colorPrimaryRealLightGreen</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryRealLightGreen</item>
+    </style>
+
+    <style name="PrimaryColorIsGreen">
+        <item name="colorPrimary">@color/colorPrimaryGreen</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerGreen</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsGreen">
+        <item name="themedLinkColor">@color/colorPrimaryGreen</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryGreen</item>
+    </style>
+
+    <style name="PrimaryColorIsLightGreen">
+        <item name="colorPrimary">@color/colorPrimaryLightGreen</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerLightGreen</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsLightGreen">
+        <item name="themedLinkColor">@color/colorPrimaryLightGreen</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryLightGreen</item>
+    </style>
+
+    <style name="PrimaryColorIsLime">
+        <item name="colorPrimary">@color/colorPrimaryLime</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerLime</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsLime">
+        <item name="themedLinkColor">@color/colorPrimaryLime</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryLime</item>
+    </style>
+
+    <style name="PrimaryColorIsYellow">
+        <item name="colorPrimary">@color/colorPrimaryYellow</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerYellow</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsYellow">
+        <item name="themedLinkColor">@color/colorPrimaryYellow</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryYellow</item>
+    </style>
+
+    <style name="PrimaryColorIsAmber">
+        <item name="colorPrimary">@color/colorPrimaryAmber</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerAmber</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsAmber">
+        <item name="themedLinkColor">@color/colorPrimaryAmber</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryAmber</item>
+    </style>
+
+    <style name="PrimaryColorIsOrange">
+        <item name="colorPrimary">@color/colorPrimaryOrange</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerOrange</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsOrange">
+        <item name="themedLinkColor">@color/colorPrimaryOrange</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryOrange</item>
+    </style>
+
+    <style name="PrimaryColorIsDeepOrange">
+        <item name="colorPrimary">@color/colorPrimaryDeepOrange</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerDeepOrange</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsDeepOrange">
+        <item name="themedLinkColor">@color/colorPrimaryDeepOrange</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryDeepOrange</item>
+    </style>
+
+    <style name="PrimaryColorIsSoftOrange">
+        <item name="colorPrimary">@color/colorPrimarySoftOrange</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerSoftOrange</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsSoftOrange">
+        <item name="themedLinkColor">@color/colorPrimarySoftOrange</item>
+        <item name="themedTopicNameColor">@color/colorPrimarySoftOrange</item>
+    </style>
+
+    <style name="PrimaryColorIsBrown">
+        <item name="colorPrimary">@color/colorPrimaryBrown</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerBrown</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsBrown">
+        <item name="themedLinkColor">@color/colorPrimaryBrown</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryBrown</item>
+    </style>
+
+    <style name="PrimaryColorIsGrey">
+        <item name="colorPrimary">@color/colorPrimaryGrey</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerGrey</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsGrey">
+        <item name="themedLinkColor">@color/colorPrimaryGrey</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryGrey</item>
+    </style>
+
+    <style name="PrimaryColorIsBlueGrey">
+        <item name="colorPrimary">@color/colorPrimaryBlueGrey</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerBlueGrey</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsBlueGrey">
+        <item name="themedLinkColor">@color/colorPrimaryBlueGrey</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryBlueGrey</item>
+    </style>
+
+    <style name="PrimaryColorIsJVC">
+        <item name="colorPrimary">@color/colorPrimaryJVC</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerJVC</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsJVC">
+        <item name="themedLinkColor">@color/colorPrimaryJVC</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryJVC</item>
+    </style>
+
+    <style name="PrimaryColorIsSoftBlack">
+        <item name="colorPrimary">@color/colorPrimarySoftBlack</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerSoftBlack</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsSoftBlack">
+        <item name="themedLinkColor">@color/colorPrimarySoftBlack</item>
+        <item name="themedTopicNameColor">@color/colorPrimarySoftBlack</item>
+    </style>
+
+    <style name="PrimaryColorIsBlack">
+        <item name="colorPrimary">@color/colorPrimaryBlack</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkerBlack</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsBlack">
+        <item name="themedLinkColor">@color/colorPrimaryBlack</item>
+        <item name="themedTopicNameColor">@color/colorPrimaryBlack</item>
+    </style>
+
+    <style name="TopicNameAndLinkColorIsDefault">
+        <item name="themedLinkColor">@color/defaultTopicNameAndLinkColorThemeLight</item>
+        <item name="themedTopicNameColor">@color/defaultTopicNameAndLinkColorThemeLight</item>
     </style>
 </resources>

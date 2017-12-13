@@ -2,20 +2,21 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="?attr/themedDefaultBackgroundColor">
 
     <TextView
         android:id="@+id/text_main_ignorelist_row"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_toLeftOf="@+id/image_button_action_ignorelist_row"
         android:layout_toStartOf="@+id/image_button_action_ignorelist_row"
         android:layout_centerVertical="true"
-        android:textStyle="bold"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"/>
+        android:textStyle="bold"/>
 
     <ImageButton
         style="@style/SelectableItemBackground"

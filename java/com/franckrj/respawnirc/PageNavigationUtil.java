@@ -1,6 +1,7 @@
 package com.franckrj.respawnirc;
 
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -325,6 +326,7 @@ public class PageNavigationUtil {
             }
         }
 
+        @NonNull
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             AbsShowSomethingFragment fragment = (AbsShowSomethingFragment) super.instantiateItem(container, position);

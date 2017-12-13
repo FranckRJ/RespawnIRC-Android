@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.franckrj.respawnirc.R;
@@ -16,13 +17,35 @@ import com.franckrj.respawnirc.R;
 import java.util.ArrayList;
 
 public class SurveyReplysAdapter extends RecyclerView.Adapter<SurveyReplysAdapter.ReplyViewHolder> {
-    private Activity parentActivity = null;
     private ArrayList<String> listOfReplyContent = new ArrayList<>();
     private LayoutInflater serviceInflater = null;
+    /* Ces deux variables sont une tentative d'optimisation probablement inutile. */
+    private String replyTitleModel = "";
+    private String replyContentHintModel = "";
 
-    public SurveyReplysAdapter(Activity newParentActivity) {
-        parentActivity = newParentActivity;
+    private final View.OnClickListener removeButtonClickedListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (view.getTag() != null && view.getTag() instanceof Integer) {
+                int position = (Integer) view.getTag();
+                if (position >= 0 && position < listOfReplyContent.size()) {
+                    if (listOfReplyContent.size() > 2) {
+                        listOfReplyContent.remove(position);
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, listOfReplyContent.size() - position);
+                    } else {
+                        listOfReplyContent.set(position, "");
+                        notifyItemChanged(position);
+                    }
+                }
+            }
+        }
+    };
+
+    public SurveyReplysAdapter(Activity parentActivity) {
         serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        replyTitleModel = parentActivity.getString(R.string.replyTitleInSurveyManager);
+        replyContentHintModel = parentActivity.getString(R.string.replyTitleInSurveyHint);
     }
 
     public void setReplys(ArrayList<String> newListOfReplyContent) {
@@ -57,6 +80,7 @@ public class SurveyReplysAdapter extends RecyclerView.Adapter<SurveyReplysAdapte
     public class ReplyViewHolder extends RecyclerView.ViewHolder {
         private TextView replyTitle = null;
         private EditText replyContent = null;
+        private ImageButton actionButton = null;
         private int replyPos = -1;
 
         private final TextWatcher replyContentChanged = new TextWatcher() {
@@ -82,13 +106,19 @@ public class SurveyReplysAdapter extends RecyclerView.Adapter<SurveyReplysAdapte
             super(mainView);
             replyTitle = mainView.findViewById(R.id.reply_title_replysurveyrow);
             replyContent = mainView.findViewById(R.id.reply_content_replysurveyrow);
+            actionButton = mainView.findViewById(R.id.image_button_action_replysurveyrow);
+
             replyContent.addTextChangedListener(replyContentChanged);
+            actionButton.setTag(-1);
+            actionButton.setOnClickListener(removeButtonClickedListener);
         }
 
         public void setCurrentReply(String content, int newPos) {
             replyPos = newPos;
-            replyTitle.setText(parentActivity.getString(R.string.replyTitleInSurveyManager, String.valueOf(replyPos + 1)));
+            replyTitle.setText(replyTitleModel.replace("%n%", String.valueOf(replyPos + 1)));
+            replyContent.setHint(replyContentHintModel.replace("%n%", String.valueOf(replyPos + 1)));
             replyContent.setText(content);
+            actionButton.setTag(newPos);
         }
     }
 }

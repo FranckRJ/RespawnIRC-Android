@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.TextView;
@@ -20,11 +21,26 @@ public class SelectTextDialogFragment extends DialogFragment {
     public static final String ARG_TEXT_IS_HTML = "com.franckrj.respawnirc.selecttextdialogfragment.text_is_html";
 
     private TextView textShowed = null;
+    private View topLine = null;
+    private View bottomLine = null;
+
+    private void updateLineShowedFromThiScrollView(NestedScrollView scrollView, int scrollY) {
+        if (scrollY == 0) {
+            topLine.setVisibility(View.INVISIBLE);
+        } else {
+            topLine.setVisibility(View.VISIBLE);
+        }
+
+        if (scrollY == (scrollView.getChildAt(0).getMeasuredHeight() - scrollView.getMeasuredHeight())) {
+            bottomLine.setVisibility(View.INVISIBLE);
+        } else {
+            bottomLine.setVisibility(View.VISIBLE);
+        }
+    }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        super.onCreateDialog(savedInstanceState);
         Bundle currentArgs = getArguments();
         String textContent = "";
         boolean textIsHtml = false;
@@ -36,8 +52,18 @@ public class SelectTextDialogFragment extends DialogFragment {
         }
 
         @SuppressLint("InflateParams")
-        View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_selecttext, null);
+        final View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_selecttext, null);
+        final NestedScrollView mainScrollView = mainView.findViewById(R.id.scrollview_selecttext);
+        topLine = mainView.findViewById(R.id.line_top_selecttext);
+        bottomLine = mainView.findViewById(R.id.line_bottom_selecttext);
         textShowed = mainView.findViewById(R.id.text_selecttext);
+
+        mainScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView scrollView, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                updateLineShowedFromThiScrollView(scrollView, scrollY);
+            }
+        });
 
         if (textIsHtml) {
             textShowed.setText(Undeprecator.htmlFromHtml(textContent));
@@ -69,6 +95,13 @@ public class SelectTextDialogFragment extends DialogFragment {
                         dialog.dismiss();
                     }
                 });
+
+        mainScrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                updateLineShowedFromThiScrollView(mainScrollView, mainScrollView.getScrollY());
+            }
+        });
 
         return builder.create();
     }

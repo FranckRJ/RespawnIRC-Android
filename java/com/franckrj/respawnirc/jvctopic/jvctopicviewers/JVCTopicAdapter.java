@@ -6,8 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
+import android.support.annotation.ColorInt;
 import android.support.v7.widget.CardView;
 import android.text.Layout;
 import android.text.Spannable;
@@ -137,7 +136,6 @@ public class JVCTopicAdapter extends BaseAdapter {
     };
 
     public JVCTopicAdapter(Activity newParentActivity, JVCParser.Settings newSettings) {
-        @DrawableRes int deletedDrawableRes = ThemeManager.getDrawableRes(ThemeManager.DrawableName.DELETED_IMAGE);
         Resources res;
 
         parentActivity = newParentActivity;
@@ -145,12 +143,12 @@ public class JVCTopicAdapter extends BaseAdapter {
         serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         res = parentActivity.getResources();
 
-        jvcImageGetter = new CustomImageGetter(parentActivity, Undeprecator.resourcesGetDrawable(res, deletedDrawableRes), downloaderForImage);
+        jvcImageGetter = new CustomImageGetter(parentActivity, ThemeManager.getDrawable(R.attr.themedDeletedImage, parentActivity), downloaderForImage);
         downloaderForImage.setParentActivity(parentActivity);
         downloaderForImage.setListenerForDownloadFinished(listenerForDownloadFinished);
         downloaderForImage.setImagesCacheDir(parentActivity.getCacheDir());
-        downloaderForImage.setDefaultDrawable(Undeprecator.resourcesGetDrawable(res, ThemeManager.getDrawableRes(ThemeManager.DrawableName.DOWNLOAD_IMAGE)));
-        downloaderForImage.setDeletedDrawable(Undeprecator.resourcesGetDrawable(res, deletedDrawableRes));
+        downloaderForImage.setDefaultDrawable(ThemeManager.getDrawable(R.attr.themedDownloadImage, parentActivity));
+        downloaderForImage.setDeletedDrawable(ThemeManager.getDrawable(R.attr.themedDeletedImage, parentActivity));
         downloaderForImage.setImagesSize(res.getDimensionPixelSize(R.dimen.miniNoelshackWidthDefault), res.getDimensionPixelSize(R.dimen.miniNoelshackHeightDefault), true);
     }
 
@@ -322,10 +320,10 @@ public class JVCTopicAdapter extends BaseAdapter {
 
         QuoteSpan[] quoteSpanArray = spannable.getSpans(0, spannable.length(), QuoteSpan.class);
         for (QuoteSpan quoteSpan : quoteSpanArray) {
-            Utils.replaceSpanByAnotherSpan(spannable, quoteSpan, new CustomQuoteSpan(Undeprecator.resourcesGetColor(parentActivity.getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_QUOTE_BACKGROUND)),
-                    Undeprecator.resourcesGetColor(parentActivity.getResources(), ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PRIMARY)),
-                    parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripSize),
-                    parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripGap)));
+            Utils.replaceSpanByAnotherSpan(spannable, quoteSpan, new CustomQuoteSpan(ThemeManager.getColorInt(R.attr.themedQuoteBackgroundColor, parentActivity),
+                                                                                     ThemeManager.getColorInt(R.attr.colorPrimary, parentActivity),
+                                                                                     parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripSize),
+                                                                                     parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripGap)));
         }
 
         URLSpan[] urlSpanArray = spannable.getSpans(0, spannable.length(), URLSpan.class);
@@ -386,12 +384,12 @@ public class JVCTopicAdapter extends BaseAdapter {
         }
     }
 
-    private void setColorBackgroundOfThisItem(View backrgoundView, @ColorRes int colorId) {
+    private void setColorBackgroundOfThisItem(View backrgoundView, @ColorInt int colorValue) {
         if (backrgoundView instanceof CardView) {
             CardView currentBackgroundView = (CardView) backrgoundView;
-            currentBackgroundView.setCardBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), colorId));
+            currentBackgroundView.setCardBackgroundColor(colorValue);
         } else {
-            backrgoundView.setBackgroundColor(Undeprecator.resourcesGetColor(parentActivity.getResources(), colorId));
+            backrgoundView.setBackgroundColor(colorValue);
         }
     }
 
@@ -440,7 +438,7 @@ public class JVCTopicAdapter extends BaseAdapter {
             viewHolder.infoLine.setText(Undeprecator.htmlFromHtml(advertiseForSurveyToShow));
             convertView.setOnClickListener(onSurveyClickListener);
             viewHolder.infoLine.setOnClickListener(onSurveyClickListener);
-            setColorBackgroundOfThisItem(convertView, ThemeManager.getColorRes(ThemeManager.ColorName.ALT_BACKGROUND_COLOR));
+            setColorBackgroundOfThisItem(convertView, ThemeManager.getColorInt(R.attr.themedSurveyMessageBackgroundColor, parentActivity));
         } else {
             final int realPosition = position - (showSurvey ? 1 : 0);
             final ContentHolder currentContent = listOfContentForMessages.get(realPosition);
@@ -510,11 +508,11 @@ public class JVCTopicAdapter extends BaseAdapter {
             }
 
             if (colorDeletedMessages && currentContent.messageIsDeleted) {
-                setColorBackgroundOfThisItem(convertView, ThemeManager.getColorRes(ThemeManager.ColorName.DELETED_MESSAGE_BACKGROUND_COLOR));
+                setColorBackgroundOfThisItem(convertView, ThemeManager.getColorInt(R.attr.themedDeletedMessageBackgroundColor, parentActivity));
             } else if (realPosition % 2 == 0 || !alternateBackgroundColor) {
-                setColorBackgroundOfThisItem(convertView, ThemeManager.getColorRes(ThemeManager.ColorName.DEFAULT_BACKGROUND_COLOR));
+                setColorBackgroundOfThisItem(convertView, ThemeManager.getColorInt(R.attr.themedDefaultBackgroundColor, parentActivity));
             } else {
-                setColorBackgroundOfThisItem(convertView, ThemeManager.getColorRes(ThemeManager.ColorName.ALT_BACKGROUND_COLOR));
+                setColorBackgroundOfThisItem(convertView, ThemeManager.getColorInt(R.attr.themedAltBackgroundColor, parentActivity));
             }
         }
 

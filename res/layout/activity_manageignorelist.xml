@@ -9,19 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/toolbar_manageignorelist"
-            layout="@layout/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"/>
-
         <TextView
             android:id="@+id/text_emptylist_manageignorelist"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar_manageignorelist"
             android:padding="16dp"
+            android:layout_below="@+id/toolbar_manageignorelist"
             android:gravity="center"
             android:textStyle="bold"
             android:text="@string/noPseudoIgnoredInList"/>
@@ -38,6 +31,10 @@
             android:layout_height="4dp"
             android:background="?attr/themedShadowTop"
             android:layout_below="@+id/toolbar_manageignorelist"/>
+
+        <include
+            android:id="@+id/toolbar_manageignorelist"
+            layout="@layout/toolbar"/>
 
     </RelativeLayout>
 

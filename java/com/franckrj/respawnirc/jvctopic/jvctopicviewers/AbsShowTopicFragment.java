@@ -2,6 +2,7 @@ package com.franckrj.respawnirc.jvctopic.jvctopicviewers;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.TypedValue;
@@ -322,7 +323,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View mainView = inflater.inflate(R.layout.fragment_showtopic, container, false);
 
@@ -374,12 +375,14 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         errorBackgroundMessage.setVisibility(View.GONE);
         swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
         if (cardDesignIsEnabled) {
-            int paddingForMsgList = getResources().getDimensionPixelSize(R.dimen.paddingOfMessageListView);
+            int paddingForMsgList = getResources().getDimensionPixelSize(R.dimen.spaceAroundSingleCard);
+            int dividerSizeForMsgList = getResources().getDimensionPixelSize(R.dimen.spaceBetweenTwoCards);
+
             jvcMsgList.setPadding(paddingForMsgList, paddingForMsgList, paddingForMsgList, paddingForMsgList);
             jvcMsgList.setDivider(null);
-            jvcMsgList.setDividerHeight(0);
+            jvcMsgList.setDividerHeight(dividerSizeForMsgList);
         } else {
-            jvcMsgList.setPadding(0, 0, 0, 2); //pour corriger un bug de smoothscroll
+            jvcMsgList.setPadding(0, 0, 0, 3); //pour corriger un bug de smoothscroll
         }
         jvcMsgList.setClipToPadding(false);
         jvcMsgList.setAdapter(adapterForTopic);
@@ -439,7 +442,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(SAVE_ALL_MESSAGES_SHOWED, adapterForTopic.getAllItems());
         outState.putBoolean(SAVE_GO_TO_BOTTOM_PAGE_LOADING, goToBottomAtPageLoading);

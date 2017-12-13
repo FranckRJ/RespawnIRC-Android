@@ -53,7 +53,6 @@ public class ChoosePageNumberDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        super.onCreateDialog(savedInstanceState);
         AlertDialog alertToShow;
         Window currentWindow;
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -62,17 +61,17 @@ public class ChoosePageNumberDialogFragment extends DialogFragment {
         pageNumberEdit = mainView.findViewById(R.id.pagenumber_edit_choosepagenumber);
         pageNumberEdit.setOnEditorActionListener(actionInEditTextListener);
         builder.setTitle(R.string.choosePageNumber).setView(mainView)
-            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.dismiss();
-                }
-            }).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    pageNumberChoosed();
-                }
-            });
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                }).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        pageNumberChoosed();
+                    }
+                });
         alertToShow = builder.create();
         currentWindow = alertToShow.getWindow();
         if (currentWindow != null) {
