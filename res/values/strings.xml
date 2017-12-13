@@ -251,6 +251,7 @@
     <string name="saveDraft">Sauvegarder le brouillon</string>
     <string name="saveMessageDraftExplained">Voulez-vous sauvegarder le message actuellement entrain d\'être écrit en tant que brouillon ?</string>
     <string name="saveTopicDraftExplained">Voulez-vous sauvegarder le topic actuellement entrain d\'être écrit en tant que brouillon ?</string>
+    <string name="disabledAfterShortcutUpdate">Raccourci désactivé suite à une mise à jour du système des raccourcis.</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>

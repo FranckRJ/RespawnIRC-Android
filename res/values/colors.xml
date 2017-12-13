@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_rirc_background">#FFFFFF</color>
+    <color name="ic_shortcut_forum_background">#3385FF</color>
     <color name="lineSeparationColor">#50808080</color>
     <!-- Light Theme -->
     <color name="shadowColorThemeLight">#50000000</color>

@@ -10,6 +10,8 @@ import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.jvctopic.jvctopicviewers.AbsShowTopicFragment;
 
 public class PrefsManager {
+    public static final int CURRENT_SHORTCUT_VERSION_NUMBER = 1;
+
     private static SharedPreferences currentPrefs = null;
     private static SharedPreferences.Editor currentPrefsEdit = null;
     private static SimpleArrayMap<BoolPref.Names, BoolPref> listOfBoolPrefs = new SimpleArrayMap<>();
@@ -53,6 +55,7 @@ public class PrefsManager {
         addIntPref(IntPref.Names.TOPIC_FAV_ARRAY_SIZE, "pref.topicFavArraySize", 0);
         addIntPref(IntPref.Names.LAST_ROW_SELECTED_INSERTSTUFF, "pref.lastRowSelecetdInsertstuff", 1);
         addIntPref(IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED, "pref.numberOfWebviewOpenSinceCacheCleared", 0);
+        addIntPref(IntPref.Names.SHORTCUT_VERSION_NUMBER, "pref.shortcutVersionNumber", 0);
 
         addStringPref(StringPref.Names.PSEUDO_OF_USER, "pref.pseudoUser", "");
         addStringPref(StringPref.Names.COOKIES_LIST, "pref.cookiesList", "");
@@ -316,7 +319,8 @@ public class PrefsManager {
             LAST_ROW_SELECTED_INSERTSTUFF,
             PRIMARY_COLOR_OF_LIGHT_THEME, TOPIC_NAME_AND_LINK_COLOR_OF_LIGHT_THEME,
             ALT_COLOR_OF_LIGHT_THEME, SURVEY_COLOR_OF_LIGHT_THEME, DELETED_COLOR_OF_LIGHT_THEME,
-            NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED
+            NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED,
+            SHORTCUT_VERSION_NUMBER
         }
     }
 

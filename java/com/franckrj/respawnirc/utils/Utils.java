@@ -186,13 +186,18 @@ public class Utils {
             ShortcutInfo newShortcut = new ShortcutInfo.Builder(parentActivity, String.valueOf(i) + "_" + currentShortcutLink)
                     .setShortLabel(currentShortcutName)
                     .setLongLabel(currentShortcutName)
-                    .setIcon(Icon.createWithResource(parentActivity, R.mipmap.ic_shortcut))
+                    .setIcon(Icon.createWithResource(parentActivity, R.mipmap.ic_shortcut_forum))
                     .setIntent(new Intent(MainActivity.ACTION_OPEN_LINK, Uri.parse(currentShortcutLink))).build();
 
             listOfShortcuts.add(newShortcut);
         }
 
-        shortcutManager.setDynamicShortcuts(listOfShortcuts);
+        try {
+            shortcutManager.setDynamicShortcuts(listOfShortcuts);
+        } catch (Exception e) {
+            /* À ce qu'il parait ça peut crash "when the user is locked", je sais pas ce que ça
+             * veut dire donc dans le doute je mets ça là. */
+        }
     }
 
     public interface StringModifier {
