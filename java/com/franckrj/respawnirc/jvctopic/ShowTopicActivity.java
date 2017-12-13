@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.franckrj.respawnirc.DraftUtils;
 import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
@@ -83,7 +84,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     private boolean goToLastPageAfterLoading = false;
     private boolean goToBottomOnLoadIsEnabled = true;
     private boolean postAsModoWhenPossible = true;
-    private boolean saveMessagesAsDraft = true;
+    private DraftUtils utilsForDraft = new DraftUtils(PrefsManager.SaveDraftType.ALWAYS, PrefsManager.BoolPref.Names.USE_LAST_MESSAGE_DRAFT_SAVED);
 
     private final JVCMessageToTopicSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageToTopicSender.NewMessageWantEditListener() {
         @Override
@@ -315,7 +316,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         convertNoelshackLinkToDirectLink = PrefsManager.getBool(PrefsManager.BoolPref.Names.USE_DIRECT_NOELSHACK_LINK);
         showOverviewOnImageClick = PrefsManager.getBool(PrefsManager.BoolPref.Names.SHOW_OVERVIEW_ON_IMAGE_CLICK);
         postAsModoWhenPossible = PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE);
-        saveMessagesAsDraft = PrefsManager.getBool(PrefsManager.BoolPref.Names.AUTO_SAVE_MESSAGES_AND_TOPICS_AS_DRAFT);
+        utilsForDraft.loadPrefsInfos();
     }
 
     private void updateShowNavigationButtons() {
@@ -425,7 +426,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
             updateLastPageAndCurrentItemAndButtonsToCurrentLink();
 
-            if (saveMessagesAsDraft) {
+            if (utilsForDraft.lastDraftSavedHasToBeUsed()) {
                 messageSendEdit.setText(PrefsManager.getString(PrefsManager.StringPref.Names.MESSAGE_DRAFT));
             }
         } else {
@@ -469,9 +470,10 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
         if (reasonOfLock == null) {
             PrefsManager.putString(PrefsManager.StringPref.Names.MESSAGE_DRAFT, messageSendEdit.getText().toString());
+            utilsForDraft.afterDraftIsSaved();
         }
 
-        /* Si reasonOfLock != null cela veut dire que la page a chargé et donc que pageNavigation.getCurrentLinkIsEmpty() == false.
+        /* Si reasonOfLock != null cela veut dire que la page a chargée et donc que pageNavigation.getCurrentLinkIsEmpty() == false.
          * Donc dans tous les cas il y a des changements de préférences à appliquer.*/
         PrefsManager.applyChanges();
         super.onPause();
@@ -552,10 +554,11 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
     @Override
     public void onBackPressed() {
-        if (saveMessagesAsDraft && reasonOfLock == null && !messageSendEdit.getText().toString().isEmpty()) {
-            Toast.makeText(this, getString(R.string.messageDraftSaved), Toast.LENGTH_SHORT).show();
+        if (reasonOfLock == null && !messageSendEdit.getText().toString().isEmpty()) {
+            utilsForDraft.whenUserTryToLeaveWithDraft(R.string.messageDraftSaved, R.string.saveMessageDraftExplained, this);
+        } else {
+            super.onBackPressed();
         }
-        super.onBackPressed();
     }
 
     @Override

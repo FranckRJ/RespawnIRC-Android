@@ -236,7 +236,7 @@
     <string name="kiloByteNumber">%1$.2f Ko</string>
     <string name="topicNameAndLinkColor">Couleur du nom des topics / liens</string>
     <string name="createSurvey">Créer un sondage</string>
-    <string name="autoSaveMessagesAsDraftTitle">Sauvegarde des messages en cours d\'écriture</string>
+    <string name="saveMessagesAndTopicsAsDraftTypeTitle">Sauvegarder les messages en cours d\'écriture</string>
     <string name="messageDraftSaved">Brouillon du message sauvegardé.</string>
     <string name="topicDraftSaved">Brouillon du topic sauvegardé.</string>
     <string name="grey">Gris</string>
@@ -247,6 +247,10 @@
     <string name="pressBackTwoTimesToLeaveConnect">Appuyez une deuxième fois sur retour pour quitter sans terminer votre connexion.</string>
     <string name="deleteSurvey">Supprimer le sondage</string>
     <string name="deleteWholeSurveyWarning">Êtes-vous sûr de vouloir supprimer la totalité du sondage et de le valider ?</string>
+    <string name="askBefore">Demander avant</string>
+    <string name="saveDraft">Sauvegarder le brouillon</string>
+    <string name="saveMessageDraftExplained">Voulez-vous sauvegarder le message actuellement entrain d\'être écrit en tant que brouillon ?</string>
+    <string name="saveTopicDraftExplained">Voulez-vous sauvegarder le topic actuellement entrain d\'être écrit en tant que brouillon ?</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>
@@ -265,6 +269,11 @@
     <string-array name="choicesForConnectionReadable">
         <item>@string/always</item>
         <item>@string/wifiOnly</item>
+        <item>@string/never</item>
+    </string-array>
+    <string-array name="choicesForSaveMessagesAndTopicsAsDraftReadable">
+        <item>@string/always</item>
+        <item>@string/askBefore</item>
         <item>@string/never</item>
     </string-array>
     <string-array name="choicesForThemesReadable">

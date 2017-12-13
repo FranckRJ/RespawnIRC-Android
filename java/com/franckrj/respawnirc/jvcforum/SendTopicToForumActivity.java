@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.franckrj.respawnirc.DraftUtils;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
 import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
@@ -45,7 +46,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
     private String lastTopicContentSended = "";
     private String lastSurveyTitleSended = "";
     private String lastSurveyReplySendedInAString = "";
-    private boolean saveTopicsAsDraft = true;
+    private DraftUtils utilsForDraft = new DraftUtils(PrefsManager.SaveDraftType.ALWAYS, PrefsManager.BoolPref.Names.USE_LAST_TOPIC_DRAFT_SAVED);
 
     private final View.OnClickListener insertStuffButtonClicked = new View.OnClickListener() {
         @Override
@@ -160,7 +161,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
         lastTopicContentSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_TOPIC_CONTENT_SENDED);
         lastSurveyTitleSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_SURVEY_TITLE_SENDED);
         lastSurveyReplySendedInAString = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_SURVEY_REPLY_SENDED_IN_A_STRING);
-        saveTopicsAsDraft = PrefsManager.getBool(PrefsManager.BoolPref.Names.AUTO_SAVE_MESSAGES_AND_TOPICS_AS_DRAFT);
+        utilsForDraft.loadPrefsInfos();
     }
 
     private static String surveyReplyListToString(ArrayList<String> thisSurveyReplyList) {
@@ -222,7 +223,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
                 currentInfos.surveyReplysList = tmpListOfReply;
             }
         } else {
-            if (saveTopicsAsDraft) {
+            if (utilsForDraft.lastDraftSavedHasToBeUsed()) {
                 topicTitleEdit.setText(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_TITLE_DRAFT));
                 topicContentEdit.setText(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_CONTENT_DRAFT));
                 currentInfos.surveyTitle = PrefsManager.getString(PrefsManager.StringPref.Names.SURVEY_TITLE_DRAFT);
@@ -245,6 +246,8 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
         PrefsManager.putString(PrefsManager.StringPref.Names.TOPIC_CONTENT_DRAFT, topicContentEdit.getText().toString());
         PrefsManager.putString(PrefsManager.StringPref.Names.SURVEY_TITLE_DRAFT, currentInfos.surveyTitle);
         PrefsManager.putString(PrefsManager.StringPref.Names.SURVEY_REPLY_IN_A_STRING_DRAFT, surveyReplyListToString(currentInfos.surveyReplysList));
+        utilsForDraft.afterDraftIsSaved();
+
         PrefsManager.applyChanges();
 
         super.onPause();
@@ -298,11 +301,12 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
 
     @Override
     public void onBackPressed() {
-        if (saveTopicsAsDraft && (!topicTitleEdit.getText().toString().isEmpty() || !topicContentEdit.getText().toString().isEmpty() ||
-                                  !currentInfos.surveyTitle.isEmpty() || !currentInfos.surveyReplysList.isEmpty())) {
-            Toast.makeText(this, getString(R.string.topicDraftSaved), Toast.LENGTH_SHORT).show();
+        if (!topicTitleEdit.getText().toString().isEmpty() || !topicContentEdit.getText().toString().isEmpty() ||
+                !currentInfos.surveyTitle.isEmpty() || !currentInfos.surveyReplysList.isEmpty()) {
+            utilsForDraft.whenUserTryToLeaveWithDraft(R.string.topicDraftSaved, R.string.saveTopicDraftExplained, this);
+        } else {
+            super.onBackPressed();
         }
-        super.onBackPressed();
     }
 
     @Override

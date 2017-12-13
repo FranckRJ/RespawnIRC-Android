@@ -44,6 +44,8 @@ public class PrefsManager {
 
         addBoolPref(BoolPref.Names.IS_FIRST_LAUNCH, "pref.isFirstLaunch", true);
         addBoolPref(BoolPref.Names.USER_IS_MODO, "pref.userIsModo", false);
+        addBoolPref(BoolPref.Names.USE_LAST_MESSAGE_DRAFT_SAVED, "pref.useLastMessageDraftSaved", true);
+        addBoolPref(BoolPref.Names.USE_LAST_TOPIC_DRAFT_SAVED, "pref.useLastTopicDraftSaved", true);
 
         addIntPref(IntPref.Names.LAST_ACTIVITY_VIEWED, "pref.lastActivityViewed", MainActivity.ACTIVITY_SELECT_FORUM_IN_LIST);
         addIntPref(IntPref.Names.CURRENT_TOPIC_MODE, "pref.currentTopicMode", AbsShowTopicFragment.MODE_FORUM);
@@ -104,7 +106,6 @@ public class PrefsManager {
         addBoolPref(BoolPref.Names.COLOR_PSEUDO_OF_USER_IN_MESSAGE, currentContext.getString(R.string.settingsColorPseudoOfUserInMessage), true);
         addBoolPref(BoolPref.Names.BACK_IS_OPEN_DRAWER, currentContext.getString(R.string.settingsBackIsOpenDrawer), false);
         addBoolPref(BoolPref.Names.SAVE_LAST_ROW_USED_INSERTSTUFF, currentContext.getString(R.string.settingsSaveLastRowUsedInsertstuff), true);
-        addBoolPref(BoolPref.Names.AUTO_SAVE_MESSAGES_AND_TOPICS_AS_DRAFT, currentContext.getString(R.string.settingsAutoSaveMessagesAndTopicsAsDraft), true);
         addBoolPref(BoolPref.Names.INVERT_TOOLBAR_TEXT_COLOR, currentContext.getString(R.string.settingsInvertToolbarTextColor), false);
 
         addIntPref(IntPref.Names.PRIMARY_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsPrimaryColorOfLightTheme), 0);
@@ -124,6 +125,7 @@ public class PrefsManager {
         addStringPref(StringPref.Names.STICKER_SIZE, currentContext.getString(R.string.settingsStickerSize), "50", 35, 70);
         addStringPref(StringPref.Names.MINI_NOELSHACK_WIDTH, currentContext.getString(R.string.settingsMiniNoelshackWidth), "68", 68, 136);
         addStringPref(StringPref.Names.LINK_TYPE_FOR_INTERNAL_BROWSER, currentContext.getString(R.string.settingsLinkTypeForInternalBrowser), String.valueOf(LinkType.NO_LINKS));
+        addStringPref(StringPref.Names.SAVE_MESSAGES_AND_TOPICS_AS_DRAFT_TYPE, currentContext.getString(R.string.settingsSaveMessagesAndTopicsAsDraftType), String.valueOf(SaveDraftType.ALWAYS));
     }
 
     public static boolean getBool(BoolPref.Names prefName) {
@@ -293,8 +295,8 @@ public class PrefsManager {
             COLOR_PSEUDO_OF_USER_IN_INFO, COLOR_PSEUDO_OF_USER_IN_MESSAGE,
             BACK_IS_OPEN_DRAWER,
             SAVE_LAST_ROW_USED_INSERTSTUFF,
-            AUTO_SAVE_MESSAGES_AND_TOPICS_AS_DRAFT,
-            INVERT_TOOLBAR_TEXT_COLOR
+            INVERT_TOOLBAR_TEXT_COLOR,
+            USE_LAST_MESSAGE_DRAFT_SAVED, USE_LAST_TOPIC_DRAFT_SAVED
         }
     }
 
@@ -357,6 +359,7 @@ public class PrefsManager {
             IGNORED_PSEUDOS_IN_LC_LIST,
             AVATAR_SIZE, STICKER_SIZE, MINI_NOELSHACK_WIDTH,
             LINK_TYPE_FOR_INTERNAL_BROWSER,
+            SAVE_MESSAGES_AND_TOPICS_AS_DRAFT_TYPE,
             MESSAGE_DRAFT, TOPIC_TITLE_DRAFT, TOPIC_CONTENT_DRAFT, SURVEY_TITLE_DRAFT, SURVEY_REPLY_IN_A_STRING_DRAFT
         }
     }
@@ -391,6 +394,16 @@ public class PrefsManager {
         public static final int NEVER = 2;
 
         public ShowImageType(int newDefaultType) {
+            super(newDefaultType);
+        }
+    }
+
+    public static class SaveDraftType extends IntValueType {
+        public static final int ALWAYS = 0;
+        public static final int ASK_BEFORE = 1;
+        public static final int NEVER = 2;
+
+        public SaveDraftType(int newDefaultType) {
             super(newDefaultType);
         }
     }
