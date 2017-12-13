@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout_navigation_view_header"
     android:layout_width="match_parent"
     android:layout_height="160dp"
-    android:background="?attr/themedNavigationHeaderBackground"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="?attr/themedNavigationHeaderBackground">
 
     <TextView
         android:id="@+id/pseudo_text_navigation_header"
@@ -27,7 +26,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_action_content_add_circle_outline"
+        android:src="@drawable/ic_add_circle_outline_dark"
         android:contentDescription="@string/connectToJVC"/>
 
 </RelativeLayout>

@@ -13,34 +13,40 @@
             android:id="@+id/reason_edit_locktopic"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:layout_marginTop="4dp"
+            android:padding="8dp"
             android:layout_below="@+id/toolbar_locktopic"
-            android:layout_margin="8dp"
             android:gravity="bottom"
             android:inputType="textMultiLine|textCapSentences"
             android:minLines="2"
             android:maxLines="3"
-            android:hint="@string/reasonOfLock"/>
+            android:hint="@string/reasonOfLock"
+            android:background="?attr/themedDefaultBackgroundColor"/>
+
+        <View
+            android:id="@+id/separator_locktopic"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@id/reason_edit_locktopic"
+            android:background="?attr/themedDarkerBackgroundColor"/>
 
         <Button
             android:id="@+id/lock_button_locktopic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/reason_edit_locktopic"
-            android:text="@string/lock"
-            android:layout_margin="16dp"/>
-
-        <include
-            android:id="@+id/toolbar_locktopic"
-            layout="@layout/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"/>
+            android:layout_margin="4dp"
+            android:layout_below="@id/separator_locktopic"
+            android:text="@string/lock"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="4dp"
             android:layout_below="@+id/toolbar_locktopic"
             android:background="?attr/themedShadowTop"/>
+
+        <include
+            android:id="@+id/toolbar_locktopic"
+            layout="@layout/toolbar"/>
 
     </RelativeLayout>
 

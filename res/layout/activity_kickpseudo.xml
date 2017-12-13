@@ -10,59 +10,73 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/motives_layout_kickpseudo"
+            android:id="@+id/kickinfos_layout_kickpseudo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/toolbar_kickpseudo"
-            android:layout_margin="8dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="@string/motive"/>
+            android:orientation="vertical"
+            android:background="?attr/themedDefaultBackgroundColor">
+            <LinearLayout
+                android:id="@+id/motives_layout_kickpseudo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="@string/motive"/>
 
-        <Spinner
-            android:id="@+id/motives_spinner_kickpseudo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/kickMotives"
-            android:prompt="@string/motive"/>
+                <Spinner
+                    android:id="@+id/motives_spinner_kickpseudo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/kickMotives"
+                    android:prompt="@string/motive"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?attr/themedDarkerBackgroundColor"/>
+
+            <EditText
+                android:id="@+id/reason_edit_kickpseudo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:gravity="bottom"
+                android:inputType="textMultiLine|textCapSentences"
+                android:minLines="4"
+                android:maxLines="6"
+                android:hint="@string/reasonOfKick"
+                android:background="@android:color/transparent"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?attr/themedDarkerBackgroundColor"/>
         </LinearLayout>
-
-        <EditText
-            android:id="@+id/reason_edit_kickpseudo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/motives_layout_kickpseudo"
-            android:layout_margin="8dp"
-            android:gravity="bottom"
-            android:inputType="textMultiLine|textCapSentences"
-            android:minLines="4"
-            android:maxLines="6"
-            android:hint="@string/reasonOfKick"/>
 
         <Button
             android:id="@+id/kick_button_kickpseudo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/reason_edit_kickpseudo"
-            android:text="@string/kick"
-            android:layout_margin="16dp"/>
-
-        <include
-            android:id="@+id/toolbar_kickpseudo"
-            layout="@layout/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"/>
+            android:layout_margin="4dp"
+            android:layout_below="@id/kickinfos_layout_kickpseudo"
+            android:text="@string/kick"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="4dp"
             android:layout_below="@+id/toolbar_kickpseudo"
             android:background="?attr/themedShadowTop"/>
+
+        <include
+            android:id="@+id/toolbar_kickpseudo"
+            layout="@layout/toolbar"/>
 
     </RelativeLayout>
 

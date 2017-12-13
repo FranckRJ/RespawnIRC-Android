@@ -5,6 +5,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,8 +29,12 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
     public static final String EXTRA_COOKIES = "com.franckrj.respawnirc.showsurveyactivity.EXTRA_COOKIES";
 
     private static final String SAVE_VOTE_BUTTON_IS_VISIBLE = "saveVoteButtonIsVisible";
+    private static final String SAVE_MAIN_CARD_IS_VISIBLE = "saveMainCardIsVisible";
     private static final String SAVE_CONTENT_FOR_SURVEY = "saveContentForSurvey";
+    private static final String SAVE_SCROLL_POSITION = "saveScrollPosition";
 
+    private ScrollView mainScrollView = null;
+    private View mainCardView = null;
     private TextView contentText = null;
     private Button voteButton = null;
     private SwipeRefreshLayout swipeRefresh = null;
@@ -68,6 +73,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
         @Override
         public void onRequestIsFinished(String reqResult) {
             swipeRefresh.setRefreshing(false);
+            mainCardView.setVisibility(View.VISIBLE);
 
             if (listOfReplysWithInfos.isEmpty()) {
                 voteButton.setVisibility(View.GONE);
@@ -129,7 +135,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
         }
     }
 
-    private String addStyleToPercentage(String percentageToStyle) {
+    private static String addStyleToPercentage(String percentageToStyle) {
         final int spaceToTake = ("100").length();
         String numberOfPercentage = percentageToStyle.substring(0, percentageToStyle.indexOf(" "));
         String colorValueOfPercentage;
@@ -137,7 +143,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
         try {
             int colorValueInNumber = Utils.roundToInt(Integer.parseInt(numberOfPercentage) * 2.5); //la couleur de l'int sera entre rouge 0 et rouge 250.
 
-            if (ThemeManager.getThemeUsedIsDark()) {
+            if (ThemeManager.currentThemeUseDarkColors()) {
                 colorValueInNumber = 250 - colorValueInNumber; //inversion pour les thèmes sombres
             }
 
@@ -166,7 +172,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
             numberOfPercentage = numberOfPercentageBuilder.toString();
         }
 
-        if (ThemeManager.getThemeUsedIsDark()) {
+        if (ThemeManager.currentThemeUseDarkColors()) {
             return "<font face=\"monospace\" color=\"#FF" + colorValueOfPercentage + colorValueOfPercentage +"\">" + numberOfPercentage + "</font>%";
         } else {
             return "<font face=\"monospace\" color=\"#" + colorValueOfPercentage + "0000\">" + numberOfPercentage + "</font>%";
@@ -186,26 +192,37 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showsurvey);
         initToolbar(R.id.toolbar_showsurvey);
 
         ActionBar myActionBar = getSupportActionBar();
 
+        mainScrollView = findViewById(R.id.scrollview_showsurvey);
+        mainCardView = findViewById(R.id.card_showsurvey);
         contentText = findViewById(R.id.content_showsurvey);
         voteButton = findViewById(R.id.button_vote_showsurvey);
         swipeRefresh = findViewById(R.id.swiperefresh_showsurvey);
 
+        mainCardView.setVisibility(View.GONE);
         voteButton.setVisibility(View.GONE);
         voteButton.setOnClickListener(voteButtonClickedListener);
         swipeRefresh.setEnabled(false);
         swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
 
         if (savedInstanceState != null) {
+            mainCardView.setVisibility(savedInstanceState.getBoolean(SAVE_MAIN_CARD_IS_VISIBLE, false) ? View.VISIBLE : View.GONE);
             voteButton.setVisibility(savedInstanceState.getBoolean(SAVE_VOTE_BUTTON_IS_VISIBLE, false) ? View.VISIBLE : View.GONE);
             contentForSurvey = savedInstanceState.getString(SAVE_CONTENT_FOR_SURVEY, "");
             contentText.setText(Undeprecator.htmlFromHtml(contentForSurvey));
+
+            mainScrollView.post(new Runnable() {
+                @Override
+                public void run() {
+                    mainScrollView.scrollTo(0, savedInstanceState.getInt(SAVE_SCROLL_POSITION, 0));
+                }
+            });
         }
         if (getIntent() != null) {
             if (getIntent().getStringExtra(EXTRA_SURVEY_TITLE) != null && myActionBar != null) {
@@ -238,8 +255,10 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putBoolean(SAVE_MAIN_CARD_IS_VISIBLE, mainCardView.getVisibility() == View.VISIBLE);
         outState.putBoolean(SAVE_VOTE_BUTTON_IS_VISIBLE, voteButton.getVisibility() == View.VISIBLE);
         outState.putString(SAVE_CONTENT_FOR_SURVEY, contentForSurvey);
+        outState.putInt(SAVE_SCROLL_POSITION, mainScrollView.getScrollY());
     }
 
     @Override

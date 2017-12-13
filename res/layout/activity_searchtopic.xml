@@ -15,19 +15,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <include
-            android:id="@+id/toolbar_searchtopic"
-            layout="@layout/toolbar"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"/>
+            android:layout_height="4dp"
+            android:background="?attr/themedShadowTop"
+            android:layout_below="@+id/radiogroup_layout_searchtopic"/>
 
         <RelativeLayout
             android:id="@+id/navigation_layout_searchtopic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/toolbar_searchtopic"
-            android:background="?attr/themedDarkerBackgroundColor">
+            android:background="?attr/themedDefaultBackgroundColor">
             <Button
                 android:id="@+id/firstpage_button_searchtopic"
                 android:layout_width="wrap_content"
@@ -37,8 +36,7 @@
                 android:layout_marginLeft="4dp"
                 android:layout_marginStart="4dp"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"/>
+                android:layout_alignParentLeft="true"/>
             <Button
                 android:id="@+id/previouspage_button_searchtopic"
                 android:layout_width="wrap_content"
@@ -47,7 +45,6 @@
                 android:minWidth="0dp"
                 android:layout_toLeftOf="@+id/currentpage_button_searchtopic"
                 android:layout_toStartOf="@+id/currentpage_button_searchtopic"
-                android:layout_alignParentTop="true"
                 android:text="@string/previousPageText"/>
             <Button
                 android:id="@+id/currentpage_button_searchtopic"
@@ -58,7 +55,6 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_centerHorizontal="true"
-                android:layout_alignParentTop="true"
                 android:text="@string/waitingText"/>
             <Button
                 android:id="@+id/nextpage_button_searchtopic"
@@ -68,7 +64,6 @@
                 android:minWidth="0dp"
                 android:layout_toRightOf="@+id/currentpage_button_searchtopic"
                 android:layout_toEndOf="@+id/currentpage_button_searchtopic"
-                android:layout_alignParentTop="true"
                 android:text="@string/nextPageText"/>
         </RelativeLayout>
 
@@ -78,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/navigation_layout_searchtopic"
             android:orientation="horizontal"
-            android:background="?attr/themedDarkerBackgroundColor"
+            android:background="?attr/themedDefaultBackgroundColor"
             android:gravity="end">
             <RadioButton
                 android:id="@+id/topicmode_radio_searchtopic"
@@ -113,13 +108,11 @@
             android:layout_width="match_parent"
             android:layout_height="4dp"
             android:background="?attr/themedShadowTop"
-            android:layout_below="@+id/radiogroup_layout_searchtopic"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:background="?attr/themedShadowTop"
             android:layout_below="@+id/toolbar_searchtopic"/>
+
+        <include
+            android:id="@+id/toolbar_searchtopic"
+            layout="@layout/toolbar"/>
 
     </RelativeLayout>
 

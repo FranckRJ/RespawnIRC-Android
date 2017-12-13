@@ -29,7 +29,7 @@
     <string name="settingsEnableCardDesignModeForum" translatable="false">settings.enableCardDesignModeForum</string>
     <string name="settingsSeparationBetweenMessagesBlackThemeModeForum" translatable="false">settings.separationBetweenMessagesBlackThemeModeForum</string>
     <string name="settingsHideUglyImages" translatable="false">settings.hideUglyImages</string>
-    <string name="settingsThemeUsed" translatable="false">settings.themeUsed</string>
+    <string name="settingsThemeUsed" translatable="false">settings.themeUsedV2</string>
     <string name="settingsForumAlternateBackgroundColor" translatable="false">settings.forumAlternateBackgroundColor</string>
     <string name="settingsEnableSmoothScroll" translatable="false">settings.enableSmoothScroll</string>
     <string name="settingsEnableGoToBottomOnLoad" translatable="false">settings.enableGoToBottomOnLoad</string>
@@ -49,4 +49,11 @@
     <string name="settingsMiniNoelshackWidth" translatable="false">settings.miniNoelshackWidth</string>
     <string name="settingsSaveLastRowUsedInsertstuff" translatable="false">settings.saveLastRowUsedInsertstuff</string>
     <string name="settingsLinkTypeForInternalBrowser" translatable="false">settings.linkTypeForInternalBrowser</string>
+    <string name="settingsPrimaryColorOfLightTheme" translatable="false">settings.customColor.primaryColorOfLightTheme</string>
+    <string name="settingsAltColorOfLightTheme" translatable="false">settings.customColor.altColorOfLightTheme</string>
+    <string name="settingsSurveyColorOfLightTheme" translatable="false">settings.customColor.surveyColorOfLightTheme</string>
+    <string name="settingsDeletedColorOfLightTheme" translatable="false">settings.customColor.deletedColorOfLightTheme</string>
+    <string name="settingsTopicNameAndLinkColorOfLightTheme" translatable="false">settings.customColor.topicNameAndLinkColorOfLightTheme</string>
+    <string name="settingsSaveMessagesAndTopicsAsDraftType" translatable="false">settings.saveMessagesAndTopicsAsDraftType</string>
+    <string name="settingsInvertToolbarTextColor" translatable="false">settings.invertToolbarTextColor</string>
 </resources>

@@ -16,15 +16,15 @@
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:background="@android:color/transparent"
-        android:textCursorDrawable="@drawable/custom_cursor"/>
+        android:textCursorDrawable="?attr/themedToolbarSearchCursor"/>
     <ImageButton
         style="@style/SelectableItemBackground"
         android:id="@+id/search_button_searchlayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_action_action_search"
-        android:padding="8dp"
+        android:src="?attr/themedToolbarSearchIcon"
+        android:scaleType="center"
         android:contentDescription="@string/search"/>
 </RelativeLayout>

@@ -10,6 +10,7 @@ import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
+import android.support.annotation.ColorInt;
 import android.text.Spannable;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -25,12 +26,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Utils {
-    public static String resColorToString(int resId, Activity baseActivity) {
-        return String.format("#%06X", 0xFFFFFF & Undeprecator.resourcesGetColor(baseActivity.getResources(), resId));
+    public static String colorToString(@ColorInt int colorValue) {
+        return String.format("#%06X", 0xFFFFFF & colorValue);
     }
 
-    public static String resColorToStringWithAlpha(int resId, Activity baseActivity) {
-        return String.format("#%08X", Undeprecator.resourcesGetColor(baseActivity.getResources(), resId));
+    public static String colorToStringWithAlpha(@ColorInt int colorValue) {
+        return String.format("#%08X", colorValue);
     }
 
     public static int roundToInt(double valToRound) {
@@ -185,13 +186,18 @@ public class Utils {
             ShortcutInfo newShortcut = new ShortcutInfo.Builder(parentActivity, String.valueOf(i) + "_" + currentShortcutLink)
                     .setShortLabel(currentShortcutName)
                     .setLongLabel(currentShortcutName)
-                    .setIcon(Icon.createWithResource(parentActivity, R.mipmap.ic_shortcut))
+                    .setIcon(Icon.createWithResource(parentActivity, R.mipmap.ic_shortcut_forum))
                     .setIntent(new Intent(MainActivity.ACTION_OPEN_LINK, Uri.parse(currentShortcutLink))).build();
 
             listOfShortcuts.add(newShortcut);
         }
 
-        shortcutManager.setDynamicShortcuts(listOfShortcuts);
+        try {
+            shortcutManager.setDynamicShortcuts(listOfShortcuts);
+        } catch (Exception e) {
+            /* À ce qu'il parait ça peut crash "when the user is locked", je sais pas ce que ça
+             * veut dire donc dans le doute je mets ça là. */
+        }
     }
 
     public interface StringModifier {

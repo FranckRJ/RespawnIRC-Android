@@ -1,10 +1,15 @@
 package com.franckrj.respawnirc.jvcforum;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,9 +27,12 @@ public class ManageSurveyOfTopicActivity extends AbsHomeIsBackActivity {
     public static final String EXTRA_SURVEY_REPLYS_LIST = "com.franckrj.respawnirc.managesurveyactivity.EXTRA_SURVEY_REPLYS_LIST";
 
     private static final String SAVE_LIST_OF_REPLY_CONTENT = "saveListOfReplyContent";
+    private static final long MAX_TIME_USER_HAVE_TO_LEAVE_IN_MS = 3_500;
 
+    private RecyclerView listOfReplys = null;
     private SurveyReplysAdapter adapterForReplys = null;
     private EditText titleEdit = null;
+    private long lastTimeUserTryToLeaveInMs = -MAX_TIME_USER_HAVE_TO_LEAVE_IN_MS;
 
     private final View.OnClickListener validateButtonClicked = new View.OnClickListener() {
         @Override
@@ -46,10 +54,26 @@ public class ManageSurveyOfTopicActivity extends AbsHomeIsBackActivity {
         }
     };
 
+    private final DialogInterface.OnClickListener onClickInClearWholeSurveyConfirmationListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            if (which == DialogInterface.BUTTON_POSITIVE) {
+                Intent data = new Intent();
+
+                data.putExtra(EXTRA_SURVEY_TITLE, "");
+                data.putStringArrayListExtra(EXTRA_SURVEY_REPLYS_LIST, new ArrayList<String>());
+
+                setResult(Activity.RESULT_OK, data);
+                finish();
+            }
+        }
+    };
+
     private final View.OnClickListener addReplyButtonClicked = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             adapterForReplys.addReply("");
+            listOfReplys.smoothScrollToPosition(adapterForReplys.getItemCount());
         }
     };
 
@@ -61,12 +85,13 @@ public class ManageSurveyOfTopicActivity extends AbsHomeIsBackActivity {
 
         Button validateButton = findViewById(R.id.validate_button_managesurvey);
         Button addReplyButton = findViewById(R.id.addreply_button_managesurvey);
-        RecyclerView listOfReplys = findViewById(R.id.reply_list_managesurvey);
+        listOfReplys = findViewById(R.id.reply_list_managesurvey);
         titleEdit = findViewById(R.id.title_edit_managesurvey);
 
         adapterForReplys = new SurveyReplysAdapter(this);
         validateButton.setOnClickListener(validateButtonClicked);
         addReplyButton.setOnClickListener(addReplyButtonClicked);
+        listOfReplys.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         listOfReplys.setLayoutManager(new LinearLayoutManager(this));
         listOfReplys.setAdapter(adapterForReplys);
 
@@ -105,8 +130,36 @@ public class ManageSurveyOfTopicActivity extends AbsHomeIsBackActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_managesurvey, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_clear_whole_survey_managesurvey:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.deleteSurvey).setMessage(R.string.deleteWholeSurveyWarning)
+                        .setPositiveButton(R.string.yes, onClickInClearWholeSurveyConfirmationListener).setNegativeButton(R.string.no, null);
+                builder.show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public void onBackPressed() {
-        Toast.makeText(this, getString(R.string.warningChangesNotSaved), Toast.LENGTH_LONG).show();
-        super.onBackPressed();
+        long currentTimeInMs = System.currentTimeMillis();
+
+        if (currentTimeInMs - lastTimeUserTryToLeaveInMs < MAX_TIME_USER_HAVE_TO_LEAVE_IN_MS) {
+            super.onBackPressed();
+        } else {
+            Toast.makeText(this, getString(R.string.pressBackTwoTimesToLeaveSurvey), Toast.LENGTH_LONG).show();
+        }
+
+        lastTimeUserTryToLeaveInMs = currentTimeInMs;
     }
 }

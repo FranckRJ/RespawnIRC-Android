@@ -14,8 +14,8 @@
             android:id="@+id/text_noresultfound_selectforum"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar_selectforum"
             android:padding="16dp"
+            android:layout_below="@+id/toolbar_selectforum"
             android:gravity="center"
             android:textStyle="bold"
             android:text="@string/noResultFound"/>
@@ -25,28 +25,65 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/toolbar_selectforum">
-            <ExpandableListView
-                android:id="@+id/forum_expendable_list_selectforum"
+            <ListView
+                android:id="@+id/forum_list_selectforum"
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
                 android:divider="@android:color/darker_gray"
                 android:dividerHeight="1dp"
-                android:drawSelectorOnTop="true"
-                android:groupIndicator="@null"/>
+                android:drawSelectorOnTop="true"/>
         </android.support.v4.widget.SwipeRefreshLayout>
 
-        <include
-            android:id="@+id/toolbar_selectforum"
-            layout="@layout/toolbar"
+        <ScrollView
+            android:id="@+id/base_forumlist_layout_selectforum"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"/>
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar_selectforum">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/spaceAroundSingleCard"
+                android:clipToPadding="false"
+                android:orientation="vertical">
+
+                <include layout="@layout/forumlist_cardcat_blabla"/>
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/spaceBetweenTwoCards"/>
+
+                <include layout="@layout/forumlist_cardcat_jvc"/>
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/spaceBetweenTwoCards"/>
+
+                <include layout="@layout/forumlist_cardcat_videogame"/>
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/spaceBetweenTwoCards"/>
+
+                <include layout="@layout/forumlist_cardcat_hardware"/>
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/spaceBetweenTwoCards"/>
+
+                <include layout="@layout/forumlist_cardcat_hobbies"/>
+
+            </LinearLayout>
+        </ScrollView>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="4dp"
             android:background="?attr/themedShadowTop"
             android:layout_below="@+id/toolbar_selectforum"/>
+
+        <include
+            android:id="@+id/toolbar_selectforum"
+            layout="@layout/toolbar"/>
 
     </RelativeLayout>
 

@@ -12,7 +12,7 @@
         <Preference
             android:key="@string/subScreenSettingsTheme"
             android:persistent="false"
-            android:title="@string/theme"/>
+            android:title="@string/themeAndColors"/>
 
         <Preference
             android:key="@string/subScreenSettingsMessageStyle"
@@ -27,7 +27,7 @@
         <Preference
             android:key="@string/subScreenSettingsImageLink"
             android:persistent="false"
-            android:title="@string/imageLink"/>
+            android:title="@string/imageAndLink"/>
 
         <Preference
             android:key="@string/subScreenSettingsIgnored"

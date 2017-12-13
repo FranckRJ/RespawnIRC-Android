@@ -10,6 +10,8 @@ import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.jvctopic.jvctopicviewers.AbsShowTopicFragment;
 
 public class PrefsManager {
+    public static final int CURRENT_SHORTCUT_VERSION_NUMBER = 1;
+
     private static SharedPreferences currentPrefs = null;
     private static SharedPreferences.Editor currentPrefsEdit = null;
     private static SimpleArrayMap<BoolPref.Names, BoolPref> listOfBoolPrefs = new SimpleArrayMap<>();
@@ -17,24 +19,24 @@ public class PrefsManager {
     private static SimpleArrayMap<StringPref.Names, StringPref> listOfStringPrefs = new SimpleArrayMap<>();
     private static SimpleArrayMap<LongPref.Names, LongPref> listOfLongPrefs = new SimpleArrayMap<>();
 
-    private static void addBoolPref(BoolPref.Names nameOfPref, String prefStringValue, boolean prefDefautlValue) {
-        listOfBoolPrefs.put(nameOfPref, new BoolPref(prefStringValue, prefDefautlValue));
+    private static void addBoolPref(BoolPref.Names nameOfPref, String prefStringValue, boolean prefDefaultValue) {
+        listOfBoolPrefs.put(nameOfPref, new BoolPref(prefStringValue, prefDefaultValue));
     }
 
-    private static void addIntPref(IntPref.Names nameOfPref, String prefStringValue, int prefDefautlValue) {
-        listOfIntPrefs.put(nameOfPref, new IntPref(prefStringValue, prefDefautlValue));
+    private static void addIntPref(IntPref.Names nameOfPref, String prefStringValue, int prefDefaultValue) {
+        listOfIntPrefs.put(nameOfPref, new IntPref(prefStringValue, prefDefaultValue));
     }
 
-    private static void addStringPref(StringPref.Names nameOfPref, String prefStringValue, String prefDefautlValue) {
-        listOfStringPrefs.put(nameOfPref, new StringPref(prefStringValue, prefDefautlValue));
+    private static void addStringPref(StringPref.Names nameOfPref, String prefStringValue, String prefDefaultValue) {
+        listOfStringPrefs.put(nameOfPref, new StringPref(prefStringValue, prefDefaultValue));
     }
 
-    private static void addStringPref(StringPref.Names nameOfPref, String prefStringValue, String prefDefautlValue, int newMinVal, int newMaxVal) {
-        listOfStringPrefs.put(nameOfPref, new StringPref(prefStringValue, prefDefautlValue, newMinVal, newMaxVal));
+    private static void addStringPref(StringPref.Names nameOfPref, String prefStringValue, String prefDefaultValue, int newMinVal, int newMaxVal) {
+        listOfStringPrefs.put(nameOfPref, new StringPref(prefStringValue, prefDefaultValue, newMinVal, newMaxVal));
     }
 
-    private static void addLongPref(LongPref.Names nameOfPref, String prefStringValue, long prefDefautlValue) {
-        listOfLongPrefs.put(nameOfPref, new LongPref(prefStringValue, prefDefautlValue));
+    private static void addLongPref(LongPref.Names nameOfPref, String prefStringValue, long prefDefaultValue) {
+        listOfLongPrefs.put(nameOfPref, new LongPref(prefStringValue, prefDefaultValue));
     }
 
     @SuppressLint("CommitPrefEdits")
@@ -44,13 +46,16 @@ public class PrefsManager {
 
         addBoolPref(BoolPref.Names.IS_FIRST_LAUNCH, "pref.isFirstLaunch", true);
         addBoolPref(BoolPref.Names.USER_IS_MODO, "pref.userIsModo", false);
-        addBoolPref(BoolPref.Names.WEBVIEW_CACHE_NEED_TO_BE_CLEAR, "pref.webviewCacheNeedToBeClear", false);
+        addBoolPref(BoolPref.Names.USE_LAST_MESSAGE_DRAFT_SAVED, "pref.useLastMessageDraftSaved", true);
+        addBoolPref(BoolPref.Names.USE_LAST_TOPIC_DRAFT_SAVED, "pref.useLastTopicDraftSaved", true);
 
         addIntPref(IntPref.Names.LAST_ACTIVITY_VIEWED, "pref.lastActivityViewed", MainActivity.ACTIVITY_SELECT_FORUM_IN_LIST);
         addIntPref(IntPref.Names.CURRENT_TOPIC_MODE, "pref.currentTopicMode", AbsShowTopicFragment.MODE_FORUM);
         addIntPref(IntPref.Names.FORUM_FAV_ARRAY_SIZE, "pref.forumFavArraySize", 0);
         addIntPref(IntPref.Names.TOPIC_FAV_ARRAY_SIZE, "pref.topicFavArraySize", 0);
         addIntPref(IntPref.Names.LAST_ROW_SELECTED_INSERTSTUFF, "pref.lastRowSelecetdInsertstuff", 1);
+        addIntPref(IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED, "pref.numberOfWebviewOpenSinceCacheCleared", 0);
+        addIntPref(IntPref.Names.SHORTCUT_VERSION_NUMBER, "pref.shortcutVersionNumber", 0);
 
         addStringPref(StringPref.Names.PSEUDO_OF_USER, "pref.pseudoUser", "");
         addStringPref(StringPref.Names.COOKIES_LIST, "pref.cookiesList", "");
@@ -68,6 +73,11 @@ public class PrefsManager {
         addStringPref(StringPref.Names.LAST_SURVEY_TITLE_SENDED, "pref.lastSurveyTitleSended", "");
         addStringPref(StringPref.Names.LAST_SURVEY_REPLY_SENDED_IN_A_STRING, "pref.lastSurveyReplySendedInAString", "");
         addStringPref(StringPref.Names.IGNORED_PSEUDOS_IN_LC_LIST, "pref.ignoredPseudosInLCList", "");
+        addStringPref(StringPref.Names.MESSAGE_DRAFT, "pref.messageDraft", "");
+        addStringPref(StringPref.Names.TOPIC_TITLE_DRAFT, "pref.topicTitleDraft", "");
+        addStringPref(StringPref.Names.TOPIC_CONTENT_DRAFT, "pref.topicContentDraft", "");
+        addStringPref(StringPref.Names.SURVEY_TITLE_DRAFT, "pref.surveyTitleDraft", "");
+        addStringPref(StringPref.Names.SURVEY_REPLY_IN_A_STRING_DRAFT, "pref.surveyReplyInAStringDraft", "");
 
         addLongPref(LongPref.Names.OLD_LAST_ID_OF_MESSAGE, "pref.oldLastIdOfMessage", 0);
 
@@ -99,11 +109,18 @@ public class PrefsManager {
         addBoolPref(BoolPref.Names.COLOR_PSEUDO_OF_USER_IN_MESSAGE, currentContext.getString(R.string.settingsColorPseudoOfUserInMessage), true);
         addBoolPref(BoolPref.Names.BACK_IS_OPEN_DRAWER, currentContext.getString(R.string.settingsBackIsOpenDrawer), false);
         addBoolPref(BoolPref.Names.SAVE_LAST_ROW_USED_INSERTSTUFF, currentContext.getString(R.string.settingsSaveLastRowUsedInsertstuff), true);
+        addBoolPref(BoolPref.Names.INVERT_TOOLBAR_TEXT_COLOR, currentContext.getString(R.string.settingsInvertToolbarTextColor), false);
+
+        addIntPref(IntPref.Names.PRIMARY_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsPrimaryColorOfLightTheme), 0);
+        addIntPref(IntPref.Names.TOPIC_NAME_AND_LINK_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsTopicNameAndLinkColorOfLightTheme), 0);
+        addIntPref(IntPref.Names.ALT_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsAltColorOfLightTheme), 0);
+        addIntPref(IntPref.Names.SURVEY_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsSurveyColorOfLightTheme), 0);
+        addIntPref(IntPref.Names.DELETED_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsDeletedColorOfLightTheme), 0);
 
         addStringPref(StringPref.Names.MAX_NUMBER_OF_OVERLY_QUOTE, currentContext.getString(R.string.settingsMaxNumberOfOverlyQuote), "2", 0, 15);
         addStringPref(StringPref.Names.SHOW_AVATAR_MODE_FORUM, currentContext.getString(R.string.settingsShowAvatarModeForum), String.valueOf(ShowImageType.ALWAYS));
         addStringPref(StringPref.Names.SHOW_NOELSHACK_IMAGE, currentContext.getString(R.string.settingsShowNoelshackImage), String.valueOf(ShowImageType.ALWAYS));
-        addStringPref(StringPref.Names.REFRESH_TOPIC_TIME, currentContext.getString(R.string.settingsRefreshTopicTime), "10000", 2500, 60000);
+        addStringPref(StringPref.Names.REFRESH_TOPIC_TIME, currentContext.getString(R.string.settingsRefreshTopicTime), "10000", 2_500, 60_000);
         addStringPref(StringPref.Names.MAX_NUMBER_OF_MESSAGES, currentContext.getString(R.string.settingsMaxNumberOfMessages), "60", 1, 120);
         addStringPref(StringPref.Names.INITIAL_NUMBER_OF_MESSAGES, currentContext.getString(R.string.settingsInitialNumberOfMessages), "10", 1, 20);
         addStringPref(StringPref.Names.THEME_USED, currentContext.getString(R.string.settingsThemeUsed), "0");
@@ -111,6 +128,7 @@ public class PrefsManager {
         addStringPref(StringPref.Names.STICKER_SIZE, currentContext.getString(R.string.settingsStickerSize), "50", 35, 70);
         addStringPref(StringPref.Names.MINI_NOELSHACK_WIDTH, currentContext.getString(R.string.settingsMiniNoelshackWidth), "68", 68, 136);
         addStringPref(StringPref.Names.LINK_TYPE_FOR_INTERNAL_BROWSER, currentContext.getString(R.string.settingsLinkTypeForInternalBrowser), String.valueOf(LinkType.NO_LINKS));
+        addStringPref(StringPref.Names.SAVE_MESSAGES_AND_TOPICS_AS_DRAFT_TYPE, currentContext.getString(R.string.settingsSaveMessagesAndTopicsAsDraftType), String.valueOf(SaveDraftType.ALWAYS));
     }
 
     public static boolean getBool(BoolPref.Names prefName) {
@@ -277,10 +295,11 @@ public class PrefsManager {
             USER_IS_MODO, POST_AS_MODO_WHEN_POSSIBLE,
             IGNORE_TOPIC_TOO, HIDE_TOTALLY_MESSAGES_OF_IGNORED_PSEUDOS,
             ENABLE_FAST_REFRESH_OF_IMAGES,
-            WEBVIEW_CACHE_NEED_TO_BE_CLEAR,
             COLOR_PSEUDO_OF_USER_IN_INFO, COLOR_PSEUDO_OF_USER_IN_MESSAGE,
             BACK_IS_OPEN_DRAWER,
-            SAVE_LAST_ROW_USED_INSERTSTUFF
+            SAVE_LAST_ROW_USED_INSERTSTUFF,
+            INVERT_TOOLBAR_TEXT_COLOR,
+            USE_LAST_MESSAGE_DRAFT_SAVED, USE_LAST_TOPIC_DRAFT_SAVED
         }
     }
 
@@ -297,7 +316,11 @@ public class PrefsManager {
             LAST_ACTIVITY_VIEWED,
             CURRENT_TOPIC_MODE,
             FORUM_FAV_ARRAY_SIZE, TOPIC_FAV_ARRAY_SIZE,
-            LAST_ROW_SELECTED_INSERTSTUFF
+            LAST_ROW_SELECTED_INSERTSTUFF,
+            PRIMARY_COLOR_OF_LIGHT_THEME, TOPIC_NAME_AND_LINK_COLOR_OF_LIGHT_THEME,
+            ALT_COLOR_OF_LIGHT_THEME, SURVEY_COLOR_OF_LIGHT_THEME, DELETED_COLOR_OF_LIGHT_THEME,
+            NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED,
+            SHORTCUT_VERSION_NUMBER
         }
     }
 
@@ -339,7 +362,9 @@ public class PrefsManager {
             THEME_USED,
             IGNORED_PSEUDOS_IN_LC_LIST,
             AVATAR_SIZE, STICKER_SIZE, MINI_NOELSHACK_WIDTH,
-            LINK_TYPE_FOR_INTERNAL_BROWSER
+            LINK_TYPE_FOR_INTERNAL_BROWSER,
+            SAVE_MESSAGES_AND_TOPICS_AS_DRAFT_TYPE,
+            MESSAGE_DRAFT, TOPIC_TITLE_DRAFT, TOPIC_CONTENT_DRAFT, SURVEY_TITLE_DRAFT, SURVEY_REPLY_IN_A_STRING_DRAFT
         }
     }
 
@@ -373,6 +398,16 @@ public class PrefsManager {
         public static final int NEVER = 2;
 
         public ShowImageType(int newDefaultType) {
+            super(newDefaultType);
+        }
+    }
+
+    public static class SaveDraftType extends IntValueType {
+        public static final int ALWAYS = 0;
+        public static final int ASK_BEFORE = 1;
+        public static final int NEVER = 2;
+
+        public SaveDraftType(int newDefaultType) {
             super(newDefaultType);
         }
     }

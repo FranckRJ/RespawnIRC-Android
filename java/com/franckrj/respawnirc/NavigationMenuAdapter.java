@@ -103,10 +103,6 @@ public class NavigationMenuAdapter extends BaseAdapter {
         }
     }
 
-    public void updateList() {
-        notifyDataSetChanged();
-    }
-
     @Override
     public int getCount() {
         return listOfMenuItem.size();

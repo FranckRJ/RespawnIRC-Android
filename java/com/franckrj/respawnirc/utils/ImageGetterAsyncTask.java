@@ -59,7 +59,7 @@ public class ImageGetterAsyncTask extends AsyncTask<Void, Integer, String> {
                 output.write(data, 0, count);
 
                 if (lenghtOfFile > 0) {
-                    publishProgress(Utils.roundToInt((total * 100) / lenghtOfFile));
+                    publishProgress(Utils.roundToInt((total * 100) / lenghtOfFile), lenghtOfFile);
                 }
             }
 
@@ -82,8 +82,8 @@ public class ImageGetterAsyncTask extends AsyncTask<Void, Integer, String> {
 
     @Override
     protected void onProgressUpdate(Integer... progress) {
-        if (progress.length > 0 && requestStatusChangedListener != null) {
-            requestStatusChangedListener.onRequestProgress(progress[0], this);
+        if (progress.length > 1 && requestStatusChangedListener != null) {
+            requestStatusChangedListener.onRequestProgress(progress[0], progress[1], this);
         }
     }
 
@@ -96,7 +96,7 @@ public class ImageGetterAsyncTask extends AsyncTask<Void, Integer, String> {
     }
 
     public interface RequestStatusChanged {
-        void onRequestProgress(Integer currentProgress, ImageGetterAsyncTask taskThatProgress);
+        void onRequestProgress(Integer currentProgressInPercent, Integer fileSize, ImageGetterAsyncTask taskThatProgress);
         void onRequestFinished(String resultFileName, ImageGetterAsyncTask taskThatIsFinished);
     }
 }

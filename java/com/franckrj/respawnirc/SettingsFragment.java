@@ -126,7 +126,26 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers implement
             }
         } else if (key.equals(getString(R.string.settingsThemeUsed))) {
             ThemeManager.updateThemeUsed();
-            getActivity().recreate();
+
+            if (getActivity() != null) {
+                getActivity().recreate();
+            }
+        } else if (key.equals(getString(R.string.settingsInvertToolbarTextColor))) {
+            ThemeManager.updateToolbarTextColor();
+
+            if (getActivity() != null) {
+                getActivity().recreate();
+            }
+        } else if (key.equals(getString(R.string.settingsPrimaryColorOfLightTheme)) ||
+                   key.equals(getString(R.string.settingsTopicNameAndLinkColorOfLightTheme))) {
+            if (getActivity() != null) {
+                ThemeManager.updateColorsUsed(getResources());
+                getActivity().recreate();
+            }
+        } else if (key.startsWith("settings.customColor.")) {
+            if (getActivity() != null) {
+                ThemeManager.updateColorsUsed(getResources());
+            }
         }
 
         updatePrefSummary(pref);
@@ -162,20 +181,34 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers implement
         }
     }
 
-    private void updatePrefDefaultValue(Preference pref) {
+    /* Le but de la clef temporaire est de ne pas sauvegarder l'option par défaut si c'est celle ci
+     * qui est retourné par "PrefsManager.getX()". La clef temporaire n'est pas vide pour empêcher
+     * des possibles crash (des histoires de requireKey() etc). Elle est unique par type de pref pour
+     * ne pas causer de crash lors de l'assignation d'un string à ce qui était précédement un bool.
+     * La persistance est temporairement à false pour plus de sécurité, au cas où, dans le doute,
+     * mais ça reste plutôt assez moche comme solution au final. */
+    private static void updatePrefDefaultValue(Preference pref) {
+        String realPrefKey = pref.getKey();
+        pref.setPersistent(false);
         if (pref instanceof CheckBoxPreference) {
+            pref.setKey("tmpKeyBool");
             CheckBoxPreference checkBoxPref = (CheckBoxPreference) pref;
-            checkBoxPref.setChecked(PrefsManager.getBool(checkBoxPref.getKey()));
+            checkBoxPref.setChecked(PrefsManager.getBool(realPrefKey));
         } else if (pref instanceof SwitchPreferenceCompat) {
+            pref.setKey("tmpKeyBool");
             SwitchPreferenceCompat switchPref = (SwitchPreferenceCompat) pref;
-            switchPref.setChecked(PrefsManager.getBool(switchPref.getKey()));
+            switchPref.setChecked(PrefsManager.getBool(realPrefKey));
         } else if (pref instanceof EditTextPreference) {
+            pref.setKey("tmpKeyString");
             EditTextPreference editTextPref = (EditTextPreference) pref;
-            editTextPref.setText(PrefsManager.getString(editTextPref.getKey()));
+            editTextPref.setText(PrefsManager.getString(realPrefKey));
         } else if (pref instanceof ListPreference) {
+            pref.setKey("tmpKeyString");
             ListPreference listPref = (ListPreference) pref;
-            listPref.setValue(PrefsManager.getString(listPref.getKey()));
+            listPref.setValue(PrefsManager.getString(realPrefKey));
         }
+        pref.setPersistent(true);
+        pref.setKey(realPrefKey);
     }
 
     private void updatePrefSummary(Preference pref) {
@@ -206,7 +239,6 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers implement
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            super.onCreateDialog(savedInstanceState);
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle(R.string.help).setMessage(R.string.help_dialog_settings)
                     .setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {

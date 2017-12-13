@@ -74,6 +74,7 @@ public final class JVCParser {
     private static final Pattern surveyReplyWithInfosPattern = Pattern.compile("<a href=\"#\" class=\"btn-sondage-reponse\" data-id-sondage=\"([^\"]*)\" data-id-reponse=\"([^\"]*)\">(.*?)</a>", Pattern.DOTALL);
     private static final Pattern realSurveyContentPattern = Pattern.compile("\"html\":\"(.*?)\"\\}");
     private static final Pattern numberOfMpJVCPattern = Pattern.compile("<div class=\".*?account-mp.*?\">[^<]*<span[^c]*class=\"account-number-mp[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
+    private static final Pattern numberOfNotifJVCPattern = Pattern.compile("<div class=\".*?account-notif.*?\">[^<]*<span[^c]*class=\"account-number-notif[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
     private static final Pattern overlyJVCQuotePattern = Pattern.compile("(<(/)?blockquote>)");
     private static final Pattern overlyBetterQuotePattern = Pattern.compile("<(/)?blockquote>");
     private static final Pattern jvcLinkPattern = Pattern.compile("<a href=\"([^\"]*)\"( )?( title=\"[^\"]*\")?>.*?</a>");
@@ -492,11 +493,21 @@ public final class JVCParser {
         return currentNames;
     }
 
-    public static String getNumberOfMPFromPage(String pageSource) {
+    public static String getNumberOfMpFromPage(String pageSource) {
         Matcher numberOfMpJVCMatcher = numberOfMpJVCPattern.matcher(pageSource);
 
         if (numberOfMpJVCMatcher.find()) {
             return numberOfMpJVCMatcher.group(1);
+        } else {
+            return null;
+        }
+    }
+
+    public static String getNumberOfNotifFromPage(String pageSource) {
+        Matcher numberOfNotifJVCMatcher = numberOfNotifJVCPattern.matcher(pageSource);
+
+        if (numberOfNotifJVCMatcher.find()) {
+            return numberOfNotifJVCMatcher.group(1);
         } else {
             return null;
         }
@@ -1648,7 +1659,7 @@ public final class JVCParser {
     }
 
     private static class BuildSpoilTag implements Utils.StringModifier {
-        private final String spoilButtonCode = "<bg_spoil_button><font color=\"#" + (ThemeManager.getThemeUsedIsDark() ? "000000" : "FFFFFF") +
+        private final String spoilButtonCode = "<bg_spoil_button><font color=\"#" + (ThemeManager.currentThemeUseDarkColors() ? "000000" : "FFFFFF") +
                                                "\">&nbsp;SPOIL&nbsp;</font></bg_spoil_button>";
 
         private final ArraySet<Integer> listOfSpoilIdToShow;
@@ -1678,7 +1689,7 @@ public final class JVCParser {
 
             if (showThisSpoil) {
                 return "<holdstring_c" + id + ">" + spoilButtonCode + "</holdstring_c" + id + ">" + "<bg_spoil_content><font color=\"#" +
-                        (ThemeManager.getThemeUsedIsDark() ? "FFFFFF" : "000000") + "\">" + (itsForSpoilBlock ? "<br />" : " ") +
+                        (ThemeManager.currentThemeUseDarkColors() ? "FFFFFF" : "000000") + "\">" + (itsForSpoilBlock ? "<br />" : " ") +
                         baseString + "</font></bg_spoil_content>";
             } else {
                 return "<holdstring_o" + id + ">" + spoilButtonCode + "</holdstring_o" + id + ">";

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Voir le fichier par défaut pour les explications. -->
+    <dimen name="spaceAroundSingleCard">8dp</dimen>
+    <dimen name="spaceBetweenTwoCards">8dp</dimen>
+</resources>

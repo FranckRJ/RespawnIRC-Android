@@ -1,6 +1,7 @@
 package com.franckrj.respawnirc.jvctopic.jvctopicviewers;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
 import android.view.Menu;
@@ -160,10 +161,10 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
     protected void initializeSettings() {
         super.initializeSettings();
         currentSettings.firstLineFormat = "[<%DATE_COLOR_START%><%DATE_TIME%><%DATE_COLOR_END%>] &lt;<%PSEUDO_COLOR_START%><%PSEUDO_PSEUDO%><%PSEUDO_COLOR_END%>&gt;";
-        currentSettings.colorPseudoUser = Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PSEUDO_USER), getActivity());
-        currentSettings.colorPseudoOther = Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PSEUDO_OTHER_MODE_IRC), getActivity());
-        currentSettings.colorPseudoModo = Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PSEUDO_MODO), getActivity());
-        currentSettings.colorPseudoAdmin = Utils.resColorToString(ThemeManager.getColorRes(ThemeManager.ColorName.COLOR_PSEUDO_ADMIN), getActivity());
+        currentSettings.colorPseudoUser = Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoUserColor, getActivity()));
+        currentSettings.colorPseudoOther = Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoOtherModeIrcColor, getActivity()));
+        currentSettings.colorPseudoModo = Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoModoColor, getActivity()));
+        currentSettings.colorPseudoAdmin = Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoAdminColor, getActivity()));
         currentSettings.applyMarkToPseudoAuthor = false;
         currentSettings.secondLineFormat = "<%MESSAGE_MESSAGE%>";
         currentSettings.addBeforeEdit = "";
@@ -204,7 +205,7 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(SAVE_OLD_URL_FOR_TOPIC, oldUrlForTopic);
         outState.putLong(SAVE_OLD_LAST_ID_OF_MESSAGE, oldLastIdOfMessage);

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
         android:title="@string/general">
@@ -9,7 +10,44 @@
             android:title="@string/theme"
             android:summary="%s"
             android:entries="@array/choicesForThemesReadable"
-            android:entryValues="@array/threeChoicesValue"/>
+            android:entryValues="@array/fourChoicesValue"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/lightThemeColors">
+        <ColorPickerPreference
+            android:key="@string/settingsPrimaryColorOfLightTheme"
+            android:title="@string/primaryColor"
+            app:pref_currentColor="@color/colorPrimaryIndigo"
+            app:pref_colors="@array/choicesForPrimaryColor"/>
+
+        <CheckBoxPreference
+            android:key="@string/settingsInvertToolbarTextColor"
+            android:title="@string/invertToolbarTextColorTitle"/>
+
+        <ColorPickerPreference
+            android:key="@string/settingsTopicNameAndLinkColorOfLightTheme"
+            android:title="@string/topicNameAndLinkColor"
+            app:pref_currentColor="@color/defaultTopicNameAndLinkColorThemeLight"
+            app:pref_colors="@array/choicesForTopicNameAndLinkColor"/>
+
+        <ColorPickerPreference
+            android:key="@string/settingsAltColorOfLightTheme"
+            android:title="@string/altColorOfMessages"
+            app:pref_currentColor="@color/defaultColorAltThemeLight"
+            app:pref_colors="@array/choicesForAltColor"/>
+
+        <ColorPickerPreference
+            android:key="@string/settingsSurveyColorOfLightTheme"
+            android:title="@string/surveyMessageColor"
+            app:pref_currentColor="@color/defaultSurveyMessageColorThemeLight"
+            app:pref_colors="@array/choicesForSurveyColor"/>
+
+        <ColorPickerPreference
+            android:key="@string/settingsDeletedColorOfLightTheme"
+            android:title="@string/deletedMessageColor"
+            app:pref_currentColor="@color/defaultDeletedMessageColorThemeLight"
+            app:pref_colors="@array/choicesForDeleteColor"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

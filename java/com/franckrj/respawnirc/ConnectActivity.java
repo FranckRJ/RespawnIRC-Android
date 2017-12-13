@@ -23,8 +23,11 @@ import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
 
 public class ConnectActivity extends AbsHomeIsBackActivity {
+    private static final long MAX_TIME_USER_HAVE_TO_LEAVE_IN_MS = 3_500;
+
     private EditText pseudoText = null;
     private HelpConnectDialogFragment helpDialogFragment = null;
+    private long lastTimeUserTryToLeaveInMs = -MAX_TIME_USER_HAVE_TO_LEAVE_IN_MS;
 
     public void saveCookies(View buttonView) {
         if (!pseudoText.getText().toString().isEmpty()) {
@@ -79,6 +82,8 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
         helpDialogFragment = new HelpConnectDialogFragment();
 
         Undeprecator.cookieManagerRemoveAllCookies(CookieManager.getInstance());
+        //suppression de la notification d'utilisation de cookie de JVC dans la webview
+        CookieManager.getInstance().setCookie("http://www.jeuxvideo.com/", "wbCookieNotifier=1");
 
         jvcWebView.setWebViewClient(new WebViewClient());
         jvcWebView.setWebChromeClient(new WebChromeClient());
@@ -90,7 +95,8 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
 
         jvcWebView.loadUrl("https://www.jeuxvideo.com/login");
 
-        PrefsManager.putBool(PrefsManager.BoolPref.Names.WEBVIEW_CACHE_NEED_TO_BE_CLEAR, true);
+        PrefsManager.putInt(PrefsManager.IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED,
+                PrefsManager.getInt(PrefsManager.IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED) + 1);
         PrefsManager.applyChanges();
     }
 
@@ -114,15 +120,22 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(this, getString(R.string.warningNotConnected), Toast.LENGTH_LONG).show();
-        super.onBackPressed();
+        long currentTimeInMs = System.currentTimeMillis();
+
+        if (currentTimeInMs - lastTimeUserTryToLeaveInMs < MAX_TIME_USER_HAVE_TO_LEAVE_IN_MS) {
+            Toast.makeText(this, getString(R.string.warningNotConnected), Toast.LENGTH_LONG).show();
+            super.onBackPressed();
+        } else {
+            Toast.makeText(this, getString(R.string.pressBackTwoTimesToLeaveConnect), Toast.LENGTH_LONG).show();
+        }
+
+        lastTimeUserTryToLeaveInMs = currentTimeInMs;
     }
 
     public static class HelpConnectDialogFragment extends DialogFragment {
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            super.onCreateDialog(savedInstanceState);
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle(R.string.help).setMessage(R.string.help_dialog_connect)
                     .setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {

@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardElevation="@dimen/elevationOfCards"
+    app:cardCornerRadius="@dimen/cornerRadiusOfCards"
+    app:cardBackgroundColor="?attr/themedDefaultBackgroundColor">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:id="@+id/forumlist_cat_videogame_selectforum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/forumlist_arrow_videogame_selectforum"
+                android:layout_toStartOf="@+id/forumlist_arrow_videogame_selectforum"
+                android:text="@string/forumlistCatTitleVideogame"
+                android:textAllCaps="true"
+                android:textColor="?attr/themedForumListCatTitleColor"
+                android:textStyle="bold"/>
+
+            <ImageView
+                android:id="@+id/forumlist_arrow_videogame_selectforum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:src="?attr/themedForumListDropDownArrow"
+                android:contentDescription="@string/expandList"/>
+        </RelativeLayout>
+
+        <android.support.v7.widget.GridLayout
+            android:id="@+id/forumlist_content_1_videogame_selectforum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            app:columnCount="3"
+            android:visibility="gone">
+            <Button
+                android:theme="?attr/themedButtonPurpleStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistVideoGameGeneral"
+                android:tag="@string/forumlistVideoGameGeneralLink"/>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="0dp"
+                app:layout_rowSpan="7"
+                app:layout_rowWeight="1"
+                android:layout_margin="4dp"
+                android:background="?attr/themedDarkerBackgroundColor"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGameFpsAndTps"
+                android:tag="@string/forumlistVideoGameFpsAndTpsLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGameSimulation"
+                android:tag="@string/forumlistVideoGameSimulationLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGameRpg"
+                android:tag="@string/forumlistVideoGameRpgLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGameMusic"
+                android:tag="@string/forumlistVideoGameMusicLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGameStr"
+                android:tag="@string/forumlistVideoGameStrLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGameMagazine"
+                android:tag="@string/forumlistVideoGameMagazineLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGameFighting"
+                android:tag="@string/forumlistVideoGameFightingLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGameImport"
+                android:tag="@string/forumlistVideoGameImportLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGameRacing"
+                android:tag="@string/forumlistVideoGameRacingLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGameHeros"
+                android:tag="@string/forumlistVideoGameHerosLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGameAdventure"
+                android:tag="@string/forumlistVideoGameAdventureLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGameBusiness"
+                android:tag="@string/forumlistVideoGameBusinessLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="2"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistVideoGameSports"
+                android:tag="@string/forumlistVideoGameSportsLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonOrangeStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistVideoGameRetrogaming"
+                android:tag="@string/forumlistVideoGameRetrogamingLink"/>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="0dp"
+                app:layout_rowSpan="7"
+                app:layout_rowWeight="1"
+                android:layout_margin="4dp"
+                android:background="?attr/themedDarkerBackgroundColor"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGameNds"
+                android:tag="@string/forumlistVideoGameNdsLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGameDreamcast"
+                android:tag="@string/forumlistVideoGameDreamcastLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGamePs2"
+                android:tag="@string/forumlistVideoGamePs2Link"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGameN64"
+                android:tag="@string/forumlistVideoGameN64Link"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGameXbox"
+                android:tag="@string/forumlistVideoGameXboxLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGameMegadrive"
+                android:tag="@string/forumlistVideoGameMegadriveLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGameGamecube"
+                android:tag="@string/forumlistVideoGameGamecubeLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGameSnes"
+                android:tag="@string/forumlistVideoGameSnesLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGameGba"
+                android:tag="@string/forumlistVideoGameGbaLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGameSaturn"
+                android:tag="@string/forumlistVideoGameSaturnLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGamePs1"
+                android:tag="@string/forumlistVideoGamePs1Link"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGameGameboy"
+                android:tag="@string/forumlistVideoGameGameboyLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="2"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistVideoGamePsp"
+                android:tag="@string/forumlistVideoGamePspLink"/>
+        </android.support.v7.widget.GridLayout>
+
+        <android.support.v7.widget.GridLayout
+            android:id="@+id/forumlist_content_2_videogame_selectforum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="12dp"
+            app:columnCount="3"
+            android:visibility="gone">
+            <Button
+                android:theme="?attr/themedButtonBlueStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistVideoGameConsolesWar"
+                android:tag="@string/forumlistVideoGameConsolesWarLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonRedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistVideoGameEvents"
+                android:tag="@string/forumlistVideoGameEventsLink"/>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="0dp"
+                app:layout_rowSpan="2"
+                app:layout_rowWeight="1"
+                android:layout_margin="4dp"
+                android:background="?attr/themedDarkerBackgroundColor"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGameE3"
+                android:tag="@string/forumlistVideoGameE3Link"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGameGamescom"
+                android:tag="@string/forumlistVideoGameGamescomLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGameTgs"
+                android:tag="@string/forumlistVideoGameTgsLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGamePgw"
+                android:tag="@string/forumlistVideoGamePgwLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonPurpleStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistVideoGameIndies"
+                android:tag="@string/forumlistVideoGameIndiesLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonGreenStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistVideoGameFtp"
+                android:tag="@string/forumlistVideoGameFtpLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonOrangeStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistVideoGameOnline"
+                android:tag="@string/forumlistVideoGameOnlineLink"/>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="0dp"
+                app:layout_rowWeight="1"
+                android:layout_margin="4dp"
+                android:background="?attr/themedDarkerBackgroundColor"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="2"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistVideoGameEsport"
+                android:tag="@string/forumlistVideoGameEsportLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonRedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistVideoGameOffers"
+                android:tag="@string/forumlistVideoGameOffersLink"/>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="0dp"
+                app:layout_rowWeight="1"
+                android:layout_margin="4dp"
+                android:background="?attr/themedDarkerBackgroundColor"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="2"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistVideoGameCollectors"
+                android:tag="@string/forumlistVideoGameCollectorsLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonBlueStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistVideoGameHandicap"
+                android:tag="@string/forumlistVideoGameHandicapLink"/>
+        </android.support.v7.widget.GridLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

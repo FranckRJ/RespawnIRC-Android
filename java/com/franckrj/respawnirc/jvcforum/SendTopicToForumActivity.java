@@ -1,9 +1,11 @@
 package com.franckrj.respawnirc.jvcforum;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.franckrj.respawnirc.DraftUtils;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
 import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
@@ -38,10 +41,12 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
     private SendTopicInfos currentInfos = new SendTopicInfos();
     private EditText topicTitleEdit = null;
     private EditText topicContentEdit = null;
+    private Button manageSurveyButton = null;
     private String lastTopicTitleSended = "";
     private String lastTopicContentSended = "";
     private String lastSurveyTitleSended = "";
     private String lastSurveyReplySendedInAString = "";
+    private DraftUtils utilsForDraft = new DraftUtils(PrefsManager.SaveDraftType.ALWAYS, PrefsManager.BoolPref.Names.USE_LAST_TOPIC_DRAFT_SAVED);
 
     private final View.OnClickListener insertStuffButtonClicked = new View.OnClickListener() {
         @Override
@@ -89,7 +94,17 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
                 Toast.makeText(SendTopicToForumActivity.this, JVCParser.getErrorMessage(reqResult), Toast.LENGTH_SHORT).show();
             }
 
+            clearWholeTopicIncludingSurvey();
             finish();
+        }
+    };
+
+    private final DialogInterface.OnClickListener onClickInClearWholeTopicConfirmationListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            if (which == DialogInterface.BUTTON_POSITIVE) {
+                clearWholeTopicIncludingSurvey();
+            }
         }
     };
 
@@ -98,13 +113,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
 
         if (currentAsyncTaskForSendTopic == null) {
             lastSurveyTitleSended = currentInfos.surveyTitle;
-            lastSurveyReplySendedInAString = TextUtils.join("&", Utils.mapStringArrayList(currentInfos.surveyReplysList,
-                                                                                          new Utils.StringModifier() {
-                                                                                              @Override
-                                                                                              public String changeString(String baseString) {
-                                                                                                  return Utils.encodeStringToUrlString(baseString);
-                                                                                              }
-                                                                                          }));
+            lastSurveyReplySendedInAString = surveyReplyListToString(currentInfos.surveyReplysList);
             lastTopicTitleSended = topicTitleEdit.getText().toString();
             lastTopicContentSended = topicContentEdit.getText().toString();
 
@@ -123,11 +132,58 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
         }
     }
 
+    private void updateManageSurveyButtonText() {
+        if (currentInfos.surveyTitle.isEmpty()) {
+            manageSurveyButton.setText(R.string.createSurvey);
+        } else {
+            manageSurveyButton.setText(R.string.manageSurvey);
+        }
+    }
+
+    private void clearWholeTopicIncludingSurvey() {
+        topicTitleEdit.setText("");
+        topicContentEdit.setText("");
+        currentInfos.surveyTitle = "";
+        currentInfos.surveyReplysList.clear();
+        updateManageSurveyButtonText();
+    }
+
     private void stopAllCurrentTasks() {
         if (currentAsyncTaskForSendTopic != null) {
             currentAsyncTaskForSendTopic.clearListenersAndCancel();
             currentAsyncTaskForSendTopic = null;
         }
+    }
+
+    private void initializeSettings() {
+        currentInfos.cookieList = PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST);
+        lastTopicTitleSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_TOPIC_TITLE_SENDED);
+        lastTopicContentSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_TOPIC_CONTENT_SENDED);
+        lastSurveyTitleSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_SURVEY_TITLE_SENDED);
+        lastSurveyReplySendedInAString = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_SURVEY_REPLY_SENDED_IN_A_STRING);
+        utilsForDraft.loadPrefsInfos();
+    }
+
+    private static String surveyReplyListToString(ArrayList<String> thisSurveyReplyList) {
+        return TextUtils.join("&", Utils.mapStringArrayList(thisSurveyReplyList,
+                                                                     new Utils.StringModifier() {
+                                                                         @Override
+                                                                         public String changeString(String baseString) {
+                                                                             return Utils.encodeStringToUrlString(baseString);
+                                                                         }
+                                                                     }));
+    }
+
+    private static ArrayList<String> surveyReplyStringToList(String thisSurveyReplyString) {
+        ArrayList<String> tmpList = Utils.mapStringArrayList(Arrays.asList(thisSurveyReplyString.split("&")),
+                                                             new Utils.StringModifier() {
+                                                                 @Override
+                                                                 public String changeString(String baseString) {
+                                                                     return Utils.decodeUrlStringToString(baseString);
+                                                                 }
+                                                             });
+        tmpList.removeAll(Arrays.asList("", null));
+        return tmpList;
     }
 
     @Override
@@ -139,7 +195,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
         ActionBar myActionBar = getSupportActionBar();
 
         Button insertStuffButton = findViewById(R.id.insertstuff_button_sendtopic);
-        Button manageSurveyButton = findViewById(R.id.managesurvey_button_sendtopic);
+        manageSurveyButton = findViewById(R.id.managesurvey_button_sendtopic);
         topicTitleEdit = findViewById(R.id.topic_title_edit_sendtopic);
         topicContentEdit = findViewById(R.id.topic_content_edit_sendtopic);
 
@@ -158,6 +214,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
             }
         }
 
+        initializeSettings();
         if (savedInstanceState != null) {
             ArrayList<String> tmpListOfReply = savedInstanceState.getStringArrayList(SAVE_SURVEY_REPLY_LIST);
             currentInfos.surveyTitle = savedInstanceState.getString(SAVE_SURVEY_TITLE, "");
@@ -165,22 +222,34 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
             if (tmpListOfReply != null) {
                 currentInfos.surveyReplysList = tmpListOfReply;
             }
+        } else {
+            if (utilsForDraft.lastDraftSavedHasToBeUsed()) {
+                topicTitleEdit.setText(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_TITLE_DRAFT));
+                topicContentEdit.setText(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_CONTENT_DRAFT));
+                currentInfos.surveyTitle = PrefsManager.getString(PrefsManager.StringPref.Names.SURVEY_TITLE_DRAFT);
+                currentInfos.surveyReplysList = surveyReplyStringToList(PrefsManager.getString(PrefsManager.StringPref.Names.SURVEY_REPLY_IN_A_STRING_DRAFT));
+            }
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        currentInfos.cookieList = PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST);
-        lastTopicTitleSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_TOPIC_TITLE_SENDED);
-        lastTopicContentSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_TOPIC_CONTENT_SENDED);
-        lastSurveyTitleSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_SURVEY_TITLE_SENDED);
-        lastSurveyReplySendedInAString = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_SURVEY_REPLY_SENDED_IN_A_STRING);
+        updateManageSurveyButtonText();
     }
 
     @Override
     public void onPause() {
         stopAllCurrentTasks();
+
+        PrefsManager.putString(PrefsManager.StringPref.Names.TOPIC_TITLE_DRAFT, topicTitleEdit.getText().toString());
+        PrefsManager.putString(PrefsManager.StringPref.Names.TOPIC_CONTENT_DRAFT, topicContentEdit.getText().toString());
+        PrefsManager.putString(PrefsManager.StringPref.Names.SURVEY_TITLE_DRAFT, currentInfos.surveyTitle);
+        PrefsManager.putString(PrefsManager.StringPref.Names.SURVEY_REPLY_IN_A_STRING_DRAFT, surveyReplyListToString(currentInfos.surveyReplysList));
+        utilsForDraft.afterDraftIsSaved();
+
+        PrefsManager.applyChanges();
+
         super.onPause();
     }
 
@@ -216,16 +285,27 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
                 topicTitleEdit.setText(lastTopicTitleSended);
                 topicContentEdit.setText(lastTopicContentSended);
                 currentInfos.surveyTitle = lastSurveyTitleSended;
-                currentInfos.surveyReplysList = Utils.mapStringArrayList(Arrays.asList(lastSurveyReplySendedInAString.split("&")),
-                                                                         new Utils.StringModifier() {
-                                                                             @Override
-                                                                             public String changeString(String baseString) {
-                                                                                 return Utils.decodeUrlStringToString(baseString);
-                                                                             }
-                                                                         });
+                currentInfos.surveyReplysList = surveyReplyStringToList(lastSurveyReplySendedInAString);
+                updateManageSurveyButtonText();
+                return true;
+            case R.id.action_clear_whole_topic_and_survey_sendtopic:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.deleteTopic).setMessage(R.string.deleteWholeTopicWarning)
+                        .setPositiveButton(R.string.yes, onClickInClearWholeTopicConfirmationListener).setNegativeButton(R.string.no, null);
+                builder.show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!topicTitleEdit.getText().toString().isEmpty() || !topicContentEdit.getText().toString().isEmpty() ||
+                !currentInfos.surveyTitle.isEmpty() || !currentInfos.surveyReplysList.isEmpty()) {
+            utilsForDraft.whenUserTryToLeaveWithDraft(R.string.topicDraftSaved, R.string.saveTopicDraftExplained, this);
+        } else {
+            super.onBackPressed();
         }
     }
 

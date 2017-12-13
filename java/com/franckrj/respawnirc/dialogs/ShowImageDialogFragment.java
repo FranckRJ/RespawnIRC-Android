@@ -2,7 +2,6 @@ package com.franckrj.respawnirc.dialogs;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
@@ -17,18 +16,19 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.ImageDownloader;
 import com.franckrj.respawnirc.utils.ThemeManager;
-import com.franckrj.respawnirc.utils.Undeprecator;
 
 public class ShowImageDialogFragment extends DialogFragment {
     public static final String ARG_IMAGE_LINK = "com.franckrj.respawnirc.showimagedialogfragment.ARG_IMAGE_LINK";
 
     private ImageView viewForImage = null;
-    private ProgressBar progressBarDeterminateForImage = null;
     private ProgressBar progressBarIndeterminateForImage = null;
+    private ProgressBar progressBarDeterminateForImage = null;
+    private TextView textForSizeOfImage = null;
     private ImageDownloader downloaderForImage = new ImageDownloader();
     private String linkOfImage = "";
     private Drawable fullsizeImage = null;
@@ -42,10 +42,22 @@ public class ShowImageDialogFragment extends DialogFragment {
 
     private final ImageDownloader.CurrentProgress listenerForCurrentProgress = new ImageDownloader.CurrentProgress() {
         @Override
-        public void newCurrentProgress(int progressInPercent, String fileLink) {
+        public void newCurrentProgress(int progressInPercent, int sizeOfFile, String fileLink) {
             if (linkOfImage.equals(fileLink)) {
-                progressBarIndeterminateForImage.setVisibility(View.GONE);
-                progressBarDeterminateForImage.setVisibility(View.VISIBLE);
+                if (progressBarIndeterminateForImage.getVisibility() == View.VISIBLE) {
+                    float formattedSizeOfFile = sizeOfFile / 1024;
+
+                    if (formattedSizeOfFile >= 1000) {
+                        formattedSizeOfFile = formattedSizeOfFile / 1024;
+                        textForSizeOfImage.setText(getString(R.string.megaByteNumber, formattedSizeOfFile));
+                    } else {
+                        textForSizeOfImage.setText(getString(R.string.kiloByteNumber, formattedSizeOfFile));
+                    }
+
+                    progressBarIndeterminateForImage.setVisibility(View.INVISIBLE);
+                    progressBarDeterminateForImage.setVisibility(View.VISIBLE);
+                    textForSizeOfImage.setVisibility(View.VISIBLE);
+                }
                 progressBarDeterminateForImage.setProgress(progressInPercent);
             }
         }
@@ -53,8 +65,9 @@ public class ShowImageDialogFragment extends DialogFragment {
 
     private void updateViewForImage() {
         viewForImage.setVisibility(View.VISIBLE);
-        progressBarIndeterminateForImage.setVisibility(View.GONE);
-        progressBarDeterminateForImage.setVisibility(View.GONE);
+        progressBarIndeterminateForImage.setVisibility(View.INVISIBLE);
+        progressBarDeterminateForImage.setVisibility(View.INVISIBLE);
+        textForSizeOfImage.setVisibility(View.INVISIBLE);
         viewForImage.setImageDrawable(fullsizeImage);
     }
 
@@ -71,12 +84,11 @@ public class ShowImageDialogFragment extends DialogFragment {
             dismiss();
         } else {
             Drawable deletedDrawable;
-            Resources res = getActivity().getResources();
             DisplayMetrics metrics = new DisplayMetrics();
 
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-            deletedDrawable = Undeprecator.resourcesGetDrawable(res, ThemeManager.getDrawableRes(ThemeManager.DrawableName.DELETED_IMAGE));
+            deletedDrawable = ThemeManager.getDrawable(R.attr.themedDeletedImage, getActivity());
             deletedDrawable.setBounds(0, 0, deletedDrawable.getIntrinsicWidth(), deletedDrawable.getIntrinsicHeight());
 
             downloaderForImage.setParentActivity(getActivity());
@@ -104,18 +116,20 @@ public class ShowImageDialogFragment extends DialogFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View mainView = inflater.inflate(R.layout.dialog_showimage, container, false);
         viewForImage = mainView.findViewById(R.id.imageview_image_showimage);
-        progressBarDeterminateForImage = mainView.findViewById(R.id.dl_determinate_image_showimage);
         progressBarIndeterminateForImage = mainView.findViewById(R.id.dl_indeterminate_image_showimage);
+        progressBarDeterminateForImage = mainView.findViewById(R.id.dl_determinate_image_showimage);
+        textForSizeOfImage = mainView.findViewById(R.id.text_size_image_showimage);
 
         /*nécessaire pour un affichage correcte sur les versions récentes d'android.*/
-        progressBarDeterminateForImage.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
         progressBarIndeterminateForImage.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
-        progressBarDeterminateForImage.setVisibility(View.GONE);
-        viewForImage.setVisibility(View.GONE);
+        progressBarDeterminateForImage.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
+        progressBarDeterminateForImage.setVisibility(View.INVISIBLE);
+        textForSizeOfImage.setVisibility(View.INVISIBLE);
+        viewForImage.setVisibility(View.INVISIBLE);
 
         fullsizeImage = downloaderForImage.getDrawableFromLink(linkOfImage);
         if (downloaderForImage.getNumberOfFilesDownloading() == 0) {
@@ -131,6 +145,16 @@ public class ShowImageDialogFragment extends DialogFragment {
         });
 
         return mainView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        Dialog dialog = getDialog();
+        if (dialog != null && dialog.getWindow() != null) {
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        }
     }
 
     @Override

@@ -19,7 +19,6 @@ public class VoteInSurveyDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        super.onCreateDialog(savedInstanceState);
         Bundle currentArgs = getArguments();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         String[] listOfReplys = null;

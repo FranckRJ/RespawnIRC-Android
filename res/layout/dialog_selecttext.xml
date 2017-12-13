@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<!-- Le clipToPadding false etc c'était parce que sans la bottom line s'affichait pas. -->
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:scrollbars="vertical">
-    <TextView
-        android:id="@+id/text_selecttext"
+    android:paddingTop="12dp"
+    android:paddingBottom="2dp"
+    android:clipToPadding="false"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/line_top_selecttext"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/themedDarkerPopupBackgroundColor"/>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scrollview_selecttext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:textIsSelectable="true"/>
-</ScrollView>
+        android:scrollbars="vertical">
+        <TextView
+            android:id="@+id/text_selecttext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textIsSelectable="true"/>
+    </android.support.v4.widget.NestedScrollView>
+
+    <View
+        android:id="@+id/line_bottom_selecttext"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/themedDarkerPopupBackgroundColor"/>
+
+</LinearLayout>

@@ -6,7 +6,7 @@
         android:title="@string/quoteMessage"/>
     <item
         android:id="@+id/menu_delete_message"
-        android:title="@string/deleteMessage"/>
+        android:title="@string/delete"/>
     <item
         android:id="@+id/menu_kick_pseudo_message"
         android:title="@string/kick"/>

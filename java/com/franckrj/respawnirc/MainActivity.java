@@ -1,6 +1,7 @@
 package com.franckrj.respawnirc;
 
 import android.content.Intent;
+import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Utils;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public static final int ACTIVITY_SHOW_FORUM = 0;
@@ -28,10 +31,10 @@ public class MainActivity extends AppCompatActivity {
         String linkToOpen = null;
 
         //vidage du cache des webviews
-        if (PrefsManager.getBool(PrefsManager.BoolPref.Names.WEBVIEW_CACHE_NEED_TO_BE_CLEAR)) {
+        if (PrefsManager.getInt(PrefsManager.IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED) > 10) {
             WebView obj = new WebView(this);
             obj.clearCache(true);
-            PrefsManager.putBool(PrefsManager.BoolPref.Names.WEBVIEW_CACHE_NEED_TO_BE_CLEAR, false);
+            PrefsManager.putInt(PrefsManager.IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED, 0);
             PrefsManager.applyChanges();
         }
 
@@ -52,9 +55,34 @@ public class MainActivity extends AppCompatActivity {
 
             if (shortcutManager != null) {
                 int sizeOfForumFavArray = PrefsManager.getInt(PrefsManager.IntPref.Names.FORUM_FAV_ARRAY_SIZE);
+                int oldShortcutVersionNumber = PrefsManager.getInt(PrefsManager.IntPref.Names.SHORTCUT_VERSION_NUMBER);
 
-                if (sizeOfForumFavArray > 0 && shortcutManager.getDynamicShortcuts().size() == 0) {
-                    Utils.updateShortcuts(this, shortcutManager, sizeOfForumFavArray);
+                try {
+                    if (oldShortcutVersionNumber != PrefsManager.CURRENT_SHORTCUT_VERSION_NUMBER) {
+                        Utils.updateShortcuts(this, shortcutManager, sizeOfForumFavArray);
+
+                        List<ShortcutInfo> currentPinnedShortcuts = shortcutManager.getPinnedShortcuts();
+                        List<ShortcutInfo> currentDynamicShortcuts = shortcutManager.getDynamicShortcuts();
+                        List<String> shortcutsIdToDisable = new ArrayList<>();
+
+                        /* Désactivation des shortcuts épinglés mais non présents dans la liste. */
+                        for (ShortcutInfo thisPinnedShortcut : currentPinnedShortcuts) {
+                            shortcutsIdToDisable.add(thisPinnedShortcut.getId());
+                        }
+                        for (ShortcutInfo thisDynamicShortcut : currentDynamicShortcuts) {
+                            shortcutsIdToDisable.remove(thisDynamicShortcut.getId());
+                        }
+
+                        shortcutManager.disableShortcuts(shortcutsIdToDisable, getString(R.string.disabledAfterShortcutUpdate));
+
+                        PrefsManager.putInt(PrefsManager.IntPref.Names.SHORTCUT_VERSION_NUMBER, PrefsManager.CURRENT_SHORTCUT_VERSION_NUMBER);
+                        PrefsManager.applyChanges();
+                    } else if (sizeOfForumFavArray > 0 && shortcutManager.getDynamicShortcuts().size() == 0) {
+                        Utils.updateShortcuts(this, shortcutManager, sizeOfForumFavArray);
+                    }
+                } catch (Exception e) {
+                    /* À ce qu'il parait les fonctions de shortcutManager peuvent crash "when the user is locked",
+                     * je sais pas ce que ça veut dire donc dans le doute je mets ça là. */
                 }
             }
         }

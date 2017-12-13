@@ -19,6 +19,8 @@ public class MainApplication extends Application {
 
         PrefsManager.initializeSharedPrefs(getApplicationContext());
         ThemeManager.updateThemeUsed();
+        ThemeManager.updateToolbarTextColor();
+        ThemeManager.updateColorsUsed(getResources());
         IgnoreListManager.loadListOfIgnoredPseudos();
         StickerConverter.initializeBasesRules();
 
