@@ -291,6 +291,10 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         return absGetterForTopic.getTopicId();
     }
 
+    public boolean getUserCanPostAsModo() {
+        return absGetterForTopic.getUserCanPostAsModo();
+    }
+
     public void setIsInFavs(Boolean newVal) {
         absGetterForTopic.setIsInFavs(newVal);
     }

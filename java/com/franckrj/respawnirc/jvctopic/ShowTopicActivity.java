@@ -211,11 +211,11 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
             popup.getMenuInflater().inflate(R.menu.menu_sendmessage_action, popup.getMenu());
             popup.setOnMenuItemClickListener(onSendmessageActionClickedListener);
-            postAsModoItem = popup.getMenu().findItem(R.id.enable_postasmodo_sendmessage_action);
 
-            if (postAsModoItem != null) {
-                postAsModoItem.setChecked(PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE));
-            }
+            postAsModoItem = popup.getMenu().findItem(R.id.enable_postasmodo_sendmessage_action);
+            postAsModoItem.setChecked(PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE));
+            postAsModoItem.setEnabled(getCurrentFragment().getUserCanPostAsModo());
+            popup.getMenu().findItem(R.id.action_past_last_message_sended_showtopic).setEnabled(!lastMessageSended.isEmpty());
 
             popup.show();
 
@@ -238,6 +238,11 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                     builder.setTitle(R.string.deleteMessage).setMessage(R.string.deleteCurrentWritedMessageWarning)
                             .setPositiveButton(R.string.yes, onClickInDeleteCurrentWritedMessageConfirmationListener).setNegativeButton(R.string.no, null);
                     builder.show();
+                    return true;
+                case R.id.action_past_last_message_sended_showtopic:
+                    if (reasonOfLock == null) {
+                        messageSendEdit.setText(lastMessageSended);
+                    }
                     return true;
                 default:
                     return false;
@@ -500,7 +505,6 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        menu.findItem(R.id.action_past_last_message_sended_showtopic).setEnabled(!lastMessageSended.isEmpty());
 
         if (!pseudoOfUser.isEmpty() && getCurrentFragment() != null) {
             menu.findItem(R.id.action_lock_topic_showtopic).setEnabled(getCurrentFragment().getUserCanLockTopic());
@@ -541,11 +545,6 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 return true;
             case R.id.action_open_in_browser_showtopic:
                 Utils.openCorrespondingBrowser(linkTypeForInternalBrowser, pageNavigation.getCurrentPageLink(), this);
-                return true;
-            case R.id.action_past_last_message_sended_showtopic:
-                if (reasonOfLock == null) {
-                    messageSendEdit.setText(lastMessageSended);
-                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -10,7 +10,4 @@
     <item
         android:id="@+id/action_open_in_browser_showtopic"
         android:title="@string/openInBrowser"/>
-    <item
-        android:id="@+id/action_past_last_message_sended_showtopic"
-        android:title="@string/pastLastMessageSended"/>
 </menu>
