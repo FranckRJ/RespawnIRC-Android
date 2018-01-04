@@ -254,6 +254,8 @@
     <string name="disabledAfterShortcutUpdate">Raccourci désactivé suite à une mise à jour du système des raccourcis.</string>
     <string name="subToTopic">S\'abonner au topic</string>
     <string name="unsubFromTopic">Se désabonner du topic</string>
+    <string name="subAdded">Abonnement ajouté.</string>
+    <string name="subRemoved">Abonnement retiré.</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>

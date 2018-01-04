@@ -38,6 +38,7 @@ import com.franckrj.respawnirc.base.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.PageNavigationUtil;
 import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
 import com.franckrj.respawnirc.utils.AddOrRemoveThingToFavs;
+import com.franckrj.respawnirc.utils.AddOrRemoveTopicToSubs;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.ThemeManager;
@@ -47,9 +48,9 @@ import java.util.ArrayList;
 
 public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCTopicGetter.NewForumAndTopicNameAvailable,
                                                                         PopupMenu.OnMenuItemClickListener, JVCTopicModeForumGetter.NewNumbersOfPagesListener,
-                                                                        ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCTopicAdapter.URLClicked,
-                                                                        AbsJVCTopicGetter.NewReasonForTopicLock, InsertStuffDialogFragment.StuffInserted, MessageMenuDialogFragment.NewPseudoIgnored,
-                                                                        PageNavigationUtil.PageNavigationFunctions, AddOrRemoveThingToFavs.ActionToFavsEnded, AbsJVCTopicGetter.TopicLinkChanged,
+                                                                        ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCTopicAdapter.URLClicked, AbsJVCTopicGetter.NewReasonForTopicLock,
+                                                                        InsertStuffDialogFragment.StuffInserted, MessageMenuDialogFragment.NewPseudoIgnored, PageNavigationUtil.PageNavigationFunctions,
+                                                                        AddOrRemoveThingToFavs.ActionToFavsEnded, AddOrRemoveTopicToSubs.ActionToSubsEnded, AbsJVCTopicGetter.TopicLinkChanged,
                                                                         AbsShowTopicFragment.NewSurveyNeedToBeShown, JVCTopicAdapter.PseudoClicked, AbsJVCTopicGetter.NewPseudoOfAuthorAvailable {
     public static final String EXTRA_TOPIC_LINK = "com.franckrj.respawnirc.EXTRA_TOPIC_LINK";
     public static final String EXTRA_TOPIC_NAME = "com.franckrj.respawnirc.EXTRA_TOPIC_NAME";
@@ -75,6 +76,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     private String cookieListInAString = "";
     private String lastMessageSended = "";
     private AddOrRemoveThingToFavs currentTaskForFavs = null;
+    private AddOrRemoveTopicToSubs currentTaskForSubs = null;
     private String reasonOfLock = null;
     private ImageButton insertStuffButton = null;
     private PageNavigationUtil pageNavigation = new PageNavigationUtil(this);
@@ -307,6 +309,10 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         if (currentTaskForFavs != null) {
             currentTaskForFavs.clearListenersAndCancel();
             currentTaskForFavs = null;
+        }
+        if (currentTaskForSubs != null) {
+            currentTaskForSubs.clearListenersAndCancel();
+            currentTaskForSubs = null;
         }
         actionsForMessages.stopAllCurrentTasks();
         senderForMessages.stopAllCurrentTask();
@@ -542,11 +548,27 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_change_topic_fav_value_showtopic:
-                if (currentTaskForFavs == null) {
-                    currentTaskForFavs = new AddOrRemoveThingToFavs(!getCurrentFragment().getIsInFavs(), this);
-                    currentTaskForFavs.execute(JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), getCurrentFragment().getTopicId(), getCurrentFragment().getLatestAjaxInfos().pref, cookieListInAString);
+                if (getCurrentFragment().getIsInFavs() != null) {
+                    if (currentTaskForFavs == null) {
+                        currentTaskForFavs = new AddOrRemoveThingToFavs(!getCurrentFragment().getIsInFavs(), this);
+                        currentTaskForFavs.execute(JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), getCurrentFragment().getTopicId(), getCurrentFragment().getLatestAjaxInfos().pref, cookieListInAString);
+                    } else {
+                        Toast.makeText(ShowTopicActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(ShowTopicActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ShowTopicActivity.this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            case R.id.action_change_topic_sub_value_showtopic:
+                if (getCurrentFragment().getSubId() != null) {
+                    if (currentTaskForSubs == null) {
+                        currentTaskForSubs = new AddOrRemoveTopicToSubs(getCurrentFragment().getSubId().isEmpty(), this);
+                        currentTaskForSubs.execute(getCurrentFragment().getTopicId(), getCurrentFragment().getSubId(), getCurrentFragment().getLatestAjaxInfos().sub, cookieListInAString);
+                    } else {
+                        Toast.makeText(ShowTopicActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(ShowTopicActivity.this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
                 }
                 return true;
             case R.id.action_lock_topic_showtopic:
@@ -856,14 +878,37 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             Toast.makeText(this, resultInString, Toast.LENGTH_SHORT).show();
         } else {
             if (currentTaskForFavs.getAddToFavs()) {
-                resultInString = getString(R.string.favAdded);
+                Toast.makeText(this, R.string.favAdded, Toast.LENGTH_SHORT).show();
             } else {
-                resultInString = getString(R.string.favRemoved);
+                Toast.makeText(this, R.string.favRemoved, Toast.LENGTH_SHORT).show();
             }
-            Toast.makeText(this, resultInString, Toast.LENGTH_SHORT).show();
-            getCurrentFragment().setIsInFavs(currentTaskForFavs.getAddToFavs());
+
+            if (getCurrentFragment() != null) {
+                getCurrentFragment().setIsInFavs(currentTaskForFavs.getAddToFavs());
+            }
         }
         currentTaskForFavs = null;
+    }
+
+    @Override
+    public void getActionToSubsResult(String resultInString, boolean itsAnError) {
+        if (itsAnError) {
+            if (resultInString.isEmpty()) {
+                resultInString = getString(R.string.errorInfosMissings);
+            }
+            Toast.makeText(this, resultInString, Toast.LENGTH_SHORT).show();
+        } else {
+            if (currentTaskForSubs.getAddToSubs()) {
+                Toast.makeText(this, R.string.subAdded, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, R.string.subRemoved, Toast.LENGTH_SHORT).show();
+            }
+
+            if (getCurrentFragment() != null) {
+                getCurrentFragment().setSubId(resultInString);
+            }
+        }
+        currentTaskForSubs = null;
     }
 
     @Override

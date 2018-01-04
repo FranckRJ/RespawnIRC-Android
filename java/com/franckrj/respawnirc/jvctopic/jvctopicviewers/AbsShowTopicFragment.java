@@ -303,6 +303,10 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         absGetterForTopic.setIsInFavs(newVal);
     }
 
+    public void setSubId(String newVal) {
+        absGetterForTopic.setSubId(newVal);
+    }
+
     public void setPseudoOfAuthor(String newPseudoOfAuthor) {
         currentSettings.pseudoOfAuthor = newPseudoOfAuthor;
     }

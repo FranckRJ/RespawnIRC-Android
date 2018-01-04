@@ -40,7 +40,8 @@ public final class JVCParser {
     private static final Pattern unicodeInTextPattern = Pattern.compile("\\\\u([a-zA-Z0-9]{4})");
     private static final Pattern alertPattern = Pattern.compile("<div class=\"alert-row\">([^<]*)</div>");
     private static final Pattern errorBlocPattern = Pattern.compile("<div class=\"bloc-erreur\">([^<]*)</div>");
-    private static final Pattern errorInJsonModePattern = Pattern.compile("\"erreur\":(\\[)?\"([^\"]*)\"");
+    private static final Pattern errorInJsonModePattern = Pattern.compile("\"(erreur|error)\":(\\[)?\"([^\"]*)\"");
+    private static final Pattern subIdInJsonPattern = Pattern.compile("\"id-abonnement\":([0-9]*)");
     private static final Pattern codeBlockPattern = Pattern.compile("<pre class=\"pre-jv\"><code class=\"code-jv\">([^<]*)</code></pre>");
     private static final Pattern codeLinePattern = Pattern.compile("<code class=\"code-jv\">(.*?)</code>", Pattern.DOTALL);
     private static final Pattern spoilLinePattern = Pattern.compile("<div class=\"bloc-spoil-jv en-ligne\">.*?<div class=\"contenu-spoil\">(.*?)</div></div>", Pattern.DOTALL);
@@ -613,7 +614,7 @@ public final class JVCParser {
         Matcher errorMatcher = errorInJsonModePattern.matcher(pageSource);
 
         if (errorMatcher.find()) {
-            String errorMessage = errorMatcher.group(2);
+            String errorMessage = errorMatcher.group(3);
 
             if (!errorMessage.isEmpty()) {
                 return "Erreur : " + specialCharToNormalChar(parsingAjaxMessages(errorMessage)).trim();
@@ -621,6 +622,16 @@ public final class JVCParser {
         }
 
         return null;
+    }
+
+    public static String getSubIdFromJson(String pageSource) {
+        Matcher subIdInJsonMatcher = subIdInJsonPattern.matcher(pageSource);
+
+        if (subIdInJsonMatcher.find()) {
+            return subIdInJsonMatcher.group(1);
+        } else {
+            return "";
+        }
     }
 
     public static String getMessageEdit(String pageSource) {
@@ -693,7 +704,7 @@ public final class JVCParser {
         }
 
         if (ajaxSubHashMatcher.find()) {
-            newAjaxInfos.sub = ajaxSubHashMatcher.group(1);
+            newAjaxInfos.sub = "ajax_hash=" + ajaxSubHashMatcher.group(1);
         }
 
         return newAjaxInfos;
