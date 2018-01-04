@@ -506,21 +506,35 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
+        MenuItem favItem = menu.findItem(R.id.action_change_topic_fav_value_showtopic);
+        MenuItem subItem = menu.findItem(R.id.action_change_topic_sub_value_showtopic);
+
+        favItem.setEnabled(false);
+        subItem.setEnabled(false);
         if (!pseudoOfUser.isEmpty() && getCurrentFragment() != null) {
             menu.findItem(R.id.action_lock_topic_showtopic).setEnabled(getCurrentFragment().getUserCanLockTopic());
+
             if (getCurrentFragment().getIsInFavs() != null) {
-                menu.findItem(R.id.action_change_topic_fav_value_showtopic).setEnabled(true);
+                favItem.setEnabled(true);
                 if (getCurrentFragment().getIsInFavs()) {
-                    menu.findItem(R.id.action_change_topic_fav_value_showtopic).setTitle(R.string.removeOfFavs);
+                    favItem.setTitle(R.string.removeFromFavs);
                 } else {
-                    menu.findItem(R.id.action_change_topic_fav_value_showtopic).setTitle(R.string.addToFavs);
+                    favItem.setTitle(R.string.addToFavs);
                 }
-                return true;
+            }
+
+            if (getCurrentFragment().getSubId() != null) {
+                subItem.setEnabled(true);
+                if (getCurrentFragment().getSubId().isEmpty()) {
+                    subItem.setTitle(R.string.subToTopic);
+                } else {
+                    subItem.setTitle(R.string.unsubFromTopic);
+                }
             }
         } else {
             menu.findItem(R.id.action_lock_topic_showtopic).setEnabled(false);
         }
-        menu.findItem(R.id.action_change_topic_fav_value_showtopic).setEnabled(false);
+
         return true;
     }
 

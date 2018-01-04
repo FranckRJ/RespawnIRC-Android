@@ -257,8 +257,10 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
+        MenuItem favItem = menu.findItem(R.id.action_change_forum_fav_value_showforum);
+
         menu.findItem(R.id.action_search_topic_showforum).setEnabled(!pageNavigation.getCurrentLinkIsEmpty());
-        menu.findItem(R.id.action_change_forum_fav_value_showforum).setEnabled(false);
+        favItem.setEnabled(false);
         menu.findItem(R.id.action_share_showforum).setEnabled(!pageNavigation.getCurrentLinkIsEmpty());
         updateShareAction();
 
@@ -266,11 +268,11 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
             menu.findItem(R.id.action_send_topic_showforum).setEnabled(!Utils.stringIsEmptyOrNull(getCurrentFragment().getLatestListOfInputInAString(false)) && !pageNavigation.getCurrentLinkIsEmpty());
 
             if (!pseudoOfUser.isEmpty() && getCurrentFragment().getIsInFavs() != null) {
-                menu.findItem(R.id.action_change_forum_fav_value_showforum).setEnabled(true);
+                favItem.setEnabled(true);
                 if (getCurrentFragment().getIsInFavs()) {
-                    menu.findItem(R.id.action_change_forum_fav_value_showforum).setTitle(R.string.removeOfFavs);
+                    favItem.setTitle(R.string.removeFromFavs);
                 } else {
-                    menu.findItem(R.id.action_change_forum_fav_value_showforum).setTitle(R.string.addToFavs);
+                    favItem.setTitle(R.string.addToFavs);
                 }
             }
         } else {

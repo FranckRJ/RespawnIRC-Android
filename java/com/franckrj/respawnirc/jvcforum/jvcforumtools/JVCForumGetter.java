@@ -14,7 +14,7 @@ public class JVCForumGetter {
     public static final int STATE_NOT_LOADING = 1;
 
     private static final String SAVE_FORUM_URL_TO_FETCH = "saveForumUrlToFetch";
-    private static final String SAVE_LATEST_AJAX_INFO_PREF = "saveLatestAjaxInfoPref";
+    private static final String SAVE_LATEST_AJAX_INFO = "saveLatestAjaxInfo";
     private static final String SAVE_LATEST_LIST_OF_INPUT = "saveLatestListOfInputInAString";
     private static final String SAVE_FORUM_IS_IN_FAV = "saveForumIsInFav";
     private static final String SAVE_IS_IN_SEARCH_MODE = "saveIsInSearchMode";
@@ -221,7 +221,7 @@ public class JVCForumGetter {
 
     public void loadFromBundle(Bundle savedInstanceState) {
         urlForForum = savedInstanceState.getString(SAVE_FORUM_URL_TO_FETCH, "");
-        latestAjaxInfos.pref = savedInstanceState.getString(SAVE_LATEST_AJAX_INFO_PREF, null);
+        latestAjaxInfos = savedInstanceState.getParcelable(SAVE_LATEST_AJAX_INFO);
         latestListOfInputInAString = savedInstanceState.getString(SAVE_LATEST_LIST_OF_INPUT, null);
         isInSearchMode = savedInstanceState.getBoolean(SAVE_IS_IN_SEARCH_MODE, false);
         lastTypeOfError = (ErrorType) savedInstanceState.getSerializable(SAVE_LAST_TYPE_OF_ERROR);
@@ -235,7 +235,7 @@ public class JVCForumGetter {
 
     public void saveToBundle(Bundle savedInstanceState) {
         savedInstanceState.putString(SAVE_FORUM_URL_TO_FETCH, urlForForum);
-        savedInstanceState.putString(SAVE_LATEST_AJAX_INFO_PREF, latestAjaxInfos.pref);
+        savedInstanceState.putParcelable(SAVE_LATEST_AJAX_INFO, latestAjaxInfos);
         savedInstanceState.putString(SAVE_LATEST_LIST_OF_INPUT, latestListOfInputInAString);
         savedInstanceState.putBoolean(SAVE_IS_IN_SEARCH_MODE, isInSearchMode);
         savedInstanceState.putSerializable(SAVE_LAST_TYPE_OF_ERROR, lastTypeOfError);
