@@ -129,9 +129,9 @@
     <string name="showUglyImagesMessage">Afficher les images nuisibles</string>
     <string name="light">Clair</string>
     <string name="dark">Sombre</string>
-    <string name="themeAndColors">Thème / Couleurs</string>
+    <string name="style">Style</string>
     <string name="black">Noir</string>
-    <string name="messageStyle">Apparence et contenu des messages</string>
+    <string name="message">Messages</string>
     <string name="settingsModeForumTitle">Mode forum</string>
     <string name="settingsModeIRCTitle">Mode IRC</string>
     <string name="imageAndLink">Images / Liens</string>
@@ -147,7 +147,7 @@
     <string name="enableGoToBottomOnLoadSummary">(ne s\'applique qu\'aux topics favoris et de la liste des topics)</string>
     <string name="enableAutoScrollTitle">Activer l\'autoscroll</string>
     <string name="enableAutoScrollSummary">(scroll automatiquement après un refresh si déjà en bas de page)</string>
-    <string name="information">Information</string>
+    <string name="informations">Informations</string>
     <string name="help_dialog_settings">Voici une liste de quelques fonctionnalités importantes que vous ne connaissez peut-être pas :\n\n• Un clique long sur un topic de la liste des topics ou des topics favoris vous permet d\'aller directement à la dernière page.\n• Un clique long sur le bouton d\'insertion (le +) vous permet d\'accéder à des options supplémentaires.\n• Un clique long sur le bouton d\'envoi de message vous permet de rafraichir la liste des messages sans les effacer.\n• Un clique normal sur le pseudo d\'un message vous permet d\'accéder à des options supplémentaires.\n• Un clique long sur le titre du topic / forum dans la toolbar vous permet de le voir en entier.\n• Un clique long sur un élément de la popup d\'insertion vous permet de l\'insérer sans fermer la popup.\n• Un clique long sur une image ou un lien vous permet d\'accéder à des options supplémentaires.</string>
     <string name="errorMessageContentNeededForSend">Erreur : Le message doit se composer au minimum de 1 caractère.</string>
     <string name="defaultShowSpoilValTitle">Afficher les spoils par défaut</string>
@@ -256,6 +256,12 @@
     <string name="unsubFromTopic">Se désabonner du topic</string>
     <string name="subAdded">Abonnement ajouté.</string>
     <string name="subRemoved">Abonnement retiré.</string>
+    <string name="generalSettingSummary">Brouillon, divers</string>
+    <string name="styleSettingSummary">Thème, couleurs</string>
+    <string name="messageSettingSummary">Apparence, contenu, formatage</string>
+    <string name="behaviourSettingSummary">Rafraichissement, scrolling, autres</string>
+    <string name="imageLinkSettingSummary">Avatars, stickers, noelshack, ouverture des liens</string>
+    <string name="ignoredSettingSummary">Affichage des messages / topics, gestion de la liste</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>
