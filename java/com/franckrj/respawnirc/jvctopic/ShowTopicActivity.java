@@ -611,6 +611,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             PrefsManager.putInt(PrefsManager.IntPref.Names.CURRENT_TOPIC_MODE, newMode);
             PrefsManager.applyChanges();
             updateShowNavigationButtons();
+            pageNavigation.setCurrentLink(pageNavigation.getFirstPageLink());
             pageNavigation.updateAdapterForPagerView();
 
             if (newMode == AbsShowTopicFragment.MODE_FORUM) {
