@@ -50,4 +50,12 @@
             app:pref_colors="@array/choicesForDeleteColor"/>
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="@string/font">
+        <EditTextPreference
+            android:key="@string/settingsTopicTitleFontSize"
+            android:title="@string/topicTitleFontSizeTitle"
+            android:numeric="integer"/>
+    </PreferenceCategory>
+
 </PreferenceScreen>

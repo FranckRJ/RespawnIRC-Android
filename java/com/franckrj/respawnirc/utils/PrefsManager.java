@@ -129,6 +129,7 @@ public class PrefsManager {
         addStringPref(StringPref.Names.MINI_NOELSHACK_WIDTH, currentContext.getString(R.string.settingsMiniNoelshackWidth), "68", 68, 136);
         addStringPref(StringPref.Names.LINK_TYPE_FOR_INTERNAL_BROWSER, currentContext.getString(R.string.settingsLinkTypeForInternalBrowser), String.valueOf(LinkType.NO_LINKS));
         addStringPref(StringPref.Names.SAVE_MESSAGES_AND_TOPICS_AS_DRAFT_TYPE, currentContext.getString(R.string.settingsSaveMessagesAndTopicsAsDraftType), String.valueOf(SaveDraftType.ALWAYS));
+        addStringPref(StringPref.Names.TOPIC_TITLE_FONT_SIZE, currentContext.getString(R.string.settingsTopicTitleFontSize), "14", 8, 20);
     }
 
     public static boolean getBool(BoolPref.Names prefName) {
@@ -364,7 +365,8 @@ public class PrefsManager {
             AVATAR_SIZE, STICKER_SIZE, MINI_NOELSHACK_WIDTH,
             LINK_TYPE_FOR_INTERNAL_BROWSER,
             SAVE_MESSAGES_AND_TOPICS_AS_DRAFT_TYPE,
-            MESSAGE_DRAFT, TOPIC_TITLE_DRAFT, TOPIC_CONTENT_DRAFT, SURVEY_TITLE_DRAFT, SURVEY_REPLY_IN_A_STRING_DRAFT
+            MESSAGE_DRAFT, TOPIC_TITLE_DRAFT, TOPIC_CONTENT_DRAFT, SURVEY_TITLE_DRAFT, SURVEY_REPLY_IN_A_STRING_DRAFT,
+            TOPIC_TITLE_FONT_SIZE
         }
     }
 
