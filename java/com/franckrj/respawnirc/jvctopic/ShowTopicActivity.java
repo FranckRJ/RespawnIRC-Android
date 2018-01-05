@@ -85,7 +85,6 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     private boolean showOverviewOnImageClick = false;
     private boolean goToLastPageAfterLoading = false;
     private boolean goToBottomOnLoadIsEnabled = true;
-    private boolean postAsModoWhenPossible = true;
     private DraftUtils utilsForDraft = new DraftUtils(PrefsManager.SaveDraftType.ALWAYS, PrefsManager.BoolPref.Names.USE_LAST_MESSAGE_DRAFT_SAVED);
 
     private final JVCMessageToTopicSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageToTopicSender.NewMessageWantEditListener() {
@@ -144,7 +143,8 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                         if (getCurrentFragment().getLatestListOfInputInAString(false) != null) {
                             messageSendButton.setEnabled(false);
                             tmpLastMessageSended = messageSendEdit.getText().toString();
-                            messageIsSended = senderForMessages.sendThisMessage(tmpLastMessageSended, pageNavigation.getCurrentPageLink(), getCurrentFragment().getLatestListOfInputInAString(postAsModoWhenPossible), cookieListInAString);
+                            messageIsSended = senderForMessages.sendThisMessage(tmpLastMessageSended, pageNavigation.getCurrentPageLink(),
+                                                                                getCurrentFragment().getLatestListOfInputInAString(PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE)), cookieListInAString);
                         }
 
                         if (!messageIsSended) {
@@ -326,7 +326,6 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         linkTypeForInternalBrowser.setTypeFromString(PrefsManager.getString(PrefsManager.StringPref.Names.LINK_TYPE_FOR_INTERNAL_BROWSER));
         convertNoelshackLinkToDirectLink = PrefsManager.getBool(PrefsManager.BoolPref.Names.USE_DIRECT_NOELSHACK_LINK);
         showOverviewOnImageClick = PrefsManager.getBool(PrefsManager.BoolPref.Names.SHOW_OVERVIEW_ON_IMAGE_CLICK);
-        postAsModoWhenPossible = PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE);
         utilsForDraft.loadPrefsInfos();
     }
 
