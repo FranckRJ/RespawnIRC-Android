@@ -264,6 +264,7 @@
     <string name="ignoredSettingSummary">Affichage des messages / topics, gestion de la liste</string>
     <string name="font">Police</string>
     <string name="topicTitleFontSizeTitle">Taille du titre des topics (en sp)</string>
+    <string name="topicInfosFontSizeTitle">Taille des informations des topics (en sp)</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>

@@ -56,6 +56,11 @@
             android:key="@string/settingsTopicTitleFontSize"
             android:title="@string/topicTitleFontSizeTitle"
             android:numeric="integer"/>
+
+        <EditTextPreference
+            android:key="@string/settingsTopicInfosFontSize"
+            android:title="@string/topicInfosFontSizeTitle"
+            android:numeric="integer"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

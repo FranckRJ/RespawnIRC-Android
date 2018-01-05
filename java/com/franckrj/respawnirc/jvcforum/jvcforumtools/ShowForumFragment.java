@@ -151,6 +151,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     private void reloadAdapterSettings() {
         adapterForForum.setAlternateBackgroundColor(PrefsManager.getBool(PrefsManager.BoolPref.Names.FORUM_ALTERNATE_BACKGROUND));
         adapterForForum.setTopicTitleSizeInSp(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_TITLE_FONT_SIZE)));
+        adapterForForum.setTopicInfosSizeInSp(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_INFOS_FONT_SIZE)));
     }
 
     private void reloadSettings() {
@@ -324,6 +325,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         super.onResume();
         boolean oldAlternateBackgroundColor = adapterForForum.getAlternateBackgroundColor();
         int oldTopicTitleSizeInSp = adapterForForum.getTopicTitleSizeInSp();
+        int oldTopicInfosSizeInSp = adapterForForum.getTopicInfosSizeInSp();
         @ColorInt int oldTopicNameColor = currentTopicNameColor;
         @ColorInt int oldAltColor = currentAltColor;
         reloadSettings();
@@ -331,7 +333,8 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
 
         /* Lors d'un changement de taille de police les vues ne sont pas bien resize. La seule solution qui semble fonctionner
          * c'est de tout recréer, invalider les vues ou faire un requestLayout ne marche pas (au moins sous 4.0.4). */
-        if (oldTopicTitleSizeInSp != adapterForForum.getTopicTitleSizeInSp()) {
+        if (oldTopicTitleSizeInSp != adapterForForum.getTopicTitleSizeInSp() ||
+                oldTopicInfosSizeInSp != adapterForForum.getTopicInfosSizeInSp()) {
             recreateAdapterForForum();
         } else {
             if (oldTopicNameColor != currentTopicNameColor) {

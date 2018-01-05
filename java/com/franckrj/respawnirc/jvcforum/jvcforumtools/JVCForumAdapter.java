@@ -27,6 +27,7 @@ public class JVCForumAdapter extends BaseAdapter {
     private Activity parentActivity = null;
     private boolean alternateBackgroundColor = false;
     private int topicTitleSizeInSp = 14;
+    private int topicInfosSizeInSp = 14;
     private Drawable iconMarqueOn = null;
     private Drawable iconMarqueOff = null;
     private Drawable iconDossier2 = null;
@@ -59,12 +60,20 @@ public class JVCForumAdapter extends BaseAdapter {
         return topicTitleSizeInSp;
     }
 
+    public int getTopicInfosSizeInSp() {
+        return topicInfosSizeInSp;
+    }
+
     public void setAlternateBackgroundColor(boolean newVal) {
         alternateBackgroundColor = newVal;
     }
 
     public void setTopicTitleSizeInSp(int newVal) {
         topicTitleSizeInSp = newVal;
+    }
+
+    public void setTopicInfosSizeInSp(int newVal) {
+        topicInfosSizeInSp = newVal;
     }
 
     public void removeAllItems() {
@@ -142,6 +151,8 @@ public class JVCForumAdapter extends BaseAdapter {
             holder.topicIcon = convertView.findViewById(R.id.topic_icon_jvctopics_row);
 
             holder.titleLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, topicTitleSizeInSp);
+            holder.authorLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, topicInfosSizeInSp);
+            holder.dateLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, topicInfosSizeInSp);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();

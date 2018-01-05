@@ -56,5 +56,6 @@
     <string name="settingsTopicNameAndLinkColorOfLightTheme" translatable="false">settings.customColor.topicNameAndLinkColorOfLightTheme</string>
     <string name="settingsSaveMessagesAndTopicsAsDraftType" translatable="false">settings.saveMessagesAndTopicsAsDraftType</string>
     <string name="settingsInvertToolbarTextColor" translatable="false">settings.invertToolbarTextColor</string>
-    <string name="settingsTopicTitleFontSize">settings.topicTitleFontSize</string>
+    <string name="settingsTopicTitleFontSize" translatable="false">settings.topicTitleFontSize</string>
+    <string name="settingsTopicInfosFontSize" translatable="false">settings.topicInfosFontSize</string>
 </resources>
