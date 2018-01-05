@@ -28,6 +28,7 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers implement
     public static final String ARG_FILE_TO_LOAD = "com.franckrj.respawnirc.settingsfragment.ARG_FILE_TO_LOAD";
 
     private SimpleArrayMap<String, MinMaxInfos> listOfMinMaxInfos = new SimpleArrayMap<>();
+    private boolean isMainPage = true;
 
     private final Preference.OnPreferenceClickListener subScreenPreferenceClicked = new Preference.OnPreferenceClickListener() {
         @Override
@@ -36,11 +37,11 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers implement
                 if (preference.getKey().equals(getString(R.string.subScreenSettingsGeneral))) {
                     ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.general_settings, preference.getTitle().toString());
                     return true;
-                } else if (preference.getKey().equals(getString(R.string.subScreenSettingsTheme))) {
-                    ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.theme_settings, preference.getTitle().toString());
+                } else if (preference.getKey().equals(getString(R.string.subScreenSettingsStyle))) {
+                    ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.style_settings, preference.getTitle().toString());
                     return true;
-                } else if (preference.getKey().equals(getString(R.string.subScreenSettingsMessageStyle))) {
-                    ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.messagestyle_settings, preference.getTitle().toString());
+                } else if (preference.getKey().equals(getString(R.string.subScreenSettingsMessage))) {
+                    ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.message_settings, preference.getTitle().toString());
                     return true;
                 } else if (preference.getKey().equals(getString(R.string.subScreenSettingsBehaviour))) {
                     ((NewSettingsFileNeedALoad) getActivity()).getNewSettingsFileId(R.xml.behaviour_settings, preference.getTitle().toString());
@@ -75,6 +76,8 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers implement
             idOfFileToLoad = getArguments().getInt(ARG_FILE_TO_LOAD, R.xml.main_settings);
         }
 
+        isMainPage = (idOfFileToLoad == R.xml.main_settings);
+
         getPreferenceManager().setSharedPreferencesName(getString(R.string.preference_file_key));
         setPreferencesFromResource(idOfFileToLoad, rootKey);
         initPrefsInfos(getPreferenceScreen());
@@ -85,7 +88,11 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers implement
         try {
             return super.onCreateView(inflater, container, savedInstanceState);
         } finally {
-            setDividerPreferences(DIVIDER_PREFERENCE_BETWEEN);
+            if (isMainPage) {
+                setDividerPreferences(DIVIDER_DEFAULT);
+            } else {
+                setDividerPreferences(DIVIDER_PREFERENCE_BETWEEN);
+            }
         }
     }
 

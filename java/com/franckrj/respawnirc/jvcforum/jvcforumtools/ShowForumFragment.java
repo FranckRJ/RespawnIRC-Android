@@ -210,8 +210,12 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         return getterForForum.getIsInFavs();
     }
 
-    public String getLatestListOfInputInAString(boolean tryToPostAsModo) {
-        return getterForForum.getLatestListOfInputInAString(tryToPostAsModo);
+    public String getLatestListOfInputInAString() {
+        return getterForForum.getLatestListOfInputInAString();
+    }
+
+    public boolean getUserCanPostAsModo() {
+        return getterForForum.getUserCanPostAsModo();
     }
 
     public void setIsInFavs(Boolean newVal) {

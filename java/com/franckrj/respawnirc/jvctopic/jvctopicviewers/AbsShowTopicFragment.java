@@ -283,6 +283,10 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         return absGetterForTopic.getIsInFavs();
     }
 
+    public String getSubId() {
+        return absGetterForTopic.getSubId();
+    }
+
     public boolean getUserCanLockTopic() {
         return absGetterForTopic.getUserCanLockTopic();
     }
@@ -291,8 +295,16 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         return absGetterForTopic.getTopicId();
     }
 
+    public boolean getUserCanPostAsModo() {
+        return absGetterForTopic.getUserCanPostAsModo();
+    }
+
     public void setIsInFavs(Boolean newVal) {
         absGetterForTopic.setIsInFavs(newVal);
+    }
+
+    public void setSubId(String newVal) {
+        absGetterForTopic.setSubId(newVal);
     }
 
     public void setPseudoOfAuthor(String newPseudoOfAuthor) {

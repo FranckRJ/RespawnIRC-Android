@@ -55,6 +55,7 @@ public class ManageIgnoreListActivity extends AbsHomeIsBackActivity {
 
         generateListOfIgnoredPseudos();
         adapterForIgnoreList.setOnPseudoRemovedListener(listenerForPseudoRemoved);
+        ignoreListView.setNestedScrollingEnabled(false);
         ignoreListView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         ignoreListView.setLayoutManager(new LinearLayoutManager(this));
         ignoreListView.setAdapter(adapterForIgnoreList);

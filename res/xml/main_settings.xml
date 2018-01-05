@@ -7,45 +7,51 @@
         <Preference
             android:key="@string/subScreenSettingsGeneral"
             android:persistent="false"
-            android:title="@string/general"/>
+            android:title="@string/general"
+            android:summary="@string/generalSettingSummary"/>
 
         <Preference
-            android:key="@string/subScreenSettingsTheme"
+            android:key="@string/subScreenSettingsStyle"
             android:persistent="false"
-            android:title="@string/themeAndColors"/>
+            android:title="@string/style"
+            android:summary="@string/styleSettingSummary"/>
 
         <Preference
-            android:key="@string/subScreenSettingsMessageStyle"
+            android:key="@string/subScreenSettingsMessage"
             android:persistent="false"
-            android:title="@string/messageStyle"/>
+            android:title="@string/message"
+            android:summary="@string/messageSettingSummary"/>
 
         <Preference
             android:key="@string/subScreenSettingsBehaviour"
             android:persistent="false"
-            android:title="@string/behaviour"/>
+            android:title="@string/behaviour"
+            android:summary="@string/behaviourSettingSummary"/>
 
         <Preference
             android:key="@string/subScreenSettingsImageLink"
             android:persistent="false"
-            android:title="@string/imageAndLink"/>
+            android:title="@string/imageAndLink"
+            android:summary="@string/imageLinkSettingSummary"/>
 
         <Preference
             android:key="@string/subScreenSettingsIgnored"
             android:persistent="false"
-            android:title="@string/ignored"/>
+            android:title="@string/ignored"
+            android:summary="@string/ignoredSettingSummary"/>
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/information">
-        <Preference
-            android:key="@string/subScreenSettingsShowWebsite"
-            android:persistent="false"
-            android:title="@string/showWebsite"/>
-
+        android:title="@string/informations">
         <Preference
             android:key="@string/subScreenSettingsHelp"
             android:persistent="false"
             android:title="@string/help"/>
+
+        <Preference
+            android:key="@string/subScreenSettingsShowWebsite"
+            android:persistent="false"
+            android:title="@string/showWebsite"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -38,6 +38,7 @@ import com.franckrj.respawnirc.base.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.PageNavigationUtil;
 import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
 import com.franckrj.respawnirc.utils.AddOrRemoveThingToFavs;
+import com.franckrj.respawnirc.utils.AddOrRemoveTopicToSubs;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.ThemeManager;
@@ -47,9 +48,9 @@ import java.util.ArrayList;
 
 public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCTopicGetter.NewForumAndTopicNameAvailable,
                                                                         PopupMenu.OnMenuItemClickListener, JVCTopicModeForumGetter.NewNumbersOfPagesListener,
-                                                                        ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCTopicAdapter.URLClicked,
-                                                                        AbsJVCTopicGetter.NewReasonForTopicLock, InsertStuffDialogFragment.StuffInserted, MessageMenuDialogFragment.NewPseudoIgnored,
-                                                                        PageNavigationUtil.PageNavigationFunctions, AddOrRemoveThingToFavs.ActionToFavsEnded, AbsJVCTopicGetter.TopicLinkChanged,
+                                                                        ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCTopicAdapter.URLClicked, AbsJVCTopicGetter.NewReasonForTopicLock,
+                                                                        InsertStuffDialogFragment.StuffInserted, MessageMenuDialogFragment.NewPseudoIgnored, PageNavigationUtil.PageNavigationFunctions,
+                                                                        AddOrRemoveThingToFavs.ActionToFavsEnded, AddOrRemoveTopicToSubs.ActionToSubsEnded, AbsJVCTopicGetter.TopicLinkChanged,
                                                                         AbsShowTopicFragment.NewSurveyNeedToBeShown, JVCTopicAdapter.PseudoClicked, AbsJVCTopicGetter.NewPseudoOfAuthorAvailable {
     public static final String EXTRA_TOPIC_LINK = "com.franckrj.respawnirc.EXTRA_TOPIC_LINK";
     public static final String EXTRA_TOPIC_NAME = "com.franckrj.respawnirc.EXTRA_TOPIC_NAME";
@@ -75,6 +76,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     private String cookieListInAString = "";
     private String lastMessageSended = "";
     private AddOrRemoveThingToFavs currentTaskForFavs = null;
+    private AddOrRemoveTopicToSubs currentTaskForSubs = null;
     private String reasonOfLock = null;
     private ImageButton insertStuffButton = null;
     private PageNavigationUtil pageNavigation = new PageNavigationUtil(this);
@@ -83,7 +85,6 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     private boolean showOverviewOnImageClick = false;
     private boolean goToLastPageAfterLoading = false;
     private boolean goToBottomOnLoadIsEnabled = true;
-    private boolean postAsModoWhenPossible = true;
     private DraftUtils utilsForDraft = new DraftUtils(PrefsManager.SaveDraftType.ALWAYS, PrefsManager.BoolPref.Names.USE_LAST_MESSAGE_DRAFT_SAVED);
 
     private final JVCMessageToTopicSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageToTopicSender.NewMessageWantEditListener() {
@@ -142,7 +143,8 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                         if (getCurrentFragment().getLatestListOfInputInAString(false) != null) {
                             messageSendButton.setEnabled(false);
                             tmpLastMessageSended = messageSendEdit.getText().toString();
-                            messageIsSended = senderForMessages.sendThisMessage(tmpLastMessageSended, pageNavigation.getCurrentPageLink(), getCurrentFragment().getLatestListOfInputInAString(postAsModoWhenPossible), cookieListInAString);
+                            messageIsSended = senderForMessages.sendThisMessage(tmpLastMessageSended, pageNavigation.getCurrentPageLink(),
+                                                                                getCurrentFragment().getLatestListOfInputInAString(PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE)), cookieListInAString);
                         }
 
                         if (!messageIsSended) {
@@ -211,11 +213,11 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
             popup.getMenuInflater().inflate(R.menu.menu_sendmessage_action, popup.getMenu());
             popup.setOnMenuItemClickListener(onSendmessageActionClickedListener);
-            postAsModoItem = popup.getMenu().findItem(R.id.enable_postasmodo_sendmessage_action);
 
-            if (postAsModoItem != null) {
-                postAsModoItem.setChecked(PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE));
-            }
+            postAsModoItem = popup.getMenu().findItem(R.id.enable_postasmodo_sendmessage_action);
+            postAsModoItem.setChecked(PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE));
+            postAsModoItem.setEnabled(getCurrentFragment().getUserCanPostAsModo());
+            popup.getMenu().findItem(R.id.action_past_last_message_sended_showtopic).setEnabled(!lastMessageSended.isEmpty());
 
             popup.show();
 
@@ -238,6 +240,11 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                     builder.setTitle(R.string.deleteMessage).setMessage(R.string.deleteCurrentWritedMessageWarning)
                             .setPositiveButton(R.string.yes, onClickInDeleteCurrentWritedMessageConfirmationListener).setNegativeButton(R.string.no, null);
                     builder.show();
+                    return true;
+                case R.id.action_past_last_message_sended_showtopic:
+                    if (reasonOfLock == null) {
+                        messageSendEdit.setText(lastMessageSended);
+                    }
                     return true;
                 default:
                     return false;
@@ -303,6 +310,10 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             currentTaskForFavs.clearListenersAndCancel();
             currentTaskForFavs = null;
         }
+        if (currentTaskForSubs != null) {
+            currentTaskForSubs.clearListenersAndCancel();
+            currentTaskForSubs = null;
+        }
         actionsForMessages.stopAllCurrentTasks();
         senderForMessages.stopAllCurrentTask();
     }
@@ -315,7 +326,6 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         linkTypeForInternalBrowser.setTypeFromString(PrefsManager.getString(PrefsManager.StringPref.Names.LINK_TYPE_FOR_INTERNAL_BROWSER));
         convertNoelshackLinkToDirectLink = PrefsManager.getBool(PrefsManager.BoolPref.Names.USE_DIRECT_NOELSHACK_LINK);
         showOverviewOnImageClick = PrefsManager.getBool(PrefsManager.BoolPref.Names.SHOW_OVERVIEW_ON_IMAGE_CLICK);
-        postAsModoWhenPossible = PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE);
         utilsForDraft.loadPrefsInfos();
     }
 
@@ -500,23 +510,36 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        menu.findItem(R.id.action_past_last_message_sended_showtopic).setEnabled(!lastMessageSended.isEmpty());
 
+        MenuItem favItem = menu.findItem(R.id.action_change_topic_fav_value_showtopic);
+        MenuItem subItem = menu.findItem(R.id.action_change_topic_sub_value_showtopic);
+
+        favItem.setEnabled(false);
+        subItem.setEnabled(false);
         if (!pseudoOfUser.isEmpty() && getCurrentFragment() != null) {
             menu.findItem(R.id.action_lock_topic_showtopic).setEnabled(getCurrentFragment().getUserCanLockTopic());
+
             if (getCurrentFragment().getIsInFavs() != null) {
-                menu.findItem(R.id.action_change_topic_fav_value_showtopic).setEnabled(true);
+                favItem.setEnabled(true);
                 if (getCurrentFragment().getIsInFavs()) {
-                    menu.findItem(R.id.action_change_topic_fav_value_showtopic).setTitle(R.string.removeOfFavs);
+                    favItem.setTitle(R.string.removeFromFavs);
                 } else {
-                    menu.findItem(R.id.action_change_topic_fav_value_showtopic).setTitle(R.string.addToFavs);
+                    favItem.setTitle(R.string.addToFavs);
                 }
-                return true;
+            }
+
+            if (getCurrentFragment().getSubId() != null) {
+                subItem.setEnabled(true);
+                if (getCurrentFragment().getSubId().isEmpty()) {
+                    subItem.setTitle(R.string.subToTopic);
+                } else {
+                    subItem.setTitle(R.string.unsubFromTopic);
+                }
             }
         } else {
             menu.findItem(R.id.action_lock_topic_showtopic).setEnabled(false);
         }
-        menu.findItem(R.id.action_change_topic_fav_value_showtopic).setEnabled(false);
+
         return true;
     }
 
@@ -524,11 +547,27 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_change_topic_fav_value_showtopic:
-                if (currentTaskForFavs == null) {
-                    currentTaskForFavs = new AddOrRemoveThingToFavs(!getCurrentFragment().getIsInFavs(), this);
-                    currentTaskForFavs.execute(JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), getCurrentFragment().getTopicId(), getCurrentFragment().getLatestAjaxInfos().pref, cookieListInAString);
+                if (getCurrentFragment().getIsInFavs() != null) {
+                    if (currentTaskForFavs == null) {
+                        currentTaskForFavs = new AddOrRemoveThingToFavs(!getCurrentFragment().getIsInFavs(), this);
+                        currentTaskForFavs.execute(JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), getCurrentFragment().getTopicId(), getCurrentFragment().getLatestAjaxInfos().pref, cookieListInAString);
+                    } else {
+                        Toast.makeText(ShowTopicActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(ShowTopicActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ShowTopicActivity.this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            case R.id.action_change_topic_sub_value_showtopic:
+                if (getCurrentFragment().getSubId() != null) {
+                    if (currentTaskForSubs == null) {
+                        currentTaskForSubs = new AddOrRemoveTopicToSubs(getCurrentFragment().getSubId().isEmpty(), this);
+                        currentTaskForSubs.execute(getCurrentFragment().getTopicId(), getCurrentFragment().getSubId(), getCurrentFragment().getLatestAjaxInfos().sub, cookieListInAString);
+                    } else {
+                        Toast.makeText(ShowTopicActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(ShowTopicActivity.this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
                 }
                 return true;
             case R.id.action_lock_topic_showtopic:
@@ -541,11 +580,6 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 return true;
             case R.id.action_open_in_browser_showtopic:
                 Utils.openCorrespondingBrowser(linkTypeForInternalBrowser, pageNavigation.getCurrentPageLink(), this);
-                return true;
-            case R.id.action_past_last_message_sended_showtopic:
-                if (reasonOfLock == null) {
-                    messageSendEdit.setText(lastMessageSended);
-                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -576,6 +610,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             PrefsManager.putInt(PrefsManager.IntPref.Names.CURRENT_TOPIC_MODE, newMode);
             PrefsManager.applyChanges();
             updateShowNavigationButtons();
+            pageNavigation.setCurrentLink(pageNavigation.getFirstPageLink());
             pageNavigation.updateAdapterForPagerView();
 
             if (newMode == AbsShowTopicFragment.MODE_FORUM) {
@@ -843,14 +878,37 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             Toast.makeText(this, resultInString, Toast.LENGTH_SHORT).show();
         } else {
             if (currentTaskForFavs.getAddToFavs()) {
-                resultInString = getString(R.string.favAdded);
+                Toast.makeText(this, R.string.favAdded, Toast.LENGTH_SHORT).show();
             } else {
-                resultInString = getString(R.string.favRemoved);
+                Toast.makeText(this, R.string.favRemoved, Toast.LENGTH_SHORT).show();
             }
-            Toast.makeText(this, resultInString, Toast.LENGTH_SHORT).show();
-            getCurrentFragment().setIsInFavs(currentTaskForFavs.getAddToFavs());
+
+            if (getCurrentFragment() != null) {
+                getCurrentFragment().setIsInFavs(currentTaskForFavs.getAddToFavs());
+            }
         }
         currentTaskForFavs = null;
+    }
+
+    @Override
+    public void getActionToSubsResult(String resultInString, boolean itsAnError) {
+        if (itsAnError) {
+            if (resultInString.isEmpty()) {
+                resultInString = getString(R.string.errorInfosMissings);
+            }
+            Toast.makeText(this, resultInString, Toast.LENGTH_SHORT).show();
+        } else {
+            if (currentTaskForSubs.getAddToSubs()) {
+                Toast.makeText(this, R.string.subAdded, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, R.string.subRemoved, Toast.LENGTH_SHORT).show();
+            }
+
+            if (getCurrentFragment() != null) {
+                getCurrentFragment().setSubId(resultInString);
+            }
+        }
+        currentTaskForSubs = null;
     }
 
     @Override

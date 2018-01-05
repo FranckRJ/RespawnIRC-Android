@@ -48,7 +48,6 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     private PrefsManager.LinkType linkTypeForInternalBrowser = new PrefsManager.LinkType(PrefsManager.LinkType.NO_LINKS);
     private String currentNumberOfMp = null;
     private String currentNumberOfNotif = null;
-    private boolean postAsModoWhenPossible = true;
 
     private final View.OnLongClickListener showForumTitleListener = new View.OnLongClickListener() {
         @Override
@@ -223,7 +222,6 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         dontConsumeRefreshOnNextResume = false;
 
         linkTypeForInternalBrowser.setTypeFromString(PrefsManager.getString(PrefsManager.StringPref.Names.LINK_TYPE_FOR_INTERNAL_BROWSER));
-        postAsModoWhenPossible = PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE);
     }
 
     @Override
@@ -257,20 +255,22 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
+        MenuItem favItem = menu.findItem(R.id.action_change_forum_fav_value_showforum);
+
         menu.findItem(R.id.action_search_topic_showforum).setEnabled(!pageNavigation.getCurrentLinkIsEmpty());
-        menu.findItem(R.id.action_change_forum_fav_value_showforum).setEnabled(false);
+        favItem.setEnabled(false);
         menu.findItem(R.id.action_share_showforum).setEnabled(!pageNavigation.getCurrentLinkIsEmpty());
         updateShareAction();
 
         if (getCurrentFragment() != null) {
-            menu.findItem(R.id.action_send_topic_showforum).setEnabled(!Utils.stringIsEmptyOrNull(getCurrentFragment().getLatestListOfInputInAString(false)) && !pageNavigation.getCurrentLinkIsEmpty());
+            menu.findItem(R.id.action_send_topic_showforum).setEnabled(!Utils.stringIsEmptyOrNull(getCurrentFragment().getLatestListOfInputInAString()) && !pageNavigation.getCurrentLinkIsEmpty());
 
             if (!pseudoOfUser.isEmpty() && getCurrentFragment().getIsInFavs() != null) {
-                menu.findItem(R.id.action_change_forum_fav_value_showforum).setEnabled(true);
+                favItem.setEnabled(true);
                 if (getCurrentFragment().getIsInFavs()) {
-                    menu.findItem(R.id.action_change_forum_fav_value_showforum).setTitle(R.string.removeOfFavs);
+                    favItem.setTitle(R.string.removeFromFavs);
                 } else {
-                    menu.findItem(R.id.action_change_forum_fav_value_showforum).setTitle(R.string.addToFavs);
+                    favItem.setTitle(R.string.addToFavs);
                 }
             }
         } else {
@@ -305,7 +305,8 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
                 Intent newSendTopicIntent = new Intent(this, SendTopicToForumActivity.class);
                 newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_FORUM_NAME, currentTitle);
                 newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_FORUM_LINK, pageNavigation.getCurrentPageLink());
-                newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_INPUT_LIST, getCurrentFragment().getLatestListOfInputInAString(postAsModoWhenPossible));
+                newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_INPUT_LIST, getCurrentFragment().getLatestListOfInputInAString());
+                newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_USER_CAN_POST_AS_MODO, getCurrentFragment().getUserCanPostAsModo());
                 startActivityForResult(newSendTopicIntent, SEND_TOPIC_REQUEST_CODE);
                 refreshNeededOnNextResume = true;
                 return true;
