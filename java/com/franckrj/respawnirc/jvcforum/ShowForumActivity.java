@@ -48,7 +48,6 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     private PrefsManager.LinkType linkTypeForInternalBrowser = new PrefsManager.LinkType(PrefsManager.LinkType.NO_LINKS);
     private String currentNumberOfMp = null;
     private String currentNumberOfNotif = null;
-    private boolean postAsModoWhenPossible = true;
 
     private final View.OnLongClickListener showForumTitleListener = new View.OnLongClickListener() {
         @Override
@@ -223,7 +222,6 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         dontConsumeRefreshOnNextResume = false;
 
         linkTypeForInternalBrowser.setTypeFromString(PrefsManager.getString(PrefsManager.StringPref.Names.LINK_TYPE_FOR_INTERNAL_BROWSER));
-        postAsModoWhenPossible = PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE);
     }
 
     @Override
@@ -265,7 +263,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         updateShareAction();
 
         if (getCurrentFragment() != null) {
-            menu.findItem(R.id.action_send_topic_showforum).setEnabled(!Utils.stringIsEmptyOrNull(getCurrentFragment().getLatestListOfInputInAString(false)) && !pageNavigation.getCurrentLinkIsEmpty());
+            menu.findItem(R.id.action_send_topic_showforum).setEnabled(!Utils.stringIsEmptyOrNull(getCurrentFragment().getLatestListOfInputInAString()) && !pageNavigation.getCurrentLinkIsEmpty());
 
             if (!pseudoOfUser.isEmpty() && getCurrentFragment().getIsInFavs() != null) {
                 favItem.setEnabled(true);
@@ -307,7 +305,8 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
                 Intent newSendTopicIntent = new Intent(this, SendTopicToForumActivity.class);
                 newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_FORUM_NAME, currentTitle);
                 newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_FORUM_LINK, pageNavigation.getCurrentPageLink());
-                newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_INPUT_LIST, getCurrentFragment().getLatestListOfInputInAString(postAsModoWhenPossible));
+                newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_INPUT_LIST, getCurrentFragment().getLatestListOfInputInAString());
+                newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_USER_CAN_POST_AS_MODO, getCurrentFragment().getUserCanPostAsModo());
                 startActivityForResult(newSendTopicIntent, SEND_TOPIC_REQUEST_CODE);
                 refreshNeededOnNextResume = true;
                 return true;

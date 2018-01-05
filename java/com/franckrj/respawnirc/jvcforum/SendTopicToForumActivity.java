@@ -31,6 +31,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
     public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_FORUM_NAME";
     public static final String EXTRA_FORUM_LINK = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_FORUM_LINK";
     public static final String EXTRA_INPUT_LIST = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_INPUT_LIST";
+    public static final String EXTRA_USER_CAN_POST_AS_MODO = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_USER_CAN_POST_AS_MODO";
     public static final String RESULT_EXTRA_TOPIC_LINK_TO_MOVE = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_TOPIC_LINK_TO_MOVE";
 
     private static final int MANAGE_SURVEY_REQUEST_CODE = 456;
@@ -47,6 +48,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
     private String lastSurveyTitleSended = "";
     private String lastSurveyReplySendedInAString = "";
     private DraftUtils utilsForDraft = new DraftUtils(PrefsManager.SaveDraftType.ALWAYS, PrefsManager.BoolPref.Names.USE_LAST_TOPIC_DRAFT_SAVED);
+    private boolean userCanPostAsModo = false;
 
     private final View.OnClickListener insertStuffButtonClicked = new View.OnClickListener() {
         @Override
@@ -119,6 +121,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
 
             currentInfos.topicTitle = lastTopicTitleSended;
             currentInfos.topicContent = lastTopicContentSended;
+            currentInfos.postAsModo = userCanPostAsModo && PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE);
 
             currentAsyncTaskForSendTopic = new SendTopicToJVC();
             currentAsyncTaskForSendTopic.setRequestIsFinishedListener(sendTopicIsFinishedListener);
@@ -212,6 +215,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
             if (getIntent().getStringExtra(EXTRA_INPUT_LIST) != null) {
                 currentInfos.listOfInputsInAstring = getIntent().getStringExtra(EXTRA_INPUT_LIST);
             }
+            userCanPostAsModo = getIntent().getBooleanExtra(EXTRA_USER_CAN_POST_AS_MODO, false);
         }
 
         initializeSettings();
@@ -270,6 +274,11 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
+
+        MenuItem postAsModoItem = menu.findItem(R.id.enable_postasmodo_sendtopic);
+        postAsModoItem.setChecked(PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE));
+        postAsModoItem.setEnabled(userCanPostAsModo);
+
         menu.findItem(R.id.action_past_last_topic_sended_sendtopic).setEnabled(!lastTopicTitleSended.isEmpty() || !lastTopicContentSended.isEmpty() ||
                                                                                !lastSurveyTitleSended.isEmpty() || !lastSurveyReplySendedInAString.isEmpty());
         return true;
@@ -281,18 +290,24 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
             case R.id.action_send_topic_sendtopic:
                 sendNewTopic();
                 return true;
-            case R.id.action_past_last_topic_sended_sendtopic:
-                topicTitleEdit.setText(lastTopicTitleSended);
-                topicContentEdit.setText(lastTopicContentSended);
-                currentInfos.surveyTitle = lastSurveyTitleSended;
-                currentInfos.surveyReplysList = surveyReplyStringToList(lastSurveyReplySendedInAString);
-                updateManageSurveyButtonText();
+            case R.id.enable_postasmodo_sendtopic:
+                /* La valeur de isChecked est inversée car le changement d'état ne se fait pas automatiquement
+                 * donc c'est la valeur avant d'avoir cliqué qui est retournée. */
+                PrefsManager.putBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE, !item.isChecked());
+                PrefsManager.applyChanges();
                 return true;
             case R.id.action_clear_whole_topic_and_survey_sendtopic:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(R.string.deleteTopic).setMessage(R.string.deleteWholeTopicWarning)
                         .setPositiveButton(R.string.yes, onClickInClearWholeTopicConfirmationListener).setNegativeButton(R.string.no, null);
                 builder.show();
+                return true;
+            case R.id.action_past_last_topic_sended_sendtopic:
+                topicTitleEdit.setText(lastTopicTitleSended);
+                topicContentEdit.setText(lastTopicContentSended);
+                currentInfos.surveyTitle = lastSurveyTitleSended;
+                currentInfos.surveyReplysList = surveyReplyStringToList(lastSurveyReplySendedInAString);
+                updateManageSurveyButtonText();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -341,6 +356,12 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
                                                                                 .append("&message_topic=").append(Utils.encodeStringToUrlString(infosOfSend[0].topicContent))
                                                                                 .append(infosOfSend[0].listOfInputsInAstring);
 
+                if (infosOfSend[0].postAsModo) {
+                    requestBuilder.append("&form_alias_rang=2");
+                } else {
+                    requestBuilder.append("&form_alias_rang=1");
+                }
+
                 if (!Utils.stringIsEmptyOrNull(infosOfSend[0].surveyTitle)) {
                     requestBuilder.append("&submit_sondage=1&question_sondage=").append(Utils.encodeStringToUrlString(infosOfSend[0].surveyTitle));
 
@@ -378,6 +399,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
         private String topicContent = "";
         private String surveyTitle = "";
         private ArrayList<String> surveyReplysList = new ArrayList<>();
+        private boolean postAsModo = false;
 
         public SendTopicInfos() {}
 
@@ -389,6 +411,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
             topicContent = baseForCopy.topicContent;
             surveyTitle = baseForCopy.surveyTitle;
             surveyReplysList = new ArrayList<>(baseForCopy.surveyReplysList);
+            postAsModo = baseForCopy.postAsModo;
         }
     }
 }

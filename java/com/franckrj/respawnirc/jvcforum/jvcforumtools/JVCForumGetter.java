@@ -130,12 +130,8 @@ public class JVCForumGetter {
         return isInFavs;
     }
 
-    public String getLatestListOfInputInAString(boolean tryToPostAsModo) {
-        if (!Utils.stringIsEmptyOrNull(latestListOfInputInAString)) {
-            return latestListOfInputInAString + (tryToPostAsModo && userCanPostAsModo ? "&form_alias_rang=2" : "&form_alias_rang=1");
-        } else {
-            return latestListOfInputInAString;
-        }
+    public String getLatestListOfInputInAString() {
+        return latestListOfInputInAString;
     }
 
     public ErrorType getLastTypeOfError() {
@@ -144,6 +140,10 @@ public class JVCForumGetter {
 
     public boolean getIsInSearchMode() {
         return isInSearchMode;
+    }
+
+    public boolean getUserCanPostAsModo() {
+        return userCanPostAsModo;
     }
 
     public void setIsInFavs(Boolean newVal) {
