@@ -66,6 +66,16 @@
             android:key="@string/settingsMessageFontSize"
             android:title="@string/messageFontSizeTitle"
             android:numeric="integer"/>
+
+        <EditTextPreference
+            android:key="@string/settingsMessageInfosFontSize"
+            android:title="@string/messageInfosFontSizeTitle"
+            android:numeric="integer"/>
+
+        <EditTextPreference
+            android:key="@string/settingsMessageSignatureFontSize"
+            android:title="@string/messageSignatureFontSizeTitle"
+            android:numeric="integer"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -266,6 +266,8 @@
     <string name="topicTitleFontSizeTitle">Taille du titre des topics (en sp)</string>
     <string name="topicInfosFontSizeTitle">Taille des informations des topics (en sp)</string>
     <string name="messageFontSizeTitle">Taille des messages (en sp)</string>
+    <string name="messageInfosFontSizeTitle">Taille des informations des messages (en sp)</string>
+    <string name="messageSignatureFontSizeTitle">Taille des signatures (en sp)</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>

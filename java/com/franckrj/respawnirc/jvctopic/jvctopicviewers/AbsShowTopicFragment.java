@@ -156,6 +156,8 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         userIsConnectedAsModo = PrefsManager.getBool(PrefsManager.BoolPref.Names.USER_IS_MODO);
         hideTotallyMessagesOfIgnoredPseudos = PrefsManager.getBool(PrefsManager.BoolPref.Names.HIDE_TOTALLY_MESSAGES_OF_IGNORED_PSEUDOS);
         adapterForTopic.setMessageFontSizeInSp(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MESSAGE_FONT_SIZE)));
+        adapterForTopic.setMessageInfosFontSizeInSp(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MESSAGE_INFOS_FONT_SIZE)));
+        adapterForTopic.setMessageSignatureFontSizeInSp(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MESSAGE_SIGNATURE_FONT_SIZE)));
     }
 
     protected void updateSettingsDependingOnConnection() {

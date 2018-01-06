@@ -71,6 +71,8 @@ public class JVCTopicAdapter extends BaseAdapter {
     private boolean userIsModo = false;
     private int avatarSize = -1;
     private int messageFontSizeInSp = 14;
+    private int messageInfosFontSizeInSp = 14;
+    private int messageSignatureFontSizeInSp = 14;
 
     @SuppressWarnings("FieldCanBeLocal")
     private final ImageDownloader.DownloadFinished listenerForDownloadFinished = new ImageDownloader.DownloadFinished() {
@@ -234,6 +236,14 @@ public class JVCTopicAdapter extends BaseAdapter {
 
     public void setMessageFontSizeInSp(int newVal) {
         messageFontSizeInSp = newVal;
+    }
+
+    public void setMessageInfosFontSizeInSp(int newVal) {
+        messageInfosFontSizeInSp = newVal;
+    }
+
+    public void setMessageSignatureFontSizeInSp(int newVal) {
+        messageSignatureFontSizeInSp = newVal;
     }
 
     public void enableSurvey(String newSurveyTitle) {
@@ -585,6 +595,8 @@ public class JVCTopicAdapter extends BaseAdapter {
             showMenuButton = itemView.findViewById(R.id.menuoverflow_image_jvcmessages_row);
 
             messageLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, messageFontSizeInSp);
+            infoLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, messageInfosFontSizeInSp);
+            signatureLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, messageSignatureFontSizeInSp);
             messageLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
             signatureLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
             showMenuButton.setOnClickListener(menuButtonClicked);
