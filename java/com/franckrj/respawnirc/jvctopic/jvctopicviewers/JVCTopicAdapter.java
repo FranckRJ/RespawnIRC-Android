@@ -18,6 +18,7 @@ import android.text.style.LeadingMarginSpan;
 import android.text.style.LineBackgroundSpan;
 import android.text.style.QuoteSpan;
 import android.text.style.URLSpan;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -69,6 +70,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     private float multiplierOfLineSizeForInfoLineIfAvatarIsShowed = 0;
     private boolean userIsModo = false;
     private int avatarSize = -1;
+    private int messageFontSizeInSp = 14;
 
     @SuppressWarnings("FieldCanBeLocal")
     private final ImageDownloader.DownloadFinished listenerForDownloadFinished = new ImageDownloader.DownloadFinished() {
@@ -228,6 +230,10 @@ public class JVCTopicAdapter extends BaseAdapter {
     public void setMiniNoeslahckSizeByWidth(int newWidth) {
         int newHeight = Utils.roundToInt(newWidth * 0.75);
         downloaderForImage.setImagesSize(newWidth, newHeight, true);
+    }
+
+    public void setMessageFontSizeInSp(int newVal) {
+        messageFontSizeInSp = newVal;
     }
 
     public void enableSurvey(String newSurveyTitle) {
@@ -571,13 +577,14 @@ public class JVCTopicAdapter extends BaseAdapter {
         public final ImageButton showMenuButton;
 
         public CustomViewHolder(View itemView) {
-            infoLine = itemView.findViewById(R.id.item_one_jvcmessages_text_row);
-            avatarImage = itemView.findViewById(R.id.image_one_jvcmessages_text_row);
-            messageLine = itemView.findViewById(R.id.item_two_jvcmessages_text_row);
-            signatureLine = itemView.findViewById(R.id.item_three_jvcmessages_text_row);
-            separator = itemView.findViewById(R.id.item_separator_jvcmessages_text_row);
-            showMenuButton = itemView.findViewById(R.id.menu_overflow_row);
+            infoLine = itemView.findViewById(R.id.infos_text_jvcmessages_row);
+            avatarImage = itemView.findViewById(R.id.avatar_image_jvcmessages_row);
+            messageLine = itemView.findViewById(R.id.message_text_jvcmessages_row);
+            signatureLine = itemView.findViewById(R.id.signature_text_jvcmessages_row);
+            separator = itemView.findViewById(R.id.separator_view_jvcmessages_row);
+            showMenuButton = itemView.findViewById(R.id.menuoverflow_image_jvcmessages_row);
 
+            messageLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, messageFontSizeInSp);
             messageLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
             signatureLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
             showMenuButton.setOnClickListener(menuButtonClicked);

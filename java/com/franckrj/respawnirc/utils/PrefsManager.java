@@ -131,6 +131,7 @@ public class PrefsManager {
         addStringPref(StringPref.Names.SAVE_MESSAGES_AND_TOPICS_AS_DRAFT_TYPE, currentContext.getString(R.string.settingsSaveMessagesAndTopicsAsDraftType), String.valueOf(SaveDraftType.ALWAYS));
         addStringPref(StringPref.Names.TOPIC_TITLE_FONT_SIZE, currentContext.getString(R.string.settingsTopicTitleFontSize), "14", 8, 20);
         addStringPref(StringPref.Names.TOPIC_INFOS_FONT_SIZE, currentContext.getString(R.string.settingsTopicInfosFontSize), "14", 8, 20);
+        addStringPref(StringPref.Names.MESSAGE_FONT_SIZE, currentContext.getString(R.string.settingsMessageFontSize), "14", 8, 20);
     }
 
     public static boolean getBool(BoolPref.Names prefName) {
@@ -367,7 +368,7 @@ public class PrefsManager {
             LINK_TYPE_FOR_INTERNAL_BROWSER,
             SAVE_MESSAGES_AND_TOPICS_AS_DRAFT_TYPE,
             MESSAGE_DRAFT, TOPIC_TITLE_DRAFT, TOPIC_CONTENT_DRAFT, SURVEY_TITLE_DRAFT, SURVEY_REPLY_IN_A_STRING_DRAFT,
-            TOPIC_TITLE_FONT_SIZE, TOPIC_INFOS_FONT_SIZE
+            TOPIC_TITLE_FONT_SIZE, TOPIC_INFOS_FONT_SIZE, MESSAGE_FONT_SIZE
         }
     }
 
