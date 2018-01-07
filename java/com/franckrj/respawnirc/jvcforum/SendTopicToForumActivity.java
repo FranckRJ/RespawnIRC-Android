@@ -146,7 +146,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
     }
 
     private void updatePostTypeTextAndVisibility() {
-        if (PrefsManager.getBool(PrefsManager.BoolPref.Names.USER_IS_MODO)) {
+        if (PrefsManager.getBool(PrefsManager.BoolPref.Names.USER_IS_MODO) || userCanPostAsModo) {
             postTypeText.setVisibility(View.VISIBLE);
 
             if (userCanPostAsModo && PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE)) {

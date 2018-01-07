@@ -3,6 +3,7 @@ package com.franckrj.respawnirc.jvctopic;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -47,7 +48,7 @@ import com.franckrj.respawnirc.utils.Utils;
 import java.util.ArrayList;
 
 public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCTopicGetter.NewForumAndTopicNameAvailable,
-                                                                        PopupMenu.OnMenuItemClickListener, JVCTopicModeForumGetter.NewNumbersOfPagesListener,
+                                                                        PopupMenu.OnMenuItemClickListener, JVCTopicModeForumGetter.NewNumbersOfPagesListener, AbsJVCTopicGetter.NewUserCanPostAsModoInfoAvailable,
                                                                         ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCTopicAdapter.URLClicked, AbsJVCTopicGetter.NewReasonForTopicLock,
                                                                         InsertStuffDialogFragment.StuffInserted, MessageMenuDialogFragment.NewPseudoIgnored, PageNavigationUtil.PageNavigationFunctions,
                                                                         AddOrRemoveThingToFavs.ActionToFavsEnded, AddOrRemoveTopicToSubs.ActionToSubsEnded, AbsJVCTopicGetter.TopicLinkChanged,
@@ -64,6 +65,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     private static final String SAVE_LAST_PAGE = "saveLastPage";
     private static final String SAVE_REASON_OF_LOCK = "saveReasonOfLock";
     private static final String SAVE_GO_TO_LAST_PAGE_AFTER_LOADING = "saveGoToLastPageAfterLoading";
+    private static final String SAVE_USER_CAN_POST_AS_MODO = "saveUserCanPostAsModo";
 
     private JVCParser.ForumAndTopicName currentTitles = new JVCParser.ForumAndTopicName();
     private JVCMessageToTopicSender senderForMessages = null;
@@ -86,6 +88,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     private boolean goToLastPageAfterLoading = false;
     private boolean goToBottomOnLoadIsEnabled = true;
     private DraftUtils utilsForDraft = new DraftUtils(PrefsManager.SaveDraftType.ALWAYS, PrefsManager.BoolPref.Names.USE_LAST_MESSAGE_DRAFT_SAVED);
+    private boolean userCanPostAsModo = false;
 
     private final JVCMessageToTopicSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageToTopicSender.NewMessageWantEditListener() {
         @Override
@@ -216,7 +219,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
             postAsModoItem = popup.getMenu().findItem(R.id.enable_postasmodo_sendmessage_action);
             postAsModoItem.setChecked(PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE));
-            postAsModoItem.setEnabled(getCurrentFragment().getUserCanPostAsModo());
+            postAsModoItem.setEnabled(userCanPostAsModo);
             popup.getMenu().findItem(R.id.action_past_last_message_sended_showtopic).setEnabled(!lastMessageSended.isEmpty());
 
             popup.show();
@@ -234,6 +237,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                      * donc c'est la valeur avant d'avoir cliqué qui est retournée. */
                     PrefsManager.putBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE, !item.isChecked());
                     PrefsManager.applyChanges();
+                    updatePostTypeNotice();
                     return true;
                 case R.id.delete_message_sendmessage_action:
                     AlertDialog.Builder builder = new AlertDialog.Builder(ShowTopicActivity.this);
@@ -347,6 +351,14 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         }
     }
 
+    private void updatePostTypeNotice() {
+        if (userCanPostAsModo && PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE)) {
+            insertStuffButton.setColorFilter(ThemeManager.getColorInt(R.attr.themedPseudoModoColor, this), PorterDuff.Mode.SRC_IN);
+        } else {
+            insertStuffButton.clearColorFilter();
+        }
+    }
+
     private void startEditThisMessage(String messageID, boolean useMessageToEdit) {
         boolean infoForEditAreGetted = false;
 
@@ -445,6 +457,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             pageNavigation.setLastPageNumber(savedInstanceState.getInt(SAVE_LAST_PAGE, pageNavigation.getCurrentItemIndex() + 1));
             getNewLockReason(savedInstanceState.getString(SAVE_REASON_OF_LOCK, null));
             goToLastPageAfterLoading = savedInstanceState.getBoolean(SAVE_GO_TO_LAST_PAGE_AFTER_LOADING, false);
+            userCanPostAsModo = savedInstanceState.getBoolean(SAVE_USER_CAN_POST_AS_MODO, false);
             pageNavigation.notifyDataSetChanged();
 
             senderForMessages.loadFromBundle(savedInstanceState);
@@ -455,6 +468,8 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
             pageNavigation.updateNavigationButtons();
         }
+
+        updatePostTypeNotice();
 
         if (myActionBar != null) {
             myActionBar.setTitle(currentTitles.forum);
@@ -497,6 +512,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         outState.putInt(SAVE_LAST_PAGE, pageNavigation.getLastPage());
         outState.putString(SAVE_REASON_OF_LOCK, reasonOfLock);
         outState.putBoolean(SAVE_GO_TO_LAST_PAGE_AFTER_LOADING, goToLastPageAfterLoading);
+        outState.putBoolean(SAVE_USER_CAN_POST_AS_MODO, userCanPostAsModo);
         senderForMessages.saveToBundle(outState);
     }
 
@@ -950,5 +966,11 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         if (currentFrag != null) {
             currentFrag.ignoreThisPseudoFromListOfMessages(newPseudoIgnored);
         }
+    }
+
+    @Override
+    public void getNewUserCanPostAsModo(boolean newUserCanPostAsModo) {
+        userCanPostAsModo = newUserCanPostAsModo;
+        updatePostTypeNotice();
     }
 }
