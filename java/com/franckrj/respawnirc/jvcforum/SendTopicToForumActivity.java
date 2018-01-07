@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.DraftUtils;
@@ -43,6 +44,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
     private EditText topicTitleEdit = null;
     private EditText topicContentEdit = null;
     private Button manageSurveyButton = null;
+    private TextView postTypeText = null;
     private String lastTopicTitleSended = "";
     private String lastTopicContentSended = "";
     private String lastSurveyTitleSended = "";
@@ -143,6 +145,20 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
         }
     }
 
+    private void updatePostTypeTextAndVisibility() {
+        if (PrefsManager.getBool(PrefsManager.BoolPref.Names.USER_IS_MODO) || userCanPostAsModo) {
+            postTypeText.setVisibility(View.VISIBLE);
+
+            if (userCanPostAsModo && PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE)) {
+                postTypeText.setText(R.string.topicPostTypeIsModo);
+            } else {
+                postTypeText.setText(R.string.topicPostTypeIsUser);
+            }
+        } else {
+            postTypeText.setVisibility(View.GONE);
+        }
+    }
+
     private void clearWholeTopicIncludingSurvey() {
         topicTitleEdit.setText("");
         topicContentEdit.setText("");
@@ -201,6 +217,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
         manageSurveyButton = findViewById(R.id.managesurvey_button_sendtopic);
         topicTitleEdit = findViewById(R.id.topic_title_edit_sendtopic);
         topicContentEdit = findViewById(R.id.topic_content_edit_sendtopic);
+        postTypeText = findViewById(R.id.text_posttype_sendtpopic);
 
         insertStuffButton.setOnClickListener(insertStuffButtonClicked);
         manageSurveyButton.setOnClickListener(manageSurveyButtonClicked);
@@ -234,6 +251,8 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
                 currentInfos.surveyReplysList = surveyReplyStringToList(PrefsManager.getString(PrefsManager.StringPref.Names.SURVEY_REPLY_IN_A_STRING_DRAFT));
             }
         }
+
+        updatePostTypeTextAndVisibility();
     }
 
     @Override
@@ -295,6 +314,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
                  * donc c'est la valeur avant d'avoir cliqué qui est retournée. */
                 PrefsManager.putBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE, !item.isChecked());
                 PrefsManager.applyChanges();
+                updatePostTypeTextAndVisibility();
                 return true;
             case R.id.action_clear_whole_topic_and_survey_sendtopic:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);

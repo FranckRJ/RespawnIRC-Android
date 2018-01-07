@@ -49,7 +49,6 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected boolean isInErrorMode = false;
     protected boolean cardDesignIsEnabled = false;
     protected boolean smoothScrollIsEnabled = true;
-    protected boolean userIsConnectedAsModo = false;
     protected boolean hideTotallyMessagesOfIgnoredPseudos = true;
 
     protected final AbsJVCTopicGetter.NewGetterStateListener listenerForNewGetterState = new AbsJVCTopicGetter.NewGetterStateListener() {
@@ -88,10 +87,10 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected final AbsJVCTopicGetter.NewUserCanPostAsModoInfoAvailable listenerForNewUserCanPostAsModo = new AbsJVCTopicGetter.NewUserCanPostAsModoInfoAvailable() {
         @Override
         public void getNewUserCanPostAsModo(boolean newUserCanPostAsModo) {
-            if (userIsConnectedAsModo) {
-                adapterForTopic.setUserIsModo(newUserCanPostAsModo);
-            } else {
-                adapterForTopic.setUserIsModo(false);
+            adapterForTopic.setUserIsModo(newUserCanPostAsModo);
+
+            if (getActivity() instanceof AbsJVCTopicGetter.NewUserCanPostAsModoInfoAvailable) {
+                ((AbsJVCTopicGetter.NewUserCanPostAsModoInfoAvailable) getActivity()).getNewUserCanPostAsModo(newUserCanPostAsModo);
             }
         }
     };
@@ -153,7 +152,6 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         adapterForTopic.setShowSpoilDefault(PrefsManager.getBool(PrefsManager.BoolPref.Names.DEFAULT_SHOW_SPOIL_VAL));
         adapterForTopic.setFastRefreshOfImages(PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_FAST_REFRESH_OF_IMAGES));
         adapterForTopic.setColorDeletedMessages(PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_COLOR_DELETED_MESSAGES));
-        userIsConnectedAsModo = PrefsManager.getBool(PrefsManager.BoolPref.Names.USER_IS_MODO);
         hideTotallyMessagesOfIgnoredPseudos = PrefsManager.getBool(PrefsManager.BoolPref.Names.HIDE_TOTALLY_MESSAGES_OF_IGNORED_PSEUDOS);
         adapterForTopic.setMessageFontSizeInSp(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MESSAGE_FONT_SIZE)));
         adapterForTopic.setMessageInfosFontSizeInSp(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MESSAGE_INFOS_FONT_SIZE)));
@@ -298,10 +296,6 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         return absGetterForTopic.getTopicId();
     }
 
-    public boolean getUserCanPostAsModo() {
-        return absGetterForTopic.getUserCanPostAsModo();
-    }
-
     public void setIsInFavs(Boolean newVal) {
         absGetterForTopic.setIsInFavs(newVal);
     }
@@ -408,10 +402,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             currentSettings.pseudoOfAuthor = savedInstanceState.getString(SAVE_SETTINGS_PSEUDO_OF_AUTHOR, "");
             allMessagesShowedAreFromIgnoredPseudos = savedInstanceState.getBoolean(SAVE_MESSAGES_ARE_FROM_IGNORED_PSEUDOS, false);
             absGetterForTopic.loadFromBundle(savedInstanceState);
-
-            if (userIsConnectedAsModo) {
-                adapterForTopic.setUserIsModo(absGetterForTopic.getUserCanPostAsModo());
-            }
+            adapterForTopic.setUserIsModo(absGetterForTopic.getUserCanPostAsModo());
 
             if (!Utils.stringIsEmptyOrNull(absGetterForTopic.getSurveyTitleInHtml())) {
                 adapterForTopic.enableSurvey(absGetterForTopic.getSurveyTitleInHtml());
