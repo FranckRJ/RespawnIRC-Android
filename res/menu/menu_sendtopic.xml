@@ -8,9 +8,13 @@
         android:icon="?attr/themedToolbarSendIcon"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/action_past_last_topic_sended_sendtopic"
-        android:title="@string/pastLastTopicSended"/>
+        android:id="@+id/enable_postasmodo_sendtopic"
+        android:title="@string/postAsModoMenuAction"
+        android:checkable="true"/>
     <item
         android:id="@+id/action_clear_whole_topic_and_survey_sendtopic"
         android:title="@string/deleteTopic"/>
+    <item
+        android:id="@+id/action_past_last_topic_sended_sendtopic"
+        android:title="@string/pastLastTopicSended"/>
 </menu>

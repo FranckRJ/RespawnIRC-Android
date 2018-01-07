@@ -2,8 +2,8 @@
 <resources>
     <string name="preference_file_key" translatable="false">com.franckrj.respawnirc.PREFERENCE_FILE_KEY</string>
     <string name="subScreenSettingsGeneral" translatable="false">subScreenSettings.general</string>
-    <string name="subScreenSettingsTheme" translatable="false">subScreenSettings.theme</string>
-    <string name="subScreenSettingsMessageStyle" translatable="false">subScreenSettings.messageStyle</string>
+    <string name="subScreenSettingsStyle" translatable="false">subScreenSettings.style</string>
+    <string name="subScreenSettingsMessage" translatable="false">subScreenSettings.message</string>
     <string name="subScreenSettingsBehaviour" translatable="false">subScreenSettings.behaviour</string>
     <string name="subScreenSettingsImageLink" translatable="false">subScreenSettings.imageLink</string>
     <string name="subScreenSettingsIgnored" translatable="false">subScreenSettings.ignored</string>

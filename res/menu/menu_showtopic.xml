@@ -5,12 +5,12 @@
         android:id="@+id/action_change_topic_fav_value_showtopic"
         android:title="@string/addToFavs"/>
     <item
+        android:id="@+id/action_change_topic_sub_value_showtopic"
+        android:title="@string/subToTopic"/>
+    <item
         android:id="@+id/action_lock_topic_showtopic"
         android:title="@string/lockTopic"/>
     <item
         android:id="@+id/action_open_in_browser_showtopic"
         android:title="@string/openInBrowser"/>
-    <item
-        android:id="@+id/action_past_last_message_sended_showtopic"
-        android:title="@string/pastLastMessageSended"/>
 </menu>

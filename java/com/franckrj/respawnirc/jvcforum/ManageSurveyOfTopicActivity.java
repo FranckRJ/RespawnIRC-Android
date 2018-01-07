@@ -91,6 +91,7 @@ public class ManageSurveyOfTopicActivity extends AbsHomeIsBackActivity {
         adapterForReplys = new SurveyReplysAdapter(this);
         validateButton.setOnClickListener(validateButtonClicked);
         addReplyButton.setOnClickListener(addReplyButtonClicked);
+        listOfReplys.setNestedScrollingEnabled(false);
         listOfReplys.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         listOfReplys.setLayoutManager(new LinearLayoutManager(this));
         listOfReplys.setAdapter(adapterForReplys);

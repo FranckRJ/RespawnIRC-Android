@@ -82,6 +82,7 @@ public class SurveyReplysAdapter extends RecyclerView.Adapter<SurveyReplysAdapte
         private EditText replyContent = null;
         private ImageButton actionButton = null;
         private int replyPos = -1;
+        private boolean saveReplyChanges = false;
 
         private final TextWatcher replyContentChanged = new TextWatcher() {
             @Override
@@ -96,7 +97,7 @@ public class SurveyReplysAdapter extends RecyclerView.Adapter<SurveyReplysAdapte
 
             @Override
             public void afterTextChanged(Editable newText) {
-                if (replyPos != -1) {
+                if (saveReplyChanges && replyPos >= 0 && replyPos < listOfReplyContent.size()) {
                     listOfReplyContent.set(replyPos, newText.toString());
                 }
             }
@@ -116,9 +117,12 @@ public class SurveyReplysAdapter extends RecyclerView.Adapter<SurveyReplysAdapte
         public void setCurrentReply(String content, int newPos) {
             replyPos = newPos;
             replyTitle.setText(replyTitleModel.replace("%n%", String.valueOf(replyPos + 1)));
+            actionButton.setTag(newPos);
+
+            saveReplyChanges = false;
             replyContent.setHint(replyContentHintModel.replace("%n%", String.valueOf(replyPos + 1)));
             replyContent.setText(content);
-            actionButton.setTag(newPos);
+            saveReplyChanges = true;
         }
     }
 }

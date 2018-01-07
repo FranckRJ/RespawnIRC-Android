@@ -19,6 +19,7 @@ public final class JVCParser {
     private static final Pattern ajaxModHashPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_hash_moderation_forum\" id=\"ajax_hash_moderation_forum\" value=\"([^\"]*)\" />");
     private static final Pattern ajaxPrefTimestampPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_timestamp_preference_user\" id=\"ajax_timestamp_preference_user\" value=\"([^\"]*)\" />");
     private static final Pattern ajaxPrefHashPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_hash_preference_user\" id=\"ajax_hash_preference_user\" value=\"([^\"]*)\" />");
+    private static final Pattern ajaxSubHashPattern = Pattern.compile("<body *data-abo-session=\"([^\"]*)\">");
     private static final Pattern messageQuotePattern = Pattern.compile("\"txt\":\"(.*)\"", Pattern.DOTALL);
     private static final Pattern entireMessagePattern = Pattern.compile("(<div class=\"bloc-message-forum[^\"]*\".*?)(<span id=\"post_[^\"]*\" class=\"bloc-message-forum-anchor\">|<div class=\"bloc-outils-plus-modo bloc-outils-bottom\">|<div class=\"bloc-pagi-default\">)", Pattern.DOTALL);
     private static final Pattern signaturePattern = Pattern.compile("<div class=\"signature-msg[^\"]*\">(.*?)</div>", Pattern.DOTALL);
@@ -39,7 +40,8 @@ public final class JVCParser {
     private static final Pattern unicodeInTextPattern = Pattern.compile("\\\\u([a-zA-Z0-9]{4})");
     private static final Pattern alertPattern = Pattern.compile("<div class=\"alert-row\">([^<]*)</div>");
     private static final Pattern errorBlocPattern = Pattern.compile("<div class=\"bloc-erreur\">([^<]*)</div>");
-    private static final Pattern errorInJsonModePattern = Pattern.compile("\"erreur\":\\[\"([^\"]*)\"");
+    private static final Pattern errorInJsonModePattern = Pattern.compile("\"(erreur|error)\":(\\[)?\"([^\"]*)\"");
+    private static final Pattern subIdInJsonPattern = Pattern.compile("\"id-abonnement\":([0-9]*)");
     private static final Pattern codeBlockPattern = Pattern.compile("<pre class=\"pre-jv\"><code class=\"code-jv\">([^<]*)</code></pre>");
     private static final Pattern codeLinePattern = Pattern.compile("<code class=\"code-jv\">(.*?)</code>", Pattern.DOTALL);
     private static final Pattern spoilLinePattern = Pattern.compile("<div class=\"bloc-spoil-jv en-ligne\">.*?<div class=\"contenu-spoil\">(.*?)</div></div>", Pattern.DOTALL);
@@ -67,6 +69,8 @@ public final class JVCParser {
     private static final Pattern forumInSearchPagePattern = Pattern.compile("<a class=\"list-search-forum-name\" href=\"([^\"]*)\"[^>]*>(.*?)</a>");
     private static final Pattern isInFavPattern = Pattern.compile("<span class=\"picto-favoris([^\"]*)\"");
     private static final Pattern topicIdInTopicPagePattern = Pattern.compile("<div (.*?)data-topic-id=\"([^\"]*)\">");
+    private static final Pattern isInSubInTopicPagePattern = Pattern.compile("<span class=\"picto-abonnement([^\"]*)\" title=\"[^\"]*\" data-action=\"[^\"]*\"([^>]*)>");
+    private static final Pattern subIdInSubButtonPattern = Pattern.compile("data-id-abonnement=\"([^\"]*)\"");
     private static final Pattern lockReasonPattern = Pattern.compile("<div class=\"message-lock-topic\">[^<]*<span>([^<]*)</span>");
     private static final Pattern surveyTitlePattern = Pattern.compile("<div class=\"intitule-sondage\">([^<]*)</div>");
     private static final Pattern surveyResultPattern = Pattern.compile("<div class=\"pied-result\">([^<]*)</div>");
@@ -250,6 +254,27 @@ public final class JVCParser {
         } else {
             return "";
         }
+    }
+
+    /* Retourne l'ID de l'abonnement si l'user est abonné, retourne un string empty s'il ne l'est pas,
+     * retourne null si indéterminé. */
+    public static String getSubIdInThisTopicPage(String topicContent) {
+        Matcher isInSubInTopicPageMatcher = isInSubInTopicPagePattern.matcher(topicContent);
+
+        if (isInSubInTopicPageMatcher.find()) {
+            /* if (isInSub) [ */
+            if (!isInSubInTopicPageMatcher.group(1).isEmpty()) {
+                Matcher subIdInSubButtonMatcher = subIdInSubButtonPattern.matcher(topicContent);
+
+                if (subIdInSubButtonMatcher.find()) {
+                    return subIdInSubButtonMatcher.group(1);
+                }
+            } else {
+                return "";
+            }
+        }
+
+        return null;
     }
 
     public static String getPageNumberForThisTopicLink(String topicLink) {
@@ -589,9 +614,23 @@ public final class JVCParser {
         Matcher errorMatcher = errorInJsonModePattern.matcher(pageSource);
 
         if (errorMatcher.find()) {
-            return "Erreur : " + specialCharToNormalChar(parsingAjaxMessages(errorMatcher.group(1))).trim();
+            String errorMessage = errorMatcher.group(3);
+
+            if (!errorMessage.isEmpty()) {
+                return "Erreur : " + specialCharToNormalChar(parsingAjaxMessages(errorMessage)).trim();
+            }
+        }
+
+        return null;
+    }
+
+    public static String getSubIdFromJson(String pageSource) {
+        Matcher subIdInJsonMatcher = subIdInJsonPattern.matcher(pageSource);
+
+        if (subIdInJsonMatcher.find()) {
+            return subIdInJsonMatcher.group(1);
         } else {
-            return null;
+            return "";
         }
     }
 
@@ -650,6 +689,7 @@ public final class JVCParser {
         Matcher ajaxModHashMatcher = ajaxModHashPattern.matcher(pageSource);
         Matcher ajaxPrefTimestampMatcher = ajaxPrefTimestampPattern.matcher(pageSource);
         Matcher ajaxPrefHashMatcher = ajaxPrefHashPattern.matcher(pageSource);
+        Matcher ajaxSubHashMatcher = ajaxSubHashPattern.matcher(pageSource);
 
         if (ajaxListTimestampMatcher.find() && ajaxListHashMatcher.find()) {
             newAjaxInfos.list = "ajax_timestamp=" + ajaxListTimestampMatcher.group(3) + "&ajax_hash=" + ajaxListHashMatcher.group(3);
@@ -661,6 +701,10 @@ public final class JVCParser {
 
         if (ajaxPrefTimestampMatcher.find() && ajaxPrefHashMatcher.find()) {
             newAjaxInfos.pref = "ajax_timestamp=" + ajaxPrefTimestampMatcher.group(1) + "&ajax_hash=" + ajaxPrefHashMatcher.group(1);
+        }
+
+        if (ajaxSubHashMatcher.find()) {
+            newAjaxInfos.sub = "ajax_hash=" + ajaxSubHashMatcher.group(1);
         }
 
         return newAjaxInfos;
@@ -1310,6 +1354,49 @@ public final class JVCParser {
         }
     }
 
+    public static class AjaxInfos implements Parcelable {
+        public String list = null;
+        public String mod = null;
+        public String pref = null;
+        public String sub = null;
+
+        public static final Parcelable.Creator<AjaxInfos> CREATOR = new Parcelable.Creator<AjaxInfos>() {
+            @Override
+            public AjaxInfos createFromParcel(Parcel in) {
+                return new AjaxInfos(in);
+            }
+
+            @Override
+            public AjaxInfos[] newArray(int size) {
+                return new AjaxInfos[size];
+            }
+        };
+
+        public AjaxInfos() {
+            //rien
+        }
+
+        private AjaxInfos(Parcel in) {
+            list = in.readString();
+            mod = in.readString();
+            pref = in.readString();
+            sub = in.readString();
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            out.writeString(list);
+            out.writeString(mod);
+            out.writeString(pref);
+            out.writeString(sub);
+        }
+    }
+
     public static class MessageInfos implements Parcelable, Comparable<MessageInfos> {
         public String pseudo = "Pseudo supprimé";
         public String pseudoType = "user";
@@ -1712,12 +1799,6 @@ public final class JVCParser {
     public static class ForumAndTopicName {
         public String forum = "";
         public String topic = "";
-    }
-
-    public static class AjaxInfos {
-        public String list = null;
-        public String mod = null;
-        public String pref = null;
     }
 
     public static class Settings {
