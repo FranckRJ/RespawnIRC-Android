@@ -262,6 +262,8 @@
     <string name="behaviourSettingSummary">Rafraichissement, scrolling, autres</string>
     <string name="imageLinkSettingSummary">Avatars, stickers, noelshack, ouverture des liens</string>
     <string name="ignoredSettingSummary">Affichage des messages / topics, gestion de la liste</string>
+    <string name="topicPostTypeIsModo">Envoi du topic en tant que : Modérateur</string>
+    <string name="topicPostTypeIsUser">Envoi du topic en tant que : Utilisateur</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>
