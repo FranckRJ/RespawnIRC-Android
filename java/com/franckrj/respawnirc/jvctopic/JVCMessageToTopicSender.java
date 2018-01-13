@@ -10,11 +10,11 @@ import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
 public class JVCMessageToTopicSender {
-    private static final String SAVE_LAST_AJAX_LIST_INFOS = "saveLastAjaxListInfos";
-    private static final String SAVE_USE_MESSAGE_TO_EDIT = "saveUseMessageToEdit";
-    private static final String SAVE_IS_IN_EDIT = "saveIsInEdit";
-    private static final String SAVE_LAST_INFOS_FOR_EDIT = "saveLastInfosForEdit";
-    private static final String SAVE_LAST_MESSAGE_ID_USED_FOR_EDIT = "saveLastMessageIDUsedForEdit";
+    private static final String SAVE_LAST_AJAX_LIST_INFOS = "mttsSaveLastAjaxListInfos";
+    private static final String SAVE_USE_MESSAGE_TO_EDIT = "mttsSaveUseMessageToEdit";
+    private static final String SAVE_IS_IN_EDIT = "mttsSaveIsInEdit";
+    private static final String SAVE_LAST_INFOS_FOR_EDIT = "mttsSaveLastInfosForEdit";
+    private static final String SAVE_LAST_MESSAGE_ID_USED_FOR_EDIT = "mttsSaveLastMessageIDUsedForEdit";
 
     private Activity parentActivity = null;
     private String lastAjaxListInfos = "";

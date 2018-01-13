@@ -13,8 +13,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
-    private static final String SAVE_FIRST_TIME_GET_MESSAGES = "saveFirstTimeGetMessages";
-    private static final String SAVE_LIST_OF_EDIT_INFOS = "saveListOfEditInfos";
+    private static final String SAVE_FIRST_TIME_GET_MESSAGES = "tmigSaveFirstTimeGetMessages";
+    private static final String SAVE_LIST_OF_EDIT_INFOS = "tmigSaveListOfEditInfos";
 
     private int timeBetweenRefreshTopic = 10000;
     private Timer timerForFetchUrl = new Timer();

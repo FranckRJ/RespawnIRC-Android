@@ -13,13 +13,13 @@ public class JVCForumGetter {
     public static final int STATE_LOADING = 0;
     public static final int STATE_NOT_LOADING = 1;
 
-    private static final String SAVE_FORUM_URL_TO_FETCH = "saveForumUrlToFetch";
-    private static final String SAVE_LATEST_AJAX_INFO = "saveLatestAjaxInfo";
-    private static final String SAVE_LATEST_LIST_OF_INPUT = "saveLatestListOfInputInAString";
-    private static final String SAVE_FORUM_IS_IN_FAV = "saveForumIsInFav";
-    private static final String SAVE_IS_IN_SEARCH_MODE = "saveIsInSearchMode";
-    private static final String SAVE_LAST_TYPE_OF_ERROR = "saveLastTypeOfError";
-    private static final String SAVE_USER_CAN_POST_AS_MODO = "saveUserCanPostAsModo";
+    private static final String SAVE_FORUM_URL_TO_FETCH = "fgSaveForumUrlToFetch";
+    private static final String SAVE_LATEST_AJAX_INFO = "fgSaveLatestAjaxInfo";
+    private static final String SAVE_LATEST_LIST_OF_INPUT = "fgSaveLatestListOfInputInAString";
+    private static final String SAVE_FORUM_IS_IN_FAV = "fgSaveForumIsInFav";
+    private static final String SAVE_IS_IN_SEARCH_MODE = "fgSaveIsInSearchMode";
+    private static final String SAVE_LAST_TYPE_OF_ERROR = "fgSaveLastTypeOfError";
+    private static final String SAVE_USER_CAN_POST_AS_MODO = "fgSaveUserCanPostAsModo";
 
     private String urlForForum = "";
     private GetJVCLastTopics currentAsyncTaskForGetTopic = null;
