@@ -119,7 +119,7 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
 
     public void setNewTopic(String newUrlForTopic) {
         firstTimeGetMessages = true;
-        latestListOfInputInAString = null;
+        currentTopicStatus.listOfInputInAString = null;
         lastIdOfMessage = 0;
         listOfEditInfos.clear();
         urlForTopic = JVCParser.getFirstPageForThisTopicLink(newUrlForTopic);
@@ -128,7 +128,7 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
 
     public void setOldTopic(String oldUrlForTopic, long oldLastIdOfMessage) {
         firstTimeGetMessages = false;
-        latestListOfInputInAString = null;
+        currentTopicStatus.listOfInputInAString = null;
         lastIdOfMessage = oldLastIdOfMessage - 1;
         listOfEditInfos.clear();
         urlForTopic = oldUrlForTopic;

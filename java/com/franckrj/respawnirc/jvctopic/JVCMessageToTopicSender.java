@@ -93,6 +93,10 @@ public class JVCMessageToTopicSender {
         }
     };
 
+    public static String addPostTypeToListOfInput(String listOfInputToUse, boolean postAsModo) {
+        return listOfInputToUse + (postAsModo ? "&form_alias_rang=2" : "&form_alias_rang=1");
+    }
+
     public JVCMessageToTopicSender(Activity newParentActivity) {
         parentActivity = newParentActivity;
     }
@@ -151,12 +155,12 @@ public class JVCMessageToTopicSender {
         lastInfosForEdit = "";
     }
 
-    public boolean sendThisMessage(String messageToSend, String urlToSend, String latestListOfInput, String cookieListInAString) {
+    public boolean sendThisMessage(String messageToSend, String urlToSend, String listOfInputToUse, String cookieListInAString) {
         if (currentAsyncTaskForSendMessage == null) {
             InfosOfSend infosForCurrentSend = new InfosOfSend();
             infosForCurrentSend.messageSended = messageToSend;
             infosForCurrentSend.urlUsed = urlToSend;
-            infosForCurrentSend.listOfInputUsed = latestListOfInput;
+            infosForCurrentSend.listOfInputUsed = listOfInputToUse;
             infosForCurrentSend.cookiesUsed = cookieListInAString;
 
             currentAsyncTaskForSendMessage = new PostJVCMessage();

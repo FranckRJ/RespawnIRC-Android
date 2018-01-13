@@ -377,12 +377,10 @@ public final class JVCParser {
         int lastOffset = 0;
 
         while (replyWithInfosMatcher.find(lastOffset)) {
-            SurveyReplyInfos newSurveyReply = new SurveyReplyInfos();
+            String tmpInfosForReply = "id_sondage=" + replyWithInfosMatcher.group(1) + "&id_sondage_reponse=" + replyWithInfosMatcher.group(2);
+            String tmpTitleOfReply = specialCharToNormalChar(replyWithInfosMatcher.group(3).replace("\n", "").replace("\r", "").trim());
 
-            newSurveyReply.infosForReply = "id_sondage=" + replyWithInfosMatcher.group(1) + "&id_sondage_reponse=" + replyWithInfosMatcher.group(2);
-            newSurveyReply.titleOfReply = specialCharToNormalChar(replyWithInfosMatcher.group(3).replace("\n", "").replace("\r", "").trim());
-
-            listOfReplys.add(newSurveyReply);
+            listOfReplys.add(new SurveyReplyInfos(tmpInfosForReply, tmpTitleOfReply));
             lastOffset = replyWithInfosMatcher.end();
         }
 
@@ -1376,6 +1374,13 @@ public final class JVCParser {
             //rien
         }
 
+        public AjaxInfos(AjaxInfos baseForCopy) {
+            list = baseForCopy.list;
+            mod = baseForCopy.mod;
+            pref = baseForCopy.pref;
+            sub = baseForCopy.sub;
+        }
+
         private AjaxInfos(Parcel in) {
             list = in.readString();
             mod = in.readString();
@@ -1605,8 +1610,8 @@ public final class JVCParser {
     }
 
     public static class SurveyReplyInfos implements Parcelable {
-        public String infosForReply = "";
-        public String titleOfReply = "";
+        public final String infosForReply;
+        public final String titleOfReply;
 
         public static final Parcelable.Creator<SurveyReplyInfos> CREATOR = new Parcelable.Creator<SurveyReplyInfos>() {
             @Override
@@ -1620,8 +1625,9 @@ public final class JVCParser {
             }
         };
 
-        public SurveyReplyInfos() {
-            //rien
+        private SurveyReplyInfos(String newInfos, String newTitle) {
+            infosForReply = newInfos;
+            titleOfReply = newTitle;
         }
 
         private SurveyReplyInfos(Parcel in) {

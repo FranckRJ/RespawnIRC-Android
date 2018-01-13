@@ -72,25 +72,24 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         }
     };
 
-    protected final AbsJVCTopicGetter.NewSurveyForTopic listenerForNewSurveyForTopic = new AbsJVCTopicGetter.NewSurveyForTopic() {
+    protected final AbsJVCTopicGetter.NewTopicStatusListener listenerForNewTopicStatus = new AbsJVCTopicGetter.NewTopicStatusListener() {
         @Override
-        public void getNewSurveyTitle(String newTitle) {
-            if (!newTitle.isEmpty()) {
-                adapterForTopic.enableSurvey(newTitle);
-            } else {
-                adapterForTopic.disableSurvey();
+        public void getNewTopicStatus(AbsJVCTopicGetter.TopicStatusInfos newTopicStatus, AbsJVCTopicGetter.TopicStatusInfos oldTopicStatus) {
+            if (!newTopicStatus.htmlSurveyTitle.equals(oldTopicStatus.htmlSurveyTitle)) {
+                if (!newTopicStatus.htmlSurveyTitle.isEmpty()) {
+                    adapterForTopic.enableSurvey(newTopicStatus.htmlSurveyTitle);
+                } else {
+                    adapterForTopic.disableSurvey();
+                }
+                adapterForTopic.notifyDataSetChanged();
             }
-            adapterForTopic.notifyDataSetChanged();
-        }
-    };
 
-    protected final AbsJVCTopicGetter.NewUserCanPostAsModoInfoAvailable listenerForNewUserCanPostAsModo = new AbsJVCTopicGetter.NewUserCanPostAsModoInfoAvailable() {
-        @Override
-        public void getNewUserCanPostAsModo(boolean newUserCanPostAsModo) {
-            adapterForTopic.setUserIsModo(newUserCanPostAsModo);
+            if (newTopicStatus.userCanPostAsModo != oldTopicStatus.userCanPostAsModo) {
+                adapterForTopic.setUserIsModo(newTopicStatus.userCanPostAsModo);
+            }
 
-            if (getActivity() instanceof AbsJVCTopicGetter.NewUserCanPostAsModoInfoAvailable) {
-                ((AbsJVCTopicGetter.NewUserCanPostAsModoInfoAvailable) getActivity()).getNewUserCanPostAsModo(newUserCanPostAsModo);
+            if (getActivity() instanceof AbsJVCTopicGetter.NewTopicStatusListener) {
+                ((AbsJVCTopicGetter.NewTopicStatusListener) getActivity()).getNewTopicStatus(newTopicStatus, oldTopicStatus);
             }
         }
     };
@@ -100,7 +99,9 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         public void onClick(View view) {
             if (adapterForTopic.getShowSurvey()) {
                 if (getActivity() instanceof NewSurveyNeedToBeShown) {
-                    ((NewSurveyNeedToBeShown) getActivity()).getNewSurveyInfos(JVCParser.specialCharToNormalChar(absGetterForTopic.getSurveyTitleInHtml()), absGetterForTopic.getTopicId(), absGetterForTopic.getLatestAjaxInfos().list, absGetterForTopic.getListOfSurveyReplysWithInfos());
+                    /* Pour raccourcir un peu la ligne suivante. */
+                    AbsJVCTopicGetter.TopicStatusInfos tmpTopicStatus = absGetterForTopic.getTopicStatus();
+                    ((NewSurveyNeedToBeShown) getActivity()).getNewSurveyInfos(JVCParser.specialCharToNormalChar(tmpTopicStatus.htmlSurveyTitle), tmpTopicStatus.topicId, tmpTopicStatus.ajaxInfos.list, tmpTopicStatus.listOfSurveyReplyWithInfos);
                 }
             }
         }
@@ -268,40 +269,12 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         absGetterForTopic.reloadTopic();
     }
 
-    public String getLatestListOfInputInAString(boolean tryToPostAsModo) {
-        return absGetterForTopic.getLatestListOfInputInAString(tryToPostAsModo);
-    }
-
-    public JVCParser.AjaxInfos getLatestAjaxInfos() {
-        return absGetterForTopic.getLatestAjaxInfos();
-    }
-
     public JVCParser.MessageInfos getCurrentItemSelected() {
         return adapterForTopic.getItem(adapterForTopic.getCurrentItemIdSelected());
     }
 
-    public Boolean getIsInFavs() {
-        return absGetterForTopic.getIsInFavs();
-    }
-
-    public String getSubId() {
-        return absGetterForTopic.getSubId();
-    }
-
-    public boolean getUserCanLockTopic() {
-        return absGetterForTopic.getUserCanLockTopic();
-    }
-
-    public String getTopicId() {
-        return absGetterForTopic.getTopicId();
-    }
-
-    public void setIsInFavs(Boolean newVal) {
-        absGetterForTopic.setIsInFavs(newVal);
-    }
-
-    public void setSubId(String newVal) {
-        absGetterForTopic.setSubId(newVal);
+    public void updateTopicStatusInfos(AbsJVCTopicGetter.TopicStatusInfos newTopicStatusInfos) {
+        absGetterForTopic.updateTopicStatusInfos(newTopicStatusInfos);
     }
 
     public void setPseudoOfAuthor(String newPseudoOfAuthor) {
@@ -351,9 +324,8 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         initializeGetterForMessages();
         initializeAdapter();
         initializeSettings();
+        absGetterForTopic.setListenerForNewTopicStatus(listenerForNewTopicStatus);
         absGetterForTopic.setListenerForNewGetterState(listenerForNewGetterState);
-        absGetterForTopic.setListenerForNewSurveyForTopic(listenerForNewSurveyForTopic);
-        absGetterForTopic.setListenerForNewUserCanPostAsModo(listenerForNewUserCanPostAsModo);
         adapterForTopic.setOnSurveyClickListener(surveyItemClickedListener);
 
         if (getActivity() instanceof NewModeNeededListener) {
@@ -361,15 +333,6 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         }
         if (getActivity() instanceof AbsJVCTopicGetter.TopicLinkChanged) {
             absGetterForTopic.setListenerForTopicLinkChanged((AbsJVCTopicGetter.TopicLinkChanged) getActivity());
-        }
-        if (getActivity() instanceof AbsJVCTopicGetter.NewForumAndTopicNameAvailable) {
-            absGetterForTopic.setListenerForNewForumAndTopicName((AbsJVCTopicGetter.NewForumAndTopicNameAvailable) getActivity());
-        }
-        if (getActivity() instanceof AbsJVCTopicGetter.NewReasonForTopicLock) {
-            absGetterForTopic.setListenerForNewReasonForTopicLock((AbsJVCTopicGetter.NewReasonForTopicLock) getActivity());
-        }
-        if (getActivity() instanceof AbsJVCTopicGetter.NewPseudoOfAuthorAvailable) {
-            absGetterForTopic.setListenerForNewPseudoOfAuthor((AbsJVCTopicGetter.NewPseudoOfAuthorAvailable) getActivity());
         }
         if (getActivity() instanceof PopupMenu.OnMenuItemClickListener) {
             adapterForTopic.setActionWhenItemMenuClicked((PopupMenu.OnMenuItemClickListener) getActivity());
@@ -402,10 +365,10 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             currentSettings.pseudoOfAuthor = savedInstanceState.getString(SAVE_SETTINGS_PSEUDO_OF_AUTHOR, "");
             allMessagesShowedAreFromIgnoredPseudos = savedInstanceState.getBoolean(SAVE_MESSAGES_ARE_FROM_IGNORED_PSEUDOS, false);
             absGetterForTopic.loadFromBundle(savedInstanceState);
-            adapterForTopic.setUserIsModo(absGetterForTopic.getUserCanPostAsModo());
+            adapterForTopic.setUserIsModo(absGetterForTopic.getTopicStatus().userCanPostAsModo);
 
-            if (!Utils.stringIsEmptyOrNull(absGetterForTopic.getSurveyTitleInHtml())) {
-                adapterForTopic.enableSurvey(absGetterForTopic.getSurveyTitleInHtml());
+            if (!Utils.stringIsEmptyOrNull(absGetterForTopic.getTopicStatus().htmlSurveyTitle)) {
+                adapterForTopic.enableSurvey(absGetterForTopic.getTopicStatus().htmlSurveyTitle);
             }
 
             if (allCurrentMessagesShowed != null) {
