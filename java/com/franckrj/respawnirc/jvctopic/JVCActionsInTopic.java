@@ -8,12 +8,15 @@ import android.widget.Toast;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
-public class JVCMessageInTopicAction {
+public class JVCActionsInTopic {
     private QuoteJVCMessage currentTaskQuoteMessage = null;
     private DeleteJVCMessage currentTaskDeleteMessage = null;
+    private UnlockJVCTopic currentTaskUnlockTopic = null;
     private NewMessageIsQuoted messageIsQuotedListener = null;
+    private TopicNeedToBeReloaded topicNeedToBeReloadedListener = null;
     private String latestMessageQuotedInfo = null;
     private DeletesInfos lastDeleteInfos = new DeletesInfos();
     private Activity parentActivity = null;
@@ -64,12 +67,38 @@ public class JVCMessageInTopicAction {
         }
     };
 
-    public JVCMessageInTopicAction(Activity newParentActivity) {
+    private final AbsWebRequestAsyncTask.RequestIsFinished<String> unlockTopicIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<String>() {
+        @Override
+        public void onRequestIsFinished(String reqResult) {
+            currentTaskUnlockTopic = null;
+
+            if (!Utils.stringIsEmptyOrNull(reqResult)) {
+                String potentialError = JVCParser.getErrorMessageInJsonMode(reqResult);
+
+                if (potentialError != null) {
+                    Toast.makeText(parentActivity, potentialError, Toast.LENGTH_SHORT).show();
+                } else if (!reqResult.startsWith("{")) {
+                    Toast.makeText(parentActivity, R.string.unknownErrorPleaseRetry, Toast.LENGTH_SHORT).show();
+                } else if (topicNeedToBeReloadedListener != null) {
+                    topicNeedToBeReloadedListener.onReloadTopicRequested();
+                }
+                return;
+            }
+
+            Toast.makeText(parentActivity, R.string.noKnownResponseFromJVC, Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    public JVCActionsInTopic(Activity newParentActivity) {
         parentActivity = newParentActivity;
     }
 
     public void setNewMessageIsQuotedListener(NewMessageIsQuoted newListener) {
         messageIsQuotedListener = newListener;
+    }
+
+    public void setTopicNeedToBeReloadedListener(TopicNeedToBeReloaded newListener) {
+        topicNeedToBeReloadedListener = newListener;
     }
 
     public void stopAllCurrentTasks() {
@@ -81,6 +110,10 @@ public class JVCMessageInTopicAction {
         if (currentTaskDeleteMessage != null) {
             currentTaskDeleteMessage.clearListenersAndCancel();
             currentTaskDeleteMessage = null;
+        }
+        if (currentTaskUnlockTopic != null) {
+            currentTaskUnlockTopic.clearListenersAndCancel();
+            currentTaskUnlockTopic = null;
         }
     }
 
@@ -121,6 +154,20 @@ public class JVCMessageInTopicAction {
         }
     }
 
+    public void startUnlockThisTopic(JVCParser.AjaxInfos latestAjaxInfos, String forumId, String topicId, String cookieListInAString) {
+        if (latestAjaxInfos.mod != null && currentTaskUnlockTopic == null) {
+            currentTaskUnlockTopic = new UnlockJVCTopic();
+            currentTaskUnlockTopic.setRequestIsFinishedListener(unlockTopicIsFinishedListener);
+            currentTaskUnlockTopic.execute(forumId, topicId, latestAjaxInfos.mod, cookieListInAString);
+        } else {
+            if (currentTaskUnlockTopic != null) {
+                Toast.makeText(parentActivity, R.string.errorQuoteAlreadyRunning, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(parentActivity, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     private static class QuoteJVCMessage extends AbsWebRequestAsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
@@ -149,6 +196,17 @@ public class JVCMessageInTopicAction {
         }
     }
 
+    private static class UnlockJVCTopic extends AbsWebRequestAsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            if (params.length > 3) {
+                WebManager.WebInfos currentWebInfos = initWebInfos(params[3], false);
+                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/modal_moderation_topic.php", "GET", "id_forum=" + params[0] + "&tab_topic[]=" + params[1] + "&type=unlock&action=get&" + params[2], currentWebInfos);
+            }
+            return "erreurlol";
+        }
+    }
+
     private class DeletesInfos {
         String idOfMessage = "";
         String latestAjaxInfosMod = "";
@@ -157,5 +215,9 @@ public class JVCMessageInTopicAction {
 
     public interface NewMessageIsQuoted {
         void getNewMessageQuoted(String messageQuoted);
+    }
+
+    public interface TopicNeedToBeReloaded {
+        void onReloadTopicRequested();
     }
 }

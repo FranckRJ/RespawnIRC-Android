@@ -54,7 +54,7 @@ public class LockTopicActivity extends AbsHomeIsBackActivity {
 
                 if (potentialError != null) {
                     Toast.makeText(LockTopicActivity.this, potentialError, Toast.LENGTH_SHORT).show();
-                } else if (!reqResult.startsWith("{") && !reqResult.isEmpty()) {
+                } else if (!reqResult.startsWith("{")) {
                     Toast.makeText(LockTopicActivity.this, R.string.unknownErrorPleaseRetry, Toast.LENGTH_SHORT).show();
                 } else {
                     setResult(Activity.RESULT_OK);

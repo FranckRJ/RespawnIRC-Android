@@ -47,7 +47,7 @@ import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 
-public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCTopicGetter.NewTopicStatusListener,
+public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCTopicGetter.NewTopicStatusListener, JVCActionsInTopic.TopicNeedToBeReloaded,
                                                                         PopupMenu.OnMenuItemClickListener, JVCTopicModeForumGetter.NewNumbersOfPagesListener, JVCTopicAdapter.PseudoClicked,
                                                                         ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCTopicAdapter.URLClicked, AbsShowTopicFragment.NewSurveyNeedToBeShown,
                                                                         InsertStuffDialogFragment.StuffInserted, MessageMenuDialogFragment.NewPseudoIgnored, PageNavigationUtil.PageNavigationFunctions,
@@ -65,7 +65,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
     private AbsJVCTopicGetter.TopicStatusInfos topicStatus = new AbsJVCTopicGetter.TopicStatusInfos();
     private JVCMessageToTopicSender senderForMessages = null;
-    private JVCMessageInTopicAction actionsForMessages = null;
+    private JVCActionsInTopic actionsForTopic = null;
     private ImageButton messageSendButton = null;
     private EditText messageSendEdit = null;
     private View messageSendLayout = null;
@@ -260,7 +260,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         }
     };
 
-    private final JVCMessageInTopicAction.NewMessageIsQuoted messageIsQuotedListener = new JVCMessageInTopicAction.NewMessageIsQuoted() {
+    private final JVCActionsInTopic.NewMessageIsQuoted messageIsQuotedListener = new JVCActionsInTopic.NewMessageIsQuoted() {
         @Override
         public void getNewMessageQuoted(String messageQuoted) {
             if (topicStatus.lockReason == null) {
@@ -318,7 +318,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             currentTaskForSubs.clearListenersAndCancel();
             currentTaskForSubs = null;
         }
-        actionsForMessages.stopAllCurrentTasks();
+        actionsForTopic.stopAllCurrentTasks();
         senderForMessages.stopAllCurrentTask();
     }
 
@@ -435,8 +435,9 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         pageNavigation.setDrawableForCurrentPageButton(arrowDrawable);
 
         pageNavigation.updateAdapterForPagerView();
-        actionsForMessages = new JVCMessageInTopicAction(this);
-        actionsForMessages.setNewMessageIsQuotedListener(messageIsQuotedListener);
+        actionsForTopic = new JVCActionsInTopic(this);
+        actionsForTopic.setNewMessageIsQuotedListener(messageIsQuotedListener);
+        actionsForTopic.setTopicNeedToBeReloadedListener(this);
         senderForMessages = new JVCMessageToTopicSender(this);
         senderForMessages.setListenerForNewMessageWantEdit(listenerForNewMessageWantEdit);
         senderForMessages.setListenerForNewMessagePosted(listenerForNewMessagePosted);
@@ -554,13 +555,20 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
+        MenuItem lockItem = menu.findItem(R.id.action_change_lock_topic_value_showtopic);
         MenuItem favItem = menu.findItem(R.id.action_change_topic_fav_value_showtopic);
         MenuItem subItem = menu.findItem(R.id.action_change_topic_sub_value_showtopic);
 
         favItem.setEnabled(false);
         subItem.setEnabled(false);
         if (!pseudoOfUser.isEmpty()) {
-            menu.findItem(R.id.action_lock_topic_showtopic).setEnabled(topicStatus.userCanLockTopic);
+            lockItem.setEnabled(topicStatus.userCanLockOrUnlockTopic);
+
+            if (topicStatus.lockReason == null) {
+                lockItem.setTitle(R.string.lockTopic);
+            } else {
+                lockItem.setTitle(R.string.unlockTopic);
+            }
 
             if (topicStatus.isInFavs != null) {
                 favItem.setEnabled(true);
@@ -580,7 +588,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 }
             }
         } else {
-            menu.findItem(R.id.action_lock_topic_showtopic).setEnabled(false);
+            lockItem.setEnabled(false);
         }
 
         return true;
@@ -613,13 +621,17 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                     Toast.makeText(ShowTopicActivity.this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
                 }
                 return true;
-            case R.id.action_lock_topic_showtopic:
-                Intent newLockTopicIntent = new Intent(ShowTopicActivity.this, LockTopicActivity.class);
-                newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_ID_FORUM, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()));
-                newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_ID_TOPIC, topicStatus.topicId);
-                newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_AJAX_MOD, topicStatus.ajaxInfos.mod);
-                newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_COOKIES, cookieListInAString);
-                startActivityForResult(newLockTopicIntent, LOCK_TOPIC_REQUEST_CODE);
+            case R.id.action_change_lock_topic_value_showtopic:
+                if (topicStatus.lockReason == null) {
+                    Intent newLockTopicIntent = new Intent(ShowTopicActivity.this, LockTopicActivity.class);
+                    newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_ID_FORUM, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()));
+                    newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_ID_TOPIC, topicStatus.topicId);
+                    newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_AJAX_MOD, topicStatus.ajaxInfos.mod);
+                    newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_COOKIES, cookieListInAString);
+                    startActivityForResult(newLockTopicIntent, LOCK_TOPIC_REQUEST_CODE);
+                } else {
+                    actionsForTopic.startUnlockThisTopic(topicStatus.ajaxInfos, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), topicStatus.topicId, cookieListInAString);
+                }
                 return true;
             case R.id.action_open_in_browser_showtopic:
                 Utils.openCorrespondingBrowser(linkTypeForInternalBrowser, pageNavigation.getCurrentPageLink(), this);
@@ -677,7 +689,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 } else if (topicStatus.lockReason != null) {
                     Toast.makeText(this, R.string.errorTopicIsLocked, Toast.LENGTH_SHORT).show();
                 } else {
-                    actionsForMessages.startQuoteThisMessage(topicStatus.ajaxInfos, getCurrentFragment().getCurrentItemSelected(), cookieListInAString);
+                    actionsForTopic.startQuoteThisMessage(topicStatus.ajaxInfos, getCurrentFragment().getCurrentItemSelected(), cookieListInAString);
                 }
                 return true;
             case R.id.menu_edit_message:
@@ -698,7 +710,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
                 return true;
             case R.id.menu_delete_message:
-                actionsForMessages.startDeleteThisMessage(topicStatus.ajaxInfos, getCurrentFragment().getCurrentItemSelected(), cookieListInAString);
+                actionsForTopic.startDeleteThisMessage(topicStatus.ajaxInfos, getCurrentFragment().getCurrentItemSelected(), cookieListInAString);
                 return true;
             case R.id.menu_kick_pseudo_message:
                 JVCParser.MessageInfos currentMessage = getCurrentFragment().getCurrentItemSelected();
@@ -967,5 +979,10 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 myActionBar.setSubtitle(topicStatus.names.topic);
             }
         }
+    }
+
+    @Override
+    public void onReloadTopicRequested() {
+        reloadTopicSafely();
     }
 }

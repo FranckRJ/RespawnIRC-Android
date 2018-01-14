@@ -79,7 +79,7 @@
     <string name="errorActionAlreadyRunning">Erreur, action déjà en cours.</string>
     <string name="favAdded">Favori ajouté.</string>
     <string name="favRemoved">Favori retiré.</string>
-    <string name="topicLockedForReason">Sujet fermé : %1$s</string>
+    <string name="topicLockedForReason">Topic fermé : %1$s</string>
     <string name="errorTopicIsLocked">Erreur, le topic est fermé.</string>
     <string name="transformStickerToSmileyTitle">Changer les stickers en smiley</string>
     <string name="transformStickerToSmileySummary">(tous les stickers ne sont pas changés)</string>
@@ -270,6 +270,7 @@
     <string name="messageFontSizeTitle">Taille des messages (en sp)</string>
     <string name="messageInfosFontSizeTitle">Taille des informations des messages (en sp)</string>
     <string name="messageSignatureFontSizeTitle">Taille des signatures (en sp)</string>
+    <string name="unlockTopic">Rouvrir le topic</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>
