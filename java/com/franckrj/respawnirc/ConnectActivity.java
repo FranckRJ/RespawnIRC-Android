@@ -25,6 +25,7 @@ import com.franckrj.respawnirc.utils.Undeprecator;
 public class ConnectActivity extends AbsHomeIsBackActivity {
     private static final long MAX_TIME_USER_HAVE_TO_LEAVE_IN_MS = 3_500;
 
+    private WebView jvcWebView = null;
     private EditText pseudoText = null;
     private HelpConnectDialogFragment helpDialogFragment = null;
     private long lastTimeUserTryToLeaveInMs = -MAX_TIME_USER_HAVE_TO_LEAVE_IN_MS;
@@ -76,7 +77,7 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
         setContentView(R.layout.activity_connect);
         initToolbar(R.id.toolbar_connect);
 
-        WebView jvcWebView = findViewById(R.id.webview_connect);
+        jvcWebView = findViewById(R.id.webview_connect);
         pseudoText = findViewById(R.id.pseudo_text_connect);
 
         helpDialogFragment = new HelpConnectDialogFragment();
@@ -98,6 +99,20 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
         PrefsManager.putInt(PrefsManager.IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED,
                 PrefsManager.getInt(PrefsManager.IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED) + 1);
         PrefsManager.applyChanges();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        jvcWebView.resumeTimers();
+        jvcWebView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        jvcWebView.onPause();
+        jvcWebView.pauseTimers();
+        super.onPause();
     }
 
     @Override

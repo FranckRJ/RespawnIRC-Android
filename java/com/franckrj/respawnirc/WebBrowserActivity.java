@@ -103,6 +103,20 @@ public class WebBrowserActivity extends AbsToolbarActivity {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        browserWebView.resumeTimers();
+        browserWebView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        browserWebView.onPause();
+        browserWebView.pauseTimers();
+        super.onPause();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_webbrowser, menu);
