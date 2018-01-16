@@ -137,7 +137,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                     if (!senderForMessages.getIsInEdit()) {
                         boolean messageIsSended = false;
                         if (topicStatus.listOfInputInAString != null) {
-                            String tmpListOfInputToUse = JVCMessageToTopicSender.addPostTypeToListOfInput(topicStatus.listOfInputInAString, PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE));
+                            String tmpListOfInputToUse = JVCMessageToTopicSender.addPostTypeToListOfInput(topicStatus.listOfInputInAString, topicStatus.userCanPostAsModo && PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE));
                             messageSendButton.setEnabled(false);
                             tmpLastMessageSended = messageSendEdit.getText().toString();
                             messageIsSended = senderForMessages.sendThisMessage(tmpLastMessageSended, pageNavigation.getCurrentPageLink(), tmpListOfInputToUse, cookieListInAString);
