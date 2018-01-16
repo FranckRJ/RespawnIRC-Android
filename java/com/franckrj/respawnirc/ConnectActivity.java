@@ -15,6 +15,7 @@ import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -30,45 +31,48 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
     private HelpConnectDialogFragment helpDialogFragment = null;
     private long lastTimeUserTryToLeaveInMs = -MAX_TIME_USER_HAVE_TO_LEAVE_IN_MS;
 
-    public void saveCookies(View buttonView) {
-        if (!pseudoText.getText().toString().isEmpty()) {
-            String allCookiesInstring = CookieManager.getInstance().getCookie("http://www.jeuxvideo.com/");
-            String[] allCookiesInStringArray = TextUtils.split(allCookiesInstring, ";");
-            String connectCookieValue = null;
+    private final View.OnClickListener saveCookieClickedListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (!pseudoText.getText().toString().isEmpty()) {
+                String allCookiesInstring = CookieManager.getInstance().getCookie("http://www.jeuxvideo.com/");
+                String[] allCookiesInStringArray = TextUtils.split(allCookiesInstring, ";");
+                String connectCookieValue = null;
 
-            for (String thisCookie : allCookiesInStringArray) {
-                String[] cookieInfos;
+                for (String thisCookie : allCookiesInStringArray) {
+                    String[] cookieInfos;
 
-                thisCookie = thisCookie.trim();
-                cookieInfos = TextUtils.split(thisCookie, "=");
+                    thisCookie = thisCookie.trim();
+                    cookieInfos = TextUtils.split(thisCookie, "=");
 
-                if (cookieInfos.length > 1) {
-                    if (cookieInfos[0].equals("coniunctio")) {
-                        connectCookieValue = cookieInfos[1];
-                        break;
+                    if (cookieInfos.length > 1) {
+                        if (cookieInfos[0].equals("coniunctio")) {
+                            connectCookieValue = cookieInfos[1];
+                            break;
+                        }
                     }
                 }
-            }
 
-            if (connectCookieValue != null) {
-                PrefsManager.putString(PrefsManager.StringPref.Names.COOKIES_LIST, "coniunctio=" + connectCookieValue);
-                PrefsManager.putString(PrefsManager.StringPref.Names.PSEUDO_OF_USER, pseudoText.getText().toString().trim());
-                PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, false);
-                PrefsManager.applyChanges();
+                if (connectCookieValue != null) {
+                    PrefsManager.putString(PrefsManager.StringPref.Names.COOKIES_LIST, "coniunctio=" + connectCookieValue);
+                    PrefsManager.putString(PrefsManager.StringPref.Names.PSEUDO_OF_USER, pseudoText.getText().toString().trim());
+                    PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, false);
+                    PrefsManager.applyChanges();
 
-                Toast.makeText(this, R.string.connectionSuccessful, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ConnectActivity.this, R.string.connectionSuccessful, Toast.LENGTH_SHORT).show();
 
-                finish();
+                    finish();
+                    return;
+                }
+            } else {
+                Toast.makeText(ConnectActivity.this, R.string.errorPseudoMissingConnect, Toast.LENGTH_LONG).show();
+
                 return;
             }
-        } else {
-            Toast.makeText(this, R.string.errorPseudoMissingConnect, Toast.LENGTH_LONG).show();
 
-            return;
+            Toast.makeText(ConnectActivity.this, R.string.errorCookiesMissingConnect, Toast.LENGTH_LONG).show();
         }
-
-        Toast.makeText(this, R.string.errorCookiesMissingConnect, Toast.LENGTH_LONG).show();
-    }
+    };
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -77,10 +81,12 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
         setContentView(R.layout.activity_connect);
         initToolbar(R.id.toolbar_connect);
 
+        Button saveCookieButton = findViewById(R.id.savecookie_button_connect);
         jvcWebView = findViewById(R.id.webview_connect);
         pseudoText = findViewById(R.id.pseudo_text_connect);
 
         helpDialogFragment = new HelpConnectDialogFragment();
+        saveCookieButton.setOnClickListener(saveCookieClickedListener);
 
         Undeprecator.cookieManagerRemoveAllCookies(CookieManager.getInstance());
         //suppression de la notification d'utilisation de cookie de JVC dans la webview
