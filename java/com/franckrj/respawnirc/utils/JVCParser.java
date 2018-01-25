@@ -32,7 +32,7 @@ public final class JVCParser {
     private static final Pattern messagePattern = Pattern.compile("<div class=\"bloc-contenu\"><div class=\"txt-msg +text-[^-]*-forum \">((.*?)(?=<div class=\"info-edition-msg\">)|(.*?)(?=<div class=\"signature-msg)|(.*))", Pattern.DOTALL);
     private static final Pattern currentPagePattern = Pattern.compile("<span class=\"page-active\">([^<]*)</span>");
     private static final Pattern pageLinkPattern = Pattern.compile("<span><a href=\"([^\"]*)\" class=\"lien-jv\">([0-9]*)</a></span>");
-    private static final Pattern topicFormPattern = Pattern.compile("(<form role=\"form\" class=\"form-post-topic[^\"]*\" method=\"post\" action=\"\".*?>.*?</form>)", Pattern.DOTALL);
+    private static final Pattern topicFormPattern = Pattern.compile("(<form role=\"form\" class=\"form-post-topic[^\"]*\" method=\"post\" action=\"[^\"]*\".*?>.*?</form>)", Pattern.DOTALL);
     private static final Pattern modoConnectFormPattern = Pattern.compile("(<form role=\"form\" action=\"\" method=\"post\" id=\"form_connexion\" class=\"form-connect-jv\" autocomplete=\"off\">.*?</form>)", Pattern.DOTALL);
     private static final Pattern inputFormPattern = Pattern.compile("<input (type|name|value)=\"([^\"]*)\" (type|name|value)=\"([^\"]*)\" (type|name|value)=\"([^\"]*)\"/>");
     private static final Pattern dateMessagePattern = Pattern.compile("<div class=\"bloc-date-msg\">([^<]*<span class=\"JvCare [^ ]* lien-jv\" target=\"_blank\">)?[^a-zA-Z0-9]*([^ ]* [^ ]* [^ ]* [^ ]* ([0-9:]*))");
@@ -52,7 +52,7 @@ public final class JVCParser {
     private static final Pattern pageSearchTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/recherche/forums/[0-9]*-[0-9]*-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-.*)");
     private static final Pattern jvCarePattern = Pattern.compile("<span class=\"JvCare [^\"]*\">([^<]*)</span>");
     private static final Pattern lastEditMessagePattern = Pattern.compile("<div class=\"info-edition-msg\">(Message édité le ([^ ]* [^ ]* [^ ]* [^ ]* [0-9:]*) par.*?)</div>");
-    private static final Pattern messageEditInfoPattern = Pattern.compile("<textarea tabindex=\"3\" class=\"area-editor\" name=\"text_commentaire\" id=\"text_commentaire\" placeholder=\"[^\"]*\">(.*?)</textarea>", Pattern.DOTALL);
+    private static final Pattern messageEditInfoPattern = Pattern.compile("<textarea((.*?)(?=id=\"text_commentaire\")|(.*?)(?=>))id=\"text_commentaire\"[^>]*>(.*?)</textarea>", Pattern.DOTALL);
     private static final Pattern allArianeStringPattern = Pattern.compile("<div class=\"fil-ariane-crumb\">.*?</h1>", Pattern.DOTALL);
     private static final Pattern forumNameInArianeStringPattern = Pattern.compile("<span><a href=\"/forums/0-[^\"]*\">([^<]*)</a></span>");
     private static final Pattern topicNameInArianeStringPattern = Pattern.compile("<span><a href=\"/forums/(42|1)-[^\"]*\">([^<]*)</a></span>");
@@ -637,7 +637,7 @@ public final class JVCParser {
         Matcher messageEditInfoMatcher = messageEditInfoPattern.matcher(pageSource);
 
         if (messageEditInfoMatcher.find()) {
-            return specialCharToNormalChar(messageEditInfoMatcher.group(1));
+            return specialCharToNormalChar(messageEditInfoMatcher.group(4));
         } else {
             return "";
         }
