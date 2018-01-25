@@ -32,7 +32,7 @@ public final class JVCParser {
     private static final Pattern messagePattern = Pattern.compile("<div class=\"bloc-contenu\"><div class=\"txt-msg +text-[^-]*-forum \">((.*?)(?=<div class=\"info-edition-msg\">)|(.*?)(?=<div class=\"signature-msg)|(.*))", Pattern.DOTALL);
     private static final Pattern currentPagePattern = Pattern.compile("<span class=\"page-active\">([^<]*)</span>");
     private static final Pattern pageLinkPattern = Pattern.compile("<span><a href=\"([^\"]*)\" class=\"lien-jv\">([0-9]*)</a></span>");
-    private static final Pattern topicFormPattern = Pattern.compile("(<form role=\"form\" class=\"form-post-topic[^\"]*\" method=\"post\" action=\"\".*?>.*?</form>)", Pattern.DOTALL);
+    private static final Pattern topicFormPattern = Pattern.compile("(<form role=\"form\" class=\"form-post-topic[^\"]*\" method=\"post\" action=\"[^\"]*\".*?>.*?</form>)", Pattern.DOTALL);
     private static final Pattern modoConnectFormPattern = Pattern.compile("(<form role=\"form\" action=\"\" method=\"post\" id=\"form_connexion\" class=\"form-connect-jv\" autocomplete=\"off\">.*?</form>)", Pattern.DOTALL);
     private static final Pattern inputFormPattern = Pattern.compile("<input (type|name|value)=\"([^\"]*)\" (type|name|value)=\"([^\"]*)\" (type|name|value)=\"([^\"]*)\"/>");
     private static final Pattern dateMessagePattern = Pattern.compile("<div class=\"bloc-date-msg\">([^<]*<span class=\"JvCare [^ ]* lien-jv\" target=\"_blank\">)?[^a-zA-Z0-9]*([^ ]* [^ ]* [^ ]* [^ ]* ([0-9:]*))");
