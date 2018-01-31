@@ -13,7 +13,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +36,7 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
 
     private EditText textForSearch = null;
     private MenuItem searchExpandableItem = null;
-    private RadioButton topicModeSearchRadioButton = null;
+    private RadioGroup searchModeRadioGroup = null;
     private String lastSearchedText = null;
     private PageNavigationUtil pageNavigation = null;
     private ShareActionProvider shareAction = null;
@@ -72,6 +72,19 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
         }
     }
 
+    private String getSearchTypeInText() {
+        switch (searchModeRadioGroup.getCheckedRadioButtonId()) {
+            case R.id.topicmode_radio_searchtopic:
+                return "titre_topic";
+            case R.id.authormode_radio_searchtopic:
+                return "auteur_topic";
+            case R.id.messagemode_radio_searchtopic:
+                return "texte_message";
+            default:
+                return "";
+        }
+    }
+
     public SearchTopicInForumActivity() {
         pageNavigation = new PageNavigationUtil(this);
         pageNavigation.setLastPageNumber(100);
@@ -81,7 +94,7 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
         if (textForSearch != null) {
             if (!textForSearch.getText().toString().isEmpty()) {
                 pageNavigation.setCurrentLink(currentSearchLink + "?search_in_forum=" + Utils.encodeStringToUrlString(textForSearch.getText().toString()) +
-                        "&type_search_in_forum=" + (topicModeSearchRadioButton.isChecked() ? "titre_topic" : "auteur_topic"));
+                        "&type_search_in_forum=" + getSearchTypeInText());
                 pageNavigation.updateAdapterForPagerView();
                 pageNavigation.updateCurrentItemAndButtonsToCurrentLink();
             }
@@ -101,7 +114,7 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
                         (Button) findViewById(R.id.currentpage_button_searchtopic), (Button) findViewById(R.id.nextpage_button_searchtopic), null);
         pageNavigation.updateAdapterForPagerView();
 
-        topicModeSearchRadioButton = findViewById(R.id.topicmode_radio_searchtopic);
+        searchModeRadioGroup = findViewById(R.id.radiogroup_layout_searchtopic);
 
         if (getIntent() != null) {
             String newLinkForSearch = getIntent().getStringExtra(EXTRA_FORUM_LINK);

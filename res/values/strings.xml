@@ -131,7 +131,8 @@
     <string name="dark">Sombre</string>
     <string name="style">Style</string>
     <string name="black">Noir</string>
-    <string name="message">Messages</string>
+    <string name="messages">Messages</string>
+    <string name="message">Message</string>
     <string name="settingsModeForumTitle">Mode forum</string>
     <string name="settingsModeIRCTitle">Mode IRC</string>
     <string name="imageAndLink">Images / Liens</string>

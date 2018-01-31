@@ -98,8 +98,12 @@ public class JVCForumAdapter extends BaseAdapter {
         String textForAuthor;
         ContentHolder thisHolder = new ContentHolder();
 
-        thisHolder.titleLineContent = Undeprecator.htmlFromHtml("<b><font color=\"" + Utils.colorToString(ThemeManager.getColorInt(R.attr.themedTopicNameColor, parentActivity)) +
-                                                                "\">" + item.htmlName + "</font> (" + item.nbOfMessages + ")</b>");
+        if (item.type.equals("message")) {
+            thisHolder.titleLineContent = Undeprecator.htmlFromHtml("<b>" + item.htmlName + "</b>");
+        } else {
+            thisHolder.titleLineContent = Undeprecator.htmlFromHtml("<b><font color=\"" + Utils.colorToString(ThemeManager.getColorInt(R.attr.themedTopicNameColor, parentActivity)) +
+                                                                    "\">" + item.htmlName + "</font> (" + item.nbOfMessages + ")</b>");
+        }
 
         switch (item.authorType) {
             case "modo":
@@ -162,6 +166,7 @@ public class JVCForumAdapter extends BaseAdapter {
         holder.authorLine.setText(currentTopicContent.authorLineContent);
         holder.dateLine.setText(currentTopicContent.dateLineContent);
 
+        holder.topicIcon.setVisibility(View.VISIBLE);
         switch (currentTopicInfos.type) {
             case "marque-on":
                 holder.topicIcon.setImageDrawable(iconMarqueOn);
@@ -180,6 +185,9 @@ public class JVCForumAdapter extends BaseAdapter {
                 break;
             case "ghost":
                 holder.topicIcon.setImageDrawable(iconGhost);
+                break;
+            case "message":
+                holder.topicIcon.setVisibility(View.INVISIBLE);
                 break;
             case "dossier1":
             default:

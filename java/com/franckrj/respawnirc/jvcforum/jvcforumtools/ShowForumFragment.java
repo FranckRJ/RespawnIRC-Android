@@ -48,7 +48,11 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
             if (listenerForNewTopicWantRead != null) {
                 JVCParser.TopicInfos currentItem = adapterForForum.getItem(position);
-                listenerForNewTopicWantRead.setReadNewTopic(currentItem.link, JVCParser.specialCharToNormalChar(currentItem.htmlName), currentItem.author, false);
+                if (currentItem.type.equals("message")) {
+                    listenerForNewTopicWantRead.setReadNewTopic(currentItem.link, "", "", false);
+                } else {
+                    listenerForNewTopicWantRead.setReadNewTopic(currentItem.link, JVCParser.specialCharToNormalChar(currentItem.htmlName), currentItem.author, false);
+                }
             }
         }
     };
@@ -58,8 +62,12 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
             if (listenerForNewTopicWantRead != null) {
                 JVCParser.TopicInfos currentItem = adapterForForum.getItem(position);
-                String realPageToGo = JVCParser.setPageNumberForThisTopicLink(currentItem.link, (Integer.parseInt(currentItem.nbOfMessages) / 20) + 1);
-                listenerForNewTopicWantRead.setReadNewTopic(realPageToGo, JVCParser.specialCharToNormalChar(currentItem.htmlName), currentItem.author, true);
+                if (currentItem.type.equals("message")) {
+                    listenerForNewTopicWantRead.setReadNewTopic(currentItem.link, "", "", false);
+                } else {
+                    String realPageToGo = JVCParser.setPageNumberForThisTopicLink(currentItem.link, (Integer.parseInt(currentItem.nbOfMessages) / 20) + 1);
+                    listenerForNewTopicWantRead.setReadNewTopic(realPageToGo, JVCParser.specialCharToNormalChar(currentItem.htmlName), currentItem.author, true);
+                }
                 return true;
             }
             return false;
