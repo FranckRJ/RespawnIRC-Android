@@ -190,6 +190,10 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         reloadAllForum(true);
     }
 
+    public void updateForumStatusInfos(JVCForumGetter.ForumStatusInfos newForumStatusInfos) {
+        getterForForum.updateForumStatusInfos(newForumStatusInfos);
+    }
+
     @Override
     public void setPageLink(String newForumPageLink) {
         setPageLink(newForumPageLink, true);
@@ -221,26 +225,6 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         getterForForum.startGetMessagesOfThisPage("");
     }
 
-    public JVCParser.AjaxInfos getLatestAjaxInfos() {
-        return getterForForum.getLatestAjaxInfos();
-    }
-
-    public Boolean getIsInFavs() {
-        return getterForForum.getIsInFavs();
-    }
-
-    public String getLatestListOfInputInAString() {
-        return getterForForum.getLatestListOfInputInAString();
-    }
-
-    public boolean getUserCanPostAsModo() {
-        return getterForForum.getUserCanPostAsModo();
-    }
-
-    public void setIsInFavs(Boolean newVal) {
-        getterForForum.setIsInFavs(newVal);
-    }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -270,14 +254,11 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         if (getActivity() instanceof NewTopicWantRead) {
             listenerForNewTopicWantRead = (NewTopicWantRead) getActivity();
         }
-        if (getActivity() instanceof JVCForumGetter.NewForumNameAvailable) {
-            getterForForum.setListenerForNewForumName((JVCForumGetter.NewForumNameAvailable) getActivity());
-        }
         if (getActivity() instanceof JVCForumGetter.ForumLinkChanged) {
             getterForForum.setListenerForForumLinkChanged((JVCForumGetter.ForumLinkChanged) getActivity());
         }
-        if (getActivity() instanceof JVCForumGetter.NewNumberOfMpAndNotifSetted) {
-            getterForForum.setListenerForNewNumberOfMpAndNotif((JVCForumGetter.NewNumberOfMpAndNotifSetted) getActivity());
+        if (getActivity() instanceof JVCForumGetter.NewForumStatusListener) {
+            getterForForum.setListenerForNewForumStatus((JVCForumGetter.NewForumStatusListener) getActivity());
         }
 
         errorBackgroundMessage.setVisibility(View.GONE);

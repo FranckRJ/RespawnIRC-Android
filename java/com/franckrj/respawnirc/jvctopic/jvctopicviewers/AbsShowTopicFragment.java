@@ -209,7 +209,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         if (shareAction != null && absGetterForTopic != null) {
             Intent shareIntent = new Intent();
             shareIntent.setAction(Intent.ACTION_SEND);
-            shareIntent.putExtra(Intent.EXTRA_TEXT, absGetterForTopic.getUrlForTopic());
+            shareIntent.putExtra(Intent.EXTRA_TEXT, absGetterForTopic.getUrlForTopicPage());
             shareIntent.setType("text/plain");
             shareAction.setShareIntent(shareIntent);
         }

@@ -106,8 +106,8 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
     }
 
     private void saveOldTopicInfos() {
-        if (!getterForTopic.getUrlForTopic().isEmpty()) {
-            PrefsManager.putString(PrefsManager.StringPref.Names.OLD_URL_FOR_TOPIC, getterForTopic.getUrlForTopic());
+        if (!getterForTopic.getUrlForTopicPage().isEmpty()) {
+            PrefsManager.putString(PrefsManager.StringPref.Names.OLD_URL_FOR_TOPIC, getterForTopic.getUrlForTopicPage());
             PrefsManager.putLong(PrefsManager.LongPref.Names.OLD_LAST_ID_OF_MESSAGE, getterForTopic.getLastIdOfMessage());
             PrefsManager.applyChanges();
         }
@@ -221,8 +221,8 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        menu.findItem(R.id.action_load_from_old_topic_info_showtopicirc).setEnabled(JVCParser.checkIfTopicAreSame(getterForTopic.getUrlForTopic(), oldUrlForTopic));
-        menu.findItem(R.id.action_share_showtopicboth).setEnabled(!getterForTopic.getUrlForTopic().isEmpty());
+        menu.findItem(R.id.action_load_from_old_topic_info_showtopicirc).setEnabled(JVCParser.checkIfTopicAreSame(getterForTopic.getUrlForTopicPage(), oldUrlForTopic));
+        menu.findItem(R.id.action_share_showtopicboth).setEnabled(!getterForTopic.getUrlForTopicPage().isEmpty());
         updateShareAction();
     }
 

@@ -207,7 +207,7 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        menu.findItem(R.id.action_share_showtopicboth).setEnabled(!getterForTopic.getUrlForTopic().isEmpty());
+        menu.findItem(R.id.action_share_showtopicboth).setEnabled(!getterForTopic.getUrlForTopicPage().isEmpty());
         updateShareAction();
     }
 

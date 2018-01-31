@@ -62,16 +62,16 @@ public class JVCTopicModeForumGetter extends AbsJVCTopicGetter {
 
     public boolean startGetMessagesOfThisPage(String newUrlOfPage, boolean useBiggerTimeoutTime) {
         if (currentAsyncTaskForGetMessage == null && !newUrlOfPage.isEmpty()) {
-            urlForTopic = newUrlOfPage;
-            isLoadingFirstPage = JVCParser.getPageNumberForThisTopicLink(urlForTopic).equals("1");
+            urlForTopicPage = newUrlOfPage;
+            isLoadingFirstPage = JVCParser.getPageNumberForThisTopicLink(urlForTopicPage).equals("1");
             currentAsyncTaskForGetMessage = new GetJVCForumLastMessages(useBiggerTimeoutTime);
             currentAsyncTaskForGetMessage.setRequestIsStartedListener(getLastMessagesIsStartedListener);
             currentAsyncTaskForGetMessage.setRequestIsFinishedListener(getLastMessagesIsFinishedListener);
-            currentAsyncTaskForGetMessage.execute(urlForTopic, cookieListInAString);
+            currentAsyncTaskForGetMessage.execute(urlForTopicPage, cookieListInAString);
             return true;
         } else {
-            urlForTopic = newUrlOfPage;
-            isLoadingFirstPage = JVCParser.getPageNumberForThisTopicLink(urlForTopic).equals("1");
+            urlForTopicPage = newUrlOfPage;
+            isLoadingFirstPage = JVCParser.getPageNumberForThisTopicLink(urlForTopicPage).equals("1");
             return false;
         }
     }
@@ -83,7 +83,7 @@ public class JVCTopicModeForumGetter extends AbsJVCTopicGetter {
 
     @Override
     public boolean reloadTopic(boolean useBiggerTimeoutTime) {
-        return startGetMessagesOfThisPage(urlForTopic, useBiggerTimeoutTime);
+        return startGetMessagesOfThisPage(urlForTopicPage, useBiggerTimeoutTime);
     }
 
     private static class GetJVCForumLastMessages extends AbsGetJVCLastMessages {

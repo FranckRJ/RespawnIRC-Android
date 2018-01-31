@@ -374,7 +374,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
                 String pageContent;
                 StringBuilder requestBuilder = new StringBuilder("titre_topic=").append(Utils.encodeStringToUrlString(infosOfSend[0].topicTitle))
                                                                                 .append("&message_topic=").append(Utils.encodeStringToUrlString(infosOfSend[0].topicContent))
-                                                                                .append(infosOfSend[0].listOfInputsInAstring);
+                                                                                .append(infosOfSend[0].listOfInputsInAstring).append("&spotify_topic=");
 
                 if (infosOfSend[0].postAsModo) {
                     requestBuilder.append("&form_alias_rang=2");

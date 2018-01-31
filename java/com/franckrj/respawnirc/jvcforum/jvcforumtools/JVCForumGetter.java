@@ -1,10 +1,11 @@
 package com.franckrj.respawnirc.jvcforum.jvcforumtools;
 
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 import com.franckrj.respawnirc.utils.JVCParser;
-import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
 import java.util.ArrayList;
@@ -14,30 +15,20 @@ public class JVCForumGetter {
     public static final int STATE_NOT_LOADING = 1;
 
     private static final String SAVE_FORUM_URL_TO_FETCH = "fgSaveForumUrlToFetch";
-    private static final String SAVE_LATEST_AJAX_INFO = "fgSaveLatestAjaxInfo";
-    private static final String SAVE_LATEST_LIST_OF_INPUT = "fgSaveLatestListOfInputInAString";
-    private static final String SAVE_FORUM_IS_IN_FAV = "fgSaveForumIsInFav";
     private static final String SAVE_IS_IN_SEARCH_MODE = "fgSaveIsInSearchMode";
     private static final String SAVE_LAST_TYPE_OF_ERROR = "fgSaveLastTypeOfError";
-    private static final String SAVE_USER_CAN_POST_AS_MODO = "fgSaveUserCanPostAsModo";
+    private static final String SAVE_FORUM_STATUS = "fgSaveForumStatus";
 
-    private String urlForForum = "";
+    private String urlForForumPage = "";
+    private ForumStatusInfos currentForumStatus = new ForumStatusInfos();
     private GetJVCLastTopics currentAsyncTaskForGetTopic = null;
     private String cookieListInAString = "";
-    private NewTopicsListener listenerForNewTopics = null;
-    private NewGetterStateListener listenerForNewGetterState = null;
-    private NewForumNameAvailable listenerForNewForumName = null;
     private ForumLinkChanged listenerForForumLinkChanged = null;
-    private String forumName = "";
-    private JVCParser.AjaxInfos latestAjaxInfos = new JVCParser.AjaxInfos();
-    private Boolean isInFavs = null;
-    private String latestListOfInputInAString = null;
-    private String latestNumberOfMp = null;
-    private String latestNumberOfNotif = null;
-    private NewNumberOfMpAndNotifSetted listenerForNewNumberOfMpAndNotif = null;
+    private NewTopicsListener listenerForNewTopics = null;
+    private NewForumStatusListener listenerForNewForumStatus = null;
+    private NewGetterStateListener listenerForNewGetterState = null;
     private boolean isInSearchMode = false;
     private ErrorType lastTypeOfError = ErrorType.NONE_OR_UNKNOWN;
-    private boolean userCanPostAsModo = false;
 
     private final AbsWebRequestAsyncTask.RequestIsStarted getLastTopicsIsStartedListener = new AbsWebRequestAsyncTask.RequestIsStarted() {
         @Override
@@ -63,10 +54,10 @@ public class JVCForumGetter {
 
                 if (!reqResult.newUrlForForumPage.isEmpty()) {
                     if (!isInSearchMode) {
-                        if (JVCParser.checkIfForumAreSame(urlForForum, reqResult.newUrlForForumPage)) {
-                            urlForForum = reqResult.newUrlForForumPage;
+                        if (JVCParser.checkIfForumAreSame(urlForForumPage, reqResult.newUrlForForumPage)) {
+                            urlForForumPage = reqResult.newUrlForForumPage;
                             if (listenerForForumLinkChanged != null) {
-                                listenerForForumLinkChanged.updateForumLink(urlForForum);
+                                listenerForForumLinkChanged.updateForumLink(urlForForumPage);
                             }
                         } else {
                             lastTypeOfError = ErrorType.FORUM_DOES_NOT_EXIST;
@@ -79,33 +70,15 @@ public class JVCForumGetter {
                 }
 
                 if (pageDownloadedIsAnalysable) {
-                    latestAjaxInfos = reqResult.newLatestAjaxInfos;
-                    isInFavs = reqResult.newIsInFavs;
-                    latestListOfInputInAString = reqResult.newListOfInputInAString;
-                    userCanPostAsModo = reqResult.newUserCanPostAsModo;
+                    ForumStatusInfos oldForumStatus = currentForumStatus;
+                    currentForumStatus = reqResult.forumStatus;
 
-                    if (reqResult.newSearchIsEmpty) {
+                    if (currentForumStatus.searchIsEmpty) {
                         lastTypeOfError = ErrorType.SEARCH_IS_EMPTY_AND_ITS_NOT_A_FAIL;
                     }
 
-                    if (!latestListOfInputInAString.isEmpty()) {
-                        latestListOfInputInAString = latestListOfInputInAString + "&spotify_topic=";
-                    }
-
-                    if (!reqResult.newForumName.equals(forumName)) {
-                        forumName = reqResult.newForumName;
-                        if (listenerForNewForumName != null) {
-                            listenerForNewForumName.getNewForumName(forumName);
-                        }
-                    }
-
-                    if (!Utils.stringsAreEquals(latestNumberOfMp, reqResult.newNumberOfMp) ||
-                            !Utils.stringsAreEquals(latestNumberOfNotif, reqResult.newNumberOfNotif)) {
-                        latestNumberOfMp = reqResult.newNumberOfMp;
-                        latestNumberOfNotif = reqResult.newNumberOfNotif;
-                        if (listenerForNewNumberOfMpAndNotif != null) {
-                            listenerForNewNumberOfMpAndNotif.getNewNumberOfMpAndNotif(latestNumberOfMp, latestNumberOfNotif);
-                        }
+                    if (listenerForNewForumStatus != null) {
+                        listenerForNewForumStatus.getNewForumStatus(new ForumStatusInfos(currentForumStatus), oldForumStatus);
                     }
 
                     if (listenerForNewTopics != null) {
@@ -122,18 +95,6 @@ public class JVCForumGetter {
         }
     };
 
-    public JVCParser.AjaxInfos getLatestAjaxInfos() {
-        return latestAjaxInfos;
-    }
-
-    public Boolean getIsInFavs() {
-        return isInFavs;
-    }
-
-    public String getLatestListOfInputInAString() {
-        return latestListOfInputInAString;
-    }
-
     public ErrorType getLastTypeOfError() {
         return lastTypeOfError;
     }
@@ -142,12 +103,8 @@ public class JVCForumGetter {
         return isInSearchMode;
     }
 
-    public boolean getUserCanPostAsModo() {
-        return userCanPostAsModo;
-    }
-
-    public void setIsInFavs(Boolean newVal) {
-        isInFavs = newVal;
+    public void updateForumStatusInfos(ForumStatusInfos newForumStatusInfos) {
+        currentForumStatus = new ForumStatusInfos(newForumStatusInfos);
     }
 
     public void setIsInSearchMode(boolean newVal) {
@@ -158,28 +115,24 @@ public class JVCForumGetter {
         cookieListInAString = newCookieListInAString;
     }
 
+    public void setListenerForForumLinkChanged(ForumLinkChanged thisListener) {
+        listenerForForumLinkChanged = thisListener;
+    }
+
     public void setListenerForNewTopics(NewTopicsListener thisListener) {
         listenerForNewTopics = thisListener;
+    }
+
+    public void setListenerForNewForumStatus(NewForumStatusListener thisListener) {
+        listenerForNewForumStatus = thisListener;
     }
 
     public void setListenerForNewGetterState(NewGetterStateListener thisListener) {
         listenerForNewGetterState = thisListener;
     }
 
-    public void setListenerForNewForumName(NewForumNameAvailable thisListener) {
-        listenerForNewForumName = thisListener;
-    }
-
-    public void setListenerForForumLinkChanged(ForumLinkChanged thisListener) {
-        listenerForForumLinkChanged = thisListener;
-    }
-
-    public void setListenerForNewNumberOfMpAndNotif(NewNumberOfMpAndNotifSetted thisListener) {
-        listenerForNewNumberOfMpAndNotif = thisListener;
-    }
-
     public void setUrlForForumWithoutLoading(String newUrlOfPage) {
-        urlForForum = newUrlOfPage;
+        urlForForumPage = newUrlOfPage;
     }
 
     public void startGetMessagesOfThisPage(String newUrlOfPage) {
@@ -188,14 +141,14 @@ public class JVCForumGetter {
 
     public boolean startGetMessagesOfThisPage(String newUrlOfPage, boolean useBiggerTimeoutTime) {
         if (currentAsyncTaskForGetTopic == null && !newUrlOfPage.isEmpty()) {
-            urlForForum = newUrlOfPage;
+            urlForForumPage = newUrlOfPage;
             currentAsyncTaskForGetTopic = new GetJVCLastTopics(isInSearchMode, useBiggerTimeoutTime);
             currentAsyncTaskForGetTopic.setRequestIsStartedListener(getLastTopicsIsStartedListener);
             currentAsyncTaskForGetTopic.setRequestIsFinishedListener(getLastTopicsIsFinishedListener);
-            currentAsyncTaskForGetTopic.execute(urlForForum, cookieListInAString);
+            currentAsyncTaskForGetTopic.execute(urlForForumPage, cookieListInAString);
             return true;
         } else {
-            urlForForum = newUrlOfPage;
+            urlForForumPage = newUrlOfPage;
             return false;
         }
     }
@@ -205,7 +158,7 @@ public class JVCForumGetter {
     }
 
     public boolean reloadForum(boolean useBiggerTimeoutTime) {
-        return startGetMessagesOfThisPage(urlForForum, useBiggerTimeoutTime);
+        return startGetMessagesOfThisPage(urlForForumPage, useBiggerTimeoutTime);
     }
 
     public void stopAllCurrentTask() {
@@ -220,29 +173,17 @@ public class JVCForumGetter {
     }
 
     public void loadFromBundle(Bundle savedInstanceState) {
-        urlForForum = savedInstanceState.getString(SAVE_FORUM_URL_TO_FETCH, "");
-        latestAjaxInfos = savedInstanceState.getParcelable(SAVE_LATEST_AJAX_INFO);
-        latestListOfInputInAString = savedInstanceState.getString(SAVE_LATEST_LIST_OF_INPUT, null);
+        urlForForumPage = savedInstanceState.getString(SAVE_FORUM_URL_TO_FETCH, "");
         isInSearchMode = savedInstanceState.getBoolean(SAVE_IS_IN_SEARCH_MODE, false);
         lastTypeOfError = (ErrorType) savedInstanceState.getSerializable(SAVE_LAST_TYPE_OF_ERROR);
-        userCanPostAsModo = savedInstanceState.getBoolean(SAVE_USER_CAN_POST_AS_MODO);
-        if (savedInstanceState.containsKey(SAVE_FORUM_IS_IN_FAV)) {
-            isInFavs = savedInstanceState.getBoolean(SAVE_FORUM_IS_IN_FAV, false);
-        } else {
-            isInFavs = null;
-        }
+        currentForumStatus = savedInstanceState.getParcelable(SAVE_FORUM_STATUS);
     }
 
     public void saveToBundle(Bundle savedInstanceState) {
-        savedInstanceState.putString(SAVE_FORUM_URL_TO_FETCH, urlForForum);
-        savedInstanceState.putParcelable(SAVE_LATEST_AJAX_INFO, latestAjaxInfos);
-        savedInstanceState.putString(SAVE_LATEST_LIST_OF_INPUT, latestListOfInputInAString);
+        savedInstanceState.putString(SAVE_FORUM_URL_TO_FETCH, urlForForumPage);
         savedInstanceState.putBoolean(SAVE_IS_IN_SEARCH_MODE, isInSearchMode);
         savedInstanceState.putSerializable(SAVE_LAST_TYPE_OF_ERROR, lastTypeOfError);
-        savedInstanceState.putBoolean(SAVE_USER_CAN_POST_AS_MODO, userCanPostAsModo);
-        if (isInFavs != null) {
-            savedInstanceState.putBoolean(SAVE_FORUM_IS_IN_FAV, isInFavs);
-        }
+        savedInstanceState.putParcelable(SAVE_FORUM_STATUS, currentForumStatus);
     }
 
     private static class GetJVCLastTopics extends AbsWebRequestAsyncTask<String, Void, ForumPageInfos> {
@@ -267,16 +208,16 @@ public class JVCForumGetter {
                     newPageInfos = new ForumPageInfos();
                     newPageInfos.listOfTopics = JVCParser.getTopicsOfThisPage(pageContent);
                     newPageInfos.newUrlForForumPage = currentWebInfos.currentUrl;
-                    newPageInfos.newForumName = JVCParser.getForumNameInForumPage(pageContent);
-                    newPageInfos.newLatestAjaxInfos = JVCParser.getAllAjaxInfos(pageContent);
-                    newPageInfos.newIsInFavs = JVCParser.getIsInFavsFromPage(pageContent);
-                    newPageInfos.newListOfInputInAString = JVCParser.getListOfInputInAStringInTopicFormForThisPage(pageContent);
-                    newPageInfos.newNumberOfMp = JVCParser.getNumberOfMpFromPage(pageContent);
-                    newPageInfos.newNumberOfNotif = JVCParser.getNumberOfNotifFromPage(pageContent);
+                    newPageInfos.forumStatus.forumName = JVCParser.getForumNameInForumPage(pageContent);
+                    newPageInfos.forumStatus.ajaxInfos = JVCParser.getAllAjaxInfos(pageContent);
+                    newPageInfos.forumStatus.isInFavs = JVCParser.getIsInFavsFromPage(pageContent);
+                    newPageInfos.forumStatus.listOfInputInAString = JVCParser.getListOfInputInAStringInTopicFormForThisPage(pageContent);
+                    newPageInfos.forumStatus.numberOfMp = JVCParser.getNumberOfMpFromPage(pageContent);
+                    newPageInfos.forumStatus.numberOfNotif = JVCParser.getNumberOfNotifFromPage(pageContent);
                     if (isInSearchMode) {
-                        newPageInfos.newSearchIsEmpty = JVCParser.getSearchIsEmptyInPage(pageContent);
+                        newPageInfos.forumStatus.searchIsEmpty = JVCParser.getSearchIsEmptyInPage(pageContent);
                     }
-                    newPageInfos.newUserCanPostAsModo = JVCParser.getUserCanPostAsModo(pageContent);
+                    newPageInfos.forumStatus.userCanPostAsModo = JVCParser.getUserCanPostAsModo(pageContent);
                 }
 
                 return newPageInfos;
@@ -291,20 +232,84 @@ public class JVCForumGetter {
     }
 
     private static class ForumPageInfos {
-        public ArrayList<JVCParser.TopicInfos> listOfTopics;
-        public String newUrlForForumPage;
-        public String newForumName;
-        public JVCParser.AjaxInfos newLatestAjaxInfos;
-        public Boolean newIsInFavs;
-        public String newListOfInputInAString;
-        public String newNumberOfMp;
-        public String newNumberOfNotif;
-        public boolean newSearchIsEmpty;
-        public boolean newUserCanPostAsModo;
+        public String newUrlForForumPage = "";
+        public ForumStatusInfos forumStatus = new ForumStatusInfos();
+        public ArrayList<JVCParser.TopicInfos> listOfTopics = new ArrayList<>();
     }
 
-    public interface NewForumNameAvailable {
-        void getNewForumName(String newForumName);
+    public static class ForumStatusInfos implements Parcelable {
+        public String forumName = "";
+        public JVCParser.AjaxInfos ajaxInfos = new JVCParser.AjaxInfos();
+        public Boolean isInFavs = null;
+        public String listOfInputInAString = null;
+        public String numberOfMp = null;
+        public String numberOfNotif = null;
+        public boolean searchIsEmpty = false;
+        public boolean userCanPostAsModo = false;
+
+        public static final Parcelable.Creator<ForumStatusInfos> CREATOR = new Parcelable.Creator<ForumStatusInfos>() {
+            @Override
+            public ForumStatusInfos createFromParcel(Parcel in) {
+                return new ForumStatusInfos(in);
+            }
+
+            @Override
+            public ForumStatusInfos[] newArray(int size) {
+                return new ForumStatusInfos[size];
+            }
+        };
+
+        public ForumStatusInfos() {
+            //rien
+        }
+
+        public ForumStatusInfos(ForumStatusInfos baseForCopy) {
+            forumName = baseForCopy.forumName;
+            ajaxInfos = new JVCParser.AjaxInfos(baseForCopy.ajaxInfos);
+            isInFavs = baseForCopy.isInFavs;
+            listOfInputInAString = baseForCopy.listOfInputInAString;
+            numberOfMp = baseForCopy.numberOfMp;
+            numberOfNotif = baseForCopy.numberOfNotif;
+            searchIsEmpty = baseForCopy.searchIsEmpty;
+            userCanPostAsModo = baseForCopy.userCanPostAsModo;
+        }
+
+        private ForumStatusInfos(Parcel in) {
+            forumName = in.readString();
+            ajaxInfos = in.readParcelable(JVCParser.AjaxInfos.class.getClassLoader());
+            byte tmpIsInFav = in.readByte();
+            if (tmpIsInFav == -1) {
+                isInFavs = null;
+            } else {
+                isInFavs = tmpIsInFav == 1;
+            }
+            listOfInputInAString = in.readString();
+            numberOfMp = in.readString();
+            numberOfNotif = in.readString();
+            searchIsEmpty = (in.readByte() == 1);
+            userCanPostAsModo = (in.readByte() == 1);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            out.writeString(forumName);
+            out.writeParcelable(ajaxInfos, flags);
+            if (isInFavs == null) {
+                out.writeByte((byte) -1);
+            } else {
+                out.writeByte((byte)(isInFavs ? 1 : 0));
+            }
+            out.writeString(listOfInputInAString);
+            out.writeString(numberOfMp);
+            out.writeString(numberOfNotif);
+            out.writeByte((byte)(searchIsEmpty ? 1 : 0));
+            out.writeByte((byte)(userCanPostAsModo ? 1 : 0));
+        }
     }
 
     public interface ForumLinkChanged {
@@ -315,11 +320,11 @@ public class JVCForumGetter {
         void getNewTopics(ArrayList<JVCParser.TopicInfos> listOfNewTopics);
     }
 
-    public interface NewGetterStateListener {
-        void newStateSetted(int newState);
+    public interface NewForumStatusListener {
+        void getNewForumStatus(ForumStatusInfos newForumStatus, ForumStatusInfos oldForumStatus);
     }
 
-    public interface NewNumberOfMpAndNotifSetted {
-        void getNewNumberOfMpAndNotif(String newNumberOfMp, String newNumberOfNotif);
+    public interface NewGetterStateListener {
+        void newStateSetted(int newState);
     }
 }

@@ -19,7 +19,7 @@ public abstract class AbsJVCTopicGetter {
     protected static final String SAVE_LAST_ID_OF_MESSAGE = "tgSaveLastIdOfMessage";
     protected static final String SAVE_TOPIC_STATUS = "tgSaveTopicStatus";
 
-    protected String urlForTopic = "";
+    protected String urlForTopicPage = "";
     protected TopicStatusInfos currentTopicStatus = new TopicStatusInfos();
     protected long lastIdOfMessage = 0;
     protected boolean isLoadingFirstPage = false;
@@ -31,8 +31,8 @@ public abstract class AbsJVCTopicGetter {
     protected NewGetterStateListener listenerForNewGetterState = null;
     protected ErrorType lastTypeOfError = ErrorType.NONE_OR_UNKNOWN;
 
-    public String getUrlForTopic() {
-        return urlForTopic;
+    public String getUrlForTopicPage() {
+        return urlForTopicPage;
     }
 
     public TopicStatusInfos getTopicStatus() {
@@ -83,14 +83,14 @@ public abstract class AbsJVCTopicGetter {
     }
 
     public void loadFromBundle(Bundle savedInstanceState) {
-        urlForTopic = savedInstanceState.getString(SAVE_TOPIC_URL_TO_FETCH, "");
+        urlForTopicPage = savedInstanceState.getString(SAVE_TOPIC_URL_TO_FETCH, "");
         isLoadingFirstPage = savedInstanceState.getBoolean(SAVE_IS_LOADING_FIRST_PAGE, false);
         lastIdOfMessage = savedInstanceState.getLong(SAVE_LAST_ID_OF_MESSAGE, 0);
         currentTopicStatus = savedInstanceState.getParcelable(SAVE_TOPIC_STATUS);
     }
 
     public void saveToBundle(Bundle savedInstanceState) {
-        savedInstanceState.putString(SAVE_TOPIC_URL_TO_FETCH, urlForTopic);
+        savedInstanceState.putString(SAVE_TOPIC_URL_TO_FETCH, urlForTopicPage);
         savedInstanceState.putBoolean(SAVE_IS_LOADING_FIRST_PAGE, isLoadingFirstPage);
         savedInstanceState.putLong(SAVE_LAST_ID_OF_MESSAGE, lastIdOfMessage);
         savedInstanceState.putParcelable(SAVE_TOPIC_STATUS, currentTopicStatus);
@@ -111,7 +111,7 @@ public abstract class AbsJVCTopicGetter {
 
         if (pageContent != null) {
             newPageInfos = new TopicPageInfos();
-            newPageInfos.urlForTopicPage = currentWebInfos.currentUrl;
+            newPageInfos.newUrlForTopicPage = currentWebInfos.currentUrl;
             newPageInfos.lastPageLink = JVCParser.getLastPageOfTopic(pageContent);
             newPageInfos.nextPageLink = JVCParser.getNextPageOfTopic(pageContent);
             newPageInfos.listOfMessages = JVCParser.getMessagesOfThisPage(pageContent);
@@ -136,12 +136,12 @@ public abstract class AbsJVCTopicGetter {
     protected boolean fillBaseClassInfoFromPageInfo(TopicPageInfos newPageInfos) {
         boolean pageDownloadedIsAnalysable = true;
 
-        if (!newPageInfos.urlForTopicPage.isEmpty()) {
-            if (JVCParser.checkIfTopicAreSame(urlForTopic, newPageInfos.urlForTopicPage)) {
-                if (JVCParser.getPageNumberForThisTopicLink(urlForTopic).equals(JVCParser.getPageNumberForThisTopicLink(newPageInfos.urlForTopicPage))) {
-                    urlForTopic = newPageInfos.urlForTopicPage;
+        if (!newPageInfos.newUrlForTopicPage.isEmpty()) {
+            if (JVCParser.checkIfTopicAreSame(urlForTopicPage, newPageInfos.newUrlForTopicPage)) {
+                if (JVCParser.getPageNumberForThisTopicLink(urlForTopicPage).equals(JVCParser.getPageNumberForThisTopicLink(newPageInfos.newUrlForTopicPage))) {
+                    urlForTopicPage = newPageInfos.newUrlForTopicPage;
                     if (listenerForTopicLinkChanged != null) {
-                        listenerForTopicLinkChanged.updateTopicLink(urlForTopic);
+                        listenerForTopicLinkChanged.updateTopicLink(urlForTopicPage);
                     }
                 } else {
                     lastTypeOfError = ErrorType.PAGE_DOES_NOT_EXIST;
@@ -177,7 +177,7 @@ public abstract class AbsJVCTopicGetter {
     }
 
     protected static class TopicPageInfos {
-        public String urlForTopicPage = "";
+        public String newUrlForTopicPage = "";
         public TopicStatusInfos topicStatus = new TopicStatusInfos();
         public ArrayList<JVCParser.MessageInfos> listOfMessages = new ArrayList<>();
         public String lastPageLink = "";

@@ -82,9 +82,9 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
 
                         if (!reqResult.lastPageLink.isEmpty()) {
                             if (firstTimeGetMessages) {
-                                urlForTopic = reqResult.lastPageLink;
+                                urlForTopicPage = reqResult.lastPageLink;
                             } else {
-                                urlForTopic = reqResult.nextPageLink;
+                                urlForTopicPage = reqResult.nextPageLink;
                             }
                             isLoadingFirstPage = false;
                             needToGetNewMessagesEarly = true;
@@ -122,7 +122,7 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
         currentTopicStatus.listOfInputInAString = null;
         lastIdOfMessage = 0;
         listOfEditInfos.clear();
-        urlForTopic = JVCParser.getFirstPageForThisTopicLink(newUrlForTopic);
+        urlForTopicPage = JVCParser.getFirstPageForThisTopicLink(newUrlForTopic);
         isLoadingFirstPage = true;
     }
 
@@ -131,7 +131,7 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
         currentTopicStatus.listOfInputInAString = null;
         lastIdOfMessage = oldLastIdOfMessage - 1;
         listOfEditInfos.clear();
-        urlForTopic = oldUrlForTopic;
+        urlForTopicPage = oldUrlForTopic;
         isLoadingFirstPage = false;
     }
 
@@ -140,7 +140,7 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
     }
 
     public boolean startGetMessages(int timerBeforeStart, boolean useBiggerTimeoutTime) {
-        if (!urlForTopic.isEmpty()) {
+        if (!urlForTopicPage.isEmpty()) {
             messagesNeedToBeGet = true;
             if (currentAsyncTaskForGetMessage == null) {
                 currentAsyncTaskForGetMessage = new GetJVCIRCLastMessages(useBiggerTimeoutTime);
@@ -203,7 +203,7 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
                         if (currentAsyncTaskForGetMessage.getStatus().equals(AsyncTask.Status.PENDING)) {
                             currentAsyncTaskForGetMessage.setRequestIsStartedListener(getMessagesIsStartedListener);
                             currentAsyncTaskForGetMessage.setRequestIsFinishedListener(getMessagesIsFinishedListener);
-                            currentAsyncTaskForGetMessage.execute(urlForTopic, cookieListInAString);
+                            currentAsyncTaskForGetMessage.execute(urlForTopicPage, cookieListInAString);
                         }
                     }
                 }
