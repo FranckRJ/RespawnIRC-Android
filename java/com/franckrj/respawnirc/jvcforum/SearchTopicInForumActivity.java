@@ -49,7 +49,7 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
     private final View.OnClickListener searchButtonClickedListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            performSearch(true);
+            performSearch();
         }
     };
 
@@ -57,7 +57,7 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                performSearch(true);
+                performSearch();
                 return true;
             }
             return false;
@@ -67,7 +67,7 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
     private final RadioGroup.OnCheckedChangeListener searchTypeChangedListener = new RadioGroup.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
-            performSearch(false);
+            performSearch();
         }
     };
 
@@ -99,7 +99,7 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
         pageNavigation.setLastPageNumber(100);
     }
 
-    public void performSearch(boolean hideSoftKeyboard) {
+    public void performSearch() {
         if (textForSearch != null) {
             if (!textForSearch.getText().toString().isEmpty()) {
                 idOfTypeOfSearch = searchModeRadioGroup.getCheckedRadioButtonId();
@@ -110,9 +110,7 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
             }
         }
 
-        if (hideSoftKeyboard) {
-            Utils.hideSoftKeyboard(SearchTopicInForumActivity.this);
-        }
+        Utils.hideSoftKeyboard(SearchTopicInForumActivity.this);
     }
 
     @Override
