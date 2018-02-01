@@ -34,7 +34,6 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
 
     private static final String SAVE_SEARCH_FORUM_CONTENT = "saveSearchForumContent";
     private static final String SAVE_CURRENT_SEARCH_LINK = "saveCurrentSearchLink";
-    private static final String SAVE_SEARCH_TEXT_IS_OPENED = "saveSearchTextIsOpened";
 
     private EditText textForSearch = null;
     private MenuItem searchExpandableItem = null;
@@ -44,12 +43,11 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
     private ShareActionProvider shareAction = null;
     private String currentSearchLink = "";
     private String currentForumName = "";
-    private boolean searchTextIsOpened = false;
 
     private final View.OnClickListener searchButtonClickedListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            performSearch();
+            performSearch(true);
         }
     };
 
@@ -57,10 +55,17 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                performSearch();
+                performSearch(true);
                 return true;
             }
             return false;
+        }
+    };
+
+    private final RadioGroup.OnCheckedChangeListener searchTypeChangedListener = new RadioGroup.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(RadioGroup group, int checkedId) {
+            performSearch(false);
         }
     };
 
@@ -92,7 +97,7 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
         pageNavigation.setLastPageNumber(100);
     }
 
-    public void performSearch() {
+    public void performSearch(boolean hideSoftKeyboard) {
         if (textForSearch != null) {
             if (!textForSearch.getText().toString().isEmpty()) {
                 pageNavigation.setCurrentLink(currentSearchLink + "?search_in_forum=" + Utils.encodeStringToUrlString(textForSearch.getText().toString()) +
@@ -102,7 +107,9 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
             }
         }
 
-        Utils.hideSoftKeyboard(SearchTopicInForumActivity.this);
+        if (hideSoftKeyboard) {
+            Utils.hideSoftKeyboard(SearchTopicInForumActivity.this);
+        }
     }
 
     @Override
@@ -117,6 +124,7 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
         pageNavigation.updateAdapterForPagerView();
 
         searchModeRadioGroup = findViewById(R.id.radiogroup_layout_searchtopic);
+        searchModeRadioGroup.setOnCheckedChangeListener(searchTypeChangedListener);
 
         if (getIntent() != null) {
             String newLinkForSearch = getIntent().getStringExtra(EXTRA_FORUM_LINK);
@@ -134,7 +142,6 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
 
         if (savedInstanceState != null) {
             lastSearchedText = savedInstanceState.getString(SAVE_SEARCH_FORUM_CONTENT, null);
-            searchTextIsOpened = savedInstanceState.getBoolean(SAVE_SEARCH_TEXT_IS_OPENED, false);
             pageNavigation.setCurrentLink(savedInstanceState.getString(SAVE_CURRENT_SEARCH_LINK, ""));
         }
 
@@ -156,7 +163,6 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putBoolean(SAVE_SEARCH_TEXT_IS_OPENED, searchTextIsOpened);
         outState.putString(SAVE_CURRENT_SEARCH_LINK, pageNavigation.getCurrentPageLink());
         outState.putString(SAVE_SEARCH_FORUM_CONTENT, null);
         if (textForSearch != null && searchExpandableItem != null) {
@@ -183,16 +189,12 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
         searchExpandableItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                searchTextIsOpened = false;
                 onBackPressed();
                 return false;
             }
 
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                if (!searchTextIsOpened) {
-                    searchTextIsOpened = true;
-                }
                 return true;
             }
         });
