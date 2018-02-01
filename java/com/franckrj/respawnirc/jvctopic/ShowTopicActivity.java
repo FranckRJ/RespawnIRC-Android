@@ -48,7 +48,7 @@ import com.franckrj.respawnirc.utils.Utils;
 import java.util.ArrayList;
 
 public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCTopicGetter.NewTopicStatusListener, JVCActionsInTopic.TopicNeedToBeReloaded,
-                                                                        PopupMenu.OnMenuItemClickListener, JVCTopicModeForumGetter.NewNumbersOfPagesListener, JVCTopicAdapter.PseudoClicked,
+                                                                        JVCTopicAdapter.MenuItemClickedInMessage, JVCTopicModeForumGetter.NewNumbersOfPagesListener, JVCTopicAdapter.PseudoClicked,
                                                                         ChoosePageNumberDialogFragment.NewPageNumberSelected, JVCTopicAdapter.URLClicked, AbsShowTopicFragment.NewSurveyNeedToBeShown,
                                                                         InsertStuffDialogFragment.StuffInserted, MessageMenuDialogFragment.NewPseudoIgnored, PageNavigationUtil.PageNavigationFunctions,
                                                                         AddOrRemoveThingToFavs.ActionToFavsEnded, AddOrRemoveTopicToSubs.ActionToSubsEnded, AbsJVCTopicGetter.TopicLinkChanged {
@@ -681,7 +681,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     }
 
     @Override
-    public boolean onMenuItemClick(MenuItem item) {
+    public boolean onMenuItemClickedInMessage(MenuItem item, JVCParser.MessageInfos fromThisMessage) {
         switch (item.getItemId()) {
             case R.id.menu_quote_message:
                 if (pseudoOfUser.isEmpty()) {
@@ -689,7 +689,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 } else if (topicStatus.lockReason != null) {
                     Toast.makeText(this, R.string.errorTopicIsLocked, Toast.LENGTH_SHORT).show();
                 } else {
-                    actionsForTopic.startQuoteThisMessage(topicStatus.ajaxInfos, getCurrentFragment().getCurrentItemSelected(), cookieListInAString);
+                    actionsForTopic.startQuoteThisMessage(topicStatus.ajaxInfos, fromThisMessage, cookieListInAString);
                 }
                 return true;
             case R.id.menu_edit_message:
@@ -702,29 +702,32 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                         Utils.hideSoftKeyboard(ShowTopicActivity.this);
                         messageSendLayout.requestFocus();
                     } else {
-                        startEditThisMessage(Long.toString(getCurrentFragment().getCurrentItemSelected().id), true);
+                        startEditThisMessage(Long.toString(fromThisMessage.id), true);
                     }
                 } else {
                     Toast.makeText(this, R.string.errorTopicIsLocked, Toast.LENGTH_SHORT).show();
                 }
 
                 return true;
-            case R.id.menu_delete_message:
-                actionsForTopic.startDeleteThisMessage(topicStatus.ajaxInfos, getCurrentFragment().getCurrentItemSelected(), cookieListInAString);
+            case R.id.menu_delete_or_restore_message:
+                if (fromThisMessage.messageIsDeleted) {
+                    actionsForTopic.startRestoreThisMessage(topicStatus.ajaxInfos, fromThisMessage, cookieListInAString);
+                } else {
+                    actionsForTopic.startDeleteThisMessage(topicStatus.ajaxInfos, fromThisMessage, cookieListInAString);
+                }
                 return true;
             case R.id.menu_kick_pseudo_message:
-                JVCParser.MessageInfos currentMessage = getCurrentFragment().getCurrentItemSelected();
                 Intent newKickPseudoIntent = new Intent(ShowTopicActivity.this, KickPseudoActivity.class);
-                newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_PSEUDO, currentMessage.pseudo);
-                newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_ID_ALIAS, currentMessage.idAlias);
+                newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_PSEUDO, fromThisMessage.pseudo);
+                newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_ID_ALIAS, fromThisMessage.idAlias);
                 newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_ID_FORUM, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()));
-                newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_ID_MESSAGE, String.valueOf(currentMessage.id));
+                newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_ID_MESSAGE, String.valueOf(fromThisMessage.id));
                 newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_AJAX_MOD, topicStatus.ajaxInfos.mod);
                 newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_COOKIES, cookieListInAString);
                 startActivity(newKickPseudoIntent);
                 return true;
             default:
-                return getCurrentFragment().onMenuItemClick(item);
+                return false;
         }
     }
 

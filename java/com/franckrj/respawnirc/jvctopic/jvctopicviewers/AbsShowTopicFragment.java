@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -103,6 +102,56 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
                     AbsJVCTopicGetter.TopicStatusInfos tmpTopicStatus = absGetterForTopic.getTopicStatus();
                     ((NewSurveyNeedToBeShown) getActivity()).getNewSurveyInfos(JVCParser.specialCharToNormalChar(tmpTopicStatus.htmlSurveyTitle), tmpTopicStatus.topicId, tmpTopicStatus.ajaxInfos.list, tmpTopicStatus.listOfSurveyReplyWithInfos);
                 }
+            }
+        }
+    };
+
+    protected final JVCTopicAdapter.MenuItemClickedInMessage menuItemClickedInMessageListener = new JVCTopicAdapter.MenuItemClickedInMessage() {
+        @Override
+        public boolean onMenuItemClickedInMessage(MenuItem item, JVCParser.MessageInfos fromThisMessage) {
+            switch (item.getItemId()) {
+                case R.id.menu_show_spoil_message:
+                    fromThisMessage.listOfSpoilIdToShow.add(-1);
+                    adapterForTopic.updateThisItem(fromThisMessage, false);
+                    adapterForTopic.notifyDataSetChanged();
+                    return true;
+                case R.id.menu_hide_spoil_message:
+                    fromThisMessage.listOfSpoilIdToShow.clear();
+                    adapterForTopic.updateThisItem(fromThisMessage, false);
+                    adapterForTopic.notifyDataSetChanged();
+                    return true;
+                case R.id.menu_show_quote_message:
+                    fromThisMessage.showOverlyQuote = true;
+                    adapterForTopic.updateThisItem(fromThisMessage, false);
+                    adapterForTopic.notifyDataSetChanged();
+                    return true;
+                case R.id.menu_hide_quote_message:
+                    fromThisMessage.showOverlyQuote = false;
+                    adapterForTopic.updateThisItem(fromThisMessage, false);
+                    adapterForTopic.notifyDataSetChanged();
+                    return true;
+                case R.id.menu_show_ugly_images_message:
+                    fromThisMessage.showUglyImages = true;
+                    adapterForTopic.updateThisItem(fromThisMessage, false);
+                    adapterForTopic.notifyDataSetChanged();
+                    return true;
+                case R.id.menu_hide_ugly_images_message:
+                    fromThisMessage.showUglyImages = false;
+                    adapterForTopic.updateThisItem(fromThisMessage, false);
+                    adapterForTopic.notifyDataSetChanged();
+                    return true;
+                case R.id.menu_show_blacklisted_message:
+                    fromThisMessage.pseudoIsBlacklisted = false;
+                    adapterForTopic.updateThisItem(fromThisMessage, false);
+                    adapterForTopic.notifyDataSetChanged();
+                    return true;
+                default:
+                    //noinspection SimplifiableIfStatement
+                    if (getActivity() instanceof JVCTopicAdapter.MenuItemClickedInMessage) {
+                        return ((JVCTopicAdapter.MenuItemClickedInMessage) getActivity()).onMenuItemClickedInMessage(item, fromThisMessage);
+                    } else {
+                        return false;
+                    }
             }
         }
     };
@@ -215,62 +264,8 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         }
     }
 
-    public boolean onMenuItemClick(MenuItem item) {
-        JVCParser.MessageInfos currentItem;
-        switch (item.getItemId()) {
-            case R.id.menu_show_spoil_message:
-                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIdSelected());
-                currentItem.listOfSpoilIdToShow.add(-1);
-                adapterForTopic.updateThisItem(currentItem, false);
-                adapterForTopic.notifyDataSetChanged();
-                return true;
-            case R.id.menu_hide_spoil_message:
-                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIdSelected());
-                currentItem.listOfSpoilIdToShow.clear();
-                adapterForTopic.updateThisItem(currentItem, false);
-                adapterForTopic.notifyDataSetChanged();
-                return true;
-            case R.id.menu_show_quote_message:
-                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIdSelected());
-                currentItem.showOverlyQuote = true;
-                adapterForTopic.updateThisItem(currentItem, false);
-                adapterForTopic.notifyDataSetChanged();
-                return true;
-            case R.id.menu_hide_quote_message:
-                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIdSelected());
-                currentItem.showOverlyQuote = false;
-                adapterForTopic.updateThisItem(currentItem, false);
-                adapterForTopic.notifyDataSetChanged();
-                return true;
-            case R.id.menu_show_ugly_images_message:
-                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIdSelected());
-                currentItem.showUglyImages = true;
-                adapterForTopic.updateThisItem(currentItem, false);
-                adapterForTopic.notifyDataSetChanged();
-                return true;
-            case R.id.menu_hide_ugly_images_message:
-                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIdSelected());
-                currentItem.showUglyImages = false;
-                adapterForTopic.updateThisItem(currentItem, false);
-                adapterForTopic.notifyDataSetChanged();
-                return true;
-            case R.id.menu_show_blacklisted_message:
-                currentItem = adapterForTopic.getItem(adapterForTopic.getCurrentItemIdSelected());
-                currentItem.pseudoIsBlacklisted = false;
-                adapterForTopic.updateThisItem(currentItem, false);
-                adapterForTopic.notifyDataSetChanged();
-                return true;
-            default:
-                return false;
-        }
-    }
-
     public void reloadTopic() {
         absGetterForTopic.reloadTopic();
-    }
-
-    public JVCParser.MessageInfos getCurrentItemSelected() {
-        return adapterForTopic.getItem(adapterForTopic.getCurrentItemIdSelected());
     }
 
     public void updateTopicStatusInfos(AbsJVCTopicGetter.TopicStatusInfos newTopicStatusInfos) {
@@ -327,15 +322,13 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         absGetterForTopic.setListenerForNewTopicStatus(listenerForNewTopicStatus);
         absGetterForTopic.setListenerForNewGetterState(listenerForNewGetterState);
         adapterForTopic.setOnSurveyClickListener(surveyItemClickedListener);
+        adapterForTopic.setActionWhenItemMenuClicked(menuItemClickedInMessageListener);
 
         if (getActivity() instanceof NewModeNeededListener) {
             listenerForNewModeNeeded = (NewModeNeededListener) getActivity();
         }
         if (getActivity() instanceof AbsJVCTopicGetter.TopicLinkChanged) {
             absGetterForTopic.setListenerForTopicLinkChanged((AbsJVCTopicGetter.TopicLinkChanged) getActivity());
-        }
-        if (getActivity() instanceof PopupMenu.OnMenuItemClickListener) {
-            adapterForTopic.setActionWhenItemMenuClicked((PopupMenu.OnMenuItemClickListener) getActivity());
         }
         if (getActivity() instanceof JVCTopicAdapter.URLClicked) {
             adapterForTopic.setUrlCLickedListener((JVCTopicAdapter.URLClicked) getActivity());

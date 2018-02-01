@@ -22,6 +22,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -50,7 +51,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     private LayoutInflater serviceInflater;
     private Activity parentActivity = null;
     private int currentItemIdSelected = -1;
-    private PopupMenu.OnMenuItemClickListener actionWhenItemMenuClicked = null;
+    private MenuItemClickedInMessage actionWhenItemMenuClicked = null;
     private JVCParser.Settings currentSettings = null;
     private int idOfLayoutToUse = 0;
     private boolean alternateBackgroundColor = false;
@@ -84,6 +85,18 @@ public class JVCTopicAdapter extends BaseAdapter {
         }
     };
 
+    private final PopupMenu.OnMenuItemClickListener menuItemInPopupMenuClickedListener = new PopupMenu.OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            //noinspection SimplifiableIfStatement
+            if (actionWhenItemMenuClicked != null) {
+                return actionWhenItemMenuClicked.onMenuItemClickedInMessage(item, getItem(currentItemIdSelected));
+            } else {
+                return false;
+            }
+        }
+    };
+
     private final View.OnClickListener menuButtonClicked = new View.OnClickListener() {
         @Override
         public void onClick(View buttonView) {
@@ -93,7 +106,7 @@ public class JVCTopicAdapter extends BaseAdapter {
 
             currentItemIdSelected = (int) buttonView.getTag();
             itemSelected = getItem(currentItemIdSelected);
-            popup.setOnMenuItemClickListener(actionWhenItemMenuClicked);
+            popup.setOnMenuItemClickListener(menuItemInPopupMenuClickedListener);
 
             if (!itemSelected.pseudoIsBlacklisted) {
                 if (itemSelected.pseudo.toLowerCase().equals(currentSettings.pseudoOfUser.toLowerCase())) {
@@ -128,8 +141,12 @@ public class JVCTopicAdapter extends BaseAdapter {
                     }
                 }
 
-                if (itemSelected.messageIsDeleted) {
-                    popup.getMenu().removeItem(R.id.menu_delete_message);
+                if (itemSelected.userCanDeleteOrRestoreMessage) {
+                    if (itemSelected.messageIsDeleted) {
+                        popup.getMenu().findItem(R.id.menu_delete_or_restore_message).setTitle(R.string.restore);
+                    }
+                } else {
+                    popup.getMenu().removeItem(R.id.menu_delete_or_restore_message);
                 }
             } else {
                 popup.getMenu().add(Menu.NONE, R.id.menu_show_blacklisted_message, Menu.NONE, R.string.showBlacklistedMessage);
@@ -156,10 +173,6 @@ public class JVCTopicAdapter extends BaseAdapter {
         downloaderForImage.setImagesSize(res.getDimensionPixelSize(R.dimen.miniNoelshackWidthDefault), res.getDimensionPixelSize(R.dimen.miniNoelshackHeightDefault), true);
     }
 
-    public int getCurrentItemIdSelected() {
-        return currentItemIdSelected;
-    }
-
     //pas d'intérêt que tout le monde puisse accéder aux messages, seul le .isEmpty() est important sur cette liste.
     public ArrayList<JVCParser.MessageInfos> getAllItems() {
         return listOfMessages;
@@ -177,7 +190,7 @@ public class JVCTopicAdapter extends BaseAdapter {
         pseudoCLickedListener = newListener;
     }
 
-    public void setActionWhenItemMenuClicked(PopupMenu.OnMenuItemClickListener newAction) {
+    public void setActionWhenItemMenuClicked(MenuItemClickedInMessage newAction) {
         actionWhenItemMenuClicked = newAction;
     }
 
@@ -617,5 +630,9 @@ public class JVCTopicAdapter extends BaseAdapter {
 
     public interface PseudoClicked {
         void getMessageOfPseudoClicked(JVCParser.MessageInfos messageClicked);
+    }
+
+    public interface MenuItemClickedInMessage {
+        boolean onMenuItemClickedInMessage(MenuItem item, JVCParser.MessageInfos fromThisMessage);
     }
 }

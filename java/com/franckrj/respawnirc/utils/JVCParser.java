@@ -27,6 +27,7 @@ public final class JVCParser {
     private static final Pattern entireTopicPattern = Pattern.compile("<li (class=\"[^\"]*\" data-id=\"[^\"]*\"|class=\"message[^\"]*\")>.*?<span class=\"topic-subject\">.*?</li>", Pattern.DOTALL);
     private static final Pattern pseudoIsBlacklistedPattern = Pattern.compile("<div class=\"bloc-message-forum msg-pseudo-blacklist[^\"]*\" data-id=\"");
     private static final Pattern messageIsDeletedPattern = Pattern.compile("<div class=\"bloc-message-forum msg-supprime[^\"]*\" data-id=\"");
+    private static final Pattern userCanDeleteOrRestoreMessagePattern = Pattern.compile("<span class=\"picto-msg-(croix|restaurer)\" title=\"(Supprimer|Restaurer)\" data-type=\"(delete|restore)\">");
     private static final Pattern pseudoInfosPattern = Pattern.compile("<span class=\"JvCare [^ ]* bloc-pseudo-msg text-([^\"]*)\" target=\"_blank\">[^a-zA-Z0-9_\\[\\]-]*([a-zA-Z0-9_\\[\\]-]*)[^<]*</span>");
     private static final Pattern idAliasPattern = Pattern.compile("data-id-alias=\"([0-9]+)\">");
     private static final Pattern messagePattern = Pattern.compile("<div class=\"bloc-contenu\"><div class=\"txt-msg +text-[^-]*-forum \">((.*?)(?=<div class=\"info-edition-msg\">)|(.*?)(?=<div class=\"signature-msg)|(.*))", Pattern.DOTALL);
@@ -983,6 +984,7 @@ public final class JVCParser {
         MessageInfos newMessageInfo = new MessageInfos();
         Matcher pseudoIsBlacklistedMatcher = pseudoIsBlacklistedPattern.matcher(thisEntireMessage);
         Matcher messageIsDeletedMatcher = messageIsDeletedPattern.matcher(thisEntireMessage);
+        Matcher userCanDeleteOrRestoreMessageMatcher = userCanDeleteOrRestoreMessagePattern.matcher(thisEntireMessage);
         Matcher pseudoInfosMatcher = pseudoInfosPattern.matcher(thisEntireMessage);
         Matcher idAliasMatcher = idAliasPattern.matcher(thisEntireMessage);
         Matcher messageMatcher = messagePattern.matcher(thisEntireMessage);
@@ -994,6 +996,7 @@ public final class JVCParser {
 
         newMessageInfo.pseudoIsBlacklisted = pseudoIsBlacklistedMatcher.find();
         newMessageInfo.messageIsDeleted = messageIsDeletedMatcher.find();
+        newMessageInfo.userCanDeleteOrRestoreMessage = userCanDeleteOrRestoreMessageMatcher.find();
 
         if (pseudoInfosMatcher.find()) {
             newMessageInfo.pseudo = pseudoInfosMatcher.group(2);
@@ -1016,12 +1019,18 @@ public final class JVCParser {
             newMessageInfo.avatarLink = "http://" + avatarMatcher.group(2);
         }
 
-        if (messageMatcher.find() && messageIdMatcher.find() && dateMessageMatcher.find()) {
-            newMessageInfo.messageNotParsed = messageMatcher.group(1);
+        if (messageIdMatcher.find()) {
+            newMessageInfo.id = Long.parseLong(messageIdMatcher.group(1));
+        }
+
+        if (dateMessageMatcher.find()) {
             newMessageInfo.dateTime = dateMessageMatcher.group(3);
             newMessageInfo.wholeDate = dateMessageMatcher.group(2);
+        }
+
+        if (messageMatcher.find()) {
+            newMessageInfo.messageNotParsed = messageMatcher.group(1);
             newMessageInfo.containUglyImages = ToolForParsing.hasUglyImagesInNotPrettyMessage(newMessageInfo.messageNotParsed);
-            newMessageInfo.id = Long.parseLong(messageIdMatcher.group(1));
 
             newMessageInfo.messageContentContainSpoil = newMessageInfo.messageNotParsed.contains("<div class=\"contenu-spoil\">");
             newMessageInfo.signatureContainSpoil = newMessageInfo.signatureNotParsed.contains("<div class=\"contenu-spoil\">");
@@ -1457,6 +1466,7 @@ public final class JVCParser {
         public String lastTimeEdit = "";
         public boolean pseudoIsBlacklisted = false;
         public boolean messageIsDeleted = false;
+        public boolean userCanDeleteOrRestoreMessage = false;
         public boolean messageContentContainSpoil = false;
         public boolean signatureContainSpoil = false;
         public int numberOfOverlyQuote = 0;
@@ -1496,6 +1506,7 @@ public final class JVCParser {
             lastTimeEdit = in.readString();
             pseudoIsBlacklisted = (in.readByte() == 1);
             messageIsDeleted = (in.readByte() == 1);
+            userCanDeleteOrRestoreMessage = (in.readByte() == 1);
             messageContentContainSpoil = (in.readByte() == 1);
             signatureContainSpoil = (in.readByte() == 1);
             numberOfOverlyQuote = in.readInt();
@@ -1530,6 +1541,7 @@ public final class JVCParser {
             out.writeString(lastTimeEdit);
             out.writeByte((byte)(pseudoIsBlacklisted ? 1 : 0));
             out.writeByte((byte)(messageIsDeleted ? 1 : 0));
+            out.writeByte((byte)(userCanDeleteOrRestoreMessage ? 1 : 0));
             out.writeByte((byte)(messageContentContainSpoil ? 1 : 0));
             out.writeByte((byte)(signatureContainSpoil ? 1 : 0));
             out.writeInt(numberOfOverlyQuote);

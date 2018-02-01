@@ -63,7 +63,7 @@
     <string name="topicFav">Topics favoris</string>
     <string name="deleteMessage">Supprimer le message</string>
     <string name="supressSuccess">Message supprimé.</string>
-    <string name="errorDeleteAlreadyRunning">Erreur, suppression déjà en cours.</string>
+    <string name="errorDeleteOrRestoreAlreadyRunning">Erreur, suppression ou restauration déjà en cours.</string>
     <string name="openInExternalBrowser">Ouvrir dans le navigateur externe</string>
     <string name="openInInternBrowser">Ouvrir dans le navigateur interne</string>
     <string name="copy">Copier</string>
@@ -272,6 +272,8 @@
     <string name="messageInfosFontSizeTitle">Taille des informations des messages (en sp)</string>
     <string name="messageSignatureFontSizeTitle">Taille des signatures (en sp)</string>
     <string name="unlockTopic">Rouvrir le topic</string>
+    <string name="restore">Restaurer</string>
+    <string name="restoreSuccess">Message restauré.</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>

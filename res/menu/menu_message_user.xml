@@ -8,6 +8,6 @@
         android:id="@+id/menu_edit_message"
         android:title="@string/editMessage"/>
     <item
-        android:id="@+id/menu_delete_message"
+        android:id="@+id/menu_delete_or_restore_message"
         android:title="@string/delete"/>
 </menu>
