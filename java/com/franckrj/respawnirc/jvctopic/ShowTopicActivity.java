@@ -95,11 +95,12 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 messageSendButton.setEnabled(true);
 
                 if (newMessageToEdit.isEmpty() || messageIsAnError) {
-                    if (newMessageToEdit.isEmpty()) {
-                        newMessageToEdit = getString(R.string.errorCantGetEditInfos);
+                    String errorToShow = newMessageToEdit;
+                    if (errorToShow.isEmpty()) {
+                        errorToShow = getString(R.string.errorCantGetEditInfos);
                     }
                     messageSendButton.setImageDrawable(ThemeManager.getDrawable(R.attr.themedContentSendIcon, ShowTopicActivity.this));
-                    showErrorWhenSendingMessage(newMessageToEdit);
+                    showErrorWhenSendingMessage(errorToShow);
                 } else if (useMessageToEdit) {
                     messageSendEdit.setText(newMessageToEdit);
                     messageSendEdit.setSelection(newMessageToEdit.length());
@@ -213,7 +214,11 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             postAsModoItem = popup.getMenu().findItem(R.id.enable_postasmodo_sendmessage_action);
             postAsModoItem.setChecked(PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE));
             postAsModoItem.setEnabled(topicStatus.userCanPostAsModo);
-            popup.getMenu().findItem(R.id.action_past_last_message_sended_showtopic).setEnabled(!lastMessageSended.isEmpty());
+            popup.getMenu().findItem(R.id.past_last_message_sended_sendmessage_action).setEnabled(!lastMessageSended.isEmpty());
+
+            if (senderForMessages.getIsInEdit()) {
+                popup.getMenu().add(Menu.NONE, R.id.cancel_edit_sendmessage_action, Menu.NONE, R.string.cancelEdit);
+            }
 
             popup.show();
 
@@ -238,10 +243,13 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                             .setPositiveButton(R.string.yes, onClickInDeleteCurrentWritedMessageConfirmationListener).setNegativeButton(R.string.no, null);
                     builder.show();
                     return true;
-                case R.id.action_past_last_message_sended_showtopic:
+                case R.id.past_last_message_sended_sendmessage_action:
                     if (topicStatus.lockReason == null) {
                         messageSendEdit.setText(lastMessageSended);
                     }
+                    return true;
+                case R.id.cancel_edit_sendmessage_action:
+                    cancelEditAndHideKeyboardAndCursor();
                     return true;
                 default:
                     return false;
@@ -406,6 +414,15 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 Toast.makeText(this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void cancelEditAndHideKeyboardAndCursor() {
+        senderForMessages.cancelEdit();
+        messageSendButton.setEnabled(true);
+        messageSendButton.setImageDrawable(ThemeManager.getDrawable(R.attr.themedContentSendIcon, this));
+        messageSendEdit.setText("");
+        Utils.hideSoftKeyboard(ShowTopicActivity.this);
+        messageSendLayout.requestFocus();
     }
 
     private AbsShowTopicFragment getCurrentFragment() {
@@ -695,12 +712,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             case R.id.menu_edit_message:
                 if (topicStatus.lockReason == null) {
                     if (senderForMessages.getIsInEdit()) {
-                        senderForMessages.cancelEdit();
-                        messageSendButton.setEnabled(true);
-                        messageSendButton.setImageDrawable(ThemeManager.getDrawable(R.attr.themedContentSendIcon, this));
-                        messageSendEdit.setText("");
-                        Utils.hideSoftKeyboard(ShowTopicActivity.this);
-                        messageSendLayout.requestFocus();
+                        cancelEditAndHideKeyboardAndCursor();
                     } else {
                         startEditThisMessage(Long.toString(fromThisMessage.id), true);
                     }

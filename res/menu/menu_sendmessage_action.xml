@@ -9,6 +9,6 @@
         android:id="@+id/delete_message_sendmessage_action"
         android:title="@string/deleteMessage"/>
     <item
-        android:id="@+id/action_past_last_message_sended_showtopic"
+        android:id="@+id/past_last_message_sended_sendmessage_action"
         android:title="@string/pastLastMessageSended"/>
 </menu>

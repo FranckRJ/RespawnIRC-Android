@@ -274,6 +274,7 @@
     <string name="unlockTopic">Rouvrir le topic</string>
     <string name="restore">Restaurer</string>
     <string name="restoreSuccess">Message restauré.</string>
+    <string name="cancelEdit">Annuler l\'édition</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>
