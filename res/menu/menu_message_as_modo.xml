@@ -5,6 +5,12 @@
         android:id="@+id/menu_quote_message"
         android:title="@string/quoteMessage"/>
     <item
+        android:id="@+id/menu_edit_message"
+        android:title="@string/editMessage"/>
+    <item
         android:id="@+id/menu_delete_or_restore_message"
         android:title="@string/delete"/>
+    <item
+        android:id="@+id/menu_kick_pseudo_message"
+        android:title="@string/kick"/>
 </menu>

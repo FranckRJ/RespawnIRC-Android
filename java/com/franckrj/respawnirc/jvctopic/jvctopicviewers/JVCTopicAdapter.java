@@ -109,12 +109,22 @@ public class JVCTopicAdapter extends BaseAdapter {
             popup.setOnMenuItemClickListener(menuItemInPopupMenuClickedListener);
 
             if (!itemSelected.pseudoIsBlacklisted) {
-                if (itemSelected.pseudo.toLowerCase().equals(currentSettings.pseudoOfUser.toLowerCase())) {
-                    inflater.inflate(R.menu.menu_message_user, popup.getMenu());
-                } else if (userIsModo) {
-                    inflater.inflate(R.menu.menu_message_moderable, popup.getMenu());
+                if (userIsModo) {
+                    inflater.inflate(R.menu.menu_message_as_modo, popup.getMenu());
                 } else {
-                    inflater.inflate(R.menu.menu_message_others, popup.getMenu());
+                    inflater.inflate(R.menu.menu_message_as_user, popup.getMenu());
+                }
+
+                if (!itemSelected.userCanEditMessage) {
+                    popup.getMenu().removeItem(R.id.menu_edit_message);
+                }
+
+                if (itemSelected.userCanDeleteOrRestoreMessage) {
+                    if (itemSelected.messageIsDeleted) {
+                        popup.getMenu().findItem(R.id.menu_delete_or_restore_message).setTitle(R.string.restore);
+                    }
+                } else {
+                    popup.getMenu().removeItem(R.id.menu_delete_or_restore_message);
                 }
 
                 if (itemSelected.numberOfOverlyQuote > currentSettings.maxNumberOfOverlyQuotes) {
@@ -139,14 +149,6 @@ public class JVCTopicAdapter extends BaseAdapter {
                     } else {
                         popup.getMenu().add(Menu.NONE, R.id.menu_show_ugly_images_message, Menu.NONE, R.string.showUglyImagesMessage);
                     }
-                }
-
-                if (itemSelected.userCanDeleteOrRestoreMessage) {
-                    if (itemSelected.messageIsDeleted) {
-                        popup.getMenu().findItem(R.id.menu_delete_or_restore_message).setTitle(R.string.restore);
-                    }
-                } else {
-                    popup.getMenu().removeItem(R.id.menu_delete_or_restore_message);
                 }
             } else {
                 popup.getMenu().add(Menu.NONE, R.id.menu_show_blacklisted_message, Menu.NONE, R.string.showBlacklistedMessage);
