@@ -275,6 +275,7 @@
     <string name="restore">Restaurer</string>
     <string name="restoreSuccess">Message restauré.</string>
     <string name="cancelEdit">Annuler l\'édition</string>
+    <string name="dekick">Dékicker</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>

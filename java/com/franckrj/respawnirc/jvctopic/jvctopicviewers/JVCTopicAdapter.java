@@ -21,7 +21,6 @@ import android.text.style.URLSpan;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +68,6 @@ public class JVCTopicAdapter extends BaseAdapter {
     private String surveyTitle = "";
     private View.OnClickListener onSurveyClickListener = null;
     private float multiplierOfLineSizeForInfoLineIfAvatarIsShowed = 0;
-    private boolean userIsModo = false;
     private int avatarSize = -1;
     private int messageFontSizeInSp = 14;
     private int messageInfosFontSizeInSp = 14;
@@ -101,7 +99,7 @@ public class JVCTopicAdapter extends BaseAdapter {
         @Override
         public void onClick(View buttonView) {
             PopupMenu popup = new PopupMenu(parentActivity, buttonView);
-            MenuInflater inflater = popup.getMenuInflater();
+            Menu menu = popup.getMenu();
             JVCParser.MessageInfos itemSelected;
 
             currentItemIdSelected = (int) buttonView.getTag();
@@ -109,49 +107,53 @@ public class JVCTopicAdapter extends BaseAdapter {
             popup.setOnMenuItemClickListener(menuItemInPopupMenuClickedListener);
 
             if (!itemSelected.pseudoIsBlacklisted) {
-                if (userIsModo) {
-                    inflater.inflate(R.menu.menu_message_as_modo, popup.getMenu());
-                } else {
-                    inflater.inflate(R.menu.menu_message_as_user, popup.getMenu());
-                }
+                menu.add(Menu.NONE, R.id.menu_quote_message, Menu.NONE, R.string.quoteMessage);
 
-                if (!itemSelected.userCanEditMessage) {
-                    popup.getMenu().removeItem(R.id.menu_edit_message);
+                if (itemSelected.userCanEditMessage) {
+                    menu.add(Menu.NONE, R.id.menu_edit_message, Menu.NONE, R.string.editMessage);
                 }
 
                 if (itemSelected.userCanDeleteOrRestoreMessage) {
                     if (itemSelected.messageIsDeleted) {
-                        popup.getMenu().findItem(R.id.menu_delete_or_restore_message).setTitle(R.string.restore);
+                        menu.add(Menu.NONE, R.id.menu_restore_message, Menu.NONE, R.string.restore);
+                    } else {
+                        menu.add(Menu.NONE, R.id.menu_delete_message, Menu.NONE, R.string.delete);
                     }
-                } else {
-                    popup.getMenu().removeItem(R.id.menu_delete_or_restore_message);
+                }
+
+                if (itemSelected.userCanKickOrDekickAuthor) {
+                    if (itemSelected.authorIsKicked) {
+                        menu.add(Menu.NONE, R.id.menu_dekick_author_message, Menu.NONE, R.string.dekick);
+                    } else {
+                        menu.add(Menu.NONE, R.id.menu_kick_author_message, Menu.NONE, R.string.kick);
+                    }
                 }
 
                 if (itemSelected.numberOfOverlyQuote > currentSettings.maxNumberOfOverlyQuotes) {
                     if (itemSelected.showOverlyQuote) {
-                        popup.getMenu().add(Menu.NONE, R.id.menu_hide_quote_message, Menu.NONE, R.string.hideQuoteMessage);
+                        menu.add(Menu.NONE, R.id.menu_hide_quote_message, Menu.NONE, R.string.hideQuoteMessage);
                     } else {
-                        popup.getMenu().add(Menu.NONE, R.id.menu_show_quote_message, Menu.NONE, R.string.showQuoteMessage);
+                        menu.add(Menu.NONE, R.id.menu_show_quote_message, Menu.NONE, R.string.showQuoteMessage);
                     }
                 }
 
                 if (itemSelected.messageContentContainSpoil || (showSignatures && itemSelected.signatureContainSpoil)) {
                     if (itemSelected.listOfSpoilIdToShow.isEmpty()) {
-                        popup.getMenu().add(Menu.NONE, R.id.menu_show_spoil_message, Menu.NONE, R.string.showSpoilMessage);
+                        menu.add(Menu.NONE, R.id.menu_show_spoil_message, Menu.NONE, R.string.showSpoilMessage);
                     } else {
-                        popup.getMenu().add(Menu.NONE, R.id.menu_hide_spoil_message, Menu.NONE, R.string.hideSpoilMessage);
+                        menu.add(Menu.NONE, R.id.menu_hide_spoil_message, Menu.NONE, R.string.hideSpoilMessage);
                     }
                 }
 
                 if (currentSettings.hideUglyImages && itemSelected.containUglyImages) {
                     if (itemSelected.showUglyImages) {
-                        popup.getMenu().add(Menu.NONE, R.id.menu_hide_ugly_images_message, Menu.NONE, R.string.hideUglyImagesMessage);
+                        menu.add(Menu.NONE, R.id.menu_hide_ugly_images_message, Menu.NONE, R.string.hideUglyImagesMessage);
                     } else {
-                        popup.getMenu().add(Menu.NONE, R.id.menu_show_ugly_images_message, Menu.NONE, R.string.showUglyImagesMessage);
+                        menu.add(Menu.NONE, R.id.menu_show_ugly_images_message, Menu.NONE, R.string.showUglyImagesMessage);
                     }
                 }
             } else {
-                popup.getMenu().add(Menu.NONE, R.id.menu_show_blacklisted_message, Menu.NONE, R.string.showBlacklistedMessage);
+                menu.add(Menu.NONE, R.id.menu_show_blacklisted_message, Menu.NONE, R.string.showBlacklistedMessage);
             }
 
             popup.show();
@@ -230,10 +232,6 @@ public class JVCTopicAdapter extends BaseAdapter {
 
     public void setOnSurveyClickListener(View.OnClickListener newListener) {
         onSurveyClickListener = newListener;
-    }
-
-    public void setUserIsModo(boolean newVal) {
-        userIsModo = newVal;
     }
 
     public void setAvatarSize(int newSize) {

@@ -721,14 +721,13 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 }
 
                 return true;
-            case R.id.menu_delete_or_restore_message:
-                if (fromThisMessage.messageIsDeleted) {
-                    actionsForTopic.startRestoreThisMessage(topicStatus.ajaxInfos, fromThisMessage, cookieListInAString);
-                } else {
-                    actionsForTopic.startDeleteThisMessage(topicStatus.ajaxInfos, fromThisMessage, cookieListInAString);
-                }
+            case R.id.menu_delete_message:
+                actionsForTopic.startDeleteThisMessage(topicStatus.ajaxInfos, fromThisMessage, cookieListInAString);
                 return true;
-            case R.id.menu_kick_pseudo_message:
+            case R.id.menu_restore_message:
+                actionsForTopic.startRestoreThisMessage(topicStatus.ajaxInfos, fromThisMessage, cookieListInAString);
+                return true;
+            case R.id.menu_kick_author_message:
                 Intent newKickPseudoIntent = new Intent(ShowTopicActivity.this, KickPseudoActivity.class);
                 newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_PSEUDO, fromThisMessage.pseudo);
                 newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_ID_ALIAS, fromThisMessage.idAlias);

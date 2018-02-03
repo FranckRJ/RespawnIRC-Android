@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <item name="menu_quote_message" type="id">menu_quote_message</item>
+    <item name="menu_edit_message" type="id">menu_edit_message</item>
+    <item name="menu_delete_message" type="id">menu_delete_message</item>
+    <item name="menu_restore_message" type="id">menu_restore_message</item>
+    <item name="menu_kick_author_message" type="id">menu_kick_author_message</item>
+    <item name="menu_dekick_author_message" type="id">menu_dekick_author_message</item>
     <item name="menu_hide_quote_message" type="id">menu_hide_quote_message</item>
     <item name="menu_show_quote_message" type="id">menu_show_quote_message</item>
     <item name="menu_hide_spoil_message" type="id">menu_hide_spoil_message</item>

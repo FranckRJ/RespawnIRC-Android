@@ -83,10 +83,6 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
                 adapterForTopic.notifyDataSetChanged();
             }
 
-            if (newTopicStatus.userCanPostAsModo != oldTopicStatus.userCanPostAsModo) {
-                adapterForTopic.setUserIsModo(newTopicStatus.userCanPostAsModo);
-            }
-
             if (getActivity() instanceof AbsJVCTopicGetter.NewTopicStatusListener) {
                 ((AbsJVCTopicGetter.NewTopicStatusListener) getActivity()).getNewTopicStatus(newTopicStatus, oldTopicStatus);
             }
@@ -358,7 +354,6 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             currentSettings.pseudoOfAuthor = savedInstanceState.getString(SAVE_SETTINGS_PSEUDO_OF_AUTHOR, "");
             allMessagesShowedAreFromIgnoredPseudos = savedInstanceState.getBoolean(SAVE_MESSAGES_ARE_FROM_IGNORED_PSEUDOS, false);
             absGetterForTopic.loadFromBundle(savedInstanceState);
-            adapterForTopic.setUserIsModo(absGetterForTopic.getTopicStatus().userCanPostAsModo);
 
             if (!Utils.stringIsEmptyOrNull(absGetterForTopic.getTopicStatus().htmlSurveyTitle)) {
                 adapterForTopic.enableSurvey(absGetterForTopic.getTopicStatus().htmlSurveyTitle);
