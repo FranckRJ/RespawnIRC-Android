@@ -737,6 +737,9 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_COOKIES, cookieListInAString);
                 startActivity(newKickPseudoIntent);
                 return true;
+            case R.id.menu_dekick_author_message:
+                actionsForTopic.startDekickThisPseudo(fromThisMessage.pseudo, topicStatus.ajaxInfos, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), fromThisMessage.idAlias, cookieListInAString);
+                return true;
             default:
                 return false;
         }

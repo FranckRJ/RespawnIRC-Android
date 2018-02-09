@@ -15,6 +15,7 @@ public class JVCActionsInTopic {
     private QuoteJVCMessage currentTaskQuoteMessage = null;
     private DeleteOrRestoreJVCMessage currentTaskDeleteOrRestoreMessage = null;
     private UnlockJVCTopic currentTaskUnlockTopic = null;
+    private DekickJVCPseudo currentTaskDekickPseudo = null;
     private NewMessageIsQuoted messageIsQuotedListener = null;
     private TopicNeedToBeReloaded topicNeedToBeReloadedListener = null;
     private String latestMessageQuotedInfo = null;
@@ -97,6 +98,29 @@ public class JVCActionsInTopic {
         }
     };
 
+    private final AbsWebRequestAsyncTask.RequestIsFinished<String> dekickPseudoIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<String>() {
+        @Override
+        public void onRequestIsFinished(String reqResult) {
+            String pseudoThatIsDekicked = currentTaskDekickPseudo.pseudoToDekick;
+            currentTaskDekickPseudo = null;
+
+            if (!Utils.stringIsEmptyOrNull(reqResult)) {
+                String potentialError = JVCParser.getErrorMessageInJsonMode(reqResult);
+
+                if (potentialError != null) {
+                    Toast.makeText(parentActivity, potentialError, Toast.LENGTH_SHORT).show();
+                } else if (!reqResult.startsWith("{")) {
+                    Toast.makeText(parentActivity, R.string.unknownErrorPleaseRetry, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(parentActivity, parentActivity.getString(R.string.dekickOfPseudoSuccessful, pseudoThatIsDekicked), Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
+            Toast.makeText(parentActivity, R.string.noKnownResponseFromJVC, Toast.LENGTH_SHORT).show();
+        }
+    };
+
     public JVCActionsInTopic(Activity newParentActivity) {
         parentActivity = newParentActivity;
     }
@@ -122,6 +146,10 @@ public class JVCActionsInTopic {
         if (currentTaskUnlockTopic != null) {
             currentTaskUnlockTopic.clearListenersAndCancel();
             currentTaskUnlockTopic = null;
+        }
+        if (currentTaskDekickPseudo != null) {
+            currentTaskDekickPseudo.clearListenersAndCancel();
+            currentTaskDekickPseudo = null;
         }
     }
 
@@ -183,7 +211,21 @@ public class JVCActionsInTopic {
             currentTaskUnlockTopic.execute(forumId, topicId, latestAjaxInfos.mod, cookieListInAString);
         } else {
             if (currentTaskUnlockTopic != null) {
-                Toast.makeText(parentActivity, R.string.errorQuoteAlreadyRunning, Toast.LENGTH_SHORT).show();
+                Toast.makeText(parentActivity, R.string.errorUnlockAlreadyRunning, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(parentActivity, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public void startDekickThisPseudo(String pseudoToDekick, JVCParser.AjaxInfos latestAjaxInfos, String forumId, String idAlias, String cookieListInAString) {
+        if (latestAjaxInfos.mod != null && currentTaskDekickPseudo == null) {
+            currentTaskDekickPseudo = new DekickJVCPseudo(pseudoToDekick);
+            currentTaskDekickPseudo.setRequestIsFinishedListener(dekickPseudoIsFinishedListener);
+            currentTaskDekickPseudo.execute(forumId, idAlias, latestAjaxInfos.mod, cookieListInAString);
+        } else {
+            if (currentTaskDekickPseudo != null) {
+                Toast.makeText(parentActivity, R.string.errorDekickAlreadyRunning, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(parentActivity, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
             }
@@ -231,6 +273,23 @@ public class JVCActionsInTopic {
             if (params.length > 3) {
                 WebManager.WebInfos currentWebInfos = initWebInfos(params[3], false);
                 return WebManager.sendRequest("http://www.jeuxvideo.com/forums/modal_moderation_topic.php", "GET", "id_forum=" + params[0] + "&tab_topic[]=" + params[1] + "&type=unlock&action=get&" + params[2], currentWebInfos);
+            }
+            return "erreurlol";
+        }
+    }
+
+    private static class DekickJVCPseudo extends AbsWebRequestAsyncTask<String, Void, String> {
+        public final String pseudoToDekick;
+
+        public DekickJVCPseudo(String newPseudoToDekick) {
+            pseudoToDekick = newPseudoToDekick;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            if (params.length > 3) {
+                WebManager.WebInfos currentWebInfos = initWebInfos(params[3], false);
+                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_unkick.php", "POST", "id_forum=" + params[0] + "&id_alias_a_unkick=" + params[1] + "&" + params[2], currentWebInfos);
             }
             return "erreurlol";
         }
