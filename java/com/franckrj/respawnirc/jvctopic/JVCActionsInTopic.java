@@ -219,7 +219,7 @@ public class JVCActionsInTopic {
             if (params.length > 2) {
                 String typeOfAction = (itsADelete ? "delete" : "restore");
                 WebManager.WebInfos currentWebInfos = initWebInfos(params[2], false);
-                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/modal_del_message.php", "GET", "tab_message[]=" + params[0] + "&type=" + typeOfAction + "&" + params[1], currentWebInfos);
+                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/modal_del_message.php", "POST", "tab_message[]=" + params[0] + "&type=" + typeOfAction + "&" + params[1], currentWebInfos);
             }
             return null;
         }
