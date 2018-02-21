@@ -304,7 +304,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
             case R.id.action_send_topic_showforum:
                 Intent newSendTopicIntent = new Intent(this, SendTopicToForumActivity.class);
                 newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_FORUM_NAME, currentTitle);
-                newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_FORUM_LINK, pageNavigation.getCurrentPageLink());
+                newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_FORUM_LINK, pageNavigation.getFirstPageLink());
                 newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_INPUT_LIST, getCurrentFragment().getLatestListOfInputInAString());
                 newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_USER_CAN_POST_AS_MODO, getCurrentFragment().getUserCanPostAsModo());
                 startActivityForResult(newSendTopicIntent, SEND_TOPIC_REQUEST_CODE);
