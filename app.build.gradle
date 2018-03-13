@@ -7,8 +7,8 @@ android {
         applicationId "com.franckrj.respawnirc"
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 1_010_1_008
-        versionName "1.10b8"
+        versionCode 1_010_1_009
+        versionName "1.10b9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         resConfigs "fr"
     }
@@ -31,6 +31,7 @@ dependencies {
     implementation 'com.android.support:design:27.1.0'
     implementation 'com.android.support:recyclerview-v7:27.1.0'
     implementation 'com.android.support:gridlayout-v7:27.1.0'
+    implementation 'com.android.support:support-emoji-appcompat:27.1.0'
     implementation 'com.takisoft.fix:preference-v7:27.1.0.0'
     implementation 'com.takisoft.fix:preference-v7-colorpicker:27.1.0.0'
 }
