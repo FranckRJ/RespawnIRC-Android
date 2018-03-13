@@ -31,7 +31,7 @@
         android:src="?attr/themedNavigationMore"
         android:contentDescription="@string/overflow_menu_desc"/>
 
-    <TextView
+    <android.support.text.emoji.widget.EmojiAppCompatTextView
         android:id="@+id/message_text_jvcmessages_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
         android:layout_below="@+id/message_text_jvcmessages_row"
         android:background="?attr/themedDarkerBackgroundColor"/>
 
-    <TextView
+    <android.support.text.emoji.widget.EmojiAppCompatTextView
         android:id="@+id/signature_text_jvcmessages_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

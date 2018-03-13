@@ -42,7 +42,7 @@
                 android:layout_height="2dp"
                 android:background="?attr/themedDarkerBackgroundColor"/>
 
-            <EditText
+            <android.support.text.emoji.widget.EmojiAppCompatEditText
                 android:id="@+id/reason_edit_kickpseudo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
