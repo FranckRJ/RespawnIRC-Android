@@ -58,6 +58,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     };
 
     public ShowForumActivity() {
+        super();
         idOfBaseActivity = ITEM_ID_FORUM;
         pageNavigation = new PageNavigationUtil(this);
         pageNavigation.setLastPageNumber(100);

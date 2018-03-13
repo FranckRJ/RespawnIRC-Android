@@ -136,6 +136,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
     };
 
     public SelectForumInListActivity() {
+        super();
         idOfBaseActivity = ITEM_ID_HOME;
     }
 

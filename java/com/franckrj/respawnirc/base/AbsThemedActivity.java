@@ -20,6 +20,7 @@ public abstract class AbsThemedActivity extends AppCompatActivity {
     protected int lastPrimaryColorUsed = -1;
     protected int lastTopicNameAndLinkColorUsed = -1;
     protected @StyleRes int colorAccentStyle = 0;
+    protected boolean windowDrawStatusBar = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,10 @@ public abstract class AbsThemedActivity extends AppCompatActivity {
                 generalTaskDesc = new ActivityManager.TaskDescription(getString(R.string.app_name), appIcon, colorUsedForGenerateTaskDesc);
             }
             setTaskDescription(generalTaskDesc);
+
+            if (windowDrawStatusBar) {
+                getWindow().setStatusBarColor(ThemeManager.getColorInt(R.attr.colorPrimaryDark, this));
+            }
         }
     }
 

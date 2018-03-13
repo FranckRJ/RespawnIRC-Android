@@ -156,6 +156,10 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         }
     };
 
+    public AbsNavigationViewActivity() {
+        windowDrawStatusBar = false;
+    }
+
     private void initializeListsOfMenuItem() {
         if (listOfMenuItemInfoForHome == null || listOfMenuItemInfoForForum == null || listOfMenuItemInfoForConnect == null) {
             listOfMenuItemInfoForHome = new ArrayList<>();
