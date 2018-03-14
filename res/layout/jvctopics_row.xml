@@ -17,7 +17,7 @@
         android:layout_alignParentStart="true"
         android:contentDescription="@string/topicIcon"/>
 
-    <android.support.text.emoji.widget.EmojiAppCompatTextView
+    <TextView
         android:id="@+id/title_text_jvctopics_row"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

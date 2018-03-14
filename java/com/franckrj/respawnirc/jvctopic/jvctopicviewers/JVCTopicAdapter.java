@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
+import android.support.text.emoji.EmojiCompat;
 import android.support.v7.widget.CardView;
 import android.text.Layout;
 import android.text.Spannable;
@@ -320,9 +321,9 @@ public class JVCTopicAdapter extends BaseAdapter {
             item.listOfSpoilIdToShow.add(-1);
         }
 
-        holder.infoLineContent = new SpannableString(Undeprecator.htmlFromHtml(JVCParser.createMessageInfoLineFromInfos(item, currentSettings)));
+        holder.infoLineContent = Undeprecator.htmlFromHtml(JVCParser.createMessageInfoLineFromInfos(item, currentSettings));
         if (!item.pseudoIsBlacklisted) {
-            holder.messageLineContent = replaceNeededSpans(Undeprecator.htmlFromHtml(JVCParser.createMessageMessageLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler), item);
+            holder.messageLineContent = replaceNeededSpansAndEmojis(Undeprecator.htmlFromHtml(JVCParser.createMessageMessageLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler), item);
         } else {
             holder.messageLineContent = null;
         }
@@ -336,7 +337,7 @@ public class JVCTopicAdapter extends BaseAdapter {
         if (!showSignatures || item.signatureNotParsed.isEmpty() || item.pseudoIsBlacklisted) {
             holder.signatureLineContent = null;
         } else {
-            holder.signatureLineContent = replaceNeededSpans(Undeprecator.htmlFromHtml(JVCParser.createSignatureFromInfos(item, currentSettings), jvcImageGetter, tagHandler), item);
+            holder.signatureLineContent = replaceNeededSpansAndEmojis(Undeprecator.htmlFromHtml(JVCParser.createSignatureFromInfos(item, currentSettings), jvcImageGetter, tagHandler), item);
         }
 
         holder.messageIsDeleted = item.messageIsDeleted;
@@ -344,7 +345,7 @@ public class JVCTopicAdapter extends BaseAdapter {
         return holder;
     }
 
-    private Spannable replaceNeededSpans(Spanned spanToChange, final JVCParser.MessageInfos infosOfMessage) {
+    private CharSequence replaceNeededSpansAndEmojis(Spanned spanToChange, final JVCParser.MessageInfos infosOfMessage) {
         Spannable spannable = new SpannableString(spanToChange);
 
         QuoteSpan[] quoteSpanArray = spannable.getSpans(0, spannable.length(), QuoteSpan.class);
@@ -389,7 +390,7 @@ public class JVCTopicAdapter extends BaseAdapter {
             });
         }
 
-        return spannable;
+        return EmojiCompat.get().process(spannable);
     }
 
     private void updateListOfSpoidIdToShow(JVCParser.MessageInfos infosOfMessage, String instructionForUpdate) {
@@ -464,7 +465,7 @@ public class JVCTopicAdapter extends BaseAdapter {
                 viewHolder.avatarImage.setOnClickListener(null);
             }
 
-            viewHolder.infoLine.setText(Undeprecator.htmlFromHtml(advertiseForSurveyToShow));
+            viewHolder.infoLine.setText(EmojiCompat.get().process(Undeprecator.htmlFromHtml(advertiseForSurveyToShow)));
             convertView.setOnClickListener(onSurveyClickListener);
             viewHolder.infoLine.setOnClickListener(onSurveyClickListener);
             setColorBackgroundOfThisItem(convertView, ThemeManager.getColorInt(R.attr.themedSurveyMessageBackgroundColor, parentActivity));
@@ -617,9 +618,9 @@ public class JVCTopicAdapter extends BaseAdapter {
     }
 
     private class ContentHolder {
-        public Spannable infoLineContent;
-        public Spannable messageLineContent;
-        public Spannable signatureLineContent;
+        public CharSequence infoLineContent;
+        public CharSequence messageLineContent;
+        public CharSequence signatureLineContent;
         public Drawable avatarImageDrawable;
         public boolean messageIsDeleted;
     }

@@ -1,6 +1,7 @@
 package com.franckrj.respawnirc.jvctopic;
 
 import android.os.Bundle;
+import android.support.text.emoji.EmojiCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.view.View;
@@ -226,7 +227,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
         }
         if (getIntent() != null) {
             if (getIntent().getStringExtra(EXTRA_SURVEY_TITLE) != null && myActionBar != null) {
-                myActionBar.setSubtitle(getIntent().getStringExtra(EXTRA_SURVEY_TITLE));
+                myActionBar.setSubtitle(EmojiCompat.get().process(getIntent().getStringExtra(EXTRA_SURVEY_TITLE)));
             }
             if (getIntent().getParcelableArrayListExtra(EXTRA_SURVEY_REPLYS_WITH_INFOS) != null) {
                 listOfReplysWithInfos = getIntent().getParcelableArrayListExtra(EXTRA_SURVEY_REPLYS_WITH_INFOS);

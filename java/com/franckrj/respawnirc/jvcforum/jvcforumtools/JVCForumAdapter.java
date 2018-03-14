@@ -3,7 +3,7 @@ package com.franckrj.respawnirc.jvcforum.jvcforumtools;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.text.Spanned;
+import android.support.text.emoji.EmojiCompat;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,10 +99,11 @@ public class JVCForumAdapter extends BaseAdapter {
         ContentHolder thisHolder = new ContentHolder();
 
         if (item.type.equals("message")) {
-            thisHolder.titleLineContent = Undeprecator.htmlFromHtml("<b>" + item.htmlName + "</b>");
+            thisHolder.titleLineContent = EmojiCompat.get().process(Undeprecator.htmlFromHtml("<b>" + item.htmlName + "</b>"));
         } else {
-            thisHolder.titleLineContent = Undeprecator.htmlFromHtml("<b><font color=\"" + Utils.colorToString(ThemeManager.getColorInt(R.attr.themedTopicNameColor, parentActivity)) +
-                                                                    "\">" + item.htmlName + "</font> (" + item.nbOfMessages + ")</b>");
+            thisHolder.titleLineContent = EmojiCompat.get().process(Undeprecator.htmlFromHtml("<b><font color=\"" +
+                                                                            Utils.colorToString(ThemeManager.getColorInt(R.attr.themedTopicNameColor, parentActivity)) +
+                                                                            "\">" + item.htmlName + "</font> (" + item.nbOfMessages + ")</b>"));
         }
 
         switch (item.authorType) {
@@ -216,8 +217,8 @@ public class JVCForumAdapter extends BaseAdapter {
     }
 
     private class ContentHolder {
-        public Spanned titleLineContent;
-        public Spanned authorLineContent;
-        public Spanned dateLineContent;
+        public CharSequence titleLineContent;
+        public CharSequence authorLineContent;
+        public CharSequence dateLineContent;
     }
 }
