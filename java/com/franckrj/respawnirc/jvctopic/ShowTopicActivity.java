@@ -62,6 +62,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     private static final int LOCK_TOPIC_REQUEST_CODE = 1245;
     private static final String SAVE_LAST_PAGE = "saveLastPage";
     private static final String SAVE_TOPIC_STATUS = "saveTopicStatus";
+    private static final String SAVE_CURRENT_TOPIC_LINK = "saveCurrentTopicLink";
     private static final String SAVE_GO_TO_LAST_PAGE_AFTER_LOADING = "saveGoToLastPageAfterLoading";
 
     private AbsJVCTopicGetter.TopicStatusInfos topicStatus = new AbsJVCTopicGetter.TopicStatusInfos();
@@ -464,8 +465,6 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         insertStuffButton.setOnClickListener(selectStickerClickedListener);
         insertStuffButton.setOnLongClickListener(showSendmessageActionListener);
 
-        pageNavigation.setCurrentLink(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_URL_TO_FETCH));
-        topicStatus.pseudoOfAuthor = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_AUTHOR_OF_TOPIC);
         updateShowNavigationButtons();
         initializeSettings();
         if (savedInstanceState == null) {
@@ -497,6 +496,15 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 topicStatus.names.topic = "";
             }
 
+            /* Si les informations du topic n'étaient pas présentes dans l'Intent ça veut dire qu'il faut les récupérer dans les prefs
+             * parce que c'est le ShowTopic lancé au démarrage de l'application. */
+            if (pageNavigation.getCurrentLinkIsEmpty()) {
+                pageNavigation.setCurrentLink(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_URL_TO_FETCH));
+                if (topicStatus.pseudoOfAuthor.isEmpty()) {
+                    topicStatus.pseudoOfAuthor = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_AUTHOR_OF_TOPIC);
+                }
+            }
+
             updateLastPageAndCurrentItemAndButtonsToCurrentLink();
 
             if (utilsForDraft.lastDraftSavedHasToBeUsed()) {
@@ -504,6 +512,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             }
         } else {
             topicStatus = savedInstanceState.getParcelable(SAVE_TOPIC_STATUS);
+            pageNavigation.setCurrentLink(savedInstanceState.getString(SAVE_CURRENT_TOPIC_LINK, ""));
             pageNavigation.setLastPageNumber(savedInstanceState.getInt(SAVE_LAST_PAGE, pageNavigation.getCurrentItemIndex() + 1));
             goToLastPageAfterLoading = savedInstanceState.getBoolean(SAVE_GO_TO_LAST_PAGE_AFTER_LOADING, false);
             pageNavigation.notifyDataSetChanged();
@@ -557,6 +566,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(SAVE_TOPIC_STATUS, topicStatus);
+        outState.putString(SAVE_CURRENT_TOPIC_LINK, pageNavigation.getCurrentPageLink());
         outState.putInt(SAVE_LAST_PAGE, pageNavigation.getLastPage());
         outState.putBoolean(SAVE_GO_TO_LAST_PAGE_AFTER_LOADING, goToLastPageAfterLoading);
         senderForMessages.saveToBundle(outState);
@@ -849,14 +859,15 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         if (!itsLongClick) {
             String possibleNewLink = JVCParser.formatThisUrl(link);
 
-            if (JVCParser.checkIfTopicAreSame(pageNavigation.getFirstPageLink(), possibleNewLink)) {
-                pageNavigation.setCurrentItemIndex(getShowablePageNumberForThisLink(possibleNewLink) - 1);
-            } else if (JVCParser.checkIfItsJVCLink(possibleNewLink)) {
+            if (JVCParser.checkIfItsTopicLink(possibleNewLink)) {
+                Intent newShowTopicIntent = new Intent(this, ShowTopicActivity.class);
+                newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_LINK, possibleNewLink);
+                startActivity(newShowTopicIntent);
+            } else if (JVCParser.checkIfItsForumLink(possibleNewLink)) {
                 Intent newShowForumIntent = new Intent(this, ShowForumActivity.class);
-                newShowForumIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 newShowForumIntent.putExtra(ShowForumActivity.EXTRA_NEW_LINK, possibleNewLink);
+                newShowForumIntent.putExtra(ShowForumActivity.EXTRA_IS_FIRST_ACTIVITY, false);
                 startActivity(newShowForumIntent);
-                finish();
             } else if (showOverviewOnImageClick && JVCParser.checkIfItsNoelshackLink(link)) {
                 Bundle argForFrag = new Bundle();
                 ShowImageDialogFragment showImageDialogFragment = new ShowImageDialogFragment();

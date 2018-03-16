@@ -38,7 +38,6 @@
 
         <activity
             android:name=".jvcforum.ShowForumActivity"
-            android:launchMode="singleTop"
             android:windowSoftInputMode="stateAlwaysHidden"/>
 
         <activity

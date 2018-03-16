@@ -215,9 +215,8 @@ public final class JVCParser {
         return linkToCheck.startsWith("http://www.jeuxvideo.com/forums/0-");
     }
 
-    public static boolean checkIfItsJVCLink(String linkToCheck) {
-        return linkToCheck.startsWith("http://www.jeuxvideo.com/forums/0-") ||
-                linkToCheck.startsWith("http://www.jeuxvideo.com/forums/1-") ||
+    public static boolean checkIfItsTopicLink(String linkToCheck) {
+        return linkToCheck.startsWith("http://www.jeuxvideo.com/forums/1-") ||
                 linkToCheck.startsWith("http://www.jeuxvideo.com/forums/42-");
     }
 

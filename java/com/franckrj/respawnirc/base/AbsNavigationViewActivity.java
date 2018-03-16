@@ -74,6 +74,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected String showNotifStringContent = "";
     protected boolean backIsOpenDrawer = false;
     protected boolean userIsModo = false;
+    protected boolean drawerIsDisabled = false;
 
     protected final AdapterView.OnItemClickListener itemInNavigationClickedListener = new AdapterView.OnItemClickListener() {
         @Override
@@ -444,6 +445,12 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         }
     }
 
+    protected void disableDrawerLayout() {
+        layoutForDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        toggleForDrawer.setDrawerIndicatorEnabled(false);
+        drawerIsDisabled = true;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -551,9 +558,9 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
 
     @Override
     public void onBackPressed() {
-        if (layoutForDrawer.isDrawerOpen(GravityCompat.START)) {
+        if (layoutForDrawer.isDrawerOpen(GravityCompat.START) && !drawerIsDisabled) {
             layoutForDrawer.closeDrawer(GravityCompat.START);
-        } else if (backIsOpenDrawer) {
+        } else if (backIsOpenDrawer && !drawerIsDisabled) {
             layoutForDrawer.openDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
@@ -568,12 +575,18 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //noinspection SimplifiableIfStatement
-        if (toggleForDrawer.onOptionsItemSelected(item)) {
-            return true;
+        if (drawerIsDisabled) {
+            if (item.getItemId() == android.R.id.home) {
+                super.onBackPressed();
+                return true;
+            }
         } else {
-            return super.onOptionsItemSelected(item);
+            if (toggleForDrawer.onOptionsItemSelected(item)) {
+                return true;
+            }
         }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

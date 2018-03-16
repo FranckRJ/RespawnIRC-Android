@@ -29,12 +29,15 @@ import com.franckrj.respawnirc.utils.Utils;
 public class ShowForumActivity extends AbsNavigationViewActivity implements ShowForumFragment.NewTopicWantRead,
                                                     JVCForumGetter.ForumLinkChanged, PageNavigationUtil.PageNavigationFunctions,
                                                     AddOrRemoveThingToFavs.ActionToFavsEnded, JVCForumGetter.NewForumStatusListener {
+    public static final String EXTRA_IS_FIRST_ACTIVITY = "com.franckrj.respawnirc.EXTRA_IS_FIRST_ACTIVITY";
     public static final String EXTRA_NEW_LINK = "com.franckrj.respawnirc.EXTRA_NEW_LINK";
     public static final String EXTRA_GO_TO_LAST_PAGE = "com.franckrj.respawnirc.EXTRA_GO_TO_LAST_PAGE";
     public static final String EXTRA_ITS_FIRST_START = "com.franckrj.respawnirc.EXTRA_ITS_FIRST_START";
 
     private static final int SEND_TOPIC_REQUEST_CODE = 156;
+    private static final String SAVE_DRAWER_IS_DISABLED = "saveDrawerIsDisabled";
     private static final String SAVE_FORUM_STATUS = "saveForumStatus";
+    private static final String SAVE_CURRENT_FORUM_LINK = "saveCurrentForumLink";
     private static final String SAVE_REFRESH_NEEDED_NEXT_RESUME = "saveRefreshNeededOnNextResume";
 
     private JVCForumGetter.ForumStatusInfos forumStatus = new JVCForumGetter.ForumStatusInfos();
@@ -140,12 +143,23 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         return (ShowForumFragment) pageNavigation.getCurrentFragment();
     }
 
+    /* Retourne vrai si une nouvelle activité a été lancé suite à l'appelle de cette fonction. */
     private boolean consumeIntent(Intent newIntent) {
-        String newLinkToGo = newIntent.getStringExtra(EXTRA_NEW_LINK);
+        if (newIntent != null) {
+            String newLinkToGo = newIntent.getStringExtra(EXTRA_NEW_LINK);
 
-        //noinspection SimplifiableIfStatement
-        if (newLinkToGo != null) {
-            return readThisTopicOrForum(newLinkToGo, newIntent.getBooleanExtra(EXTRA_GO_TO_LAST_PAGE, false));
+            if (!newIntent.getBooleanExtra(EXTRA_IS_FIRST_ACTIVITY, true)) {
+                disableDrawerLayout();
+            }
+
+            if (getIntent().getBooleanExtra(EXTRA_ITS_FIRST_START, false)) {
+                if (PrefsManager.getInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED) == MainActivity.ACTIVITY_SHOW_TOPIC) {
+                    startActivity(new Intent(this, ShowTopicActivity.class));
+                    return true;
+                }
+            } else if (newLinkToGo != null) {
+                return readThisTopicOrForum(newLinkToGo, newIntent.getBooleanExtra(EXTRA_GO_TO_LAST_PAGE, false));
+            }
         }
 
         return false;
@@ -171,29 +185,48 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
                         (Button) findViewById(R.id.currentpage_button_showforum), (Button) findViewById(R.id.nextpage_button_showforum), null);
         pageNavigation.updateAdapterForPagerView();
 
-        pageNavigation.setCurrentLink(PrefsManager.getString(PrefsManager.StringPref.Names.FORUM_URL_TO_FETCH));
         if (savedInstanceState == null) {
             forumStatus.forumName = getString(R.string.app_name);
             newActivityIsLaunched = consumeIntent(getIntent());
+
+            /* Si les informations du topic n'étaient pas présentes dans l'Intent ça veut dire qu'il faut les récupérer dans les prefs
+             * parce que c'est le ShowForum lancé au démarrage de l'application.
+             * Si la première activité affichée est ShowTopic et que le lien du forum dans les prefs n'est pas le forum du ShowTopic on récupère
+             * le vrai lien du forum via le lien du topic. On le fait pas dans tous les cas dans le but de préserver le numéro de la page du forum si possible. */
+            if (pageNavigation.getCurrentLinkIsEmpty()) {
+                if (PrefsManager.getInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED) == MainActivity.ACTIVITY_SHOW_TOPIC) {
+                    String savedForumLink = PrefsManager.getString(PrefsManager.StringPref.Names.FORUM_URL_TO_FETCH);
+                    String forumLinkFromSavedTopicLink = JVCParser.getForumForTopicLink(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_URL_TO_FETCH));
+
+                    if (JVCParser.checkIfForumAreSame(savedForumLink, forumLinkFromSavedTopicLink)) {
+                        pageNavigation.setCurrentLink(savedForumLink);
+                    } else {
+                        pageNavigation.setCurrentLink(forumLinkFromSavedTopicLink);
+                    }
+                } else {
+                    pageNavigation.setCurrentLink(PrefsManager.getString(PrefsManager.StringPref.Names.FORUM_URL_TO_FETCH));
+                }
+            }
+
             pageNavigation.updateCurrentItemAndButtonsToCurrentLink();
         } else {
+            drawerIsDisabled = savedInstanceState.getBoolean(SAVE_DRAWER_IS_DISABLED);
             forumStatus = savedInstanceState.getParcelable(SAVE_FORUM_STATUS);
+            pageNavigation.setCurrentLink(savedInstanceState.getString(SAVE_CURRENT_FORUM_LINK, ""));
             refreshNeededOnNextResume = savedInstanceState.getBoolean(SAVE_REFRESH_NEEDED_NEXT_RESUME, false);
+
+            if (drawerIsDisabled) {
+                disableDrawerLayout();
+            }
             updateMpAndNotifNumberShowed(forumStatus.numberOfMp, forumStatus.numberOfNotif);
             pageNavigation.updateNavigationButtons();
         }
         setTitle(forumStatus.forumName);
 
-        if (savedInstanceState == null && getIntent() != null) {
-            if (getIntent().getBooleanExtra(EXTRA_ITS_FIRST_START, false) && PrefsManager.getInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED) == MainActivity.ACTIVITY_SHOW_TOPIC) {
-                startActivity(new Intent(this, ShowTopicActivity.class));
-                newActivityIsLaunched = true;
-            }
-        }
-
         if (newActivityIsLaunched) {
             pageNavigation.setDontLoadOnFirstTimeForNextFragCreate(true);
-        } else if (savedInstanceState == null) {
+        } else if (savedInstanceState == null && !drawerIsDisabled) {
+            /* Drawer désactivé == autres activités dans le stack avant, donc l'animation de doit pas être un fade. */
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }
     }
@@ -234,7 +267,9 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putBoolean(SAVE_DRAWER_IS_DISABLED, drawerIsDisabled);
         outState.putParcelable(SAVE_FORUM_STATUS, forumStatus);
+        outState.putString(SAVE_CURRENT_FORUM_LINK, pageNavigation.getCurrentPageLink());
         outState.putBoolean(SAVE_REFRESH_NEEDED_NEXT_RESUME, refreshNeededOnNextResume);
     }
 
