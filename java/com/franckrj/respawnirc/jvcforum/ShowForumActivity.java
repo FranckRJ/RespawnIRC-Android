@@ -31,6 +31,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
                                                     AddOrRemoveThingToFavs.ActionToFavsEnded, JVCForumGetter.NewForumStatusListener {
     public static final String EXTRA_IS_FIRST_ACTIVITY = "com.franckrj.respawnirc.EXTRA_IS_FIRST_ACTIVITY";
     public static final String EXTRA_NEW_LINK = "com.franckrj.respawnirc.EXTRA_NEW_LINK";
+    public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.EXTRA_FORUM_NAME";
     public static final String EXTRA_GO_TO_LAST_PAGE = "com.franckrj.respawnirc.EXTRA_GO_TO_LAST_PAGE";
     public static final String EXTRA_ITS_FIRST_START = "com.franckrj.respawnirc.EXTRA_ITS_FIRST_START";
 
@@ -145,8 +146,11 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
 
     /* Retourne vrai si une nouvelle activité a été lancé suite à l'appelle de cette fonction. */
     private boolean consumeIntent(Intent newIntent) {
+        boolean newActivityIsLaunched = false;
+
         if (newIntent != null) {
             String newLinkToGo = newIntent.getStringExtra(EXTRA_NEW_LINK);
+            String newForumNameToUse = newIntent.getStringExtra(EXTRA_FORUM_NAME);
 
             if (!newIntent.getBooleanExtra(EXTRA_IS_FIRST_ACTIVITY, true)) {
                 disableDrawerLayout();
@@ -155,14 +159,18 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
             if (getIntent().getBooleanExtra(EXTRA_ITS_FIRST_START, false)) {
                 if (PrefsManager.getInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED) == MainActivity.ACTIVITY_SHOW_TOPIC) {
                     startActivity(new Intent(this, ShowTopicActivity.class));
-                    return true;
+                    newActivityIsLaunched = true;
                 }
             } else if (newLinkToGo != null) {
-                return readThisTopicOrForum(newLinkToGo, newIntent.getBooleanExtra(EXTRA_GO_TO_LAST_PAGE, false));
+                newActivityIsLaunched = readThisTopicOrForum(newLinkToGo, newIntent.getBooleanExtra(EXTRA_GO_TO_LAST_PAGE, false));
+            }
+
+            if (!Utils.stringIsEmptyOrNull(newForumNameToUse)) {
+                forumStatus.forumName = newForumNameToUse;
             }
         }
 
-        return false;
+        return newActivityIsLaunched;
     }
 
     private void updateShareAction() {
