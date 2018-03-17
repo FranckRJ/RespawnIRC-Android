@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.text.emoji.EmojiCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -536,7 +535,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
         if (myActionBar != null) {
             myActionBar.setTitle(topicStatus.names.forum);
-            myActionBar.setSubtitle(EmojiCompat.get().process(topicStatus.names.topic));
+            myActionBar.setSubtitle(Utils.applyEmojiCompatIfPossible(topicStatus.names.topic));
         }
     }
 
@@ -1020,7 +1019,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
             if (myActionBar != null) {
                 myActionBar.setTitle(topicStatus.names.forum);
-                myActionBar.setSubtitle(EmojiCompat.get().process(topicStatus.names.topic));
+                myActionBar.setSubtitle(Utils.applyEmojiCompatIfPossible(topicStatus.names.topic));
             }
         }
     }

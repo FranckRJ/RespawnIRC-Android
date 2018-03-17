@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
-import android.support.text.emoji.EmojiCompat;
 import android.support.v7.widget.CardView;
 import android.text.Layout;
 import android.text.Spannable;
@@ -390,7 +389,7 @@ public class JVCTopicAdapter extends BaseAdapter {
             });
         }
 
-        return EmojiCompat.get().process(spannable);
+        return Utils.applyEmojiCompatIfPossible(spannable);
     }
 
     private void updateListOfSpoidIdToShow(JVCParser.MessageInfos infosOfMessage, String instructionForUpdate) {
@@ -465,7 +464,7 @@ public class JVCTopicAdapter extends BaseAdapter {
                 viewHolder.avatarImage.setOnClickListener(null);
             }
 
-            viewHolder.infoLine.setText(EmojiCompat.get().process(Undeprecator.htmlFromHtml(advertiseForSurveyToShow)));
+            viewHolder.infoLine.setText(Utils.applyEmojiCompatIfPossible(Undeprecator.htmlFromHtml(advertiseForSurveyToShow)));
             convertView.setOnClickListener(onSurveyClickListener);
             viewHolder.infoLine.setOnClickListener(onSurveyClickListener);
             setColorBackgroundOfThisItem(convertView, ThemeManager.getColorInt(R.attr.themedSurveyMessageBackgroundColor, parentActivity));

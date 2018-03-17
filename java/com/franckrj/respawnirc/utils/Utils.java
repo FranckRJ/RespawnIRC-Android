@@ -11,6 +11,7 @@ import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.support.annotation.ColorInt;
+import android.support.text.emoji.EmojiCompat;
 import android.text.Spannable;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -172,6 +173,14 @@ public class Utils {
         } else {
             currentEditText.getText().insert(currentCursorPos, stringToInsert);
             currentEditText.setSelection(currentCursorPos + stringToInsert.length() - posOfCenterFromEnd);
+        }
+    }
+
+    public static CharSequence applyEmojiCompatIfPossible(CharSequence baseMessage) {
+        if (EmojiCompat.get().getLoadState() == EmojiCompat.LOAD_STATE_SUCCEEDED) {
+            return EmojiCompat.get().process(baseMessage);
+        } else {
+            return baseMessage;
         }
     }
 

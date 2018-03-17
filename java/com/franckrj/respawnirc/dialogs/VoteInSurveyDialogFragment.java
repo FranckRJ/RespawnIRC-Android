@@ -4,11 +4,11 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.text.emoji.EmojiCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -31,7 +31,7 @@ public class VoteInSurveyDialogFragment extends DialogFragment {
 
             if (tmpListOfReplys != null) {
                 for (String thisReply : tmpListOfReplys) {
-                    listOfReplys.add(EmojiCompat.get().process(thisReply));
+                    listOfReplys.add(Utils.applyEmojiCompatIfPossible(thisReply));
                 }
             }
         }

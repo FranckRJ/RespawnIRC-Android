@@ -3,7 +3,6 @@ package com.franckrj.respawnirc.jvcforum.jvcforumtools;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.text.emoji.EmojiCompat;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,9 +98,9 @@ public class JVCForumAdapter extends BaseAdapter {
         ContentHolder thisHolder = new ContentHolder();
 
         if (item.type.equals("message")) {
-            thisHolder.titleLineContent = EmojiCompat.get().process(Undeprecator.htmlFromHtml("<b>" + item.htmlName + "</b>"));
+            thisHolder.titleLineContent = Utils.applyEmojiCompatIfPossible(Undeprecator.htmlFromHtml("<b>" + item.htmlName + "</b>"));
         } else {
-            thisHolder.titleLineContent = EmojiCompat.get().process(Undeprecator.htmlFromHtml("<b><font color=\"" +
+            thisHolder.titleLineContent = Utils.applyEmojiCompatIfPossible(Undeprecator.htmlFromHtml("<b><font color=\"" +
                                                                             Utils.colorToString(ThemeManager.getColorInt(R.attr.themedTopicNameColor, parentActivity)) +
                                                                             "\">" + item.htmlName + "</font> (" + item.nbOfMessages + ")</b>"));
         }
@@ -143,8 +142,8 @@ public class JVCForumAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-        ContentHolder currentTopicContent = listOfContentForTopics.get(position);
         JVCParser.TopicInfos currentTopicInfos = listOfTopics.get(position);
+        ContentHolder currentTopicContent = listOfContentForTopics.get(position);
 
         if (convertView == null) {
             holder = new ViewHolder();
