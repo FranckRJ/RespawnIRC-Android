@@ -116,7 +116,7 @@ public final class JVCParser {
         }
     }
 
-    public static String formatThisUrl(String urlToChange) {
+    public static String formatThisUrlToClassicJvcUrl(String urlToChange) {
         if (urlToChange.startsWith("https://")) {
             urlToChange = "http://" + urlToChange.substring(("https://").length());
         } else if (!urlToChange.startsWith("http://")) {

@@ -10,7 +10,7 @@ import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.jvctopic.jvctopicviewers.AbsShowTopicFragment;
 
 public class PrefsManager {
-    public static final int CURRENT_SHORTCUT_VERSION_NUMBER = 1;
+    public static final int CURRENT_SHORTCUT_VERSION_NUMBER = 2;
 
     private static SharedPreferences currentPrefs = null;
     private static SharedPreferences.Editor currentPrefsEdit = null;
@@ -401,7 +401,7 @@ public class PrefsManager {
     public static class ShowImageType extends IntValueType {
         public static final int ALWAYS = 0;
         public static final int WIFI_ONLY = 1;
-        public static final int NEVER = 2;
+        //public static final int NEVER = 2;
 
         public ShowImageType(int newDefaultType) {
             super(newDefaultType);

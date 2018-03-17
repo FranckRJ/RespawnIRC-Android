@@ -471,6 +471,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         initializeSettings();
         if (savedInstanceState == null) {
             if (getIntent() != null) {
+                String possibleLinkToUse = getIntent().getStringExtra(EXTRA_TOPIC_LINK);
                 goToLastPageAfterLoading = getIntent().getBooleanExtra(EXTRA_GO_TO_LAST_PAGE, false);
                 topicHasBeenOpenedFromAForum = getIntent().getBooleanExtra(EXTRA_OPENED_FROM_FORUM, true);
                 topicStatus.names.forum = getIntent().getStringExtra(EXTRA_FORUM_NAME);
@@ -491,8 +492,11 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                     topicStatus.names.topic = "";
                 }
 
-                if (getIntent().getStringExtra(EXTRA_TOPIC_LINK) != null) {
-                    pageNavigation.setCurrentLink(getIntent().getStringExtra(EXTRA_TOPIC_LINK));
+                if (possibleLinkToUse != null) {
+                    if (!possibleLinkToUse.isEmpty()) {
+                        possibleLinkToUse = JVCParser.formatThisUrlToClassicJvcUrl(possibleLinkToUse);
+                    }
+                    pageNavigation.setCurrentLink(possibleLinkToUse);
                 }
             } else {
                 topicStatus.names.forum = getString(R.string.app_name);
@@ -870,7 +874,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         }
 
         if (!itsLongClick) {
-            String possibleNewLink = JVCParser.formatThisUrl(link);
+            String possibleNewLink = JVCParser.formatThisUrlToClassicJvcUrl(link);
 
             if (JVCParser.checkIfItsTopicLink(possibleNewLink)) {
                 Intent newShowTopicIntent = new Intent(this, ShowTopicActivity.class);

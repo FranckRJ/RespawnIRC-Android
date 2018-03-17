@@ -211,7 +211,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         isInErrorMode = false;
 
         if (!newForumPageLink.isEmpty()) {
-            newForumPageLink = JVCParser.formatThisUrl(newForumPageLink);
+            newForumPageLink = JVCParser.formatThisUrlToClassicJvcUrl(newForumPageLink);
         }
 
         getterForForum.stopAllCurrentTask();

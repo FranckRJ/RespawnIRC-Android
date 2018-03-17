@@ -117,7 +117,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     private boolean readThisTopicOrForum(String link, boolean goToLastPage) {
         if (link != null) {
             if (!link.isEmpty()) {
-                link = JVCParser.formatThisUrl(link);
+                link = JVCParser.formatThisUrlToClassicJvcUrl(link);
             }
 
             if (JVCParser.checkIfItsForumLink(link)) {

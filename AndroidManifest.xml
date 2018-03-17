@@ -25,9 +25,32 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="com.franckrj.respawnirc.ACTION_OPEN_LINK"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="com.franckrj.respawnirc.ACTION_OPEN_SHORTCUT"/>
                 <data android:scheme="http"/>
+                <data android:scheme="https"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="http" android:host="www.jeuxvideo.com" android:pathPrefix="/forums/0-"/>
+                <data android:scheme="http" android:host="www.jeuxvideo.com" android:pathPrefix="/forums/1-"/>
+                <data android:scheme="http" android:host="www.jeuxvideo.com" android:pathPrefix="/forums/42-"/>
+                <data android:scheme="https" android:host="www.jeuxvideo.com" android:pathPrefix="/forums/0-"/>
+                <data android:scheme="https" android:host="www.jeuxvideo.com" android:pathPrefix="/forums/1-"/>
+                <data android:scheme="https" android:host="www.jeuxvideo.com" android:pathPrefix="/forums/42-"/>
+                <data android:scheme="http" android:host="m.jeuxvideo.com" android:pathPrefix="/forums/0-"/>
+                <data android:scheme="http" android:host="m.jeuxvideo.com" android:pathPrefix="/forums/1-"/>
+                <data android:scheme="http" android:host="m.jeuxvideo.com" android:pathPrefix="/forums/42-"/>
+                <data android:scheme="https" android:host="m.jeuxvideo.com" android:pathPrefix="/forums/0-"/>
+                <data android:scheme="https" android:host="m.jeuxvideo.com" android:pathPrefix="/forums/1-"/>
+                <data android:scheme="https" android:host="m.jeuxvideo.com" android:pathPrefix="/forums/42-"/>
+                <data android:scheme="http" android:host="jeuxvideo.com" android:pathPrefix="/forums/0-"/>
+                <data android:scheme="http" android:host="jeuxvideo.com" android:pathPrefix="/forums/1-"/>
+                <data android:scheme="http" android:host="jeuxvideo.com" android:pathPrefix="/forums/42-"/>
+                <data android:scheme="https" android:host="jeuxvideo.com" android:pathPrefix="/forums/0-"/>
+                <data android:scheme="https" android:host="jeuxvideo.com" android:pathPrefix="/forums/1-"/>
+                <data android:scheme="https" android:host="jeuxvideo.com" android:pathPrefix="/forums/42-"/>
             </intent-filter>
         </activity>
 

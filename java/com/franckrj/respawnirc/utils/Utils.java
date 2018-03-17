@@ -196,7 +196,7 @@ public class Utils {
                     .setShortLabel(currentShortcutName)
                     .setLongLabel(currentShortcutName)
                     .setIcon(Icon.createWithResource(parentActivity, R.mipmap.ic_shortcut_forum))
-                    .setIntent(new Intent(MainActivity.ACTION_OPEN_LINK, Uri.parse(currentShortcutLink))).build();
+                    .setIntent(new Intent(MainActivity.ACTION_OPEN_SHORTCUT, Uri.parse(currentShortcutLink))).build();
 
             listOfShortcuts.add(newShortcut);
         }
