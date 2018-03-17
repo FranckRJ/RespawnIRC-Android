@@ -280,6 +280,7 @@
     <string name="errorDekickAlreadyRunning">Erreur, dékick déjà en cours.</string>
     <string name="dekickOfPseudoSuccessful">%1$s dékické.</string>
     <string name="goToForumOfTopic">Accéder au forum du topic</string>
+    <string name="chooseBrowser">Choisissez un navigateur</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>

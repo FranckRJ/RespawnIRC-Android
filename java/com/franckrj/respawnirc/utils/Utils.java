@@ -136,8 +136,8 @@ public class Utils {
 
     public static void openLinkInExternalBrowser(String link, Activity parentActivity) {
         try {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
-            parentActivity.startActivity(browserIntent);
+            Intent chooseBrowserIntent = Intent.createChooser(new Intent(Intent.ACTION_VIEW, Uri.parse(link)), parentActivity.getString(R.string.chooseBrowser));
+            parentActivity.startActivity(chooseBrowserIntent);
         } catch (Exception e) {
             //rien
         }
