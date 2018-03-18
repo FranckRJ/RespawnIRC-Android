@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
-import android.support.annotation.StyleRes;
 import android.support.v7.app.AppCompatActivity;
 
 import com.franckrj.respawnirc.R;
@@ -18,8 +17,7 @@ public abstract class AbsThemedActivity extends AppCompatActivity {
     protected ThemeManager.ThemeName lastThemeUsed = null;
     protected boolean toolbarTextColorIsInverted = false;
     protected int lastPrimaryColorUsed = -1;
-    protected int lastTopicNameAndLinkColorUsed = -1;
-    protected @StyleRes int colorAccentStyle = 0;
+    protected int lastTopicNameAndAccentColorUsed = -1;
     protected boolean windowDrawStatusBar = true;
 
     @Override
@@ -30,11 +28,7 @@ public abstract class AbsThemedActivity extends AppCompatActivity {
         lastThemeUsed = ThemeManager.getThemeUsed();
         toolbarTextColorIsInverted = ThemeManager.getToolbarTextColorIsInvertedForThemeLight();
         lastPrimaryColorUsed = ThemeManager.getPrimaryColorIdUsedForThemeLight();
-        lastTopicNameAndLinkColorUsed = ThemeManager.getTopicNameAndLinkColorIdUsedForThemeLight();
-
-        if (colorAccentStyle != 0) {
-            getTheme().applyStyle(colorAccentStyle, true);
-        }
+        lastTopicNameAndAccentColorUsed = ThemeManager.getTopicNameAndAccentColorIdUsedForThemeLight();
 
         super.onCreate(savedInstanceState);
 
@@ -57,7 +51,7 @@ public abstract class AbsThemedActivity extends AppCompatActivity {
         super.onResume();
 
         if ((lastThemeUsed != ThemeManager.getThemeUsed()) || (lastPrimaryColorUsed != ThemeManager.getPrimaryColorIdUsedForThemeLight()) ||
-                (lastTopicNameAndLinkColorUsed != ThemeManager.getTopicNameAndLinkColorIdUsedForThemeLight()) ||
+                (lastTopicNameAndAccentColorUsed != ThemeManager.getTopicNameAndAccentColorIdUsedForThemeLight()) ||
                 (toolbarTextColorIsInverted != ThemeManager.getToolbarTextColorIsInvertedForThemeLight())) {
             recreate();
         }

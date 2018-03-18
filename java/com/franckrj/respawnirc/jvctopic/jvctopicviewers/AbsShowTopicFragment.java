@@ -334,7 +334,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         }
 
         errorBackgroundMessage.setVisibility(View.GONE);
-        swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
+        swipeRefresh.setColorSchemeResources(R.color.colorControlHighlightThemeLight);
         if (cardDesignIsEnabled) {
             int paddingForMsgList = getResources().getDimensionPixelSize(R.dimen.spaceAroundSingleCard);
             int dividerSizeForMsgList = getResources().getDimensionPixelSize(R.dimen.spaceBetweenTwoCards);

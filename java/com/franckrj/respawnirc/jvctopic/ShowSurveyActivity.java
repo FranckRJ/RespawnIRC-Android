@@ -209,7 +209,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
         voteButton.setVisibility(View.GONE);
         voteButton.setOnClickListener(voteButtonClickedListener);
         swipeRefresh.setEnabled(false);
-        swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
+        swipeRefresh.setColorSchemeResources(R.color.colorControlHighlightThemeLight);
 
         if (savedInstanceState != null) {
             mainCardView.setVisibility(savedInstanceState.getBoolean(SAVE_MAIN_CARD_IS_VISIBLE, false) ? View.VISIBLE : View.GONE);

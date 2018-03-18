@@ -53,7 +53,7 @@
     <string name="settingsAltColorOfLightTheme" translatable="false">settings.customColor.altColorOfLightTheme</string>
     <string name="settingsSurveyColorOfLightTheme" translatable="false">settings.customColor.surveyColorOfLightTheme</string>
     <string name="settingsDeletedColorOfLightTheme" translatable="false">settings.customColor.deletedColorOfLightTheme</string>
-    <string name="settingsTopicNameAndLinkColorOfLightTheme" translatable="false">settings.customColor.topicNameAndLinkColorOfLightTheme</string>
+    <string name="settingsTopicNameAndAccentColorOfLightTheme" translatable="false">settings.customColor.topicNameAndAccentColorOfLightTheme</string>
     <string name="settingsSaveMessagesAndTopicsAsDraftType" translatable="false">settings.saveMessagesAndTopicsAsDraftType</string>
     <string name="settingsInvertToolbarTextColor" translatable="false">settings.invertToolbarTextColor</string>
     <string name="settingsTopicTitleFontSize" translatable="false">settings.topicTitleFontSize</string>

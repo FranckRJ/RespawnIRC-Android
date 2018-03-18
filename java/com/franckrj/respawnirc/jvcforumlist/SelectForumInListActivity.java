@@ -216,7 +216,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         noResultFoundTextView = findViewById(R.id.text_noresultfound_selectforum);
         baseForumListLayout = findViewById(R.id.base_forumlist_layout_selectforum);
         swipeRefresh.setEnabled(false);
-        swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
+        swipeRefresh.setColorSchemeResources(R.color.colorControlHighlightThemeLight);
         noResultFoundTextView.setVisibility(View.GONE);
 
         baseForumlistCatBlabla = initForumlistCategoryCard(R.id.forumlist_cat_blabla_selectforum, R.id.forumlist_content_blabla_selectforum,

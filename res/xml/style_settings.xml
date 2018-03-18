@@ -26,10 +26,10 @@
             android:title="@string/invertToolbarTextColorTitle"/>
 
         <ColorPickerPreference
-            android:key="@string/settingsTopicNameAndLinkColorOfLightTheme"
-            android:title="@string/topicNameAndLinkColor"
-            app:pref_currentColor="@color/defaultTopicNameAndLinkColorThemeLight"
-            app:pref_colors="@array/choicesForTopicNameAndLinkColor"/>
+            android:key="@string/settingsTopicNameAndAccentColorOfLightTheme"
+            android:title="@string/topicNameAndAccentColor"
+            app:pref_currentColor="@color/defaultTopicNameAndAccentColorThemeLight"
+            app:pref_colors="@array/choicesForTopicNameAndAccentColor"/>
 
         <ColorPickerPreference
             android:key="@string/settingsAltColorOfLightTheme"

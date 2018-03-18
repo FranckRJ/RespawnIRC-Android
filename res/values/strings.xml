@@ -235,7 +235,7 @@
     <string name="deletedMessageColor">Couleur des messages supprimés</string>
     <string name="megaByteNumber">%1$.2f Mo</string>
     <string name="kiloByteNumber">%1$.2f Ko</string>
-    <string name="topicNameAndLinkColor">Couleur du nom des topics / liens</string>
+    <string name="topicNameAndAccentColor">Couleur secondaire</string>
     <string name="createSurvey">Créer un sondage</string>
     <string name="saveMessagesAndTopicsAsDraftTypeTitle">Sauvegarder les messages en cours d\'écriture</string>
     <string name="messageDraftSaved">Brouillon du message sauvegardé.</string>

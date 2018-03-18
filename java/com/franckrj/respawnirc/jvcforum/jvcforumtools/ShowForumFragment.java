@@ -270,7 +270,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         }
 
         errorBackgroundMessage.setVisibility(View.GONE);
-        swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
+        swipeRefresh.setColorSchemeResources(R.color.colorControlHighlightThemeLight);
         jvcTopicList.setAdapter(adapterForForum);
 
         if (savedInstanceState != null) {

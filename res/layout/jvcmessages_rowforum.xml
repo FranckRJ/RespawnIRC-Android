@@ -35,8 +35,7 @@
         android:layout_marginTop="4dp"
         android:paddingRight="6dp"
         android:paddingLeft="6dp"
-        android:layout_below="@+id/infos_text_jvcmessages_row"
-        android:textColorLink="?attr/themedLinkColor"/>
+        android:layout_below="@+id/infos_text_jvcmessages_row"/>
 
     <View
         android:id="@+id/separator_view_jvcmessages_row"
@@ -55,7 +54,6 @@
         android:layout_height="wrap_content"
         android:paddingRight="6dp"
         android:paddingLeft="6dp"
-        android:layout_below="@+id/separator_view_jvcmessages_row"
-        android:textColorLink="?attr/themedLinkColor"/>
+        android:layout_below="@+id/separator_view_jvcmessages_row"/>
 
 </RelativeLayout>
