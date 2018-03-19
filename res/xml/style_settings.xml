@@ -27,7 +27,8 @@
 
         <ColorPickerPreference
             android:key="@string/settingsTopicNameAndAccentColorOfLightTheme"
-            android:title="@string/topicNameAndAccentColor"
+            android:title="@string/topicNameAndAccentColorTitle"
+            android:summary="@string/topicNameAndAccentColorSummary"
             app:pref_currentColor="@color/defaultTopicNameAndAccentColorThemeLight"
             app:pref_colors="@array/choicesForTopicNameAndAccentColor"/>
 

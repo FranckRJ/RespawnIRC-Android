@@ -235,7 +235,7 @@
     <string name="deletedMessageColor">Couleur des messages supprimés</string>
     <string name="megaByteNumber">%1$.2f Mo</string>
     <string name="kiloByteNumber">%1$.2f Ko</string>
-    <string name="topicNameAndAccentColor">Couleur secondaire</string>
+    <string name="topicNameAndAccentColorTitle">Couleur secondaire</string>
     <string name="createSurvey">Créer un sondage</string>
     <string name="saveMessagesAndTopicsAsDraftTypeTitle">Sauvegarder les messages en cours d\'écriture</string>
     <string name="messageDraftSaved">Brouillon du message sauvegardé.</string>
@@ -281,6 +281,7 @@
     <string name="dekickOfPseudoSuccessful">%1$s dékické.</string>
     <string name="goToForumOfTopic">Accéder au forum du topic</string>
     <string name="chooseBrowser">Choisissez un navigateur</string>
+    <string name="topicNameAndAccentColorSummary">Titres de topic, liens, etc…</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>
