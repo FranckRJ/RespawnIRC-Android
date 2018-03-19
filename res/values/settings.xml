@@ -61,4 +61,5 @@
     <string name="settingsMessageFontSize" translatable="false">settings.messageFontSize</string>
     <string name="settingsMessageInfosFontSize" translatable="false">settings.messageInfosFontSize</string>
     <string name="settingsMessageSignatureFontSize" translatable="false">settings.messageSignatureFontSize</string>
+    <string name="settingsRefreshForumOnResume" translatable="false">settings.refreshForumOnResume</string>
 </resources>

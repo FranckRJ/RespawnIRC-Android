@@ -282,6 +282,7 @@
     <string name="goToForumOfTopic">Accéder au forum du topic</string>
     <string name="chooseBrowser">Choisissez un navigateur</string>
     <string name="topicNameAndAccentColorSummary">Titres de topic, liens, etc…</string>
+    <string name="refreshForumOnResumeTitle">Rafraichir les forums à chaque affichage</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>

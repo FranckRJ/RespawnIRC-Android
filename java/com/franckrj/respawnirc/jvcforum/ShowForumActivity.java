@@ -248,10 +248,11 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     @Override
     public void onResume() {
         super.onResume();
+        boolean refreshForumOnResume = PrefsManager.getBool(PrefsManager.BoolPref.Names.REFRESH_FORUM_ON_RESUME);
         PrefsManager.putInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED, MainActivity.ACTIVITY_SHOW_FORUM);
         PrefsManager.applyChanges();
 
-        if (refreshNeededOnNextResume && !dontConsumeRefreshOnNextResume) {
+        if ((refreshForumOnResume || refreshNeededOnNextResume) && !dontConsumeRefreshOnNextResume) {
             refreshNeededOnNextResume = false;
             if (getCurrentFragment() != null) {
                 getCurrentFragment().refreshForum();
