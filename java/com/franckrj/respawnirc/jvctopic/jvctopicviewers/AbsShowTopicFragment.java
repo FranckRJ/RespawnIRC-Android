@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -86,6 +87,22 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             if (getActivity() instanceof AbsJVCTopicGetter.NewTopicStatusListener) {
                 ((AbsJVCTopicGetter.NewTopicStatusListener) getActivity()).getNewTopicStatus(newTopicStatus, oldTopicStatus);
             }
+        }
+    };
+
+    private final AbsJVCTopicGetter.NewMessagesListener listenerForNewMessages = new AbsJVCTopicGetter.NewMessagesListener() {
+        @Override
+        public void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages, boolean itsReallyEmpty, boolean dontShowMessages) {
+            jvcMsgList.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_DISABLED);
+
+            processAddOfNewMessagesToListView(listOfNewMessages, itsReallyEmpty, dontShowMessages);
+
+            jvcMsgList.post(new Runnable() {
+                @Override
+                public void run() {
+                    jvcMsgList.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL);
+                }
+            });
         }
     };
 
@@ -317,6 +334,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         initializeSettings();
         absGetterForTopic.setListenerForNewTopicStatus(listenerForNewTopicStatus);
         absGetterForTopic.setListenerForNewGetterState(listenerForNewGetterState);
+        absGetterForTopic.setListenerForNewMessages(listenerForNewMessages);
         adapterForTopic.setOnSurveyClickListener(surveyItemClickedListener);
         adapterForTopic.setActionWhenItemMenuClicked(menuItemClickedInMessageListener);
 
@@ -418,4 +436,5 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
 
     protected abstract void initializeGetterForMessages();
     protected abstract void initializeAdapter();
+    protected abstract void processAddOfNewMessagesToListView(ArrayList<JVCParser.MessageInfos> listOfNewMessages, boolean itsReallyEmpty, boolean dontShowMessages);
 }

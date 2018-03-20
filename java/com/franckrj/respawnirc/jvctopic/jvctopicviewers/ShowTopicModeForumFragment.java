@@ -24,67 +24,6 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
     private boolean clearMessagesOnRefresh = true;
     private boolean autoScrollIsEnabled = true;
 
-    private final JVCTopicModeForumGetter.NewMessagesListener listenerForNewMessages = new JVCTopicModeForumGetter.NewMessagesListener() {
-        @Override
-        public void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages, boolean itsReallyEmpty, boolean dontShowMessages) {
-            if (dontShowMessages) {
-                isInErrorMode = false;
-                allMessagesShowedAreFromIgnoredPseudos = false;
-                goToBottomAtPageLoading = false;
-            } else if (!listOfNewMessages.isEmpty()) {
-                String pseudoOfUserInLC = currentSettings.pseudoOfUser.toLowerCase();
-                boolean scrolledAtTheEnd = false;
-                isInErrorMode = false;
-
-                if (!adapterForTopic.getAllItems().isEmpty()) {
-                    scrolledAtTheEnd = listIsScrolledAtBottom();
-                }
-
-                adapterForTopic.removeAllItems();
-
-                for (JVCParser.MessageInfos thisMessageInfo : listOfNewMessages) {
-                    String pseudoOfMessageInLC = thisMessageInfo.pseudo.toLowerCase();
-
-                    if (!pseudoOfMessageInLC.equals(pseudoOfUserInLC) && IgnoreListManager.pseudoInLCIsIgnored(pseudoOfMessageInLC)) {
-                        if (hideTotallyMessagesOfIgnoredPseudos) {
-                            continue;
-                        } else {
-                            thisMessageInfo.pseudoIsBlacklisted = true;
-                        }
-                    }
-
-                    adapterForTopic.addItem(thisMessageInfo, true);
-                }
-
-                adapterForTopic.notifyDataSetChanged();
-
-                if (adapterForTopic.getAllItems().isEmpty()) {
-                    setErrorBackgroundMessageForAllMessageIgnored();
-                } else {
-                    allMessagesShowedAreFromIgnoredPseudos = false;
-
-                    if (goToBottomAtPageLoading || (autoScrollIsEnabled && scrolledAtTheEnd)) {
-                        if (smoothScrollIsEnabled && scrolledAtTheEnd) { //s'il y avait des messages affichés avant et qu'on était en bas de page, smoothscroll
-                            jvcMsgList.smoothScrollToPosition(adapterForTopic.getCount() - 1);
-                        } else {
-                            jvcMsgList.setSelection(adapterForTopic.getCount() - 1);
-                        }
-                    }
-                }
-                goToBottomAtPageLoading = false;
-            } else {
-                allMessagesShowedAreFromIgnoredPseudos = false;
-
-                if (!isInErrorMode) {
-                    getterForTopic.reloadTopic(true);
-                    isInErrorMode = true;
-                } else {
-                    setErrorBackgroundMessageDependingOnLastError();
-                }
-            }
-        }
-    };
-
     private final SwipeRefreshLayout.OnRefreshListener listenerForRefresh = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
@@ -176,11 +115,69 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
     }
 
     @Override
+    public void processAddOfNewMessagesToListView(ArrayList<JVCParser.MessageInfos> listOfNewMessages, boolean itsReallyEmpty, boolean dontShowMessages) {
+        if (dontShowMessages) {
+            isInErrorMode = false;
+            allMessagesShowedAreFromIgnoredPseudos = false;
+            goToBottomAtPageLoading = false;
+        } else if (!listOfNewMessages.isEmpty()) {
+            String pseudoOfUserInLC = currentSettings.pseudoOfUser.toLowerCase();
+            boolean scrolledAtTheEnd = false;
+            isInErrorMode = false;
+
+            if (!adapterForTopic.getAllItems().isEmpty()) {
+                scrolledAtTheEnd = listIsScrolledAtBottom();
+            }
+
+            adapterForTopic.removeAllItems();
+
+            for (JVCParser.MessageInfos thisMessageInfo : listOfNewMessages) {
+                String pseudoOfMessageInLC = thisMessageInfo.pseudo.toLowerCase();
+
+                if (!pseudoOfMessageInLC.equals(pseudoOfUserInLC) && IgnoreListManager.pseudoInLCIsIgnored(pseudoOfMessageInLC)) {
+                    if (hideTotallyMessagesOfIgnoredPseudos) {
+                        continue;
+                    } else {
+                        thisMessageInfo.pseudoIsBlacklisted = true;
+                    }
+                }
+
+                adapterForTopic.addItem(thisMessageInfo, true);
+            }
+
+            adapterForTopic.notifyDataSetChanged();
+
+            if (adapterForTopic.getAllItems().isEmpty()) {
+                setErrorBackgroundMessageForAllMessageIgnored();
+            } else {
+                allMessagesShowedAreFromIgnoredPseudos = false;
+
+                if (goToBottomAtPageLoading || (autoScrollIsEnabled && scrolledAtTheEnd)) {
+                    if (smoothScrollIsEnabled && scrolledAtTheEnd) { //s'il y avait des messages affichés avant et qu'on était en bas de page, smoothscroll
+                        jvcMsgList.smoothScrollToPosition(adapterForTopic.getCount() - 1);
+                    } else {
+                        jvcMsgList.setSelection(adapterForTopic.getCount() - 1);
+                    }
+                }
+            }
+            goToBottomAtPageLoading = false;
+        } else {
+            allMessagesShowedAreFromIgnoredPseudos = false;
+
+            if (!isInErrorMode) {
+                getterForTopic.reloadTopic(true);
+                isInErrorMode = true;
+            } else {
+                setErrorBackgroundMessageDependingOnLastError();
+            }
+        }
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         swipeRefresh.setOnRefreshListener(listenerForRefresh);
-        getterForTopic.setListenerForNewMessages(listenerForNewMessages);
 
         if (getActivity() instanceof JVCTopicModeForumGetter.NewNumbersOfPagesListener) {
             getterForTopic.setListenerForNewNumbersOfPages((JVCTopicModeForumGetter.NewNumbersOfPagesListener) getActivity());
