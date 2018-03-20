@@ -600,7 +600,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         favItem.setEnabled(false);
         subItem.setEnabled(false);
         if (!pseudoOfUser.isEmpty()) {
-            lockItem.setEnabled(topicStatus.userCanLockOrUnlockTopic);
+            lockItem.setVisible(topicStatus.userCanLockOrUnlockTopic);
 
             if (topicStatus.lockReason == null) {
                 lockItem.setTitle(R.string.lockTopic);
@@ -626,7 +626,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 }
             }
         } else {
-            lockItem.setEnabled(false);
+            lockItem.setVisible(false);
         }
 
         return true;
