@@ -130,11 +130,11 @@ public class PrefsManager {
         addStringPref(StringPref.Names.MINI_NOELSHACK_WIDTH, currentContext.getString(R.string.settingsMiniNoelshackWidth), "68", 68, 136);
         addStringPref(StringPref.Names.LINK_TYPE_FOR_INTERNAL_BROWSER, currentContext.getString(R.string.settingsLinkTypeForInternalBrowser), String.valueOf(LinkType.NO_LINKS));
         addStringPref(StringPref.Names.SAVE_MESSAGES_AND_TOPICS_AS_DRAFT_TYPE, currentContext.getString(R.string.settingsSaveMessagesAndTopicsAsDraftType), String.valueOf(SaveDraftType.ALWAYS));
-        addStringPref(StringPref.Names.TOPIC_TITLE_FONT_SIZE, currentContext.getString(R.string.settingsTopicTitleFontSize), "14", 8, 20);
-        addStringPref(StringPref.Names.TOPIC_INFOS_FONT_SIZE, currentContext.getString(R.string.settingsTopicInfosFontSize), "14", 8, 20);
-        addStringPref(StringPref.Names.MESSAGE_FONT_SIZE, currentContext.getString(R.string.settingsMessageFontSize), "14", 8, 20);
-        addStringPref(StringPref.Names.MESSAGE_INFOS_FONT_SIZE, currentContext.getString(R.string.settingsMessageInfosFontSize), "14", 8, 20);
-        addStringPref(StringPref.Names.MESSAGE_SIGNATURE_FONT_SIZE, currentContext.getString(R.string.settingsMessageSignatureFontSize), "14", 8, 20);
+        addStringPref(StringPref.Names.TOPIC_TITLE_FONT_SIZE, currentContext.getString(R.string.settingsTopicTitleFontSize), "14");
+        addStringPref(StringPref.Names.TOPIC_INFOS_FONT_SIZE, currentContext.getString(R.string.settingsTopicInfosFontSize), "14");
+        addStringPref(StringPref.Names.MESSAGE_FONT_SIZE, currentContext.getString(R.string.settingsMessageFontSize), "14");
+        addStringPref(StringPref.Names.MESSAGE_INFOS_FONT_SIZE, currentContext.getString(R.string.settingsMessageInfosFontSize), "14");
+        addStringPref(StringPref.Names.MESSAGE_SIGNATURE_FONT_SIZE, currentContext.getString(R.string.settingsMessageSignatureFontSize), "14");
     }
 
     public static boolean getBool(BoolPref.Names prefName) {

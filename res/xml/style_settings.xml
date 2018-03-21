@@ -53,30 +53,40 @@
 
     <PreferenceCategory
         android:title="@string/font">
-        <EditTextPreference
+        <ListPreference
             android:key="@string/settingsTopicTitleFontSize"
             android:title="@string/topicTitleFontSizeTitle"
-            android:numeric="integer"/>
+            android:summary="%s"
+            android:entries="@array/choicesForFontSize"
+            android:entryValues="@array/fontSizeChoicesValue"/>
 
-        <EditTextPreference
+        <ListPreference
             android:key="@string/settingsTopicInfosFontSize"
             android:title="@string/topicInfosFontSizeTitle"
-            android:numeric="integer"/>
+            android:summary="%s"
+            android:entries="@array/choicesForFontSize"
+            android:entryValues="@array/fontSizeChoicesValue"/>
 
-        <EditTextPreference
+        <ListPreference
             android:key="@string/settingsMessageFontSize"
             android:title="@string/messageFontSizeTitle"
-            android:numeric="integer"/>
+            android:summary="%s"
+            android:entries="@array/choicesForFontSize"
+            android:entryValues="@array/fontSizeChoicesValue"/>
 
-        <EditTextPreference
+        <ListPreference
             android:key="@string/settingsMessageInfosFontSize"
             android:title="@string/messageInfosFontSizeTitle"
-            android:numeric="integer"/>
+            android:summary="%s"
+            android:entries="@array/choicesForFontSize"
+            android:entryValues="@array/fontSizeChoicesValue"/>
 
-        <EditTextPreference
+        <ListPreference
             android:key="@string/settingsMessageSignatureFontSize"
             android:title="@string/messageSignatureFontSizeTitle"
-            android:numeric="integer"/>
+            android:summary="%s"
+            android:entries="@array/choicesForFontSize"
+            android:entryValues="@array/fontSizeChoicesValue"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

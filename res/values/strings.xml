@@ -266,11 +266,11 @@
     <string name="topicPostTypeIsModo">Envoi du topic en tant que : Modérateur</string>
     <string name="topicPostTypeIsUser">Envoi du topic en tant que : Utilisateur</string>
     <string name="font">Police</string>
-    <string name="topicTitleFontSizeTitle">Taille du titre des topics (en sp)</string>
-    <string name="topicInfosFontSizeTitle">Taille des informations des topics (en sp)</string>
-    <string name="messageFontSizeTitle">Taille des messages (en sp)</string>
-    <string name="messageInfosFontSizeTitle">Taille des informations des messages (en sp)</string>
-    <string name="messageSignatureFontSizeTitle">Taille des signatures (en sp)</string>
+    <string name="topicTitleFontSizeTitle">Taille du titre des topics</string>
+    <string name="topicInfosFontSizeTitle">Taille des informations des topics</string>
+    <string name="messageFontSizeTitle">Taille des messages</string>
+    <string name="messageInfosFontSizeTitle">Taille des informations des messages</string>
+    <string name="messageSignatureFontSizeTitle">Taille des signatures</string>
     <string name="unlockTopic">Rouvrir le topic</string>
     <string name="restore">Restaurer</string>
     <string name="restoreSuccess">Message restauré.</string>
@@ -283,6 +283,15 @@
     <string name="chooseBrowser">Choisissez un navigateur</string>
     <string name="topicNameAndAccentColorSummary">Titres de topic, liens, etc…</string>
     <string name="refreshForumOnResumeTitle">Rafraichir les forums à chaque affichage</string>
+    <string name="veryVerySmall">Vraiment très petit</string>
+    <string name="verySmall">Très petit</string>
+    <string name="small">Petit</string>
+    <string name="aBitSmall">Un peu petit</string>
+    <string name="normal">Normal</string>
+    <string name="aBitHuge">Un peu grand</string>
+    <string name="huge">Grand</string>
+    <string name="veryHuge">Très grand</string>
+    <string name="veryVeryHuge">Vraiment très grand</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>
@@ -319,6 +328,17 @@
         <item>@string/jvcLinksOnly</item>
         <item>@string/noLinks</item>
     </string-array>
+    <string-array name="choicesForFontSize">
+        <item>@string/veryVerySmall</item>
+        <item>@string/verySmall</item>
+        <item>@string/small</item>
+        <item>@string/aBitSmall</item>
+        <item>@string/normal</item>
+        <item>@string/aBitHuge</item>
+        <item>@string/huge</item>
+        <item>@string/veryHuge</item>
+        <item>@string/veryVeryHuge</item>
+    </string-array>
     <string-array name="threeChoicesValue">
         <item>"0"</item>
         <item>"1"</item>
@@ -329,6 +349,17 @@
         <item>"1"</item>
         <item>"2"</item>
         <item>"3"</item>
+    </string-array>
+    <string-array name="fontSizeChoicesValue">
+        <item>"10"</item>
+        <item>"11"</item>
+        <item>"12"</item>
+        <item>"13"</item>
+        <item>"14"</item>
+        <item>"15"</item>
+        <item>"16"</item>
+        <item>"17"</item>
+        <item>"18"</item>
     </string-array>
     <string-array name="kickMotives">
         <item>@string/selectMotive</item>
