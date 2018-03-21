@@ -93,16 +93,9 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     private final AbsJVCTopicGetter.NewMessagesListener listenerForNewMessages = new AbsJVCTopicGetter.NewMessagesListener() {
         @Override
         public void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages, boolean itsReallyEmpty, boolean dontShowMessages) {
-            jvcMsgList.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_DISABLED);
-
-            processAddOfNewMessagesToListView(listOfNewMessages, itsReallyEmpty, dontShowMessages);
-
-            jvcMsgList.post(new Runnable() {
-                @Override
-                public void run() {
-                    jvcMsgList.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL);
-                }
-            });
+            disableTranscriptModeOnJvcMsgList();
+            processAddOfNewMessagesToJvcMsgList(listOfNewMessages, itsReallyEmpty, dontShowMessages);
+            enableTranscriptModeOnJvcMsgList();
         }
     };
 
@@ -277,6 +270,19 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         }
     }
 
+    protected void disableTranscriptModeOnJvcMsgList() {
+        jvcMsgList.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_DISABLED);
+    }
+
+    protected void enableTranscriptModeOnJvcMsgList() {
+        jvcMsgList.post(new Runnable() {
+            @Override
+            public void run() {
+                jvcMsgList.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL);
+            }
+        });
+    }
+
     public void reloadTopic() {
         absGetterForTopic.reloadTopic();
     }
@@ -377,6 +383,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
                 adapterForTopic.enableSurvey(absGetterForTopic.getTopicStatus().htmlSurveyTitle);
             }
 
+            disableTranscriptModeOnJvcMsgList();
             if (allCurrentMessagesShowed != null) {
                 for (JVCParser.MessageInfos thisMessageInfo : allCurrentMessagesShowed) {
                     adapterForTopic.addItem(thisMessageInfo, false);
@@ -384,6 +391,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             }
 
             adapterForTopic.notifyDataSetChanged();
+            enableTranscriptModeOnJvcMsgList();
 
             if (adapterForTopic.getAllItems().isEmpty() && allMessagesShowedAreFromIgnoredPseudos) {
                 setErrorBackgroundMessageForAllMessageIgnored();
@@ -436,5 +444,5 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
 
     protected abstract void initializeGetterForMessages();
     protected abstract void initializeAdapter();
-    protected abstract void processAddOfNewMessagesToListView(ArrayList<JVCParser.MessageInfos> listOfNewMessages, boolean itsReallyEmpty, boolean dontShowMessages);
+    protected abstract void processAddOfNewMessagesToJvcMsgList(ArrayList<JVCParser.MessageInfos> listOfNewMessages, boolean itsReallyEmpty, boolean dontShowMessages);
 }

@@ -103,7 +103,7 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
     }
 
     @Override
-    public void processAddOfNewMessagesToListView(ArrayList<JVCParser.MessageInfos> listOfNewMessages, boolean itsReallyEmpty, boolean dontShowMessages) {
+    public void processAddOfNewMessagesToJvcMsgList(ArrayList<JVCParser.MessageInfos> listOfNewMessages, boolean itsReallyEmpty, boolean dontShowMessages) {
         if (!listOfNewMessages.isEmpty()) {
             String pseudoOfUserInLC = currentSettings.pseudoOfUser.toLowerCase();
             boolean scrolledAtTheEnd = true;
