@@ -33,24 +33,14 @@
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="http" android:host="www.jeuxvideo.com" android:pathPrefix="/forums/0-"/>
-                <data android:scheme="http" android:host="www.jeuxvideo.com" android:pathPrefix="/forums/1-"/>
-                <data android:scheme="http" android:host="www.jeuxvideo.com" android:pathPrefix="/forums/42-"/>
-                <data android:scheme="https" android:host="www.jeuxvideo.com" android:pathPrefix="/forums/0-"/>
-                <data android:scheme="https" android:host="www.jeuxvideo.com" android:pathPrefix="/forums/1-"/>
-                <data android:scheme="https" android:host="www.jeuxvideo.com" android:pathPrefix="/forums/42-"/>
-                <data android:scheme="http" android:host="m.jeuxvideo.com" android:pathPrefix="/forums/0-"/>
-                <data android:scheme="http" android:host="m.jeuxvideo.com" android:pathPrefix="/forums/1-"/>
-                <data android:scheme="http" android:host="m.jeuxvideo.com" android:pathPrefix="/forums/42-"/>
-                <data android:scheme="https" android:host="m.jeuxvideo.com" android:pathPrefix="/forums/0-"/>
-                <data android:scheme="https" android:host="m.jeuxvideo.com" android:pathPrefix="/forums/1-"/>
-                <data android:scheme="https" android:host="m.jeuxvideo.com" android:pathPrefix="/forums/42-"/>
-                <data android:scheme="http" android:host="jeuxvideo.com" android:pathPrefix="/forums/0-"/>
-                <data android:scheme="http" android:host="jeuxvideo.com" android:pathPrefix="/forums/1-"/>
-                <data android:scheme="http" android:host="jeuxvideo.com" android:pathPrefix="/forums/42-"/>
-                <data android:scheme="https" android:host="jeuxvideo.com" android:pathPrefix="/forums/0-"/>
-                <data android:scheme="https" android:host="jeuxvideo.com" android:pathPrefix="/forums/1-"/>
-                <data android:scheme="https" android:host="jeuxvideo.com" android:pathPrefix="/forums/42-"/>
+                <data android:scheme="http"/>
+                <data android:scheme="https"/>
+                <data android:host="www.jeuxvideo.com"/>
+                <data android:host="m.jeuxvideo.com"/>
+                <data android:host="jeuxvideo.com"/>
+                <data android:pathPrefix="/forums/0-"/>
+                <data android:pathPrefix="/forums/1-"/>
+                <data android:pathPrefix="/forums/42-"/>
             </intent-filter>
         </activity>
 
