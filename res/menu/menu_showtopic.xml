@@ -2,13 +2,16 @@
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/action_go_to_forum_of_topic_showtopic"
+        android:title="@string/goToForumOfTopic"/>
+    <item
         android:id="@+id/action_change_topic_fav_value_showtopic"
         android:title="@string/addToFavs"/>
     <item
         android:id="@+id/action_change_topic_sub_value_showtopic"
         android:title="@string/subToTopic"/>
     <item
-        android:id="@+id/action_lock_topic_showtopic"
+        android:id="@+id/action_change_lock_topic_value_showtopic"
         android:title="@string/lockTopic"/>
     <item
         android:id="@+id/action_open_in_browser_showtopic"

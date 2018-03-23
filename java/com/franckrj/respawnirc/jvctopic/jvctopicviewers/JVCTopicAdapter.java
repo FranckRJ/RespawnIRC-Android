@@ -18,9 +18,10 @@ import android.text.style.LeadingMarginSpan;
 import android.text.style.LineBackgroundSpan;
 import android.text.style.QuoteSpan;
 import android.text.style.URLSpan;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -49,7 +50,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     private LayoutInflater serviceInflater;
     private Activity parentActivity = null;
     private int currentItemIdSelected = -1;
-    private PopupMenu.OnMenuItemClickListener actionWhenItemMenuClicked = null;
+    private MenuItemClickedInMessage actionWhenItemMenuClicked = null;
     private JVCParser.Settings currentSettings = null;
     private int idOfLayoutToUse = 0;
     private boolean alternateBackgroundColor = false;
@@ -67,8 +68,10 @@ public class JVCTopicAdapter extends BaseAdapter {
     private String surveyTitle = "";
     private View.OnClickListener onSurveyClickListener = null;
     private float multiplierOfLineSizeForInfoLineIfAvatarIsShowed = 0;
-    private boolean userIsModo = false;
     private int avatarSize = -1;
+    private int messageFontSizeInSp = 14;
+    private int messageInfosFontSizeInSp = 14;
+    private int messageSignatureFontSizeInSp = 14;
 
     @SuppressWarnings("FieldCanBeLocal")
     private final ImageDownloader.DownloadFinished listenerForDownloadFinished = new ImageDownloader.DownloadFinished() {
@@ -80,55 +83,77 @@ public class JVCTopicAdapter extends BaseAdapter {
         }
     };
 
+    private final PopupMenu.OnMenuItemClickListener menuItemInPopupMenuClickedListener = new PopupMenu.OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            //noinspection SimplifiableIfStatement
+            if (actionWhenItemMenuClicked != null) {
+                return actionWhenItemMenuClicked.onMenuItemClickedInMessage(item, getItem(currentItemIdSelected));
+            } else {
+                return false;
+            }
+        }
+    };
+
     private final View.OnClickListener menuButtonClicked = new View.OnClickListener() {
         @Override
         public void onClick(View buttonView) {
             PopupMenu popup = new PopupMenu(parentActivity, buttonView);
-            MenuInflater inflater = popup.getMenuInflater();
+            Menu menu = popup.getMenu();
             JVCParser.MessageInfos itemSelected;
 
             currentItemIdSelected = (int) buttonView.getTag();
             itemSelected = getItem(currentItemIdSelected);
-            popup.setOnMenuItemClickListener(actionWhenItemMenuClicked);
+            popup.setOnMenuItemClickListener(menuItemInPopupMenuClickedListener);
 
             if (!itemSelected.pseudoIsBlacklisted) {
-                if (itemSelected.pseudo.toLowerCase().equals(currentSettings.pseudoOfUser.toLowerCase())) {
-                    inflater.inflate(R.menu.menu_message_user, popup.getMenu());
-                } else if (userIsModo) {
-                    inflater.inflate(R.menu.menu_message_moderable, popup.getMenu());
-                } else {
-                    inflater.inflate(R.menu.menu_message_others, popup.getMenu());
+                menu.add(Menu.NONE, R.id.menu_quote_message, Menu.NONE, R.string.quoteMessage);
+
+                if (itemSelected.userCanEditMessage) {
+                    menu.add(Menu.NONE, R.id.menu_edit_message, Menu.NONE, R.string.editMessage);
+                }
+
+                if (itemSelected.userCanDeleteOrRestoreMessage) {
+                    if (itemSelected.messageIsDeleted) {
+                        menu.add(Menu.NONE, R.id.menu_restore_message, Menu.NONE, R.string.restore);
+                    } else {
+                        menu.add(Menu.NONE, R.id.menu_delete_message, Menu.NONE, R.string.delete);
+                    }
+                }
+
+                if (itemSelected.userCanKickOrDekickAuthor) {
+                    if (itemSelected.authorIsKicked) {
+                        menu.add(Menu.NONE, R.id.menu_dekick_author_message, Menu.NONE, R.string.dekick);
+                    } else {
+                        menu.add(Menu.NONE, R.id.menu_kick_author_message, Menu.NONE, R.string.kick);
+                    }
                 }
 
                 if (itemSelected.numberOfOverlyQuote > currentSettings.maxNumberOfOverlyQuotes) {
                     if (itemSelected.showOverlyQuote) {
-                        popup.getMenu().add(Menu.NONE, R.id.menu_hide_quote_message, Menu.NONE, R.string.hideQuoteMessage);
+                        menu.add(Menu.NONE, R.id.menu_hide_quote_message, Menu.NONE, R.string.hideQuoteMessage);
                     } else {
-                        popup.getMenu().add(Menu.NONE, R.id.menu_show_quote_message, Menu.NONE, R.string.showQuoteMessage);
+                        menu.add(Menu.NONE, R.id.menu_show_quote_message, Menu.NONE, R.string.showQuoteMessage);
                     }
                 }
 
                 if (itemSelected.messageContentContainSpoil || (showSignatures && itemSelected.signatureContainSpoil)) {
                     if (itemSelected.listOfSpoilIdToShow.isEmpty()) {
-                        popup.getMenu().add(Menu.NONE, R.id.menu_show_spoil_message, Menu.NONE, R.string.showSpoilMessage);
+                        menu.add(Menu.NONE, R.id.menu_show_spoil_message, Menu.NONE, R.string.showSpoilMessage);
                     } else {
-                        popup.getMenu().add(Menu.NONE, R.id.menu_hide_spoil_message, Menu.NONE, R.string.hideSpoilMessage);
+                        menu.add(Menu.NONE, R.id.menu_hide_spoil_message, Menu.NONE, R.string.hideSpoilMessage);
                     }
                 }
 
                 if (currentSettings.hideUglyImages && itemSelected.containUglyImages) {
                     if (itemSelected.showUglyImages) {
-                        popup.getMenu().add(Menu.NONE, R.id.menu_hide_ugly_images_message, Menu.NONE, R.string.hideUglyImagesMessage);
+                        menu.add(Menu.NONE, R.id.menu_hide_ugly_images_message, Menu.NONE, R.string.hideUglyImagesMessage);
                     } else {
-                        popup.getMenu().add(Menu.NONE, R.id.menu_show_ugly_images_message, Menu.NONE, R.string.showUglyImagesMessage);
+                        menu.add(Menu.NONE, R.id.menu_show_ugly_images_message, Menu.NONE, R.string.showUglyImagesMessage);
                     }
                 }
-
-                if (itemSelected.messageIsDeleted) {
-                    popup.getMenu().removeItem(R.id.menu_delete_message);
-                }
             } else {
-                popup.getMenu().add(Menu.NONE, R.id.menu_show_blacklisted_message, Menu.NONE, R.string.showBlacklistedMessage);
+                menu.add(Menu.NONE, R.id.menu_show_blacklisted_message, Menu.NONE, R.string.showBlacklistedMessage);
             }
 
             popup.show();
@@ -152,10 +177,6 @@ public class JVCTopicAdapter extends BaseAdapter {
         downloaderForImage.setImagesSize(res.getDimensionPixelSize(R.dimen.miniNoelshackWidthDefault), res.getDimensionPixelSize(R.dimen.miniNoelshackHeightDefault), true);
     }
 
-    public int getCurrentItemIdSelected() {
-        return currentItemIdSelected;
-    }
-
     //pas d'intérêt que tout le monde puisse accéder aux messages, seul le .isEmpty() est important sur cette liste.
     public ArrayList<JVCParser.MessageInfos> getAllItems() {
         return listOfMessages;
@@ -173,7 +194,7 @@ public class JVCTopicAdapter extends BaseAdapter {
         pseudoCLickedListener = newListener;
     }
 
-    public void setActionWhenItemMenuClicked(PopupMenu.OnMenuItemClickListener newAction) {
+    public void setActionWhenItemMenuClicked(MenuItemClickedInMessage newAction) {
         actionWhenItemMenuClicked = newAction;
     }
 
@@ -213,10 +234,6 @@ public class JVCTopicAdapter extends BaseAdapter {
         onSurveyClickListener = newListener;
     }
 
-    public void setUserIsModo(boolean newVal) {
-        userIsModo = newVal;
-    }
-
     public void setAvatarSize(int newSize) {
         avatarSize = newSize;
     }
@@ -228,6 +245,18 @@ public class JVCTopicAdapter extends BaseAdapter {
     public void setMiniNoeslahckSizeByWidth(int newWidth) {
         int newHeight = Utils.roundToInt(newWidth * 0.75);
         downloaderForImage.setImagesSize(newWidth, newHeight, true);
+    }
+
+    public void setMessageFontSizeInSp(int newVal) {
+        messageFontSizeInSp = newVal;
+    }
+
+    public void setMessageInfosFontSizeInSp(int newVal) {
+        messageInfosFontSizeInSp = newVal;
+    }
+
+    public void setMessageSignatureFontSizeInSp(int newVal) {
+        messageSignatureFontSizeInSp = newVal;
     }
 
     public void enableSurvey(String newSurveyTitle) {
@@ -291,9 +320,9 @@ public class JVCTopicAdapter extends BaseAdapter {
             item.listOfSpoilIdToShow.add(-1);
         }
 
-        holder.infoLineContent = new SpannableString(Undeprecator.htmlFromHtml(JVCParser.createMessageInfoLineFromInfos(item, currentSettings)));
+        holder.infoLineContent = Undeprecator.htmlFromHtml(JVCParser.createMessageInfoLineFromInfos(item, currentSettings));
         if (!item.pseudoIsBlacklisted) {
-            holder.messageLineContent = replaceNeededSpans(Undeprecator.htmlFromHtml(JVCParser.createMessageMessageLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler), item);
+            holder.messageLineContent = replaceNeededSpansAndEmojis(Undeprecator.htmlFromHtml(JVCParser.createMessageMessageLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler), item);
         } else {
             holder.messageLineContent = null;
         }
@@ -307,7 +336,7 @@ public class JVCTopicAdapter extends BaseAdapter {
         if (!showSignatures || item.signatureNotParsed.isEmpty() || item.pseudoIsBlacklisted) {
             holder.signatureLineContent = null;
         } else {
-            holder.signatureLineContent = replaceNeededSpans(Undeprecator.htmlFromHtml(JVCParser.createSignatureFromInfos(item, currentSettings), jvcImageGetter, tagHandler), item);
+            holder.signatureLineContent = replaceNeededSpansAndEmojis(Undeprecator.htmlFromHtml(JVCParser.createSignatureFromInfos(item, currentSettings), jvcImageGetter, tagHandler), item);
         }
 
         holder.messageIsDeleted = item.messageIsDeleted;
@@ -315,7 +344,7 @@ public class JVCTopicAdapter extends BaseAdapter {
         return holder;
     }
 
-    private Spannable replaceNeededSpans(Spanned spanToChange, final JVCParser.MessageInfos infosOfMessage) {
+    private CharSequence replaceNeededSpansAndEmojis(Spanned spanToChange, final JVCParser.MessageInfos infosOfMessage) {
         Spannable spannable = new SpannableString(spanToChange);
 
         QuoteSpan[] quoteSpanArray = spannable.getSpans(0, spannable.length(), QuoteSpan.class);
@@ -360,7 +389,7 @@ public class JVCTopicAdapter extends BaseAdapter {
             });
         }
 
-        return spannable;
+        return Utils.applyEmojiCompatIfPossible(spannable);
     }
 
     private void updateListOfSpoidIdToShow(JVCParser.MessageInfos infosOfMessage, String instructionForUpdate) {
@@ -435,7 +464,7 @@ public class JVCTopicAdapter extends BaseAdapter {
                 viewHolder.avatarImage.setOnClickListener(null);
             }
 
-            viewHolder.infoLine.setText(Undeprecator.htmlFromHtml(advertiseForSurveyToShow));
+            viewHolder.infoLine.setText(Utils.applyEmojiCompatIfPossible(Undeprecator.htmlFromHtml(advertiseForSurveyToShow)));
             convertView.setOnClickListener(onSurveyClickListener);
             viewHolder.infoLine.setOnClickListener(onSurveyClickListener);
             setColorBackgroundOfThisItem(convertView, ThemeManager.getColorInt(R.attr.themedSurveyMessageBackgroundColor, parentActivity));
@@ -571,13 +600,16 @@ public class JVCTopicAdapter extends BaseAdapter {
         public final ImageButton showMenuButton;
 
         public CustomViewHolder(View itemView) {
-            infoLine = itemView.findViewById(R.id.item_one_jvcmessages_text_row);
-            avatarImage = itemView.findViewById(R.id.image_one_jvcmessages_text_row);
-            messageLine = itemView.findViewById(R.id.item_two_jvcmessages_text_row);
-            signatureLine = itemView.findViewById(R.id.item_three_jvcmessages_text_row);
-            separator = itemView.findViewById(R.id.item_separator_jvcmessages_text_row);
-            showMenuButton = itemView.findViewById(R.id.menu_overflow_row);
+            infoLine = itemView.findViewById(R.id.infos_text_jvcmessages_row);
+            avatarImage = itemView.findViewById(R.id.avatar_image_jvcmessages_row);
+            messageLine = itemView.findViewById(R.id.message_text_jvcmessages_row);
+            signatureLine = itemView.findViewById(R.id.signature_text_jvcmessages_row);
+            separator = itemView.findViewById(R.id.separator_view_jvcmessages_row);
+            showMenuButton = itemView.findViewById(R.id.menuoverflow_image_jvcmessages_row);
 
+            messageLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, messageFontSizeInSp);
+            infoLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, messageInfosFontSizeInSp);
+            signatureLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, messageSignatureFontSizeInSp);
             messageLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
             signatureLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
             showMenuButton.setOnClickListener(menuButtonClicked);
@@ -585,9 +617,9 @@ public class JVCTopicAdapter extends BaseAdapter {
     }
 
     private class ContentHolder {
-        public Spannable infoLineContent;
-        public Spannable messageLineContent;
-        public Spannable signatureLineContent;
+        public CharSequence infoLineContent;
+        public CharSequence messageLineContent;
+        public CharSequence signatureLineContent;
         public Drawable avatarImageDrawable;
         public boolean messageIsDeleted;
     }
@@ -598,5 +630,9 @@ public class JVCTopicAdapter extends BaseAdapter {
 
     public interface PseudoClicked {
         void getMessageOfPseudoClicked(JVCParser.MessageInfos messageClicked);
+    }
+
+    public interface MenuItemClickedInMessage {
+        boolean onMenuItemClickedInMessage(MenuItem item, JVCParser.MessageInfos fromThisMessage);
     }
 }

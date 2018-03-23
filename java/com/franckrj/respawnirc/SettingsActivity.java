@@ -9,10 +9,6 @@ public class SettingsActivity extends AbsHomeIsBackActivity implements SettingsF
     public static final String EXTRA_FILE_TO_LOAD = "com.respawnirc.settingsactivity.EXTRA_FILE_TO_LOAD";
     public static final String EXTRA_PREF_TITLE = "com.respawnirc.settingsactivity.EXTRA_PREF_TITLE";
 
-    public SettingsActivity() {
-        colorAccentStyle = R.style.ColorAccentIsLinkColor;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

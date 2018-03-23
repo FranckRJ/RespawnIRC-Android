@@ -19,7 +19,7 @@
         <Preference
             android:key="@string/subScreenSettingsMessage"
             android:persistent="false"
-            android:title="@string/message"
+            android:title="@string/messages"
             android:summary="@string/messageSettingSummary"/>
 
         <Preference

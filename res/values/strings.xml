@@ -63,7 +63,7 @@
     <string name="topicFav">Topics favoris</string>
     <string name="deleteMessage">Supprimer le message</string>
     <string name="supressSuccess">Message supprimé.</string>
-    <string name="errorDeleteAlreadyRunning">Erreur, suppression déjà en cours.</string>
+    <string name="errorDeleteOrRestoreAlreadyRunning">Erreur, suppression ou restauration déjà en cours.</string>
     <string name="openInExternalBrowser">Ouvrir dans le navigateur externe</string>
     <string name="openInInternBrowser">Ouvrir dans le navigateur interne</string>
     <string name="copy">Copier</string>
@@ -79,7 +79,7 @@
     <string name="errorActionAlreadyRunning">Erreur, action déjà en cours.</string>
     <string name="favAdded">Favori ajouté.</string>
     <string name="favRemoved">Favori retiré.</string>
-    <string name="topicLockedForReason">Sujet fermé : %1$s</string>
+    <string name="topicLockedForReason">Topic fermé : %1$s</string>
     <string name="errorTopicIsLocked">Erreur, le topic est fermé.</string>
     <string name="transformStickerToSmileyTitle">Changer les stickers en smiley</string>
     <string name="transformStickerToSmileySummary">(tous les stickers ne sont pas changés)</string>
@@ -131,7 +131,8 @@
     <string name="dark">Sombre</string>
     <string name="style">Style</string>
     <string name="black">Noir</string>
-    <string name="message">Messages</string>
+    <string name="messages">Messages</string>
+    <string name="message">Message</string>
     <string name="settingsModeForumTitle">Mode forum</string>
     <string name="settingsModeIRCTitle">Mode IRC</string>
     <string name="imageAndLink">Images / Liens</string>
@@ -234,7 +235,7 @@
     <string name="deletedMessageColor">Couleur des messages supprimés</string>
     <string name="megaByteNumber">%1$.2f Mo</string>
     <string name="kiloByteNumber">%1$.2f Ko</string>
-    <string name="topicNameAndLinkColor">Couleur du nom des topics / liens</string>
+    <string name="topicNameAndAccentColorTitle">Couleur secondaire</string>
     <string name="createSurvey">Créer un sondage</string>
     <string name="saveMessagesAndTopicsAsDraftTypeTitle">Sauvegarder les messages en cours d\'écriture</string>
     <string name="messageDraftSaved">Brouillon du message sauvegardé.</string>
@@ -257,13 +258,40 @@
     <string name="subAdded">Abonnement ajouté.</string>
     <string name="subRemoved">Abonnement retiré.</string>
     <string name="generalSettingSummary">Brouillon, divers</string>
-    <string name="styleSettingSummary">Thème, couleurs</string>
+    <string name="styleSettingSummary">Thème, couleurs, police</string>
     <string name="messageSettingSummary">Apparence, contenu, formatage</string>
     <string name="behaviourSettingSummary">Rafraichissement, scrolling, autres</string>
     <string name="imageLinkSettingSummary">Avatars, stickers, noelshack, ouverture des liens</string>
     <string name="ignoredSettingSummary">Affichage des messages / topics, gestion de la liste</string>
     <string name="topicPostTypeIsModo">Envoi du topic en tant que : Modérateur</string>
     <string name="topicPostTypeIsUser">Envoi du topic en tant que : Utilisateur</string>
+    <string name="font">Police</string>
+    <string name="topicTitleFontSizeTitle">Taille du titre des topics</string>
+    <string name="topicInfosFontSizeTitle">Taille des informations des topics</string>
+    <string name="messageFontSizeTitle">Taille des messages</string>
+    <string name="messageInfosFontSizeTitle">Taille des informations des messages</string>
+    <string name="messageSignatureFontSizeTitle">Taille des signatures</string>
+    <string name="unlockTopic">Rouvrir le topic</string>
+    <string name="restore">Restaurer</string>
+    <string name="restoreSuccess">Message restauré.</string>
+    <string name="cancelEdit">Annuler l\'édition</string>
+    <string name="dekick">Dékicker</string>
+    <string name="errorUnlockAlreadyRunning">Erreur, réouverture déjà en cours.</string>
+    <string name="errorDekickAlreadyRunning">Erreur, dékick déjà en cours.</string>
+    <string name="dekickOfPseudoSuccessful">%1$s dékické.</string>
+    <string name="goToForumOfTopic">Accéder au forum du topic</string>
+    <string name="chooseBrowser">Choisissez un navigateur</string>
+    <string name="topicNameAndAccentColorSummary">Titres de topic, liens, etc…</string>
+    <string name="refreshForumOnResumeTitle">Rafraichir les forums à chaque affichage</string>
+    <string name="veryVerySmall">Vraiment très petit</string>
+    <string name="verySmall">Très petit</string>
+    <string name="small">Petit</string>
+    <string name="aBitSmall">Un peu petit</string>
+    <string name="normal">Normal</string>
+    <string name="aBitHuge">Un peu grand</string>
+    <string name="huge">Grand</string>
+    <string name="veryHuge">Très grand</string>
+    <string name="veryVeryHuge">Vraiment très grand</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>
@@ -300,6 +328,17 @@
         <item>@string/jvcLinksOnly</item>
         <item>@string/noLinks</item>
     </string-array>
+    <string-array name="choicesForFontSize">
+        <item>@string/veryVerySmall</item>
+        <item>@string/verySmall</item>
+        <item>@string/small</item>
+        <item>@string/aBitSmall</item>
+        <item>@string/normal</item>
+        <item>@string/aBitHuge</item>
+        <item>@string/huge</item>
+        <item>@string/veryHuge</item>
+        <item>@string/veryVeryHuge</item>
+    </string-array>
     <string-array name="threeChoicesValue">
         <item>"0"</item>
         <item>"1"</item>
@@ -310,6 +349,17 @@
         <item>"1"</item>
         <item>"2"</item>
         <item>"3"</item>
+    </string-array>
+    <string-array name="fontSizeChoicesValue">
+        <item>"10"</item>
+        <item>"11"</item>
+        <item>"12"</item>
+        <item>"13"</item>
+        <item>"14"</item>
+        <item>"15"</item>
+        <item>"16"</item>
+        <item>"17"</item>
+        <item>"18"</item>
     </string-array>
     <string-array name="kickMotives">
         <item>@string/selectMotive</item>

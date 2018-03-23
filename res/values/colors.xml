@@ -5,7 +5,7 @@
     <color name="lineSeparationColor">#50808080</color>
     <!-- Light Theme -->
     <color name="shadowColorThemeLight">#50000000</color>
-    <color name="colorAccentThemeLight">#757575</color>
+    <color name="colorControlHighlightThemeLight">#757575</color>
     <color name="colorQuoteBackgroundThemeLight">#10000000</color>
     <color name="colorPseudoUserThemeLight">#3399ff</color>
     <color name="colorPseudoOtherModeForumThemeLight">#80000000</color>
@@ -26,10 +26,10 @@
     <color name="shadowColorThemeDark">#80000000</color>
     <color name="colorPrimaryThemeDark">#212121</color>
     <color name="colorPrimaryDarkerThemeDark">#141414</color>
-    <color name="colorAccentThemeDark">#888888</color>
+    <color name="colorControlHighlightThemeDark">#888888</color>
     <color name="colorQuoteBackgroundThemeDark">#10FFFFFF</color>
     <color name="altBackgroundColorThemeDark">#242424</color>
-    <color name="linkColorThemeDark">#4DA6FF</color>
+    <color name="accentColorThemeDark">#4DA6FF</color>
     <color name="topicNameColorThemeDark">#EEEEEE</color>
     <color name="colorPseudoUserThemeDark">#80BFFF</color>
     <color name="colorPseudoOtherModeForumThemeDark">#00FFFFFF</color>
@@ -50,7 +50,7 @@
     <color name="forumListDarkerForumColorThemeDark">#595959</color>
     <!-- Grey Theme -->
     <color name="colorPrimaryDarkerThemeGrey">#000000</color>
-    <color name="colorAccentThemeGrey">#EEEEEE</color>
+    <color name="colorControlHighlightThemeGrey">#EEEEEE</color>
     <color name="altBackgroundColorThemeGrey">#4A4A4A</color>
     <color name="defaultBackgroundColorThemeGrey">#424242</color>
     <color name="windowBackgroundColorThemeGrey">#303030</color>
@@ -185,7 +185,7 @@
     <color name="colorPrimaryDarkerBlack">#000000</color>
     <color name="colorAltBlack">#E0E0E0</color>
     <color name="colorAltDarkerBlack">#BDBDBD</color>
-    <color name="defaultTopicNameAndLinkColorThemeLight">#006BD7</color>
+    <color name="defaultTopicNameAndAccentColorThemeLight">#006BD7</color>
     <color name="defaultColorAltThemeLight">#EEF5FC</color>
     <color name="defaultSurveyMessageColorThemeLight">#FFF0DB</color>
     <color name="defaultDeletedMessageColorThemeLight">#CFF3FE</color>
@@ -222,7 +222,7 @@
         <item>@color/colorPrimaryBlack</item>
     </integer-array>
 
-    <integer-array name="choicesForTopicNameAndLinkColor">
+    <integer-array name="choicesForTopicNameAndAccentColor">
         <item>@color/colorPrimaryRealRed</item>
         <item>@color/colorPrimaryRed</item>
         <item>@color/colorPrimaryPink</item>
@@ -252,7 +252,7 @@
         <item>@color/colorPrimaryJVC</item>
         <item>@color/colorPrimarySoftBlack</item>
         <item>@color/colorPrimaryBlack</item>
-        <item>@color/defaultTopicNameAndLinkColorThemeLight</item>
+        <item>@color/defaultTopicNameAndAccentColorThemeLight</item>
     </integer-array>
 
     <integer-array name="choicesForAltColor">

@@ -15,7 +15,7 @@ public class HelpFirstLaunchDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setTitle(R.string.welcome).setMessage(R.string.help_firstlaunch)
                 .setNegativeButton(R.string.later, new DialogInterface.OnClickListener() {
                     @Override

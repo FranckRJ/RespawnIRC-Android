@@ -130,7 +130,7 @@ public class ConnectAsModoActivity extends AbsHomeIsBackActivity {
         validateButton = findViewById(R.id.validate_button_modoconnect);
 
         swipeRefresh.setEnabled(false);
-        swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
+        swipeRefresh.setColorSchemeResources(R.color.colorControlHighlightThemeLight);
         modoPasswordText.setOnEditorActionListener(actionInPasswordEditTextListener);
         validateButton.setOnClickListener(validateButtonClickedListener);
 

@@ -6,7 +6,7 @@
     android:padding="4dp">
 
     <ImageView
-        android:id="@+id/item_topic_icon_jvctopics_image_row"
+        android:id="@+id/topic_icon_jvctopics_row"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:layout_marginTop="4dp"
@@ -18,29 +18,29 @@
         android:contentDescription="@string/topicIcon"/>
 
     <TextView
-        android:id="@+id/item_one_jvctopics_text_row"
+        android:id="@+id/title_text_jvctopics_row"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/item_topic_icon_jvctopics_image_row"
-        android:layout_toEndOf="@+id/item_topic_icon_jvctopics_image_row"/>
+        android:layout_toRightOf="@+id/topic_icon_jvctopics_row"
+        android:layout_toEndOf="@+id/topic_icon_jvctopics_row"/>
 
     <TextView
-        android:id="@+id/item_two_jvctopics_text_row"
+        android:id="@+id/author_text_jvctopics_row"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="-2dp"
-        android:layout_toRightOf="@+id/item_topic_icon_jvctopics_image_row"
-        android:layout_toEndOf="@+id/item_topic_icon_jvctopics_image_row"
-        android:layout_below="@+id/item_one_jvctopics_text_row"/>
+        android:layout_toRightOf="@+id/topic_icon_jvctopics_row"
+        android:layout_toEndOf="@+id/topic_icon_jvctopics_row"
+        android:layout_below="@+id/title_text_jvctopics_row"/>
 
     <TextView
-        android:id="@+id/item_three_jvctopics_text_row"
+        android:id="@+id/date_text_jvctopics_row"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="-2dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/item_one_jvctopics_text_row"/>
+        android:layout_below="@+id/title_text_jvctopics_row"/>
 
 </RelativeLayout>

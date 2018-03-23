@@ -16,7 +16,7 @@
             android:layout_below="@+id/toolbar_sendtopic"
             android:orientation="vertical"
             android:background="?attr/themedDefaultBackgroundColor">
-            <EditText
+            <android.support.text.emoji.widget.EmojiAppCompatEditText
                 android:id="@+id/topic_title_edit_sendtopic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
                 android:layout_height="2dp"
                 android:background="?attr/themedDarkerBackgroundColor"/>
 
-            <EditText
+            <android.support.text.emoji.widget.EmojiAppCompatEditText
                 android:id="@+id/topic_content_edit_sendtopic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

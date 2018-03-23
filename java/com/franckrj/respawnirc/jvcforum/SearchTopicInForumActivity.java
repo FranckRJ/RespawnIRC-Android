@@ -13,10 +13,11 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
 import com.franckrj.respawnirc.base.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.PageNavigationUtil;
@@ -24,6 +25,7 @@ import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.jvcforum.jvcforumtools.ShowForumFragment;
 import com.franckrj.respawnirc.jvctopic.ShowTopicActivity;
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Utils;
 
 public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements ShowForumFragment.NewTopicWantRead, PageNavigationUtil.PageNavigationFunctions {
@@ -31,18 +33,18 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
     public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.EXTRA_FORUM_NAME";
 
     private static final String SAVE_SEARCH_FORUM_CONTENT = "saveSearchForumContent";
+    private static final String SAVE_TYPE_OF_SEARCH = "saveTypeOfSearch";
     private static final String SAVE_CURRENT_SEARCH_LINK = "saveCurrentSearchLink";
-    private static final String SAVE_SEARCH_TEXT_IS_OPENED = "saveSearchTextIsOpened";
 
     private EditText textForSearch = null;
     private MenuItem searchExpandableItem = null;
-    private RadioButton topicModeSearchRadioButton = null;
+    private RadioGroup searchModeRadioGroup = null;
     private String lastSearchedText = null;
     private PageNavigationUtil pageNavigation = null;
     private ShareActionProvider shareAction = null;
     private String currentSearchLink = "";
     private String currentForumName = "";
-    private boolean searchTextIsOpened = false;
+    private int idOfTypeOfSearch = 0;
 
     private final View.OnClickListener searchButtonClickedListener = new View.OnClickListener() {
         @Override
@@ -62,6 +64,26 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
         }
     };
 
+    private final RadioGroup.OnCheckedChangeListener searchTypeChangedListener = new RadioGroup.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(RadioGroup group, int checkedId) {
+            performSearch();
+        }
+    };
+
+    private static String getSearchTypeInTextForSearchTypeId(int searchTypeId) {
+        switch (searchTypeId) {
+            case R.id.topicmode_radio_searchtopic:
+                return "titre_topic";
+            case R.id.authormode_radio_searchtopic:
+                return "auteur_topic";
+            case R.id.messagemode_radio_searchtopic:
+                return "texte_message";
+            default:
+                return "";
+        }
+    }
+
     private void updateShareAction() {
         if (shareAction != null) {
             Intent shareIntent = new Intent();
@@ -80,8 +102,9 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
     public void performSearch() {
         if (textForSearch != null) {
             if (!textForSearch.getText().toString().isEmpty()) {
+                idOfTypeOfSearch = searchModeRadioGroup.getCheckedRadioButtonId();
                 pageNavigation.setCurrentLink(currentSearchLink + "?search_in_forum=" + Utils.encodeStringToUrlString(textForSearch.getText().toString()) +
-                        "&type_search_in_forum=" + (topicModeSearchRadioButton.isChecked() ? "titre_topic" : "auteur_topic"));
+                        "&type_search_in_forum=" + getSearchTypeInTextForSearchTypeId(idOfTypeOfSearch));
                 pageNavigation.updateAdapterForPagerView();
                 pageNavigation.updateCurrentItemAndButtonsToCurrentLink();
             }
@@ -101,7 +124,8 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
                         (Button) findViewById(R.id.currentpage_button_searchtopic), (Button) findViewById(R.id.nextpage_button_searchtopic), null);
         pageNavigation.updateAdapterForPagerView();
 
-        topicModeSearchRadioButton = findViewById(R.id.topicmode_radio_searchtopic);
+        searchModeRadioGroup = findViewById(R.id.radiogroup_layout_searchtopic);
+        searchModeRadioGroup.setOnCheckedChangeListener(searchTypeChangedListener);
 
         if (getIntent() != null) {
             String newLinkForSearch = getIntent().getStringExtra(EXTRA_FORUM_LINK);
@@ -119,7 +143,7 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
 
         if (savedInstanceState != null) {
             lastSearchedText = savedInstanceState.getString(SAVE_SEARCH_FORUM_CONTENT, null);
-            searchTextIsOpened = savedInstanceState.getBoolean(SAVE_SEARCH_TEXT_IS_OPENED, false);
+            idOfTypeOfSearch = savedInstanceState.getInt(SAVE_TYPE_OF_SEARCH, 0);
             pageNavigation.setCurrentLink(savedInstanceState.getString(SAVE_CURRENT_SEARCH_LINK, ""));
         }
 
@@ -131,11 +155,18 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        PrefsManager.putInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED, MainActivity.ACTIVITY_SHOW_FORUM);
+        PrefsManager.applyChanges();
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putBoolean(SAVE_SEARCH_TEXT_IS_OPENED, searchTextIsOpened);
         outState.putString(SAVE_CURRENT_SEARCH_LINK, pageNavigation.getCurrentPageLink());
+        outState.putInt(SAVE_TYPE_OF_SEARCH, idOfTypeOfSearch);
         outState.putString(SAVE_SEARCH_FORUM_CONTENT, null);
         if (textForSearch != null && searchExpandableItem != null) {
             if (searchExpandableItem.isActionViewExpanded()) {
@@ -161,16 +192,12 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
         searchExpandableItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                searchTextIsOpened = false;
                 onBackPressed();
                 return false;
             }
 
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                if (!searchTextIsOpened) {
-                    searchTextIsOpened = true;
-                }
                 return true;
             }
         });
@@ -246,8 +273,10 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
 
     @Override
     public int getShowablePageNumberForThisLink(String link) {
+        int numberOfResultPerPage = (idOfTypeOfSearch == R.id.messagemode_radio_searchtopic ? 20 : 25);
+
         try {
-            return ((Integer.parseInt(JVCParser.getPageNumberForThisSearchTopicLink(link)) - 1) / 25) + 1;
+            return ((Integer.parseInt(JVCParser.getPageNumberForThisSearchTopicLink(link)) - 1) / numberOfResultPerPage) + 1;
         } catch (Exception e) {
             return 1;
         }
@@ -255,6 +284,8 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
 
     @Override
     public String setShowedPageNumberForThisLink(String link, int newPageNumber) {
-        return JVCParser.setPageNumberForThisSearchTopicLink(link, ((newPageNumber - 1) * 25) + 1);
+        int numberOfResultPerPage = (idOfTypeOfSearch == R.id.messagemode_radio_searchtopic ? 20 : 25);
+
+        return JVCParser.setPageNumberForThisSearchTopicLink(link, ((newPageNumber - 1) * numberOfResultPerPage) + 1);
     }
 }

@@ -3,6 +3,7 @@ package com.franckrj.respawnirc;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -125,13 +126,14 @@ public class ManageIgnoreListActivity extends AbsHomeIsBackActivity {
             return listOfIgnoredPseudos.isEmpty();
         }
 
+        @NonNull
         @Override
-        public IgnoreViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public IgnoreViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             return new IgnoreViewHolder(serviceInflater.inflate(R.layout.ignorelist_row, parent, false));
         }
 
         @Override
-        public void onBindViewHolder(IgnoreViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull IgnoreViewHolder holder, int position) {
             holder.setCurrentPseudo(listOfIgnoredPseudos.get(position), position);
         }
 
