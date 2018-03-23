@@ -28,86 +28,13 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
     private String oldUrlForTopic = "";
     private long oldLastIdOfMessage = 0;
 
-    private final JVCTopicModeIRCGetter.NewMessagesListener listenerForNewMessages = new JVCTopicModeIRCGetter.NewMessagesListener() {
-        @Override
-        public void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages, boolean itsReallyEmpty, boolean dontShowMessages) {
-            if (!listOfNewMessages.isEmpty()) {
-                String pseudoOfUserInLC = currentSettings.pseudoOfUser.toLowerCase();
-                boolean scrolledAtTheEnd = true;
-                boolean needASmoothScroll = false;
-                boolean firstTimeGetMessages = adapterForTopic.getAllItems().isEmpty();
-                isInErrorMode = false;
-
-                if (!adapterForTopic.getAllItems().isEmpty()) {
-                    scrolledAtTheEnd = listIsScrolledAtBottom();
-                    needASmoothScroll = scrolledAtTheEnd;
-                }
-
-                for (JVCParser.MessageInfos thisMessageInfo : listOfNewMessages) {
-                    String pseudoOfMessageInLC = thisMessageInfo.pseudo.toLowerCase();
-
-                    if (!pseudoOfMessageInLC.equals(pseudoOfUserInLC) && IgnoreListManager.pseudoInLCIsIgnored(pseudoOfMessageInLC)) {
-                        if (hideTotallyMessagesOfIgnoredPseudos) {
-                            continue;
-                        } else {
-                            thisMessageInfo.pseudoIsBlacklisted = true;
-                        }
-                    }
-
-                    if (!thisMessageInfo.isAnEdit) {
-                        adapterForTopic.addItem(thisMessageInfo, true);
-                    } else {
-                        adapterForTopic.updateThisItem(thisMessageInfo, true);
-                    }
-                }
-
-                if (firstTimeGetMessages) {
-                    while (adapterForTopic.getCount() > initialNumberOfMessagesShowed) {
-                        adapterForTopic.removeFirstItem();
-                    }
-                }
-
-                while (adapterForTopic.getCount() > maxNumberOfMessagesShowed) {
-                    adapterForTopic.removeFirstItem();
-                }
-
-                adapterForTopic.notifyDataSetChanged();
-
-                if (adapterForTopic.getAllItems().isEmpty()) {
-                    setErrorBackgroundMessageForAllMessageIgnored();
-                } else {
-                    allMessagesShowedAreFromIgnoredPseudos = false;
-
-                    if (scrolledAtTheEnd) {
-                        if (smoothScrollIsEnabled && needASmoothScroll) { //s'il y avait des messages affichés avant et qu'on était en bas de page, smoothscroll
-                            jvcMsgList.smoothScrollToPosition(adapterForTopic.getCount() - 1);
-                        } else {
-                            jvcMsgList.setSelection(adapterForTopic.getCount() - 1);
-                        }
-                    }
-                }
-            } else if (itsReallyEmpty) {
-                allMessagesShowedAreFromIgnoredPseudos = false;
-
-                if (!isInErrorMode) {
-                    getterForTopic.reloadTopic(true);
-                    isInErrorMode = true;
-                } else if (adapterForTopic.getAllItems().isEmpty()) {
-                    setErrorBackgroundMessageDependingOnLastError();
-                }
-            } else if (adapterForTopic.getAllItems().isEmpty() && allMessagesShowedAreFromIgnoredPseudos) {
-                setErrorBackgroundMessageForAllMessageIgnored();
-            }
-        }
-    };
-
     public static boolean getShowNavigationButtons() {
         return false;
     }
 
     private void saveOldTopicInfos() {
-        if (!getterForTopic.getUrlForTopic().isEmpty()) {
-            PrefsManager.putString(PrefsManager.StringPref.Names.OLD_URL_FOR_TOPIC, getterForTopic.getUrlForTopic());
+        if (!getterForTopic.getUrlForTopicPage().isEmpty()) {
+            PrefsManager.putString(PrefsManager.StringPref.Names.OLD_URL_FOR_TOPIC, getterForTopic.getUrlForTopicPage());
             PrefsManager.putLong(PrefsManager.LongPref.Names.OLD_LAST_ID_OF_MESSAGE, getterForTopic.getLastIdOfMessage());
             PrefsManager.applyChanges();
         }
@@ -176,10 +103,80 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
     }
 
     @Override
+    public void processAddOfNewMessagesToJvcMsgList(ArrayList<JVCParser.MessageInfos> listOfNewMessages, boolean itsReallyEmpty, boolean dontShowMessages) {
+        if (!listOfNewMessages.isEmpty()) {
+            String pseudoOfUserInLC = currentSettings.pseudoOfUser.toLowerCase();
+            boolean scrolledAtTheEnd = true;
+            boolean needASmoothScroll = false;
+            boolean firstTimeGetMessages = adapterForTopic.getAllItems().isEmpty();
+            isInErrorMode = false;
+
+            if (!adapterForTopic.getAllItems().isEmpty()) {
+                scrolledAtTheEnd = listIsScrolledAtBottom();
+                needASmoothScroll = scrolledAtTheEnd;
+            }
+
+            for (JVCParser.MessageInfos thisMessageInfo : listOfNewMessages) {
+                String pseudoOfMessageInLC = thisMessageInfo.pseudo.toLowerCase();
+
+                if (!pseudoOfMessageInLC.equals(pseudoOfUserInLC) && IgnoreListManager.pseudoInLCIsIgnored(pseudoOfMessageInLC)) {
+                    if (hideTotallyMessagesOfIgnoredPseudos) {
+                        continue;
+                    } else {
+                        thisMessageInfo.pseudoIsBlacklisted = true;
+                    }
+                }
+
+                if (!thisMessageInfo.isAnEdit) {
+                    adapterForTopic.addItem(thisMessageInfo, true);
+                } else {
+                    adapterForTopic.updateThisItem(thisMessageInfo, true);
+                }
+            }
+
+            if (firstTimeGetMessages) {
+                while (adapterForTopic.getCount() > initialNumberOfMessagesShowed) {
+                    adapterForTopic.removeFirstItem();
+                }
+            }
+
+            while (adapterForTopic.getCount() > maxNumberOfMessagesShowed) {
+                adapterForTopic.removeFirstItem();
+            }
+
+            adapterForTopic.notifyDataSetChanged();
+
+            if (adapterForTopic.getAllItems().isEmpty()) {
+                setErrorBackgroundMessageForAllMessageIgnored();
+            } else {
+                allMessagesShowedAreFromIgnoredPseudos = false;
+
+                if (scrolledAtTheEnd) {
+                    if (smoothScrollIsEnabled && needASmoothScroll) { //s'il y avait des messages affichés avant et qu'on était en bas de page, smoothscroll
+                        jvcMsgList.smoothScrollToPosition(adapterForTopic.getCount() - 1);
+                    } else {
+                        jvcMsgList.setSelection(adapterForTopic.getCount() - 1);
+                    }
+                }
+            }
+        } else if (itsReallyEmpty) {
+            allMessagesShowedAreFromIgnoredPseudos = false;
+
+            if (!isInErrorMode) {
+                getterForTopic.reloadTopic(true);
+                isInErrorMode = true;
+            } else if (adapterForTopic.getAllItems().isEmpty()) {
+                setErrorBackgroundMessageDependingOnLastError();
+            }
+        } else if (adapterForTopic.getAllItems().isEmpty() && allMessagesShowedAreFromIgnoredPseudos) {
+            setErrorBackgroundMessageForAllMessageIgnored();
+        }
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getterForTopic.setListenerForNewMessages(listenerForNewMessages);
         swipeRefresh.setEnabled(false);
 
         if (savedInstanceState != null) {
@@ -221,8 +218,8 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        menu.findItem(R.id.action_load_from_old_topic_info_showtopicirc).setEnabled(JVCParser.checkIfTopicAreSame(getterForTopic.getUrlForTopic(), oldUrlForTopic));
-        menu.findItem(R.id.action_share_showtopicboth).setEnabled(!getterForTopic.getUrlForTopic().isEmpty());
+        menu.findItem(R.id.action_load_from_old_topic_info_showtopicirc).setEnabled(JVCParser.checkIfTopicAreSame(getterForTopic.getUrlForTopicPage(), oldUrlForTopic));
+        menu.findItem(R.id.action_share_showtopicboth).setEnabled(!getterForTopic.getUrlForTopicPage().isEmpty());
         updateShareAction();
     }
 

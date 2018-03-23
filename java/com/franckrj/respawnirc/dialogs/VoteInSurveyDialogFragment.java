@@ -8,6 +8,9 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.utils.Utils;
+
+import java.util.ArrayList;
 
 public class VoteInSurveyDialogFragment extends DialogFragment {
     public static final String ARG_SURVEY_REPLYS = "com.franckrj.respawnirc.ARG_SURVEY_REPLYS";
@@ -20,15 +23,21 @@ public class VoteInSurveyDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Bundle currentArgs = getArguments();
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        String[] listOfReplys = null;
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        ArrayList<CharSequence> listOfReplys = new ArrayList<>();
 
         if (currentArgs != null) {
-            listOfReplys = currentArgs.getStringArray(ARG_SURVEY_REPLYS);
+            String[] tmpListOfReplys = currentArgs.getStringArray(ARG_SURVEY_REPLYS);
+
+            if (tmpListOfReplys != null) {
+                for (String thisReply : tmpListOfReplys) {
+                    listOfReplys.add(Utils.applyEmojiCompatIfPossible(thisReply));
+                }
+            }
         }
 
         builder.setTitle(R.string.vote);
-        builder.setSingleChoiceItems(listOfReplys, -1, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(listOfReplys.toArray(new CharSequence[listOfReplys.size()]), -1, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 idOfLastSelectedItem = which;

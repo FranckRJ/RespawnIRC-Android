@@ -17,7 +17,7 @@ import com.franckrj.respawnirc.utils.JVCParser;
 import java.util.ArrayList;
 
 public class JVCForumListAdapter extends BaseAdapter {
-    private static final String SAVE_LIST_OF_SEARCHED_FORUM_SHOWED = "saveListOfSearchedForumShowed";
+    private static final String SAVE_LIST_OF_SEARCHED_FORUM_SHOWED = "flaSaveListOfSearchedForumShowed";
 
     private ArrayList<JVCParser.NameAndLink> currentListOfForums = new ArrayList<>();
     private LayoutInflater serviceInflater;

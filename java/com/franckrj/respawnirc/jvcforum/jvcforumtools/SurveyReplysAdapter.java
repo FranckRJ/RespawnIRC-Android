@@ -2,6 +2,7 @@ package com.franckrj.respawnirc.jvcforum.jvcforumtools;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -62,13 +63,14 @@ public class SurveyReplysAdapter extends RecyclerView.Adapter<SurveyReplysAdapte
         return listOfReplyContent;
     }
 
+    @NonNull
     @Override
-    public ReplyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ReplyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ReplyViewHolder(serviceInflater.inflate(R.layout.reply_survey_row, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(ReplyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ReplyViewHolder holder, int position) {
         holder.setCurrentReply(listOfReplyContent.get(position), position);
     }
 

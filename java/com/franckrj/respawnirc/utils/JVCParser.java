@@ -24,9 +24,12 @@ public final class JVCParser {
     private static final Pattern entireMessagePattern = Pattern.compile("(<div class=\"bloc-message-forum[^\"]*\".*?)(<span id=\"post_[^\"]*\" class=\"bloc-message-forum-anchor\">|<div class=\"bloc-outils-plus-modo bloc-outils-bottom\">|<div class=\"bloc-pagi-default\">)", Pattern.DOTALL);
     private static final Pattern signaturePattern = Pattern.compile("<div class=\"signature-msg[^\"]*\">(.*)", Pattern.DOTALL);
     private static final Pattern avatarPattern = Pattern.compile("<img src=\"[^\"]*\" data-srcset=\"(http:)?//([^\"]*)\" class=\"user-avatar-msg\"", Pattern.DOTALL);
-    private static final Pattern entireTopicPattern = Pattern.compile("<li class=\"[^\"]*\" data-id=\"[^\"]*\">.*?<span class=\"topic-subject\">.*?</li>", Pattern.DOTALL);
+    private static final Pattern entireTopicPattern = Pattern.compile("<li (class=\"[^\"]*\" data-id=\"[^\"]*\"|class=\"message[^\"]*\")>.*?<span class=\"topic-subject\">.*?</li>", Pattern.DOTALL);
     private static final Pattern pseudoIsBlacklistedPattern = Pattern.compile("<div class=\"bloc-message-forum msg-pseudo-blacklist[^\"]*\" data-id=\"");
     private static final Pattern messageIsDeletedPattern = Pattern.compile("<div class=\"bloc-message-forum msg-supprime[^\"]*\" data-id=\"");
+    private static final Pattern userCanDeleteOrRestoreMessagePattern = Pattern.compile("<span class=\"picto-msg-(croix|restaurer)\" title=\"(Supprimer|Restaurer)\" data-type=\"(delete|restore)\">");
+    private static final Pattern userCanEditMessagePattern = Pattern.compile("<span class=\"picto-msg-crayon\" title=\"Editer\">");
+    private static final Pattern userCanKickOrDekickAuthorPattern = Pattern.compile("<span class=\"picto-msg-(kick|dekick)\" title=\"(Kicker|Dékicker)\" data-id-alias=\"[^\"]*\">");
     private static final Pattern pseudoInfosPattern = Pattern.compile("<span class=\"JvCare [^ ]* bloc-pseudo-msg text-([^\"]*)\" target=\"_blank\">[^a-zA-Z0-9_\\[\\]-]*([a-zA-Z0-9_\\[\\]-]*)[^<]*</span>");
     private static final Pattern idAliasPattern = Pattern.compile("data-id-alias=\"([0-9]+)\">");
     private static final Pattern messagePattern = Pattern.compile("<div class=\"bloc-contenu\">[^<]*<div class=\"txt-msg +text-[^-]*-forum \">((.*?)(?=<div class=\"info-edition-msg\">)|(.*?)(?=<div class=\"signature-msg)|(.*))", Pattern.DOTALL);
@@ -51,16 +54,18 @@ public final class JVCParser {
     private static final Pattern pageForumLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/[0-9]*-([0-9]*)-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-[^\\.]*\\.htm)");
     private static final Pattern pageSearchTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/recherche/forums/[0-9]*-[0-9]*-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-.*)");
     private static final Pattern jvCarePattern = Pattern.compile("<span class=\"JvCare [^\"]*\">([^<]*)</span>");
-    private static final Pattern lastEditMessagePattern = Pattern.compile("<div class=\"info-edition-msg\">(Message édité le ([^ ]* [^ ]* [^ ]* [^ ]* [0-9:]*) par.*?)</div>");
+    private static final Pattern lastEditMessagePattern = Pattern.compile("<div class=\"info-edition-msg\">[^M]*(Message édité le ([^ ]* [^ ]* [^ ]* [^ ]* [0-9:]*) par.*?)</div>", Pattern.DOTALL);
     private static final Pattern messageEditInfoPattern = Pattern.compile("<textarea((.*?)(?=id=\"text_commentaire\")|(.*?)(?=>))id=\"text_commentaire\"[^>]*>(.*?)</textarea>", Pattern.DOTALL);
     private static final Pattern allArianeStringPattern = Pattern.compile("<div class=\"fil-ariane-crumb\">.*?</h1>", Pattern.DOTALL);
     private static final Pattern forumNameInArianeStringPattern = Pattern.compile("<span><a href=\"/forums/0-[^\"]*\">([^<]*)</a></span>");
     private static final Pattern topicNameInArianeStringPattern = Pattern.compile("<span><a href=\"/forums/(42|1)-[^\"]*\">([^<]*)</a></span>");
     private static final Pattern highlightInArianeStringPattern = Pattern.compile("<h1 class=\"highlight\">([^<]*)</h1>");
     private static final Pattern topicNameAndLinkPattern = Pattern.compile("<a class=\"lien-jv topic-title[^\"]*\" href=\"([^\"]*\" title=\"[^\"]*)\"[^>]*>");
+    private static final Pattern topicNameAndLinkInMessageSearchPattern = Pattern.compile("<a href=\"([^\"]*)\" class=\"topic-title icon-down-right-arrow\"[^>]*>(.*?)</a>", Pattern.DOTALL);
     private static final Pattern topicNumberMessagesPattern = Pattern.compile("<span class=\"topic-count\">[^0-9]*([0-9]*)");
     private static final Pattern topicNumberMessagesAdmPattern = Pattern.compile("<span class=\"topic-count-adm\">[^0-9]*([0-9]*)");
     private static final Pattern topicAuthorPattern = Pattern.compile("<span class=\".*?text-([^ ]*) topic-author[^>]*>[^A-Za-z0-9\\[\\]_-]*([^<\\n\\r ]*)");
+    private static final Pattern topicAuthorInMessageSearchPattern = Pattern.compile("<span class=\".*?text-auteur text-([a-zA-Z]*)[^>]*>[^A-Za-z0-9\\[\\]_-]*([^<\\n\\r ]*)");
     private static final Pattern topicDatePattern = Pattern.compile("<span class=\"topic-date\">[^<]*<span[^>]*>[^0-9/:]*([0-9/:]*)");
     private static final Pattern topicTypePattern = Pattern.compile("<img src=\"/img/forums/topic-(.*?)\\.png\" alt=\"[^\"]*\" title=\"[^\"]*\" class=\"topic-img\"");
     private static final Pattern forumFavsBlocPattern = Pattern.compile("<h2>Mes forums favoris</h2>.*?<ul class=\"display-list-simple\">(.*?)</ul>", Pattern.DOTALL);
@@ -91,8 +96,8 @@ public final class JVCParser {
     private static final Pattern noelshackImagePattern = Pattern.compile("<span class=\"JvCare[^>]*><img class=\"img-shack\".*?src=\"http(s)?://([^\"]*)\" alt=\"([^\"]*)\"[^>]*></span>");
     private static final Pattern emptySearchPattern = Pattern.compile("<span style=\"[^\"]*\">[ \\n\\r]*Aucune réponse pour votre recherche ![ \\n\\r]*</span>");
     private static final Pattern userCanPostAsModoPattern = Pattern.compile("<select class=\"select-user-post\" id=\"form_alias_rang\" name=\"form_alias_rang\">((.*?)(?=<option value=\"2\")|(.*?)(?=</select>))<option value=\"2\"", Pattern.DOTALL);
-    private static final Pattern userCanLockTopicPattern = Pattern.compile("<span class=\"btn btn-forum-modo btn-lock-topic\" data-type=\"lock\">Bloquer</span>");
-    private static final Pattern uglyImagesNamePattern = Pattern.compile("issou|risi|rizi|jesus|picsart|chancla|larry");
+    private static final Pattern userCanLockOrUnlockTopicPattern = Pattern.compile("<span class=\"btn btn-forum-modo btn-lock-topic\" data-type=\"(un)?lock\">");
+    private static final Pattern uglyImagesNamePattern = Pattern.compile("issou|risi|rizi|jesus|picsart|chancla|larry|sermion");
     private static final Pattern adPattern = Pattern.compile("<ins[^>]*></ins>");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
     private static final Pattern multipleSpacesPattern = Pattern.compile(" +");
@@ -111,7 +116,7 @@ public final class JVCParser {
         }
     }
 
-    public static String formatThisUrl(String urlToChange) {
+    public static String formatThisUrlToClassicJvcUrl(String urlToChange) {
         if (urlToChange.startsWith("https://")) {
             urlToChange = "http://" + urlToChange.substring(("https://").length());
         } else if (!urlToChange.startsWith("http://")) {
@@ -210,9 +215,8 @@ public final class JVCParser {
         return linkToCheck.startsWith("http://www.jeuxvideo.com/forums/0-");
     }
 
-    public static boolean checkIfItsJVCLink(String linkToCheck) {
-        return linkToCheck.startsWith("http://www.jeuxvideo.com/forums/0-") ||
-                linkToCheck.startsWith("http://www.jeuxvideo.com/forums/1-") ||
+    public static boolean checkIfItsTopicLink(String linkToCheck) {
+        return linkToCheck.startsWith("http://www.jeuxvideo.com/forums/1-") ||
                 linkToCheck.startsWith("http://www.jeuxvideo.com/forums/42-");
     }
 
@@ -378,12 +382,10 @@ public final class JVCParser {
         int lastOffset = 0;
 
         while (replyWithInfosMatcher.find(lastOffset)) {
-            SurveyReplyInfos newSurveyReply = new SurveyReplyInfos();
+            String tmpInfosForReply = "id_sondage=" + replyWithInfosMatcher.group(1) + "&id_sondage_reponse=" + replyWithInfosMatcher.group(2);
+            String tmpTitleOfReply = specialCharToNormalChar(replyWithInfosMatcher.group(3).replace("\n", "").replace("\r", "").trim());
 
-            newSurveyReply.infosForReply = "id_sondage=" + replyWithInfosMatcher.group(1) + "&id_sondage_reponse=" + replyWithInfosMatcher.group(2);
-            newSurveyReply.titleOfReply = specialCharToNormalChar(replyWithInfosMatcher.group(3).replace("\n", "").replace("\r", "").trim());
-
-            listOfReplys.add(newSurveyReply);
+            listOfReplys.add(new SurveyReplyInfos(tmpInfosForReply, tmpTitleOfReply));
             lastOffset = replyWithInfosMatcher.end();
         }
 
@@ -715,8 +717,8 @@ public final class JVCParser {
         return userCanPostAsModoPattern.matcher(pageSource).find();
     }
 
-    public static boolean getUserCanLockTopic(String pageSource) {
-        return userCanLockTopicPattern.matcher(pageSource).find();
+    public static boolean getUserCanLockOrUnlockTopic(String pageSource) {
+        return userCanLockOrUnlockTopicPattern.matcher(pageSource).find();
     }
 
     public static String getListOfInputInAStringInTopicFormForThisPage(String pageSource) {
@@ -983,6 +985,9 @@ public final class JVCParser {
         MessageInfos newMessageInfo = new MessageInfos();
         Matcher pseudoIsBlacklistedMatcher = pseudoIsBlacklistedPattern.matcher(thisEntireMessage);
         Matcher messageIsDeletedMatcher = messageIsDeletedPattern.matcher(thisEntireMessage);
+        Matcher userCanDeleteOrRestoreMessageMatcher = userCanDeleteOrRestoreMessagePattern.matcher(thisEntireMessage);
+        Matcher userCanEditMessageMatcher = userCanEditMessagePattern.matcher(thisEntireMessage);
+        Matcher userCanKickOrDekickAuthorMatcher = userCanKickOrDekickAuthorPattern.matcher(thisEntireMessage);
         Matcher pseudoInfosMatcher = pseudoInfosPattern.matcher(thisEntireMessage);
         Matcher idAliasMatcher = idAliasPattern.matcher(thisEntireMessage);
         Matcher messageMatcher = messagePattern.matcher(thisEntireMessage);
@@ -994,6 +999,13 @@ public final class JVCParser {
 
         newMessageInfo.pseudoIsBlacklisted = pseudoIsBlacklistedMatcher.find();
         newMessageInfo.messageIsDeleted = messageIsDeletedMatcher.find();
+        newMessageInfo.userCanDeleteOrRestoreMessage = userCanDeleteOrRestoreMessageMatcher.find();
+        newMessageInfo.userCanEditMessage = userCanEditMessageMatcher.find();
+        newMessageInfo.userCanKickOrDekickAuthor = userCanKickOrDekickAuthorMatcher.find();
+
+        if (newMessageInfo.userCanKickOrDekickAuthor) {
+            newMessageInfo.authorIsKicked = userCanKickOrDekickAuthorMatcher.group(1).equals("dekick");
+        }
 
         if (pseudoInfosMatcher.find()) {
             newMessageInfo.pseudo = pseudoInfosMatcher.group(2);
@@ -1016,12 +1028,18 @@ public final class JVCParser {
             newMessageInfo.avatarLink = "http://" + avatarMatcher.group(2);
         }
 
-        if (messageMatcher.find() && messageIdMatcher.find() && dateMessageMatcher.find()) {
-            newMessageInfo.messageNotParsed = messageMatcher.group(1);
+        if (messageIdMatcher.find()) {
+            newMessageInfo.id = Long.parseLong(messageIdMatcher.group(1));
+        }
+
+        if (dateMessageMatcher.find()) {
             newMessageInfo.dateTime = dateMessageMatcher.group(3);
             newMessageInfo.wholeDate = dateMessageMatcher.group(2);
+        }
+
+        if (messageMatcher.find()) {
+            newMessageInfo.messageNotParsed = messageMatcher.group(1);
             newMessageInfo.containUglyImages = ToolForParsing.hasUglyImagesInNotPrettyMessage(newMessageInfo.messageNotParsed);
-            newMessageInfo.id = Long.parseLong(messageIdMatcher.group(1));
 
             newMessageInfo.messageContentContainSpoil = newMessageInfo.messageNotParsed.contains("<div class=\"contenu-spoil\">");
             newMessageInfo.signatureContainSpoil = newMessageInfo.signatureNotParsed.contains("<div class=\"contenu-spoil\">");
@@ -1058,13 +1076,47 @@ public final class JVCParser {
             newTopicInfo.nbOfMessages = topicNumberMessagesMatcher.group(1);
         }
 
-        if (topicNameAndLinkMatcher.find() && topicDateMatcher.find() && topicTypeMatcher.find()) {
+        if (topicNameAndLinkMatcher.find()) {
             String topicNameAndLinkString = topicNameAndLinkMatcher.group(1);
             newTopicInfo.link = "http://www.jeuxvideo.com" + topicNameAndLinkString.substring(0, topicNameAndLinkString.indexOf("\""));
             newTopicInfo.htmlName = topicNameAndLinkString.substring(topicNameAndLinkString.indexOf("title=\"") + 7);
+        }
+
+        if (topicDateMatcher.find()) {
             newTopicInfo.wholeDate = topicDateMatcher.group(1);
+        }
+
+        if (topicTypeMatcher.find()) {
             newTopicInfo.type = topicTypeMatcher.group(1);
         }
+
+        return newTopicInfo;
+    }
+
+    public static TopicInfos createTopicInfoFromEntireTopicMessageSearch(String thisEntireTopic) {
+        TopicInfos newTopicInfo = new TopicInfos();
+        Matcher topicNameAndLinkMatcher = topicNameAndLinkInMessageSearchPattern.matcher(thisEntireTopic);
+        Matcher topicAuthorMatcher = topicAuthorInMessageSearchPattern.matcher(thisEntireTopic);
+        Matcher topicDateMatcher = topicDatePattern.matcher(thisEntireTopic);
+
+        if (topicAuthorMatcher.find()) {
+            newTopicInfo.author = topicAuthorMatcher.group(2).trim();
+            newTopicInfo.authorType = topicAuthorMatcher.group(1).trim();
+        } else {
+            newTopicInfo.author = "Pseudo supprimé";
+            newTopicInfo.authorType = "user";
+        }
+
+        if (topicNameAndLinkMatcher.find()) {
+            newTopicInfo.link = "http://www.jeuxvideo.com" + topicNameAndLinkMatcher.group(1);
+            newTopicInfo.htmlName = topicNameAndLinkMatcher.group(2).replace("\r", "").replace("\n", "").replace("em>", "u>").trim();
+        }
+
+        if (topicDateMatcher.find()) {
+            newTopicInfo.wholeDate = topicDateMatcher.group(1);
+        }
+
+        newTopicInfo.type = "message";
 
         return newTopicInfo;
     }
@@ -1087,7 +1139,11 @@ public final class JVCParser {
         Matcher entireTopicMatcher = entireTopicPattern.matcher(sourcePage);
 
         while (entireTopicMatcher.find()) {
-            listOfParsedTopic.add(createTopicInfoFromEntireTopic(entireTopicMatcher.group(0)));
+            if (entireTopicMatcher.group(1).startsWith("class=\"message")) {
+                listOfParsedTopic.add(createTopicInfoFromEntireTopicMessageSearch(entireTopicMatcher.group(0)));
+            } else {
+                listOfParsedTopic.add(createTopicInfoFromEntireTopic(entireTopicMatcher.group(0)));
+            }
         }
 
         return listOfParsedTopic;
@@ -1379,6 +1435,13 @@ public final class JVCParser {
             //rien
         }
 
+        public AjaxInfos(AjaxInfos baseForCopy) {
+            list = baseForCopy.list;
+            mod = baseForCopy.mod;
+            pref = baseForCopy.pref;
+            sub = baseForCopy.sub;
+        }
+
         private AjaxInfos(Parcel in) {
             list = in.readString();
             mod = in.readString();
@@ -1412,6 +1475,10 @@ public final class JVCParser {
         public String lastTimeEdit = "";
         public boolean pseudoIsBlacklisted = false;
         public boolean messageIsDeleted = false;
+        public boolean userCanDeleteOrRestoreMessage = false;
+        public boolean userCanEditMessage = false;
+        public boolean authorIsKicked = false;
+        public boolean userCanKickOrDekickAuthor = false;
         public boolean messageContentContainSpoil = false;
         public boolean signatureContainSpoil = false;
         public int numberOfOverlyQuote = 0;
@@ -1451,6 +1518,10 @@ public final class JVCParser {
             lastTimeEdit = in.readString();
             pseudoIsBlacklisted = (in.readByte() == 1);
             messageIsDeleted = (in.readByte() == 1);
+            userCanDeleteOrRestoreMessage = (in.readByte() == 1);
+            userCanEditMessage = (in.readByte() == 1);
+            authorIsKicked = (in.readByte() == 1);
+            userCanKickOrDekickAuthor = (in.readByte() == 1);
             messageContentContainSpoil = (in.readByte() == 1);
             signatureContainSpoil = (in.readByte() == 1);
             numberOfOverlyQuote = in.readInt();
@@ -1485,6 +1556,10 @@ public final class JVCParser {
             out.writeString(lastTimeEdit);
             out.writeByte((byte)(pseudoIsBlacklisted ? 1 : 0));
             out.writeByte((byte)(messageIsDeleted ? 1 : 0));
+            out.writeByte((byte)(userCanDeleteOrRestoreMessage ? 1 : 0));
+            out.writeByte((byte)(userCanEditMessage ? 1 : 0));
+            out.writeByte((byte)(authorIsKicked ? 1 : 0));
+            out.writeByte((byte)(userCanKickOrDekickAuthor ? 1 : 0));
             out.writeByte((byte)(messageContentContainSpoil ? 1 : 0));
             out.writeByte((byte)(signatureContainSpoil ? 1 : 0));
             out.writeInt(numberOfOverlyQuote);
@@ -1496,8 +1571,12 @@ public final class JVCParser {
             out.writeInt(lastIdOfSpoilInMessage);
 
             out.writeInt(listOfSpoilIdToShow.size());
-            for (int i = 0; i < listOfSpoilIdToShow.size(); ++i) {
-                out.writeInt(listOfSpoilIdToShow.valueAt(i));
+            for (Integer currentSpoilId : listOfSpoilIdToShow) {
+                if (currentSpoilId != null) {
+                    out.writeInt(currentSpoilId);
+                } else {
+                    out.writeInt(-8); //valeur impossible à avoir en temps normal, le minimum est censé être -1.
+                }
             }
         }
 
@@ -1585,11 +1664,6 @@ public final class JVCParser {
             //rien
         }
 
-        public NameAndLink(String newName, String newLink) {
-            name = newName;
-            link = newLink;
-        }
-
         private NameAndLink(Parcel in) {
             name = in.readString();
             link = in.readString();
@@ -1608,8 +1682,8 @@ public final class JVCParser {
     }
 
     public static class SurveyReplyInfos implements Parcelable {
-        public String infosForReply = "";
-        public String titleOfReply = "";
+        public final String infosForReply;
+        public final String titleOfReply;
 
         public static final Parcelable.Creator<SurveyReplyInfos> CREATOR = new Parcelable.Creator<SurveyReplyInfos>() {
             @Override
@@ -1623,8 +1697,9 @@ public final class JVCParser {
             }
         };
 
-        public SurveyReplyInfos() {
-            //rien
+        private SurveyReplyInfos(String newInfos, String newTitle) {
+            infosForReply = newInfos;
+            titleOfReply = newTitle;
         }
 
         private SurveyReplyInfos(Parcel in) {

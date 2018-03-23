@@ -3,7 +3,7 @@ package com.franckrj.respawnirc.jvcforum.jvcforumtools;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.text.Spanned;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +25,8 @@ public class JVCForumAdapter extends BaseAdapter {
     private LayoutInflater serviceInflater = null;
     private Activity parentActivity = null;
     private boolean alternateBackgroundColor = false;
+    private int topicTitleSizeInSp = 14;
+    private int topicInfosSizeInSp = 14;
     private Drawable iconMarqueOn = null;
     private Drawable iconMarqueOff = null;
     private Drawable iconDossier2 = null;
@@ -53,8 +55,24 @@ public class JVCForumAdapter extends BaseAdapter {
         return alternateBackgroundColor;
     }
 
+    public int getTopicTitleSizeInSp() {
+        return topicTitleSizeInSp;
+    }
+
+    public int getTopicInfosSizeInSp() {
+        return topicInfosSizeInSp;
+    }
+
     public void setAlternateBackgroundColor(boolean newVal) {
         alternateBackgroundColor = newVal;
+    }
+
+    public void setTopicTitleSizeInSp(int newVal) {
+        topicTitleSizeInSp = newVal;
+    }
+
+    public void setTopicInfosSizeInSp(int newVal) {
+        topicInfosSizeInSp = newVal;
     }
 
     public void removeAllItems() {
@@ -79,8 +97,13 @@ public class JVCForumAdapter extends BaseAdapter {
         String textForAuthor;
         ContentHolder thisHolder = new ContentHolder();
 
-        thisHolder.firstLineContent = Undeprecator.htmlFromHtml("<b><font color=\"" + Utils.colorToString(ThemeManager.getColorInt(R.attr.themedTopicNameColor, parentActivity)) +
-                "\">" + item.htmlName + "</font> (" + item.nbOfMessages + ")</b>");
+        if (item.type.equals("message")) {
+            thisHolder.titleLineContent = Utils.applyEmojiCompatIfPossible(Undeprecator.htmlFromHtml("<b>" + item.htmlName + "</b>"));
+        } else {
+            thisHolder.titleLineContent = Utils.applyEmojiCompatIfPossible(Undeprecator.htmlFromHtml("<b><font color=\"" +
+                                                                            Utils.colorToString(ThemeManager.getColorInt(R.attr.themedTopicNameColor, parentActivity)) +
+                                                                            "\">" + item.htmlName + "</font> (" + item.nbOfMessages + ")</b>"));
+        }
 
         switch (item.authorType) {
             case "modo":
@@ -95,8 +118,8 @@ public class JVCForumAdapter extends BaseAdapter {
                 break;
         }
 
-        thisHolder.secondLineContent = Undeprecator.htmlFromHtml(textForAuthor);
-        thisHolder.thirdLineContent = Undeprecator.htmlFromHtml("<small>" + item.wholeDate + "</small>");
+        thisHolder.authorLineContent = Undeprecator.htmlFromHtml(textForAuthor);
+        thisHolder.dateLineContent = Undeprecator.htmlFromHtml("<small>" + item.wholeDate + "</small>");
 
         return thisHolder;
     }
@@ -119,26 +142,31 @@ public class JVCForumAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-        ContentHolder currentTopicContent = listOfContentForTopics.get(position);
         JVCParser.TopicInfos currentTopicInfos = listOfTopics.get(position);
+        ContentHolder currentTopicContent = listOfContentForTopics.get(position);
 
         if (convertView == null) {
             holder = new ViewHolder();
 
             convertView = serviceInflater.inflate(R.layout.jvctopics_row, parent, false);
-            holder.firstLine = convertView.findViewById(R.id.item_one_jvctopics_text_row);
-            holder.secondLine = convertView.findViewById(R.id.item_two_jvctopics_text_row);
-            holder.thirdLine = convertView.findViewById(R.id.item_three_jvctopics_text_row);
-            holder.topicIcon = convertView.findViewById(R.id.item_topic_icon_jvctopics_image_row);
+            holder.titleLine = convertView.findViewById(R.id.title_text_jvctopics_row);
+            holder.authorLine = convertView.findViewById(R.id.author_text_jvctopics_row);
+            holder.dateLine = convertView.findViewById(R.id.date_text_jvctopics_row);
+            holder.topicIcon = convertView.findViewById(R.id.topic_icon_jvctopics_row);
 
+            holder.titleLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, topicTitleSizeInSp);
+            holder.authorLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, topicInfosSizeInSp);
+            holder.dateLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, topicInfosSizeInSp);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.firstLine.setText(currentTopicContent.firstLineContent);
-        holder.secondLine.setText(currentTopicContent.secondLineContent);
-        holder.thirdLine.setText(currentTopicContent.thirdLineContent);
 
+        holder.titleLine.setText(currentTopicContent.titleLineContent);
+        holder.authorLine.setText(currentTopicContent.authorLineContent);
+        holder.dateLine.setText(currentTopicContent.dateLineContent);
+
+        holder.topicIcon.setVisibility(View.VISIBLE);
         switch (currentTopicInfos.type) {
             case "marque-on":
                 holder.topicIcon.setImageDrawable(iconMarqueOn);
@@ -158,6 +186,9 @@ public class JVCForumAdapter extends BaseAdapter {
             case "ghost":
                 holder.topicIcon.setImageDrawable(iconGhost);
                 break;
+            case "message":
+                holder.topicIcon.setVisibility(View.INVISIBLE);
+                break;
             case "dossier1":
             default:
                 holder.topicIcon.setImageDrawable(iconDossier1);
@@ -170,19 +201,23 @@ public class JVCForumAdapter extends BaseAdapter {
             convertView.setBackgroundColor(ThemeManager.getColorInt(R.attr.themedDefaultBackgroundColor, parentActivity));
         }
 
+        holder.titleLine.invalidate();
+        holder.titleLine.requestLayout();
+        convertView.invalidate();
+        convertView.requestLayout();
         return convertView;
     }
 
     private class ViewHolder {
-        public TextView firstLine;
-        public TextView secondLine;
-        public TextView thirdLine;
+        public TextView titleLine;
+        public TextView authorLine;
+        public TextView dateLine;
         public ImageView topicIcon;
     }
 
     private class ContentHolder {
-        public Spanned firstLineContent;
-        public Spanned secondLineContent;
-        public Spanned thirdLineContent;
+        public CharSequence titleLineContent;
+        public CharSequence authorLineContent;
+        public CharSequence dateLineContent;
     }
 }

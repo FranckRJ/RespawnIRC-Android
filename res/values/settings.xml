@@ -53,7 +53,13 @@
     <string name="settingsAltColorOfLightTheme" translatable="false">settings.customColor.altColorOfLightTheme</string>
     <string name="settingsSurveyColorOfLightTheme" translatable="false">settings.customColor.surveyColorOfLightTheme</string>
     <string name="settingsDeletedColorOfLightTheme" translatable="false">settings.customColor.deletedColorOfLightTheme</string>
-    <string name="settingsTopicNameAndLinkColorOfLightTheme" translatable="false">settings.customColor.topicNameAndLinkColorOfLightTheme</string>
+    <string name="settingsTopicNameAndAccentColorOfLightTheme" translatable="false">settings.customColor.topicNameAndAccentColorOfLightTheme</string>
     <string name="settingsSaveMessagesAndTopicsAsDraftType" translatable="false">settings.saveMessagesAndTopicsAsDraftType</string>
     <string name="settingsInvertToolbarTextColor" translatable="false">settings.invertToolbarTextColor</string>
+    <string name="settingsTopicTitleFontSize" translatable="false">settings.topicTitleFontSizeV2</string>
+    <string name="settingsTopicInfosFontSize" translatable="false">settings.topicInfosFontSizeV2</string>
+    <string name="settingsMessageFontSize" translatable="false">settings.messageFontSizeV2</string>
+    <string name="settingsMessageInfosFontSize" translatable="false">settings.messageInfosFontSizeV2</string>
+    <string name="settingsMessageSignatureFontSize" translatable="false">settings.messageSignatureFontSizeV2</string>
+    <string name="settingsRefreshForumOnResume" translatable="false">settings.refreshForumOnResume</string>
 </resources>

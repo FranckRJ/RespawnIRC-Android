@@ -54,7 +54,7 @@ public class LockTopicActivity extends AbsHomeIsBackActivity {
 
                 if (potentialError != null) {
                     Toast.makeText(LockTopicActivity.this, potentialError, Toast.LENGTH_SHORT).show();
-                } else if (!reqResult.startsWith("{") && !reqResult.isEmpty()) {
+                } else if (!reqResult.startsWith("{")) {
                     Toast.makeText(LockTopicActivity.this, R.string.unknownErrorPleaseRetry, Toast.LENGTH_SHORT).show();
                 } else {
                     setResult(Activity.RESULT_OK);
@@ -127,7 +127,7 @@ public class LockTopicActivity extends AbsHomeIsBackActivity {
         protected String doInBackground(LockInfos... infoOfLock) {
             if (infoOfLock.length == 1) {
                 WebManager.WebInfos currentWebInfos = initWebInfos(infoOfLock[0].cookies, false);
-                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/modal_moderation_topic.php", "GET", "id_forum=" + infoOfLock[0].idForum + "&tab_topic[]=" +  infoOfLock[0].idTopic +
+                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/modal_moderation_topic.php", "POST", "id_forum=" + infoOfLock[0].idForum + "&tab_topic[]=" +  infoOfLock[0].idTopic +
                         "&type=lock&raison_moderation=" + Utils.encodeStringToUrlString(infoOfLock[0].reason) + "&action=post&" + infoOfLock[0].ajaxInfos, currentWebInfos);
             }
             return "erreurlol";

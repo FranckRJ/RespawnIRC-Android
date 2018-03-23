@@ -25,9 +25,22 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="com.franckrj.respawnirc.ACTION_OPEN_LINK"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="com.franckrj.respawnirc.ACTION_OPEN_SHORTCUT"/>
                 <data android:scheme="http"/>
+                <data android:scheme="https"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="http"/>
+                <data android:scheme="https"/>
+                <data android:host="www.jeuxvideo.com"/>
+                <data android:host="m.jeuxvideo.com"/>
+                <data android:host="jeuxvideo.com"/>
+                <data android:pathPrefix="/forums/0-"/>
+                <data android:pathPrefix="/forums/1-"/>
+                <data android:pathPrefix="/forums/42-"/>
             </intent-filter>
         </activity>
 
@@ -38,7 +51,6 @@
 
         <activity
             android:name=".jvcforum.ShowForumActivity"
-            android:launchMode="singleTop"
             android:windowSoftInputMode="stateAlwaysHidden"/>
 
         <activity

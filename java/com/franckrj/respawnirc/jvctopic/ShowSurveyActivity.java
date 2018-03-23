@@ -209,7 +209,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
         voteButton.setVisibility(View.GONE);
         voteButton.setOnClickListener(voteButtonClickedListener);
         swipeRefresh.setEnabled(false);
-        swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
+        swipeRefresh.setColorSchemeResources(R.color.colorControlHighlightThemeLight);
 
         if (savedInstanceState != null) {
             mainCardView.setVisibility(savedInstanceState.getBoolean(SAVE_MAIN_CARD_IS_VISIBLE, false) ? View.VISIBLE : View.GONE);
@@ -226,7 +226,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
         }
         if (getIntent() != null) {
             if (getIntent().getStringExtra(EXTRA_SURVEY_TITLE) != null && myActionBar != null) {
-                myActionBar.setSubtitle(getIntent().getStringExtra(EXTRA_SURVEY_TITLE));
+                myActionBar.setSubtitle(Utils.applyEmojiCompatIfPossible(getIntent().getStringExtra(EXTRA_SURVEY_TITLE)));
             }
             if (getIntent().getParcelableArrayListExtra(EXTRA_SURVEY_REPLYS_WITH_INFOS) != null) {
                 listOfReplysWithInfos = getIntent().getParcelableArrayListExtra(EXTRA_SURVEY_REPLYS_WITH_INFOS);

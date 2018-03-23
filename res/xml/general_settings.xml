@@ -40,6 +40,10 @@
             android:key="@string/settingsHideUglyImages"
             android:title="@string/hideUglyImagesTitle"
             android:summary="@string/hideUglyImagesSummary"/>
+
+        <CheckBoxPreference
+            android:key="@string/settingsRefreshForumOnResume"
+            android:title="@string/refreshForumOnResumeTitle"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

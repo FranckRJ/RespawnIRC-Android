@@ -23,7 +23,8 @@
             android:divider="?attr/themedDividerColor"
             android:dividerHeight="1dp"
             android:scrollbarStyle="outsideOverlay"
-            android:scrollbars="vertical"/>
+            android:scrollbars="vertical"
+            android:transcriptMode="normal"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

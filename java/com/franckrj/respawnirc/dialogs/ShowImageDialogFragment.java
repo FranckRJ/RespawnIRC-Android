@@ -86,7 +86,7 @@ public class ShowImageDialogFragment extends DialogFragment {
             Drawable deletedDrawable;
             DisplayMetrics metrics = new DisplayMetrics();
 
-            getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            requireActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
             deletedDrawable = ThemeManager.getDrawable(R.attr.themedDeletedImage, getActivity());
             deletedDrawable.setBounds(0, 0, deletedDrawable.getIntrinsicWidth(), deletedDrawable.getIntrinsicHeight());
@@ -94,7 +94,7 @@ public class ShowImageDialogFragment extends DialogFragment {
             downloaderForImage.setParentActivity(getActivity());
             downloaderForImage.setListenerForDownloadFinished(listenerForDownloadFinished);
             downloaderForImage.setListenerForCurrentProgress(listenerForCurrentProgress);
-            downloaderForImage.setImagesCacheDir(getActivity().getCacheDir());
+            downloaderForImage.setImagesCacheDir(requireActivity().getCacheDir());
             downloaderForImage.setScaleLargeImages(true);
             downloaderForImage.setDefaultDrawable(deletedDrawable);
             downloaderForImage.setDeletedDrawable(deletedDrawable);

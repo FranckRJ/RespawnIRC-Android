@@ -48,7 +48,11 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
             if (listenerForNewTopicWantRead != null) {
                 JVCParser.TopicInfos currentItem = adapterForForum.getItem(position);
-                listenerForNewTopicWantRead.setReadNewTopic(currentItem.link, JVCParser.specialCharToNormalChar(currentItem.htmlName), currentItem.author, false);
+                if (currentItem.type.equals("message")) {
+                    listenerForNewTopicWantRead.setReadNewTopic(currentItem.link, "", "", false);
+                } else {
+                    listenerForNewTopicWantRead.setReadNewTopic(currentItem.link, JVCParser.specialCharToNormalChar(currentItem.htmlName), currentItem.author, false);
+                }
             }
         }
     };
@@ -58,8 +62,12 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
             if (listenerForNewTopicWantRead != null) {
                 JVCParser.TopicInfos currentItem = adapterForForum.getItem(position);
-                String realPageToGo = JVCParser.setPageNumberForThisTopicLink(currentItem.link, (Integer.parseInt(currentItem.nbOfMessages) / 20) + 1);
-                listenerForNewTopicWantRead.setReadNewTopic(realPageToGo, JVCParser.specialCharToNormalChar(currentItem.htmlName), currentItem.author, true);
+                if (currentItem.type.equals("message")) {
+                    listenerForNewTopicWantRead.setReadNewTopic(currentItem.link, "", "", false);
+                } else {
+                    String realPageToGo = JVCParser.setPageNumberForThisTopicLink(currentItem.link, (Integer.parseInt(currentItem.nbOfMessages) / 20) + 1);
+                    listenerForNewTopicWantRead.setReadNewTopic(realPageToGo, JVCParser.specialCharToNormalChar(currentItem.htmlName), currentItem.author, true);
+                }
                 return true;
             }
             return false;
@@ -148,8 +156,14 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         }
     };
 
-    private void reloadSettings() {
+    private void reloadAdapterSettings() {
         adapterForForum.setAlternateBackgroundColor(PrefsManager.getBool(PrefsManager.BoolPref.Names.FORUM_ALTERNATE_BACKGROUND));
+        adapterForForum.setTopicTitleSizeInSp(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_TITLE_FONT_SIZE)));
+        adapterForForum.setTopicInfosSizeInSp(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_INFOS_FONT_SIZE)));
+    }
+
+    private void reloadSettings() {
+        reloadAdapterSettings();
         getterForForum.setCookieListInAString(PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
         pseudoOfUserInLC = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER).toLowerCase();
         ignoreTopicToo = PrefsManager.getBool(PrefsManager.BoolPref.Names.IGNORE_TOPIC_TOO);
@@ -167,8 +181,25 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         return getterForForum.reloadForum();
     }
 
+    private void recreateAdapterForForum() {
+        ArrayList<JVCParser.TopicInfos> allCurrentTopicsShowed = adapterForForum.getAllItems();
+
+        adapterForForum = new JVCForumAdapter(getActivity());
+        reloadAdapterSettings();
+        jvcTopicList.setAdapter(adapterForForum);
+
+        for (JVCParser.TopicInfos thisTopicInfo : allCurrentTopicsShowed) {
+            adapterForForum.addItem(thisTopicInfo);
+        }
+        adapterForForum.notifyDataSetChanged();
+    }
+
     public void refreshForum() {
         reloadAllForum(true);
+    }
+
+    public void updateForumStatusInfos(JVCForumGetter.ForumStatusInfos newForumStatusInfos) {
+        getterForForum.updateForumStatusInfos(newForumStatusInfos);
     }
 
     @Override
@@ -180,7 +211,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         isInErrorMode = false;
 
         if (!newForumPageLink.isEmpty()) {
-            newForumPageLink = JVCParser.formatThisUrl(newForumPageLink);
+            newForumPageLink = JVCParser.formatThisUrlToClassicJvcUrl(newForumPageLink);
         }
 
         getterForForum.stopAllCurrentTask();
@@ -200,26 +231,6 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         adapterForForum.removeAllItems();
         adapterForForum.notifyDataSetChanged();
         getterForForum.startGetMessagesOfThisPage("");
-    }
-
-    public JVCParser.AjaxInfos getLatestAjaxInfos() {
-        return getterForForum.getLatestAjaxInfos();
-    }
-
-    public Boolean getIsInFavs() {
-        return getterForForum.getIsInFavs();
-    }
-
-    public String getLatestListOfInputInAString() {
-        return getterForForum.getLatestListOfInputInAString();
-    }
-
-    public boolean getUserCanPostAsModo() {
-        return getterForForum.getUserCanPostAsModo();
-    }
-
-    public void setIsInFavs(Boolean newVal) {
-        getterForForum.setIsInFavs(newVal);
     }
 
     @Override
@@ -251,18 +262,15 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         if (getActivity() instanceof NewTopicWantRead) {
             listenerForNewTopicWantRead = (NewTopicWantRead) getActivity();
         }
-        if (getActivity() instanceof JVCForumGetter.NewForumNameAvailable) {
-            getterForForum.setListenerForNewForumName((JVCForumGetter.NewForumNameAvailable) getActivity());
-        }
         if (getActivity() instanceof JVCForumGetter.ForumLinkChanged) {
             getterForForum.setListenerForForumLinkChanged((JVCForumGetter.ForumLinkChanged) getActivity());
         }
-        if (getActivity() instanceof JVCForumGetter.NewNumberOfMpAndNotifSetted) {
-            getterForForum.setListenerForNewNumberOfMpAndNotif((JVCForumGetter.NewNumberOfMpAndNotifSetted) getActivity());
+        if (getActivity() instanceof JVCForumGetter.NewForumStatusListener) {
+            getterForForum.setListenerForNewForumStatus((JVCForumGetter.NewForumStatusListener) getActivity());
         }
 
         errorBackgroundMessage.setVisibility(View.GONE);
-        swipeRefresh.setColorSchemeResources(R.color.colorAccentThemeLight);
+        swipeRefresh.setColorSchemeResources(R.color.colorControlHighlightThemeLight);
         jvcTopicList.setAdapter(adapterForForum);
 
         if (savedInstanceState != null) {
@@ -276,7 +284,6 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
                     adapterForForum.addItem(thisTopicInfo);
                 }
             }
-
             adapterForForum.notifyDataSetChanged();
 
             if (adapterForForum.getAllItems().isEmpty()) {
@@ -306,18 +313,27 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     public void onResume() {
         super.onResume();
         boolean oldAlternateBackgroundColor = adapterForForum.getAlternateBackgroundColor();
+        int oldTopicTitleSizeInSp = adapterForForum.getTopicTitleSizeInSp();
+        int oldTopicInfosSizeInSp = adapterForForum.getTopicInfosSizeInSp();
         @ColorInt int oldTopicNameColor = currentTopicNameColor;
         @ColorInt int oldAltColor = currentAltColor;
         reloadSettings();
         isInErrorMode = false;
 
-        if (oldTopicNameColor != currentTopicNameColor) {
-            adapterForForum.recreateAllItems();
-        }
+        /* Lors d'un changement de taille de police les vues ne sont pas bien resize. La seule solution qui semble fonctionner
+         * c'est de tout recréer, invalider les vues ou faire un requestLayout ne marche pas (au moins sous 4.0.4). */
+        if (oldTopicTitleSizeInSp != adapterForForum.getTopicTitleSizeInSp() ||
+                oldTopicInfosSizeInSp != adapterForForum.getTopicInfosSizeInSp()) {
+            recreateAdapterForForum();
+        } else {
+            if (oldTopicNameColor != currentTopicNameColor) {
+                adapterForForum.recreateAllItems();
+            }
 
-        if (oldAlternateBackgroundColor != adapterForForum.getAlternateBackgroundColor() ||
-                oldTopicNameColor != currentTopicNameColor || oldAltColor != currentAltColor) {
-            adapterForForum.notifyDataSetChanged();
+            if (oldAlternateBackgroundColor != adapterForForum.getAlternateBackgroundColor() ||
+                    oldTopicNameColor != currentTopicNameColor || oldAltColor != currentAltColor) {
+                adapterForForum.notifyDataSetChanged();
+            }
         }
 
         if (adapterForForum.getAllItems().isEmpty() && !allTopicsShowedAreFromIgnoredPseudos &&

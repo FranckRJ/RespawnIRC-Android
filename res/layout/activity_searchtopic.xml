@@ -79,8 +79,6 @@
                 android:id="@+id/topicmode_radio_searchtopic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:paddingEnd="8dp"
@@ -93,8 +91,8 @@
                 android:id="@+id/authormode_radio_searchtopic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginStart="2dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:paddingEnd="8dp"
@@ -102,6 +100,19 @@
                 android:paddingStart="4dp"
                 android:paddingLeft="4dp"
                 android:text="@string/author"/>
+            <RadioButton
+                android:id="@+id/messagemode_radio_searchtopic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginStart="2dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingEnd="8dp"
+                android:paddingRight="8dp"
+                android:paddingStart="4dp"
+                android:paddingLeft="4dp"
+                android:text="@string/message"/>
         </RadioGroup>
 
         <View

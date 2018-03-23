@@ -15,9 +15,9 @@ public class LongClickLinkMovementMethod extends LinkMovementMethod {
     private static final int LONG_CLICK_TIME = 600;
     private static final long[] LONG_PRESS_VIBRATE_PATTERN = {0, 1, 20, 21};
 
-    private static LongClickLinkMovementMethod instance;
+    private static LongClickLinkMovementMethod instance = null;
 
-    private Handler longClickHandler;
+    private Handler longClickHandler = new Handler();
     private boolean itsLongPress = false;
 
     @Override
@@ -25,9 +25,7 @@ public class LongClickLinkMovementMethod extends LinkMovementMethod {
         int action = event.getAction();
 
         if (action == MotionEvent.ACTION_CANCEL) {
-            if (longClickHandler != null) {
-                longClickHandler.removeCallbacksAndMessages(null);
-            }
+            longClickHandler.removeCallbacksAndMessages(null);
         }
 
         if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_DOWN) {
@@ -48,9 +46,7 @@ public class LongClickLinkMovementMethod extends LinkMovementMethod {
 
             if (link.length > 0) {
                 if (action == MotionEvent.ACTION_UP) {
-                    if (longClickHandler != null) {
-                        longClickHandler.removeCallbacksAndMessages(null);
-                    }
+                    longClickHandler.removeCallbacksAndMessages(null);
                     if (!itsLongPress) {
                         link[0].onClick(widget);
                     }
@@ -76,7 +72,6 @@ public class LongClickLinkMovementMethod extends LinkMovementMethod {
     public static MovementMethod getInstance() {
         if (instance == null) {
             instance = new LongClickLinkMovementMethod();
-            instance.longClickHandler = new Handler();
         }
 
         return instance;

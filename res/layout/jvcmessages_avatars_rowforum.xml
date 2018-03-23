@@ -13,7 +13,7 @@
         android:layout_alignParentLeft="true"
         android:orientation="horizontal">
         <ImageView
-            android:id="@+id/image_one_jvcmessages_text_row"
+            android:id="@+id/avatar_image_jvcmessages_row"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_marginLeft="4dp"
@@ -24,7 +24,7 @@
             android:background="?attr/themedBackgroundAvatar"
             android:contentDescription="@string/avatar"/>
         <TextView
-            android:id="@+id/item_one_jvcmessages_text_row"
+            android:id="@+id/infos_text_jvcmessages_row"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="6dp"
@@ -35,7 +35,7 @@
             android:layout_weight="1"/>
         <ImageButton
             style="@style/SelectableItemBackground"
-            android:id="@+id/menu_overflow_row"
+            android:id="@+id/menuoverflow_image_jvcmessages_row"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="4dp"
@@ -44,32 +44,30 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/item_two_jvcmessages_text_row"
+        android:id="@+id/message_text_jvcmessages_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingRight="6dp"
         android:paddingLeft="6dp"
-        android:layout_below="@+id/layout_one_jvcmessages_text_row"
-        android:textColorLink="?attr/themedLinkColor"/>
+        android:layout_below="@+id/layout_one_jvcmessages_text_row"/>
 
     <View
-        android:id="@+id/item_separator_jvcmessages_text_row"
+        android:id="@+id/separator_view_jvcmessages_row"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="2dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
         android:layout_marginRight="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_below="@+id/item_two_jvcmessages_text_row"
+        android:layout_below="@+id/message_text_jvcmessages_row"
         android:background="?attr/themedDarkerBackgroundColor"/>
 
     <TextView
-        android:id="@+id/item_three_jvcmessages_text_row"
+        android:id="@+id/signature_text_jvcmessages_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingRight="6dp"
         android:paddingLeft="6dp"
-        android:layout_below="@+id/item_separator_jvcmessages_text_row"
-        android:textColorLink="?attr/themedLinkColor"/>
+        android:layout_below="@+id/separator_view_jvcmessages_row"/>
 
 </RelativeLayout>

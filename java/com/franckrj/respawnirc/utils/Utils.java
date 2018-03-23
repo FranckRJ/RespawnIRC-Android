@@ -11,6 +11,7 @@ import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.support.annotation.ColorInt;
+import android.support.text.emoji.EmojiCompat;
 import android.text.Spannable;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -135,8 +136,8 @@ public class Utils {
 
     public static void openLinkInExternalBrowser(String link, Activity parentActivity) {
         try {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
-            parentActivity.startActivity(browserIntent);
+            Intent chooseBrowserIntent = Intent.createChooser(new Intent(Intent.ACTION_VIEW, Uri.parse(link)), parentActivity.getString(R.string.chooseBrowser));
+            parentActivity.startActivity(chooseBrowserIntent);
         } catch (Exception e) {
             //rien
         }
@@ -175,6 +176,14 @@ public class Utils {
         }
     }
 
+    public static CharSequence applyEmojiCompatIfPossible(CharSequence baseMessage) {
+        if (EmojiCompat.get().getLoadState() == EmojiCompat.LOAD_STATE_SUCCEEDED) {
+            return EmojiCompat.get().process(baseMessage);
+        } else {
+            return baseMessage;
+        }
+    }
+
     @TargetApi(25)
     public static void updateShortcuts(Activity parentActivity, ShortcutManager shortcutManager, int sizeOfForumFavArray) {
         ArrayList<ShortcutInfo> listOfShortcuts = new ArrayList<>();
@@ -187,7 +196,7 @@ public class Utils {
                     .setShortLabel(currentShortcutName)
                     .setLongLabel(currentShortcutName)
                     .setIcon(Icon.createWithResource(parentActivity, R.mipmap.ic_shortcut_forum))
-                    .setIntent(new Intent(MainActivity.ACTION_OPEN_LINK, Uri.parse(currentShortcutLink))).build();
+                    .setIntent(new Intent(MainActivity.ACTION_OPEN_SHORTCUT, Uri.parse(currentShortcutLink), parentActivity, MainActivity.class)).build();
 
             listOfShortcuts.add(newShortcut);
         }

@@ -10,7 +10,7 @@ import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.jvctopic.jvctopicviewers.AbsShowTopicFragment;
 
 public class PrefsManager {
-    public static final int CURRENT_SHORTCUT_VERSION_NUMBER = 1;
+    public static final int CURRENT_SHORTCUT_VERSION_NUMBER = 2;
 
     private static SharedPreferences currentPrefs = null;
     private static SharedPreferences.Editor currentPrefsEdit = null;
@@ -110,9 +110,10 @@ public class PrefsManager {
         addBoolPref(BoolPref.Names.BACK_IS_OPEN_DRAWER, currentContext.getString(R.string.settingsBackIsOpenDrawer), false);
         addBoolPref(BoolPref.Names.SAVE_LAST_ROW_USED_INSERTSTUFF, currentContext.getString(R.string.settingsSaveLastRowUsedInsertstuff), true);
         addBoolPref(BoolPref.Names.INVERT_TOOLBAR_TEXT_COLOR, currentContext.getString(R.string.settingsInvertToolbarTextColor), false);
+        addBoolPref(BoolPref.Names.REFRESH_FORUM_ON_RESUME, currentContext.getString(R.string.settingsRefreshForumOnResume), false);
 
         addIntPref(IntPref.Names.PRIMARY_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsPrimaryColorOfLightTheme), 0);
-        addIntPref(IntPref.Names.TOPIC_NAME_AND_LINK_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsTopicNameAndLinkColorOfLightTheme), 0);
+        addIntPref(IntPref.Names.TOPIC_NAME_AND_ACCENT_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsTopicNameAndAccentColorOfLightTheme), 0);
         addIntPref(IntPref.Names.ALT_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsAltColorOfLightTheme), 0);
         addIntPref(IntPref.Names.SURVEY_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsSurveyColorOfLightTheme), 0);
         addIntPref(IntPref.Names.DELETED_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsDeletedColorOfLightTheme), 0);
@@ -129,6 +130,11 @@ public class PrefsManager {
         addStringPref(StringPref.Names.MINI_NOELSHACK_WIDTH, currentContext.getString(R.string.settingsMiniNoelshackWidth), "68", 68, 136);
         addStringPref(StringPref.Names.LINK_TYPE_FOR_INTERNAL_BROWSER, currentContext.getString(R.string.settingsLinkTypeForInternalBrowser), String.valueOf(LinkType.NO_LINKS));
         addStringPref(StringPref.Names.SAVE_MESSAGES_AND_TOPICS_AS_DRAFT_TYPE, currentContext.getString(R.string.settingsSaveMessagesAndTopicsAsDraftType), String.valueOf(SaveDraftType.ALWAYS));
+        addStringPref(StringPref.Names.TOPIC_TITLE_FONT_SIZE, currentContext.getString(R.string.settingsTopicTitleFontSize), "14");
+        addStringPref(StringPref.Names.TOPIC_INFOS_FONT_SIZE, currentContext.getString(R.string.settingsTopicInfosFontSize), "14");
+        addStringPref(StringPref.Names.MESSAGE_FONT_SIZE, currentContext.getString(R.string.settingsMessageFontSize), "14");
+        addStringPref(StringPref.Names.MESSAGE_INFOS_FONT_SIZE, currentContext.getString(R.string.settingsMessageInfosFontSize), "14");
+        addStringPref(StringPref.Names.MESSAGE_SIGNATURE_FONT_SIZE, currentContext.getString(R.string.settingsMessageSignatureFontSize), "14");
     }
 
     public static boolean getBool(BoolPref.Names prefName) {
@@ -299,7 +305,8 @@ public class PrefsManager {
             BACK_IS_OPEN_DRAWER,
             SAVE_LAST_ROW_USED_INSERTSTUFF,
             INVERT_TOOLBAR_TEXT_COLOR,
-            USE_LAST_MESSAGE_DRAFT_SAVED, USE_LAST_TOPIC_DRAFT_SAVED
+            USE_LAST_MESSAGE_DRAFT_SAVED, USE_LAST_TOPIC_DRAFT_SAVED,
+            REFRESH_FORUM_ON_RESUME
         }
     }
 
@@ -317,7 +324,7 @@ public class PrefsManager {
             CURRENT_TOPIC_MODE,
             FORUM_FAV_ARRAY_SIZE, TOPIC_FAV_ARRAY_SIZE,
             LAST_ROW_SELECTED_INSERTSTUFF,
-            PRIMARY_COLOR_OF_LIGHT_THEME, TOPIC_NAME_AND_LINK_COLOR_OF_LIGHT_THEME,
+            PRIMARY_COLOR_OF_LIGHT_THEME, TOPIC_NAME_AND_ACCENT_COLOR_OF_LIGHT_THEME,
             ALT_COLOR_OF_LIGHT_THEME, SURVEY_COLOR_OF_LIGHT_THEME, DELETED_COLOR_OF_LIGHT_THEME,
             NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED,
             SHORTCUT_VERSION_NUMBER
@@ -364,7 +371,8 @@ public class PrefsManager {
             AVATAR_SIZE, STICKER_SIZE, MINI_NOELSHACK_WIDTH,
             LINK_TYPE_FOR_INTERNAL_BROWSER,
             SAVE_MESSAGES_AND_TOPICS_AS_DRAFT_TYPE,
-            MESSAGE_DRAFT, TOPIC_TITLE_DRAFT, TOPIC_CONTENT_DRAFT, SURVEY_TITLE_DRAFT, SURVEY_REPLY_IN_A_STRING_DRAFT
+            MESSAGE_DRAFT, TOPIC_TITLE_DRAFT, TOPIC_CONTENT_DRAFT, SURVEY_TITLE_DRAFT, SURVEY_REPLY_IN_A_STRING_DRAFT,
+            TOPIC_TITLE_FONT_SIZE, TOPIC_INFOS_FONT_SIZE, MESSAGE_FONT_SIZE, MESSAGE_INFOS_FONT_SIZE, MESSAGE_SIGNATURE_FONT_SIZE
         }
     }
 
@@ -395,7 +403,7 @@ public class PrefsManager {
     public static class ShowImageType extends IntValueType {
         public static final int ALWAYS = 0;
         public static final int WIFI_ONLY = 1;
-        public static final int NEVER = 2;
+        //public static final int NEVER = 2;
 
         public ShowImageType(int newDefaultType) {
             super(newDefaultType);

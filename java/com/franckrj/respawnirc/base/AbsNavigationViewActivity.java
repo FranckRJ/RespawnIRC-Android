@@ -74,6 +74,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected String showNotifStringContent = "";
     protected boolean backIsOpenDrawer = false;
     protected boolean userIsModo = false;
+    protected boolean drawerIsDisabled = false;
 
     protected final AdapterView.OnItemClickListener itemInNavigationClickedListener = new AdapterView.OnItemClickListener() {
         @Override
@@ -155,6 +156,10 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             }
         }
     };
+
+    public AbsNavigationViewActivity() {
+        windowDrawStatusBar = false;
+    }
 
     private void initializeListsOfMenuItem() {
         if (listOfMenuItemInfoForHome == null || listOfMenuItemInfoForForum == null || listOfMenuItemInfoForConnect == null) {
@@ -440,6 +445,12 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         }
     }
 
+    protected void disableDrawerLayout() {
+        layoutForDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        toggleForDrawer.setDrawerIndicatorEnabled(false);
+        drawerIsDisabled = true;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -513,7 +524,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         contextConnectImageNavigation = navigationHeader.findViewById(R.id.context_connect_image_navigation_header);
         adapterForNavigationMenu = new NavigationMenuAdapter(this);
         adapterForNavigationMenu.setBackgroundColors((ThemeManager.currentThemeUseDarkColors() ? Color.WHITE : Color.BLACK), ThemeManager.getColorInt(R.attr.themedNavigationIconColor, this),
-                ThemeManager.getColorInt(R.attr.colorAccent, this) & 0x40FFFFFF, Color.TRANSPARENT);
+                ThemeManager.getColorInt(R.attr.themedControlHighlightColor, this) & 0x40FFFFFF, Color.TRANSPARENT);
         adapterForNavigationMenu.setFontColors((ThemeManager.currentThemeUseDarkColors() ? Color.WHITE : Color.BLACK), ThemeManager.getColorInt(R.attr.themedHeaderTextColor, this));
         navigationMenuList.setHeaderView(navigationHeader);
         navigationMenuList.setAdapter(adapterForNavigationMenu);
@@ -547,9 +558,9 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
 
     @Override
     public void onBackPressed() {
-        if (layoutForDrawer.isDrawerOpen(GravityCompat.START)) {
+        if (layoutForDrawer.isDrawerOpen(GravityCompat.START) && !drawerIsDisabled) {
             layoutForDrawer.closeDrawer(GravityCompat.START);
-        } else if (backIsOpenDrawer) {
+        } else if (backIsOpenDrawer && !drawerIsDisabled) {
             layoutForDrawer.openDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
@@ -564,12 +575,18 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //noinspection SimplifiableIfStatement
-        if (toggleForDrawer.onOptionsItemSelected(item)) {
-            return true;
+        if (drawerIsDisabled) {
+            if (item.getItemId() == android.R.id.home) {
+                super.onBackPressed();
+                return true;
+            }
         } else {
-            return super.onOptionsItemSelected(item);
+            if (toggleForDrawer.onOptionsItemSelected(item)) {
+                return true;
+            }
         }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

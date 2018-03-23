@@ -26,10 +26,11 @@
             android:title="@string/invertToolbarTextColorTitle"/>
 
         <ColorPickerPreference
-            android:key="@string/settingsTopicNameAndLinkColorOfLightTheme"
-            android:title="@string/topicNameAndLinkColor"
-            app:pref_currentColor="@color/defaultTopicNameAndLinkColorThemeLight"
-            app:pref_colors="@array/choicesForTopicNameAndLinkColor"/>
+            android:key="@string/settingsTopicNameAndAccentColorOfLightTheme"
+            android:title="@string/topicNameAndAccentColorTitle"
+            android:summary="@string/topicNameAndAccentColorSummary"
+            app:pref_currentColor="@color/defaultTopicNameAndAccentColorThemeLight"
+            app:pref_colors="@array/choicesForTopicNameAndAccentColor"/>
 
         <ColorPickerPreference
             android:key="@string/settingsAltColorOfLightTheme"
@@ -48,6 +49,44 @@
             android:title="@string/deletedMessageColor"
             app:pref_currentColor="@color/defaultDeletedMessageColorThemeLight"
             app:pref_colors="@array/choicesForDeleteColor"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/font">
+        <ListPreference
+            android:key="@string/settingsTopicTitleFontSize"
+            android:title="@string/topicTitleFontSizeTitle"
+            android:summary="%s"
+            android:entries="@array/choicesForFontSize"
+            android:entryValues="@array/fontSizeChoicesValue"/>
+
+        <ListPreference
+            android:key="@string/settingsTopicInfosFontSize"
+            android:title="@string/topicInfosFontSizeTitle"
+            android:summary="%s"
+            android:entries="@array/choicesForFontSize"
+            android:entryValues="@array/fontSizeChoicesValue"/>
+
+        <ListPreference
+            android:key="@string/settingsMessageFontSize"
+            android:title="@string/messageFontSizeTitle"
+            android:summary="%s"
+            android:entries="@array/choicesForFontSize"
+            android:entryValues="@array/fontSizeChoicesValue"/>
+
+        <ListPreference
+            android:key="@string/settingsMessageInfosFontSize"
+            android:title="@string/messageInfosFontSizeTitle"
+            android:summary="%s"
+            android:entries="@array/choicesForFontSize"
+            android:entryValues="@array/fontSizeChoicesValue"/>
+
+        <ListPreference
+            android:key="@string/settingsMessageSignatureFontSize"
+            android:title="@string/messageSignatureFontSizeTitle"
+            android:summary="%s"
+            android:entries="@array/choicesForFontSize"
+            android:entryValues="@array/fontSizeChoicesValue"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

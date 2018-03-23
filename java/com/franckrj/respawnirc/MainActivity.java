@@ -10,6 +10,8 @@ import android.webkit.WebView;
 
 import com.franckrj.respawnirc.jvcforumlist.SelectForumInListActivity;
 import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
+import com.franckrj.respawnirc.jvctopic.ShowTopicActivity;
+import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Utils;
 
@@ -22,13 +24,12 @@ public class MainActivity extends AppCompatActivity {
     public static final int ACTIVITY_SHOW_TOPIC = 1;
     public static final int ACTIVITY_SELECT_FORUM_IN_LIST = 2;
 
-    public static final String ACTION_OPEN_LINK = "com.franckrj.respawnirc.ACTION_OPEN_LINK";
+    public static final String ACTION_OPEN_SHORTCUT = "com.franckrj.respawnirc.ACTION_OPEN_SHORTCUT";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         int lastActivityViewed = PrefsManager.getInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED);
-        String linkToOpen = null;
 
         //vidage du cache des webviews
         if (PrefsManager.getInt(PrefsManager.IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED) > 10) {
@@ -88,25 +89,44 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (getIntent() != null) {
-            linkToOpen = getIntent().getDataString();
+            String actionForLinkToOpen = getIntent().getAction();
+            String linkToOpen = getIntent().getDataString();
+
+            if (!Utils.stringIsEmptyOrNull(linkToOpen) && !Utils.stringIsEmptyOrNull(actionForLinkToOpen)) {
+                linkToOpen = JVCParser.formatThisUrlToClassicJvcUrl(linkToOpen);
+                if (actionForLinkToOpen.equals(ACTION_OPEN_SHORTCUT)) {
+                    Intent newShowForumIntent = new Intent(this, ShowForumActivity.class);
+                    newShowForumIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    newShowForumIntent.putExtra(ShowForumActivity.EXTRA_NEW_LINK, linkToOpen);
+                    startActivity(newShowForumIntent);
+                    finish();
+                    return;
+                } else if (actionForLinkToOpen.equals(Intent.ACTION_VIEW)){
+                    if (JVCParser.checkIfItsTopicLink(linkToOpen)) {
+                        Intent newShowTopicIntent = new Intent(this, ShowTopicActivity.class);
+                        newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_LINK, linkToOpen);
+                        newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_OPENED_FROM_FORUM, false);
+                        startActivity(newShowTopicIntent);
+                    } else {
+                        Intent newShowForumIntent = new Intent(this, ShowForumActivity.class);
+                        newShowForumIntent.putExtra(ShowForumActivity.EXTRA_NEW_LINK, linkToOpen);
+                        newShowForumIntent.putExtra(ShowForumActivity.EXTRA_IS_FIRST_ACTIVITY, false);
+                        startActivity(newShowForumIntent);
+                    }
+                    finish();
+                    return;
+                }
+            }
         }
 
-        if (Utils.stringIsEmptyOrNull(linkToOpen)) {
-            Intent firstIntentToLaunch;
-            if (lastActivityViewed == ACTIVITY_SELECT_FORUM_IN_LIST) {
-                firstIntentToLaunch = new Intent(this, SelectForumInListActivity.class);
-                firstIntentToLaunch.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(firstIntentToLaunch);
-            } else {
-                firstIntentToLaunch = new Intent(this, ShowForumActivity.class);
-                firstIntentToLaunch.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                firstIntentToLaunch.putExtra(ShowForumActivity.EXTRA_ITS_FIRST_START, true);
-                startActivity(firstIntentToLaunch);
-            }
+        if (lastActivityViewed == ACTIVITY_SELECT_FORUM_IN_LIST) {
+            Intent newSelectForumInListIntent = new Intent(this, SelectForumInListActivity.class);
+            newSelectForumInListIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(newSelectForumInListIntent);
         } else {
             Intent newShowForumIntent = new Intent(this, ShowForumActivity.class);
             newShowForumIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            newShowForumIntent.putExtra(ShowForumActivity.EXTRA_NEW_LINK, linkToOpen);
+            newShowForumIntent.putExtra(ShowForumActivity.EXTRA_ITS_FIRST_START, true);
             startActivity(newShowForumIntent);
         }
 
