@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                     finish();
                     return;
                 } else if (actionForLinkToOpen.equals(Intent.ACTION_VIEW)){
-                    if (JVCParser.checkIfItsTopicLink(linkToOpen)) {
+                    if (JVCParser.checkIfItsTopicFormatedLink(linkToOpen)) {
                         Intent newShowTopicIntent = new Intent(this, ShowTopicActivity.class);
                         newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_LINK, linkToOpen);
                         newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_OPENED_FROM_FORUM, false);

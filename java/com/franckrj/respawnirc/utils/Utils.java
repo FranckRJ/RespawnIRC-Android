@@ -136,8 +136,15 @@ public class Utils {
 
     public static void openLinkInExternalBrowser(String link, Activity parentActivity) {
         try {
-            Intent chooseBrowserIntent = Intent.createChooser(new Intent(Intent.ACTION_VIEW, Uri.parse(link)), parentActivity.getString(R.string.chooseBrowser));
-            parentActivity.startActivity(chooseBrowserIntent);
+            Intent browserIntent;
+
+            if (JVCParser.checkIfItsOpennableFormatedLink(JVCParser.formatThisUrlToClassicJvcUrl(link))) {
+                browserIntent = Intent.createChooser(new Intent(Intent.ACTION_VIEW, Uri.parse(link)), parentActivity.getString(R.string.chooseBrowser));
+            } else {
+                browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+            }
+
+            parentActivity.startActivity(browserIntent);
         } catch (Exception e) {
             //rien
         }
