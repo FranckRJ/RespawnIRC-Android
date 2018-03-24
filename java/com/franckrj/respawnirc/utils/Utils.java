@@ -123,8 +123,8 @@ public class Utils {
     }
 
     public static void openCorrespondingBrowser(PrefsManager.LinkType linkTypeToOpenInternalBrowser, String link, Activity parentActivity) {
-        boolean itsAJVCLink = link.matches("(?i)^http(s)?://(www\\.)?jeuxvideo\\.com$") ||
-                              link.matches("(?i)^http(s)?://(www\\.)?jeuxvideo\\.com/.*");
+        boolean itsAJVCLink = link.matches("(?i)^http(s)?://((www|m)\\.)?jeuxvideo\\.com$") ||
+                              link.matches("(?i)^http(s)?://((www|m)\\.)?jeuxvideo\\.com/.*");
 
         if (linkTypeToOpenInternalBrowser.type == PrefsManager.LinkType.ALL_LINKS ||
                 (linkTypeToOpenInternalBrowser.type == PrefsManager.LinkType.JVC_LINKS_ONLY && itsAJVCLink)) {
