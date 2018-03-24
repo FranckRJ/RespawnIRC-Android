@@ -123,8 +123,8 @@ public class Utils {
     }
 
     public static void openCorrespondingBrowser(PrefsManager.LinkType linkTypeToOpenInternalBrowser, String link, Activity parentActivity) {
-        boolean itsAJVCLink = link.matches("(?i)^http(s)?://(www\\.)?jeuxvideo\\.com$") ||
-                              link.matches("(?i)^http(s)?://(www\\.)?jeuxvideo\\.com/.*");
+        boolean itsAJVCLink = link.matches("(?i)^http(s)?://((www|m)\\.)?jeuxvideo\\.com$") ||
+                              link.matches("(?i)^http(s)?://((www|m)\\.)?jeuxvideo\\.com/.*");
 
         if (linkTypeToOpenInternalBrowser.type == PrefsManager.LinkType.ALL_LINKS ||
                 (linkTypeToOpenInternalBrowser.type == PrefsManager.LinkType.JVC_LINKS_ONLY && itsAJVCLink)) {
@@ -136,8 +136,15 @@ public class Utils {
 
     public static void openLinkInExternalBrowser(String link, Activity parentActivity) {
         try {
-            Intent chooseBrowserIntent = Intent.createChooser(new Intent(Intent.ACTION_VIEW, Uri.parse(link)), parentActivity.getString(R.string.chooseBrowser));
-            parentActivity.startActivity(chooseBrowserIntent);
+            Intent browserIntent;
+
+            if (JVCParser.checkIfItsOpennableFormatedLink(JVCParser.formatThisUrlToClassicJvcUrl(link))) {
+                browserIntent = Intent.createChooser(new Intent(Intent.ACTION_VIEW, Uri.parse(link)), parentActivity.getString(R.string.chooseBrowser));
+            } else {
+                browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+            }
+
+            parentActivity.startActivity(browserIntent);
         } catch (Exception e) {
             //rien
         }

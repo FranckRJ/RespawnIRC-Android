@@ -120,7 +120,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
                 link = JVCParser.formatThisUrlToClassicJvcUrl(link);
             }
 
-            if (JVCParser.checkIfItsForumLink(link)) {
+            if (JVCParser.checkIfItsForumFormatedLink(link)) {
                 if (readThisForum(link)) {
                     return false;
                 }

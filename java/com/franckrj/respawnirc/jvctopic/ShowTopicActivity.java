@@ -876,12 +876,12 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         if (!itsLongClick) {
             String possibleNewLink = JVCParser.formatThisUrlToClassicJvcUrl(link);
 
-            if (JVCParser.checkIfItsTopicLink(possibleNewLink)) {
+            if (JVCParser.checkIfItsTopicFormatedLink(possibleNewLink)) {
                 Intent newShowTopicIntent = new Intent(this, ShowTopicActivity.class);
                 newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_LINK, possibleNewLink);
                 newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_OPENED_FROM_FORUM, false);
                 startActivity(newShowTopicIntent);
-            } else if (JVCParser.checkIfItsForumLink(possibleNewLink)) {
+            } else if (JVCParser.checkIfItsForumFormatedLink(possibleNewLink)) {
                 Intent newShowForumIntent = new Intent(this, ShowForumActivity.class);
                 newShowForumIntent.putExtra(ShowForumActivity.EXTRA_NEW_LINK, possibleNewLink);
                 newShowForumIntent.putExtra(ShowForumActivity.EXTRA_IS_FIRST_ACTIVITY, false);

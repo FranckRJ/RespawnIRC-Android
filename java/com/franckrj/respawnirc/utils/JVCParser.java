@@ -211,13 +211,18 @@ public final class JVCParser {
         }
     }
 
-    public static boolean checkIfItsForumLink(String linkToCheck) {
+    public static boolean checkIfItsForumFormatedLink(String linkToCheck) {
         return linkToCheck.startsWith("http://www.jeuxvideo.com/forums/0-");
     }
 
-    public static boolean checkIfItsTopicLink(String linkToCheck) {
+    public static boolean checkIfItsTopicFormatedLink(String linkToCheck) {
         return linkToCheck.startsWith("http://www.jeuxvideo.com/forums/1-") ||
                 linkToCheck.startsWith("http://www.jeuxvideo.com/forums/42-");
+    }
+
+    /* Retourne vrai si c'est un lien ouvrable via RespawnIRC. */
+    public static boolean checkIfItsOpennableFormatedLink(String linkToCheck) {
+        return checkIfItsForumFormatedLink(linkToCheck) || checkIfItsTopicFormatedLink(linkToCheck);
     }
 
     public static String getFirstPageForThisTopicLink(String topicLink) {
