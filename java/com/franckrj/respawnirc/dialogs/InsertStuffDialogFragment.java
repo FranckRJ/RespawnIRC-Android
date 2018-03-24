@@ -511,9 +511,9 @@ public class InsertStuffDialogFragment extends DialogFragment {
 
         jvcImageGetter = new CustomImageGetter(getActivity(), deletedDrawable, null);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         @SuppressLint("InflateParams")
-        View mainView = requireActivity().getLayoutInflater().inflate(R.layout.dialog_insertstuff, null);
+        View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_insertstuff, null);
         scrollViewOfButtons = mainView.findViewById(R.id.list_scrollview_insertstuff);
         mainTextView = mainView.findViewById(R.id.showstuff_text_insertstuff);
         listOfCategoryButtons.add((ImageView) mainView.findViewById(R.id.smiley_button_insertstuff));

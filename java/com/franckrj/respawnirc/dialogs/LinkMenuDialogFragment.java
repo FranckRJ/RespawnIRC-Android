@@ -24,7 +24,7 @@ public class LinkMenuDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Bundle currentArgs = getArguments();
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         if (currentArgs != null) {
             urlOfLink = currentArgs.getString(ARG_URL, getString(R.string.waitingText));
