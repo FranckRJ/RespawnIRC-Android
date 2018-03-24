@@ -44,7 +44,7 @@ public class SelectTextDialogFragment extends DialogFragment {
         Bundle currentArgs = getArguments();
         String textContent = "";
         boolean textIsHtml = false;
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         if (currentArgs != null) {
             textContent = currentArgs.getString(ARG_TEXT_CONTENT, "");
@@ -52,7 +52,7 @@ public class SelectTextDialogFragment extends DialogFragment {
         }
 
         @SuppressLint("InflateParams")
-        final View mainView = requireActivity().getLayoutInflater().inflate(R.layout.dialog_selecttext, null);
+        final View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_selecttext, null);
         final NestedScrollView mainScrollView = mainView.findViewById(R.id.scrollview_selecttext);
         topLine = mainView.findViewById(R.id.line_top_selecttext);
         bottomLine = mainView.findViewById(R.id.line_bottom_selecttext);

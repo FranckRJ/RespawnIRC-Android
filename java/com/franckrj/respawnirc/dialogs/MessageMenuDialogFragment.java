@@ -39,7 +39,7 @@ public class MessageMenuDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Bundle currentArgs = getArguments();
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         if (currentArgs != null) {
             pseudoOfMessage = currentArgs.getString(ARG_PSEUDO_MESSAGE, getString(R.string.waitingText));
@@ -106,7 +106,7 @@ public class MessageMenuDialogFragment extends DialogFragment {
                         argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, JVCParser.parseMessageToSimpleMessage(messageNotParsed));
                         argForFrag.putBoolean(SelectTextDialogFragment.ARG_TEXT_IS_HTML, true);
                         selectTextDialogFragment.setArguments(argForFrag);
-                        selectTextDialogFragment.show(requireActivity().getSupportFragmentManager(), "SelectTextDialogFragment");
+                        selectTextDialogFragment.show(getActivity().getSupportFragmentManager(), "SelectTextDialogFragment");
                         break;
                     }
                 }
