@@ -52,11 +52,13 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     private final View.OnLongClickListener showForumTitleListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
-            Bundle argForFrag = new Bundle();
-            SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
-            argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumNames, forumStatus.forumName));
-            selectTextDialogFragment.setArguments(argForFrag);
-            selectTextDialogFragment.show(getSupportFragmentManager(), "SelectTextDialogFragment");
+            if (!getSupportFragmentManager().isStateSaved()) {
+                Bundle argForFrag = new Bundle();
+                SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
+                argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumNames, forumStatus.forumName));
+                selectTextDialogFragment.setArguments(argForFrag);
+                selectTextDialogFragment.show(getSupportFragmentManager(), "SelectTextDialogFragment");
+            }
             return true;
         }
     };

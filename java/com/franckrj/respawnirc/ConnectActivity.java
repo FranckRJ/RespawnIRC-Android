@@ -132,7 +132,9 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_showhelp_connect:
-                helpDialogFragment.show(getSupportFragmentManager(), "HelpConnectDialogFragment");
+                if (!getSupportFragmentManager().isStateSaved()) {
+                    helpDialogFragment.show(getSupportFragmentManager(), "HelpConnectDialogFragment");
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

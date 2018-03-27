@@ -181,11 +181,13 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     private final View.OnLongClickListener showForumAndTopicTitleListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
-            Bundle argForFrag = new Bundle();
-            SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
-            argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumAndTopicNames, topicStatus.names.forum, topicStatus.names.topic));
-            selectTextDialogFragment.setArguments(argForFrag);
-            selectTextDialogFragment.show(getSupportFragmentManager(), "SelectTextDialogFragment");
+            if (!getSupportFragmentManager().isStateSaved()) {
+                Bundle argForFrag = new Bundle();
+                SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
+                argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumAndTopicNames, topicStatus.names.forum, topicStatus.names.topic));
+                selectTextDialogFragment.setArguments(argForFrag);
+                selectTextDialogFragment.show(getSupportFragmentManager(), "SelectTextDialogFragment");
+            }
             return true;
         }
     };
@@ -201,8 +203,10 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     private final View.OnClickListener selectStickerClickedListener = new View.OnClickListener() {
         @Override
         public void onClick(View buttonView) {
-            InsertStuffDialogFragment insertStuffDialogFragment = new InsertStuffDialogFragment();
-            insertStuffDialogFragment.show(getSupportFragmentManager(), "InsertStuffDialogFragment");
+            if (!getSupportFragmentManager().isStateSaved()) {
+                InsertStuffDialogFragment insertStuffDialogFragment = new InsertStuffDialogFragment();
+                insertStuffDialogFragment.show(getSupportFragmentManager(), "InsertStuffDialogFragment");
+            }
         }
     };
 
@@ -296,7 +300,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     private final View.OnClickListener lockReasonCLickedListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (topicStatus.lockReason != null) {
+            if (topicStatus.lockReason != null && !getSupportFragmentManager().isStateSaved()) {
                 Bundle argForFrag = new Bundle();
                 SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
                 argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.topicLockedForReason, topicStatus.lockReason));
@@ -812,7 +816,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
     @Override
     public void extendPageSelection(View buttonView) {
-        if (pageNavigation.getIdOfThisButton(buttonView) == PageNavigationUtil.ID_BUTTON_CURRENT) {
+        if (pageNavigation.getIdOfThisButton(buttonView) == PageNavigationUtil.ID_BUTTON_CURRENT && !getSupportFragmentManager().isStateSaved()) {
             ChoosePageNumberDialogFragment choosePageDialogFragment = new ChoosePageNumberDialogFragment();
             choosePageDialogFragment.show(getSupportFragmentManager(), "ChoosePageNumberDialogFragment");
         }
@@ -887,15 +891,17 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 newShowForumIntent.putExtra(ShowForumActivity.EXTRA_IS_FIRST_ACTIVITY, false);
                 startActivity(newShowForumIntent);
             } else if (showOverviewOnImageClick && JVCParser.checkIfItsNoelshackLink(link)) {
-                Bundle argForFrag = new Bundle();
-                ShowImageDialogFragment showImageDialogFragment = new ShowImageDialogFragment();
-                argForFrag.putString(ShowImageDialogFragment.ARG_IMAGE_LINK, JVCParser.noelshackToDirectLink(link));
-                showImageDialogFragment.setArguments(argForFrag);
-                showImageDialogFragment.show(getSupportFragmentManager(), "ShowImageDialogFragment");
+                if (!getSupportFragmentManager().isStateSaved()) {
+                    Bundle argForFrag = new Bundle();
+                    ShowImageDialogFragment showImageDialogFragment = new ShowImageDialogFragment();
+                    argForFrag.putString(ShowImageDialogFragment.ARG_IMAGE_LINK, JVCParser.noelshackToDirectLink(link));
+                    showImageDialogFragment.setArguments(argForFrag);
+                    showImageDialogFragment.show(getSupportFragmentManager(), "ShowImageDialogFragment");
+                }
             } else {
                 Utils.openCorrespondingBrowser(linkTypeForInternalBrowser, link, this);
             }
-        } else {
+        } else if (!getSupportFragmentManager().isStateSaved()) {
             Bundle argForFrag = new Bundle();
             LinkMenuDialogFragment linkMenuDialogFragment = new LinkMenuDialogFragment();
             argForFrag.putString(LinkMenuDialogFragment.ARG_URL, link);
@@ -972,15 +978,17 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
     @Override
     public void getMessageOfPseudoClicked(JVCParser.MessageInfos messageClicked) {
-        Bundle argForFrag = new Bundle();
-        MessageMenuDialogFragment messageMenuDialogFragment = new MessageMenuDialogFragment();
-        argForFrag.putString(MessageMenuDialogFragment.ARG_PSEUDO_MESSAGE, messageClicked.pseudo);
-        argForFrag.putString(MessageMenuDialogFragment.ARG_PSEUDO_USER, pseudoOfUser);
-        argForFrag.putString(MessageMenuDialogFragment.ARG_MESSAGE_ID, String.valueOf(messageClicked.id));
-        argForFrag.putInt(MessageMenuDialogFragment.ARG_LINK_TYPE_FOR_INTERNAL_BROWSER, linkTypeForInternalBrowser.type);
-        argForFrag.putString(MessageMenuDialogFragment.ARG_MESSAGE_CONTENT, messageClicked.messageNotParsed);
-        messageMenuDialogFragment.setArguments(argForFrag);
-        messageMenuDialogFragment.show(getSupportFragmentManager(), "MessageMenuDialogFragment");
+        if (!getSupportFragmentManager().isStateSaved()) {
+            Bundle argForFrag = new Bundle();
+            MessageMenuDialogFragment messageMenuDialogFragment = new MessageMenuDialogFragment();
+            argForFrag.putString(MessageMenuDialogFragment.ARG_PSEUDO_MESSAGE, messageClicked.pseudo);
+            argForFrag.putString(MessageMenuDialogFragment.ARG_PSEUDO_USER, pseudoOfUser);
+            argForFrag.putString(MessageMenuDialogFragment.ARG_MESSAGE_ID, String.valueOf(messageClicked.id));
+            argForFrag.putInt(MessageMenuDialogFragment.ARG_LINK_TYPE_FOR_INTERNAL_BROWSER, linkTypeForInternalBrowser.type);
+            argForFrag.putString(MessageMenuDialogFragment.ARG_MESSAGE_CONTENT, messageClicked.messageNotParsed);
+            messageMenuDialogFragment.setArguments(argForFrag);
+            messageMenuDialogFragment.show(getSupportFragmentManager(), "MessageMenuDialogFragment");
+        }
     }
 
     @Override

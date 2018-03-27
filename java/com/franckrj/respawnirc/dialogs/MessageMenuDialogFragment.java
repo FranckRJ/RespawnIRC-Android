@@ -101,12 +101,14 @@ public class MessageMenuDialogFragment extends DialogFragment {
                         break;
                     }
                     case POS_SELECT_TEXT: {
-                        Bundle argForFrag = new Bundle();
-                        SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
-                        argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, JVCParser.parseMessageToSimpleMessage(messageNotParsed));
-                        argForFrag.putBoolean(SelectTextDialogFragment.ARG_TEXT_IS_HTML, true);
-                        selectTextDialogFragment.setArguments(argForFrag);
-                        selectTextDialogFragment.show(getActivity().getSupportFragmentManager(), "SelectTextDialogFragment");
+                        if (!isStateSaved()) {
+                            Bundle argForFrag = new Bundle();
+                            SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
+                            argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, JVCParser.parseMessageToSimpleMessage(messageNotParsed));
+                            argForFrag.putBoolean(SelectTextDialogFragment.ARG_TEXT_IS_HTML, true);
+                            selectTextDialogFragment.setArguments(argForFrag);
+                            selectTextDialogFragment.show(getActivity().getSupportFragmentManager(), "SelectTextDialogFragment");
+                        }
                         break;
                     }
                 }
