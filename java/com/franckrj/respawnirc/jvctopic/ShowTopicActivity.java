@@ -127,7 +127,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                     messageSendEdit.setText("");
                 }
 
-                reloadTopicSafely();
+                refreshTopicSafely();
             }
         }
     };
@@ -193,7 +193,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     private final View.OnLongClickListener refreshFromSendButton = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
-            reloadTopicSafely();
+            refreshTopicSafely();
             return true;
         }
     };
@@ -314,10 +314,10 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         }
     }
 
-    private void reloadTopicSafely() {
+    private void refreshTopicSafely() {
         AbsShowTopicFragment currentFrag = getCurrentFragment();
         if (currentFrag != null) {
-            currentFrag.reloadTopic();
+            currentFrag.refreshContent();
         }
     }
 
@@ -698,7 +698,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == LOCK_TOPIC_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            reloadTopicSafely();
+            refreshTopicSafely();
         }
     }
 
@@ -1030,6 +1030,6 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
     @Override
     public void onReloadTopicRequested() {
-        reloadTopicSafely();
+        refreshTopicSafely();
     }
 }

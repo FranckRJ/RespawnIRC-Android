@@ -283,7 +283,8 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         });
     }
 
-    public void reloadTopic() {
+    @Override
+    public void refreshContent() {
         absGetterForTopic.reloadTopic();
     }
 

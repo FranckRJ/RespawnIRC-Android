@@ -43,7 +43,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
 
     private JVCForumGetter.ForumStatusInfos forumStatus = new JVCForumGetter.ForumStatusInfos();
     private AddOrRemoveThingToFavs currentTaskForFavs = null;
-    private PageNavigationUtil pageNavigation = null;
+    private PageNavigationUtil pageNavigation;
     private ShareActionProvider shareAction = null;
     private boolean refreshNeededOnNextResume = false;
     private boolean dontConsumeRefreshOnNextResume = false;
@@ -255,7 +255,9 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         if ((refreshForumOnResume || refreshNeededOnNextResume) && !dontConsumeRefreshOnNextResume) {
             refreshNeededOnNextResume = false;
             if (getCurrentFragment() != null) {
-                getCurrentFragment().refreshForum();
+                getCurrentFragment().refreshContent();
+            } else {
+                pageNavigation.setRefreshOnNextInstanciate(true);
             }
         }
         dontConsumeRefreshOnNextResume = false;
