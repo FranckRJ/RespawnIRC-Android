@@ -9,9 +9,9 @@ import android.graphics.drawable.Drawable;
 import android.text.Html;
 
 public class CustomImageGetter implements Html.ImageGetter {
-    private Activity parentActivity = null;
-    private Drawable deletedDrawable = null;
-    private ImageDownloader downloaderForImage = null;
+    private Activity parentActivity;
+    private Drawable deletedDrawable;
+    private ImageDownloader downloaderForImage;
     private int stickerSize = -1;
 
     public CustomImageGetter(Activity newParentActivity, Drawable newDeletedDrawable, ImageDownloader newDownloaderForImage) {

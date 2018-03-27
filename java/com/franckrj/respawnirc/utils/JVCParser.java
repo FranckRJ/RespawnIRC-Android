@@ -50,8 +50,8 @@ public final class JVCParser {
     private static final Pattern spoilLinePattern = Pattern.compile("<div class=\"bloc-spoil-jv en-ligne\">.*?<div class=\"contenu-spoil\">(.*?)</div></div>", Pattern.DOTALL);
     private static final Pattern spoilBlockPattern = Pattern.compile("<div class=\"bloc-spoil-jv\">.*?<div class=\"contenu-spoil\">(.*?)</div></div>", Pattern.DOTALL);
     private static final Pattern spoilOverlyPattern = Pattern.compile("(<div class=\"bloc-spoil-jv[^\"]*\">.*?<div class=\"contenu-spoil\">|</div></div>)", Pattern.DOTALL);
-    private static final Pattern pageTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/[0-9]*-([0-9]*)-([0-9]*)-)([0-9]*)(-[0-9]*-[0-9]*-[0-9]*-[^\\.]*\\.htm)");
-    private static final Pattern pageForumLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/[0-9]*-([0-9]*)-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-[^\\.]*\\.htm)");
+    private static final Pattern pageTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/[0-9]*-([0-9]*)-([0-9]*)-)([0-9]*)(-[0-9]*-[0-9]*-[0-9]*-[^.]*\\.htm)");
+    private static final Pattern pageForumLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/[0-9]*-([0-9]*)-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-[^.]*\\.htm)");
     private static final Pattern pageSearchTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/recherche/forums/[0-9]*-[0-9]*-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-.*)");
     private static final Pattern jvCarePattern = Pattern.compile("<span class=\"JvCare [^\"]*\">([^<]*)</span>");
     private static final Pattern lastEditMessagePattern = Pattern.compile("<div class=\"info-edition-msg\">[^M]*(Message édité le ([^ ]* [^ ]* [^ ]* [^ ]* [0-9:]*) par.*?)</div>", Pattern.DOTALL);
@@ -1833,8 +1833,8 @@ public final class JVCParser {
                                                "\">&nbsp;SPOIL&nbsp;</font></bg_spoil_button>";
 
         private final ArraySet<Integer> listOfSpoilIdToShow;
-        private boolean showAllSpoils = false;
-        private int lastIdUsed = -1;
+        private boolean showAllSpoils;
+        private int lastIdUsed;
         private boolean itsForSpoilBlock = false;
 
         public BuildSpoilTag(ArraySet<Integer> newListOfSpoilIdToShow, int newLastIdUsed) {

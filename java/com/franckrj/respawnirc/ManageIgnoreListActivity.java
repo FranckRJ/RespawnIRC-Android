@@ -38,8 +38,7 @@ public class ManageIgnoreListActivity extends AbsHomeIsBackActivity {
     };
 
     private void generateListOfIgnoredPseudos() {
-        ArrayList<String> newListOfIgnoredPseudos = new ArrayList<>();
-        newListOfIgnoredPseudos.addAll(Arrays.asList(IgnoreListManager.getListOfIgnoredPseudosInLCAsArray()));
+        ArrayList<String> newListOfIgnoredPseudos = new ArrayList<>(Arrays.asList(IgnoreListManager.getListOfIgnoredPseudosInLCAsArray()));
         Collections.sort(newListOfIgnoredPseudos);
         adapterForIgnoreList.setListOfIgnoredPseudos(newListOfIgnoredPseudos);
     }
@@ -79,7 +78,7 @@ public class ManageIgnoreListActivity extends AbsHomeIsBackActivity {
     }
 
     private static class IgnoreListAdapter extends RecyclerView.Adapter<IgnoreListAdapter.IgnoreViewHolder> {
-        private LayoutInflater serviceInflater = null;
+        private LayoutInflater serviceInflater;
         private ArrayList<String> listOfIgnoredPseudos = new ArrayList<>();
         private OnPseudoRemovedListener listenerForPseudoRemoved = null;
 
@@ -143,8 +142,8 @@ public class ManageIgnoreListActivity extends AbsHomeIsBackActivity {
         }
 
         public class IgnoreViewHolder extends RecyclerView.ViewHolder {
-            private TextView mainText = null;
-            private ImageButton actionButton = null;
+            private TextView mainText;
+            private ImageButton actionButton;
 
             public IgnoreViewHolder(View mainView) {
                 super(mainView);

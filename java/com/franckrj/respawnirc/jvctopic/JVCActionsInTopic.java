@@ -20,7 +20,7 @@ public class JVCActionsInTopic {
     private TopicNeedToBeReloaded topicNeedToBeReloadedListener = null;
     private String latestMessageQuotedInfo = null;
     private DeletesInfos lastDeleteInfos = new DeletesInfos();
-    private Activity parentActivity = null;
+    private Activity parentActivity;
 
     private final DialogInterface.OnClickListener onClickInDeleteConfirmationPopupListener = new DialogInterface.OnClickListener() {
         @Override

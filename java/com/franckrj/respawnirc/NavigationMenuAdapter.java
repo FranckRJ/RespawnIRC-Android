@@ -18,8 +18,8 @@ import java.util.ArrayList;
 
 public class NavigationMenuAdapter extends BaseAdapter {
     private ArrayList<MenuItemInfo> listOfMenuItem = new ArrayList<>();
-    private Activity parentActivity = null;
-    private LayoutInflater serviceInflater = null;
+    private Activity parentActivity;
+    private LayoutInflater serviceInflater;
     private int rowSelected = -1;
     private @ColorInt int selectedItemColor;
     private @ColorInt int unselectedItemColor;
