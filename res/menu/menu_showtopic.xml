@@ -14,6 +14,9 @@
         android:id="@+id/action_change_lock_topic_value_showtopic"
         android:title="@string/lockTopic"/>
     <item
+        android:id="@+id/action_change_pin_topic_value_showtopic"
+        android:title="@string/pinTopic"/>
+    <item
         android:id="@+id/action_open_in_browser_showtopic"
         android:title="@string/openInBrowser"/>
 </menu>

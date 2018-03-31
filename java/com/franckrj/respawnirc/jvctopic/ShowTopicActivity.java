@@ -597,40 +597,46 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         super.onPrepareOptionsMenu(menu);
 
         MenuItem lockItem = menu.findItem(R.id.action_change_lock_topic_value_showtopic);
+        MenuItem pinItem = menu.findItem(R.id.action_change_pin_topic_value_showtopic);
         MenuItem favItem = menu.findItem(R.id.action_change_topic_fav_value_showtopic);
         MenuItem subItem = menu.findItem(R.id.action_change_topic_sub_value_showtopic);
 
         menu.findItem(R.id.action_go_to_forum_of_topic_showtopic).setVisible(!topicHasBeenOpenedFromAForum);
-        favItem.setEnabled(false);
-        subItem.setEnabled(false);
-        if (!pseudoOfUser.isEmpty()) {
-            lockItem.setVisible(topicStatus.userCanLockOrUnlockTopic);
+        lockItem.setVisible(topicStatus.userCanLockOrUnlockTopic);
+        pinItem.setVisible(topicStatus.userCanPinOrUnpinTopic);
 
-            if (topicStatus.lockReason == null) {
-                lockItem.setTitle(R.string.lockTopic);
+        if (topicStatus.lockReason == null) {
+            lockItem.setTitle(R.string.lockTopic);
+        } else {
+            lockItem.setTitle(R.string.unlockTopic);
+        }
+
+        if (topicStatus.topicIsPinned) {
+            pinItem.setTitle(R.string.unpinTopic);
+        } else {
+            pinItem.setTitle(R.string.pinTopic);
+        }
+
+        if (topicStatus.isInFavs != null && !pseudoOfUser.isEmpty()) {
+            favItem.setEnabled(true);
+            if (topicStatus.isInFavs) {
+                favItem.setTitle(R.string.removeFromFavs);
             } else {
-                lockItem.setTitle(R.string.unlockTopic);
-            }
-
-            if (topicStatus.isInFavs != null) {
-                favItem.setEnabled(true);
-                if (topicStatus.isInFavs) {
-                    favItem.setTitle(R.string.removeFromFavs);
-                } else {
-                    favItem.setTitle(R.string.addToFavs);
-                }
-            }
-
-            if (topicStatus.subId != null) {
-                subItem.setEnabled(true);
-                if (topicStatus.subId.isEmpty()) {
-                    subItem.setTitle(R.string.subToTopic);
-                } else {
-                    subItem.setTitle(R.string.unsubFromTopic);
-                }
+                favItem.setTitle(R.string.addToFavs);
             }
         } else {
-            lockItem.setVisible(false);
+            favItem.setEnabled(false);
+        }
+
+        if (topicStatus.subId != null && !pseudoOfUser.isEmpty()) {
+            subItem.setEnabled(true);
+            if (topicStatus.subId.isEmpty()) {
+                subItem.setTitle(R.string.subToTopic);
+            } else {
+                subItem.setTitle(R.string.unsubFromTopic);
+            }
+        } else {
+            subItem.setEnabled(false);
         }
 
         return true;
@@ -681,6 +687,9 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 } else {
                     actionsForTopic.startUnlockThisTopic(topicStatus.ajaxInfos, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), topicStatus.topicId, cookieListInAString);
                 }
+                return true;
+            case R.id.action_change_pin_topic_value_showtopic:
+                actionsForTopic.startPinOrUnpinTopic(!topicStatus.topicIsPinned, topicStatus.ajaxInfos, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), topicStatus.topicId, cookieListInAString);
                 return true;
             case R.id.action_open_in_browser_showtopic:
                 Utils.openCorrespondingBrowser(linkTypeForInternalBrowser, pageNavigation.getCurrentPageLink(), this);

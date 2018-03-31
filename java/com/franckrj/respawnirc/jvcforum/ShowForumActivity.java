@@ -303,21 +303,17 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         menu.findItem(R.id.action_search_topic_showforum).setEnabled(!pageNavigation.getCurrentLinkIsEmpty());
         menu.findItem(R.id.action_share_showforum).setEnabled(!pageNavigation.getCurrentLinkIsEmpty());
         updateShareAction();
+        menu.findItem(R.id.action_send_topic_showforum).setEnabled(!Utils.stringIsEmptyOrNull(forumStatus.listOfInputInAString) && !pageNavigation.getCurrentLinkIsEmpty());
 
-        favItem.setEnabled(false);
-        if (!pseudoOfUser.isEmpty()) {
-            menu.findItem(R.id.action_send_topic_showforum).setEnabled(!Utils.stringIsEmptyOrNull(forumStatus.listOfInputInAString) && !pageNavigation.getCurrentLinkIsEmpty());
-
-            if (forumStatus.isInFavs != null) {
-                favItem.setEnabled(true);
-                if (forumStatus.isInFavs) {
-                    favItem.setTitle(R.string.removeFromFavs);
-                } else {
-                    favItem.setTitle(R.string.addToFavs);
-                }
+        if (forumStatus.isInFavs != null && !pseudoOfUser.isEmpty()) {
+            favItem.setEnabled(true);
+            if (forumStatus.isInFavs) {
+                favItem.setTitle(R.string.removeFromFavs);
+            } else {
+                favItem.setTitle(R.string.addToFavs);
             }
         } else {
-            menu.findItem(R.id.action_send_topic_showforum).setEnabled(false);
+            favItem.setEnabled(false);
         }
 
         return true;

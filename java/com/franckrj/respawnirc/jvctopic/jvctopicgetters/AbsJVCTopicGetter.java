@@ -128,6 +128,8 @@ public abstract class AbsJVCTopicGetter {
             }
             newPageInfos.topicStatus.userCanPostAsModo = JVCParser.getUserCanPostAsModo(pageContent);
             newPageInfos.topicStatus.userCanLockOrUnlockTopic = JVCParser.getUserCanLockOrUnlockTopic(pageContent);
+            newPageInfos.topicStatus.userCanPinOrUnpinTopic = JVCParser.getUserCanPinOrUnpinTopic(pageContent);
+            newPageInfos.topicStatus.topicIsPinned = JVCParser.getTopicIsPinned(pageContent);
         }
 
         return newPageInfos;
@@ -197,6 +199,8 @@ public abstract class AbsJVCTopicGetter {
         public ArrayList<JVCParser.SurveyReplyInfos> listOfSurveyReplyWithInfos = new ArrayList<>();
         public boolean userCanPostAsModo = false;
         public boolean userCanLockOrUnlockTopic = false;
+        public boolean userCanPinOrUnpinTopic = false;
+        public boolean topicIsPinned = false;
 
         public static final Parcelable.Creator<TopicStatusInfos> CREATOR = new Parcelable.Creator<TopicStatusInfos>() {
             @Override
@@ -228,6 +232,8 @@ public abstract class AbsJVCTopicGetter {
             listOfSurveyReplyWithInfos = new ArrayList<>(baseForCopy.listOfSurveyReplyWithInfos);
             userCanPostAsModo = baseForCopy.userCanPostAsModo;
             userCanLockOrUnlockTopic = baseForCopy.userCanLockOrUnlockTopic;
+            userCanPinOrUnpinTopic = baseForCopy.userCanPinOrUnpinTopic;
+            topicIsPinned = baseForCopy.topicIsPinned;
         }
 
         private TopicStatusInfos(Parcel in) {
@@ -249,6 +255,8 @@ public abstract class AbsJVCTopicGetter {
             in.readTypedList(listOfSurveyReplyWithInfos, JVCParser.SurveyReplyInfos.CREATOR);
             userCanPostAsModo = (in.readByte() == 1);
             userCanLockOrUnlockTopic = (in.readByte() == 1);
+            userCanPinOrUnpinTopic = (in.readByte() == 1);
+            topicIsPinned = (in.readByte() == 1);
         }
 
         @Override
@@ -275,6 +283,8 @@ public abstract class AbsJVCTopicGetter {
             out.writeTypedList(listOfSurveyReplyWithInfos);
             out.writeByte((byte)(userCanPostAsModo ? 1 : 0));
             out.writeByte((byte)(userCanLockOrUnlockTopic ? 1 : 0));
+            out.writeByte((byte)(userCanPinOrUnpinTopic ? 1 : 0));
+            out.writeByte((byte)(topicIsPinned ? 1 : 0));
         }
     }
 

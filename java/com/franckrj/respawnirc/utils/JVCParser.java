@@ -43,7 +43,7 @@ public final class JVCParser {
     private static final Pattern unicodeInTextPattern = Pattern.compile("\\\\u([a-zA-Z0-9]{4})");
     private static final Pattern alertPattern = Pattern.compile("<div class=\"alert-row\">([^<]*)</div>");
     private static final Pattern errorBlocPattern = Pattern.compile("<div class=\"bloc-erreur\">([^<]*)</div>");
-    private static final Pattern errorInJsonModePattern = Pattern.compile("\"(erreur|error)\":(\\[)?\"([^\"]*)\"");
+    private static final Pattern errorInJsonModePattern = Pattern.compile("\"(erreur|error)(s)?\":(\\[)?\"([^\"]*)\"");
     private static final Pattern subIdInJsonPattern = Pattern.compile("\"id-abonnement\":([0-9]*)");
     private static final Pattern codeBlockPattern = Pattern.compile("<pre class=\"pre-jv\"><code class=\"code-jv\">([^<]*)</code></pre>");
     private static final Pattern codeLinePattern = Pattern.compile("<code class=\"code-jv\">(.*?)</code>", Pattern.DOTALL);
@@ -97,6 +97,7 @@ public final class JVCParser {
     private static final Pattern emptySearchPattern = Pattern.compile("<span style=\"[^\"]*\">[ \\n\\r]*Aucune réponse pour votre recherche ![ \\n\\r]*</span>");
     private static final Pattern userCanPostAsModoPattern = Pattern.compile("<select class=\"select-user-post\" id=\"form_alias_rang\" name=\"form_alias_rang\">((.*?)(?=<option value=\"2\")|(.*?)(?=</select>))<option value=\"2\"", Pattern.DOTALL);
     private static final Pattern userCanLockOrUnlockTopicPattern = Pattern.compile("<span class=\"btn btn-forum-modo btn-lock-topic\" data-type=\"(un)?lock\">");
+    private static final Pattern userCanPinOrUnpinTopicPattern = Pattern.compile("<span class=\"btn btn-forum-modo btn-epingle-topic\" data-type=\"(des)?epingle\">");
     private static final Pattern uglyImagesNamePattern = Pattern.compile("issou|risi|rizi|jesus|picsart|chancla|larry|sermion");
     private static final Pattern adPattern = Pattern.compile("<ins[^>]*></ins>");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
@@ -622,7 +623,7 @@ public final class JVCParser {
         Matcher errorMatcher = errorInJsonModePattern.matcher(pageSource);
 
         if (errorMatcher.find()) {
-            String errorMessage = errorMatcher.group(3);
+            String errorMessage = errorMatcher.group(4);
 
             if (!errorMessage.isEmpty()) {
                 return "Erreur : " + specialCharToNormalChar(parsingAjaxMessages(errorMessage)).trim();
@@ -724,6 +725,21 @@ public final class JVCParser {
 
     public static boolean getUserCanLockOrUnlockTopic(String pageSource) {
         return userCanLockOrUnlockTopicPattern.matcher(pageSource).find();
+    }
+
+    public static boolean getUserCanPinOrUnpinTopic(String pageSource) {
+        return userCanPinOrUnpinTopicPattern.matcher(pageSource).find();
+    }
+
+    public static boolean getTopicIsPinned(String pageSource) {
+        Matcher topicIsPinnedMatcher = userCanPinOrUnpinTopicPattern.matcher(pageSource);
+
+        //noinspection SimplifiableIfStatement
+        if (topicIsPinnedMatcher.find()) {
+            return !topicIsPinnedMatcher.group(1).isEmpty();
+        } else {
+            return false;
+        }
     }
 
     public static String getListOfInputInAStringInTopicFormForThisPage(String pageSource) {
