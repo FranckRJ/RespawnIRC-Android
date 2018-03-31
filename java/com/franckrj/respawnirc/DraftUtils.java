@@ -22,14 +22,14 @@ public class DraftUtils {
         saveDraftInfo.setTypeFromString(PrefsManager.getString(PrefsManager.StringPref.Names.SAVE_MESSAGES_AND_TOPICS_AS_DRAFT_TYPE));
     }
 
-    @SuppressWarnings("SimplifiableIfStatement")
     public boolean lastDraftSavedHasToBeUsed() {
-        if (saveDraftInfo.type == PrefsManager.SaveDraftType.ALWAYS) {
-            return true;
-        } else if (saveDraftInfo.type == PrefsManager.SaveDraftType.NEVER) {
-            return false;
-        } else {
-            return PrefsManager.getBool(useSavedDraftPref);
+        switch (saveDraftInfo.type) {
+            case PrefsManager.SaveDraftType.ALWAYS:
+                return true;
+            case PrefsManager.SaveDraftType.NEVER:
+                return false;
+            default:
+                return PrefsManager.getBool(useSavedDraftPref);
         }
     }
 
@@ -45,32 +45,36 @@ public class DraftUtils {
     }
 
     public void whenUserTryToLeaveWithDraft(@StringRes final int idOfMessageShowedAfterDraftSaved, @StringRes final int idOfSaveDraftExplained, final Activity parentActivity) {
-        if (saveDraftInfo.type == PrefsManager.SaveDraftType.ALWAYS) {
-            Toast.makeText(parentActivity, parentActivity.getString(idOfMessageShowedAfterDraftSaved), Toast.LENGTH_SHORT).show();
-            parentActivity.finish();
-        } else if (saveDraftInfo.type == PrefsManager.SaveDraftType.ASK_BEFORE) {
-            final DialogInterface.OnClickListener onClickInSaveDraftConfirmationListener = new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if (which == DialogInterface.BUTTON_POSITIVE) {
-                        PrefsManager.putBool(useSavedDraftPref, true);
-                        dontOverrideUserChoiceOfUseSavedDraft = true;
-                        Toast.makeText(parentActivity, parentActivity.getString(idOfMessageShowedAfterDraftSaved), Toast.LENGTH_SHORT).show();
-                        parentActivity.finish();
-                    } else if (which == DialogInterface.BUTTON_NEGATIVE) {
-                        PrefsManager.putBool(useSavedDraftPref, false);
-                        dontOverrideUserChoiceOfUseSavedDraft = true;
-                        parentActivity.finish();
+        switch (saveDraftInfo.type) {
+            case PrefsManager.SaveDraftType.ALWAYS:
+                Toast.makeText(parentActivity, parentActivity.getString(idOfMessageShowedAfterDraftSaved), Toast.LENGTH_SHORT).show();
+                parentActivity.finish();
+                break;
+            case PrefsManager.SaveDraftType.ASK_BEFORE:
+                final DialogInterface.OnClickListener onClickInSaveDraftConfirmationListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == DialogInterface.BUTTON_POSITIVE) {
+                            PrefsManager.putBool(useSavedDraftPref, true);
+                            dontOverrideUserChoiceOfUseSavedDraft = true;
+                            Toast.makeText(parentActivity, parentActivity.getString(idOfMessageShowedAfterDraftSaved), Toast.LENGTH_SHORT).show();
+                            parentActivity.finish();
+                        } else if (which == DialogInterface.BUTTON_NEGATIVE) {
+                            PrefsManager.putBool(useSavedDraftPref, false);
+                            dontOverrideUserChoiceOfUseSavedDraft = true;
+                            parentActivity.finish();
+                        }
                     }
-                }
-            };
+                };
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity);
-            builder.setTitle(R.string.saveDraft).setMessage(idOfSaveDraftExplained)
-                    .setPositiveButton(R.string.yes, onClickInSaveDraftConfirmationListener).setNegativeButton(R.string.no, onClickInSaveDraftConfirmationListener);
-            builder.show();
-        } else {
-            parentActivity.finish();
+                AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity);
+                builder.setTitle(R.string.saveDraft).setMessage(idOfSaveDraftExplained)
+                        .setPositiveButton(R.string.yes, onClickInSaveDraftConfirmationListener).setNegativeButton(R.string.no, onClickInSaveDraftConfirmationListener);
+                builder.show();
+                break;
+            default:
+                parentActivity.finish();
+                break;
         }
     }
 }

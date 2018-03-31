@@ -15,12 +15,13 @@ public class JVCActionsInTopic {
     private QuoteJVCMessage currentTaskQuoteMessage = null;
     private DeleteOrRestoreJVCMessage currentTaskDeleteOrRestoreMessage = null;
     private UnlockJVCTopic currentTaskUnlockTopic = null;
+    private PinOrUnpinJVCTopic currentTaskPinOrUnpinTopic = null;
     private DekickJVCPseudo currentTaskDekickPseudo = null;
     private NewMessageIsQuoted messageIsQuotedListener = null;
     private TopicNeedToBeReloaded topicNeedToBeReloadedListener = null;
     private String latestMessageQuotedInfo = null;
     private DeletesInfos lastDeleteInfos = new DeletesInfos();
-    private Activity parentActivity = null;
+    private Activity parentActivity;
 
     private final DialogInterface.OnClickListener onClickInDeleteConfirmationPopupListener = new DialogInterface.OnClickListener() {
         @Override
@@ -98,6 +99,31 @@ public class JVCActionsInTopic {
         }
     };
 
+    private final AbsWebRequestAsyncTask.RequestIsFinished<String> pinOrUnpinTopicIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<String>() {
+        @Override
+        public void onRequestIsFinished(String reqResult) {
+            boolean itWasAPin = currentTaskPinOrUnpinTopic.itsAPin;
+            currentTaskPinOrUnpinTopic = null;
+
+            if (!Utils.stringIsEmptyOrNull(reqResult)) {
+                String potentialError = JVCParser.getErrorMessageInJsonMode(reqResult);
+
+                if (potentialError != null) {
+                    Toast.makeText(parentActivity, potentialError, Toast.LENGTH_SHORT).show();
+                } else if (!reqResult.startsWith("{")) {
+                    Toast.makeText(parentActivity, R.string.unknownErrorPleaseRetry, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(parentActivity, (itWasAPin ? R.string.pinSuccess : R.string.unpinSuccess), Toast.LENGTH_SHORT).show();
+                    if (topicNeedToBeReloadedListener != null) {
+                        topicNeedToBeReloadedListener.onReloadTopicRequested();
+                    }
+                }
+            } else {
+                Toast.makeText(parentActivity, R.string.noKnownResponseFromJVC, Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
+
     private final AbsWebRequestAsyncTask.RequestIsFinished<String> dekickPseudoIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<String>() {
         @Override
         public void onRequestIsFinished(String reqResult) {
@@ -146,6 +172,10 @@ public class JVCActionsInTopic {
         if (currentTaskUnlockTopic != null) {
             currentTaskUnlockTopic.clearListenersAndCancel();
             currentTaskUnlockTopic = null;
+        }
+        if (currentTaskPinOrUnpinTopic != null) {
+            currentTaskPinOrUnpinTopic.clearListenersAndCancel();
+            currentTaskPinOrUnpinTopic = null;
         }
         if (currentTaskDekickPseudo != null) {
             currentTaskDekickPseudo.clearListenersAndCancel();
@@ -218,6 +248,20 @@ public class JVCActionsInTopic {
         }
     }
 
+    public void startPinOrUnpinTopic(boolean itsAPin, JVCParser.AjaxInfos latestAjaxInfos, String forumId, String topicId, String cookieListInAString) {
+        if (latestAjaxInfos.mod != null && currentTaskPinOrUnpinTopic == null) {
+            currentTaskPinOrUnpinTopic = new PinOrUnpinJVCTopic(itsAPin);
+            currentTaskPinOrUnpinTopic.setRequestIsFinishedListener(pinOrUnpinTopicIsFinishedListener);
+            currentTaskPinOrUnpinTopic.execute(forumId, topicId, latestAjaxInfos.mod, cookieListInAString);
+        } else {
+            if (currentTaskPinOrUnpinTopic != null) {
+                Toast.makeText(parentActivity, R.string.errorPinOrUnpinAlreadyRunning, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(parentActivity, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     public void startDekickThisPseudo(String pseudoToDekick, JVCParser.AjaxInfos latestAjaxInfos, String forumId, String idAlias, String cookieListInAString) {
         if (latestAjaxInfos.mod != null && currentTaskDekickPseudo == null) {
             currentTaskDekickPseudo = new DekickJVCPseudo(pseudoToDekick);
@@ -273,6 +317,24 @@ public class JVCActionsInTopic {
             if (params.length > 3) {
                 WebManager.WebInfos currentWebInfos = initWebInfos(params[3], false);
                 return WebManager.sendRequest("http://www.jeuxvideo.com/forums/modal_moderation_topic.php", "GET", "id_forum=" + params[0] + "&tab_topic[]=" + params[1] + "&type=unlock&action=get&" + params[2], currentWebInfos);
+            }
+            return "erreurlol";
+        }
+    }
+
+    private static class PinOrUnpinJVCTopic extends AbsWebRequestAsyncTask<String, Void, String> {
+        public final boolean itsAPin;
+
+        public PinOrUnpinJVCTopic(boolean newItsAPin) {
+            itsAPin = newItsAPin;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            if (params.length > 3) {
+                String typeOfAction = (itsAPin ? "epingle" : "desepingle");
+                WebManager.WebInfos currentWebInfos = initWebInfos(params[3], false);
+                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/modal_moderation_topic.php", "POST", "id_forum=" + params[0] + "&tab_topic[]=" + params[1] + "&type=" + typeOfAction + "&" + params[2], currentWebInfos);
             }
             return "erreurlol";
         }

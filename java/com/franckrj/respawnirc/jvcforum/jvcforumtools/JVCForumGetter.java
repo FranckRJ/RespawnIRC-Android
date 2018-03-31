@@ -187,8 +187,8 @@ public class JVCForumGetter {
     }
 
     private static class GetJVCLastTopics extends AbsWebRequestAsyncTask<String, Void, ForumPageInfos> {
-        boolean isInSearchMode = false;
-        boolean useBiggerTimeoutTime = false;
+        boolean isInSearchMode;
+        boolean useBiggerTimeoutTime;
 
         public GetJVCLastTopics(boolean newIsInSearchMode, boolean newUseBiggerTimeoutTime) {
             isInSearchMode = newIsInSearchMode;

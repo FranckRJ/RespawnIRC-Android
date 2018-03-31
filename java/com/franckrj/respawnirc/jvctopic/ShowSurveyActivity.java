@@ -46,7 +46,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
     private final View.OnClickListener voteButtonClickedListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (currentTaskForVote == null) {
+            if (currentTaskForVote == null && !getSupportFragmentManager().isStateSaved()) {
                 Bundle argForFrag = new Bundle();
                 VoteInSurveyDialogFragment voteDialogFragment = new VoteInSurveyDialogFragment();
                 String[] listOfReplys = new String[listOfReplysWithInfos.size()];

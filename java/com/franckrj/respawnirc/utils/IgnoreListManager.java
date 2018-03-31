@@ -9,10 +9,9 @@ public class IgnoreListManager {
     private static HashSet<String> listOfIgnoredPseudosInLC = new HashSet<>();
 
     public static boolean pseudoInLCIsIgnored(String pseudoToCheckInLC) {
+        //noinspection SimplifiableIfStatement
         if (!listOfIgnoredPseudosInLC.isEmpty()) {
-            if (listOfIgnoredPseudosInLC.contains(pseudoToCheckInLC)) {
-                return true;
-            }
+            return listOfIgnoredPseudosInLC.contains(pseudoToCheckInLC);
         }
 
         return false;

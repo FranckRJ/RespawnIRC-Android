@@ -4,7 +4,7 @@ import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 
 public class AddOrRemoveTopicToSubs extends AbsWebRequestAsyncTask<String, Void, String> {
     private final boolean addToSubs;
-    private ActionToSubsEnded actionToSubsEndedListener = null;
+    private ActionToSubsEnded actionToSubsEndedListener;
 
     @SuppressWarnings("FieldCanBeLocal")
     private final AbsWebRequestAsyncTask.RequestIsFinished<String> changeSubIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<String>() {

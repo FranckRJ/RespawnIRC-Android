@@ -4,7 +4,7 @@ import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 
 public class AddOrRemoveThingToFavs extends AbsWebRequestAsyncTask<String, Void, String> {
     private final boolean addToFavs;
-    private ActionToFavsEnded actionToFavsEndedListener = null;
+    private ActionToFavsEnded actionToFavsEndedListener;
 
     @SuppressWarnings("FieldCanBeLocal")
     private final AbsWebRequestAsyncTask.RequestIsFinished<String> changeFavIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<String>() {
@@ -41,20 +41,23 @@ public class AddOrRemoveThingToFavs extends AbsWebRequestAsyncTask<String, Void,
         String actionToDo;
         WebManager.WebInfos currentWebInfos = initWebInfos("", false);
 
-        if (params.length == 3) {
-            forumId = params[0];
-            topicId = "0";
-            typeOfAction = "forum";
-            ajaxInfos = params[1];
-            currentWebInfos.cookiesInAString = params[2];
-        } else if (params.length == 4) {
-            forumId = params[0];
-            topicId = params[1];
-            typeOfAction = "topic";
-            ajaxInfos = params[2];
-            currentWebInfos.cookiesInAString = params[3];
-        } else {
-            return "";
+        switch (params.length) {
+            case 3:
+                forumId = params[0];
+                topicId = "0";
+                typeOfAction = "forum";
+                ajaxInfos = params[1];
+                currentWebInfos.cookiesInAString = params[2];
+                break;
+            case 4:
+                forumId = params[0];
+                topicId = params[1];
+                typeOfAction = "topic";
+                ajaxInfos = params[2];
+                currentWebInfos.cookiesInAString = params[3];
+                break;
+            default:
+                return "";
         }
 
         if (addToFavs) {

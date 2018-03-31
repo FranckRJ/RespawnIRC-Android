@@ -172,7 +172,7 @@ public class ConnectAsModoActivity extends AbsHomeIsBackActivity {
     }
 
     private static class ConnectAsModoTask extends AbsWebRequestAsyncTask<String, Void, String> {
-        private String passwordToUse = null;
+        private String passwordToUse;
         private String listOfInputInStringToUse = "";
 
         public ConnectAsModoTask(String newPasswordToUse) {

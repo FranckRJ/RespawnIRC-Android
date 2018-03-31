@@ -16,7 +16,7 @@ public class JVCMessageToTopicSender {
     private static final String SAVE_LAST_INFOS_FOR_EDIT = "mttsSaveLastInfosForEdit";
     private static final String SAVE_LAST_MESSAGE_ID_USED_FOR_EDIT = "mttsSaveLastMessageIDUsedForEdit";
 
-    private Activity parentActivity = null;
+    private Activity parentActivity;
     private String lastAjaxListInfos = "";
     private boolean useMessageToEdit = true;
     private boolean isInEdit = false;

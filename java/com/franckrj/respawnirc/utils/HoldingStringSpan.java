@@ -7,7 +7,7 @@ import android.text.TextPaint;
 import android.text.style.CharacterStyle;
 
 public class HoldingStringSpan extends CharacterStyle implements ParcelableSpan {
-    private String infoToHold = "";
+    private String infoToHold;
 
     public static final Parcelable.Creator<HoldingStringSpan> CREATOR = new Parcelable.Creator<HoldingStringSpan>() {
         @Override

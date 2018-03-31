@@ -1,5 +1,6 @@
 package com.franckrj.respawnirc;
 
+import android.arch.lifecycle.Lifecycle;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -29,11 +30,12 @@ public class PageNavigationUtil {
     private ViewPager pagerView = null;
     private ScreenSlidePagerAdapter adapterForPagerView = null;
     private boolean showNavigationButtons = true;
-    private AppCompatActivity parentActivity = null;
-    private PageNavigationFunctions funcForPageNav = null;
+    private AppCompatActivity parentActivity;
+    private PageNavigationFunctions funcForPageNav;
     private boolean loadNeedToBeDoneOnPageCreate = false;
     private boolean goToBottomOnNextLoad = false;
     private boolean dontLoadOnFirstTimeForNextFragCreate = false;
+    private boolean refreshOnNextInstanciate = false;
     private int lastPage = 0;
 
     private final Button.OnClickListener changePageWithNavigationButtonListener = new View.OnClickListener() {
@@ -43,10 +45,10 @@ public class PageNavigationUtil {
                 pagerView.setCurrentItem(0);
                 return;
             } else if (buttonView == previousPageButton && previousPageButton.getVisibility() == View.VISIBLE) {
-                pagerView.setCurrentItem(pagerView.getCurrentItem() - 1);
+                pagerView.setCurrentItem(getCurrentItemIndex() - 1);
                 return;
             }  else if (buttonView == nextPageButton && nextPageButton.getVisibility() == View.VISIBLE) {
-                pagerView.setCurrentItem(pagerView.getCurrentItem() + 1);
+                pagerView.setCurrentItem(getCurrentItemIndex() + 1);
                 return;
             } else if (lastPageButton != null) {
                 if (buttonView == lastPageButton && lastPageButton.getVisibility() == View.VISIBLE) {
@@ -79,11 +81,11 @@ public class PageNavigationUtil {
         @Override
         public void onPageScrollStateChanged(int state) {
             if (state == ViewPager.SCROLL_STATE_IDLE) {
-                if (pagerView.getCurrentItem() > 0) {
-                    clearPageForThisFragment(pagerView.getCurrentItem() - 1);
+                if (getCurrentItemIndex() > 0) {
+                    clearPageForThisFragment(getCurrentItemIndex() - 1);
                 }
-                if (pagerView.getCurrentItem() < adapterForPagerView.getCount() - 1) {
-                    clearPageForThisFragment(pagerView.getCurrentItem() + 1);
+                if (getCurrentItemIndex() < adapterForPagerView.getCount() - 1) {
+                    clearPageForThisFragment(getCurrentItemIndex() + 1);
                 }
             }
         }
@@ -140,15 +142,15 @@ public class PageNavigationUtil {
                 lastPageButton.setVisibility(View.GONE);
             }
 
-            if (pagerView.getCurrentItem() >= 0 && lastPage > 0) {
-                currentPageButton.setText(String.valueOf(pagerView.getCurrentItem() + 1));
+            if (getCurrentItemIndex() >= 0 && lastPage > 0) {
+                currentPageButton.setText(String.valueOf(getCurrentItemIndex() + 1));
 
-                if (pagerView.getCurrentItem() > 0) {
+                if (getCurrentItemIndex() > 0) {
                     firstPageButton.setVisibility(View.VISIBLE);
                     firstPageButton.setText(String.valueOf(1));
                     previousPageButton.setVisibility(View.VISIBLE);
                 }
-                if (pagerView.getCurrentItem() < lastPage - 1) {
+                if (getCurrentItemIndex() < lastPage - 1) {
                     nextPageButton.setVisibility(View.VISIBLE);
 
                     if (lastPageButton != null) {
@@ -226,7 +228,7 @@ public class PageNavigationUtil {
 
     public final String getCurrentPageLink() {
         if (funcForPageNav != null) {
-            return funcForPageNav.setShowedPageNumberForThisLink(currentLink, pagerView.getCurrentItem() + 1);
+            return funcForPageNav.setShowedPageNumberForThisLink(currentLink, getCurrentItemIndex() + 1);
         }
         return currentLink;
     }
@@ -263,6 +265,10 @@ public class PageNavigationUtil {
 
     public void setDontLoadOnFirstTimeForNextFragCreate(boolean newVal) {
         dontLoadOnFirstTimeForNextFragCreate = newVal;
+    }
+
+    public void setRefreshOnNextInstanciate(boolean newVal) {
+        refreshOnNextInstanciate = newVal;
     }
 
     public void setDrawableForCurrentPageButton(Drawable thisDrawable) {
@@ -305,7 +311,7 @@ public class PageNavigationUtil {
         @Override
         public Fragment getItem(int position) {
             if (funcForPageNav != null) {
-                if (loadNeedToBeDoneOnPageCreate && position == pagerView.getCurrentItem() && !currentLink.isEmpty()) {
+                if (loadNeedToBeDoneOnPageCreate && position == getCurrentItemIndex() && !currentLink.isEmpty()) {
                     AbsShowSomethingFragment tmpFragment = funcForPageNav.createNewFragmentForRead(funcForPageNav.setShowedPageNumberForThisLink(currentLink, position + 1));
                     funcForPageNav.doThingsBeforeLoadOnFragment(tmpFragment);
                     if (goToBottomOnNextLoad) {
@@ -330,6 +336,16 @@ public class PageNavigationUtil {
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             AbsShowSomethingFragment fragment = (AbsShowSomethingFragment) super.instantiateItem(container, position);
+
+            if (refreshOnNextInstanciate && position == getCurrentItemIndex()) {
+                /* On refresh uniquement si le fragment a déjà été correctement créé. Ça permet entre autre de refresh uniquement
+                 * quand le fragment est chargé depuis une saved state et non quand il est créé pour la première fois. */
+                if (fragment.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+                    fragment.refreshContent();
+                }
+                refreshOnNextInstanciate = false;
+            }
+
             referenceMap.put(position, fragment);
             return fragment;
         }

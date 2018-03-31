@@ -21,7 +21,7 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
     private boolean firstTimeGetMessages = true;
     private boolean messagesNeedToBeGet = false;
     private ParcelableLongSparseStringArray listOfEditInfos = new ParcelableLongSparseStringArray();
-    protected Activity parentActivity = null;
+    protected Activity parentActivity;
 
     private final AbsWebRequestAsyncTask.RequestIsStarted getMessagesIsStartedListener = new AbsWebRequestAsyncTask.RequestIsStarted() {
         @Override
@@ -212,7 +212,7 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
     }
 
     private static class GetJVCIRCLastMessages extends AbsGetJVCLastMessages {
-        private boolean useBiggerTimeoutTime = false;
+        private boolean useBiggerTimeoutTime;
 
         public GetJVCIRCLastMessages(boolean newUseBiggerTimeoutTime) {
             useBiggerTimeoutTime = newUseBiggerTimeoutTime;

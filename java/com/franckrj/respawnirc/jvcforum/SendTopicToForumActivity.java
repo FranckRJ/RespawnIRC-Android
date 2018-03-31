@@ -55,8 +55,10 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
     private final View.OnClickListener insertStuffButtonClicked = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            InsertStuffDialogFragment insertStuffDialogFragment = new InsertStuffDialogFragment();
-            insertStuffDialogFragment.show(getSupportFragmentManager(), "InsertStuffDialogFragment");
+            if (!getSupportFragmentManager().isStateSaved()) {
+                InsertStuffDialogFragment insertStuffDialogFragment = new InsertStuffDialogFragment();
+                insertStuffDialogFragment.show(getSupportFragmentManager(), "InsertStuffDialogFragment");
+            }
         }
     };
 

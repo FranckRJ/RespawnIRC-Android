@@ -292,6 +292,11 @@
     <string name="huge">Grand</string>
     <string name="veryHuge">Très grand</string>
     <string name="veryVeryHuge">Vraiment très grand</string>
+    <string name="pinTopic">Épingler le topic</string>
+    <string name="unpinTopic">Dépingler le topic</string>
+    <string name="errorPinOrUnpinAlreadyRunning">Erreur, épinglage ou dépinglage déjà en cours.</string>
+    <string name="pinSuccess">Topic épinglé.</string>
+    <string name="unpinSuccess">Topic dépinglé.</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>

@@ -84,19 +84,21 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
 
             if ((currentItemId == ITEM_ID_REFRESH_FORUM_FAV || currentItemId == ITEM_ID_REFRESH_TOPIC_FAV) && currentGroupId == GROUP_ID_BASIC) {
                 if (!pseudoOfUser.isEmpty()) {
-                    Bundle argForFrag = new Bundle();
-                    RefreshFavDialogFragment refreshFavsDialogFragment = new RefreshFavDialogFragment();
+                    if (!getSupportFragmentManager().isStateSaved()) {
+                        Bundle argForFrag = new Bundle();
+                        RefreshFavDialogFragment refreshFavsDialogFragment = new RefreshFavDialogFragment();
 
-                    argForFrag.putString(RefreshFavDialogFragment.ARG_PSEUDO, pseudoOfUser);
-                    argForFrag.putString(RefreshFavDialogFragment.ARG_COOKIE_LIST, PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
-                    if (currentItemId == ITEM_ID_REFRESH_FORUM_FAV) {
-                        argForFrag.putInt(RefreshFavDialogFragment.ARG_FAV_TYPE, RefreshFavDialogFragment.FAV_FORUM);
-                    } else {
-                        argForFrag.putInt(RefreshFavDialogFragment.ARG_FAV_TYPE, RefreshFavDialogFragment.FAV_TOPIC);
+                        argForFrag.putString(RefreshFavDialogFragment.ARG_PSEUDO, pseudoOfUser);
+                        argForFrag.putString(RefreshFavDialogFragment.ARG_COOKIE_LIST, PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
+                        if (currentItemId == ITEM_ID_REFRESH_FORUM_FAV) {
+                            argForFrag.putInt(RefreshFavDialogFragment.ARG_FAV_TYPE, RefreshFavDialogFragment.FAV_FORUM);
+                        } else {
+                            argForFrag.putInt(RefreshFavDialogFragment.ARG_FAV_TYPE, RefreshFavDialogFragment.FAV_TOPIC);
+                        }
+
+                        refreshFavsDialogFragment.setArguments(argForFrag);
+                        refreshFavsDialogFragment.show(getSupportFragmentManager(), "RefreshFavDialogFragment");
                     }
-
-                    refreshFavsDialogFragment.setArguments(argForFrag);
-                    refreshFavsDialogFragment.show(getSupportFragmentManager(), "RefreshFavDialogFragment");
                 } else {
                     Toast.makeText(AbsNavigationViewActivity.this, R.string.errorConnectNeeded, Toast.LENGTH_SHORT).show();
                 }
@@ -157,9 +159,10 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         }
     };
 
-    public AbsNavigationViewActivity() {
+    /* Voir AbsThemedActivity pour plus d'infos. */
+    /*public AbsNavigationViewActivity() {
         windowDrawStatusBar = false;
-    }
+    }*/
 
     private void initializeListsOfMenuItem() {
         if (listOfMenuItemInfoForHome == null || listOfMenuItemInfoForForum == null || listOfMenuItemInfoForConnect == null) {

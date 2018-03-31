@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.franckrj.respawnirc.R;
@@ -21,7 +20,7 @@ public class JVCForumListAdapter extends BaseAdapter {
 
     private ArrayList<JVCParser.NameAndLink> currentListOfForums = new ArrayList<>();
     private LayoutInflater serviceInflater;
-    private Activity parentActivity = null;
+    private Activity parentActivity;
 
     public JVCForumListAdapter(Activity newParentActivity) {
         parentActivity = newParentActivity;
@@ -78,7 +77,6 @@ public class JVCForumListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             convertView = serviceInflater.inflate(R.layout.jvcforums_row, parent, false);
             holder.forumTitle = convertView.findViewById(R.id.title_forum_jvcforums_text_row);
-            holder.forumImage = convertView.findViewById(R.id.image_forum_jvcforums_text_row);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -92,6 +90,5 @@ public class JVCForumListAdapter extends BaseAdapter {
 
     private class ViewHolder {
         public TextView forumTitle;
-        public ImageView forumImage;
     }
 }
