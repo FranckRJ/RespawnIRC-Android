@@ -159,9 +159,10 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         }
     };
 
-    public AbsNavigationViewActivity() {
+    /* Voir AbsThemedActivity pour plus d'infos. */
+    /*public AbsNavigationViewActivity() {
         windowDrawStatusBar = false;
-    }
+    }*/
 
     private void initializeListsOfMenuItem() {
         if (listOfMenuItemInfoForHome == null || listOfMenuItemInfoForForum == null || listOfMenuItemInfoForConnect == null) {

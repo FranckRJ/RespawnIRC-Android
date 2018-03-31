@@ -18,7 +18,7 @@ public abstract class AbsThemedActivity extends AppCompatActivity {
     protected boolean toolbarTextColorIsInverted = false;
     protected int lastPrimaryColorUsed = -1;
     protected int lastTopicNameAndAccentColorUsed = -1;
-    protected boolean windowDrawStatusBar = true;
+    //protected boolean windowDrawStatusBar = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,9 +40,10 @@ public abstract class AbsThemedActivity extends AppCompatActivity {
             }
             setTaskDescription(generalTaskDesc);
 
-            if (windowDrawStatusBar) {
+            /* Pour corriger un bug de la SL 27.1.0, mais comme il y a eu un downgrade ce n'est plus nécessaire. */
+            /*if (windowDrawStatusBar) {
                 getWindow().setStatusBarColor(ThemeManager.getColorInt(R.attr.colorPrimaryDark, this));
-            }
+            }*/
         }
     }
 
