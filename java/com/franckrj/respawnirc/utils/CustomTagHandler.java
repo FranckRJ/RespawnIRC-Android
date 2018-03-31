@@ -44,7 +44,8 @@ public class CustomTagHandler implements Html.TagHandler {
         }
     }
 
-    private static Object getLast(Editable text, Class spanType) {
+    /* Class<?> pour corriger le "unchecked conversion required: Class<T> found: Class" dans le getSpans(). */
+    private static Object getLast(Editable text, Class<?> spanType) {
         Object[] objectArray = text.getSpans(0, text.length(), spanType);
 
         for (int i = objectArray.length - 1; i >= 0; --i) {

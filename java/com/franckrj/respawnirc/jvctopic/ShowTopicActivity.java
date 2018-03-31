@@ -127,7 +127,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                     messageSendEdit.setText("");
                 }
 
-                reloadTopicSafely();
+                refreshTopicSafely();
             }
         }
     };
@@ -181,11 +181,13 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     private final View.OnLongClickListener showForumAndTopicTitleListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
-            Bundle argForFrag = new Bundle();
-            SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
-            argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumAndTopicNames, topicStatus.names.forum, topicStatus.names.topic));
-            selectTextDialogFragment.setArguments(argForFrag);
-            selectTextDialogFragment.show(getSupportFragmentManager(), "SelectTextDialogFragment");
+            if (!getSupportFragmentManager().isStateSaved()) {
+                Bundle argForFrag = new Bundle();
+                SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
+                argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumAndTopicNames, topicStatus.names.forum, topicStatus.names.topic));
+                selectTextDialogFragment.setArguments(argForFrag);
+                selectTextDialogFragment.show(getSupportFragmentManager(), "SelectTextDialogFragment");
+            }
             return true;
         }
     };
@@ -193,7 +195,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     private final View.OnLongClickListener refreshFromSendButton = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
-            reloadTopicSafely();
+            refreshTopicSafely();
             return true;
         }
     };
@@ -201,8 +203,10 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     private final View.OnClickListener selectStickerClickedListener = new View.OnClickListener() {
         @Override
         public void onClick(View buttonView) {
-            InsertStuffDialogFragment insertStuffDialogFragment = new InsertStuffDialogFragment();
-            insertStuffDialogFragment.show(getSupportFragmentManager(), "InsertStuffDialogFragment");
+            if (!getSupportFragmentManager().isStateSaved()) {
+                InsertStuffDialogFragment insertStuffDialogFragment = new InsertStuffDialogFragment();
+                insertStuffDialogFragment.show(getSupportFragmentManager(), "InsertStuffDialogFragment");
+            }
         }
     };
 
@@ -296,7 +300,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     private final View.OnClickListener lockReasonCLickedListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (topicStatus.lockReason != null) {
+            if (topicStatus.lockReason != null && !getSupportFragmentManager().isStateSaved()) {
                 Bundle argForFrag = new Bundle();
                 SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
                 argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.topicLockedForReason, topicStatus.lockReason));
@@ -314,10 +318,10 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         }
     }
 
-    private void reloadTopicSafely() {
+    private void refreshTopicSafely() {
         AbsShowTopicFragment currentFrag = getCurrentFragment();
         if (currentFrag != null) {
-            currentFrag.reloadTopic();
+            currentFrag.refreshContent();
         }
     }
 
@@ -593,40 +597,46 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         super.onPrepareOptionsMenu(menu);
 
         MenuItem lockItem = menu.findItem(R.id.action_change_lock_topic_value_showtopic);
+        MenuItem pinItem = menu.findItem(R.id.action_change_pin_topic_value_showtopic);
         MenuItem favItem = menu.findItem(R.id.action_change_topic_fav_value_showtopic);
         MenuItem subItem = menu.findItem(R.id.action_change_topic_sub_value_showtopic);
 
         menu.findItem(R.id.action_go_to_forum_of_topic_showtopic).setVisible(!topicHasBeenOpenedFromAForum);
-        favItem.setEnabled(false);
-        subItem.setEnabled(false);
-        if (!pseudoOfUser.isEmpty()) {
-            lockItem.setVisible(topicStatus.userCanLockOrUnlockTopic);
+        lockItem.setVisible(topicStatus.userCanLockOrUnlockTopic);
+        pinItem.setVisible(topicStatus.userCanPinOrUnpinTopic);
 
-            if (topicStatus.lockReason == null) {
-                lockItem.setTitle(R.string.lockTopic);
+        if (topicStatus.lockReason == null) {
+            lockItem.setTitle(R.string.lockTopic);
+        } else {
+            lockItem.setTitle(R.string.unlockTopic);
+        }
+
+        if (topicStatus.topicIsPinned) {
+            pinItem.setTitle(R.string.unpinTopic);
+        } else {
+            pinItem.setTitle(R.string.pinTopic);
+        }
+
+        if (topicStatus.isInFavs != null && !pseudoOfUser.isEmpty()) {
+            favItem.setEnabled(true);
+            if (topicStatus.isInFavs) {
+                favItem.setTitle(R.string.removeFromFavs);
             } else {
-                lockItem.setTitle(R.string.unlockTopic);
-            }
-
-            if (topicStatus.isInFavs != null) {
-                favItem.setEnabled(true);
-                if (topicStatus.isInFavs) {
-                    favItem.setTitle(R.string.removeFromFavs);
-                } else {
-                    favItem.setTitle(R.string.addToFavs);
-                }
-            }
-
-            if (topicStatus.subId != null) {
-                subItem.setEnabled(true);
-                if (topicStatus.subId.isEmpty()) {
-                    subItem.setTitle(R.string.subToTopic);
-                } else {
-                    subItem.setTitle(R.string.unsubFromTopic);
-                }
+                favItem.setTitle(R.string.addToFavs);
             }
         } else {
-            lockItem.setVisible(false);
+            favItem.setEnabled(false);
+        }
+
+        if (topicStatus.subId != null && !pseudoOfUser.isEmpty()) {
+            subItem.setEnabled(true);
+            if (topicStatus.subId.isEmpty()) {
+                subItem.setTitle(R.string.subToTopic);
+            } else {
+                subItem.setTitle(R.string.unsubFromTopic);
+            }
+        } else {
+            subItem.setEnabled(false);
         }
 
         return true;
@@ -678,6 +688,9 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                     actionsForTopic.startUnlockThisTopic(topicStatus.ajaxInfos, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), topicStatus.topicId, cookieListInAString);
                 }
                 return true;
+            case R.id.action_change_pin_topic_value_showtopic:
+                actionsForTopic.startPinOrUnpinTopic(!topicStatus.topicIsPinned, topicStatus.ajaxInfos, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), topicStatus.topicId, cookieListInAString);
+                return true;
             case R.id.action_open_in_browser_showtopic:
                 Utils.openCorrespondingBrowser(linkTypeForInternalBrowser, pageNavigation.getCurrentPageLink(), this);
                 return true;
@@ -698,7 +711,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == LOCK_TOPIC_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            reloadTopicSafely();
+            refreshTopicSafely();
         }
     }
 
@@ -812,7 +825,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
     @Override
     public void extendPageSelection(View buttonView) {
-        if (pageNavigation.getIdOfThisButton(buttonView) == PageNavigationUtil.ID_BUTTON_CURRENT) {
+        if (pageNavigation.getIdOfThisButton(buttonView) == PageNavigationUtil.ID_BUTTON_CURRENT && !getSupportFragmentManager().isStateSaved()) {
             ChoosePageNumberDialogFragment choosePageDialogFragment = new ChoosePageNumberDialogFragment();
             choosePageDialogFragment.show(getSupportFragmentManager(), "ChoosePageNumberDialogFragment");
         }
@@ -887,15 +900,17 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 newShowForumIntent.putExtra(ShowForumActivity.EXTRA_IS_FIRST_ACTIVITY, false);
                 startActivity(newShowForumIntent);
             } else if (showOverviewOnImageClick && JVCParser.checkIfItsNoelshackLink(link)) {
-                Bundle argForFrag = new Bundle();
-                ShowImageDialogFragment showImageDialogFragment = new ShowImageDialogFragment();
-                argForFrag.putString(ShowImageDialogFragment.ARG_IMAGE_LINK, JVCParser.noelshackToDirectLink(link));
-                showImageDialogFragment.setArguments(argForFrag);
-                showImageDialogFragment.show(getSupportFragmentManager(), "ShowImageDialogFragment");
+                if (!getSupportFragmentManager().isStateSaved()) {
+                    Bundle argForFrag = new Bundle();
+                    ShowImageDialogFragment showImageDialogFragment = new ShowImageDialogFragment();
+                    argForFrag.putString(ShowImageDialogFragment.ARG_IMAGE_LINK, JVCParser.noelshackToDirectLink(link));
+                    showImageDialogFragment.setArguments(argForFrag);
+                    showImageDialogFragment.show(getSupportFragmentManager(), "ShowImageDialogFragment");
+                }
             } else {
                 Utils.openCorrespondingBrowser(linkTypeForInternalBrowser, link, this);
             }
-        } else {
+        } else if (!getSupportFragmentManager().isStateSaved()) {
             Bundle argForFrag = new Bundle();
             LinkMenuDialogFragment linkMenuDialogFragment = new LinkMenuDialogFragment();
             argForFrag.putString(LinkMenuDialogFragment.ARG_URL, link);
@@ -972,15 +987,17 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
     @Override
     public void getMessageOfPseudoClicked(JVCParser.MessageInfos messageClicked) {
-        Bundle argForFrag = new Bundle();
-        MessageMenuDialogFragment messageMenuDialogFragment = new MessageMenuDialogFragment();
-        argForFrag.putString(MessageMenuDialogFragment.ARG_PSEUDO_MESSAGE, messageClicked.pseudo);
-        argForFrag.putString(MessageMenuDialogFragment.ARG_PSEUDO_USER, pseudoOfUser);
-        argForFrag.putString(MessageMenuDialogFragment.ARG_MESSAGE_ID, String.valueOf(messageClicked.id));
-        argForFrag.putInt(MessageMenuDialogFragment.ARG_LINK_TYPE_FOR_INTERNAL_BROWSER, linkTypeForInternalBrowser.type);
-        argForFrag.putString(MessageMenuDialogFragment.ARG_MESSAGE_CONTENT, messageClicked.messageNotParsed);
-        messageMenuDialogFragment.setArguments(argForFrag);
-        messageMenuDialogFragment.show(getSupportFragmentManager(), "MessageMenuDialogFragment");
+        if (!getSupportFragmentManager().isStateSaved()) {
+            Bundle argForFrag = new Bundle();
+            MessageMenuDialogFragment messageMenuDialogFragment = new MessageMenuDialogFragment();
+            argForFrag.putString(MessageMenuDialogFragment.ARG_PSEUDO_MESSAGE, messageClicked.pseudo);
+            argForFrag.putString(MessageMenuDialogFragment.ARG_PSEUDO_USER, pseudoOfUser);
+            argForFrag.putString(MessageMenuDialogFragment.ARG_MESSAGE_ID, String.valueOf(messageClicked.id));
+            argForFrag.putInt(MessageMenuDialogFragment.ARG_LINK_TYPE_FOR_INTERNAL_BROWSER, linkTypeForInternalBrowser.type);
+            argForFrag.putString(MessageMenuDialogFragment.ARG_MESSAGE_CONTENT, messageClicked.messageNotParsed);
+            messageMenuDialogFragment.setArguments(argForFrag);
+            messageMenuDialogFragment.show(getSupportFragmentManager(), "MessageMenuDialogFragment");
+        }
     }
 
     @Override
@@ -1030,6 +1047,6 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
     @Override
     public void onReloadTopicRequested() {
-        reloadTopicSafely();
+        refreshTopicSafely();
     }
 }

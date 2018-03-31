@@ -43,7 +43,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
 
     private JVCForumGetter.ForumStatusInfos forumStatus = new JVCForumGetter.ForumStatusInfos();
     private AddOrRemoveThingToFavs currentTaskForFavs = null;
-    private PageNavigationUtil pageNavigation = null;
+    private PageNavigationUtil pageNavigation;
     private ShareActionProvider shareAction = null;
     private boolean refreshNeededOnNextResume = false;
     private boolean dontConsumeRefreshOnNextResume = false;
@@ -52,11 +52,13 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     private final View.OnLongClickListener showForumTitleListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
-            Bundle argForFrag = new Bundle();
-            SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
-            argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumNames, forumStatus.forumName));
-            selectTextDialogFragment.setArguments(argForFrag);
-            selectTextDialogFragment.show(getSupportFragmentManager(), "SelectTextDialogFragment");
+            if (!getSupportFragmentManager().isStateSaved()) {
+                Bundle argForFrag = new Bundle();
+                SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
+                argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumNames, forumStatus.forumName));
+                selectTextDialogFragment.setArguments(argForFrag);
+                selectTextDialogFragment.show(getSupportFragmentManager(), "SelectTextDialogFragment");
+            }
             return true;
         }
     };
@@ -255,7 +257,9 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         if ((refreshForumOnResume || refreshNeededOnNextResume) && !dontConsumeRefreshOnNextResume) {
             refreshNeededOnNextResume = false;
             if (getCurrentFragment() != null) {
-                getCurrentFragment().refreshForum();
+                getCurrentFragment().refreshContent();
+            } else {
+                pageNavigation.setRefreshOnNextInstanciate(true);
             }
         }
         dontConsumeRefreshOnNextResume = false;
@@ -299,21 +303,17 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         menu.findItem(R.id.action_search_topic_showforum).setEnabled(!pageNavigation.getCurrentLinkIsEmpty());
         menu.findItem(R.id.action_share_showforum).setEnabled(!pageNavigation.getCurrentLinkIsEmpty());
         updateShareAction();
+        menu.findItem(R.id.action_send_topic_showforum).setEnabled(!Utils.stringIsEmptyOrNull(forumStatus.listOfInputInAString) && !pageNavigation.getCurrentLinkIsEmpty());
 
-        favItem.setEnabled(false);
-        if (!pseudoOfUser.isEmpty()) {
-            menu.findItem(R.id.action_send_topic_showforum).setEnabled(!Utils.stringIsEmptyOrNull(forumStatus.listOfInputInAString) && !pageNavigation.getCurrentLinkIsEmpty());
-
-            if (forumStatus.isInFavs != null) {
-                favItem.setEnabled(true);
-                if (forumStatus.isInFavs) {
-                    favItem.setTitle(R.string.removeFromFavs);
-                } else {
-                    favItem.setTitle(R.string.addToFavs);
-                }
+        if (forumStatus.isInFavs != null && !pseudoOfUser.isEmpty()) {
+            favItem.setEnabled(true);
+            if (forumStatus.isInFavs) {
+                favItem.setTitle(R.string.removeFromFavs);
+            } else {
+                favItem.setTitle(R.string.addToFavs);
             }
         } else {
-            menu.findItem(R.id.action_send_topic_showforum).setEnabled(false);
+            favItem.setEnabled(false);
         }
 
         return true;

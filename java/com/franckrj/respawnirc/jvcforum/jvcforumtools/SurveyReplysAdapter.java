@@ -19,10 +19,10 @@ import java.util.ArrayList;
 
 public class SurveyReplysAdapter extends RecyclerView.Adapter<SurveyReplysAdapter.ReplyViewHolder> {
     private ArrayList<String> listOfReplyContent = new ArrayList<>();
-    private LayoutInflater serviceInflater = null;
+    private LayoutInflater serviceInflater;
     /* Ces deux variables sont une tentative d'optimisation probablement inutile. */
-    private String replyTitleModel = "";
-    private String replyContentHintModel = "";
+    private String replyTitleModel;
+    private String replyContentHintModel;
 
     private final View.OnClickListener removeButtonClickedListener = new View.OnClickListener() {
         @Override
@@ -80,9 +80,9 @@ public class SurveyReplysAdapter extends RecyclerView.Adapter<SurveyReplysAdapte
     }
 
     public class ReplyViewHolder extends RecyclerView.ViewHolder {
-        private TextView replyTitle = null;
-        private EditText replyContent = null;
-        private ImageButton actionButton = null;
+        private TextView replyTitle;
+        private EditText replyContent;
+        private ImageButton actionButton;
         private int replyPos = -1;
         private boolean saveReplyChanges = false;
 

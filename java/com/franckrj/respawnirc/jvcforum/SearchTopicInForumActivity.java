@@ -40,7 +40,7 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
     private MenuItem searchExpandableItem = null;
     private RadioGroup searchModeRadioGroup = null;
     private String lastSearchedText = null;
-    private PageNavigationUtil pageNavigation = null;
+    private PageNavigationUtil pageNavigation;
     private ShareActionProvider shareAction = null;
     private String currentSearchLink = "";
     private String currentForumName = "";

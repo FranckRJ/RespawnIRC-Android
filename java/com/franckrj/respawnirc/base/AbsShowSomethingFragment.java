@@ -16,4 +16,5 @@ public abstract class AbsShowSomethingFragment extends Fragment {
 
     public abstract void setPageLink(String newForumPageLink);
     public abstract void clearContent();
+    public abstract void refreshContent();
 }

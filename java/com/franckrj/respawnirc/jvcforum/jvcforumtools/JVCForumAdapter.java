@@ -22,18 +22,18 @@ import java.util.ArrayList;
 public class JVCForumAdapter extends BaseAdapter {
     private ArrayList<JVCParser.TopicInfos> listOfTopics = new ArrayList<>();
     private ArrayList<ContentHolder> listOfContentForTopics = new ArrayList<>();
-    private LayoutInflater serviceInflater = null;
-    private Activity parentActivity = null;
+    private LayoutInflater serviceInflater;
+    private Activity parentActivity;
     private boolean alternateBackgroundColor = false;
     private int topicTitleSizeInSp = 14;
     private int topicInfosSizeInSp = 14;
-    private Drawable iconMarqueOn = null;
-    private Drawable iconMarqueOff = null;
-    private Drawable iconDossier2 = null;
-    private Drawable iconLock = null;
-    private Drawable iconResolu = null;
-    private Drawable iconGhost = null;
-    private Drawable iconDossier1 = null;
+    private Drawable iconMarqueOn;
+    private Drawable iconMarqueOff;
+    private Drawable iconDossier2;
+    private Drawable iconLock;
+    private Drawable iconResolu;
+    private Drawable iconGhost;
+    private Drawable iconDossier1;
 
     public JVCForumAdapter(Activity newParentActivity) {
         parentActivity = newParentActivity;

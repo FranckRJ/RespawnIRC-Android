@@ -87,7 +87,7 @@ public class JVCTopicModeForumGetter extends AbsJVCTopicGetter {
     }
 
     private static class GetJVCForumLastMessages extends AbsGetJVCLastMessages {
-        private boolean useBiggerTimeoutTime = false;
+        private boolean useBiggerTimeoutTime;
 
         public GetJVCForumLastMessages(boolean newUseBiggerTimeoutTime) {
             useBiggerTimeoutTime = newUseBiggerTimeoutTime;

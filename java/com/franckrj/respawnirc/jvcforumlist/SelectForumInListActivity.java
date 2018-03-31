@@ -274,8 +274,10 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         }
 
         if (PrefsManager.getBool(PrefsManager.BoolPref.Names.IS_FIRST_LAUNCH)) {
-            HelpFirstLaunchDialogFragment firstLaunchDialogFragment = new HelpFirstLaunchDialogFragment();
-            firstLaunchDialogFragment.show(getSupportFragmentManager(), "HelpFirstLaunchDialogFragment");
+            if (!getSupportFragmentManager().isStateSaved()) {
+                HelpFirstLaunchDialogFragment firstLaunchDialogFragment = new HelpFirstLaunchDialogFragment();
+                firstLaunchDialogFragment.show(getSupportFragmentManager(), "HelpFirstLaunchDialogFragment");
+            }
             PrefsManager.putBool(PrefsManager.BoolPref.Names.IS_FIRST_LAUNCH, false);
             PrefsManager.applyChanges();
         }
@@ -364,8 +366,10 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_select_topic_or_forum_selectforum:
-                ChooseTopicOrForumLinkDialogFragment chooseLinkDialogFragment = new ChooseTopicOrForumLinkDialogFragment();
-                chooseLinkDialogFragment.show(getSupportFragmentManager(), "ChooseTopicOrForumLinkDialogFragment");
+                if (!getSupportFragmentManager().isStateSaved()) {
+                    ChooseTopicOrForumLinkDialogFragment chooseLinkDialogFragment = new ChooseTopicOrForumLinkDialogFragment();
+                    chooseLinkDialogFragment.show(getSupportFragmentManager(), "ChooseTopicOrForumLinkDialogFragment");
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

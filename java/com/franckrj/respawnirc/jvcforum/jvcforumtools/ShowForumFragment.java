@@ -194,7 +194,8 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         adapterForForum.notifyDataSetChanged();
     }
 
-    public void refreshForum() {
+    @Override
+    public void refreshContent() {
         reloadAllForum(true);
     }
 
