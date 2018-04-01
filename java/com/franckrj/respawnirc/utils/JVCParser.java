@@ -736,7 +736,7 @@ public final class JVCParser {
 
         //noinspection SimplifiableIfStatement
         if (topicIsPinnedMatcher.find()) {
-            return !topicIsPinnedMatcher.group(1).isEmpty();
+            return !Utils.stringIsEmptyOrNull(topicIsPinnedMatcher.group(1));
         } else {
             return false;
         }
