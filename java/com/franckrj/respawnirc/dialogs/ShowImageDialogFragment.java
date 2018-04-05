@@ -139,8 +139,9 @@ public class ShowImageDialogFragment extends DialogFragment {
         mainView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: pas sur que ce soit une bonne idée, ne pas appliquer ailleurs avant plus de tests
-                dismissAllowingStateLoss();
+                if (!isStateSaved()) {
+                    dismiss();
+                }
             }
         });
 
@@ -160,12 +161,16 @@ public class ShowImageDialogFragment extends DialogFragment {
     @Override
     public void onPause() {
         downloaderForImage.stopAllCurrentTasks();
+        downloaderForImage.clearMemoryCache();
         super.onPause();
     }
 
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
+        /* La fonction onPause est censé toujours être appelé avant onDismiss donc ça sert a rien,
+         * mais dans le doute... */
         downloaderForImage.stopAllCurrentTasks();
+        downloaderForImage.clearMemoryCache();
         super.onDismiss(dialogInterface);
     }
 }
