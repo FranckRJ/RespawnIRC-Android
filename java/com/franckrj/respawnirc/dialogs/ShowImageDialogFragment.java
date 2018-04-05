@@ -139,8 +139,9 @@ public class ShowImageDialogFragment extends DialogFragment {
         mainView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: pas sur que ce soit une bonne idée, ne pas appliquer ailleurs avant plus de tests
-                dismissAllowingStateLoss();
+                if (!isStateSaved()) {
+                    dismiss();
+                }
             }
         });
 
@@ -153,19 +154,25 @@ public class ShowImageDialogFragment extends DialogFragment {
 
         Dialog dialog = getDialog();
         if (dialog != null && dialog.getWindow() != null) {
-            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            /* Bizarrement MATCH_PARENT n'est nécessaire que pour le width, pour le height pas besoin et en plus si le height
+             * est set à MATCH_PARENT la statusbar bug est devient toute noire. */
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
     }
 
     @Override
     public void onPause() {
         downloaderForImage.stopAllCurrentTasks();
+        downloaderForImage.clearMemoryCache();
         super.onPause();
     }
 
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
+        /* La fonction onPause est censé toujours être appelé avant onDismiss donc ça sert a rien,
+         * mais dans le doute... */
         downloaderForImage.stopAllCurrentTasks();
+        downloaderForImage.clearMemoryCache();
         super.onDismiss(dialogInterface);
     }
 }
