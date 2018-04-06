@@ -125,8 +125,8 @@ public class ShowImageDialogFragment extends DialogFragment {
         textForSizeOfImage = mainView.findViewById(R.id.text_size_image_showimage);
 
         /*nécessaire pour un affichage correcte sur les versions récentes d'android.*/
-        progressBarIndeterminateForImage.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
-        progressBarDeterminateForImage.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
+        progressBarIndeterminateForImage.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+        progressBarDeterminateForImage.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
         progressBarDeterminateForImage.setVisibility(View.INVISIBLE);
         textForSizeOfImage.setVisibility(View.INVISIBLE);
         viewForImage.setVisibility(View.INVISIBLE);
