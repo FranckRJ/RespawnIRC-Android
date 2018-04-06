@@ -31,6 +31,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.utils.CustomSpannableFactory;
 import com.franckrj.respawnirc.utils.HoldingStringSpan;
 import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.CustomImageGetter;
@@ -54,6 +55,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     private JVCParser.Settings currentSettings;
     private int idOfLayoutToUse = 0;
     private boolean alternateBackgroundColor = false;
+    private CustomSpannableFactory spannableFactory = new CustomSpannableFactory();
     private CustomTagHandler tagHandler = new CustomTagHandler();
     private ImageDownloader downloaderForImage = new ImageDownloader();
     private URLClicked urlCLickedListener = null;
@@ -320,7 +322,7 @@ public class JVCTopicAdapter extends BaseAdapter {
             item.listOfSpoilIdToShow.add(-1);
         }
 
-        holder.infoLineContent = Undeprecator.htmlFromHtml(JVCParser.createMessageInfoLineFromInfos(item, currentSettings));
+        holder.infoLineContent = new SpannableString(Undeprecator.htmlFromHtml(JVCParser.createMessageInfoLineFromInfos(item, currentSettings)));
         if (!item.pseudoIsBlacklisted) {
             holder.messageLineContent = replaceNeededSpansAndEmojis(Undeprecator.htmlFromHtml(JVCParser.createMessageMessageLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler), item);
         } else {
@@ -344,8 +346,8 @@ public class JVCTopicAdapter extends BaseAdapter {
         return holder;
     }
 
-    private CharSequence replaceNeededSpansAndEmojis(Spanned spanToChange, final JVCParser.MessageInfos infosOfMessage) {
-        Spannable spannable = new SpannableString(spanToChange);
+    private Spannable replaceNeededSpansAndEmojis(Spanned spanToChange, final JVCParser.MessageInfos infosOfMessage) {
+        Spannable spannable = new SpannableString(Utils.applyEmojiCompatIfPossible(spanToChange));
 
         QuoteSpan[] quoteSpanArray = spannable.getSpans(0, spannable.length(), QuoteSpan.class);
         for (QuoteSpan quoteSpan : quoteSpanArray) {
@@ -389,7 +391,7 @@ public class JVCTopicAdapter extends BaseAdapter {
             });
         }
 
-        return Utils.applyEmojiCompatIfPossible(spannable);
+        return spannable;
     }
 
     private void updateListOfSpoidIdToShow(JVCParser.MessageInfos infosOfMessage, String instructionForUpdate) {
@@ -464,7 +466,7 @@ public class JVCTopicAdapter extends BaseAdapter {
                 viewHolder.avatarImage.setOnClickListener(null);
             }
 
-            viewHolder.infoLine.setText(Utils.applyEmojiCompatIfPossible(Undeprecator.htmlFromHtml(advertiseForSurveyToShow)));
+            viewHolder.infoLine.setText(Utils.applyEmojiCompatIfPossible(Undeprecator.htmlFromHtml(advertiseForSurveyToShow)), TextView.BufferType.SPANNABLE);
             convertView.setOnClickListener(onSurveyClickListener);
             viewHolder.infoLine.setOnClickListener(onSurveyClickListener);
             setColorBackgroundOfThisItem(convertView, ThemeManager.getColorInt(R.attr.themedSurveyMessageBackgroundColor, parentActivity));
@@ -474,7 +476,7 @@ public class JVCTopicAdapter extends BaseAdapter {
 
             viewHolder.showMenuButton.setTag(position);
             viewHolder.showMenuButton.setVisibility(View.VISIBLE);
-            viewHolder.infoLine.setText(currentContent.infoLineContent);
+            viewHolder.infoLine.setText(currentContent.infoLineContent, TextView.BufferType.SPANNABLE);
 
             convertView.setOnClickListener(null);
             if (currentContent.messageLineContent != null) {
@@ -488,7 +490,7 @@ public class JVCTopicAdapter extends BaseAdapter {
                 };
 
                 viewHolder.messageLine.setVisibility(View.VISIBLE);
-                viewHolder.messageLine.setText(currentContent.messageLineContent);
+                viewHolder.messageLine.setText(currentContent.messageLineContent, TextView.BufferType.SPANNABLE);
 
                 viewHolder.infoLine.setOnClickListener(infoClickedListener);
                 if (viewHolder.avatarImage != null) {
@@ -530,7 +532,7 @@ public class JVCTopicAdapter extends BaseAdapter {
             if (currentContent.signatureLineContent != null) {
                 viewHolder.signatureLine.setVisibility(View.VISIBLE);
                 viewHolder.separator.setVisibility(View.VISIBLE);
-                viewHolder.signatureLine.setText(currentContent.signatureLineContent);
+                viewHolder.signatureLine.setText(currentContent.signatureLineContent, TextView.BufferType.SPANNABLE);
             } else {
                 viewHolder.signatureLine.setVisibility(View.GONE);
                 viewHolder.separator.setVisibility(View.GONE);
@@ -607,8 +609,11 @@ public class JVCTopicAdapter extends BaseAdapter {
             separator = itemView.findViewById(R.id.separator_view_jvcmessages_row);
             showMenuButton = itemView.findViewById(R.id.menuoverflow_image_jvcmessages_row);
 
-            messageLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, messageFontSizeInSp);
+            infoLine.setSpannableFactory(spannableFactory);
+            messageLine.setSpannableFactory(spannableFactory);
+            signatureLine.setSpannableFactory(spannableFactory);
             infoLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, messageInfosFontSizeInSp);
+            messageLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, messageFontSizeInSp);
             signatureLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, messageSignatureFontSizeInSp);
             messageLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
             signatureLine.setMovementMethod(LongClickLinkMovementMethod.getInstance());
@@ -617,9 +622,9 @@ public class JVCTopicAdapter extends BaseAdapter {
     }
 
     private class ContentHolder {
-        public CharSequence infoLineContent;
-        public CharSequence messageLineContent;
-        public CharSequence signatureLineContent;
+        public Spannable infoLineContent;
+        public Spannable messageLineContent;
+        public Spannable signatureLineContent;
         public Drawable avatarImageDrawable;
         public boolean messageIsDeleted;
     }
