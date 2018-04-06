@@ -3,6 +3,8 @@ package com.franckrj.respawnirc.jvcforum.jvcforumtools;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.utils.CustomSpannableFactory;
 import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Undeprecator;
@@ -22,6 +25,7 @@ import java.util.ArrayList;
 public class JVCForumAdapter extends BaseAdapter {
     private ArrayList<JVCParser.TopicInfos> listOfTopics = new ArrayList<>();
     private ArrayList<ContentHolder> listOfContentForTopics = new ArrayList<>();
+    private CustomSpannableFactory spannableFactory = new CustomSpannableFactory();
     private LayoutInflater serviceInflater;
     private Activity parentActivity;
     private boolean alternateBackgroundColor = false;
@@ -98,11 +102,11 @@ public class JVCForumAdapter extends BaseAdapter {
         ContentHolder thisHolder = new ContentHolder();
 
         if (item.type.equals("message")) {
-            thisHolder.titleLineContent = Utils.applyEmojiCompatIfPossible(Undeprecator.htmlFromHtml("<b>" + item.htmlName + "</b>"));
+            thisHolder.titleLineContent = new SpannableString(Utils.applyEmojiCompatIfPossible(Undeprecator.htmlFromHtml("<b>" + item.htmlName + "</b>")));
         } else {
-            thisHolder.titleLineContent = Utils.applyEmojiCompatIfPossible(Undeprecator.htmlFromHtml("<b><font color=\"" +
-                                                                            Utils.colorToString(ThemeManager.getColorInt(R.attr.themedTopicNameColor, parentActivity)) +
-                                                                            "\">" + item.htmlName + "</font> (" + item.nbOfMessages + ")</b>"));
+            thisHolder.titleLineContent = new SpannableString(Utils.applyEmojiCompatIfPossible(Undeprecator.htmlFromHtml("<b><font color=\"" +
+                                                                                               Utils.colorToString(ThemeManager.getColorInt(R.attr.themedTopicNameColor, parentActivity)) +
+                                                                                               "\">" + item.htmlName + "</font> (" + item.nbOfMessages + ")</b>")));
         }
 
         switch (item.authorType) {
@@ -118,8 +122,8 @@ public class JVCForumAdapter extends BaseAdapter {
                 break;
         }
 
-        thisHolder.authorLineContent = Undeprecator.htmlFromHtml(textForAuthor);
-        thisHolder.dateLineContent = Undeprecator.htmlFromHtml("<small>" + item.wholeDate + "</small>");
+        thisHolder.authorLineContent = new SpannableString(Undeprecator.htmlFromHtml(textForAuthor));
+        thisHolder.dateLineContent = new SpannableString(Undeprecator.htmlFromHtml("<small>" + item.wholeDate + "</small>"));
 
         return thisHolder;
     }
@@ -154,6 +158,9 @@ public class JVCForumAdapter extends BaseAdapter {
             holder.dateLine = convertView.findViewById(R.id.date_text_jvctopics_row);
             holder.topicIcon = convertView.findViewById(R.id.topic_icon_jvctopics_row);
 
+            holder.titleLine.setSpannableFactory(spannableFactory);
+            holder.authorLine.setSpannableFactory(spannableFactory);
+            holder.dateLine.setSpannableFactory(spannableFactory);
             holder.titleLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, topicTitleSizeInSp);
             holder.authorLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, topicInfosSizeInSp);
             holder.dateLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, topicInfosSizeInSp);
@@ -162,9 +169,9 @@ public class JVCForumAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.titleLine.setText(currentTopicContent.titleLineContent);
-        holder.authorLine.setText(currentTopicContent.authorLineContent);
-        holder.dateLine.setText(currentTopicContent.dateLineContent);
+        holder.titleLine.setText(currentTopicContent.titleLineContent, TextView.BufferType.SPANNABLE);
+        holder.authorLine.setText(currentTopicContent.authorLineContent, TextView.BufferType.SPANNABLE);
+        holder.dateLine.setText(currentTopicContent.dateLineContent, TextView.BufferType.SPANNABLE);
 
         holder.topicIcon.setVisibility(View.VISIBLE);
         switch (currentTopicInfos.type) {
@@ -216,8 +223,8 @@ public class JVCForumAdapter extends BaseAdapter {
     }
 
     private class ContentHolder {
-        public CharSequence titleLineContent;
-        public CharSequence authorLineContent;
-        public CharSequence dateLineContent;
+        public Spannable titleLineContent;
+        public Spannable authorLineContent;
+        public Spannable dateLineContent;
     }
 }
