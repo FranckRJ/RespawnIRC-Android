@@ -39,7 +39,7 @@ public class MessageMenuDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Bundle currentArgs = getArguments();
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
 
         if (currentArgs != null) {
             pseudoOfMessage = currentArgs.getString(ARG_PSEUDO_MESSAGE, getString(R.string.waitingText));
@@ -59,57 +59,59 @@ public class MessageMenuDialogFragment extends DialogFragment {
         builder.setItems(R.array.choicesForMessageMenu, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case POS_OPEN_CDV: {
-                        String link = "http://www.jeuxvideo.com/profil/" + pseudoOfMessage.toLowerCase() + "?mode=infos";
-                        Utils.openCorrespondingBrowser(linkTypeForInternalBrowser, link, getActivity());
-                        break;
-                    }
-                    case POS_SEND_MP: {
-                        Utils.openLinkInInternalBrowser("http://www.jeuxvideo.com/messages-prives/nouveau.php?all_dest=" + pseudoOfMessage, getActivity());
-                        break;
-                    }
-                    case POS_IGNORE: {
-                        if (!pseudoOfUser.toLowerCase().equals(pseudoOfMessage.toLowerCase())) {
-                            if (IgnoreListManager.addPseudoToIgnoredList(pseudoOfMessage)) {
-                                IgnoreListManager.saveListOfIgnoredPseudos();
-                                Toast.makeText(getActivity(), getString(R.string.pseudoIgnored, pseudoOfMessage), Toast.LENGTH_SHORT).show();
+                if (getActivity() != null) {
+                    switch (which) {
+                        case POS_OPEN_CDV: {
+                            String link = "http://www.jeuxvideo.com/profil/" + pseudoOfMessage.toLowerCase() + "?mode=infos";
+                            Utils.openCorrespondingBrowser(linkTypeForInternalBrowser, link, getActivity());
+                            break;
+                        }
+                        case POS_SEND_MP: {
+                            Utils.openLinkInInternalBrowser("http://www.jeuxvideo.com/messages-prives/nouveau.php?all_dest=" + pseudoOfMessage, getActivity());
+                            break;
+                        }
+                        case POS_IGNORE: {
+                            if (!pseudoOfUser.toLowerCase().equals(pseudoOfMessage.toLowerCase())) {
+                                if (IgnoreListManager.addPseudoToIgnoredList(pseudoOfMessage)) {
+                                    IgnoreListManager.saveListOfIgnoredPseudos();
+                                    Toast.makeText(getActivity(), getString(R.string.pseudoIgnored, pseudoOfMessage), Toast.LENGTH_SHORT).show();
 
-                                if (getActivity() instanceof NewPseudoIgnored) {
-                                    ((NewPseudoIgnored) getActivity()).onIgnoreNewPseudo(pseudoOfMessage);
+                                    if (getActivity() instanceof NewPseudoIgnored) {
+                                        ((NewPseudoIgnored) getActivity()).onIgnoreNewPseudo(pseudoOfMessage);
+                                    }
+                                } else {
+                                    Toast.makeText(getActivity(), R.string.pseudoIsAlreadyIgnored, Toast.LENGTH_SHORT).show();
                                 }
                             } else {
-                                Toast.makeText(getActivity(), R.string.pseudoIsAlreadyIgnored, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), R.string.errorYouCantIgnoreYourself, Toast.LENGTH_SHORT).show();
                             }
-                        } else {
-                            Toast.makeText(getActivity(), R.string.errorYouCantIgnoreYourself, Toast.LENGTH_SHORT).show();
+                            break;
                         }
-                        break;
-                    }
-                    case POS_COPY_PSEUDO: {
-                        Utils.putStringInClipboard(pseudoOfMessage, getActivity());
-                        Toast.makeText(getActivity(), R.string.copyDone, Toast.LENGTH_SHORT).show();
-                        break;
-                    }
-                    case POS_COPY_PERMALINK: {
-                        Utils.putStringInClipboard("http://www.jeuxvideo.com/" + pseudoOfMessage.toLowerCase() + "/forums/message/" + idOfMessage, getActivity());
-                        Toast.makeText(getActivity(), R.string.copyDone, Toast.LENGTH_SHORT).show();
-                        break;
-                    }
-                    case POS_DDB: {
-                        Utils.openLinkInInternalBrowser("http://www.jeuxvideo.com/" + pseudoOfMessage.toLowerCase() + "/forums/message/" + idOfMessage, getActivity());
-                        break;
-                    }
-                    case POS_SELECT_TEXT: {
-                        if (!isStateSaved()) {
-                            Bundle argForFrag = new Bundle();
-                            SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
-                            argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, JVCParser.parseMessageToSimpleMessage(messageNotParsed));
-                            argForFrag.putBoolean(SelectTextDialogFragment.ARG_TEXT_IS_HTML, true);
-                            selectTextDialogFragment.setArguments(argForFrag);
-                            selectTextDialogFragment.show(getActivity().getSupportFragmentManager(), "SelectTextDialogFragment");
+                        case POS_COPY_PSEUDO: {
+                            Utils.putStringInClipboard(pseudoOfMessage, getActivity());
+                            Toast.makeText(getActivity(), R.string.copyDone, Toast.LENGTH_SHORT).show();
+                            break;
                         }
-                        break;
+                        case POS_COPY_PERMALINK: {
+                            Utils.putStringInClipboard("http://www.jeuxvideo.com/" + pseudoOfMessage.toLowerCase() + "/forums/message/" + idOfMessage, getActivity());
+                            Toast.makeText(getActivity(), R.string.copyDone, Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                        case POS_DDB: {
+                            Utils.openLinkInInternalBrowser("http://www.jeuxvideo.com/" + pseudoOfMessage.toLowerCase() + "/forums/message/" + idOfMessage, getActivity());
+                            break;
+                        }
+                        case POS_SELECT_TEXT: {
+                            if (!isStateSaved()) {
+                                Bundle argForFrag = new Bundle();
+                                SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
+                                argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, JVCParser.parseMessageToSimpleMessage(messageNotParsed));
+                                argForFrag.putBoolean(SelectTextDialogFragment.ARG_TEXT_IS_HTML, true);
+                                selectTextDialogFragment.setArguments(argForFrag);
+                                selectTextDialogFragment.show(getActivity().getSupportFragmentManager(), "SelectTextDialogFragment");
+                            }
+                            break;
+                        }
                     }
                 }
                 dialog.dismiss();

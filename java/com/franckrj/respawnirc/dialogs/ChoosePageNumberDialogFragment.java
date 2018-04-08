@@ -55,9 +55,9 @@ public class ChoosePageNumberDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog alertToShow;
         Window currentWindow;
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         @SuppressLint("InflateParams")
-        View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_choosepagenumber, null);
+        View mainView = requireActivity().getLayoutInflater().inflate(R.layout.dialog_choosepagenumber, null);
         pageNumberEdit = mainView.findViewById(R.id.pagenumber_edit_choosepagenumber);
         pageNumberEdit.setOnEditorActionListener(actionInEditTextListener);
         builder.setTitle(R.string.choosePageNumber).setView(mainView)
