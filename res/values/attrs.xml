@@ -22,6 +22,7 @@
     <attr name="themedSurveyMessageBackgroundColor" format="reference"/>
     <attr name="themedTopicNameColor" format="reference"/>
     <attr name="themedQuoteBackgroundColor" format="reference"/>
+    <attr name="themedQuoteStripeColor" format="reference"/>
     <attr name="themedPseudoUserColor" format="reference"/>
     <attr name="themedPseudoOtherModeForumColor" format="reference"/>
     <attr name="themedPseudoOtherModeIrcColor" format="reference"/>

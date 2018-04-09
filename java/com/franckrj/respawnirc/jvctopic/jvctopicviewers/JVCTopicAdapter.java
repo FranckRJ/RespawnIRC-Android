@@ -352,7 +352,7 @@ public class JVCTopicAdapter extends BaseAdapter {
         QuoteSpan[] quoteSpanArray = spannable.getSpans(0, spannable.length(), QuoteSpan.class);
         for (QuoteSpan quoteSpan : quoteSpanArray) {
             Utils.replaceSpanByAnotherSpan(spannable, quoteSpan, new CustomQuoteSpan(ThemeManager.getColorInt(R.attr.themedQuoteBackgroundColor, parentActivity),
-                                                                                     ThemeManager.getColorInt(R.attr.colorPrimary, parentActivity),
+                                                                                     ThemeManager.getColorInt(R.attr.themedQuoteStripeColor, parentActivity),
                                                                                      parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripSize),
                                                                                      parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripGap)));
         }
