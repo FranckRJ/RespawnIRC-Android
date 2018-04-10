@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="quoteStripSize">2dp</dimen>
+    <dimen name="quoteStripeSize">2dp</dimen>
     <dimen name="sizeBetweenTextAndArrow">5dp</dimen>
-    <dimen name="quoteStripGap">4dp</dimen>
+    <dimen name="quoteGapSize">4dp</dimen>
     <dimen name="miniNoelshackWidthDefault">102dp</dimen>
     <dimen name="miniNoelshackHeightDefault">77dp</dimen>
     <!-- Avant Lolipop l'élévation rajoute du padding aux cartes, d'où la différence de taille des espaces. -->

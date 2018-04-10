@@ -49,7 +49,6 @@ public class JVCTopicAdapter extends BaseAdapter {
     private ArrayList<JVCParser.MessageInfos> listOfMessages = new ArrayList<>();
     private ArrayList<ContentHolder> listOfContentForMessages = new ArrayList<>();
     private LayoutInflater serviceInflater;
-    private Activity parentActivity;
     private int currentItemIdSelected = -1;
     private MenuItemClickedInMessage actionWhenItemMenuClicked = null;
     private JVCParser.Settings currentSettings;
@@ -74,6 +73,16 @@ public class JVCTopicAdapter extends BaseAdapter {
     private int messageFontSizeInSp = 14;
     private int messageInfosFontSizeInSp = 14;
     private int messageSignatureFontSizeInSp = 14;
+    private @ColorInt int quoteBackgroundColor = 0;
+    private @ColorInt int quoteStripeColor = 0;
+    private int quoteStripeSize = 0;
+    private int quoteGapSize = 0;
+    private String baseTitleForSurvey = "";
+    private String baseSubTitleForSurvey = "";
+    private @ColorInt int surveyMessageBackgroundColor = 0;
+    private @ColorInt int deletedMessageBackgroundColor = 0;
+    private @ColorInt int defaultMessageBackgroundColor = 0;
+    private @ColorInt int altMessageBackgroundColor = 0;
 
     @SuppressWarnings("FieldCanBeLocal")
     private final ImageDownloader.DownloadFinished listenerForDownloadFinished = new ImageDownloader.DownloadFinished() {
@@ -100,7 +109,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     private final View.OnClickListener menuButtonClicked = new View.OnClickListener() {
         @Override
         public void onClick(View buttonView) {
-            PopupMenu popup = new PopupMenu(parentActivity, buttonView);
+            PopupMenu popup = new PopupMenu(buttonView.getContext(), buttonView);
             Menu menu = popup.getMenu();
             JVCParser.MessageInfos itemSelected;
 
@@ -162,10 +171,9 @@ public class JVCTopicAdapter extends BaseAdapter {
         }
     };
 
-    public JVCTopicAdapter(Activity newParentActivity, JVCParser.Settings newSettings) {
+    public JVCTopicAdapter(Activity parentActivity, JVCParser.Settings newSettings) {
         Resources res;
 
-        parentActivity = newParentActivity;
         currentSettings = newSettings;
         serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         res = parentActivity.getResources();
@@ -261,6 +269,46 @@ public class JVCTopicAdapter extends BaseAdapter {
         messageSignatureFontSizeInSp = newVal;
     }
 
+    public void setQuoteBackgroundColor(@ColorInt int newColor) {
+        quoteBackgroundColor = newColor;
+    }
+
+    public void setQuoteStripeColor(@ColorInt int newColor) {
+        quoteStripeColor = newColor;
+    }
+
+    public void setQuoteStripeSize(int newSize) {
+        quoteStripeSize = newSize;
+    }
+
+    public void setQuoteGapSize(int newSize) {
+        quoteGapSize = newSize;
+    }
+
+    public void setBaseTitleForSurvey(String newString) {
+        baseTitleForSurvey = newString;
+    }
+
+    public void setBaseSubTitleForSurvey(String newString) {
+        baseSubTitleForSurvey = newString;
+    }
+
+    public void setSurveyMessageBackgroundColor(@ColorInt int newColor) {
+        surveyMessageBackgroundColor = newColor;
+    }
+
+    public void setDeletedMessageBackgroundColor(@ColorInt int newColor) {
+        deletedMessageBackgroundColor = newColor;
+    }
+
+    public void setDefaultMessageBackgroundColor(@ColorInt int newColor) {
+        defaultMessageBackgroundColor = newColor;
+    }
+
+    public void setAltMessageBackgroundColor(@ColorInt int newColor) {
+        altMessageBackgroundColor = newColor;
+    }
+
     public void enableSurvey(String newSurveyTitle) {
         showSurvey = true;
         surveyTitle = newSurveyTitle;
@@ -351,10 +399,7 @@ public class JVCTopicAdapter extends BaseAdapter {
 
         QuoteSpan[] quoteSpanArray = spannable.getSpans(0, spannable.length(), QuoteSpan.class);
         for (QuoteSpan quoteSpan : quoteSpanArray) {
-            Utils.replaceSpanByAnotherSpan(spannable, quoteSpan, new CustomQuoteSpan(ThemeManager.getColorInt(R.attr.themedQuoteBackgroundColor, parentActivity),
-                                                                                     ThemeManager.getColorInt(R.attr.themedQuoteStripeColor, parentActivity),
-                                                                                     parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripSize),
-                                                                                     parentActivity.getResources().getDimensionPixelSize(R.dimen.quoteStripGap)));
+            Utils.replaceSpanByAnotherSpan(spannable, quoteSpan, new CustomQuoteSpan(quoteBackgroundColor, quoteStripeColor, quoteStripeSize, quoteGapSize));
         }
 
         URLSpan[] urlSpanArray = spannable.getSpans(0, spannable.length(), URLSpan.class);
@@ -455,7 +500,7 @@ public class JVCTopicAdapter extends BaseAdapter {
         }
 
         if (position == 0 && showSurvey) {
-            String advertiseForSurveyToShow = parentActivity.getString(R.string.titleForSurvey) + " <b>" + surveyTitle + "</b><br><small>" + parentActivity.getString(R.string.clickHereToSee) + "</small>";
+            String advertiseForSurveyToShow = baseTitleForSurvey + " <b>" + surveyTitle + "</b><br><small>" + baseSubTitleForSurvey + "</small>";
 
             viewHolder.showMenuButton.setVisibility(View.GONE);
             viewHolder.messageLine.setVisibility(View.GONE);
@@ -469,7 +514,7 @@ public class JVCTopicAdapter extends BaseAdapter {
             viewHolder.infoLine.setText(Utils.applyEmojiCompatIfPossible(Undeprecator.htmlFromHtml(advertiseForSurveyToShow)), TextView.BufferType.SPANNABLE);
             convertView.setOnClickListener(onSurveyClickListener);
             viewHolder.infoLine.setOnClickListener(onSurveyClickListener);
-            setColorBackgroundOfThisItem(convertView, ThemeManager.getColorInt(R.attr.themedSurveyMessageBackgroundColor, parentActivity));
+            setColorBackgroundOfThisItem(convertView, surveyMessageBackgroundColor);
         } else {
             final int realPosition = position - (showSurvey ? 1 : 0);
             final ContentHolder currentContent = listOfContentForMessages.get(realPosition);
@@ -539,11 +584,11 @@ public class JVCTopicAdapter extends BaseAdapter {
             }
 
             if (colorDeletedMessages && currentContent.messageIsDeleted) {
-                setColorBackgroundOfThisItem(convertView, ThemeManager.getColorInt(R.attr.themedDeletedMessageBackgroundColor, parentActivity));
+                setColorBackgroundOfThisItem(convertView, deletedMessageBackgroundColor);
             } else if (realPosition % 2 == 0 || !alternateBackgroundColor) {
-                setColorBackgroundOfThisItem(convertView, ThemeManager.getColorInt(R.attr.themedDefaultBackgroundColor, parentActivity));
+                setColorBackgroundOfThisItem(convertView, defaultMessageBackgroundColor);
             } else {
-                setColorBackgroundOfThisItem(convertView, ThemeManager.getColorInt(R.attr.themedAltBackgroundColor, parentActivity));
+                setColorBackgroundOfThisItem(convertView, altMessageBackgroundColor);
             }
         }
 

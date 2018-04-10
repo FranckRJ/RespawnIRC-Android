@@ -72,7 +72,7 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
 
     @Override
     protected void initializeGetterForMessages() {
-        getterForTopic = new JVCTopicModeIRCGetter(getActivity());
+        getterForTopic = new JVCTopicModeIRCGetter(requireActivity());
         absGetterForTopic = getterForTopic;
     }
 
@@ -88,10 +88,10 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
     protected void initializeSettings() {
         super.initializeSettings();
         currentSettings.firstLineFormat = "[<%DATE_COLOR_START%><%DATE_TIME%><%DATE_COLOR_END%>] &lt;<%PSEUDO_COLOR_START%><%PSEUDO_PSEUDO%><%PSEUDO_COLOR_END%>&gt;";
-        currentSettings.colorPseudoUser = Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoUserColor, getActivity()));
-        currentSettings.colorPseudoOther = Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoOtherModeIrcColor, getActivity()));
-        currentSettings.colorPseudoModo = Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoModoColor, getActivity()));
-        currentSettings.colorPseudoAdmin = Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoAdminColor, getActivity()));
+        currentSettings.colorPseudoUser = Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoUserColor, requireActivity()));
+        currentSettings.colorPseudoOther = Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoOtherModeIrcColor, requireActivity()));
+        currentSettings.colorPseudoModo = Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoModoColor, requireActivity()));
+        currentSettings.colorPseudoAdmin = Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoAdminColor, requireActivity()));
         currentSettings.applyMarkToPseudoAuthor = false;
         currentSettings.secondLineFormat = "<%MESSAGE_MESSAGE%>";
         currentSettings.addBeforeEdit = "";
