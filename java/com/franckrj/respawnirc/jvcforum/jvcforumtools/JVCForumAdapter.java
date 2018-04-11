@@ -3,6 +3,9 @@ package com.franckrj.respawnirc.jvcforum.jvcforumtools;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorInt;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.utils.CustomSpannableFactory;
 import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Undeprecator;
@@ -22,9 +26,14 @@ import java.util.ArrayList;
 public class JVCForumAdapter extends BaseAdapter {
     private ArrayList<JVCParser.TopicInfos> listOfTopics = new ArrayList<>();
     private ArrayList<ContentHolder> listOfContentForTopics = new ArrayList<>();
+    private CustomSpannableFactory spannableFactory = new CustomSpannableFactory();
     private LayoutInflater serviceInflater;
-    private Activity parentActivity;
     private boolean alternateBackgroundColor = false;
+    private @ColorInt int topicNameColor = 0;
+    private @ColorInt int pseudoModoColor = 0;
+    private @ColorInt int pseudoAdminColor = 0;
+    private @ColorInt int altBackgroundColor = 0;
+    private @ColorInt int defaultBackgroundColor = 0;
     private int topicTitleSizeInSp = 14;
     private int topicInfosSizeInSp = 14;
     private Drawable iconMarqueOn;
@@ -35,8 +44,7 @@ public class JVCForumAdapter extends BaseAdapter {
     private Drawable iconGhost;
     private Drawable iconDossier1;
 
-    public JVCForumAdapter(Activity newParentActivity) {
-        parentActivity = newParentActivity;
+    public JVCForumAdapter(Activity parentActivity) {
         serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         iconMarqueOn = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_marque_on);
         iconMarqueOff = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_marque_off);
@@ -63,6 +71,16 @@ public class JVCForumAdapter extends BaseAdapter {
         return topicInfosSizeInSp;
     }
 
+    @ColorInt
+    public int getTopicNameColor() {
+        return topicNameColor;
+    }
+
+    @ColorInt
+    public int getAltBackgroundColor() {
+        return altBackgroundColor;
+    }
+
     public void setAlternateBackgroundColor(boolean newVal) {
         alternateBackgroundColor = newVal;
     }
@@ -73,6 +91,26 @@ public class JVCForumAdapter extends BaseAdapter {
 
     public void setTopicInfosSizeInSp(int newVal) {
         topicInfosSizeInSp = newVal;
+    }
+
+    public void setTopicNameColor(@ColorInt int newColor) {
+        topicNameColor = newColor;
+    }
+
+    public void setPseudoModoColor(@ColorInt int newColor) {
+        pseudoModoColor = newColor;
+    }
+
+    public void setPseudoAdminColor(@ColorInt int newColor) {
+        pseudoAdminColor = newColor;
+    }
+
+    public void setAltBackgroundColor(@ColorInt int newColor) {
+        altBackgroundColor = newColor;
+    }
+
+    public void setDefaultBackgroundColor(@ColorInt int newColor) {
+        defaultBackgroundColor = newColor;
     }
 
     public void removeAllItems() {
@@ -98,28 +136,27 @@ public class JVCForumAdapter extends BaseAdapter {
         ContentHolder thisHolder = new ContentHolder();
 
         if (item.type.equals("message")) {
-            thisHolder.titleLineContent = Utils.applyEmojiCompatIfPossible(Undeprecator.htmlFromHtml("<b>" + item.htmlName + "</b>"));
+            thisHolder.titleLineContent = new SpannableString(Utils.applyEmojiCompatIfPossible(Undeprecator.htmlFromHtml("<b>" + item.htmlName + "</b>")));
         } else {
-            thisHolder.titleLineContent = Utils.applyEmojiCompatIfPossible(Undeprecator.htmlFromHtml("<b><font color=\"" +
-                                                                            Utils.colorToString(ThemeManager.getColorInt(R.attr.themedTopicNameColor, parentActivity)) +
-                                                                            "\">" + item.htmlName + "</font> (" + item.nbOfMessages + ")</b>"));
+            thisHolder.titleLineContent = new SpannableString(Utils.applyEmojiCompatIfPossible(Undeprecator.htmlFromHtml("<b><font color=\"" + Utils.colorToString(topicNameColor) +
+                                                                                               "\">" + item.htmlName + "</font> (" + item.nbOfMessages + ")</b>")));
         }
 
         switch (item.authorType) {
             case "modo":
-                textForAuthor = "<small><font color=\"" + Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoModoColor, parentActivity)) + "\">" + item.author + "</font></small>";
+                textForAuthor = "<small><font color=\"" + Utils.colorToString(pseudoModoColor) + "\">" + item.author + "</font></small>";
                 break;
             case "admin":
             case "staff":
-                textForAuthor = "<small><font color=\"" + Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoAdminColor, parentActivity)) + "\">" + item.author + "</font></small>";
+                textForAuthor = "<small><font color=\"" + Utils.colorToString(pseudoAdminColor) + "\">" + item.author + "</font></small>";
                 break;
             default:
                 textForAuthor = "<small>" + item.author + "</small>";
                 break;
         }
 
-        thisHolder.authorLineContent = Undeprecator.htmlFromHtml(textForAuthor);
-        thisHolder.dateLineContent = Undeprecator.htmlFromHtml("<small>" + item.wholeDate + "</small>");
+        thisHolder.authorLineContent = new SpannableString(Undeprecator.htmlFromHtml(textForAuthor));
+        thisHolder.dateLineContent = new SpannableString(Undeprecator.htmlFromHtml("<small>" + item.wholeDate + "</small>"));
 
         return thisHolder;
     }
@@ -154,6 +191,9 @@ public class JVCForumAdapter extends BaseAdapter {
             holder.dateLine = convertView.findViewById(R.id.date_text_jvctopics_row);
             holder.topicIcon = convertView.findViewById(R.id.topic_icon_jvctopics_row);
 
+            holder.titleLine.setSpannableFactory(spannableFactory);
+            holder.authorLine.setSpannableFactory(spannableFactory);
+            holder.dateLine.setSpannableFactory(spannableFactory);
             holder.titleLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, topicTitleSizeInSp);
             holder.authorLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, topicInfosSizeInSp);
             holder.dateLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, topicInfosSizeInSp);
@@ -162,9 +202,9 @@ public class JVCForumAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.titleLine.setText(currentTopicContent.titleLineContent);
-        holder.authorLine.setText(currentTopicContent.authorLineContent);
-        holder.dateLine.setText(currentTopicContent.dateLineContent);
+        holder.titleLine.setText(currentTopicContent.titleLineContent, TextView.BufferType.SPANNABLE);
+        holder.authorLine.setText(currentTopicContent.authorLineContent, TextView.BufferType.SPANNABLE);
+        holder.dateLine.setText(currentTopicContent.dateLineContent, TextView.BufferType.SPANNABLE);
 
         holder.topicIcon.setVisibility(View.VISIBLE);
         switch (currentTopicInfos.type) {
@@ -196,9 +236,9 @@ public class JVCForumAdapter extends BaseAdapter {
         }
 
         if (position % 2 == 0 && alternateBackgroundColor) {
-            convertView.setBackgroundColor(ThemeManager.getColorInt(R.attr.themedAltBackgroundColor, parentActivity));
+            convertView.setBackgroundColor(altBackgroundColor);
         } else {
-            convertView.setBackgroundColor(ThemeManager.getColorInt(R.attr.themedDefaultBackgroundColor, parentActivity));
+            convertView.setBackgroundColor(defaultBackgroundColor);
         }
 
         holder.titleLine.invalidate();
@@ -216,8 +256,8 @@ public class JVCForumAdapter extends BaseAdapter {
     }
 
     private class ContentHolder {
-        public CharSequence titleLineContent;
-        public CharSequence authorLineContent;
-        public CharSequence dateLineContent;
+        public Spannable titleLineContent;
+        public Spannable authorLineContent;
+        public Spannable dateLineContent;
     }
 }

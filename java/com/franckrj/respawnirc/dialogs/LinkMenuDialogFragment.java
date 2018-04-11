@@ -24,7 +24,7 @@ public class LinkMenuDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Bundle currentArgs = getArguments();
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
 
         if (currentArgs != null) {
             urlOfLink = currentArgs.getString(ARG_URL, getString(R.string.waitingText));
@@ -36,17 +36,19 @@ public class LinkMenuDialogFragment extends DialogFragment {
         builder.setItems(R.array.choicesForLinkMenu, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case POS_OPEN_IN_WEB_BROWSER:
-                        Utils.openLinkInExternalBrowser(urlOfLink, getActivity());
-                        break;
-                    case POS_OPEN_IN_INTERN_BROWSER:
-                        Utils.openLinkInInternalBrowser(urlOfLink, getActivity());
-                        break;
-                    case POS_COPY:
-                        Utils.putStringInClipboard(urlOfLink, getActivity());
-                        Toast.makeText(getActivity(), R.string.copyDone, Toast.LENGTH_SHORT).show();
-                        break;
+                if (getActivity() != null) {
+                    switch (which) {
+                        case POS_OPEN_IN_WEB_BROWSER:
+                            Utils.openLinkInExternalBrowser(urlOfLink, getActivity());
+                            break;
+                        case POS_OPEN_IN_INTERN_BROWSER:
+                            Utils.openLinkInInternalBrowser(urlOfLink, getActivity());
+                            break;
+                        case POS_COPY:
+                            Utils.putStringInClipboard(urlOfLink, getActivity());
+                            Toast.makeText(getActivity(), R.string.copyDone, Toast.LENGTH_SHORT).show();
+                            break;
+                    }
                 }
                 dialog.dismiss();
             }

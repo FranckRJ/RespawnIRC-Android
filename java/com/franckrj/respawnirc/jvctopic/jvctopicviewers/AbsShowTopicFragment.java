@@ -21,6 +21,7 @@ import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.jvctopic.jvctopicgetters.AbsJVCTopicGetter;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
+import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
@@ -212,6 +213,16 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         adapterForTopic.setMessageFontSizeInSp(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MESSAGE_FONT_SIZE)));
         adapterForTopic.setMessageInfosFontSizeInSp(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MESSAGE_INFOS_FONT_SIZE)));
         adapterForTopic.setMessageSignatureFontSizeInSp(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MESSAGE_SIGNATURE_FONT_SIZE)));
+        adapterForTopic.setQuoteBackgroundColor(ThemeManager.getColorInt(R.attr.themedQuoteBackgroundColor, requireActivity()));
+        adapterForTopic.setQuoteStripeColor(ThemeManager.getColorInt(R.attr.themedQuoteStripeColor, requireActivity()));
+        adapterForTopic.setQuoteStripeSize(requireActivity().getResources().getDimensionPixelSize(R.dimen.quoteStripeSize));
+        adapterForTopic.setQuoteGapSize(requireActivity().getResources().getDimensionPixelSize(R.dimen.quoteGapSize));
+        adapterForTopic.setBaseTitleForSurvey(requireActivity().getString(R.string.titleForSurvey));
+        adapterForTopic.setBaseSubTitleForSurvey(requireActivity().getString(R.string.clickHereToSee));
+        adapterForTopic.setSurveyMessageBackgroundColor(ThemeManager.getColorInt(R.attr.themedSurveyMessageBackgroundColor, requireActivity()));
+        adapterForTopic.setDeletedMessageBackgroundColor(ThemeManager.getColorInt(R.attr.themedDeletedMessageBackgroundColor, requireActivity()));
+        adapterForTopic.setDefaultMessageBackgroundColor(ThemeManager.getColorInt(R.attr.themedDefaultBackgroundColor, requireActivity()));
+        adapterForTopic.setAltMessageBackgroundColor(ThemeManager.getColorInt(R.attr.themedAltBackgroundColor, requireActivity()));
     }
 
     protected void updateSettingsDependingOnConnection() {
@@ -249,7 +260,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         if (adapterForTopic.getAllItems().isEmpty()) {
             errorBackgroundMessage.setText(idOfErrorTextToShow);
             errorBackgroundMessage.setVisibility(View.VISIBLE);
-        } else {
+        } else if (getActivity() != null) {
             Toast.makeText(getActivity(), idOfErrorTextToShow, Toast.LENGTH_SHORT).show();
         }
     }
@@ -335,7 +346,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        adapterForTopic = new JVCTopicAdapter(getActivity(), currentSettings);
+        adapterForTopic = new JVCTopicAdapter(requireActivity(), currentSettings);
         initializeGetterForMessages();
         initializeAdapter();
         initializeSettings();
