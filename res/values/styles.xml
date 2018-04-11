@@ -28,6 +28,7 @@
         <item name="themedSurveyMessageBackgroundColor">@color/defaultSurveyMessageColorThemeLight</item>
         <item name="themedTopicNameColor">@color/defaultTopicNameAndAccentColorThemeLight</item>
         <item name="themedQuoteBackgroundColor">@color/colorQuoteBackgroundThemeLight</item>
+        <item name="themedQuoteStripeColor">?attr/colorPrimary</item>
         <item name="themedPseudoUserColor">@color/colorPseudoUserThemeLight</item>
         <item name="themedPseudoOtherModeForumColor">@color/colorPseudoOtherModeForumThemeLight</item>
         <item name="themedPseudoOtherModeIrcColor">@color/colorPseudoOtherModeIrcThemeLight</item>
@@ -86,6 +87,7 @@
         <item name="themedSurveyMessageBackgroundColor">@color/surveyMessagesBackgroundColorThemeDark</item>
         <item name="themedTopicNameColor">@color/topicNameColorThemeDark</item>
         <item name="themedQuoteBackgroundColor">@color/colorQuoteBackgroundThemeDark</item>
+        <item name="themedQuoteStripeColor">@color/colorQuoteStripeThemeDark</item>
         <item name="themedPseudoUserColor">@color/colorPseudoUserThemeDark</item>
         <item name="themedPseudoOtherModeForumColor">@color/colorPseudoOtherModeForumThemeDark</item>
         <item name="themedPseudoOtherModeIrcColor">@color/colorPseudoOtherModeIrcThemeDark</item>
@@ -125,6 +127,7 @@
         <item name="themedDividerColor">@color/dividerColorThemeGrey</item>
         <item name="themedBackgroundAvatar">@drawable/avatar_image_border_grey</item>
         <item name="themedAltBackgroundColor">@color/altBackgroundColorThemeGrey</item>
+        <item name="themedQuoteStripeColor">@color/colorQuoteStripeThemeGrey</item>
         <item name="themedButtonSubForumStyle">@style/ButtonSubForumGreyAndBlackStyle</item>
         <item name="themedButtonBlueStyle">@style/ButtonForumGreyStyle</item>
         <item name="themedButtonRedStyle">@style/ButtonForumGreyStyle</item>
@@ -143,6 +146,7 @@
         <item name="themedBackgroundAvatar">@drawable/avatar_image_border_black</item>
         <item name="themedAltBackgroundColor">@color/altBackgroundColorThemeBlack</item>
         <item name="themedQuoteBackgroundColor">@color/colorQuoteBackgroundThemeBlack</item>
+        <item name="themedQuoteStripeColor">@color/colorQuoteStripeThemeBlack</item>
         <item name="themedButtonSubForumStyle">@style/ButtonSubForumGreyAndBlackStyle</item>
         <item name="themedButtonBlueStyle">@style/ButtonForumBlackStyle</item>
         <item name="themedButtonRedStyle">@style/ButtonForumBlackStyle</item>

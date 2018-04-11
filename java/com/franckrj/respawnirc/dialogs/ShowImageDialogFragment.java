@@ -86,15 +86,15 @@ public class ShowImageDialogFragment extends DialogFragment {
             Drawable deletedDrawable;
             DisplayMetrics metrics = new DisplayMetrics();
 
-            getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            requireActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-            deletedDrawable = ThemeManager.getDrawable(R.attr.themedDeletedImage, getActivity());
+            deletedDrawable = ThemeManager.getDrawable(R.attr.themedDeletedImage, requireActivity());
             deletedDrawable.setBounds(0, 0, deletedDrawable.getIntrinsicWidth(), deletedDrawable.getIntrinsicHeight());
 
-            downloaderForImage.setParentActivity(getActivity());
+            downloaderForImage.setParentActivity(requireActivity());
             downloaderForImage.setListenerForDownloadFinished(listenerForDownloadFinished);
             downloaderForImage.setListenerForCurrentProgress(listenerForCurrentProgress);
-            downloaderForImage.setImagesCacheDir(getActivity().getCacheDir());
+            downloaderForImage.setImagesCacheDir(requireActivity().getCacheDir());
             downloaderForImage.setScaleLargeImages(true);
             downloaderForImage.setDefaultDrawable(deletedDrawable);
             downloaderForImage.setDeletedDrawable(deletedDrawable);
@@ -125,8 +125,8 @@ public class ShowImageDialogFragment extends DialogFragment {
         textForSizeOfImage = mainView.findViewById(R.id.text_size_image_showimage);
 
         /*nécessaire pour un affichage correcte sur les versions récentes d'android.*/
-        progressBarIndeterminateForImage.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
-        progressBarDeterminateForImage.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
+        progressBarIndeterminateForImage.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+        progressBarDeterminateForImage.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
         progressBarDeterminateForImage.setVisibility(View.INVISIBLE);
         textForSizeOfImage.setVisibility(View.INVISIBLE);
         viewForImage.setVisibility(View.INVISIBLE);
@@ -139,8 +139,9 @@ public class ShowImageDialogFragment extends DialogFragment {
         mainView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: pas sur que ce soit une bonne idée, ne pas appliquer ailleurs avant plus de tests
-                dismissAllowingStateLoss();
+                if (!isStateSaved()) {
+                    dismiss();
+                }
             }
         });
 
@@ -153,19 +154,25 @@ public class ShowImageDialogFragment extends DialogFragment {
 
         Dialog dialog = getDialog();
         if (dialog != null && dialog.getWindow() != null) {
-            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            /* Bizarrement MATCH_PARENT n'est nécessaire que pour le width, pour le height pas besoin et en plus si le height
+             * est set à MATCH_PARENT la statusbar bug est devient toute noire. */
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
     }
 
     @Override
     public void onPause() {
         downloaderForImage.stopAllCurrentTasks();
+        downloaderForImage.clearMemoryCache();
         super.onPause();
     }
 
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
+        /* La fonction onPause est censé toujours être appelé avant onDismiss donc ça sert a rien,
+         * mais dans le doute... */
         downloaderForImage.stopAllCurrentTasks();
+        downloaderForImage.clearMemoryCache();
         super.onDismiss(dialogInterface);
     }
 }

@@ -40,8 +40,6 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     private boolean ignoreTopicToo = true;
     private boolean clearTopicsOnRefresh = true;
     private boolean isInErrorMode = false;
-    private @ColorInt int currentTopicNameColor = 0;
-    private @ColorInt int currentAltColor = 0;
 
     private final AdapterView.OnItemClickListener listenerForItemClickedInListView = new AdapterView.OnItemClickListener() {
         @Override
@@ -139,7 +137,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
                     if (adapterForForum.getAllItems().isEmpty()) {
                         errorBackgroundMessage.setText(idOfErrorTextToShow);
                         errorBackgroundMessage.setVisibility(View.VISIBLE);
-                    } else {
+                    } else if (getActivity() != null) {
                         Toast.makeText(getActivity(), idOfErrorTextToShow, Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -160,6 +158,11 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         adapterForForum.setAlternateBackgroundColor(PrefsManager.getBool(PrefsManager.BoolPref.Names.FORUM_ALTERNATE_BACKGROUND));
         adapterForForum.setTopicTitleSizeInSp(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_TITLE_FONT_SIZE)));
         adapterForForum.setTopicInfosSizeInSp(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_INFOS_FONT_SIZE)));
+        adapterForForum.setTopicNameColor(ThemeManager.getColorInt(R.attr.themedTopicNameColor, requireActivity()));
+        adapterForForum.setPseudoModoColor(ThemeManager.getColorInt(R.attr.themedPseudoModoColor, requireActivity()));
+        adapterForForum.setPseudoAdminColor(ThemeManager.getColorInt(R.attr.themedPseudoAdminColor, requireActivity()));
+        adapterForForum.setAltBackgroundColor(ThemeManager.getColorInt(R.attr.themedAltBackgroundColor, requireActivity()));
+        adapterForForum.setDefaultBackgroundColor(ThemeManager.getColorInt(R.attr.themedDefaultBackgroundColor, requireActivity()));
     }
 
     private void reloadSettings() {
@@ -167,8 +170,6 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         getterForForum.setCookieListInAString(PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
         pseudoOfUserInLC = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER).toLowerCase();
         ignoreTopicToo = PrefsManager.getBool(PrefsManager.BoolPref.Names.IGNORE_TOPIC_TOO);
-        currentTopicNameColor = ThemeManager.getColorInt(R.attr.themedTopicNameColor, getActivity());
-        currentAltColor = ThemeManager.getColorInt(R.attr.themedAltBackgroundColor, getActivity());
         clearTopicsOnRefresh = true;
     }
 
@@ -184,7 +185,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     private void recreateAdapterForForum() {
         ArrayList<JVCParser.TopicInfos> allCurrentTopicsShowed = adapterForForum.getAllItems();
 
-        adapterForForum = new JVCForumAdapter(getActivity());
+        adapterForForum = new JVCForumAdapter(requireActivity());
         reloadAdapterSettings();
         jvcTopicList.setAdapter(adapterForForum);
 
@@ -253,7 +254,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         super.onActivityCreated(savedInstanceState);
 
         getterForForum = new JVCForumGetter();
-        adapterForForum = new JVCForumAdapter(getActivity());
+        adapterForForum = new JVCForumAdapter(requireActivity());
         reloadSettings();
         getterForForum.setListenerForNewGetterState(listenerForNewGetterState);
         getterForForum.setListenerForNewTopics(listenerForNewTopics);
@@ -316,23 +317,23 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         boolean oldAlternateBackgroundColor = adapterForForum.getAlternateBackgroundColor();
         int oldTopicTitleSizeInSp = adapterForForum.getTopicTitleSizeInSp();
         int oldTopicInfosSizeInSp = adapterForForum.getTopicInfosSizeInSp();
-        @ColorInt int oldTopicNameColor = currentTopicNameColor;
-        @ColorInt int oldAltColor = currentAltColor;
+        @ColorInt int oldTopicNameColor = adapterForForum.getTopicNameColor();
+        @ColorInt int oldAltColor = adapterForForum.getAltBackgroundColor();
         reloadSettings();
         isInErrorMode = false;
 
         /* Lors d'un changement de taille de police les vues ne sont pas bien resize. La seule solution qui semble fonctionner
-         * c'est de tout recréer, invalider les vues ou faire un requestLayout ne marche pas (au moins sous 4.0.4). */
+         * c'est de tout recréer, invalider les vues ou faire un requestLayout ne marche pas (du moins sous 4.0.4). */
         if (oldTopicTitleSizeInSp != adapterForForum.getTopicTitleSizeInSp() ||
                 oldTopicInfosSizeInSp != adapterForForum.getTopicInfosSizeInSp()) {
             recreateAdapterForForum();
         } else {
-            if (oldTopicNameColor != currentTopicNameColor) {
+            if (oldTopicNameColor != adapterForForum.getTopicNameColor()) {
                 adapterForForum.recreateAllItems();
             }
 
             if (oldAlternateBackgroundColor != adapterForForum.getAlternateBackgroundColor() ||
-                    oldTopicNameColor != currentTopicNameColor || oldAltColor != currentAltColor) {
+                    oldTopicNameColor != adapterForForum.getTopicNameColor() || oldAltColor != adapterForForum.getAltBackgroundColor()) {
                 adapterForForum.notifyDataSetChanged();
             }
         }

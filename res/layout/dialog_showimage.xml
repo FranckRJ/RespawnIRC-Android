@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <!-- Set le minWidth/minHeight est le seul moyen trouvé pour forcer l'image à occuper
+         tout l'espace, du moins sous Android 4.0.4. -->
     <ImageView
         android:id="@+id/imageview_image_showimage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
         android:scaleType="fitCenter"
+        android:minWidth="100000dp"
+        android:minHeight="100000dp"
         android:contentDescription="@string/noelshack"/>
 
     <ProgressBar
@@ -16,7 +21,10 @@
         android:id="@+id/dl_indeterminate_image_showimage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:indeterminate="true"/>
 
     <ProgressBar
@@ -24,14 +32,19 @@
         android:id="@+id/dl_determinate_image_showimage"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:indeterminate="false"/>
 
     <TextView
         android:id="@+id/text_size_image_showimage"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_below="@id/dl_determinate_image_showimage"
+        app:layout_constraintTop_toBottomOf="@+id/dl_determinate_image_showimage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:textColor="@android:color/white"/>
-</RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

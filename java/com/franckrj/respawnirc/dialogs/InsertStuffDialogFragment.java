@@ -62,7 +62,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
 
     private void selectThisRow(int rowToUse) {
         listOfCategoryButtons.get(oldRowNumber).setBackgroundColor(Color.TRANSPARENT);
-        listOfCategoryButtons.get(rowToUse).setBackgroundColor(ThemeManager.getColorInt(R.attr.themedDarkerPopupBackgroundColor, getActivity()));
+        listOfCategoryButtons.get(rowToUse).setBackgroundColor(ThemeManager.getColorInt(R.attr.themedDarkerPopupBackgroundColor, requireActivity()));
         initializeSpanForTextViewIfNeeded(jvcImageGetter, rowToUse);
         mainTextView.setText(replaceUrlSpans(listOfSpanForTextView[rowToUse]));
         scrollViewOfButtons.requestChildFocus(listOfCategoryButtons.get(rowToUse), listOfCategoryButtons.get(rowToUse));
@@ -506,14 +506,14 @@ public class InsertStuffDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Drawable deletedDrawable = ThemeManager.getDrawable(R.attr.themedDeletedImage, getActivity());
+        Drawable deletedDrawable = ThemeManager.getDrawable(R.attr.themedDeletedImage, requireActivity());
         deletedDrawable.setBounds(0, 0, deletedDrawable.getIntrinsicWidth(), deletedDrawable.getIntrinsicHeight());
 
-        jvcImageGetter = new CustomImageGetter(getActivity(), deletedDrawable, null);
+        jvcImageGetter = new CustomImageGetter(requireActivity(), deletedDrawable, null);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         @SuppressLint("InflateParams")
-        View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_insertstuff, null);
+        View mainView = requireActivity().getLayoutInflater().inflate(R.layout.dialog_insertstuff, null);
         scrollViewOfButtons = mainView.findViewById(R.id.list_scrollview_insertstuff);
         mainTextView = mainView.findViewById(R.id.showstuff_text_insertstuff);
         listOfCategoryButtons.add((ImageView) mainView.findViewById(R.id.smiley_button_insertstuff));

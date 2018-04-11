@@ -44,7 +44,7 @@ public class SelectTextDialogFragment extends DialogFragment {
         Bundle currentArgs = getArguments();
         String textContent = "";
         boolean textIsHtml = false;
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
 
         if (currentArgs != null) {
             textContent = currentArgs.getString(ARG_TEXT_CONTENT, "");
@@ -52,7 +52,7 @@ public class SelectTextDialogFragment extends DialogFragment {
         }
 
         @SuppressLint("InflateParams")
-        final View mainView = getActivity().getLayoutInflater().inflate(R.layout.dialog_selecttext, null);
+        final View mainView = requireActivity().getLayoutInflater().inflate(R.layout.dialog_selecttext, null);
         final NestedScrollView mainScrollView = mainView.findViewById(R.id.scrollview_selecttext);
         topLine = mainView.findViewById(R.id.line_top_selecttext);
         bottomLine = mainView.findViewById(R.id.line_bottom_selecttext);
@@ -81,16 +81,18 @@ public class SelectTextDialogFragment extends DialogFragment {
                 .setPositiveButton(R.string.copy, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        final int selStart = textShowed.getSelectionStart();
-                        final int selEnd = textShowed.getSelectionEnd();
-                        final int min = Math.max(0, Math.min(selStart, selEnd));
-                        final int max = Math.max(0, Math.max(selStart, selEnd));
-                        if (min != max) {
-                            Utils.putStringInClipboard(textShowed.getText().subSequence(min, max).toString(), getActivity());
-                            Toast.makeText(getActivity(), R.string.copyDone, Toast.LENGTH_SHORT).show();
-                        } else {
-                            Utils.putStringInClipboard(textShowed.getText().toString(), getActivity());
-                            Toast.makeText(getActivity(), R.string.allTextCopied, Toast.LENGTH_SHORT).show();
+                        if (getActivity() != null) {
+                            final int selStart = textShowed.getSelectionStart();
+                            final int selEnd = textShowed.getSelectionEnd();
+                            final int min = Math.max(0, Math.min(selStart, selEnd));
+                            final int max = Math.max(0, Math.max(selStart, selEnd));
+                            if (min != max) {
+                                Utils.putStringInClipboard(textShowed.getText().subSequence(min, max).toString(), getActivity());
+                                Toast.makeText(getActivity(), R.string.copyDone, Toast.LENGTH_SHORT).show();
+                            } else {
+                                Utils.putStringInClipboard(textShowed.getText().toString(), getActivity());
+                                Toast.makeText(getActivity(), R.string.allTextCopied, Toast.LENGTH_SHORT).show();
+                            }
                         }
                         dialog.dismiss();
                     }

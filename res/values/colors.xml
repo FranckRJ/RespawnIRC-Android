@@ -6,7 +6,7 @@
     <!-- Light Theme -->
     <color name="shadowColorThemeLight">#50000000</color>
     <color name="colorControlHighlightThemeLight">#757575</color>
-    <color name="colorQuoteBackgroundThemeLight">#10000000</color>
+    <color name="colorQuoteBackgroundThemeLight">#0D000000</color>
     <color name="colorPseudoUserThemeLight">#3399ff</color>
     <color name="colorPseudoOtherModeForumThemeLight">#80000000</color>
     <color name="colorPseudoOtherModeIrcThemeLight">#000025</color>
@@ -27,7 +27,8 @@
     <color name="colorPrimaryThemeDark">#212121</color>
     <color name="colorPrimaryDarkerThemeDark">#141414</color>
     <color name="colorControlHighlightThemeDark">#888888</color>
-    <color name="colorQuoteBackgroundThemeDark">#10FFFFFF</color>
+    <color name="colorQuoteBackgroundThemeDark">#0DFFFFFF</color>
+    <color name="colorQuoteStripeThemeDark">#000000</color>
     <color name="altBackgroundColorThemeDark">#242424</color>
     <color name="accentColorThemeDark">#4DA6FF</color>
     <color name="topicNameColorThemeDark">#EEEEEE</color>
@@ -52,6 +53,7 @@
     <color name="colorPrimaryDarkerThemeGrey">#000000</color>
     <color name="colorControlHighlightThemeGrey">#EEEEEE</color>
     <color name="altBackgroundColorThemeGrey">#4A4A4A</color>
+    <color name="colorQuoteStripeThemeGrey">#161616</color>
     <color name="defaultBackgroundColorThemeGrey">#424242</color>
     <color name="windowBackgroundColorThemeGrey">#303030</color>
     <color name="darkerBackgroundColorThemeGrey">#151515</color>
@@ -61,7 +63,8 @@
     <!-- Black Theme -->
     <color name="colorPrimaryThemeBlack">#151515</color>
     <color name="colorPrimaryDarkerThemeBlack">#000000</color>
-    <color name="colorQuoteBackgroundThemeBlack">#20FFFFFF</color>
+    <color name="colorQuoteBackgroundThemeBlack">#14FFFFFF</color>
+    <color name="colorQuoteStripeThemeBlack">#CBCBCB</color>
     <color name="altBackgroundColorThemeBlack">#000000</color>
     <color name="defaultBackgroundColorThemeBlack">#000000</color>
     <color name="windowBackgroundColorThemeBlack">#000000</color>
