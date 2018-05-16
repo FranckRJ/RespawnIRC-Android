@@ -64,7 +64,6 @@ public class JVCTopicAdapter extends BaseAdapter {
     private boolean showSignatures = false;
     private boolean showAvatars = false;
     private boolean showSpoilDefault = false;
-    private boolean fastRefreshOfImages = false;
     private boolean colorDeletedMessages = true;
     private String surveyTitle = "";
     private View.OnClickListener onSurveyClickListener = null;
@@ -83,16 +82,6 @@ public class JVCTopicAdapter extends BaseAdapter {
     private @ColorInt int deletedMessageBackgroundColor = 0;
     private @ColorInt int defaultMessageBackgroundColor = 0;
     private @ColorInt int altMessageBackgroundColor = 0;
-
-    @SuppressWarnings("FieldCanBeLocal")
-    private final ImageDownloader.DownloadFinished listenerForDownloadFinished = new ImageDownloader.DownloadFinished() {
-        @Override
-        public void newDownloadFinished(int numberOfDownloadRemaining) {
-            if (numberOfDownloadRemaining == 0 || fastRefreshOfImages) {
-                notifyDataSetChanged();
-            }
-        }
-    };
 
     private final PopupMenu.OnMenuItemClickListener menuItemInPopupMenuClickedListener = new PopupMenu.OnMenuItemClickListener() {
         @Override
@@ -180,7 +169,6 @@ public class JVCTopicAdapter extends BaseAdapter {
 
         jvcImageGetter = new CustomImageGetter(parentActivity, ThemeManager.getDrawable(R.attr.themedDeletedImage, parentActivity), downloaderForImage);
         downloaderForImage.setParentActivity(parentActivity);
-        downloaderForImage.setListenerForDownloadFinished(listenerForDownloadFinished);
         downloaderForImage.setImagesCacheDir(parentActivity.getCacheDir());
         downloaderForImage.setDefaultDrawable(ThemeManager.getDrawable(R.attr.themedDownloadImage, parentActivity));
         downloaderForImage.setDeletedDrawable(ThemeManager.getDrawable(R.attr.themedDeletedImage, parentActivity));
@@ -228,10 +216,6 @@ public class JVCTopicAdapter extends BaseAdapter {
         showSpoilDefault = newVal;
     }
 
-    public void setFastRefreshOfImages(boolean newVal) {
-        fastRefreshOfImages = newVal;
-    }
-
     public void setColorDeletedMessages(boolean newVal) {
         colorDeletedMessages = newVal;
     }
@@ -242,6 +226,10 @@ public class JVCTopicAdapter extends BaseAdapter {
 
     public void setOnSurveyClickListener(View.OnClickListener newListener) {
         onSurveyClickListener = newListener;
+    }
+
+    public void setDownloadFinishedListener(ImageDownloader.DownloadFinished newListener) {
+        downloaderForImage.setListenerForDownloadFinished(newListener);
     }
 
     public void setAvatarSize(int newSize) {

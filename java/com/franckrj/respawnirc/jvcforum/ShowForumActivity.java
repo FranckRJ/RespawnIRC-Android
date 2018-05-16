@@ -158,7 +158,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
                 disableDrawerLayout();
             }
 
-            if (getIntent().getBooleanExtra(EXTRA_ITS_FIRST_START, false)) {
+            if (newIntent.getBooleanExtra(EXTRA_ITS_FIRST_START, false)) {
                 if (PrefsManager.getInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED) == MainActivity.ACTIVITY_SHOW_TOPIC) {
                     startActivity(new Intent(this, ShowTopicActivity.class));
                     newActivityIsLaunched = true;

@@ -49,7 +49,7 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
     private final View.OnClickListener searchButtonClickedListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            performSearch();
+            performSearch(true);
         }
     };
 
@@ -57,7 +57,7 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                performSearch();
+                performSearch(true);
                 return true;
             }
             return false;
@@ -67,7 +67,7 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
     private final RadioGroup.OnCheckedChangeListener searchTypeChangedListener = new RadioGroup.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
-            performSearch();
+            performSearch(false);
         }
     };
 
@@ -99,9 +99,12 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
         pageNavigation.setLastPageNumber(100);
     }
 
-    public void performSearch() {
+    public void performSearch(boolean initiatedBySearchButton) {
+        boolean textSearchedIsValid = false;
+
         if (textForSearch != null) {
             if (!textForSearch.getText().toString().isEmpty()) {
+                textSearchedIsValid = true;
                 idOfTypeOfSearch = searchModeRadioGroup.getCheckedRadioButtonId();
                 pageNavigation.setCurrentLink(currentSearchLink + "?search_in_forum=" + Utils.encodeStringToUrlString(textForSearch.getText().toString()) +
                         "&type_search_in_forum=" + getSearchTypeInTextForSearchTypeId(idOfTypeOfSearch));
@@ -110,7 +113,9 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
             }
         }
 
-        Utils.hideSoftKeyboard(SearchTopicInForumActivity.this);
+        if (initiatedBySearchButton || textSearchedIsValid) {
+            Utils.hideSoftKeyboard(SearchTopicInForumActivity.this);
+        }
     }
 
     @Override

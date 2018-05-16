@@ -11,14 +11,14 @@ public class StickerConverter {
         ruleForNoLangageSticker.add(new InfoForConvert("1jc3", "1jc3-fr", false));
         ruleForNoLangageSticker.add(new InfoForConvert("1lej", "1lej-en", false));
         ruleForNoLangageSticker.add(new InfoForConvert("1leq", "1leq-en", false));
-        ruleForNoLangageSticker.add(new InfoForConvert("1n1q", "1n1q-fr", false));
-        ruleForNoLangageSticker.add(new InfoForConvert("1n1t", "1n1t-fr", false));
-        ruleForNoLangageSticker.add(new InfoForConvert("1n1r", "1n1r-fr", false));
-        ruleForNoLangageSticker.add(new InfoForConvert("1n1o", "1n1o-fr", false));
-        ruleForNoLangageSticker.add(new InfoForConvert("1n1n", "1n1n-fr", false));
-        ruleForNoLangageSticker.add(new InfoForConvert("1n1m", "1n1m-fr", false));
-        ruleForNoLangageSticker.add(new InfoForConvert("1n1p", "1n1p-fr", false));
-        ruleForNoLangageSticker.add(new InfoForConvert("zuc", "zuc-fr", false));
+        ruleForNoLangageSticker.add(new InfoForConvert("1n1q-fr", "1n1q", false));
+        ruleForNoLangageSticker.add(new InfoForConvert("1n1t-fr", "1n1t", false));
+        ruleForNoLangageSticker.add(new InfoForConvert("1n1r-fr", "1n1r", false));
+        ruleForNoLangageSticker.add(new InfoForConvert("1n1o-fr", "1n1o", false));
+        ruleForNoLangageSticker.add(new InfoForConvert("1n1n-fr", "1n1n", false));
+        ruleForNoLangageSticker.add(new InfoForConvert("1n1m-fr", "1n1m", false));
+        ruleForNoLangageSticker.add(new InfoForConvert("1n1p-fr", "1n1p", false));
+        ruleForNoLangageSticker.add(new InfoForConvert("zuc-fr", "zuc", false));
 
         ruleForStickerToSmiley = new ArrayList<>();
         ruleForStickerToSmiley.add(new InfoForConvert("1jnh", "45.gif", true));
