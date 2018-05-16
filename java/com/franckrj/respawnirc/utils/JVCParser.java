@@ -87,10 +87,10 @@ public final class JVCParser {
     private static final Pattern overlyJVCQuotePattern = Pattern.compile("(<(/)?blockquote>)");
     private static final Pattern overlyBetterQuotePattern = Pattern.compile("<(/)?blockquote>");
     private static final Pattern jvcLinkPattern = Pattern.compile("<a href=\"([^\"]*)\"( )?( title=\"[^\"]*\")?>.*?</a>");
-    private static final Pattern shortLinkPattern = Pattern.compile("<span class=\"JvCare [^\"]*\" rel=\"nofollow[^\"]*\" target=\"_blank\">([^<]*)</span>");
+    private static final Pattern shortLinkPattern = Pattern.compile("<span class=\"JvCare [^\"]*\"[^>]*?target=\"_blank\">([^<]*)</span>");
     private static final Pattern longLinkPattern = Pattern.compile("<span class=\"JvCare [^\"]*\"[^i]*itle=\"([^\"]*)\">[^<]*<i></i><span>[^<]*</span>[^<]*</span>");
     private static final Pattern smileyPattern = Pattern.compile("<img src=\"http(s)?://image\\.jeuxvideo\\.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-code=\"([^\"]*)\" title=\"[^\"]*\" [^>]*>");
-    private static final Pattern youtubeVideoPattern = Pattern.compile("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe .*? src=\"http(s)?://www\\.youtube\\.com/embed/([^\"]*)\"[^>]*></iframe></div></div>");
+    private static final Pattern embedVideoPattern = Pattern.compile("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe.*?src=\"([^\"]*)\"[^>]*></iframe></div></div>");
     private static final Pattern jvcVideoPattern = Pattern.compile("<div class=\"player-contenu\">.*?</div>[^<]*</div>[^<]*</div>[^<]*</div>", Pattern.DOTALL);
     private static final Pattern surroundedBlockquotePattern = Pattern.compile("(<br /> *)*(<(/)?blockquote>)( *<br />)*");
     private static final Pattern noelshackImagePattern = Pattern.compile("<span class=\"JvCare[^>]*><img class=\"img-shack\".*?src=\"http(s)?://([^\"]*)\" alt=\"([^\"]*)\"[^>]*></span>");
@@ -908,7 +908,7 @@ public final class JVCParser {
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, stickerPattern, 1, "<img src=\"sticker_", ".png\"/>", new ConvertUrlToStickerId(), new ConvertStringToString("-", "_"));
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, smileyPattern, 2, "<img src=\"smiley_", "\"/>", null, null);
 
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, youtubeVideoPattern, 2, "<a href=\"http://youtu.be/", "\">http://youtu.be/", 2, "</a>");
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, embedVideoPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcVideoPattern, -1, "[[Vidéo non supportée par l'application]]", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
@@ -959,7 +959,7 @@ public final class JVCParser {
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, stickerPattern, 1, "[[sticker:p/", "]]", new ConvertUrlToStickerId(), null);
         ToolForParsing.replaceStringByAnother(messageInBuilder, "\n", "");
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, smileyPattern, 3, "", "", null, null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, youtubeVideoPattern, 2, "http://youtu.be/", "", null, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, embedVideoPattern, 1, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcVideoPattern, -1, "[[Vidéo non supportée par l'application]]", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcLinkPattern, 1, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", null, null);
