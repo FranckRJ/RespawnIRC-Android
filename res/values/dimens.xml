@@ -14,5 +14,5 @@
     <dimen name="paddingForCompoundDrawableNavigationMenu">16dp</dimen>
     <dimen name="xPaddingSendMessageEditTextTopicLock">10dp</dimen>
     <dimen name="xPaddingSendMessageEditTextNormal">5dp</dimen>
-    <dimen name="yPaddingSendMessageEditTextNormal">2dp</dimen>
+    <dimen name="yPaddingSendMessageEditTextNormal">4dp</dimen>
 </resources>
