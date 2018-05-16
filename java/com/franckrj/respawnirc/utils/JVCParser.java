@@ -47,9 +47,9 @@ public final class JVCParser {
     private static final Pattern subIdInJsonPattern = Pattern.compile("\"id-abonnement\":([0-9]*)");
     private static final Pattern codeBlockPattern = Pattern.compile("<pre class=\"pre-jv\"><code class=\"code-jv\">([^<]*)</code></pre>");
     private static final Pattern codeLinePattern = Pattern.compile("<code class=\"code-jv\">(.*?)</code>", Pattern.DOTALL);
-    private static final Pattern spoilLinePattern = Pattern.compile("<div class=\"bloc-spoil-jv en-ligne\">.*?<div class=\"contenu-spoil\">(.*?)</div></div>", Pattern.DOTALL);
+    private static final Pattern spoilLinePattern = Pattern.compile("<span class=\"bloc-spoil-jv en-ligne\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
     private static final Pattern spoilBlockPattern = Pattern.compile("<div class=\"bloc-spoil-jv\">.*?<div class=\"contenu-spoil\">(.*?)</div></div>", Pattern.DOTALL);
-    private static final Pattern spoilOverlyPattern = Pattern.compile("(<div class=\"bloc-spoil-jv[^\"]*\">.*?<div class=\"contenu-spoil\">|</div></div>)", Pattern.DOTALL);
+    private static final Pattern spoilOverlyPattern = Pattern.compile("(<(span|div) class=\"bloc-spoil-jv[^\"]*\">.*?<(span|div) class=\"contenu-spoil\">|</span></span>|</div></div>)", Pattern.DOTALL);
     private static final Pattern pageTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/[0-9]*-([0-9]*)-([0-9]*)-)([0-9]*)(-[0-9]*-[0-9]*-[0-9]*-[^.]*\\.htm)");
     private static final Pattern pageForumLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/[0-9]*-([0-9]*)-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-[^.]*\\.htm)");
     private static final Pattern pageSearchTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/recherche/forums/[0-9]*-[0-9]*-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-.*)");
@@ -1062,8 +1062,8 @@ public final class JVCParser {
             newMessageInfo.messageNotParsed = messageMatcher.group(1);
             newMessageInfo.containUglyImages = ToolForParsing.hasUglyImagesInNotPrettyMessage(newMessageInfo.messageNotParsed);
 
-            newMessageInfo.messageContentContainSpoil = newMessageInfo.messageNotParsed.contains("<div class=\"contenu-spoil\">");
-            newMessageInfo.signatureContainSpoil = newMessageInfo.signatureNotParsed.contains("<div class=\"contenu-spoil\">");
+            newMessageInfo.messageContentContainSpoil = newMessageInfo.messageNotParsed.contains(" class=\"contenu-spoil\">");
+            newMessageInfo.signatureContainSpoil = newMessageInfo.signatureNotParsed.contains(" class=\"contenu-spoil\">");
 
             newMessageInfo.messageNotParsed = makeBasicMessageParse(newMessageInfo.messageNotParsed, newMessageInfo.messageContentContainSpoil);
             newMessageInfo.signatureNotParsed = makeBasicMessageParse(newMessageInfo.signatureNotParsed, newMessageInfo.signatureContainSpoil);
@@ -1227,7 +1227,7 @@ public final class JVCParser {
             int lastOffsetOfTag = 0;
 
             while (spoilOverlyMatcher.find(lastOffsetOfTag)) {
-                boolean itsEndingTag = spoilOverlyMatcher.group().equals("</div></div>");
+                boolean itsEndingTag = spoilOverlyMatcher.group().startsWith("</");
 
                 if (!itsEndingTag) {
                     ++currentSpoilTagDeepness;
