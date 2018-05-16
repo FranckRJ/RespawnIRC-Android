@@ -117,6 +117,12 @@ public class WebBrowserActivity extends AbsToolbarActivity {
     }
 
     @Override
+    public void onDestroy() {
+        browserWebView.destroy();
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_webbrowser, menu);

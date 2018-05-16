@@ -56,7 +56,7 @@
                 android:layout_height="60dp"
                 android:padding="8dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/sticker_zuc_fr"
+                android:src="@drawable/sticker_zuc"
                 android:contentDescription="@string/insertStuff"/>
             <ImageView
                 android:id="@+id/sticker_2_button_insertstuff"
@@ -144,7 +144,7 @@
                 android:layout_height="60dp"
                 android:padding="8dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/sticker_1n1p_fr"
+                android:src="@drawable/sticker_1n1p"
                 android:contentDescription="@string/insertStuff"/>
             <ImageView
                 android:id="@+id/sticker_13_button_insertstuff"

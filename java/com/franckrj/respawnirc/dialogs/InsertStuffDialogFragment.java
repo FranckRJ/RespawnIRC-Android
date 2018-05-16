@@ -218,7 +218,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
                     appendAnotherStuff("sticker_zu9", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_zua", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_zub", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_zuc_fr", textForShowAllStuff, false);
+                    appendAnotherStuff("sticker_zuc", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_zuc_en", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_zuc_es", textForShowAllStuff, false);
                     break;
@@ -361,32 +361,32 @@ public class InsertStuffDialogFragment extends DialogFragment {
                     //foot
                     appendAnotherStuff("sticker_1n1m_de", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1n1m_es", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1n1m_fr", textForShowAllStuff, false);
+                    appendAnotherStuff("sticker_1n1m", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1n1m_it", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1n1n_de", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1n1n_es", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1n1n_fr", textForShowAllStuff, false);
+                    appendAnotherStuff("sticker_1n1n", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1n1n_it", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1n1o_de", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1n1o_es", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1n1o_fr", textForShowAllStuff, false);
+                    appendAnotherStuff("sticker_1n1o", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1n1o_it", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1n1p_de", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1n1p_es", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1n1p_fr", textForShowAllStuff, false);
+                    appendAnotherStuff("sticker_1n1p", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1n1p_it", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1n1q_de", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1n1q_es", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1n1q_fr", textForShowAllStuff, false);
+                    appendAnotherStuff("sticker_1n1q", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1n1q_it", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1n1r_de", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1n1r_es", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1n1r_fr", textForShowAllStuff, false);
+                    appendAnotherStuff("sticker_1n1r", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1n1r_it", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1n1s", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1n1t_de", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1n1t_es", textForShowAllStuff, false);
-                    appendAnotherStuff("sticker_1n1t_fr", textForShowAllStuff, false);
+                    appendAnotherStuff("sticker_1n1t", textForShowAllStuff, false);
                     appendAnotherStuff("sticker_1n1t_it", textForShowAllStuff, false);
                     break;
                 case 14:

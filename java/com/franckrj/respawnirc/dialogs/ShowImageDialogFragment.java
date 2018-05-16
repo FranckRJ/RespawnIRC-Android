@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.ImageDownloader;
-import com.franckrj.respawnirc.utils.ThemeManager;
+import com.franckrj.respawnirc.utils.Undeprecator;
 
 public class ShowImageDialogFragment extends DialogFragment {
     public static final String ARG_IMAGE_LINK = "com.franckrj.respawnirc.showimagedialogfragment.ARG_IMAGE_LINK";
@@ -88,7 +88,7 @@ public class ShowImageDialogFragment extends DialogFragment {
 
             requireActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-            deletedDrawable = ThemeManager.getDrawable(R.attr.themedDeletedImage, requireActivity());
+            deletedDrawable = Undeprecator.resourcesGetDrawable(requireActivity().getResources(), R.drawable.image_deleted_dark);
             deletedDrawable.setBounds(0, 0, deletedDrawable.getIntrinsicWidth(), deletedDrawable.getIntrinsicHeight());
 
             downloaderForImage.setParentActivity(requireActivity());

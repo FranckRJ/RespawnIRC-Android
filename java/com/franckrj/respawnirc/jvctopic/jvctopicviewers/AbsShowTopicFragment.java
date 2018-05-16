@@ -19,6 +19,7 @@ import com.franckrj.respawnirc.base.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.NetworkBroadcastReceiver;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.jvctopic.jvctopicgetters.AbsJVCTopicGetter;
+import com.franckrj.respawnirc.utils.ImageDownloader;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.ThemeManager;
@@ -51,6 +52,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected boolean cardDesignIsEnabled = false;
     protected boolean smoothScrollIsEnabled = true;
     protected boolean hideTotallyMessagesOfIgnoredPseudos = true;
+    protected boolean fastRefreshOfImages = false;
 
     protected final AbsJVCTopicGetter.NewGetterStateListener listenerForNewGetterState = new AbsJVCTopicGetter.NewGetterStateListener() {
         @Override
@@ -163,6 +165,17 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         }
     };
 
+    private final ImageDownloader.DownloadFinished listenerForDownloadFinished = new ImageDownloader.DownloadFinished() {
+        @Override
+        public void newDownloadFinished(int numberOfDownloadRemaining) {
+            if (numberOfDownloadRemaining == 0 || fastRefreshOfImages) {
+                disableTranscriptModeOnJvcMsgList();
+                adapterForTopic.notifyDataSetChanged();
+                enableTranscriptModeOnJvcMsgList();
+            }
+        }
+    };
+
     protected void initializeSettings() {
         int avatarSizeInDP;
         int stickerSizeInDP;
@@ -207,7 +220,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         absGetterForTopic.setCookieListInAString(PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
         smoothScrollIsEnabled = PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_SMOOTH_SCROLL);
         adapterForTopic.setShowSpoilDefault(PrefsManager.getBool(PrefsManager.BoolPref.Names.DEFAULT_SHOW_SPOIL_VAL));
-        adapterForTopic.setFastRefreshOfImages(PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_FAST_REFRESH_OF_IMAGES));
+        fastRefreshOfImages = PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_FAST_REFRESH_OF_IMAGES);
         adapterForTopic.setColorDeletedMessages(PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_COLOR_DELETED_MESSAGES));
         hideTotallyMessagesOfIgnoredPseudos = PrefsManager.getBool(PrefsManager.BoolPref.Names.HIDE_TOTALLY_MESSAGES_OF_IGNORED_PSEUDOS);
         adapterForTopic.setMessageFontSizeInSp(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MESSAGE_FONT_SIZE)));
@@ -355,6 +368,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         absGetterForTopic.setListenerForNewMessages(listenerForNewMessages);
         adapterForTopic.setOnSurveyClickListener(surveyItemClickedListener);
         adapterForTopic.setActionWhenItemMenuClicked(menuItemClickedInMessageListener);
+        adapterForTopic.setDownloadFinishedListener(listenerForDownloadFinished);
 
         if (getActivity() instanceof NewModeNeededListener) {
             listenerForNewModeNeeded = (NewModeNeededListener) getActivity();

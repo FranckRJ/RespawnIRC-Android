@@ -122,6 +122,12 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
     }
 
     @Override
+    public void onDestroy() {
+        jvcWebView.destroy();
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_connect, menu);

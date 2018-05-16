@@ -108,13 +108,14 @@
                 android:id="@+id/sendmessage_text_showtopic"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:minHeight="44dp"
                 android:layout_weight="1"
                 android:paddingTop="@dimen/yPaddingSendMessageEditTextNormal"
                 android:paddingBottom="@dimen/yPaddingSendMessageEditTextNormal"
                 android:paddingLeft="@dimen/xPaddingSendMessageEditTextNormal"
                 android:paddingRight="@dimen/xPaddingSendMessageEditTextNormal"
                 android:inputType="textMultiLine|textCapSentences"
-                android:maxLines="4"
+                android:maxLines="5"
                 android:hint="@string/messagePlaceHolder"
                 android:background="@android:color/transparent"/>
             <ImageButton

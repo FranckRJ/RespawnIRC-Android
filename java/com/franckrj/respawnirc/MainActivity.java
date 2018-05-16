@@ -26,11 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String ACTION_OPEN_SHORTCUT = "com.franckrj.respawnirc.ACTION_OPEN_SHORTCUT";
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        int lastActivityViewed = PrefsManager.getInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED);
-
+    private void manageWebViewCache() {
         //vidage du cache des webviews
         if (PrefsManager.getInt(PrefsManager.IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED) > 10) {
             WebView obj = new WebView(this);
@@ -38,7 +34,9 @@ public class MainActivity extends AppCompatActivity {
             PrefsManager.putInt(PrefsManager.IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED, 0);
             PrefsManager.applyChanges();
         }
+    }
 
+    private void manageImageCache() {
         File[] listOfImagesCached = getCacheDir().listFiles();
         if (listOfImagesCached != null) {
             if (listOfImagesCached.length > 100) {
@@ -50,7 +48,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
 
+    private void manageShortcuts() {
         if (Build.VERSION.SDK_INT >= 25) {
             ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
 
@@ -87,6 +87,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    void launchNeededActivities() {
+        int lastActivityViewed = PrefsManager.getInt(PrefsManager.IntPref.Names.LAST_ACTIVITY_VIEWED);
 
         if (getIntent() != null) {
             String actionForLinkToOpen = getIntent().getAction();
@@ -99,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
                     newShowForumIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     newShowForumIntent.putExtra(ShowForumActivity.EXTRA_NEW_LINK, linkToOpen);
                     startActivity(newShowForumIntent);
-                    finish();
                     return;
                 } else if (actionForLinkToOpen.equals(Intent.ACTION_VIEW)){
                     if (JVCParser.checkIfItsTopicFormatedLink(linkToOpen)) {
@@ -113,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
                         newShowForumIntent.putExtra(ShowForumActivity.EXTRA_IS_FIRST_ACTIVITY, false);
                         startActivity(newShowForumIntent);
                     }
-                    finish();
                     return;
                 }
             }
@@ -129,6 +131,17 @@ public class MainActivity extends AppCompatActivity {
             newShowForumIntent.putExtra(ShowForumActivity.EXTRA_ITS_FIRST_START, true);
             startActivity(newShowForumIntent);
         }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        manageWebViewCache();
+        manageImageCache();
+        manageShortcuts();
+
+        launchNeededActivities();
 
         finish();
     }
