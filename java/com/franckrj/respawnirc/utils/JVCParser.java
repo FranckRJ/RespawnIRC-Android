@@ -74,7 +74,7 @@ public final class JVCParser {
     private static final Pattern forumInSearchPagePattern = Pattern.compile("<a class=\"list-search-forum-name\" href=\"([^\"]*)\"[^>]*>(.*?)</a>");
     private static final Pattern isInFavPattern = Pattern.compile("<span class=\"picto-favoris([^\"]*)\"");
     private static final Pattern topicIdInTopicPagePattern = Pattern.compile("<div (.*?)data-topic-id=\"([^\"]*)\">");
-    private static final Pattern isInSubInTopicPagePattern = Pattern.compile("<span class=\"picto-abonnement([^\"]*)\" title=\"[^\"]*\" data-action=\"[^\"]*\"([^>]*)>");
+    private static final Pattern isInSubInTopicPagePattern = Pattern.compile("<span class=\"icon-bell-([^\"]*)\" title=\"[^\"]*\" data-action=\"[^\"]*\"([^>]*)>");
     private static final Pattern subIdInSubButtonPattern = Pattern.compile("data-id-abonnement=\"([^\"]*)\"");
     private static final Pattern lockReasonPattern = Pattern.compile("<div class=\"message-lock-topic\">[^<]*<span>([^<]*)</span>");
     private static final Pattern surveyTitlePattern = Pattern.compile("<div class=\"intitule-sondage\">([^<]*)</div>");
@@ -274,8 +274,8 @@ public final class JVCParser {
 
         if (isInSubInTopicPageMatcher.find()) {
             /* if (isInSub) [ */
-            if (!isInSubInTopicPageMatcher.group(1).isEmpty()) {
-                Matcher subIdInSubButtonMatcher = subIdInSubButtonPattern.matcher(topicContent);
+            if (isInSubInTopicPageMatcher.group(1).equals("on")) {
+                Matcher subIdInSubButtonMatcher = subIdInSubButtonPattern.matcher(isInSubInTopicPageMatcher.group());
 
                 if (subIdInSubButtonMatcher.find()) {
                     return subIdInSubButtonMatcher.group(1);
