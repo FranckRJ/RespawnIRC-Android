@@ -960,7 +960,7 @@ public final class JVCParser {
         ToolForParsing.replaceStringByAnother(messageInBuilder, "\n", "");
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, smileyPattern, 3, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, embedVideoPattern, 1, "", "", null, null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcVideoPattern, -1, "[[Vidéo non supportée par l'application]]", "", null, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcVideoPattern, 1, "http://www.jeuxvideo.com/videos/iframe/", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcLinkPattern, 1, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longLinkPattern, 1, "", "", null, null);
