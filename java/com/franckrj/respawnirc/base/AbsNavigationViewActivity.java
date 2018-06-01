@@ -204,7 +204,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.showNotif);
-                tmpItemInfo.drawableResId = R.drawable.ic_star_dark_zoom;
+                tmpItemInfo.drawableResId = R.drawable.ic_bell_dark_zoom;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = false;
                 tmpItemInfo.itemId = ITEM_ID_SHOWNOTIF;
