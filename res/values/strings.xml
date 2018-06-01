@@ -217,7 +217,7 @@
     <string name="gta">GTA</string>
     <string name="avatarSizeTitle">Taille des avatars (en dp)</string>
     <string name="saveLastRowUsedInsertstuffTitle">Se souvenir du dernier type de sticker utilisé</string>
-    <string name="errorThereIsACaptcha">Erreur, les captchas ne sont pas supportés. Veuillez ré-essayer dans quelques instants.</string>
+    <string name="errorThereIsACaptcha">Erreur, captchas non supportés. Ré-essayez plus tard ou avec un compte plus ancien.</string>
     <string name="replyTitleInSurveyManager">%n% :</string>
     <string name="replyTitleInSurveyHint">Réponse n°%n%</string>
     <string name="addReply">Ajouter une réponse</string>
