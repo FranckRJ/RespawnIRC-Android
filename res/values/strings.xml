@@ -102,8 +102,7 @@
     <string name="areYouSure">Êtes-vous sûr ?</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
-    <string name="showMpWithNumber">Messages privés   (%1$s)</string>
-    <string name="showNotifWithNumber">Notifications   (%1$s)</string>
+    <string name="mpOrNotifNumberNonZero">%1$s (!)</string>
     <string name="openCDV">Ouvrir la CDV</string>
     <string name="copyPseudo">Copier le pseudo</string>
     <string name="copyPermalink">Copier le lien permanent</string>
