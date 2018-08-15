@@ -1,6 +1,7 @@
 package com.franckrj.respawnirc.jvctopic;
 
 import android.os.Bundle;
+import android.support.transition.TransitionManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.view.View;
@@ -29,17 +30,22 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
     public static final String EXTRA_COOKIES = "com.franckrj.respawnirc.showsurveyactivity.EXTRA_COOKIES";
 
     private static final String SAVE_VOTE_BUTTON_IS_VISIBLE = "saveVoteButtonIsVisible";
+    private static final String SAVE_SHOWRESULT_BUTTON_IS_VISIBLE = "saveShowResultButtonIsVisible";
     private static final String SAVE_MAIN_CARD_IS_VISIBLE = "saveMainCardIsVisible";
+    private static final String SAVE_UNPARSED_SURVEY_CONTENT = "saveUnparsedSurveyContent";
     private static final String SAVE_CONTENT_FOR_SURVEY = "saveContentForSurvey";
     private static final String SAVE_SCROLL_POSITION = "saveScrollPosition";
 
     private ScrollView mainScrollView = null;
+    private TextView backgroundErrorText = null;
     private View mainCardView = null;
     private TextView contentText = null;
     private Button voteButton = null;
+    private Button showResultButton = null;
     private SwipeRefreshLayout swipeRefresh = null;
     private DownloadInfosForSurvey currentTaskForSurvey = null;
     private SendVoteToSurvey currentTaskForVote = null;
+    private String unparsedSurveyContent = "";
     private String contentForSurvey = "";
     private ArrayList<JVCParser.SurveyReplyInfos> listOfReplysWithInfos;
 
@@ -62,6 +68,15 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
         }
     };
 
+    private final View.OnClickListener showResultButtonClickedListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            showResultButton.setVisibility(View.GONE);
+            fillSurveyContentAndShowError(unparsedSurveyContent, true);
+            TransitionManager.beginDelayedTransition(mainScrollView);
+        }
+    };
+
     private final AbsWebRequestAsyncTask.RequestIsStarted requestIsStartedListener = new AbsWebRequestAsyncTask.RequestIsStarted() {
         @Override
         public void onRequestIsStarted() {
@@ -72,16 +87,25 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
     private final AbsWebRequestAsyncTask.RequestIsFinished<String> downloadInfosIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<String>() {
         @Override
         public void onRequestIsFinished(String reqResult) {
+            boolean analyseSucceded;
             swipeRefresh.setRefreshing(false);
-            mainCardView.setVisibility(View.VISIBLE);
+            unparsedSurveyContent = reqResult;
 
             if (listOfReplysWithInfos.isEmpty()) {
                 voteButton.setVisibility(View.GONE);
+                showResultButton.setVisibility(View.GONE);
+                analyseSucceded = fillSurveyContentAndShowError(unparsedSurveyContent, true);
             } else {
                 voteButton.setVisibility(View.VISIBLE);
+                showResultButton.setVisibility(View.VISIBLE);
+                analyseSucceded = fillSurveyContentAndShowError(unparsedSurveyContent, false);
             }
 
-            analyzeSurveyContent(reqResult);
+            if (analyseSucceded) {
+                mainCardView.setVisibility(View.VISIBLE);
+            } else {
+                backgroundErrorText.setVisibility(View.VISIBLE);
+            }
 
             currentTaskForSurvey = null;
         }
@@ -92,16 +116,19 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
         public void onRequestIsFinished(String reqResult) {
             swipeRefresh.setRefreshing(false);
 
-            if (analyzeSurveyContent(reqResult)) {
+            if (fillSurveyContentAndShowError(reqResult, true)) {
+                unparsedSurveyContent = reqResult;
                 Toast.makeText(ShowSurveyActivity.this, R.string.voteRegistered, Toast.LENGTH_SHORT).show();
                 voteButton.setVisibility(View.GONE);
+                showResultButton.setVisibility(View.GONE);
+                TransitionManager.beginDelayedTransition(mainScrollView);
             }
 
             currentTaskForVote = null;
         }
     };
 
-    private boolean analyzeSurveyContent(String pageContent) {
+    private boolean fillSurveyContentAndShowError(String pageContent, boolean showResult) {
         if (!Utils.stringIsEmptyOrNull(pageContent)) {
             String errorContent = JVCParser.getErrorMessageInJsonMode(pageContent);
 
@@ -117,7 +144,14 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
                 newContentToShow.append("<br><big><b>").append(infosForSurvey.htmlTitle).append("</b></big><br>");
 
                 for (JVCParser.SurveyInfos.SurveyReply currentReply : infosForSurvey.listOfReplys) {
-                    newContentToShow.append("<br>").append(addStyleToPercentage(currentReply.percentageOfVotes)).append(" : ").append(currentReply.htmlTitle);
+                    newContentToShow.append("<br>");
+                    if (showResult) {
+                        newContentToShow.append(addStyleToPercentage(currentReply.percentageOfVotes)).append(" : ");
+                    }
+                    else {
+                        newContentToShow.append("<font face=\"monospace\" color=\"#").append(ThemeManager.currentThemeUseDarkColors() ? "FFFFFF" : "000000").append("\">&gt;</font> ");
+                    }
+                    newContentToShow.append(currentReply.htmlTitle);
                 }
 
                 newContentToShow.append("<br><br>").append(infosForSurvey.numberOfVotes);
@@ -126,11 +160,19 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
                 contentText.setText(Undeprecator.htmlFromHtml(contentForSurvey));
                 return true;
             } else {
-                Toast.makeText(ShowSurveyActivity.this, errorContent, Toast.LENGTH_SHORT).show();
+                if (mainCardView.getVisibility() == View.GONE) {
+                    backgroundErrorText.setText(errorContent);
+                } else {
+                    Toast.makeText(ShowSurveyActivity.this, errorContent, Toast.LENGTH_SHORT).show();
+                }
                 return false;
             }
         } else {
-            Toast.makeText(ShowSurveyActivity.this, R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
+            if (mainCardView.getVisibility() == View.GONE) {
+                backgroundErrorText.setText(R.string.errorDownloadFailed);
+            } else {
+                Toast.makeText(ShowSurveyActivity.this, R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
+            }
             return false;
         }
     }
@@ -200,20 +242,27 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
         ActionBar myActionBar = getSupportActionBar();
 
         mainScrollView = findViewById(R.id.scrollview_showsurvey);
+        backgroundErrorText = findViewById(R.id.text_errorbackgroundmessage_showsurvey);
         mainCardView = findViewById(R.id.card_showsurvey);
         contentText = findViewById(R.id.content_showsurvey);
         voteButton = findViewById(R.id.button_vote_showsurvey);
+        showResultButton = findViewById(R.id.button_showresult_showsurvey);
         swipeRefresh = findViewById(R.id.swiperefresh_showsurvey);
 
         mainCardView.setVisibility(View.GONE);
+        backgroundErrorText.setVisibility(View.GONE);
         voteButton.setVisibility(View.GONE);
+        showResultButton.setVisibility(View.GONE);
         voteButton.setOnClickListener(voteButtonClickedListener);
+        showResultButton.setOnClickListener(showResultButtonClickedListener);
         swipeRefresh.setEnabled(false);
         swipeRefresh.setColorSchemeResources(R.color.colorControlHighlightThemeLight);
 
         if (savedInstanceState != null) {
             mainCardView.setVisibility(savedInstanceState.getBoolean(SAVE_MAIN_CARD_IS_VISIBLE, false) ? View.VISIBLE : View.GONE);
             voteButton.setVisibility(savedInstanceState.getBoolean(SAVE_VOTE_BUTTON_IS_VISIBLE, false) ? View.VISIBLE : View.GONE);
+            showResultButton.setVisibility(savedInstanceState.getBoolean(SAVE_SHOWRESULT_BUTTON_IS_VISIBLE, false) ? View.VISIBLE : View.GONE);
+            unparsedSurveyContent = savedInstanceState.getString(SAVE_UNPARSED_SURVEY_CONTENT, "");
             contentForSurvey = savedInstanceState.getString(SAVE_CONTENT_FOR_SURVEY, "");
             contentText.setText(Undeprecator.htmlFromHtml(contentForSurvey));
 
@@ -257,6 +306,8 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
         super.onSaveInstanceState(outState);
         outState.putBoolean(SAVE_MAIN_CARD_IS_VISIBLE, mainCardView.getVisibility() == View.VISIBLE);
         outState.putBoolean(SAVE_VOTE_BUTTON_IS_VISIBLE, voteButton.getVisibility() == View.VISIBLE);
+        outState.putBoolean(SAVE_SHOWRESULT_BUTTON_IS_VISIBLE, showResultButton.getVisibility() == View.VISIBLE);
+        outState.putString(SAVE_UNPARSED_SURVEY_CONTENT, unparsedSurveyContent);
         outState.putString(SAVE_CONTENT_FOR_SURVEY, contentForSurvey);
         outState.putInt(SAVE_SCROLL_POSITION, mainScrollView.getScrollY());
     }
