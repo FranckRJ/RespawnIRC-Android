@@ -140,7 +140,7 @@ public final class JVCParser {
             return baseLink;
         }
 
-        if (baseLink.startsWith("fichiers/") || baseLink.startsWith("minis/")) {
+        if (baseLink.startsWith("fichiers/") || baseLink.startsWith("fichiers-xs/") || baseLink.startsWith("minis/")) {
             baseLink = baseLink.substring(baseLink.indexOf("/") + 1);
         } else {
             baseLink = baseLink.replaceFirst("-", "/").replaceFirst("-", "/");
