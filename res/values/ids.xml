@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="menu_quote_message" type="id">menu_quote_message</item>
-    <item name="menu_edit_message" type="id">menu_edit_message</item>
-    <item name="menu_delete_message" type="id">menu_delete_message</item>
-    <item name="menu_restore_message" type="id">menu_restore_message</item>
-    <item name="menu_kick_author_message" type="id">menu_kick_author_message</item>
-    <item name="menu_dekick_author_message" type="id">menu_dekick_author_message</item>
-    <item name="menu_hide_quote_message" type="id">menu_hide_quote_message</item>
-    <item name="menu_show_quote_message" type="id">menu_show_quote_message</item>
-    <item name="menu_hide_spoil_message" type="id">menu_hide_spoil_message</item>
-    <item name="menu_show_spoil_message" type="id">menu_show_spoil_message</item>
-    <item name="menu_hide_ugly_images_message" type="id">menu_hide_ugly_images_message</item>
-    <item name="menu_show_ugly_images_message" type="id">menu_show_ugly_images_message</item>
-    <item name="menu_show_blacklisted_message" type="id">menu_show_blacklisted_message</item>
-    <item name="cancel_edit_sendmessage_action" type="id">cancel_edit_sendmessage_action</item>
+    <item name="menu_quote_message" type="id"/>
+    <item name="menu_edit_message" type="id"/>
+    <item name="menu_delete_message" type="id"/>
+    <item name="menu_restore_message" type="id"/>
+    <item name="menu_kick_author_message" type="id"/>
+    <item name="menu_dekick_author_message" type="id"/>
+    <item name="menu_hide_quote_message" type="id"/>
+    <item name="menu_show_quote_message" type="id"/>
+    <item name="menu_hide_spoil_message" type="id"/>
+    <item name="menu_show_spoil_message" type="id"/>
+    <item name="menu_hide_ugly_images_message" type="id"/>
+    <item name="menu_show_ugly_images_message" type="id"/>
+    <item name="menu_show_blacklisted_message" type="id"/>
+    <item name="cancel_edit_sendmessage_action" type="id"/>
 </resources>
