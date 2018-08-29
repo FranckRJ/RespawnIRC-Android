@@ -14,21 +14,17 @@ import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceGroup;
 import android.support.v7.preference.SwitchPreferenceCompat;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.Utils;
 import com.takisoft.fix.support.v7.preference.EditTextPreference;
-import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompatDividers;
+import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompat;
 
-public class SettingsFragment extends PreferenceFragmentCompatDividers implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
     public static final String ARG_FILE_TO_LOAD = "com.franckrj.respawnirc.settingsfragment.ARG_FILE_TO_LOAD";
 
     private SimpleArrayMap<String, MinMaxInfos> listOfMinMaxInfos = new SimpleArrayMap<>();
-    private boolean isMainPage = true;
 
     private final Preference.OnPreferenceClickListener subScreenPreferenceClicked = new Preference.OnPreferenceClickListener() {
         @Override
@@ -78,24 +74,9 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers implement
             idOfFileToLoad = getArguments().getInt(ARG_FILE_TO_LOAD, R.xml.main_settings);
         }
 
-        isMainPage = (idOfFileToLoad == R.xml.main_settings);
-
         getPreferenceManager().setSharedPreferencesName(getString(R.string.preference_file_key));
         setPreferencesFromResource(idOfFileToLoad, rootKey);
         initPrefsInfos(getPreferenceScreen());
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        try {
-            return super.onCreateView(inflater, container, savedInstanceState);
-        } finally {
-            if (isMainPage) {
-                setDividerPreferences(DIVIDER_DEFAULT);
-            } else {
-                setDividerPreferences(DIVIDER_PREFERENCE_BETWEEN);
-            }
-        }
     }
 
     @Override
