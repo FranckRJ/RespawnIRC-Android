@@ -98,71 +98,74 @@ public class JVCTopicAdapter extends BaseAdapter {
     private final View.OnClickListener menuButtonClicked = new View.OnClickListener() {
         @Override
         public void onClick(View buttonView) {
-            PopupMenu popup = new PopupMenu(buttonView.getContext(), buttonView);
-            Menu menu = popup.getMenu();
-            JVCParser.MessageInfos itemSelected;
-
             currentItemIdSelected = (int) buttonView.getTag();
-            itemSelected = getItem(currentItemIdSelected);
-            popup.setOnMenuItemClickListener(menuItemInPopupMenuClickedListener);
 
-            if (!itemSelected.pseudoIsBlacklisted) {
-                if (itemSelected.userCanQuoteMessage) {
-                    menu.add(Menu.NONE, R.id.menu_quote_message, Menu.NONE, R.string.quoteMessage);
-                }
+            if (hasItem(currentItemIdSelected)) {
+                PopupMenu popup = new PopupMenu(buttonView.getContext(), buttonView);
+                Menu menu = popup.getMenu();
+                JVCParser.MessageInfos itemSelected;
 
-                if (itemSelected.userCanEditMessage) {
-                    menu.add(Menu.NONE, R.id.menu_edit_message, Menu.NONE, R.string.editMessage);
-                }
+                itemSelected = getItem(currentItemIdSelected);
+                popup.setOnMenuItemClickListener(menuItemInPopupMenuClickedListener);
 
-                if (itemSelected.userCanDeleteOrRestoreMessage) {
-                    if (itemSelected.messageIsDeleted) {
-                        menu.add(Menu.NONE, R.id.menu_restore_message, Menu.NONE, R.string.restore);
-                    } else {
-                        menu.add(Menu.NONE, R.id.menu_delete_message, Menu.NONE, R.string.delete);
+                if (!itemSelected.pseudoIsBlacklisted) {
+                    if (itemSelected.userCanQuoteMessage) {
+                        menu.add(Menu.NONE, R.id.menu_quote_message, Menu.NONE, R.string.quoteMessage);
                     }
+
+                    if (itemSelected.userCanEditMessage) {
+                        menu.add(Menu.NONE, R.id.menu_edit_message, Menu.NONE, R.string.editMessage);
+                    }
+
+                    if (itemSelected.userCanDeleteOrRestoreMessage) {
+                        if (itemSelected.messageIsDeleted) {
+                            menu.add(Menu.NONE, R.id.menu_restore_message, Menu.NONE, R.string.restore);
+                        } else {
+                            menu.add(Menu.NONE, R.id.menu_delete_message, Menu.NONE, R.string.delete);
+                        }
+                    }
+
+                    if (itemSelected.userCanKickOrDekickAuthor) {
+                        if (itemSelected.authorIsKicked) {
+                            menu.add(Menu.NONE, R.id.menu_dekick_author_message, Menu.NONE, R.string.dekick);
+                        } else {
+                            menu.add(Menu.NONE, R.id.menu_kick_author_message, Menu.NONE, R.string.kick);
+                        }
+                    }
+
+                    if (itemSelected.numberOfOverlyQuote > currentSettings.maxNumberOfOverlyQuotes) {
+                        if (itemSelected.showOverlyQuote) {
+                            menu.add(Menu.NONE, R.id.menu_hide_quote_message, Menu.NONE, R.string.hideQuoteMessage);
+                        } else {
+                            menu.add(Menu.NONE, R.id.menu_show_quote_message, Menu.NONE, R.string.showQuoteMessage);
+                        }
+                    }
+
+                    if (itemSelected.messageContentContainSpoil || (showSignatures && itemSelected.signatureContainSpoil)) {
+                        if (itemSelected.listOfSpoilIdToShow.isEmpty()) {
+                            menu.add(Menu.NONE, R.id.menu_show_spoil_message, Menu.NONE, R.string.showSpoilMessage);
+                        } else {
+                            menu.add(Menu.NONE, R.id.menu_hide_spoil_message, Menu.NONE, R.string.hideSpoilMessage);
+                        }
+                    }
+
+                    if (currentSettings.hideUglyImages && itemSelected.containUglyImages) {
+                        if (itemSelected.showUglyImages) {
+                            menu.add(Menu.NONE, R.id.menu_hide_ugly_images_message, Menu.NONE, R.string.hideUglyImagesMessage);
+                        } else {
+                            menu.add(Menu.NONE, R.id.menu_show_ugly_images_message, Menu.NONE, R.string.showUglyImagesMessage);
+                        }
+                    }
+                } else {
+                    menu.add(Menu.NONE, R.id.menu_show_blacklisted_message, Menu.NONE, R.string.showBlacklistedMessage);
                 }
 
-                if (itemSelected.userCanKickOrDekickAuthor) {
-                    if (itemSelected.authorIsKicked) {
-                        menu.add(Menu.NONE, R.id.menu_dekick_author_message, Menu.NONE, R.string.dekick);
-                    } else {
-                        menu.add(Menu.NONE, R.id.menu_kick_author_message, Menu.NONE, R.string.kick);
-                    }
+                if (!menu.hasVisibleItems()) {
+                    menu.add(Menu.NONE, R.id.useless_action, Menu.NONE, R.string.nothing);
                 }
 
-                if (itemSelected.numberOfOverlyQuote > currentSettings.maxNumberOfOverlyQuotes) {
-                    if (itemSelected.showOverlyQuote) {
-                        menu.add(Menu.NONE, R.id.menu_hide_quote_message, Menu.NONE, R.string.hideQuoteMessage);
-                    } else {
-                        menu.add(Menu.NONE, R.id.menu_show_quote_message, Menu.NONE, R.string.showQuoteMessage);
-                    }
-                }
-
-                if (itemSelected.messageContentContainSpoil || (showSignatures && itemSelected.signatureContainSpoil)) {
-                    if (itemSelected.listOfSpoilIdToShow.isEmpty()) {
-                        menu.add(Menu.NONE, R.id.menu_show_spoil_message, Menu.NONE, R.string.showSpoilMessage);
-                    } else {
-                        menu.add(Menu.NONE, R.id.menu_hide_spoil_message, Menu.NONE, R.string.hideSpoilMessage);
-                    }
-                }
-
-                if (currentSettings.hideUglyImages && itemSelected.containUglyImages) {
-                    if (itemSelected.showUglyImages) {
-                        menu.add(Menu.NONE, R.id.menu_hide_ugly_images_message, Menu.NONE, R.string.hideUglyImagesMessage);
-                    } else {
-                        menu.add(Menu.NONE, R.id.menu_show_ugly_images_message, Menu.NONE, R.string.showUglyImagesMessage);
-                    }
-                }
-            } else {
-                menu.add(Menu.NONE, R.id.menu_show_blacklisted_message, Menu.NONE, R.string.showBlacklistedMessage);
+                popup.show();
             }
-
-            if (!menu.hasVisibleItems()) {
-                menu.add(Menu.NONE, R.id.useless_action, Menu.NONE, R.string.nothing);
-            }
-
-            popup.show();
         }
     };
 
@@ -487,7 +490,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         CustomViewHolder viewHolder;
 
         if (convertView == null) {
@@ -527,8 +530,8 @@ public class JVCTopicAdapter extends BaseAdapter {
                 View.OnClickListener infoClickedListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (pseudoCLickedListener != null) {
-                            pseudoCLickedListener.getMessageOfPseudoClicked(listOfMessages.get(realPosition));
+                        if (pseudoCLickedListener != null && hasItem(position)) {
+                            pseudoCLickedListener.getMessageOfPseudoClicked(getItem(position));
                         }
                     }
                 };
