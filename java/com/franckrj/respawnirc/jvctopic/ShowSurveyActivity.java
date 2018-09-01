@@ -282,16 +282,27 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
             } else {
                 listOfReplysWithInfos = new ArrayList<>();
             }
-            if (contentForSurvey.isEmpty() && getIntent().getStringExtra(EXTRA_TOPIC_ID) != null && getIntent().getStringExtra(EXTRA_AJAX_INFOS) != null && getIntent().getStringExtra(EXTRA_COOKIES) != null) {
-                currentTaskForSurvey = new DownloadInfosForSurvey();
-                currentTaskForSurvey.setRequestIsStartedListener(requestIsStartedListener);
-                currentTaskForSurvey.setRequestIsFinishedListener(downloadInfosIsFinishedListener);
-                currentTaskForSurvey.execute(getIntent().getStringExtra(EXTRA_TOPIC_ID), getIntent().getStringExtra(EXTRA_AJAX_INFOS), getIntent().getStringExtra(EXTRA_COOKIES));
-            }
         }
+    }
 
-        if (currentTaskForSurvey == null && contentForSurvey.isEmpty()) {
-            Toast.makeText(this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (contentForSurvey.isEmpty()) {
+            if (getIntent() != null) {
+                if (getIntent().getStringExtra(EXTRA_TOPIC_ID) != null && getIntent().getStringExtra(EXTRA_AJAX_INFOS) != null && getIntent().getStringExtra(EXTRA_COOKIES) != null) {
+                    currentTaskForSurvey = new DownloadInfosForSurvey();
+                    currentTaskForSurvey.setRequestIsStartedListener(requestIsStartedListener);
+                    currentTaskForSurvey.setRequestIsFinishedListener(downloadInfosIsFinishedListener);
+                    currentTaskForSurvey.execute(getIntent().getStringExtra(EXTRA_TOPIC_ID), getIntent().getStringExtra(EXTRA_AJAX_INFOS), getIntent().getStringExtra(EXTRA_COOKIES));
+                }
+            }
+
+            if (currentTaskForSurvey == null) {
+                backgroundErrorText.setVisibility(View.VISIBLE);
+                backgroundErrorText.setText(R.string.errorDownloadFailed);
+            }
         }
     }
 
