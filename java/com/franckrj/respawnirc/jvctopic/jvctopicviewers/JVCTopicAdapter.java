@@ -87,7 +87,7 @@ public class JVCTopicAdapter extends BaseAdapter {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             //noinspection SimplifiableIfStatement
-            if (actionWhenItemMenuClicked != null) {
+            if (actionWhenItemMenuClicked != null && hasItem(currentItemIdSelected)) {
                 return actionWhenItemMenuClicked.onMenuItemClickedInMessage(item, getItem(currentItemIdSelected));
             } else {
                 return false;
@@ -461,6 +461,11 @@ public class JVCTopicAdapter extends BaseAdapter {
         } else {
             backrgoundView.setBackgroundColor(colorValue);
         }
+    }
+
+    public boolean hasItem(int position) {
+        position = position - (showSurvey ? 1 : 0);
+        return (position >= 0 && position < listOfMessages.size());
     }
 
     public JVCParser.MessageInfos getItem(int position) {
