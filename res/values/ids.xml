@@ -14,4 +14,5 @@
     <item name="menu_show_ugly_images_message" type="id"/>
     <item name="menu_show_blacklisted_message" type="id"/>
     <item name="cancel_edit_sendmessage_action" type="id"/>
+    <item name="useless_action" type="id"/>
 </resources>

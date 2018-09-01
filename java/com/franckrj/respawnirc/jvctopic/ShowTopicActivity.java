@@ -899,6 +899,10 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 newShowForumIntent.putExtra(ShowForumActivity.EXTRA_NEW_LINK, possibleNewLink);
                 newShowForumIntent.putExtra(ShowForumActivity.EXTRA_IS_FIRST_ACTIVITY, false);
                 startActivity(newShowForumIntent);
+            } else if (JVCParser.checkIfItsMessageFormatedLink(possibleNewLink)) {
+                Intent newShowMessageIntent = new Intent(this, ShowMessageActivity.class);
+                newShowMessageIntent.putExtra(ShowMessageActivity.EXTRA_MESSAGE_PERMALINK, possibleNewLink);
+                startActivity(newShowMessageIntent);
             } else if (showOverviewOnImageClick && JVCParser.checkIfItsNoelshackLink(link)) {
                 if (!getSupportFragmentManager().isStateSaved()) {
                     Bundle argForFrag = new Bundle();

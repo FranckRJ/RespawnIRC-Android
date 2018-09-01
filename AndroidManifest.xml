@@ -44,6 +44,7 @@
                 <data android:pathPrefix="/forums/0-"/>
                 <data android:pathPrefix="/forums/1-"/>
                 <data android:pathPrefix="/forums/42-"/>
+                <data android:pathPattern="/.*/forums/message/.*"/>
             </intent-filter>
         </activity>
 
@@ -83,6 +84,10 @@
             android:name=".ConnectAsModoActivity"
             android:label="@string/connnectAsModoText"
             android:windowSoftInputMode="stateAlwaysHidden"/>
+
+        <activity
+            android:name=".jvctopic.ShowMessageActivity"
+            android:label="@string/message"/>
 
         <activity
             android:name=".jvctopic.ShowSurveyActivity"

@@ -107,7 +107,9 @@ public class JVCTopicAdapter extends BaseAdapter {
             popup.setOnMenuItemClickListener(menuItemInPopupMenuClickedListener);
 
             if (!itemSelected.pseudoIsBlacklisted) {
-                menu.add(Menu.NONE, R.id.menu_quote_message, Menu.NONE, R.string.quoteMessage);
+                if (itemSelected.userCanQuoteMessage) {
+                    menu.add(Menu.NONE, R.id.menu_quote_message, Menu.NONE, R.string.quoteMessage);
+                }
 
                 if (itemSelected.userCanEditMessage) {
                     menu.add(Menu.NONE, R.id.menu_edit_message, Menu.NONE, R.string.editMessage);
@@ -154,6 +156,10 @@ public class JVCTopicAdapter extends BaseAdapter {
                 }
             } else {
                 menu.add(Menu.NONE, R.id.menu_show_blacklisted_message, Menu.NONE, R.string.showBlacklistedMessage);
+            }
+
+            if (!menu.hasVisibleItems()) {
+                menu.add(Menu.NONE, R.id.useless_action, Menu.NONE, R.string.nothing);
             }
 
             popup.show();

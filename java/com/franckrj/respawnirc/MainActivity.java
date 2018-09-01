@@ -10,6 +10,7 @@ import android.webkit.WebView;
 
 import com.franckrj.respawnirc.jvcforumlist.SelectForumInListActivity;
 import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
+import com.franckrj.respawnirc.jvctopic.ShowMessageActivity;
 import com.franckrj.respawnirc.jvctopic.ShowTopicActivity;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
@@ -110,11 +111,15 @@ public class MainActivity extends AppCompatActivity {
                         newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_LINK, linkToOpen);
                         newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_OPENED_FROM_FORUM, false);
                         startActivity(newShowTopicIntent);
-                    } else {
+                    } else if (JVCParser.checkIfItsForumFormatedLink(linkToOpen)) {
                         Intent newShowForumIntent = new Intent(this, ShowForumActivity.class);
                         newShowForumIntent.putExtra(ShowForumActivity.EXTRA_NEW_LINK, linkToOpen);
                         newShowForumIntent.putExtra(ShowForumActivity.EXTRA_IS_FIRST_ACTIVITY, false);
                         startActivity(newShowForumIntent);
+                    } else {
+                        Intent newShowMessageIntent = new Intent(this, ShowMessageActivity.class);
+                        newShowMessageIntent.putExtra(ShowMessageActivity.EXTRA_MESSAGE_PERMALINK, linkToOpen);
+                        startActivity(newShowMessageIntent);
                     }
                     return;
                 }

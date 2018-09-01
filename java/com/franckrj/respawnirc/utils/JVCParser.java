@@ -22,6 +22,7 @@ public final class JVCParser {
     private static final Pattern ajaxSubHashPattern = Pattern.compile("<body *data-abo-session=\"([^\"]*)\">");
     private static final Pattern messageQuotePattern = Pattern.compile("\"txt\":\"(.*)\"", Pattern.DOTALL);
     private static final Pattern entireMessagePattern = Pattern.compile("(<div class=\"bloc-message-forum[^\"]*\".*?)(<span id=\"post_[^\"]*\" class=\"bloc-message-forum-anchor\">|<div class=\"bloc-outils-plus-modo bloc-outils-bottom\">|<div class=\"bloc-pagi-default\">)", Pattern.DOTALL);
+    private static final Pattern entireMessageInPermalinkPattern = Pattern.compile("(<div class=\"bloc-message-forum[^\"]*\".*?)<div class=\"bloc-return-topic\">", Pattern.DOTALL);
     private static final Pattern signaturePattern = Pattern.compile("<div class=\"signature-msg[^\"]*\">(.*)", Pattern.DOTALL);
     private static final Pattern avatarPattern = Pattern.compile("<img src=\"[^\"]*\" data-srcset=\"(http:)?//([^\"]*)\" class=\"user-avatar-msg\"", Pattern.DOTALL);
     private static final Pattern entireTopicPattern = Pattern.compile("<li (class=\"[^\"]*\" data-id=\"[^\"]*\"|class=\"message[^\"]*\")>.*?<span class=\"topic-subject\">.*?</li>", Pattern.DOTALL);
@@ -221,9 +222,23 @@ public final class JVCParser {
                 linkToCheck.startsWith("http://www.jeuxvideo.com/forums/42-");
     }
 
+    public static boolean checkIfItsMessageFormatedLink(String linkToCheck) {
+        if (linkToCheck.startsWith("http://www.jeuxvideo.com/")) {
+            String partOfLinkToCheck = linkToCheck.substring(("http://www.jeuxvideo.com/").length());
+
+            if (partOfLinkToCheck.contains("/")) {
+                partOfLinkToCheck = partOfLinkToCheck.substring(partOfLinkToCheck.indexOf('/'));
+
+                return partOfLinkToCheck.startsWith("/forums/message/");
+            }
+        }
+
+        return false;
+    }
+
     /* Retourne vrai si c'est un lien ouvrable via RespawnIRC. */
     public static boolean checkIfItsOpennableFormatedLink(String linkToCheck) {
-        return checkIfItsForumFormatedLink(linkToCheck) || checkIfItsTopicFormatedLink(linkToCheck);
+        return checkIfItsForumFormatedLink(linkToCheck) || checkIfItsTopicFormatedLink(linkToCheck) || checkIfItsMessageFormatedLink(linkToCheck);
     }
 
     public static String getFirstPageForThisTopicLink(String topicLink) {
@@ -1155,6 +1170,18 @@ public final class JVCParser {
         return listOfParsedMessage;
     }
 
+    public static MessageInfos getMessageFromPermalinkPage(String sourcePage) {
+        Matcher entireMessageMatcher = entireMessageInPermalinkPattern.matcher(sourcePage);
+
+        if (entireMessageMatcher.find()) {
+            MessageInfos newMessage = createMessageInfoFromEntireMessage(entireMessageMatcher.group(1));
+            newMessage.userCanQuoteMessage = false;
+            return newMessage;
+        }
+
+        return null;
+    }
+
     public static ArrayList<TopicInfos> getTopicsOfThisPage(String sourcePage) {
         ArrayList<TopicInfos> listOfParsedTopic = new ArrayList<>();
         Matcher entireTopicMatcher = entireTopicPattern.matcher(sourcePage);
@@ -1498,6 +1525,7 @@ public final class JVCParser {
         public boolean messageIsDeleted = false;
         public boolean userCanDeleteOrRestoreMessage = false;
         public boolean userCanEditMessage = false;
+        public boolean userCanQuoteMessage = true;
         public boolean authorIsKicked = false;
         public boolean userCanKickOrDekickAuthor = false;
         public boolean messageContentContainSpoil = false;
@@ -1541,6 +1569,7 @@ public final class JVCParser {
             messageIsDeleted = (in.readByte() == 1);
             userCanDeleteOrRestoreMessage = (in.readByte() == 1);
             userCanEditMessage = (in.readByte() == 1);
+            userCanQuoteMessage = (in.readByte() == 1);
             authorIsKicked = (in.readByte() == 1);
             userCanKickOrDekickAuthor = (in.readByte() == 1);
             messageContentContainSpoil = (in.readByte() == 1);
@@ -1579,6 +1608,7 @@ public final class JVCParser {
             out.writeByte((byte)(messageIsDeleted ? 1 : 0));
             out.writeByte((byte)(userCanDeleteOrRestoreMessage ? 1 : 0));
             out.writeByte((byte)(userCanEditMessage ? 1 : 0));
+            out.writeByte((byte)(userCanQuoteMessage ? 1 : 0));
             out.writeByte((byte)(authorIsKicked ? 1 : 0));
             out.writeByte((byte)(userCanKickOrDekickAuthor ? 1 : 0));
             out.writeByte((byte)(messageContentContainSpoil ? 1 : 0));
