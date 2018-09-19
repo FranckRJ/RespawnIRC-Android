@@ -2,9 +2,12 @@ package com.franckrj.respawnirc.jvctopic;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.util.TypedValue;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
@@ -30,7 +33,7 @@ import com.franckrj.respawnirc.utils.WebManager;
 public class ShowMessageActivity extends AbsHomeIsBackActivity {
     public static final String EXTRA_MESSAGE_PERMALINK = "com.franckrj.respawnirc.showmessageactivity.EXTRA_MESSAGE_PERMALINK";
 
-    private static final String SAVE_MESSAGE_TO_SHOW = "saveMessageToShow";
+    private static final String SAVE_MESSAGE_SHOWED = "saveMessageShowed";
 
     private TextView backgroundErrorText = null;
     private JVCTopicAdapter adapterForTopic = null;
@@ -43,7 +46,7 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
     private PrefsManager.LinkType linkTypeForInternalBrowser = new PrefsManager.LinkType(PrefsManager.LinkType.NO_LINKS);
     private boolean convertNoelshackLinkToDirectLink = false;
     private boolean showOverviewOnImageClick = false;
-    private JVCParser.MessageInfos messageToShow = null;
+    private MessageShowedStatusInfos messageShowedStatus = new MessageShowedStatusInfos();
 
     private final JVCTopicAdapter.MenuItemClickedInMessage menuItemClickedInMessageListener = new JVCTopicAdapter.MenuItemClickedInMessage() {
         @Override
@@ -165,20 +168,20 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
         }
     };
 
-    private final AbsWebRequestAsyncTask.RequestIsFinished<JVCParser.MessageInfos> getMessageIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<JVCParser.MessageInfos>() {
+    private final AbsWebRequestAsyncTask.RequestIsFinished<MessageShowedStatusInfos> getMessageIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<MessageShowedStatusInfos>() {
         @Override
-        public void onRequestIsFinished(JVCParser.MessageInfos reqResult) {
+        public void onRequestIsFinished(MessageShowedStatusInfos reqResult) {
             swipeRefresh.setRefreshing(false);
-            messageToShow = reqResult;
+            messageShowedStatus = reqResult;
 
-            if (messageToShow == null) {
+            if (messageShowedStatus.message == null) {
                 backgroundErrorText.setVisibility(View.VISIBLE);
                 backgroundErrorText.setText(R.string.errorDownloadFailed);
             } else {
                 ActionBar myActionBar = getSupportActionBar();
-                adapterForTopic.addItem(messageToShow, true);
+                adapterForTopic.addItem(messageShowedStatus.message, true);
                 if (myActionBar != null) {
-                    myActionBar.setSubtitle(messageToShow.pseudo);
+                    myActionBar.setSubtitle(messageShowedStatus.message.pseudo);
                 }
             }
 
@@ -325,13 +328,17 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
         swipeRefresh.setColorSchemeResources(R.color.colorControlHighlightThemeLight);
 
         if (savedInstanceState != null) {
-            messageToShow = savedInstanceState.getParcelable(SAVE_MESSAGE_TO_SHOW);
+            messageShowedStatus = savedInstanceState.getParcelable(SAVE_MESSAGE_SHOWED);
 
-            if (messageToShow != null) {
+            if (messageShowedStatus == null) {
+                messageShowedStatus = new MessageShowedStatusInfos();
+            }
+
+            if (messageShowedStatus.message != null) {
                 ActionBar myActionBar = getSupportActionBar();
-                adapterForTopic.addItem(messageToShow, true);
+                adapterForTopic.addItem(messageShowedStatus.message, true);
                 if (myActionBar != null) {
-                    myActionBar.setSubtitle(messageToShow.pseudo);
+                    myActionBar.setSubtitle(messageShowedStatus.message.pseudo);
                 }
             }
         }
@@ -342,7 +349,7 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
         super.onResume();
         updateSettingsDependingOnConnection();
 
-        if (messageToShow == null) {
+        if (messageShowedStatus.message == null) {
             if (getIntent() != null) {
                 if (getIntent().getStringExtra(EXTRA_MESSAGE_PERMALINK) != null) {
                     currentTaskForGetMessage = new GetMessageToShow();
@@ -372,21 +379,90 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(SAVE_MESSAGE_TO_SHOW, messageToShow);
+        outState.putParcelable(SAVE_MESSAGE_SHOWED, messageShowedStatus);
     }
 
-    private static class GetMessageToShow extends AbsWebRequestAsyncTask<String, Void, JVCParser.MessageInfos> {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_showmessage, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.action_go_to_topic_showmessage).setEnabled(!messageShowedStatus.topicLink.isEmpty());
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_go_to_topic_showmessage:
+                Intent newShowTopicIntent = new Intent(ShowMessageActivity.this, ShowTopicActivity.class);
+                newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_LINK, JVCParser.formatThisUrlToClassicJvcUrl(messageShowedStatus.topicLink));
+                newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_OPENED_FROM_FORUM, false);
+                startActivity(newShowTopicIntent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private static class GetMessageToShow extends AbsWebRequestAsyncTask<String, Void, MessageShowedStatusInfos> {
         @Override
-        protected JVCParser.MessageInfos doInBackground(String... params) {
+        protected MessageShowedStatusInfos doInBackground(String... params) {
+            MessageShowedStatusInfos newMessageShowedStatus = new MessageShowedStatusInfos();
+
             if (params.length > 1) {
                 WebManager.WebInfos currentWebInfos = initWebInfos(params[1], true);
                 String source = WebManager.sendRequest(params[0], "GET", "", currentWebInfos);
 
                 if (source != null) {
-                    return JVCParser.getMessageFromPermalinkPage(source);
+                    newMessageShowedStatus.message = JVCParser.getMessageFromPermalinkPage(source);
+                    newMessageShowedStatus.topicLink = JVCParser.getTopicLinkFromPermalinkPage(source);
                 }
             }
-            return null;
+
+            return newMessageShowedStatus;
+        }
+    }
+
+    public static class MessageShowedStatusInfos implements Parcelable {
+        JVCParser.MessageInfos message = null;
+        String topicLink = "";
+
+        public static final Parcelable.Creator<MessageShowedStatusInfos> CREATOR = new Parcelable.Creator<MessageShowedStatusInfos>() {
+            @Override
+            public MessageShowedStatusInfos createFromParcel(Parcel in) {
+                return new MessageShowedStatusInfos(in);
+            }
+
+            @Override
+            public MessageShowedStatusInfos[] newArray(int size) {
+                return new MessageShowedStatusInfos[size];
+            }
+        };
+
+        public MessageShowedStatusInfos() {
+            //rien
+        }
+
+        private MessageShowedStatusInfos(Parcel in) {
+            message = in.readParcelable(JVCParser.MessageInfos.class.getClassLoader());
+            topicLink = in.readString();
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            out.writeParcelable(message, flags);
+            out.writeString(topicLink);
         }
     }
 }

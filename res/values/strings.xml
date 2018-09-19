@@ -298,6 +298,7 @@
     <string name="unpinSuccess">Topic dépinglé.</string>
     <string name="showResult">Afficher les résultats</string>
     <string name="nothing">Rien</string>
+    <string name="goToTopicOfForum">Accéder au topic du message</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>
