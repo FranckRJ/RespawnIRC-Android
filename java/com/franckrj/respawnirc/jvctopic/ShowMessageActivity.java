@@ -3,6 +3,7 @@ package com.franckrj.respawnirc.jvctopic;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
@@ -174,7 +175,11 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
                 backgroundErrorText.setVisibility(View.VISIBLE);
                 backgroundErrorText.setText(R.string.errorDownloadFailed);
             } else {
+                ActionBar myActionBar = getSupportActionBar();
                 adapterForTopic.addItem(messageToShow, true);
+                if (myActionBar != null) {
+                    myActionBar.setSubtitle(messageToShow.pseudo);
+                }
             }
 
             currentTaskForGetMessage = null;
@@ -323,7 +328,11 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
             messageToShow = savedInstanceState.getParcelable(SAVE_MESSAGE_TO_SHOW);
 
             if (messageToShow != null) {
+                ActionBar myActionBar = getSupportActionBar();
                 adapterForTopic.addItem(messageToShow, true);
+                if (myActionBar != null) {
+                    myActionBar.setSubtitle(messageToShow.pseudo);
+                }
             }
         }
     }
