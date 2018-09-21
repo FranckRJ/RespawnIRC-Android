@@ -109,6 +109,7 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
             boolean scrolledAtTheEnd = true;
             boolean needASmoothScroll = false;
             boolean firstTimeGetMessages = adapterForTopic.getAllItems().isEmpty();
+            boolean anItemHasChanged = false;
             isInErrorMode = false;
 
             if (!adapterForTopic.getAllItems().isEmpty()) {
@@ -132,19 +133,17 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
                 } else {
                     adapterForTopic.updateThisItem(thisMessageInfo, true);
                 }
+                anItemHasChanged = true;
             }
 
-            if (firstTimeGetMessages) {
-                while (adapterForTopic.getCount() > initialNumberOfMessagesShowed) {
-                    adapterForTopic.removeFirstItem();
-                }
-            }
-
-            while (adapterForTopic.getCount() > maxNumberOfMessagesShowed) {
+            while (adapterForTopic.getCount() > maxNumberOfMessagesShowed || (firstTimeGetMessages && adapterForTopic.getCount() > initialNumberOfMessagesShowed)) {
                 adapterForTopic.removeFirstItem();
+                anItemHasChanged = true;
             }
 
-            adapterForTopic.notifyDataSetChanged();
+            if (anItemHasChanged) {
+                adapterForTopic.notifyDataSetChanged();
+            }
 
             if (adapterForTopic.getAllItems().isEmpty()) {
                 setErrorBackgroundMessageForAllMessageIgnored();

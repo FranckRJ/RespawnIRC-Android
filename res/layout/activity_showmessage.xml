@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/text_errorbackgroundmessage_showmessage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:gravity="center"
+            android:textStyle="bold"/>
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swiperefresh_showmessage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar_showmessage">
+            <ListView
+                android:id="@+id/jvcmessage_view_showmessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="?attr/themedDividerColor"
+                android:dividerHeight="1dp"
+                android:scrollbarStyle="outsideOverlay"
+                android:scrollbars="vertical"/>
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_below="@+id/toolbar_showmessage"
+            android:background="?attr/themedShadowTop"/>
+
+        <include
+            android:id="@+id/toolbar_showmessage"
+            layout="@layout/toolbar"/>
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>
