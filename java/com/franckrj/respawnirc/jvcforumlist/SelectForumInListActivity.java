@@ -218,6 +218,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         swipeRefresh.setEnabled(false);
         swipeRefresh.setColorSchemeResources(R.color.colorControlHighlightThemeLight);
         noResultFoundTextView.setVisibility(View.GONE);
+        hideMpAndNotifNumber();
 
         baseForumlistCatBlabla = initForumlistCategoryCard(R.id.forumlist_cat_blabla_selectforum, R.id.forumlist_content_blabla_selectforum,
                                                            0, R.id.forumlist_arrow_blabla_selectforum);
@@ -269,8 +270,6 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
                     baseForumListLayout.scrollTo(0, savedInstanceState.getInt(SAVE_BASE_FORUMLIST_SCROLL_POSITION, 0));
                 }
             });
-        } else {
-            updateMpAndNotifNumberShowed(null, null);
         }
 
         if (PrefsManager.getBool(PrefsManager.BoolPref.Names.IS_FIRST_LAUNCH)) {

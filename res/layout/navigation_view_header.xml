@@ -7,6 +7,30 @@
     android:background="?attr/themedNavigationHeaderBackground">
 
     <TextView
+        android:id="@+id/mp_text_navigation_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/notif_text_navigation_header"
+        android:layout_marginBottom="8dp"
+        android:drawableLeft="@drawable/ic_mail_dark"
+        android:drawableStart="@drawable/ic_mail_dark"
+        android:drawablePadding="6dp"
+        android:textColor="@android:color/white"
+        android:gravity="center_vertical"/>
+
+    <TextView
+        android:id="@+id/notif_text_navigation_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/pseudo_text_navigation_header"
+        android:layout_marginBottom="4dp"
+        android:drawableLeft="@drawable/ic_bell_dark"
+        android:drawableStart="@drawable/ic_bell_dark"
+        android:drawablePadding="6dp"
+        android:textColor="@android:color/white"
+        android:gravity="center_vertical"/>
+
+    <TextView
         android:id="@+id/pseudo_text_navigation_header"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

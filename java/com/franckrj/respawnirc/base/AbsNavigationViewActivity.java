@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.ShortcutManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -59,6 +60,8 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected DrawerLayout layoutForDrawer = null;
     protected NavigationMenuListView navigationMenuList = null;
     protected NavigationMenuAdapter adapterForNavigationMenu = null;
+    protected TextView mpTextNavigation = null;
+    protected TextView notifTextNavigation = null;
     protected TextView pseudoTextNavigation = null;
     protected ImageView contextConnectImageNavigation = null;
     protected ActionBarDrawerToggle toggleForDrawer = null;
@@ -70,8 +73,6 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected int idOfBaseActivity = -1;
     protected int currentNavigationMenuMode = -1;
     protected ArrayList<NavigationMenuAdapter.MenuItemInfo> currentListOfMenuItem = null;
-    protected String showMpStringContent = "";
-    protected String showNotifStringContent = "";
     protected boolean backIsOpenDrawer = false;
     protected boolean userIsModo = false;
     protected boolean drawerIsDisabled = false;
@@ -192,28 +193,6 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             }
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
-                tmpItemInfo.textContent = getString(R.string.showMp);
-                tmpItemInfo.drawableResId = R.drawable.ic_mail_dark_zoom;
-                tmpItemInfo.isHeader = false;
-                tmpItemInfo.isEnabled = false;
-                tmpItemInfo.itemId = ITEM_ID_SHOWMP;
-                tmpItemInfo.groupId = GROUP_ID_BASIC;
-                listOfMenuItemInfoForHome.add(tmpItemInfo);
-                listOfMenuItemInfoForForum.add(tmpItemInfo);
-            }
-            {
-                NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
-                tmpItemInfo.textContent = getString(R.string.showNotif);
-                tmpItemInfo.drawableResId = R.drawable.ic_bell_dark_zoom;
-                tmpItemInfo.isHeader = false;
-                tmpItemInfo.isEnabled = false;
-                tmpItemInfo.itemId = ITEM_ID_SHOWNOTIF;
-                tmpItemInfo.groupId = GROUP_ID_BASIC;
-                listOfMenuItemInfoForHome.add(tmpItemInfo);
-                listOfMenuItemInfoForForum.add(tmpItemInfo);
-            }
-            {
-                NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.preference);
                 tmpItemInfo.drawableResId = R.drawable.ic_settings_dark_zoom;
                 tmpItemInfo.isHeader = false;
@@ -266,6 +245,27 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                 tmpItemInfo.groupId = GROUP_ID_BASIC;
                 listOfMenuItemInfoForHome.add(tmpItemInfo);
                 listOfMenuItemInfoForForum.add(tmpItemInfo);
+            }
+
+            {
+                NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
+                tmpItemInfo.textContent = getString(R.string.showMp);
+                tmpItemInfo.drawableResId = R.drawable.ic_mail_dark_zoom;
+                tmpItemInfo.isHeader = false;
+                tmpItemInfo.isEnabled = true;
+                tmpItemInfo.itemId = ITEM_ID_SHOWMP;
+                tmpItemInfo.groupId = GROUP_ID_BASIC;
+                listOfMenuItemInfoForConnect.add(tmpItemInfo);
+            }
+            {
+                NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
+                tmpItemInfo.textContent = getString(R.string.showNotif);
+                tmpItemInfo.drawableResId = R.drawable.ic_bell_dark_zoom;
+                tmpItemInfo.isHeader = false;
+                tmpItemInfo.isEnabled = true;
+                tmpItemInfo.itemId = ITEM_ID_SHOWNOTIF;
+                tmpItemInfo.groupId = GROUP_ID_BASIC;
+                listOfMenuItemInfoForConnect.add(tmpItemInfo);
             }
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
@@ -336,21 +336,10 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         }
 
         if (!isInNavigationConnectMode) {
-            int positionOfShowMpItem = adapterForNavigationMenu.getPositionDependingOnId(ITEM_ID_SHOWMP, GROUP_ID_BASIC);
-            int positionOfShowNotifItem = adapterForNavigationMenu.getPositionDependingOnId(ITEM_ID_SHOWNOTIF, GROUP_ID_BASIC);
             int positionOfShowGTAItem = adapterForNavigationMenu.getPositionDependingOnId(ITEM_ID_SHOWGTA, GROUP_ID_BASIC);
 
             updateFavsInNavigationMenu(false);
-            adapterForNavigationMenu.setRowEnabled(positionOfShowMpItem, !pseudoOfUser.isEmpty());
-            adapterForNavigationMenu.setRowEnabled(positionOfShowNotifItem, !pseudoOfUser.isEmpty());
             adapterForNavigationMenu.setRowSelected(adapterForNavigationMenu.getPositionDependingOnId(idOfBaseActivity, GROUP_ID_BASIC));
-
-            if (!showMpStringContent.isEmpty()) {
-                adapterForNavigationMenu.setRowText(positionOfShowMpItem, showMpStringContent);
-            }
-            if (!showNotifStringContent.isEmpty()) {
-                adapterForNavigationMenu.setRowText(positionOfShowNotifItem, showNotifStringContent);
-            }
 
             if (pseudoOfUser.isEmpty()) {
                 contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_add_circle_outline_dark));
@@ -418,33 +407,33 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         }
     }
 
-    protected void updateMpAndNotifNumberShowed(String newNumberOfMp, String newNumberOfNotif) {
-        boolean itemChanged = false;
-        int positionOfShowMpItem = adapterForNavigationMenu.getPositionDependingOnId(ITEM_ID_SHOWMP, GROUP_ID_BASIC);
-        int positionOfShowNotifItem = adapterForNavigationMenu.getPositionDependingOnId(ITEM_ID_SHOWNOTIF, GROUP_ID_BASIC);
+    protected void hideMpAndNotifNumber() {
+        mpTextNavigation.setVisibility(View.GONE);
+        notifTextNavigation.setVisibility(View.GONE);
+    }
 
+    protected void updateMpAndNotifNumberShowed(String newNumberOfMp, String newNumberOfNotif) {
         if (newNumberOfMp == null) {
-            showMpStringContent = getString(R.string.showMp);
-        } else {
-            showMpStringContent = getString(R.string.showMpWithNumber, newNumberOfMp);
+            newNumberOfMp = "";
         }
         if (newNumberOfNotif == null) {
-            showNotifStringContent = getString(R.string.showNotif);
+            newNumberOfNotif = "";
+        }
+
+        if (newNumberOfMp.isEmpty() || newNumberOfMp.equals("0")) {
+            mpTextNavigation.setTypeface(null, Typeface.NORMAL);
+            mpTextNavigation.setText(newNumberOfMp);
         } else {
-            showNotifStringContent = getString(R.string.showNotifWithNumber, newNumberOfNotif);
+            mpTextNavigation.setTypeface(null, Typeface.BOLD);
+            mpTextNavigation.setText(getString(R.string.mpOrNotifNumberNonZero, newNumberOfMp));
         }
 
-        if (positionOfShowMpItem != -1) {
-            adapterForNavigationMenu.setRowText(positionOfShowMpItem, showMpStringContent);
-            itemChanged = true;
-        }
-        if (positionOfShowNotifItem != -1) {
-            adapterForNavigationMenu.setRowText(positionOfShowNotifItem, showNotifStringContent);
-            itemChanged = true;
-        }
-
-        if (itemChanged) {
-            adapterForNavigationMenu.notifyDataSetChanged();
+        if (newNumberOfNotif.isEmpty() || newNumberOfNotif.equals("0")) {
+            notifTextNavigation.setTypeface(null, Typeface.NORMAL);
+            notifTextNavigation.setText(newNumberOfNotif);
+        } else {
+            notifTextNavigation.setTypeface(null, Typeface.BOLD);
+            notifTextNavigation.setText(getString(R.string.mpOrNotifNumberNonZero, newNumberOfNotif));
         }
     }
 
@@ -523,6 +512,8 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         toggleForDrawer.setDrawerSlideAnimationEnabled(false);
 
         View navigationHeader = getLayoutInflater().inflate(R.layout.navigation_view_header, navigationMenuList, false);
+        mpTextNavigation = navigationHeader.findViewById(R.id.mp_text_navigation_header);
+        notifTextNavigation = navigationHeader.findViewById(R.id.notif_text_navigation_header);
         pseudoTextNavigation = navigationHeader.findViewById(R.id.pseudo_text_navigation_header);
         contextConnectImageNavigation = navigationHeader.findViewById(R.id.context_connect_image_navigation_header);
         adapterForNavigationMenu = new NavigationMenuAdapter(this);

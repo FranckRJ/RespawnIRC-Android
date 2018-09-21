@@ -102,8 +102,7 @@
     <string name="areYouSure">Êtes-vous sûr ?</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
-    <string name="showMpWithNumber">Messages privés   (%1$s)</string>
-    <string name="showNotifWithNumber">Notifications   (%1$s)</string>
+    <string name="mpOrNotifNumberNonZero">%1$s (!)</string>
     <string name="openCDV">Ouvrir la CDV</string>
     <string name="copyPseudo">Copier le pseudo</string>
     <string name="copyPermalink">Copier le lien permanent</string>
@@ -297,6 +296,9 @@
     <string name="errorPinOrUnpinAlreadyRunning">Erreur, épinglage ou dépinglage déjà en cours.</string>
     <string name="pinSuccess">Topic épinglé.</string>
     <string name="unpinSuccess">Topic dépinglé.</string>
+    <string name="showResult">Afficher les résultats</string>
+    <string name="nothing">Rien</string>
+    <string name="goToTopicOfForum">Accéder au topic du message</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>
