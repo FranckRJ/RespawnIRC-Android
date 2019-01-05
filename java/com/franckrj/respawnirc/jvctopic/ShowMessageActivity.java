@@ -223,17 +223,17 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
         adapterForTopic.setShowSignatures(PrefsManager.getBool(PrefsManager.BoolPref.Names.SHOW_SIGNATURE_MODE_FORUM));
 
         try {
-            avatarSizeInDP = Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.AVATAR_SIZE));
+            avatarSizeInDP = PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.AVATAR_SIZE);
         } catch (Exception e) {
             avatarSizeInDP = -1;
         }
         try {
-            stickerSizeInDP = Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.STICKER_SIZE));
+            stickerSizeInDP = PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.STICKER_SIZE);
         } catch (Exception e) {
             stickerSizeInDP = -1;
         }
         try {
-            miniNoelshackWidthInDP = Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MINI_NOELSHACK_WIDTH));
+            miniNoelshackWidthInDP = PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.MINI_NOELSHACK_WIDTH);
         } catch (Exception e) {
             miniNoelshackWidthInDP = -1;
         }
@@ -264,7 +264,7 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
         currentSettings.addBeforeEdit = "<br /><br /><small><i>";
         currentSettings.addAfterEdit = "</i></small>";
         currentSettings.applyMarkToPseudoAuthor = PrefsManager.getBool(PrefsManager.BoolPref.Names.MARK_AUTHOR_PSEUDO_MODE_FORUM);
-        currentSettings.maxNumberOfOverlyQuotes = Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MAX_NUMBER_OF_OVERLY_QUOTE));
+        currentSettings.maxNumberOfOverlyQuotes = PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.MAX_NUMBER_OF_OVERLY_QUOTE);
         currentSettings.transformStickerToSmiley = PrefsManager.getBool(PrefsManager.BoolPref.Names.TRANSFORM_STICKER_TO_SMILEY);
         currentSettings.shortenLongLink = PrefsManager.getBool(PrefsManager.BoolPref.Names.SHORTEN_LONG_LINK);
         currentSettings.hideUglyImages = PrefsManager.getBool(PrefsManager.BoolPref.Names.HIDE_UGLY_IMAGES);
@@ -273,9 +273,9 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
         currentSettings.colorPseudoOfUserInMessage = PrefsManager.getBool(PrefsManager.BoolPref.Names.COLOR_PSEUDO_OF_USER_IN_MESSAGE);
         adapterForTopic.setShowSpoilDefault(PrefsManager.getBool(PrefsManager.BoolPref.Names.DEFAULT_SHOW_SPOIL_VAL));
         adapterForTopic.setColorDeletedMessages(PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_COLOR_DELETED_MESSAGES));
-        adapterForTopic.setMessageFontSizeInSp(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MESSAGE_FONT_SIZE)));
-        adapterForTopic.setMessageInfosFontSizeInSp(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MESSAGE_INFOS_FONT_SIZE)));
-        adapterForTopic.setMessageSignatureFontSizeInSp(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MESSAGE_SIGNATURE_FONT_SIZE)));
+        adapterForTopic.setMessageFontSizeInSp(PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.MESSAGE_FONT_SIZE));
+        adapterForTopic.setMessageInfosFontSizeInSp(PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.MESSAGE_INFOS_FONT_SIZE));
+        adapterForTopic.setMessageSignatureFontSizeInSp(PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.MESSAGE_SIGNATURE_FONT_SIZE));
         adapterForTopic.setQuoteBackgroundColor(ThemeManager.getColorInt(R.attr.themedQuoteBackgroundColor, this));
         adapterForTopic.setQuoteStripeColor(ThemeManager.getColorInt(R.attr.themedQuoteStripeColor, this));
         adapterForTopic.setQuoteStripeSize(getResources().getDimensionPixelSize(R.dimen.quoteStripeSize));

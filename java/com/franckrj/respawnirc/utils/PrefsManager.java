@@ -179,6 +179,24 @@ public class PrefsManager {
         }
     }
 
+    public static int getStringAsInt(StringPref.Names prefName) {
+        StringPref prefInfo = listOfStringPrefs.get(prefName);
+
+        if (prefInfo != null) {
+            try {
+                return Integer.parseInt(currentPrefs.getString(prefInfo.stringName, prefInfo.defaultValue));
+            } catch (Exception e) {
+                try {
+                    return Integer.parseInt(prefInfo.defaultValue);
+                } catch (Exception ee) {
+                    return 0;
+                }
+            }
+        } else {
+            return 0;
+        }
+    }
+
     public static String getString(String prefName) {
         for (int i = 0; i < listOfStringPrefs.size(); ++i) {
             StringPref tmpPref = listOfStringPrefs.valueAt(i);

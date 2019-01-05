@@ -156,8 +156,8 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
 
     private void reloadAdapterSettings() {
         adapterForForum.setAlternateBackgroundColor(PrefsManager.getBool(PrefsManager.BoolPref.Names.FORUM_ALTERNATE_BACKGROUND));
-        adapterForForum.setTopicTitleSizeInSp(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_TITLE_FONT_SIZE)));
-        adapterForForum.setTopicInfosSizeInSp(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_INFOS_FONT_SIZE)));
+        adapterForForum.setTopicTitleSizeInSp(PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.TOPIC_TITLE_FONT_SIZE));
+        adapterForForum.setTopicInfosSizeInSp(PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.TOPIC_INFOS_FONT_SIZE));
         adapterForForum.setTopicNameColor(ThemeManager.getColorInt(R.attr.themedTopicNameColor, requireActivity()));
         adapterForForum.setPseudoModoColor(ThemeManager.getColorInt(R.attr.themedPseudoModoColor, requireActivity()));
         adapterForForum.setPseudoAdminColor(ThemeManager.getColorInt(R.attr.themedPseudoAdminColor, requireActivity()));

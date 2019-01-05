@@ -97,9 +97,9 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
         currentSettings.addBeforeEdit = "";
         currentSettings.addAfterEdit = "";
         showRefreshWhenMessagesShowed = PrefsManager.getBool(PrefsManager.BoolPref.Names.TOPIC_SHOW_REFRESH_WHEN_MESSAGE_SHOWED_MODE_IRC);
-        maxNumberOfMessagesShowed = Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MAX_NUMBER_OF_MESSAGES));
-        initialNumberOfMessagesShowed = Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.INITIAL_NUMBER_OF_MESSAGES));
-        getterForTopic.setTimeBetweenRefreshTopic(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.REFRESH_TOPIC_TIME)));
+        maxNumberOfMessagesShowed = PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.MAX_NUMBER_OF_MESSAGES);
+        initialNumberOfMessagesShowed = PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.INITIAL_NUMBER_OF_MESSAGES);
+        getterForTopic.setTimeBetweenRefreshTopic(PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.REFRESH_TOPIC_TIME));
     }
 
     @Override

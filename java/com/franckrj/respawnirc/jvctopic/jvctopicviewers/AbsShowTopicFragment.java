@@ -182,17 +182,17 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         int miniNoelshackWidthInDP;
 
         try {
-            avatarSizeInDP = Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.AVATAR_SIZE));
+            avatarSizeInDP = PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.AVATAR_SIZE);
         } catch (Exception e) {
             avatarSizeInDP = -1;
         }
         try {
-            stickerSizeInDP = Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.STICKER_SIZE));
+            stickerSizeInDP = PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.STICKER_SIZE);
         } catch (Exception e) {
             stickerSizeInDP = -1;
         }
         try {
-            miniNoelshackWidthInDP = Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MINI_NOELSHACK_WIDTH));
+            miniNoelshackWidthInDP = PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.MINI_NOELSHACK_WIDTH);
         } catch (Exception e) {
             miniNoelshackWidthInDP = -1;
         }
@@ -210,7 +210,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             adapterForTopic.setMiniNoeslahckSizeByWidth(Utils.roundToInt(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, miniNoelshackWidthInDP, getResources().getDisplayMetrics())));
         }
 
-        currentSettings.maxNumberOfOverlyQuotes = Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MAX_NUMBER_OF_OVERLY_QUOTE));
+        currentSettings.maxNumberOfOverlyQuotes = PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.MAX_NUMBER_OF_OVERLY_QUOTE);
         currentSettings.transformStickerToSmiley = PrefsManager.getBool(PrefsManager.BoolPref.Names.TRANSFORM_STICKER_TO_SMILEY);
         currentSettings.shortenLongLink = PrefsManager.getBool(PrefsManager.BoolPref.Names.SHORTEN_LONG_LINK);
         currentSettings.hideUglyImages = PrefsManager.getBool(PrefsManager.BoolPref.Names.HIDE_UGLY_IMAGES);
@@ -223,9 +223,9 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         fastRefreshOfImages = PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_FAST_REFRESH_OF_IMAGES);
         adapterForTopic.setColorDeletedMessages(PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_COLOR_DELETED_MESSAGES));
         hideTotallyMessagesOfIgnoredPseudos = PrefsManager.getBool(PrefsManager.BoolPref.Names.HIDE_TOTALLY_MESSAGES_OF_IGNORED_PSEUDOS);
-        adapterForTopic.setMessageFontSizeInSp(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MESSAGE_FONT_SIZE)));
-        adapterForTopic.setMessageInfosFontSizeInSp(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MESSAGE_INFOS_FONT_SIZE)));
-        adapterForTopic.setMessageSignatureFontSizeInSp(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MESSAGE_SIGNATURE_FONT_SIZE)));
+        adapterForTopic.setMessageFontSizeInSp(PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.MESSAGE_FONT_SIZE));
+        adapterForTopic.setMessageInfosFontSizeInSp(PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.MESSAGE_INFOS_FONT_SIZE));
+        adapterForTopic.setMessageSignatureFontSizeInSp(PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.MESSAGE_SIGNATURE_FONT_SIZE));
         adapterForTopic.setQuoteBackgroundColor(ThemeManager.getColorInt(R.attr.themedQuoteBackgroundColor, requireActivity()));
         adapterForTopic.setQuoteStripeColor(ThemeManager.getColorInt(R.attr.themedQuoteStripeColor, requireActivity()));
         adapterForTopic.setQuoteStripeSize(requireActivity().getResources().getDimensionPixelSize(R.dimen.quoteStripeSize));
