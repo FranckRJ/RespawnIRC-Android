@@ -35,6 +35,7 @@ public class PrefsManager {
         listOfStringPrefs.put(nameOfPref, new StringPref(prefStringValue, prefDefaultValue, newMinVal, newMaxVal));
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static void addLongPref(LongPref.Names nameOfPref, String prefStringValue, long prefDefaultValue) {
         listOfLongPrefs.put(nameOfPref, new LongPref(prefStringValue, prefDefaultValue));
     }

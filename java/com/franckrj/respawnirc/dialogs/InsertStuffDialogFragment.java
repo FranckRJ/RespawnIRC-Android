@@ -494,7 +494,7 @@ public class InsertStuffDialogFragment extends DialogFragment {
                 }
 
                 @Override
-                public void onClick(View view) {
+                public void onClick(@NonNull View view) {
                     onLongClick(view);
                     dismiss();
                 }

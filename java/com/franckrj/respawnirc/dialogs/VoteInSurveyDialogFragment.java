@@ -37,7 +37,7 @@ public class VoteInSurveyDialogFragment extends DialogFragment {
         }
 
         builder.setTitle(R.string.vote);
-        builder.setSingleChoiceItems(listOfReplys.toArray(new CharSequence[listOfReplys.size()]), -1, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(listOfReplys.toArray(new CharSequence[0]), -1, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 idOfLastSelectedItem = which;
@@ -70,7 +70,7 @@ public class VoteInSurveyDialogFragment extends DialogFragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(SAVE_ID_ITEM_SELECTED, idOfLastSelectedItem);
     }

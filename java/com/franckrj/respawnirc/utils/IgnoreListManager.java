@@ -42,6 +42,6 @@ public class IgnoreListManager {
     }
 
     public static String[] getListOfIgnoredPseudosInLCAsArray() {
-        return listOfIgnoredPseudosInLC.toArray(new String[listOfIgnoredPseudosInLC.size()]);
+        return listOfIgnoredPseudosInLC.toArray(new String[0]);
     }
 }

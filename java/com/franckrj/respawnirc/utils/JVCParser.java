@@ -1965,6 +1965,15 @@ public final class JVCParser {
     public static class ForumAndTopicName {
         public String forum = "";
         public String topic = "";
+
+        public ForumAndTopicName() {
+            //rien
+        }
+
+        public ForumAndTopicName(ForumAndTopicName baseForCopy) {
+            forum = baseForCopy.forum;
+            topic = baseForCopy.topic;
+        }
     }
 
     public static class Settings {

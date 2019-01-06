@@ -78,6 +78,7 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
                     drawable = new DrawableWrapper(new BitmapDrawable(parentActivity.getResources(), loadBitmapFromCache(newFile.getPath())));
                 }
             } catch (Exception e) {
+                //noinspection ConstantConditions
                 drawable = null;
             }
 
