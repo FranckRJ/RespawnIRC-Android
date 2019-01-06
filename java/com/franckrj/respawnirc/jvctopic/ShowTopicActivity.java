@@ -498,7 +498,14 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
                 if (possibleLinkToUse != null) {
                     if (!possibleLinkToUse.isEmpty()) {
+                        String anchorOfTopic;
+
                         possibleLinkToUse = JVCParser.formatThisUrlToClassicJvcUrl(possibleLinkToUse);
+                        anchorOfTopic = JVCParser.getMessageAnchorInTopicIfAny(possibleLinkToUse);
+
+                        if (!anchorOfTopic.isEmpty()) {
+                            pageNavigation.setAnchorForNextLoad(anchorOfTopic);
+                        }
                     }
                     pageNavigation.setCurrentLink(possibleLinkToUse);
                 }

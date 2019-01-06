@@ -230,8 +230,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     @Override
     public void clearContent(boolean deleteTemporaryInfos) {
         if (deleteTemporaryInfos) {
-            goToBottomAtPageLoading = false;
-            dontLoadOnFirstTime = false;
+            clearTemporaryInfos();
         }
         getterForForum.stopAllCurrentTask();
         adapterForForum.removeAllItems();

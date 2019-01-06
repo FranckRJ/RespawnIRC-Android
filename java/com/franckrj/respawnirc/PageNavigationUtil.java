@@ -36,6 +36,7 @@ public class PageNavigationUtil {
     private boolean goToBottomOnNextLoad = false;
     private boolean dontLoadOnFirstTimeForNextFragCreate = false;
     private boolean refreshOnNextInstanciate = false;
+    private String anchorForNextLoad = null;
     private int lastPage = 0;
 
     private final Button.OnClickListener changePageWithNavigationButtonListener = new View.OnClickListener() {
@@ -184,6 +185,10 @@ public class PageNavigationUtil {
                     currentFragment.enableGoToBottomAtPageLoading();
                     goToBottomOnNextLoad = false;
                 }
+                if (anchorForNextLoad != null) {
+                    currentFragment.setAnchorForNextLoad(anchorForNextLoad);
+                    anchorForNextLoad = null;
+                }
                 currentFragment.setPageLink(funcForPageNav.setShowedPageNumberForThisLink(currentLink, position + 1));
             } else {
                 loadNeedToBeDoneOnPageCreate = true;
@@ -271,6 +276,10 @@ public class PageNavigationUtil {
         refreshOnNextInstanciate = newVal;
     }
 
+    public void setAnchorForNextLoad(String newVal) {
+        anchorForNextLoad = newVal;
+    }
+
     public void setDrawableForCurrentPageButton(Drawable thisDrawable) {
         currentPageButton.setCompoundDrawables(null, null, thisDrawable, null);
         currentPageButton.setCompoundDrawablePadding(parentActivity.getResources().getDimensionPixelSize(R.dimen.sizeBetweenTextAndArrow));
@@ -317,6 +326,10 @@ public class PageNavigationUtil {
                     if (goToBottomOnNextLoad) {
                         tmpFragment.enableGoToBottomAtPageLoading();
                         goToBottomOnNextLoad = false;
+                    }
+                    if (anchorForNextLoad != null) {
+                        tmpFragment.setAnchorForNextLoad(anchorForNextLoad);
+                        anchorForNextLoad = null;
                     }
                     if (dontLoadOnFirstTimeForNextFragCreate) {
                         tmpFragment.enableDontLoadOnFirstTime();

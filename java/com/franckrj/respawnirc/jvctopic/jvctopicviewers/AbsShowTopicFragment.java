@@ -34,6 +34,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
 
     protected static final String SAVE_ALL_MESSAGES_SHOWED = "saveAllCurrentMessagesShowed";
     protected static final String SAVE_GO_TO_BOTTOM_PAGE_LOADING = "saveGoToBottomPageLoading";
+    protected static final String SAVE_ANCHOR_FOR_NEXT_LOAD = "saveAnchorForNextLoad";
     protected static final String SAVE_SETTINGS_PSEUDO_OF_AUTHOR = "saveSettingsPseudoOfAuthor";
     protected static final String SAVE_MESSAGES_ARE_FROM_IGNORED_PSEUDOS = "saveMessagesAreFromIgnoredPseudos";
 
@@ -336,8 +337,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     @Override
     public void clearContent(boolean deleteTemporaryInfos) {
         if (deleteTemporaryInfos) {
-            goToBottomAtPageLoading = false;
-            dontLoadOnFirstTime = false;
+            clearTemporaryInfos();
         }
         absGetterForTopic.stopAllCurrentTask();
         absGetterForTopic.resetDirectlyShowedInfos();
@@ -405,6 +405,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         if (savedInstanceState != null) {
             ArrayList<JVCParser.MessageInfos> allCurrentMessagesShowed = savedInstanceState.getParcelableArrayList(SAVE_ALL_MESSAGES_SHOWED);
             goToBottomAtPageLoading = savedInstanceState.getBoolean(SAVE_GO_TO_BOTTOM_PAGE_LOADING, false);
+            anchorForNextLoad = savedInstanceState.getString(SAVE_ANCHOR_FOR_NEXT_LOAD, null);
             currentSettings.pseudoOfAuthor = savedInstanceState.getString(SAVE_SETTINGS_PSEUDO_OF_AUTHOR, "");
             allMessagesShowedAreFromIgnoredPseudos = savedInstanceState.getBoolean(SAVE_MESSAGES_ARE_FROM_IGNORED_PSEUDOS, false);
             absGetterForTopic.loadFromBundle(savedInstanceState);
@@ -459,6 +460,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(SAVE_ALL_MESSAGES_SHOWED, adapterForTopic.getAllItems());
         outState.putBoolean(SAVE_GO_TO_BOTTOM_PAGE_LOADING, goToBottomAtPageLoading);
+        outState.putString(SAVE_ANCHOR_FOR_NEXT_LOAD, anchorForNextLoad);
         outState.putString(SAVE_SETTINGS_PSEUDO_OF_AUTHOR, currentSettings.pseudoOfAuthor);
         outState.putBoolean(SAVE_MESSAGES_ARE_FROM_IGNORED_PSEUDOS, allMessagesShowedAreFromIgnoredPseudos);
         absGetterForTopic.saveToBundle(outState);

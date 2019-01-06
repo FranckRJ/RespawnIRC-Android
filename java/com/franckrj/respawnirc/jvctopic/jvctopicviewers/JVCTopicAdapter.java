@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.text.Layout;
 import android.text.Spannable;
@@ -403,7 +404,7 @@ public class JVCTopicAdapter extends BaseAdapter {
         for (final URLSpan urlSpan : urlSpanArray) {
             Utils.replaceSpanByAnotherSpan(spannable, urlSpan, new LongClickableSpan() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(@NonNull View view) {
                     if (urlCLickedListener != null) {
                         urlCLickedListener.getClickedURL(urlSpan.getURL(), false);
                     }
@@ -422,12 +423,12 @@ public class JVCTopicAdapter extends BaseAdapter {
         for (final HoldingStringSpan holdingStringSpan : holdingStringSpanArray) {
             Utils.replaceSpanByAnotherSpan(spannable, holdingStringSpan, new ClickableSpan() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(@NonNull View view) {
                     updateListOfSpoidIdToShow(infosOfMessage, holdingStringSpan.getString());
                 }
 
                 @Override
-                public void updateDrawState(TextPaint ds) {
+                public void updateDrawState(@NonNull TextPaint ds) {
                     //rien
                 }
             });
@@ -477,6 +478,15 @@ public class JVCTopicAdapter extends BaseAdapter {
             return new JVCParser.MessageInfos();
         }
         return listOfMessages.get(position);
+    }
+
+    public int getPositionOfMessageId(long idToSearch) {
+        for (int i = 0; i < listOfMessages.size(); ++i) {
+            if (listOfMessages.get(i).id == idToSearch) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override
