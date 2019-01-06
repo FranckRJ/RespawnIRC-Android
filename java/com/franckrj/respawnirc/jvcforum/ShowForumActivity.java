@@ -78,7 +78,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         pageNavigation.updateAdapterForPagerView();
         pageNavigation.updateCurrentItemAndButtonsToCurrentLink();
         if (pageNavigation.getCurrentItemIndex() > 0) {
-            pageNavigation.clearPageForThisFragment(0);
+            pageNavigation.clearPageForThisFragment(0, true);
         }
     }
 

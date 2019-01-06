@@ -65,9 +65,9 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
     }
 
     @Override
-    public void clearContent() {
+    public void clearContent(boolean deleteTemporaryInfos) {
         saveOldTopicInfos();
-        super.clearContent();
+        super.clearContent(deleteTemporaryInfos);
     }
 
     @Override

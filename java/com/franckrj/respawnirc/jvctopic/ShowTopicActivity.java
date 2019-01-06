@@ -727,7 +727,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             if (newMode == AbsShowTopicFragment.MODE_FORUM) {
                 updateLastPageAndCurrentItemAndButtonsToCurrentLink();
                 if (pageNavigation.getCurrentItemIndex() > 0) {
-                    pageNavigation.clearPageForThisFragment(0);
+                    pageNavigation.clearPageForThisFragment(0, true);
                 }
             }
         }

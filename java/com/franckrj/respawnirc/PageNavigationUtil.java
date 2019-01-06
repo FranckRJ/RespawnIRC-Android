@@ -82,10 +82,10 @@ public class PageNavigationUtil {
         public void onPageScrollStateChanged(int state) {
             if (state == ViewPager.SCROLL_STATE_IDLE) {
                 if (getCurrentItemIndex() > 0) {
-                    clearPageForThisFragment(getCurrentItemIndex() - 1);
+                    clearPageForThisFragment(getCurrentItemIndex() - 1, true);
                 }
                 if (getCurrentItemIndex() < adapterForPagerView.getCount() - 1) {
-                    clearPageForThisFragment(getCurrentItemIndex() + 1);
+                    clearPageForThisFragment(getCurrentItemIndex() + 1, true);
                 }
             }
         }
@@ -191,10 +191,10 @@ public class PageNavigationUtil {
         }
     }
 
-    public void clearPageForThisFragment(int position) {
+    public void clearPageForThisFragment(int position, boolean deleteTemporaryInfos) {
         AbsShowSomethingFragment currentFragment = adapterForPagerView.getFragment(position);
         if (currentFragment != null) {
-            currentFragment.clearContent();
+            currentFragment.clearContent(deleteTemporaryInfos);
         }
     }
 
@@ -302,8 +302,8 @@ public class PageNavigationUtil {
         }
 
         @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            ((AbsShowSomethingFragment) object).clearContent();
+        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+            ((AbsShowSomethingFragment) object).clearContent(false);
             referenceMap.remove(position);
             super.destroyItem(container, position, object);
         }
@@ -334,7 +334,7 @@ public class PageNavigationUtil {
 
         @NonNull
         @Override
-        public Object instantiateItem(ViewGroup container, int position) {
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
             AbsShowSomethingFragment fragment = (AbsShowSomethingFragment) super.instantiateItem(container, position);
 
             if (refreshOnNextInstanciate && position == getCurrentItemIndex()) {

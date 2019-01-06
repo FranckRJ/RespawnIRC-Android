@@ -15,6 +15,6 @@ public abstract class AbsShowSomethingFragment extends Fragment {
     }
 
     public abstract void setPageLink(String newForumPageLink);
-    public abstract void clearContent();
+    public abstract void clearContent(boolean deleteTemporaryInfos);
     public abstract void refreshContent();
 }

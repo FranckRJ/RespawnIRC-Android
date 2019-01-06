@@ -334,7 +334,11 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     }
 
     @Override
-    public void clearContent() {
+    public void clearContent(boolean deleteTemporaryInfos) {
+        if (deleteTemporaryInfos) {
+            goToBottomAtPageLoading = false;
+            dontLoadOnFirstTime = false;
+        }
         absGetterForTopic.stopAllCurrentTask();
         absGetterForTopic.resetDirectlyShowedInfos();
         adapterForTopic.disableSurvey();
