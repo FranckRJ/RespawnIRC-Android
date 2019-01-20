@@ -91,18 +91,6 @@ public class NavigationMenuAdapter extends BaseAdapter {
         rowSelected = newVal;
     }
 
-    public void setRowEnabled(int position, boolean newVal) {
-        if (position < listOfMenuItem.size()) {
-            listOfMenuItem.get(position).isEnabled = newVal;
-        }
-    }
-
-    public void setRowText(int position, String newText) {
-        if (position < listOfMenuItem.size()) {
-            listOfMenuItem.get(position).textContent = newText;
-        }
-    }
-
     @Override
     public int getCount() {
         return listOfMenuItem.size();
@@ -151,16 +139,34 @@ public class NavigationMenuAdapter extends BaseAdapter {
             holder.contentTextView.setTextColor(normalTextColor);
         }
 
-        if (currentMenuItemInfo.drawableResId != 0) {
-            Drawable compoundDrawable = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), currentMenuItemInfo.drawableResId).mutate();
+        if (currentMenuItemInfo.iconResId != 0 || currentMenuItemInfo.buttonResId != 0) {
+            Drawable compoundLeftDrawable = null;
+            Drawable compoundRightDrawable = null;
 
-            if (rowSelected == position && currentMenuItemInfo.isEnabled) {
-                compoundDrawable.setColorFilter(selectedItemColor, PorterDuff.Mode.SRC_ATOP);
-            } else {
-                compoundDrawable.setColorFilter(unselectedItemColor, PorterDuff.Mode.SRC_ATOP);
+            if (currentMenuItemInfo.iconResId != 0) {
+                compoundLeftDrawable = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), currentMenuItemInfo.iconResId).mutate();
+            }
+            if (currentMenuItemInfo.buttonResId != 0) {
+                compoundRightDrawable = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), currentMenuItemInfo.buttonResId).mutate();
             }
 
-            holder.contentTextView.setCompoundDrawablesWithIntrinsicBounds(compoundDrawable, null, null, null);
+            if (rowSelected == position && currentMenuItemInfo.isEnabled) {
+                if (compoundLeftDrawable != null) {
+                    compoundLeftDrawable.setColorFilter(selectedItemColor, PorterDuff.Mode.SRC_ATOP);
+                }
+                if (compoundRightDrawable != null) {
+                    compoundRightDrawable.setColorFilter(selectedItemColor, PorterDuff.Mode.SRC_ATOP);
+                }
+            } else {
+                if (compoundLeftDrawable != null) {
+                    compoundLeftDrawable.setColorFilter(unselectedItemColor, PorterDuff.Mode.SRC_ATOP);
+                }
+                if (compoundRightDrawable != null) {
+                    compoundRightDrawable.setColorFilter(unselectedItemColor, PorterDuff.Mode.SRC_ATOP);
+                }
+            }
+
+            holder.contentTextView.setCompoundDrawablesWithIntrinsicBounds(compoundLeftDrawable, null, compoundRightDrawable, null);
         } else {
             holder.contentTextView.setCompoundDrawables(null, null, null, null);
         }
@@ -174,12 +180,6 @@ public class NavigationMenuAdapter extends BaseAdapter {
         return convertView;
     }
 
-    @Override
-    public boolean isEnabled(int position) {
-        MenuItemInfo currentItemInfo = listOfMenuItem.get(position);
-        return !currentItemInfo.isHeader && currentItemInfo.isEnabled;
-    }
-
     private class CustomViewHolder {
         public TextView contentTextView = null;
         public View upperLineView = null;
@@ -187,7 +187,8 @@ public class NavigationMenuAdapter extends BaseAdapter {
 
     public static class MenuItemInfo {
         public String textContent = "";
-        public @DrawableRes int drawableResId = 0;
+        public @DrawableRes int iconResId = 0;
+        public @DrawableRes int buttonResId = 0;
         public boolean isHeader = false;
         public boolean isEnabled = true;
         public int itemId = -1;

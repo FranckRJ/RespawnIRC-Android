@@ -173,7 +173,8 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.home);
-                tmpItemInfo.drawableResId = R.drawable.ic_home_dark_zoom;
+                tmpItemInfo.iconResId = R.drawable.ic_home_dark_zoom;
+                tmpItemInfo.buttonResId = 0;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = true;
                 tmpItemInfo.itemId = ITEM_ID_HOME;
@@ -184,7 +185,8 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.forum);
-                tmpItemInfo.drawableResId = R.drawable.ic_forum_dark_zoom;
+                tmpItemInfo.iconResId = R.drawable.ic_forum_dark_zoom;
+                tmpItemInfo.buttonResId = 0;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = true;
                 tmpItemInfo.itemId = ITEM_ID_FORUM;
@@ -194,7 +196,8 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.preference);
-                tmpItemInfo.drawableResId = R.drawable.ic_settings_dark_zoom;
+                tmpItemInfo.iconResId = R.drawable.ic_settings_dark_zoom;
+                tmpItemInfo.buttonResId = 0;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = true;
                 tmpItemInfo.itemId = ITEM_ID_PREF;
@@ -205,19 +208,9 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.forumFav);
-                tmpItemInfo.drawableResId = 0;
+                tmpItemInfo.iconResId = 0;
+                tmpItemInfo.buttonResId = R.drawable.ictb_refresh_dark;
                 tmpItemInfo.isHeader = true;
-                tmpItemInfo.isEnabled = true;
-                tmpItemInfo.itemId = -1;
-                tmpItemInfo.groupId = -1;
-                listOfMenuItemInfoForHome.add(tmpItemInfo);
-                listOfMenuItemInfoForForum.add(tmpItemInfo);
-            }
-            {
-                NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
-                tmpItemInfo.textContent = getString(R.string.refresh);
-                tmpItemInfo.drawableResId = R.drawable.ic_refresh_dark_zoom;
-                tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = true;
                 tmpItemInfo.itemId = ITEM_ID_REFRESH_FORUM_FAV;
                 tmpItemInfo.groupId = GROUP_ID_BASIC;
@@ -227,19 +220,9 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.topicFav);
-                tmpItemInfo.drawableResId = 0;
+                tmpItemInfo.iconResId = 0;
+                tmpItemInfo.buttonResId = R.drawable.ictb_refresh_dark;
                 tmpItemInfo.isHeader = true;
-                tmpItemInfo.isEnabled = true;
-                tmpItemInfo.itemId = -1;
-                tmpItemInfo.groupId = -1;
-                listOfMenuItemInfoForHome.add(tmpItemInfo);
-                listOfMenuItemInfoForForum.add(tmpItemInfo);
-            }
-            {
-                NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
-                tmpItemInfo.textContent = getString(R.string.refresh);
-                tmpItemInfo.drawableResId = R.drawable.ic_refresh_dark_zoom;
-                tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = true;
                 tmpItemInfo.itemId = ITEM_ID_REFRESH_TOPIC_FAV;
                 tmpItemInfo.groupId = GROUP_ID_BASIC;
@@ -250,7 +233,8 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.showMp);
-                tmpItemInfo.drawableResId = R.drawable.ic_mail_dark_zoom;
+                tmpItemInfo.iconResId = R.drawable.ic_mail_dark_zoom;
+                tmpItemInfo.buttonResId = 0;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = true;
                 tmpItemInfo.itemId = ITEM_ID_SHOWMP;
@@ -260,7 +244,8 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.showNotif);
-                tmpItemInfo.drawableResId = R.drawable.ic_bell_dark_zoom;
+                tmpItemInfo.iconResId = R.drawable.ic_bell_dark_zoom;
+                tmpItemInfo.buttonResId = 0;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = true;
                 tmpItemInfo.itemId = ITEM_ID_SHOWNOTIF;
@@ -270,7 +255,8 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.connectWithAnotherAccount);
-                tmpItemInfo.drawableResId = R.drawable.ic_add_dark_zoom;
+                tmpItemInfo.iconResId = R.drawable.ic_add_dark_zoom;
+                tmpItemInfo.buttonResId = 0;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = true;
                 tmpItemInfo.itemId = ITEM_ID_CONNECT;
@@ -280,7 +266,8 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.connnectAsModoText);
-                tmpItemInfo.drawableResId = R.drawable.ic_empty;
+                tmpItemInfo.iconResId = R.drawable.ic_empty;
+                tmpItemInfo.buttonResId = 0;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = true;
                 tmpItemInfo.itemId = ITEM_ID_CONNECT_AS_MODO;
@@ -292,7 +279,8 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         if (showGTAMenuItem == null) {
             showGTAMenuItem = new NavigationMenuAdapter.MenuItemInfo();
             showGTAMenuItem.textContent = getString(R.string.gta);
-            showGTAMenuItem.drawableResId = R.drawable.ic_report_dark_zoom;
+            showGTAMenuItem.iconResId = R.drawable.ic_report_dark_zoom;
+            showGTAMenuItem.buttonResId = 0;
             showGTAMenuItem.isHeader = false;
             showGTAMenuItem.isEnabled = true;
             showGTAMenuItem.itemId = ITEM_ID_SHOWGTA;
@@ -372,34 +360,36 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     private void updateFavsInNavigationMenu(boolean needToUpdateAdapter) {
         int currentForumFavArraySize = PrefsManager.getInt(PrefsManager.IntPref.Names.FORUM_FAV_ARRAY_SIZE);
         int currentTopicFavArraySize = PrefsManager.getInt(PrefsManager.IntPref.Names.TOPIC_FAV_ARRAY_SIZE);
-        int positionOfRefreshFavItem;
+        int positionOfNewFavItem;
 
         adapterForNavigationMenu.removeAllItemsFromGroup(GROUP_ID_FORUM_FAV);
-        positionOfRefreshFavItem = adapterForNavigationMenu.getPositionDependingOnId(ITEM_ID_REFRESH_FORUM_FAV, GROUP_ID_BASIC);
+        positionOfNewFavItem = adapterForNavigationMenu.getPositionDependingOnId(ITEM_ID_REFRESH_FORUM_FAV, GROUP_ID_BASIC) + 1;
         for (int i = 0; i < currentForumFavArraySize; ++i) {
             NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
             tmpItemInfo.textContent = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.FORUM_FAV_NAME, String.valueOf(i));
-            tmpItemInfo.drawableResId = 0;
+            tmpItemInfo.iconResId = 0;
+            tmpItemInfo.buttonResId = 0;
             tmpItemInfo.isHeader = false;
             tmpItemInfo.isEnabled = true;
             tmpItemInfo.itemId = i;
             tmpItemInfo.groupId = GROUP_ID_FORUM_FAV;
-            currentListOfMenuItem.add(positionOfRefreshFavItem, tmpItemInfo);
-            ++positionOfRefreshFavItem;
+            currentListOfMenuItem.add(positionOfNewFavItem, tmpItemInfo);
+            ++positionOfNewFavItem;
         }
 
         adapterForNavigationMenu.removeAllItemsFromGroup(GROUP_ID_TOPIC_FAV);
-        positionOfRefreshFavItem = adapterForNavigationMenu.getPositionDependingOnId(ITEM_ID_REFRESH_TOPIC_FAV, GROUP_ID_BASIC);
+        positionOfNewFavItem = adapterForNavigationMenu.getPositionDependingOnId(ITEM_ID_REFRESH_TOPIC_FAV, GROUP_ID_BASIC) + 1;
         for (int i = 0; i < currentTopicFavArraySize; ++i) {
             NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
             tmpItemInfo.textContent = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.TOPIC_FAV_NAME, String.valueOf(i));
-            tmpItemInfo.drawableResId = 0;
+            tmpItemInfo.iconResId = 0;
+            tmpItemInfo.buttonResId = 0;
             tmpItemInfo.isHeader = false;
             tmpItemInfo.isEnabled = true;
             tmpItemInfo.itemId = i;
             tmpItemInfo.groupId = GROUP_ID_TOPIC_FAV;
-            currentListOfMenuItem.add(positionOfRefreshFavItem, tmpItemInfo);
-            ++positionOfRefreshFavItem;
+            currentListOfMenuItem.add(positionOfNewFavItem, tmpItemInfo);
+            ++positionOfNewFavItem;
         }
 
         if (needToUpdateAdapter) {
