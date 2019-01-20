@@ -391,6 +391,13 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     }
 
     @Override
+    protected void launchShowForumInfos() {
+        Intent newShowForumInfosIntent = new Intent(this, ShowForumInfosActivity.class);
+        newShowForumInfosIntent.putExtra(ShowForumInfosActivity.EXTRA_FORUM_LINK, pageNavigation.getFirstPageLink());
+        startActivity(newShowForumInfosIntent);
+    }
+
+    @Override
     public void setReadNewTopic(String newTopicLink, String newTopicName, String pseudoOfAuthor, boolean fromLongClick) {
         readThisTopic(newTopicLink, false, newTopicName, pseudoOfAuthor, fromLongClick);
     }

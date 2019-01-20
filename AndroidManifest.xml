@@ -58,6 +58,11 @@
             android:windowSoftInputMode="stateAlwaysHidden"/>
 
         <activity
+            android:name=".jvcforum.ShowForumInfosActivity"
+            android:label="@string/forumInfos"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+
+        <activity
             android:name=".jvcforum.SearchTopicInForumActivity"
             android:windowSoftInputMode="stateVisible"/>
 

@@ -186,7 +186,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.forum);
                 tmpItemInfo.iconResId = R.drawable.ic_forum_dark_zoom;
-                tmpItemInfo.buttonResId = 0;
+                tmpItemInfo.buttonResId = R.drawable.ictb_about_dark;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = true;
                 tmpItemInfo.itemId = ITEM_ID_FORUM;
@@ -462,6 +462,9 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                                 finish();
                             }
                             break;
+                        case ITEM_ID_FORUM:
+                            launchShowForumInfos();
+                            break;
                         case ITEM_ID_CONNECT:
                             startActivity(new Intent(AbsNavigationViewActivity.this, ConnectActivity.class));
                             break;
@@ -620,4 +623,5 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
 
     protected abstract void initializeViewAndToolbar();
     protected abstract void newForumOrTopicToRead(String link, boolean itsAForum, boolean isWhenDrawerIsClosed, boolean fromLongClick);
+    protected abstract void launchShowForumInfos();
 }

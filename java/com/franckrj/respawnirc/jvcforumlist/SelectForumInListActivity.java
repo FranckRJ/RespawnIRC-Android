@@ -392,6 +392,11 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
     }
 
     @Override
+    protected void launchShowForumInfos() {
+        //rien
+    }
+
+    @Override
     public void newTopicOrForumAvailable(String newTopicOrForumLink) {
         readNewTopicOrForum(newTopicOrForumLink, false);
     }
