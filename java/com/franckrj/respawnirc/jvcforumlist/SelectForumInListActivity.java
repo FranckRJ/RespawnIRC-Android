@@ -151,7 +151,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
                 currentAsyncTaskForGetSearchedForums = new GetSearchedForums();
                 currentAsyncTaskForGetSearchedForums.setRequestIsStartedListener(getSearchedForumsIsStartedListener);
                 currentAsyncTaskForGetSearchedForums.setRequestIsFinishedListener(getSearchedForumsIsFinishedListener);
-                currentAsyncTaskForGetSearchedForums.execute(textForSearch.getText().toString());
+                currentAsyncTaskForGetSearchedForums.execute(textForSearch.getText().toString(), PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
             }
 
             Utils.hideSoftKeyboard(SelectForumInListActivity.this);
@@ -404,9 +404,9 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
     private static class GetSearchedForums extends AbsWebRequestAsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
-            if (params.length > 0) {
+            if (params.length > 1) {
                 String pageResult;
-                WebManager.WebInfos currentWebInfos = initWebInfos("", false);
+                WebManager.WebInfos currentWebInfos = initWebInfos(params[1], false);
 
                 pageResult = WebManager.sendRequest("http://www.jeuxvideo.com/forums/recherche.php", "GET", "q=" + Utils.encodeStringToUrlString(params[0]), currentWebInfos);
 
