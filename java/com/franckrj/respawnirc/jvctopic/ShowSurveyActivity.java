@@ -80,6 +80,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
     private final AbsWebRequestAsyncTask.RequestIsStarted requestIsStartedListener = new AbsWebRequestAsyncTask.RequestIsStarted() {
         @Override
         public void onRequestIsStarted() {
+            backgroundErrorText.setVisibility(View.GONE);
             swipeRefresh.setRefreshing(true);
         }
     };
