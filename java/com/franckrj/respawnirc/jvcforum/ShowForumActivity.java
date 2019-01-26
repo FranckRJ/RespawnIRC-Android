@@ -394,6 +394,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     protected void launchShowForumInfos() {
         Intent newShowForumInfosIntent = new Intent(this, ShowForumInfosActivity.class);
         newShowForumInfosIntent.putExtra(ShowForumInfosActivity.EXTRA_FORUM_LINK, pageNavigation.getFirstPageLink());
+        newShowForumInfosIntent.putExtra(ShowForumInfosActivity.EXTRA_COOKIES, PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
         startActivity(newShowForumInfosIntent);
     }
 
