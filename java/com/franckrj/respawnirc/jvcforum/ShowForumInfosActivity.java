@@ -2,6 +2,8 @@ package com.franckrj.respawnirc.jvcforum;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.view.View;
@@ -23,7 +25,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
     public static final String EXTRA_FORUM_LINK = "com.franckrj.respawnirc.showforuminfos.EXTRA_FORUM_LINK";
     public static final String EXTRA_COOKIES = "com.franckrj.respawnirc.showforuminfos.EXTRA_COOKIES";
 
-    private static final String SAVE_LIST_OF_SUBFORUMS = "saveListOfSubforums";
+    private static final String SAVE_FORUM_INFOS = "saveForumInfos";
     private static final String SAVE_SCROLL_POSITION = "saveScrollPosition";
 
     private TextView backgroundErrorText = null;
@@ -32,7 +34,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
     private CardView subforumsCardView = null;
     private LinearLayout layoutListOfSubforums = null;
     private DownloadForumInfos currentTaskForDownload = null;
-    private ArrayList<JVCParser.NameAndLink> listOfSubforums = null;
+    private ForumInfos infosForForum = null;
 
     private final View.OnClickListener subforumButtonClickedListener = new View.OnClickListener() {
         @Override
@@ -54,13 +56,13 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
         }
     };
 
-    private final AbsWebRequestAsyncTask.RequestIsFinished<String> downloadInfosIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<String>() {
+    private final AbsWebRequestAsyncTask.RequestIsFinished<ForumInfos> downloadInfosIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<ForumInfos>() {
         @Override
-        public void onRequestIsFinished(String reqResult) {
+        public void onRequestIsFinished(ForumInfos newInfos) {
             swipeRefresh.setRefreshing(false);
 
-            if (reqResult != null) {
-                listOfSubforums = JVCParser.getListOfSubforumsInForumPage(reqResult);
+            if (newInfos != null) {
+                infosForForum = newInfos;
                 updateDisplayedInfos();
             } else {
                 backgroundErrorText.setVisibility(View.VISIBLE);
@@ -71,9 +73,9 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
     };
 
     private void updateDisplayedInfos() {
-        if (listOfSubforums != null && !listOfSubforums.isEmpty()) {
+        if (infosForForum != null && !infosForForum.listOfSubforums.isEmpty()) {
             subforumsCardView.setVisibility(View.VISIBLE);
-            for (JVCParser.NameAndLink nameAndLink : listOfSubforums) {
+            for (JVCParser.NameAndLink nameAndLink : infosForForum.listOfSubforums) {
                 Button newSubforumButton = (Button)getLayoutInflater().inflate(R.layout.button_subforum, layoutListOfSubforums, false);
 
                 newSubforumButton.setText(Undeprecator.htmlFromHtml(nameAndLink.name));
@@ -113,7 +115,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
         subforumsCardView.setVisibility(View.GONE);
 
         if (savedInstanceState != null) {
-            listOfSubforums = savedInstanceState.getParcelableArrayList(SAVE_LIST_OF_SUBFORUMS);
+            infosForForum = savedInstanceState.getParcelable(SAVE_FORUM_INFOS);
             updateDisplayedInfos();
 
             mainScrollView.post(new Runnable() {
@@ -129,7 +131,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
     public void onResume() {
         super.onResume();
 
-        if (listOfSubforums == null) {
+        if (infosForForum == null) {
             if (getIntent() != null) {
                 if (getIntent().getStringExtra(EXTRA_FORUM_LINK) != null && getIntent().getStringExtra(EXTRA_COOKIES) != null) {
                     currentTaskForDownload = new DownloadForumInfos();
@@ -154,18 +156,59 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(SAVE_LIST_OF_SUBFORUMS, listOfSubforums);
+        outState.putParcelable(SAVE_FORUM_INFOS, infosForForum);
         outState.putInt(SAVE_SCROLL_POSITION, mainScrollView.getScrollY());
     }
 
-    private static class DownloadForumInfos extends AbsWebRequestAsyncTask<String, Void, String> {
+    private static class DownloadForumInfos extends AbsWebRequestAsyncTask<String, Void, ForumInfos> {
         @Override
-        protected String doInBackground(String... params) {
+        protected ForumInfos doInBackground(String... params) {
             if (params.length > 1) {
                 WebManager.WebInfos currentWebInfos = initWebInfos(params[1], false);
-                return WebManager.sendRequest(params[0], "GET", "", currentWebInfos);
+                String source = WebManager.sendRequest(params[0], "GET", "", currentWebInfos);
+
+                if (source != null && !source.isEmpty()) {
+                    ForumInfos newForumInfos = new ForumInfos();
+
+                    newForumInfos.listOfSubforums = JVCParser.getListOfSubforumsInForumPage(source);
+                    return newForumInfos;
+                }
             }
             return null;
+        }
+    }
+
+    private static class ForumInfos implements Parcelable {
+        public ArrayList<JVCParser.NameAndLink> listOfSubforums = new ArrayList<>();
+
+        public static final Parcelable.Creator<ForumInfos> CREATOR = new Parcelable.Creator<ForumInfos>() {
+            @Override
+            public ForumInfos createFromParcel(Parcel in) {
+                return new ForumInfos(in);
+            }
+
+            @Override
+            public ForumInfos[] newArray(int size) {
+                return new ForumInfos[size];
+            }
+        };
+
+        public ForumInfos() {
+            //rien
+        }
+
+        private ForumInfos(Parcel in) {
+            in.readTypedList(listOfSubforums, JVCParser.NameAndLink.CREATOR);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            out.writeTypedList(listOfSubforums);
         }
     }
 }
