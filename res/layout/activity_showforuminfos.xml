@@ -37,6 +37,17 @@
                     android:clipToPadding="false"
                     android:orientation="vertical">
 
+                    <TextView
+                        android:id="@+id/text_numberofconnected_showforuminfos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="16dp"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textStyle="bold"/>
+
                     <android.support.v7.widget.CardView
                         android:id="@+id/subforum_card_showforuminfos"
                         android:layout_width="match_parent"

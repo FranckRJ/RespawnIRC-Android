@@ -31,6 +31,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
     private TextView backgroundErrorText = null;
     private SwipeRefreshLayout swipeRefresh = null;
     private ScrollView mainScrollView = null;
+    private TextView numberOfConnectedView = null;
     private CardView subforumsCardView = null;
     private LinearLayout layoutListOfSubforums = null;
     private DownloadForumInfos currentTaskForDownload = null;
@@ -87,6 +88,12 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
         } else {
             subforumsCardView.setVisibility(View.GONE);
         }
+        if (infosForForum != null && !infosForForum.numberOfConnected.isEmpty()) {
+            numberOfConnectedView.setVisibility(View.VISIBLE);
+            numberOfConnectedView.setText(Undeprecator.htmlFromHtml(infosForForum.numberOfConnected));
+        } else {
+            subforumsCardView.setVisibility(View.GONE);
+        }
     }
 
     private void stopAllCurrentTasks() {
@@ -106,12 +113,14 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
         backgroundErrorText = findViewById(R.id.text_errorbackgroundmessage_showforuminfos);
         swipeRefresh = findViewById(R.id.swiperefresh_showforuminfos);
         mainScrollView = findViewById(R.id.scrollview_showforuminfos);
+        numberOfConnectedView = findViewById(R.id.text_numberofconnected_showforuminfos);
         subforumsCardView = findViewById(R.id.subforum_card_showforuminfos);
         layoutListOfSubforums = findViewById(R.id.subforum_list_showforuminfos);
 
         backgroundErrorText.setVisibility(View.GONE);
         swipeRefresh.setEnabled(false);
         swipeRefresh.setColorSchemeResources(R.color.colorControlHighlightThemeLight);
+        numberOfConnectedView.setVisibility(View.GONE);
         subforumsCardView.setVisibility(View.GONE);
 
         if (savedInstanceState != null) {
@@ -171,6 +180,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
                     ForumInfos newForumInfos = new ForumInfos();
 
                     newForumInfos.listOfSubforums = JVCParser.getListOfSubforumsInForumPage(source);
+                    newForumInfos.numberOfConnected = JVCParser.getNumberOfConnectFromPage(source);
                     return newForumInfos;
                 }
             }
@@ -179,6 +189,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
     }
 
     private static class ForumInfos implements Parcelable {
+        public String numberOfConnected = "";
         public ArrayList<JVCParser.NameAndLink> listOfSubforums = new ArrayList<>();
 
         public static final Parcelable.Creator<ForumInfos> CREATOR = new Parcelable.Creator<ForumInfos>() {
@@ -198,6 +209,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
         }
 
         private ForumInfos(Parcel in) {
+            numberOfConnected = in.readString();
             in.readTypedList(listOfSubforums, JVCParser.NameAndLink.CREATOR);
         }
 
@@ -208,6 +220,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
 
         @Override
         public void writeToParcel(Parcel out, int flags) {
+            out.writeString(numberOfConnected);
             out.writeTypedList(listOfSubforums);
         }
     }
