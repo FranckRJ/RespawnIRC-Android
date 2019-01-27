@@ -182,7 +182,9 @@ public class JVCTopicAdapter extends BaseAdapter {
         downloaderForImage.setImagesCacheDir(parentActivity.getCacheDir());
         downloaderForImage.setDefaultDrawable(ThemeManager.getDrawable(R.attr.themedDownloadImage, parentActivity));
         downloaderForImage.setDeletedDrawable(ThemeManager.getDrawable(R.attr.themedDeletedImage, parentActivity));
-        downloaderForImage.setImagesSize(res.getDimensionPixelSize(R.dimen.miniNoelshackWidthDefault), res.getDimensionPixelSize(R.dimen.miniNoelshackHeightDefault), true);
+        downloaderForImage.setDefaultDrawableResized(ThemeManager.getDrawable(R.attr.themedDownloadImage, parentActivity));
+        downloaderForImage.setDeletedDrawableResized(ThemeManager.getDrawable(R.attr.themedDeletedImage, parentActivity));
+        downloaderForImage.setImagesSize(res.getDimensionPixelSize(R.dimen.miniNoelshackWidthDefault), res.getDimensionPixelSize(R.dimen.miniNoelshackHeightDefault));
     }
 
     //pas d'intérêt que tout le monde puisse accéder aux messages, seul le .isEmpty() est important sur cette liste.
@@ -252,7 +254,7 @@ public class JVCTopicAdapter extends BaseAdapter {
 
     public void setMiniNoeslahckSizeByWidth(int newWidth) {
         int newHeight = Utils.roundToInt(newWidth * 0.75);
-        downloaderForImage.setImagesSize(newWidth, newHeight, true);
+        downloaderForImage.setImagesSize(newWidth, newHeight);
     }
 
     public void setMessageFontSizeInSp(int newVal) {
@@ -376,7 +378,7 @@ public class JVCTopicAdapter extends BaseAdapter {
         }
 
         if (showAvatars && !item.avatarLink.isEmpty() && !item.pseudoIsBlacklisted) {
-            holder.avatarImageDrawable = downloaderForImage.getDrawableFromLink(item.avatarLink);
+            holder.avatarImageDrawable = downloaderForImage.getDrawableFromLink(item.avatarLink, false);
         } else {
             holder.avatarImageDrawable = null;
         }

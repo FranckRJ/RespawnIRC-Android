@@ -17,6 +17,8 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
     private ArrayList<ImageGetterAsyncTask> listOfCurrentsTasks = new ArrayList<>();
     private Drawable defaultDrawable = null;
     private Drawable deletedDrawable = null;
+    private Drawable defaultDrawableResized = null;
+    private Drawable deletedDrawableResized = null;
     private int numberOfFilesDownloading = 0;
     private DownloadFinished listenerForDownloadFinished = null;
     private CurrentProgress listenerForCurrentProgress = null;
@@ -38,13 +40,15 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
         imagesCacheDir = newCacheDir;
     }
 
-    public void setImagesSize(int newWidth, int newHeight, boolean boundDefaultsDrawableToNewSize) {
+    public void setImagesSize(int newWidth, int newHeight) {
         imagesWidth = newWidth;
         imagesHeight = newHeight;
 
-        if (boundDefaultsDrawableToNewSize) {
-            defaultDrawable.setBounds(0, 0, imagesWidth, imagesHeight);
-            deletedDrawable.setBounds(0, 0, imagesWidth, imagesHeight);
+        if (defaultDrawableResized != null) {
+            defaultDrawableResized.setBounds(0, 0, imagesWidth, imagesHeight);
+        }
+        if (deletedDrawableResized != null) {
+            deletedDrawableResized.setBounds(0, 0, imagesWidth, imagesHeight);
         }
     }
 
@@ -58,17 +62,35 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
 
     public void setDefaultDrawable(Drawable newDrawable) {
         defaultDrawable = newDrawable;
+        defaultDrawable.setBounds(0, 0, defaultDrawable.getIntrinsicWidth(), defaultDrawable.getIntrinsicHeight());
     }
 
     public void setDeletedDrawable(Drawable newDrawable) {
         deletedDrawable = newDrawable;
+        deletedDrawable.setBounds(0, 0, deletedDrawable.getIntrinsicWidth(), deletedDrawable.getIntrinsicHeight());
+    }
+
+    public void setDefaultDrawableResized(Drawable newDrawable) {
+        defaultDrawableResized = newDrawable;
+        defaultDrawableResized.setBounds(0, 0, imagesWidth, imagesHeight);
+        if (defaultDrawable == null) {
+            defaultDrawable = defaultDrawableResized;
+        }
+    }
+
+    public void setDeletedDrawableResized(Drawable newDrawable) {
+        deletedDrawableResized = newDrawable;
+        deletedDrawableResized.setBounds(0, 0, imagesWidth, imagesHeight);
+        if (deletedDrawable == null) {
+            deletedDrawable = deletedDrawableResized;
+        }
     }
 
     public void setScaleLargeImages(boolean newVal) {
         scaleLargeImages = newVal;
     }
 
-    public Drawable getDrawableFromLink(String link) {
+    public Drawable getDrawableFromLink(String link, boolean setToDefaultSize) {
         DrawableWrapper drawable = listOfDrawable.get(link);
 
         if (drawable == null) {
@@ -84,10 +106,14 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
 
             if (drawable == null) {
                 drawable = new DrawableWrapper(defaultDrawable);
-                startDownloadOfThisFileInThisWrapper(link, drawable);
+                startDownloadOfThisFileInThisWrapper(link, drawable, setToDefaultSize);
             }
 
-            drawable.setBounds(0, 0, imagesWidth, imagesHeight);
+            if (setToDefaultSize) {
+                drawable.setBounds(0, 0, imagesWidth, imagesHeight);
+            } else {
+                drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+            }
             listOfDrawable.put(link, drawable);
         }
 
@@ -106,8 +132,8 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
         listOfCurrentsTasks.clear();
     }
 
-    private void startDownloadOfThisFileInThisWrapper(String linkToFile, DrawableWrapper thisWrapper) {
-        ImageGetterAsyncTask getterForImage = new ImageGetterAsyncTask(thisWrapper, linkToFile, imagesCacheDir.getPath(), scaleLargeImages);
+    private void startDownloadOfThisFileInThisWrapper(String linkToFile, DrawableWrapper thisWrapper, boolean setToDefaultSize) {
+        ImageGetterAsyncTask getterForImage = new ImageGetterAsyncTask(thisWrapper, linkToFile, imagesCacheDir.getPath(), scaleLargeImages, setToDefaultSize);
         getterForImage.setRequestStatusChangedListener(this);
         listOfCurrentsTasks.add(getterForImage);
         getterForImage.execute();
@@ -180,7 +206,11 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
         if (!resultFileName.isEmpty()) {
             try {
                 BitmapDrawable drawableToUse = new BitmapDrawable(parentActivity.getResources(), loadBitmapFromCache(resultFileName));
-                drawableToUse.setBounds(0, 0, imagesWidth, imagesHeight);
+                if (taskThatIsFinished.getSetToDefaultSize()) {
+                    drawableToUse.setBounds(0, 0, imagesWidth, imagesHeight);
+                } else {
+                    drawableToUse.setBounds(0, 0, drawableToUse.getIntrinsicWidth(), drawableToUse.getIntrinsicHeight());
+                }
                 taskThatIsFinished.getWrapperForDrawable().setWrappedDrawable(drawableToUse);
             } catch (Exception e) {
                 taskThatIsFinished.getWrapperForDrawable().setWrappedDrawable(deletedDrawable);

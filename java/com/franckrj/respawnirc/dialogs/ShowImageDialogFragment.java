@@ -89,16 +89,15 @@ public class ShowImageDialogFragment extends DialogFragment {
             requireActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
             deletedDrawable = Undeprecator.resourcesGetDrawable(requireActivity().getResources(), R.drawable.image_deleted_dark);
-            deletedDrawable.setBounds(0, 0, deletedDrawable.getIntrinsicWidth(), deletedDrawable.getIntrinsicHeight());
 
             downloaderForImage.setParentActivity(requireActivity());
             downloaderForImage.setListenerForDownloadFinished(listenerForDownloadFinished);
             downloaderForImage.setListenerForCurrentProgress(listenerForCurrentProgress);
             downloaderForImage.setImagesCacheDir(requireActivity().getCacheDir());
             downloaderForImage.setScaleLargeImages(true);
-            downloaderForImage.setDefaultDrawable(deletedDrawable);
-            downloaderForImage.setDeletedDrawable(deletedDrawable);
-            downloaderForImage.setImagesSize(metrics.widthPixels, metrics.heightPixels, false);
+            downloaderForImage.setDefaultDrawableResized(deletedDrawable);
+            downloaderForImage.setDeletedDrawableResized(deletedDrawable);
+            downloaderForImage.setImagesSize(metrics.widthPixels, metrics.heightPixels);
         }
     }
 
@@ -131,7 +130,7 @@ public class ShowImageDialogFragment extends DialogFragment {
         textForSizeOfImage.setVisibility(View.INVISIBLE);
         viewForImage.setVisibility(View.INVISIBLE);
 
-        fullsizeImage = downloaderForImage.getDrawableFromLink(linkOfImage);
+        fullsizeImage = downloaderForImage.getDrawableFromLink(linkOfImage, true);
         if (downloaderForImage.getNumberOfFilesDownloading() == 0) {
             updateViewForImage();
         }

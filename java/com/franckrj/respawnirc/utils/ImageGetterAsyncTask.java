@@ -14,14 +14,16 @@ public class ImageGetterAsyncTask extends AsyncTask<Void, Long, String> {
     private final DrawableWrapper wrapperForDrawable;
     private final String fileDownloadPath;
     private final String fileLocalPath;
-    private final boolean itsABigFile;
+    private final boolean updateProgress;
+    private final boolean setToDefaultSize;
     private RequestStatusChanged requestStatusChangedListener = null;
 
-    public ImageGetterAsyncTask(DrawableWrapper newWrapper, String link, String cacheDirPath, boolean newScaleLargeImage) {
+    public ImageGetterAsyncTask(DrawableWrapper newWrapper, String link, String cacheDirPath, boolean newUpdateProgress, boolean newSetToDefaultSize) {
         wrapperForDrawable = newWrapper;
         fileDownloadPath = link;
         fileLocalPath = (cacheDirPath + "/" + Utils.imageLinkToFileName(fileDownloadPath)).replace("//", "/");
-        itsABigFile = newScaleLargeImage;
+        updateProgress = newUpdateProgress;
+        setToDefaultSize = newSetToDefaultSize;
     }
 
     public DrawableWrapper getWrapperForDrawable() {
@@ -30,6 +32,10 @@ public class ImageGetterAsyncTask extends AsyncTask<Void, Long, String> {
 
     public String getFileDownloadPath() {
         return fileDownloadPath;
+    }
+
+    public boolean getSetToDefaultSize() {
+        return setToDefaultSize;
     }
 
     public void setRequestStatusChangedListener(RequestStatusChanged newListener) {
@@ -42,7 +48,7 @@ public class ImageGetterAsyncTask extends AsyncTask<Void, Long, String> {
             long lenghtOfFile = 0;
             URL url = new URL(fileDownloadPath);
 
-            if (itsABigFile) {
+            if (updateProgress) {
                 HttpURLConnection conection = (HttpURLConnection) url.openConnection();
                 conection.connect();
                 lenghtOfFile = conection.getContentLength();

@@ -58,7 +58,7 @@ public class CustomImageGetter implements Html.ImageGetter {
 
             return drawable;
         } else if (source.startsWith("http://image.noelshack.com/minis") && downloaderForImage != null) {
-            return downloaderForImage.getDrawableFromLink(source);
+            return downloaderForImage.getDrawableFromLink(source, true);
         } else {
             return deletedDrawable;
         }
