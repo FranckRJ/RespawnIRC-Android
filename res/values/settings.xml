@@ -62,4 +62,5 @@
     <string name="settingsMessageInfosFontSize" translatable="false">settings.messageInfosFontSizeV2</string>
     <string name="settingsMessageSignatureFontSize" translatable="false">settings.messageSignatureFontSizeV2</string>
     <string name="settingsRefreshForumOnResume" translatable="false">settings.refreshForumOnResume</string>
+    <string name="settingsEnableAlphaInNoelshackMini" translatable="false">settings.enableAlphaInNoelshackMini</string>
 </resources>

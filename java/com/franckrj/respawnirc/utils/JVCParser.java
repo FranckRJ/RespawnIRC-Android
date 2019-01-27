@@ -974,7 +974,7 @@ public final class JVCParser {
         }
 
         if (settings.showNoelshackImages) {
-            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 3, "", "", new MakeNoelshackImageLink(true), null);
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 3, "", "", new MakeNoelshackImageLink(settings.enableAlphaInNoelshackMini), null);
         } else {
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 3, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         }
@@ -2018,6 +2018,7 @@ public final class JVCParser {
         public boolean transformStickerToSmiley = false;
         public boolean shortenLongLink = false;
         public boolean hideUglyImages = false;
+        public boolean enableAlphaInNoelshackMini = false;
     }
 
     private static class SpoilTagsInfos {

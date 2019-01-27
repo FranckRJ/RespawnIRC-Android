@@ -112,6 +112,7 @@ public class PrefsManager {
         addBoolPref(BoolPref.Names.SAVE_LAST_ROW_USED_INSERTSTUFF, currentContext.getString(R.string.settingsSaveLastRowUsedInsertstuff), true);
         addBoolPref(BoolPref.Names.INVERT_TOOLBAR_TEXT_COLOR, currentContext.getString(R.string.settingsInvertToolbarTextColor), false);
         addBoolPref(BoolPref.Names.REFRESH_FORUM_ON_RESUME, currentContext.getString(R.string.settingsRefreshForumOnResume), false);
+        addBoolPref(BoolPref.Names.ENABLE_ALPHA_IN_NOELSHACK_MINI, currentContext.getString(R.string.settingsEnableAlphaInNoelshackMini), false);
 
         addIntPref(IntPref.Names.PRIMARY_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsPrimaryColorOfLightTheme), 0);
         addIntPref(IntPref.Names.TOPIC_NAME_AND_ACCENT_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsTopicNameAndAccentColorOfLightTheme), 0);
@@ -325,7 +326,8 @@ public class PrefsManager {
             SAVE_LAST_ROW_USED_INSERTSTUFF,
             INVERT_TOOLBAR_TEXT_COLOR,
             USE_LAST_MESSAGE_DRAFT_SAVED, USE_LAST_TOPIC_DRAFT_SAVED,
-            REFRESH_FORUM_ON_RESUME
+            REFRESH_FORUM_ON_RESUME,
+            ENABLE_ALPHA_IN_NOELSHACK_MINI
         }
     }
 

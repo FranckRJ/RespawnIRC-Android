@@ -301,6 +301,8 @@
     <string name="goToTopicOfForum">Accéder au topic du message</string>
     <string name="forumInfos">Informations sur le forum</string>
     <string name="subForums">Sous-forums</string>
+    <string name="enableAlphaInNoelshackMini">Activer la transparence pour les miniatures</string>
+    <string name="enableAlphaInNoelshackMiniSummary">(augmente l\'utilisation de la mémoire et du CPU)</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>
