@@ -105,7 +105,7 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
             }
 
             if (drawable == null) {
-                drawable = new DrawableWrapper(defaultDrawable);
+                drawable = new DrawableWrapper(setToDefaultSize ? defaultDrawableResized : defaultDrawable);
                 startDownloadOfThisFileInThisWrapper(link, drawable, setToDefaultSize);
             }
 
@@ -213,10 +213,10 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
                 }
                 taskThatIsFinished.getWrapperForDrawable().setWrappedDrawable(drawableToUse);
             } catch (Exception e) {
-                taskThatIsFinished.getWrapperForDrawable().setWrappedDrawable(deletedDrawable);
+                taskThatIsFinished.getWrapperForDrawable().setWrappedDrawable(taskThatIsFinished.getSetToDefaultSize() ? deletedDrawableResized : deletedDrawable);
             }
         } else {
-            taskThatIsFinished.getWrapperForDrawable().setWrappedDrawable(deletedDrawable);
+            taskThatIsFinished.getWrapperForDrawable().setWrappedDrawable(taskThatIsFinished.getSetToDefaultSize() ? deletedDrawableResized : deletedDrawable);
         }
         downloadOfAFileEnded(taskThatIsFinished);
     }
