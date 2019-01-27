@@ -184,6 +184,7 @@ public class JVCTopicAdapter extends BaseAdapter {
         downloaderForImage.setDeletedDrawable(ThemeManager.getDrawable(R.attr.themedDeletedImage, parentActivity));
         downloaderForImage.setDefaultDrawableResized(ThemeManager.getDrawable(R.attr.themedDownloadImage, parentActivity));
         downloaderForImage.setDeletedDrawableResized(ThemeManager.getDrawable(R.attr.themedDeletedImage, parentActivity));
+        downloaderForImage.setOptimisedScale(false);
         downloaderForImage.setImagesSize(res.getDimensionPixelSize(R.dimen.miniNoelshackWidthDefault), res.getDimensionPixelSize(R.dimen.miniNoelshackHeightDefault));
     }
 
@@ -378,7 +379,7 @@ public class JVCTopicAdapter extends BaseAdapter {
         }
 
         if (showAvatars && !item.avatarLink.isEmpty() && !item.pseudoIsBlacklisted) {
-            holder.avatarImageDrawable = downloaderForImage.getDrawableFromLink(item.avatarLink, false);
+            holder.avatarImageDrawable = downloaderForImage.getDrawableFromLink(item.avatarLink, false, false, false);
         } else {
             holder.avatarImageDrawable = null;
         }

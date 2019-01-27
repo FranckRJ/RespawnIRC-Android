@@ -27,6 +27,17 @@ public class DrawableWrapper extends Drawable implements Drawable.Callback {
     }
 
     @Override
+    public void setBounds(int left, int top, int right, int bottom) {
+        mDrawable.setBounds(left, top, right, bottom);
+        super.setBounds(left, top, right, bottom);
+    }
+
+    @Override
+    public void setBounds(@NonNull Rect bounds) {
+        setBounds(bounds.left, bounds.top, bounds.right, bounds.bottom);
+    }
+
+    @Override
     protected void onBoundsChange(Rect bounds) {
         mDrawable.setBounds(bounds);
     }

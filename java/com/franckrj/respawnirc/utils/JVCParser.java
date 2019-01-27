@@ -974,7 +974,7 @@ public final class JVCParser {
         }
 
         if (settings.showNoelshackImages) {
-            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 3, "<a href=\"", "\"><img src=\"http://", 2, "\"/></a>");
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 3, "", "", new MakeNoelshackImageLink(true), null);
         } else {
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 3, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         }
@@ -1441,31 +1441,6 @@ public final class JVCParser {
             }
         }
 
-        public static void parseThisMessageWithThisPattern(StringBuilder messageToParse, Pattern patternToUse, int groupToUse, String stringBefore, String stringAfter, int secondGroupToUse, String stringAfterAfter) {
-            Matcher matcherToUse = patternToUse.matcher(messageToParse);
-            int lastOffset = 0;
-
-            while (matcherToUse.find(lastOffset)) {
-                StringBuilder newMessage = new StringBuilder(stringBefore);
-
-                if (groupToUse != -1) {
-                    newMessage.append(matcherToUse.group(groupToUse));
-                }
-
-                newMessage.append(stringAfter);
-
-                if (secondGroupToUse != -1) {
-                    newMessage.append(matcherToUse.group(secondGroupToUse));
-                }
-
-                newMessage.append(stringAfterAfter);
-
-                messageToParse.replace(matcherToUse.start(), matcherToUse.end(), newMessage.toString());
-                lastOffset = matcherToUse.start() + newMessage.length();
-                matcherToUse = patternToUse.matcher(messageToParse);
-            }
-        }
-
         public static void replaceStringByAnother(StringBuilder builder, String from, String to)
         {
             int index = builder.indexOf(from);
@@ -1916,8 +1891,8 @@ public final class JVCParser {
     }
 
     private static class MakeShortenedLinkIfPossible implements Utils.StringModifier {
-        final int maxStringSize;
-        final boolean forceLinkCreation;
+        private final int maxStringSize;
+        private final boolean forceLinkCreation;
 
         MakeShortenedLinkIfPossible(int newMaxStringSize, boolean newForceLinkCreation) {
             maxStringSize = newMaxStringSize;
@@ -1937,12 +1912,34 @@ public final class JVCParser {
         }
     }
 
+    private static class MakeNoelshackImageLink implements Utils.StringModifier {
+        private final boolean useFichierXsForPng;
+
+        MakeNoelshackImageLink(boolean newUseFichierXsForPng) {
+            useFichierXsForPng = newUseFichierXsForPng;
+        }
+
+        @Override
+        public String changeString(String baseString) {
+            String imageLink = noelshackToDirectLink(baseString);
+
+            if (useFichierXsForPng && imageLink.endsWith(".png")) {
+                imageLink = "http://image.noelshack.com/fichiers-xs/" + imageLink.substring(("http://image.noelshack.com/fichiers/").length());
+            } else {
+                imageLink = "http://image.noelshack.com/minis/" + imageLink.substring(("http://image.noelshack.com/fichiers/").length());
+                imageLink = imageLink.substring(0, imageLink.lastIndexOf(".")) + ".png";
+            }
+
+            return "<a href=\"" + baseString + "\"><img src=\"" + imageLink + "\"/></a>";
+        }
+    }
+
     private static class BuildSpoilTag implements Utils.StringModifier {
         private final String spoilButtonCode = "<bg_spoil_button><font color=\"#" + (ThemeManager.currentThemeUseDarkColors() ? "000000" : "FFFFFF") +
                                                "\">&nbsp;SPOIL&nbsp;</font></bg_spoil_button>";
 
         private final ArraySet<Integer> listOfSpoilIdToShow;
-        private boolean showAllSpoils;
+        private final boolean showAllSpoils;
         private int lastIdUsed;
         private boolean itsForSpoilBlock = false;
 

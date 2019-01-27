@@ -94,7 +94,8 @@ public class ShowImageDialogFragment extends DialogFragment {
             downloaderForImage.setListenerForDownloadFinished(listenerForDownloadFinished);
             downloaderForImage.setListenerForCurrentProgress(listenerForCurrentProgress);
             downloaderForImage.setImagesCacheDir(requireActivity().getCacheDir());
-            downloaderForImage.setScaleLargeImages(true);
+            downloaderForImage.setOptimisedScale(true);
+            downloaderForImage.setUpdateProgress(true);
             downloaderForImage.setDefaultDrawableResized(deletedDrawable);
             downloaderForImage.setDeletedDrawableResized(deletedDrawable);
             downloaderForImage.setImagesSize(metrics.widthPixels, metrics.heightPixels);
@@ -130,7 +131,7 @@ public class ShowImageDialogFragment extends DialogFragment {
         textForSizeOfImage.setVisibility(View.INVISIBLE);
         viewForImage.setVisibility(View.INVISIBLE);
 
-        fullsizeImage = downloaderForImage.getDrawableFromLink(linkOfImage, true);
+        fullsizeImage = downloaderForImage.getDrawableFromLink(linkOfImage, true, true, false);
         if (downloaderForImage.getNumberOfFilesDownloading() == 0) {
             updateViewForImage();
         }

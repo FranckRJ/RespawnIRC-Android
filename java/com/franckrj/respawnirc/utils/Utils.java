@@ -118,6 +118,8 @@ public class Utils {
     public static String imageLinkToFileName(String link) {
         if (link.startsWith("http://image.noelshack.com/minis/")) {
             return "img_nlsk_mini_" + link.substring(("http://image.noelshack.com/minis/").length()).replace("/", "_");
+        } else if (link.startsWith("http://image.noelshack.com/fichiers-xs/")) {
+            return "img_nlsk_xs_" + link.substring(("http://image.noelshack.com/fichiers-xs/").length()).replace("/", "_");
         } else if (link.startsWith("http://image.noelshack.com/fichiers/")) {
             return "img_nlsk_big_" + link.substring(("http://image.noelshack.com/fichiers/").length()).replace("/", "_");
         } else if (link.startsWith("http://image.jeuxvideo.com/avatar")) {

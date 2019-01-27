@@ -16,14 +16,18 @@ public class ImageGetterAsyncTask extends AsyncTask<Void, Long, String> {
     private final String fileLocalPath;
     private final boolean updateProgress;
     private final boolean setToDefaultSize;
+    private final boolean scaleToSize;
+    private final boolean setToDefaultAspectRatio;
     private RequestStatusChanged requestStatusChangedListener = null;
 
-    public ImageGetterAsyncTask(DrawableWrapper newWrapper, String link, String cacheDirPath, boolean newUpdateProgress, boolean newSetToDefaultSize) {
+    public ImageGetterAsyncTask(DrawableWrapper newWrapper, String link, String cacheDirPath, boolean newUpdateProgress, boolean newSetToDefaultSize, boolean newScaleToSize, boolean newSetToDefaultAspectRatio) {
         wrapperForDrawable = newWrapper;
         fileDownloadPath = link;
         fileLocalPath = (cacheDirPath + "/" + Utils.imageLinkToFileName(fileDownloadPath)).replace("//", "/");
         updateProgress = newUpdateProgress;
         setToDefaultSize = newSetToDefaultSize;
+        scaleToSize = newScaleToSize;
+        setToDefaultAspectRatio = newSetToDefaultAspectRatio;
     }
 
     public DrawableWrapper getWrapperForDrawable() {
@@ -36,6 +40,14 @@ public class ImageGetterAsyncTask extends AsyncTask<Void, Long, String> {
 
     public boolean getSetToDefaultSize() {
         return setToDefaultSize;
+    }
+
+    public boolean getScaleToSize() {
+        return scaleToSize;
+    }
+
+    public boolean getSetToDefaultAspectRatio() {
+        return setToDefaultAspectRatio;
     }
 
     public void setRequestStatusChangedListener(RequestStatusChanged newListener) {

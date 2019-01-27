@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.InsetDrawable;
 import android.support.v4.util.SimpleArrayMap;
 
 import java.io.File;
@@ -26,7 +27,8 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
     private int imagesHeight = 0;
     private File imagesCacheDir = null;
     private Activity parentActivity = null;
-    private boolean scaleLargeImages = false;
+    private boolean updateProgress = false;
+    private boolean optimisedScale = false;
 
     public int getNumberOfFilesDownloading() {
         return numberOfFilesDownloading;
@@ -86,18 +88,27 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
         }
     }
 
-    public void setScaleLargeImages(boolean newVal) {
-        scaleLargeImages = newVal;
+    public void setUpdateProgress(boolean newVal) {
+        updateProgress = newVal;
     }
 
-    public Drawable getDrawableFromLink(String link, boolean setToDefaultSize) {
+    public void setOptimisedScale(boolean newVal) {
+        optimisedScale = newVal;
+    }
+
+    public Drawable getDrawableFromLink(String link, boolean setToDefaultSize, boolean scaleToSize, boolean setToDefaultAspectRatio) {
         DrawableWrapper drawable = listOfDrawable.get(link);
 
         if (drawable == null) {
             try {
                 File newFile = new File(imagesCacheDir, Utils.imageLinkToFileName(link));
                 if (newFile.exists()) {
-                    drawable = new DrawableWrapper(new BitmapDrawable(parentActivity.getResources(), loadBitmapFromCache(newFile.getPath())));
+                    BitmapDrawable tmpDrawable = new BitmapDrawable(parentActivity.getResources(), loadBitmapFromCache(newFile.getPath(), scaleToSize));
+                    if (setToDefaultAspectRatio) {
+                        drawable = new DrawableWrapper(buildInsetDrawableForAspectRatio(tmpDrawable, setToDefaultSize));
+                    } else {
+                        drawable = new DrawableWrapper(tmpDrawable);
+                    }
                 }
             } catch (Exception e) {
                 //noinspection ConstantConditions
@@ -106,7 +117,7 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
 
             if (drawable == null) {
                 drawable = new DrawableWrapper(setToDefaultSize ? defaultDrawableResized : defaultDrawable);
-                startDownloadOfThisFileInThisWrapper(link, drawable, setToDefaultSize);
+                startDownloadOfThisFileInThisWrapper(link, drawable, setToDefaultSize, scaleToSize, setToDefaultAspectRatio);
             }
 
             if (setToDefaultSize) {
@@ -132,8 +143,8 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
         listOfCurrentsTasks.clear();
     }
 
-    private void startDownloadOfThisFileInThisWrapper(String linkToFile, DrawableWrapper thisWrapper, boolean setToDefaultSize) {
-        ImageGetterAsyncTask getterForImage = new ImageGetterAsyncTask(thisWrapper, linkToFile, imagesCacheDir.getPath(), scaleLargeImages, setToDefaultSize);
+    private void startDownloadOfThisFileInThisWrapper(String linkToFile, DrawableWrapper thisWrapper, boolean setToDefaultSize, boolean scaleToSize, boolean setToDefaultAspectRatio) {
+        ImageGetterAsyncTask getterForImage = new ImageGetterAsyncTask(thisWrapper, linkToFile, imagesCacheDir.getPath(), updateProgress, setToDefaultSize, scaleToSize, setToDefaultAspectRatio);
         getterForImage.setRequestStatusChangedListener(this);
         listOfCurrentsTasks.add(getterForImage);
         getterForImage.execute();
@@ -156,18 +167,18 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
         }
     }
 
-    public Bitmap loadBitmapFromCache(String fileName) {
+    public Bitmap loadBitmapFromCache(String fileName, boolean scaleToSize) {
         try {
             Bitmap bitmapLoaded;
             BitmapFactory.Options currentOptions = new BitmapFactory.Options();
             InputStream stream = new FileInputStream(fileName);
 
-            if (scaleLargeImages) {
+            if (scaleToSize) {
                 currentOptions.inJustDecodeBounds = true;
                 BitmapFactory.decodeStream(stream, null, currentOptions);
                 stream.close();
                 stream = new FileInputStream(fileName);
-                currentOptions.inSampleSize = calculateInSampleSize(currentOptions, imagesWidth, imagesHeight);
+                currentOptions.inSampleSize = calculateInSampleSize(currentOptions, imagesWidth, imagesHeight, optimisedScale);
                 currentOptions.inJustDecodeBounds = false;
             }
 
@@ -180,15 +191,40 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
         }
     }
 
-    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+    public Drawable buildInsetDrawableForAspectRatio(Drawable drawableToChange, boolean isSetToDefaultSize) {
+        int drawableWidth = drawableToChange.getIntrinsicWidth();
+        int drawableHeight = drawableToChange.getIntrinsicHeight();
+
+        if ((drawableHeight / (double)drawableWidth) < ((imagesHeight / (double)imagesWidth) - 0.005)) {
+            int verticalMargin = Utils.roundToInt(drawableWidth * (imagesHeight / (double)imagesWidth)) - drawableHeight;
+
+            if (isSetToDefaultSize) {
+                verticalMargin *= (imagesHeight / (double)(verticalMargin + drawableHeight));
+            }
+
+            return (new InsetDrawable(drawableToChange, 0, verticalMargin / 2, 0, verticalMargin / 2));
+        } else if ((drawableHeight / (double)drawableWidth) > ((imagesHeight / (double)imagesWidth) + 0.005)) {
+            int horizontalMargin = Utils.roundToInt(drawableHeight / (imagesHeight / (double)imagesWidth)) - drawableWidth;
+
+            if (isSetToDefaultSize) {
+                horizontalMargin *= (imagesWidth / (double)(horizontalMargin + drawableWidth));
+            }
+
+            return (new InsetDrawable(drawableToChange, horizontalMargin / 2, 0, horizontalMargin / 2, 0));
+        } else {
+            return drawableToChange;
+        }
+    }
+
+    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight, boolean scaleWithLoss) {
         int height = options.outHeight;
         int width = options.outWidth;
         int inSampleSize = 1;
 
-        while (width / 2 > reqWidth * 0.9 || height / 2 > reqHeight * 0.9) {
+        while (width / 2 > reqWidth * (scaleWithLoss ? 0.9 : 1) || height / 2 > reqHeight * (scaleWithLoss ? 0.9 : 1)) {
             inSampleSize *= 2;
             width /= 2;
-            height /=2;
+            height /= 2;
         }
 
         return inSampleSize;
@@ -203,20 +239,26 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
 
     @Override
     public void onRequestFinished(String resultFileName, ImageGetterAsyncTask taskThatIsFinished) {
+        DrawableWrapper wrappedDrawable = taskThatIsFinished.getWrapperForDrawable();
+
         if (!resultFileName.isEmpty()) {
             try {
-                BitmapDrawable drawableToUse = new BitmapDrawable(parentActivity.getResources(), loadBitmapFromCache(resultFileName));
-                if (taskThatIsFinished.getSetToDefaultSize()) {
-                    drawableToUse.setBounds(0, 0, imagesWidth, imagesHeight);
+                BitmapDrawable tmpDrawable = new BitmapDrawable(parentActivity.getResources(), loadBitmapFromCache(resultFileName, taskThatIsFinished.getScaleToSize()));
+                if (taskThatIsFinished.getSetToDefaultAspectRatio()) {
+                    wrappedDrawable.setWrappedDrawable(buildInsetDrawableForAspectRatio(tmpDrawable, taskThatIsFinished.getSetToDefaultSize()));
                 } else {
-                    drawableToUse.setBounds(0, 0, drawableToUse.getIntrinsicWidth(), drawableToUse.getIntrinsicHeight());
+                    wrappedDrawable.setWrappedDrawable(tmpDrawable);
                 }
-                taskThatIsFinished.getWrapperForDrawable().setWrappedDrawable(drawableToUse);
             } catch (Exception e) {
-                taskThatIsFinished.getWrapperForDrawable().setWrappedDrawable(taskThatIsFinished.getSetToDefaultSize() ? deletedDrawableResized : deletedDrawable);
+                wrappedDrawable.setWrappedDrawable(taskThatIsFinished.getSetToDefaultSize() ? deletedDrawableResized : deletedDrawable);
             }
         } else {
-            taskThatIsFinished.getWrapperForDrawable().setWrappedDrawable(taskThatIsFinished.getSetToDefaultSize() ? deletedDrawableResized : deletedDrawable);
+            wrappedDrawable.setWrappedDrawable(taskThatIsFinished.getSetToDefaultSize() ? deletedDrawableResized : deletedDrawable);
+        }
+        if (taskThatIsFinished.getSetToDefaultSize()) {
+            wrappedDrawable.setBounds(0, 0, imagesWidth, imagesHeight);
+        } else {
+            wrappedDrawable.setBounds(0, 0, wrappedDrawable.getIntrinsicWidth(), wrappedDrawable.getIntrinsicHeight());
         }
         downloadOfAFileEnded(taskThatIsFinished);
     }
