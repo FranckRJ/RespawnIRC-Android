@@ -1896,7 +1896,7 @@ public final class JVCParser {
         public String changeString(String baseString) {
             if (isCodeBlock) {
                 while (baseString.startsWith("\n")) {
-                    baseString = baseString.substring(1, baseString.length());
+                    baseString = baseString.substring(1);
                 }
                 while (baseString.endsWith("\n")) {
                     baseString = baseString.substring(0, baseString.length() - 1);
@@ -1904,7 +1904,7 @@ public final class JVCParser {
                 baseString = baseString.replace("\n", "<br />");
             } else {
                 if (baseString.startsWith(" ")) {
-                    baseString = "&nbsp;" + baseString.substring(1, baseString.length());
+                    baseString = "&nbsp;" + baseString.substring(1);
                 }
                 if (baseString.endsWith(" ")) {
                     baseString = baseString.substring(0, baseString.length() - 1) + "&nbsp;";
