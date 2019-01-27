@@ -7,10 +7,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 
-public class ImageGetterAsyncTask extends AsyncTask<Void, Integer, String> {
+public class ImageGetterAsyncTask extends AsyncTask<Void, Long, String> {
     private final DrawableWrapper wrapperForDrawable;
     private final String fileDownloadPath;
     private final String fileLocalPath;
@@ -39,13 +39,14 @@ public class ImageGetterAsyncTask extends AsyncTask<Void, Integer, String> {
     @Override
     protected String doInBackground(Void... params) {
         try {
-            int lenghtOfFile = 0;
+            long lenghtOfFile = 0;
             URL url = new URL(fileDownloadPath);
 
             if (itsABigFile) {
-                URLConnection conection = url.openConnection();
+                HttpURLConnection conection = (HttpURLConnection) url.openConnection();
                 conection.connect();
                 lenghtOfFile = conection.getContentLength();
+                conection.disconnect();
             }
 
             InputStream input = new BufferedInputStream(url.openStream(), 8192);
@@ -59,7 +60,7 @@ public class ImageGetterAsyncTask extends AsyncTask<Void, Integer, String> {
                 output.write(data, 0, count);
 
                 if (lenghtOfFile > 0) {
-                    publishProgress(Utils.roundToInt((total * 100) / lenghtOfFile), lenghtOfFile);
+                    publishProgress(Utils.roundToLong((total * 100.) / lenghtOfFile), lenghtOfFile);
                 }
             }
 
@@ -81,7 +82,7 @@ public class ImageGetterAsyncTask extends AsyncTask<Void, Integer, String> {
     }
 
     @Override
-    protected void onProgressUpdate(Integer... progress) {
+    protected void onProgressUpdate(Long... progress) {
         if (progress.length > 1 && requestStatusChangedListener != null) {
             requestStatusChangedListener.onRequestProgress(progress[0], progress[1], this);
         }
@@ -96,7 +97,7 @@ public class ImageGetterAsyncTask extends AsyncTask<Void, Integer, String> {
     }
 
     public interface RequestStatusChanged {
-        void onRequestProgress(Integer currentProgressInPercent, Integer fileSize, ImageGetterAsyncTask taskThatProgress);
+        void onRequestProgress(Long currentProgressInPercent, Long fileSize, ImageGetterAsyncTask taskThatProgress);
         void onRequestFinished(String resultFileName, ImageGetterAsyncTask taskThatIsFinished);
     }
 }

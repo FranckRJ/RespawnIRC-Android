@@ -169,7 +169,7 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
     }
 
     @Override
-    public void onRequestProgress(Integer currentProgressInPercent, Integer fileSize, ImageGetterAsyncTask taskThatProgress) {
+    public void onRequestProgress(Long currentProgressInPercent, Long fileSize, ImageGetterAsyncTask taskThatProgress) {
         if (listenerForCurrentProgress != null) {
             listenerForCurrentProgress.newCurrentProgress(currentProgressInPercent, fileSize, taskThatProgress.getFileDownloadPath());
         }
@@ -196,7 +196,7 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
     }
 
     public interface CurrentProgress {
-        void newCurrentProgress(int progressInPercent, int sizeOfFile, String fileLink);
+        void newCurrentProgress(long progressInPercent, long sizeOfFile, String fileLink);
     }
 }
 

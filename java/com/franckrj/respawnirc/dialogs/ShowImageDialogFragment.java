@@ -42,13 +42,13 @@ public class ShowImageDialogFragment extends DialogFragment {
 
     private final ImageDownloader.CurrentProgress listenerForCurrentProgress = new ImageDownloader.CurrentProgress() {
         @Override
-        public void newCurrentProgress(int progressInPercent, int sizeOfFile, String fileLink) {
+        public void newCurrentProgress(long progressInPercent, long sizeOfFile, String fileLink) {
             if (linkOfImage.equals(fileLink)) {
                 if (progressBarIndeterminateForImage.getVisibility() == View.VISIBLE) {
-                    float formattedSizeOfFile = sizeOfFile / 1024;
+                    double formattedSizeOfFile = sizeOfFile / 1024.;
 
                     if (formattedSizeOfFile >= 1000) {
-                        formattedSizeOfFile = formattedSizeOfFile / 1024;
+                        formattedSizeOfFile = formattedSizeOfFile / 1024.;
                         textForSizeOfImage.setText(getString(R.string.megaByteNumber, formattedSizeOfFile));
                     } else {
                         textForSizeOfImage.setText(getString(R.string.kiloByteNumber, formattedSizeOfFile));
@@ -58,7 +58,7 @@ public class ShowImageDialogFragment extends DialogFragment {
                     progressBarDeterminateForImage.setVisibility(View.VISIBLE);
                     textForSizeOfImage.setVisibility(View.VISIBLE);
                 }
-                progressBarDeterminateForImage.setProgress(progressInPercent);
+                progressBarDeterminateForImage.setProgress((int)progressInPercent);
             }
         }
     };
