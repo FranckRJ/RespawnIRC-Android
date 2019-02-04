@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme.Light.Base" parent="PreferenceFixTheme.Light.NoActionBar">
+    <style name="AppTheme.Light.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowAnimationStyle">@style/AppActivityAnimation</item>
         <item name="themedShadowBottom">@drawable/shadow_bottom_light</item>
         <item name="themedShadowTop">@drawable/shadow_top_light</item>
@@ -59,7 +59,7 @@
     </style>
     <style name="AppTheme.Light.Real" parent="AppTheme.Light.Base"/>
 
-    <style name="AppTheme.Dark.Base" parent="PreferenceFixTheme.NoActionBar">
+    <style name="AppTheme.Dark.Base" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowAnimationStyle">@style/AppActivityAnimation</item>
         <item name="themedShadowBottom">@drawable/shadow_bottom_dark</item>
         <item name="themedShadowTop">@drawable/shadow_top_dark</item>

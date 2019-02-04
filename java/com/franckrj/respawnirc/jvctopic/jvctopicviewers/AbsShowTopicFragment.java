@@ -2,9 +2,9 @@ package com.franckrj.respawnirc.jvctopic.jvctopicviewers;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.ShareActionProvider;
+import androidx.annotation.NonNull;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.appcompat.widget.ShareActionProvider;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;

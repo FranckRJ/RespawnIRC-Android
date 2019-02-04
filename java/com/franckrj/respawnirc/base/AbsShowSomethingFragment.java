@@ -1,6 +1,6 @@
 package com.franckrj.respawnirc.base;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 public abstract class AbsShowSomethingFragment extends Fragment {
     protected boolean goToBottomAtPageLoading = false;

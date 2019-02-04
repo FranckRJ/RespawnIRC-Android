@@ -2,9 +2,9 @@ package com.franckrj.respawnirc.jvcforumlist;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.transition.TransitionManager;
-import android.support.v4.widget.SwipeRefreshLayout;
+import androidx.annotation.IdRes;
+import androidx.transition.TransitionManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;

@@ -7,8 +7,8 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Region;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.v4.graphics.drawable.DrawableCompat;
+import androidx.annotation.NonNull;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 /* Classe copiée de https://android.googlesource.com/platform/frameworks/support/+/master/v7/appcompat/src/android/support/v7/graphics/drawable/DrawableWrapper.java
  * mais sans le @RestrictTo(LIBRARY_GROUP) pour pouvoir l'utiliser quand même.
