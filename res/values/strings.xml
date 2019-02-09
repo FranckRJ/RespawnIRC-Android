@@ -303,6 +303,10 @@
     <string name="subForums">Sous-forums</string>
     <string name="enableAlphaInNoelshackMini">Activer la transparence pour les miniatures</string>
     <string name="enableAlphaInNoelshackMiniSummary">(augmente l\'utilisation de la mémoire et du CPU)</string>
+    <string name="forumManagement">Gestion du forum</string>
+    <string name="errorNumberConnected">X connecté(s)</string>
+    <string name="listOfModeratorsText">Modérateurs : %1$s.</string>
+    <string name="listOfModeratorsTextEmpty">Pas de modérateurs.</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>

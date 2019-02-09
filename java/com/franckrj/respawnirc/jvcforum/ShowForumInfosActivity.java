@@ -31,8 +31,10 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
     private TextView backgroundErrorText = null;
     private SwipeRefreshLayout swipeRefresh = null;
     private ScrollView mainScrollView = null;
+    private LinearLayout mainLayout = null;
     private TextView numberOfConnectedView = null;
     private CardView subforumsCardView = null;
+    private TextView listOfModeratorsText = null;
     private LinearLayout layoutListOfSubforums = null;
     private DownloadForumInfos currentTaskForDownload = null;
     private ForumInfos infosForForum = null;
@@ -74,25 +76,34 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
     };
 
     private void updateDisplayedInfos() {
-        if (infosForForum != null && !infosForForum.listOfSubforums.isEmpty()) {
-            subforumsCardView.setVisibility(View.VISIBLE);
-            for (JVCParser.NameAndLink nameAndLink : infosForForum.listOfSubforums) {
-                Button newSubforumButton = (Button)getLayoutInflater().inflate(R.layout.button_subforum, layoutListOfSubforums, false);
+        if (infosForForum == null) {
+            mainLayout.setVisibility(View.GONE);
+        } else {
+            mainLayout.setVisibility(View.VISIBLE);
+            if (!infosForForum.listOfSubforums.isEmpty()) {
+                subforumsCardView.setVisibility(View.VISIBLE);
+                for (JVCParser.NameAndLink nameAndLink : infosForForum.listOfSubforums) {
+                    Button newSubforumButton = (Button) getLayoutInflater().inflate(R.layout.button_subforum, layoutListOfSubforums, false);
 
-                newSubforumButton.setText(Undeprecator.htmlFromHtml(nameAndLink.name));
-                newSubforumButton.setTag(nameAndLink.link);
-                newSubforumButton.setOnClickListener(subforumButtonClickedListener);
+                    newSubforumButton.setText(Undeprecator.htmlFromHtml(nameAndLink.name));
+                    newSubforumButton.setTag(nameAndLink.link);
+                    newSubforumButton.setOnClickListener(subforumButtonClickedListener);
 
-                layoutListOfSubforums.addView(newSubforumButton);
+                    layoutListOfSubforums.addView(newSubforumButton);
+                }
+            } else {
+                subforumsCardView.setVisibility(View.GONE);
             }
-        } else {
-            subforumsCardView.setVisibility(View.GONE);
-        }
-        if (infosForForum != null && !infosForForum.numberOfConnected.isEmpty()) {
-            numberOfConnectedView.setVisibility(View.VISIBLE);
-            numberOfConnectedView.setText(Undeprecator.htmlFromHtml(infosForForum.numberOfConnected));
-        } else {
-            subforumsCardView.setVisibility(View.GONE);
+            if (!infosForForum.numberOfConnected.isEmpty()) {
+                numberOfConnectedView.setText(Undeprecator.htmlFromHtml(infosForForum.numberOfConnected));
+            } else {
+                numberOfConnectedView.setText(R.string.errorNumberConnected);
+            }
+            if (!infosForForum.listOfModeratorsString.isEmpty()) {
+                listOfModeratorsText.setText(getString(R.string.listOfModeratorsText, infosForForum.listOfModeratorsString));
+            } else {
+                listOfModeratorsText.setText(R.string.listOfModeratorsTextEmpty);
+            }
         }
     }
 
@@ -113,15 +124,16 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
         backgroundErrorText = findViewById(R.id.text_errorbackgroundmessage_showforuminfos);
         swipeRefresh = findViewById(R.id.swiperefresh_showforuminfos);
         mainScrollView = findViewById(R.id.scrollview_showforuminfos);
+        mainLayout = findViewById(R.id.main_layout_showforuminfos);
         numberOfConnectedView = findViewById(R.id.text_numberofconnected_showforuminfos);
         subforumsCardView = findViewById(R.id.subforum_card_showforuminfos);
         layoutListOfSubforums = findViewById(R.id.subforum_list_showforuminfos);
+        listOfModeratorsText = findViewById(R.id.listofmoderators_text_showforuminfos);
 
         backgroundErrorText.setVisibility(View.GONE);
         swipeRefresh.setEnabled(false);
         swipeRefresh.setColorSchemeResources(R.color.colorControlHighlightThemeLight);
-        numberOfConnectedView.setVisibility(View.GONE);
-        subforumsCardView.setVisibility(View.GONE);
+        mainLayout.setVisibility(View.GONE);
 
         if (savedInstanceState != null) {
             infosForForum = savedInstanceState.getParcelable(SAVE_FORUM_INFOS);
@@ -181,6 +193,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
 
                     newForumInfos.listOfSubforums = JVCParser.getListOfSubforumsInForumPage(source);
                     newForumInfos.numberOfConnected = JVCParser.getNumberOfConnectFromPage(source);
+                    newForumInfos.listOfModeratorsString = JVCParser.getListOfModeratorsFromPage(source);
                     return newForumInfos;
                 }
             }
@@ -191,6 +204,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
     private static class ForumInfos implements Parcelable {
         public String numberOfConnected = "";
         public ArrayList<JVCParser.NameAndLink> listOfSubforums = new ArrayList<>();
+        public String listOfModeratorsString = "";
 
         public static final Parcelable.Creator<ForumInfos> CREATOR = new Parcelable.Creator<ForumInfos>() {
             @Override
@@ -211,6 +225,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
         private ForumInfos(Parcel in) {
             numberOfConnected = in.readString();
             in.readTypedList(listOfSubforums, JVCParser.NameAndLink.CREATOR);
+            listOfModeratorsString = in.readString();
         }
 
         @Override
@@ -222,6 +237,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
         public void writeToParcel(Parcel out, int flags) {
             out.writeString(numberOfConnected);
             out.writeTypedList(listOfSubforums);
+            out.writeString(listOfModeratorsString);
         }
     }
 }

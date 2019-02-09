@@ -92,6 +92,7 @@ public final class JVCParser {
     private static final Pattern numberOfMpJVCPattern = Pattern.compile("<div class=\".*?account-mp.*?\">[^<]*<span[^c]*class=\"jv-account-number-mp[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
     private static final Pattern numberOfNotifJVCPattern = Pattern.compile("<div class=\".*?account-notif.*?\">[^<]*<span[^c]*class=\"jv-account-number-notif[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
     private static final Pattern numberOfConnectedPattern = Pattern.compile("<span class=\"nb-connect-fofo\">([^<]*)</span>");
+    private static final Pattern listOfModeratorsPattern = Pattern.compile("<span class=\"liste-modo-fofo\">(.*?)</span>", Pattern.DOTALL);
     private static final Pattern overlyJVCQuotePattern = Pattern.compile("(<(/)?blockquote>)");
     private static final Pattern overlyBetterQuotePattern = Pattern.compile("<(/)?blockquote>");
     private static final Pattern jvcLinkPattern = Pattern.compile("<a href=\"([^\"]*)\"( )?( title=\"[^\"]*\")?>.*?</a>");
@@ -608,6 +609,16 @@ public final class JVCParser {
 
         if (numberOfConnectedMatcher.find()) {
             return numberOfConnectedMatcher.group(1);
+        } else {
+            return "";
+        }
+    }
+
+    public static String getListOfModeratorsFromPage(String pageSource) {
+        Matcher listOfModeratorsMatcher = listOfModeratorsPattern.matcher(pageSource);
+
+        if (listOfModeratorsMatcher.find()) {
+            return listOfModeratorsMatcher.group(1).replace("<!--", "").replace("-->", "").replace(" ", "").replace("\n", "").replace(",", ", ");
         } else {
             return "";
         }
