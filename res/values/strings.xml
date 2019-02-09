@@ -307,6 +307,10 @@
     <string name="errorNumberConnected">X connecté(s)</string>
     <string name="listOfModeratorsText">Modérateurs : %1$s.</string>
     <string name="listOfModeratorsTextEmpty">Pas de modérateurs.</string>
+    <string name="contactModerators">Contacter les modérateurs</string>
+    <string name="forumRules">Règles du forum</string>
+    <string name="errorDuringContactModerators">Erreur, impossible de contacter les modérateurs.</string>
+    <string name="errorDuringShowRules">Erreur, impossible d\'accéder aux règles.</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>

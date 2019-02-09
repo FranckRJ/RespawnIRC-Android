@@ -104,7 +104,18 @@
                             <TextView
                                 android:id="@+id/listofmoderators_text_showforuminfos"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"/>
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="8dp"/>
+                            <Button
+                                android:id="@+id/contactmoderators_button_showforuminfos"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/contactModerators"/>
+                            <Button
+                                android:id="@+id/showforumrules_button_showforuminfos"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/forumRules"/>
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 

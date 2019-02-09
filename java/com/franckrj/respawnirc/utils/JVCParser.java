@@ -53,7 +53,7 @@ public final class JVCParser {
     private static final Pattern spoilBlockPattern = Pattern.compile("<div class=\"bloc-spoil-jv\">.*?<div class=\"contenu-spoil\">(.*?)</div></div>", Pattern.DOTALL);
     private static final Pattern spoilOverlyPattern = Pattern.compile("(<(span|div) class=\"bloc-spoil-jv[^\"]*\">.*?<(span|div) class=\"contenu-spoil\">|</span></span>|</div></div>)", Pattern.DOTALL);
     private static final Pattern pageTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/[0-9]*-([0-9]*)-([0-9]*)-)([0-9]*)(-[0-9]*-[0-9]*-[0-9]*-[^.]*\\.htm)");
-    private static final Pattern pageForumLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/[0-9]*-([0-9]*)-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-[^.]*\\.htm)");
+    private static final Pattern pageForumLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/[0-9]*-([0-9]*)-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-([^.]*)\\.htm)");
     private static final Pattern pageSearchTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/recherche/forums/[0-9]*-[0-9]*-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-.*)");
     private static final Pattern messageAnchorInTopicLinkPattern = Pattern.compile("#post_([0-9]*)");
     private static final Pattern jvCarePattern = Pattern.compile("<span class=\"JvCare [^\"]*\">([^<]*)</span>");
@@ -256,6 +256,16 @@ public final class JVCParser {
             return pageTopicLinkNumberMatcher.group(1) + "1" + pageTopicLinkNumberMatcher.group(5);
         }
         else {
+            return "";
+        }
+    }
+
+    public static String getForumNameOfThisForum(String forumLink) {
+        Matcher forumLinkNumberMatcher = pageForumLinkNumberPattern.matcher(forumLink);
+
+        if (forumLinkNumberMatcher.find()) {
+            return forumLinkNumberMatcher.group(5);
+        } else {
             return "";
         }
     }
