@@ -75,8 +75,10 @@ public final class JVCParser {
     private static final Pattern topicFavsBlocPattern = Pattern.compile("<h2>Mes sujets favoris</h2>.*?<ul class=\"display-list-simple\">(.*?)</ul>", Pattern.DOTALL);
     private static final Pattern favPattern = Pattern.compile("<li><a href=\"([^\"]*)\">([^<]*)</a></li>");
     private static final Pattern forumInSearchPagePattern = Pattern.compile("<a class=\"list-search-forum-name\" href=\"([^\"]*)\"[^>]*>(.*?)</a>");
-    private static final Pattern subforumListInForumPagePattern = Pattern.compile("<ul class=\"liste-sous-forums\">(.*)?</ul>", Pattern.DOTALL);
+    private static final Pattern subforumListInForumPagePattern = Pattern.compile("<ul class=\"liste-sous-forums\">(.*?)</ul>", Pattern.DOTALL);
+    private static final Pattern noMissTopicsListInForumPagePattern = Pattern.compile("<ul class=\"liste-sujets-nomiss\">(.*?)</ul>", Pattern.DOTALL);
     private static final Pattern subforumInListPattern = Pattern.compile("<li class=\"line-ellipsis\">[^<]*<a href=\"([^\"]*)\" class=\"lien-jv\">([^<]*)</a>[^<]*</li>");
+    private static final Pattern noMissTopicInListPattern = Pattern.compile("<a href=\"//www.jeuxvideo.com([^\"]*)\" class=\"lien-jv\">([^<]*)</a>");
     private static final Pattern isInFavPattern = Pattern.compile("<span class=\"picto-favoris([^\"]*)\"");
     private static final Pattern topicIdInTopicPagePattern = Pattern.compile("<div (.*?)data-topic-id=\"([^\"]*)\">");
     private static final Pattern isInSubInTopicPagePattern = Pattern.compile("<span class=\"icon-bell-([^\"]*)\" title=\"[^\"]*\" data-action=\"[^\"]*\"([^>]*)>");
@@ -483,6 +485,30 @@ public final class JVCParser {
         }
 
         return listOfSubforums;
+    }
+
+    public static ArrayList<NameAndLink> getListOfNoMissTopicsInForumPage(String pageSource) {
+        ArrayList<NameAndLink> listOfNoMissTopics = new ArrayList<>();
+        Matcher noMissTopicsListInForumPageMatcher = noMissTopicsListInForumPagePattern.matcher(pageSource);
+
+        if (noMissTopicsListInForumPageMatcher.find()) {
+            Matcher noMissTopicInListMatcher = noMissTopicInListPattern.matcher(noMissTopicsListInForumPageMatcher.group(1));
+            int lastOffset = 0;
+
+            while (noMissTopicInListMatcher.find(lastOffset)) {
+                NameAndLink newNameAndLink = new NameAndLink();
+
+                newNameAndLink.name = noMissTopicInListMatcher.group(2).trim();
+                if (!noMissTopicInListMatcher.group(1).isEmpty()) {
+                    newNameAndLink.link = "http://www.jeuxvideo.com" + noMissTopicInListMatcher.group(1);
+                }
+
+                listOfNoMissTopics.add(newNameAndLink);
+                lastOffset = noMissTopicInListMatcher.end();
+            }
+        }
+
+        return listOfNoMissTopics;
     }
 
     public static ArrayList<NameAndLink> getListOfForumsFavs(String pageSource) {

@@ -311,6 +311,7 @@
     <string name="forumRules">Règles du forum</string>
     <string name="errorDuringContactModerators">Erreur, impossible de contacter les modérateurs.</string>
     <string name="errorDuringShowRules">Erreur, impossible d\'accéder aux règles.</string>
+    <string name="noMissTopics">Sujets à ne pas manquer</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>

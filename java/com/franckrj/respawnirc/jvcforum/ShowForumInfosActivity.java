@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
 import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
+import com.franckrj.respawnirc.jvctopic.ShowTopicActivity;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
@@ -37,8 +38,10 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
     private LinearLayout mainLayout = null;
     private TextView numberOfConnectedView = null;
     private CardView subforumsCardView = null;
-    private TextView listOfModeratorsText = null;
     private LinearLayout layoutListOfSubforums = null;
+    private TextView listOfModeratorsText = null;
+    private CardView noMissTopicsCardView = null;
+    private LinearLayout layoutListOfNoMissTopics = null;
     private DownloadForumInfos currentTaskForDownload = null;
     private ForumInfos infosForForum = null;
 
@@ -50,6 +53,18 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
                 newShowForumIntent.putExtra(ShowForumActivity.EXTRA_NEW_LINK, (String) button.getTag());
                 newShowForumIntent.putExtra(ShowForumActivity.EXTRA_IS_FIRST_ACTIVITY, false);
                 startActivity(newShowForumIntent);
+            }
+        }
+    };
+
+    private final View.OnClickListener noMissTopicButtonClickedListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View button) {
+            if (button.getTag() != null && button.getTag() instanceof String) {
+                Intent newShowTopicIntent = new Intent(ShowForumInfosActivity.this, ShowTopicActivity.class);
+                newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_LINK, (String) button.getTag());
+                newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_OPENED_FROM_FORUM, false);
+                startActivity(newShowTopicIntent);
             }
         }
     };
@@ -109,6 +124,11 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
             mainLayout.setVisibility(View.GONE);
         } else {
             mainLayout.setVisibility(View.VISIBLE);
+            if (!infosForForum.numberOfConnected.isEmpty()) {
+                numberOfConnectedView.setText(Undeprecator.htmlFromHtml(infosForForum.numberOfConnected));
+            } else {
+                numberOfConnectedView.setText(R.string.errorNumberConnected);
+            }
             if (!infosForForum.listOfSubforums.isEmpty()) {
                 subforumsCardView.setVisibility(View.VISIBLE);
                 for (JVCParser.NameAndLink nameAndLink : infosForForum.listOfSubforums) {
@@ -123,15 +143,24 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
             } else {
                 subforumsCardView.setVisibility(View.GONE);
             }
-            if (!infosForForum.numberOfConnected.isEmpty()) {
-                numberOfConnectedView.setText(Undeprecator.htmlFromHtml(infosForForum.numberOfConnected));
-            } else {
-                numberOfConnectedView.setText(R.string.errorNumberConnected);
-            }
             if (!infosForForum.listOfModeratorsString.isEmpty()) {
                 listOfModeratorsText.setText(getString(R.string.listOfModeratorsText, infosForForum.listOfModeratorsString));
             } else {
                 listOfModeratorsText.setText(R.string.listOfModeratorsTextEmpty);
+            }
+            if (!infosForForum.listOfNoMissTopics.isEmpty()) {
+                noMissTopicsCardView.setVisibility(View.VISIBLE);
+                for (JVCParser.NameAndLink nameAndLink : infosForForum.listOfNoMissTopics) {
+                    Button newNoMissTopicButton = (Button) getLayoutInflater().inflate(R.layout.button_subforum, layoutListOfNoMissTopics, false);
+
+                    newNoMissTopicButton.setText(Undeprecator.htmlFromHtml(nameAndLink.name));
+                    newNoMissTopicButton.setTag(nameAndLink.link);
+                    newNoMissTopicButton.setOnClickListener(noMissTopicButtonClickedListener);
+
+                    layoutListOfNoMissTopics.addView(newNoMissTopicButton);
+                }
+            } else {
+                noMissTopicsCardView.setVisibility(View.GONE);
             }
         }
     }
@@ -161,6 +190,8 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
         subforumsCardView = findViewById(R.id.subforum_card_showforuminfos);
         layoutListOfSubforums = findViewById(R.id.subforum_list_showforuminfos);
         listOfModeratorsText = findViewById(R.id.listofmoderators_text_showforuminfos);
+        noMissTopicsCardView = findViewById(R.id.nomisstopics_card_showforuminfos);
+        layoutListOfNoMissTopics = findViewById(R.id.nomisstopics_list_showforuminfos);
 
         contactModeratorsButton.setOnClickListener(contactModeratorsButtonClickedListener);
         showForumRulesButton.setOnClickListener(showForumRulesButtonClickedListener);
@@ -226,9 +257,10 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
                 if (source != null && !source.isEmpty()) {
                     ForumInfos newForumInfos = new ForumInfos();
 
-                    newForumInfos.listOfSubforums = JVCParser.getListOfSubforumsInForumPage(source);
                     newForumInfos.numberOfConnected = JVCParser.getNumberOfConnectFromPage(source);
+                    newForumInfos.listOfSubforums = JVCParser.getListOfSubforumsInForumPage(source);
                     newForumInfos.listOfModeratorsString = JVCParser.getListOfModeratorsFromPage(source);
+                    newForumInfos.listOfNoMissTopics = JVCParser.getListOfNoMissTopicsInForumPage(source);
                     return newForumInfos;
                 }
             }
@@ -240,6 +272,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
         public String numberOfConnected = "";
         public ArrayList<JVCParser.NameAndLink> listOfSubforums = new ArrayList<>();
         public String listOfModeratorsString = "";
+        public ArrayList<JVCParser.NameAndLink> listOfNoMissTopics = new ArrayList<>();
 
         public static final Parcelable.Creator<ForumInfos> CREATOR = new Parcelable.Creator<ForumInfos>() {
             @Override
@@ -261,6 +294,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
             numberOfConnected = in.readString();
             in.readTypedList(listOfSubforums, JVCParser.NameAndLink.CREATOR);
             listOfModeratorsString = in.readString();
+            in.readTypedList(listOfNoMissTopics, JVCParser.NameAndLink.CREATOR);
         }
 
         @Override
@@ -273,6 +307,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
             out.writeString(numberOfConnected);
             out.writeTypedList(listOfSubforums);
             out.writeString(listOfModeratorsString);
+            out.writeTypedList(listOfNoMissTopics);
         }
     }
 }
