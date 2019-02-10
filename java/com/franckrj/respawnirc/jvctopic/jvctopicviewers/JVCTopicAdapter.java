@@ -319,6 +319,10 @@ public class JVCTopicAdapter extends BaseAdapter {
         showSurvey = false;
     }
 
+    public void stopAllCurrentTasks() {
+        downloaderForImage.stopAllCurrentTasks();
+    }
+
     public void removeAllItems() {
         listOfMessages.clear();
         listOfContentForMessages.clear();

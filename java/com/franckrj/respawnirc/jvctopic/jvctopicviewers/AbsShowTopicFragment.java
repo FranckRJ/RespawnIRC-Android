@@ -345,6 +345,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         adapterForTopic.disableSurvey();
         adapterForTopic.removeAllItems();
         adapterForTopic.notifyDataSetChanged();
+        adapterForTopic.stopAllCurrentTasks();
         setPageLink("");
     }
 
@@ -454,6 +455,16 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     public void onPause() {
         absGetterForTopic.stopAllCurrentTask();
         super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        /* On veut stop le téléchargement des images que si on est sur que ce fragment ne sera plus jamais utilisé,
+         * donc ici c'est peut-être le meilleur endroit même si c'est pas garanti (que ce soit appelé).
+         * Normalement si onDestroy n'est pas appelé ça veut dire que tout le process a été tué (incluant les
+         * ImageGetterAsyncTask) mais j'en suis pas sur. */
+        adapterForTopic.stopAllCurrentTasks();
+        super.onDestroy();
     }
 
     @Override
