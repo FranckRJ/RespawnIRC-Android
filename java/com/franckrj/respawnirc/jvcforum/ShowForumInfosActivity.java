@@ -61,11 +61,18 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
         @Override
         public void onClick(View button) {
             if (button.getTag() != null && button.getTag() instanceof String) {
-                Intent newShowTopicIntent = new Intent(ShowForumInfosActivity.this, ShowTopicActivity.class);
-                newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_LINK, (String) button.getTag());
-                newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_OPENED_FROM_FORUM, false);
-                startActivity(newShowTopicIntent);
+                noMissTopicButtonClicked((String) button.getTag(), false);
             }
+        }
+    };
+
+    private final View.OnLongClickListener noMissTopicButtonLongClickedListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View button) {
+            if (button.getTag() != null && button.getTag() instanceof String) {
+                noMissTopicButtonClicked((String) button.getTag(), true);
+            }
+            return true;
         }
     };
 
@@ -119,6 +126,14 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
         }
     };
 
+    private void noMissTopicButtonClicked(String linkClicked, boolean isFromLongClick) {
+        Intent newShowTopicIntent = new Intent(ShowForumInfosActivity.this, ShowTopicActivity.class);
+        newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_LINK, linkClicked);
+        newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_OPENED_FROM_FORUM, false);
+        newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_GO_TO_LAST_PAGE, isFromLongClick);
+        startActivity(newShowTopicIntent);
+    }
+
     private void updateDisplayedInfos() {
         if (infosForForum == null) {
             mainLayout.setVisibility(View.GONE);
@@ -156,6 +171,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
                     newNoMissTopicButton.setText(Undeprecator.htmlFromHtml(nameAndLink.name));
                     newNoMissTopicButton.setTag(nameAndLink.link);
                     newNoMissTopicButton.setOnClickListener(noMissTopicButtonClickedListener);
+                    newNoMissTopicButton.setOnLongClickListener(noMissTopicButtonLongClickedListener);
 
                     layoutListOfNoMissTopics.addView(newNoMissTopicButton);
                 }
