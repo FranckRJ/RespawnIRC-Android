@@ -36,6 +36,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
     private SwipeRefreshLayout swipeRefresh = null;
     private ScrollView mainScrollView = null;
     private LinearLayout mainLayout = null;
+    private TextView forumNameText = null;
     private TextView numberOfConnectedView = null;
     private CardView subforumsCardView = null;
     private LinearLayout layoutListOfSubforums = null;
@@ -139,6 +140,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
             mainLayout.setVisibility(View.GONE);
         } else {
             mainLayout.setVisibility(View.VISIBLE);
+            forumNameText.setText(getString(R.string.forumTitleInfo, infosForForum.forumName));
             if (!infosForForum.numberOfConnected.isEmpty()) {
                 numberOfConnectedView.setText(Undeprecator.htmlFromHtml(infosForForum.numberOfConnected));
             } else {
@@ -202,6 +204,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
         swipeRefresh = findViewById(R.id.swiperefresh_showforuminfos);
         mainScrollView = findViewById(R.id.scrollview_showforuminfos);
         mainLayout = findViewById(R.id.main_layout_showforuminfos);
+        forumNameText = findViewById(R.id.foruminfos_title_showforuminfos);
         numberOfConnectedView = findViewById(R.id.text_numberofconnected_showforuminfos);
         subforumsCardView = findViewById(R.id.subforum_card_showforuminfos);
         layoutListOfSubforums = findViewById(R.id.subforum_list_showforuminfos);
@@ -273,6 +276,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
                 if (source != null && !source.isEmpty()) {
                     ForumInfos newForumInfos = new ForumInfos();
 
+                    newForumInfos.forumName = JVCParser.getForumNameInForumPage(source);
                     newForumInfos.numberOfConnected = JVCParser.getNumberOfConnectFromPage(source);
                     newForumInfos.listOfSubforums = JVCParser.getListOfSubforumsInForumPage(source);
                     newForumInfos.listOfModeratorsString = JVCParser.getListOfModeratorsFromPage(source);
@@ -285,6 +289,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
     }
 
     private static class ForumInfos implements Parcelable {
+        public String forumName = "";
         public String numberOfConnected = "";
         public ArrayList<JVCParser.NameAndLink> listOfSubforums = new ArrayList<>();
         public String listOfModeratorsString = "";
@@ -307,6 +312,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
         }
 
         private ForumInfos(Parcel in) {
+            forumName = in.readString();
             numberOfConnected = in.readString();
             in.readTypedList(listOfSubforums, JVCParser.NameAndLink.CREATOR);
             listOfModeratorsString = in.readString();
@@ -320,6 +326,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
 
         @Override
         public void writeToParcel(Parcel out, int flags) {
+            out.writeString(forumName);
             out.writeString(numberOfConnected);
             out.writeTypedList(listOfSubforums);
             out.writeString(listOfModeratorsString);

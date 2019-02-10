@@ -38,16 +38,36 @@
                     android:clipToPadding="false"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/text_numberofconnected_showforuminfos"
+                    <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="16dp"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textStyle="bold"/>
+                        android:layout_marginBottom="16dp"
+                        app:cardElevation="@dimen/elevationOfCards"
+                        app:cardCornerRadius="@dimen/cornerRadiusOfCards"
+                        app:cardBackgroundColor="?attr/themedDefaultBackgroundColor">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="16dp"
+                            android:paddingRight="16dp"
+                            android:paddingTop="12dp"
+                            android:paddingBottom="12dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/foruminfos_title_showforuminfos"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="12dp"
+                                android:textAllCaps="true"
+                                android:textColor="?attr/themedForumListCatTitleColor"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:id="@+id/text_numberofconnected_showforuminfos"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/subforum_card_showforuminfos"
@@ -78,14 +98,12 @@
                     </androidx.cardview.widget.CardView>
 
                     <androidx.cardview.widget.CardView
-                        android:id="@+id/forummanagement_card_showforuminfos"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:cardElevation="@dimen/elevationOfCards"
                         app:cardCornerRadius="@dimen/cornerRadiusOfCards"
                         app:cardBackgroundColor="?attr/themedDefaultBackgroundColor">
                         <LinearLayout
-                            android:id="@+id/forummanagement_list_showforuminfos"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingLeft="16dp"
