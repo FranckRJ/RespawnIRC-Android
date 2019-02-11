@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.InsetDrawable;
+import android.os.AsyncTask;
+
 import androidx.collection.SimpleArrayMap;
 
 import java.io.File;
@@ -14,13 +16,15 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChanged {
+    private static final int MAX_NUMBER_OF_CURRENT_TASKS = 20;
+
     private SimpleArrayMap<String, DrawableWrapper> listOfDrawable = new SimpleArrayMap<>();
     private ArrayList<ImageGetterAsyncTask> listOfCurrentsTasks = new ArrayList<>();
+    private ArrayList<DownloadImageInfos> listOfPendingsTasksInfos = new ArrayList<>();
     private Drawable defaultDrawable = null;
     private Drawable deletedDrawable = null;
     private Drawable defaultDrawableResized = null;
     private Drawable deletedDrawableResized = null;
-    private int numberOfFilesDownloading = 0;
     private DownloadFinished listenerForDownloadFinished = null;
     private CurrentProgress listenerForCurrentProgress = null;
     private int imagesWidth = 0;
@@ -31,7 +35,7 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
     private boolean optimisedScale = false;
 
     public int getNumberOfFilesDownloading() {
-        return numberOfFilesDownloading;
+        return (listOfCurrentsTasks.size() + listOfPendingsTasksInfos.size());
     }
 
     public void setParentActivity(Activity newParentActivity) {
@@ -117,7 +121,7 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
 
             if (drawable == null) {
                 drawable = new DrawableWrapper(setToDefaultSize ? defaultDrawableResized : defaultDrawable);
-                startDownloadOfThisFileInThisWrapper(link, drawable, setToDefaultSize, scaleToSize, setToDefaultAspectRatio);
+                startDownloadOfThisFileOrAddToQueue(link, drawable, setToDefaultSize, scaleToSize, setToDefaultAspectRatio);
             }
 
             if (setToDefaultSize) {
@@ -143,17 +147,27 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
         listOfCurrentsTasks.clear();
     }
 
-    private void startDownloadOfThisFileInThisWrapper(String linkToFile, DrawableWrapper thisWrapper, boolean setToDefaultSize, boolean scaleToSize, boolean setToDefaultAspectRatio) {
-        ImageGetterAsyncTask getterForImage = new ImageGetterAsyncTask(thisWrapper, linkToFile, imagesCacheDir.getPath(), updateProgress, setToDefaultSize, scaleToSize, setToDefaultAspectRatio);
+    private void startDownloadOfThisFileOrAddToQueue(String linkToFile, DrawableWrapper thisWrapper, boolean setToDefaultSize, boolean scaleToSize, boolean setToDefaultAspectRatio) {
+        DownloadImageInfos newInfosForDownload = new DownloadImageInfos(linkToFile, thisWrapper, setToDefaultSize, scaleToSize, setToDefaultAspectRatio);
+
+        if (listOfCurrentsTasks.size() < MAX_NUMBER_OF_CURRENT_TASKS) {
+            startDownloadOfThisFileWithInfos(newInfosForDownload);
+        } else {
+            listOfPendingsTasksInfos.add(newInfosForDownload);
+        }
+    }
+
+    private void startDownloadOfThisFileWithInfos(DownloadImageInfos infosForDownload) {
+        ImageGetterAsyncTask getterForImage = new ImageGetterAsyncTask(infosForDownload.thisWrapper, infosForDownload.linkToFile,
+                                                                        imagesCacheDir.getPath(), updateProgress, infosForDownload.setToDefaultSize,
+                                                                        infosForDownload.scaleToSize, infosForDownload.setToDefaultAspectRatio);
         getterForImage.setRequestStatusChangedListener(this);
         listOfCurrentsTasks.add(getterForImage);
-        getterForImage.execute();
-        ++numberOfFilesDownloading;
+        getterForImage.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void downloadOfAFileEnded(ImageGetterAsyncTask taskEnded) {
         final int numberOfCurrentsTasks = listOfCurrentsTasks.size();
-        --numberOfFilesDownloading;
 
         for (int i = 0; i < numberOfCurrentsTasks; ++i) {
             if (listOfCurrentsTasks.get(i) == taskEnded) {
@@ -161,9 +175,13 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
                 break;
             }
         }
+        if (listOfCurrentsTasks.size() < MAX_NUMBER_OF_CURRENT_TASKS && listOfPendingsTasksInfos.size() > 0) {
+            startDownloadOfThisFileWithInfos(listOfPendingsTasksInfos.get(0));
+            listOfPendingsTasksInfos.remove(0);
+        }
 
         if (listenerForDownloadFinished != null) {
-            listenerForDownloadFinished.newDownloadFinished(numberOfFilesDownloading);
+            listenerForDownloadFinished.newDownloadFinished(getNumberOfFilesDownloading());
         }
     }
 
@@ -261,6 +279,22 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
             wrappedDrawable.setBounds(0, 0, wrappedDrawable.getIntrinsicWidth(), wrappedDrawable.getIntrinsicHeight());
         }
         downloadOfAFileEnded(taskThatIsFinished);
+    }
+
+    private class DownloadImageInfos {
+        public final String linkToFile;
+        public final DrawableWrapper thisWrapper;
+        public final boolean setToDefaultSize;
+        public final boolean scaleToSize;
+        public final boolean setToDefaultAspectRatio;
+
+        public DownloadImageInfos(String newLinkToFile, DrawableWrapper newThisWrapper, boolean newSetToDefaultSize, boolean newScaleToSize, boolean newSetToDefaultAspectRatio) {
+            linkToFile = newLinkToFile;
+            thisWrapper = newThisWrapper;
+            setToDefaultSize = newSetToDefaultSize;
+            scaleToSize = newScaleToSize;
+            setToDefaultAspectRatio = newSetToDefaultAspectRatio;
+        }
     }
 
     public interface DownloadFinished {
