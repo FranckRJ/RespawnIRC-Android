@@ -92,7 +92,7 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
         @Override
         public void newDownloadFinished(int numberOfDownloadRemaining) {
             if (numberOfDownloadRemaining == 0 || fastRefreshOfImages) {
-                adapterForTopic.notifyDataSetChanged();
+                jvcMsgList.invalidateViews();
             }
         }
     };

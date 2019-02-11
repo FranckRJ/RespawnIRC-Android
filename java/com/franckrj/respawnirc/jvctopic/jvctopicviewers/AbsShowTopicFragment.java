@@ -171,7 +171,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         public void newDownloadFinished(int numberOfDownloadRemaining) {
             if (numberOfDownloadRemaining == 0 || fastRefreshOfImages) {
                 disableTranscriptModeOnJvcMsgList();
-                adapterForTopic.notifyDataSetChanged();
+                jvcMsgList.invalidateViews();
                 enableTranscriptModeOnJvcMsgList();
             }
         }
