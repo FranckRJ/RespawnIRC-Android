@@ -11,7 +11,6 @@ import com.franckrj.respawnirc.utils.IgnoreListManager;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.StickerConverter;
 import com.franckrj.respawnirc.utils.ThemeManager;
-import com.franckrj.respawnirc.utils.WebManager;
 
 public class MainApplication extends Application {
     private void initializeEmojiCompat() {
@@ -40,7 +39,6 @@ public class MainApplication extends Application {
         NetworkBroadcastReceiver.updateConnectionInfos(getApplicationContext());
         getApplicationContext().registerReceiver(new NetworkBroadcastReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
-        WebManager.generateNewUserAgent();
         initializeEmojiCompat();
     }
 }
