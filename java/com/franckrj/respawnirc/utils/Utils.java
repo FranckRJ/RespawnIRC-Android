@@ -117,13 +117,13 @@ public class Utils {
 
     public static String imageLinkToFileName(String link) {
         if (link.startsWith("http://image.noelshack.com/minis/")) {
-            return "img_nlsk_mini_" + link.substring(("http://image.noelshack.com/minis/").length()).replace("/", "_");
+            return "nlsk_mini/" + link.substring(("http://image.noelshack.com/minis/").length()).replace("/", "_");
         } else if (link.startsWith("http://image.noelshack.com/fichiers-xs/")) {
-            return "img_nlsk_xs_" + link.substring(("http://image.noelshack.com/fichiers-xs/").length()).replace("/", "_");
+            return "nlsk_xs/" + link.substring(("http://image.noelshack.com/fichiers-xs/").length()).replace("/", "_");
         } else if (link.startsWith("http://image.noelshack.com/fichiers/")) {
-            return "img_nlsk_big_" + link.substring(("http://image.noelshack.com/fichiers/").length()).replace("/", "_");
+            return "nlsk_big/" + link.substring(("http://image.noelshack.com/fichiers/").length()).replace("/", "_");
         } else if (link.startsWith("http://image.jeuxvideo.com/avatar")) {
-            return "img_vtr_" + link.substring(("http://image.jeuxvideo.com/avatar").length()).replace("/", "_");
+            return "vtr_sm/" + link.substring(("http://image.jeuxvideo.com/avatar").length()).replace("/", "_");
         } else {
             return "";
         }
