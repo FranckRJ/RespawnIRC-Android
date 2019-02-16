@@ -16,7 +16,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChanged {
-    private static final int MAX_NUMBER_OF_CURRENT_TASKS = 20;
+    private static final int MAX_NUMBER_OF_CURRENT_TASKS = 32;
 
     private SimpleArrayMap<String, DrawableWrapper> listOfDrawable = new SimpleArrayMap<>();
     private ArrayList<ImageGetterAsyncTask> listOfCurrentsTasks = new ArrayList<>();
@@ -140,6 +140,7 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
     }
 
     public void stopAllCurrentTasks() {
+        listOfPendingsTasksInfos.clear();
         for (ImageGetterAsyncTask taskIterator : listOfCurrentsTasks) {
             taskIterator.setRequestStatusChangedListener(null);
             taskIterator.cancel(false);
