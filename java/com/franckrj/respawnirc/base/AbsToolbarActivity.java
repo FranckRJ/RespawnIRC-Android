@@ -1,8 +1,8 @@
 package com.franckrj.respawnirc.base;
 
-import android.support.annotation.IdRes;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.IdRes;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 
 public abstract class AbsToolbarActivity extends AbsThemedActivity {
     protected Toolbar initToolbar(@IdRes int idOfToolbar) {

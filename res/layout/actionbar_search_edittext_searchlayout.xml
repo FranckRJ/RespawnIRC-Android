@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <android.support.text.emoji.widget.EmojiAppCompatEditText
+    <androidx.emoji.widget.EmojiAppCompatEditText
         android:id="@+id/search_text_searchlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

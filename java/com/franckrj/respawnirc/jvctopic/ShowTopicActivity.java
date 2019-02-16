@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -498,7 +498,14 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
                 if (possibleLinkToUse != null) {
                     if (!possibleLinkToUse.isEmpty()) {
+                        String anchorOfTopic;
+
                         possibleLinkToUse = JVCParser.formatThisUrlToClassicJvcUrl(possibleLinkToUse);
+                        anchorOfTopic = JVCParser.getMessageAnchorInTopicIfAny(possibleLinkToUse);
+
+                        if (!anchorOfTopic.isEmpty()) {
+                            pageNavigation.setAnchorForNextLoad(anchorOfTopic);
+                        }
                     }
                     pageNavigation.setCurrentLink(possibleLinkToUse);
                 }
@@ -727,7 +734,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             if (newMode == AbsShowTopicFragment.MODE_FORUM) {
                 updateLastPageAndCurrentItemAndButtonsToCurrentLink();
                 if (pageNavigation.getCurrentItemIndex() > 0) {
-                    pageNavigation.clearPageForThisFragment(0);
+                    pageNavigation.clearPageForThisFragment(0, true);
                 }
             }
         }

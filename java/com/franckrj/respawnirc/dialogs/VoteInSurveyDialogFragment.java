@@ -3,9 +3,9 @@ package com.franckrj.respawnirc.dialogs;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
+import androidx.appcompat.app.AlertDialog;
 
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.Utils;
@@ -37,7 +37,7 @@ public class VoteInSurveyDialogFragment extends DialogFragment {
         }
 
         builder.setTitle(R.string.vote);
-        builder.setSingleChoiceItems(listOfReplys.toArray(new CharSequence[listOfReplys.size()]), -1, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(listOfReplys.toArray(new CharSequence[0]), -1, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 idOfLastSelectedItem = which;
@@ -70,7 +70,7 @@ public class VoteInSurveyDialogFragment extends DialogFragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(SAVE_ID_ITEM_SELECTED, idOfLastSelectedItem);
     }

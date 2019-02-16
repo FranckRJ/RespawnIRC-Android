@@ -1,9 +1,9 @@
 package com.franckrj.respawnirc.jvcforum.jvcforumtools;
 
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
-import android.support.v4.widget.SwipeRefreshLayout;
+import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -156,8 +156,8 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
 
     private void reloadAdapterSettings() {
         adapterForForum.setAlternateBackgroundColor(PrefsManager.getBool(PrefsManager.BoolPref.Names.FORUM_ALTERNATE_BACKGROUND));
-        adapterForForum.setTopicTitleSizeInSp(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_TITLE_FONT_SIZE)));
-        adapterForForum.setTopicInfosSizeInSp(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.TOPIC_INFOS_FONT_SIZE)));
+        adapterForForum.setTopicTitleSizeInSp(PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.TOPIC_TITLE_FONT_SIZE));
+        adapterForForum.setTopicInfosSizeInSp(PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.TOPIC_INFOS_FONT_SIZE));
         adapterForForum.setTopicNameColor(ThemeManager.getColorInt(R.attr.themedTopicNameColor, requireActivity()));
         adapterForForum.setPseudoModoColor(ThemeManager.getColorInt(R.attr.themedPseudoModoColor, requireActivity()));
         adapterForForum.setPseudoAdminColor(ThemeManager.getColorInt(R.attr.themedPseudoAdminColor, requireActivity()));
@@ -228,7 +228,10 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     }
 
     @Override
-    public void clearContent() {
+    public void clearContent(boolean deleteTemporaryInfos) {
+        if (deleteTemporaryInfos) {
+            clearTemporaryInfos();
+        }
         getterForForum.stopAllCurrentTask();
         adapterForForum.removeAllItems();
         adapterForForum.notifyDataSetChanged();

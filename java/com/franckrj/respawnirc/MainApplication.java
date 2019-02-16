@@ -3,15 +3,14 @@ package com.franckrj.respawnirc;
 import android.app.Application;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import android.support.text.emoji.EmojiCompat;
-import android.support.text.emoji.FontRequestEmojiCompatConfig;
-import android.support.v4.provider.FontRequest;
+import androidx.emoji.text.EmojiCompat;
+import androidx.emoji.text.FontRequestEmojiCompatConfig;
+import androidx.core.provider.FontRequest;
 
 import com.franckrj.respawnirc.utils.IgnoreListManager;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.StickerConverter;
 import com.franckrj.respawnirc.utils.ThemeManager;
-import com.franckrj.respawnirc.utils.WebManager;
 
 public class MainApplication extends Application {
     private void initializeEmojiCompat() {
@@ -40,7 +39,6 @@ public class MainApplication extends Application {
         NetworkBroadcastReceiver.updateConnectionInfos(getApplicationContext());
         getApplicationContext().registerReceiver(new NetworkBroadcastReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
-        WebManager.generateNewUserAgent();
         initializeEmojiCompat();
     }
 }

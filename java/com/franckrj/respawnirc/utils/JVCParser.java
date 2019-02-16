@@ -2,8 +2,8 @@ package com.franckrj.respawnirc.utils;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.v4.util.ArraySet;
+import androidx.annotation.NonNull;
+import androidx.collection.ArraySet;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,7 +23,7 @@ public final class JVCParser {
     private static final Pattern messageQuotePattern = Pattern.compile("\"txt\":\"(.*)\"", Pattern.DOTALL);
     private static final Pattern entireMessagePattern = Pattern.compile("(<div class=\"bloc-message-forum[^\"]*\".*?)(<span id=\"post_[^\"]*\" class=\"bloc-message-forum-anchor\">|<div class=\"bloc-outils-plus-modo bloc-outils-bottom\">|<div class=\"bloc-pagi-default\">)", Pattern.DOTALL);
     private static final Pattern entireMessageInPermalinkPattern = Pattern.compile("(<div class=\"bloc-message-forum[^\"]*\".*?)<div class=\"bloc-return-topic\">", Pattern.DOTALL);
-    private static final Pattern topicLinkInPermalinkPattern = Pattern.compile("<div class=\"bloc-return-topic\">[^<]*<a href=\"([^#\"]*)");
+    private static final Pattern topicLinkInPermalinkPattern = Pattern.compile("<div class=\"bloc-return-topic\">[^<]*<a href=\"([^\"]*)");
     private static final Pattern signaturePattern = Pattern.compile("<div class=\"signature-msg[^\"]*\">(.*)", Pattern.DOTALL);
     private static final Pattern avatarPattern = Pattern.compile("<img src=\"[^\"]*\" data-srcset=\"(http:)?//([^\"]*)\" class=\"user-avatar-msg\"", Pattern.DOTALL);
     private static final Pattern entireTopicPattern = Pattern.compile("<li (class=\"[^\"]*\" data-id=\"[^\"]*\"|class=\"message[^\"]*\")>.*?<span class=\"topic-subject\">.*?</li>", Pattern.DOTALL);
@@ -53,8 +53,9 @@ public final class JVCParser {
     private static final Pattern spoilBlockPattern = Pattern.compile("<div class=\"bloc-spoil-jv\">.*?<div class=\"contenu-spoil\">(.*?)</div></div>", Pattern.DOTALL);
     private static final Pattern spoilOverlyPattern = Pattern.compile("(<(span|div) class=\"bloc-spoil-jv[^\"]*\">.*?<(span|div) class=\"contenu-spoil\">|</span></span>|</div></div>)", Pattern.DOTALL);
     private static final Pattern pageTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/[0-9]*-([0-9]*)-([0-9]*)-)([0-9]*)(-[0-9]*-[0-9]*-[0-9]*-[^.]*\\.htm)");
-    private static final Pattern pageForumLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/[0-9]*-([0-9]*)-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-[^.]*\\.htm)");
+    private static final Pattern pageForumLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/[0-9]*-([0-9]*)-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-([^.]*)\\.htm)");
     private static final Pattern pageSearchTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/recherche/forums/[0-9]*-[0-9]*-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-.*)");
+    private static final Pattern messageAnchorInTopicLinkPattern = Pattern.compile("#post_([0-9]*)");
     private static final Pattern jvCarePattern = Pattern.compile("<span class=\"JvCare [^\"]*\">([^<]*)</span>");
     private static final Pattern lastEditMessagePattern = Pattern.compile("<div class=\"info-edition-msg\">[^M]*(Message édité le ([^ ]* [^ ]* [^ ]* [^ ]* [0-9:]*) par.*?)</div>", Pattern.DOTALL);
     private static final Pattern messageEditInfoPattern = Pattern.compile("<textarea((.*?)(?=id=\"text_commentaire\")|(.*?)(?=>))id=\"text_commentaire\"[^>]*>(.*?)</textarea>", Pattern.DOTALL);
@@ -74,6 +75,10 @@ public final class JVCParser {
     private static final Pattern topicFavsBlocPattern = Pattern.compile("<h2>Mes sujets favoris</h2>.*?<ul class=\"display-list-simple\">(.*?)</ul>", Pattern.DOTALL);
     private static final Pattern favPattern = Pattern.compile("<li><a href=\"([^\"]*)\">([^<]*)</a></li>");
     private static final Pattern forumInSearchPagePattern = Pattern.compile("<a class=\"list-search-forum-name\" href=\"([^\"]*)\"[^>]*>(.*?)</a>");
+    private static final Pattern subforumListInForumPagePattern = Pattern.compile("<ul class=\"liste-sous-forums\">(.*?)</ul>", Pattern.DOTALL);
+    private static final Pattern noMissTopicsListInForumPagePattern = Pattern.compile("<ul class=\"liste-sujets-nomiss\">(.*?)</ul>", Pattern.DOTALL);
+    private static final Pattern subforumInListPattern = Pattern.compile("<li class=\"line-ellipsis\">[^<]*<a href=\"([^\"]*)\" class=\"lien-jv\">([^<]*)</a>[^<]*</li>");
+    private static final Pattern noMissTopicInListPattern = Pattern.compile("<a href=\"//www.jeuxvideo.com([^\"]*)\" class=\"lien-jv\">([^<]*)</a>");
     private static final Pattern isInFavPattern = Pattern.compile("<span class=\"picto-favoris([^\"]*)\"");
     private static final Pattern topicIdInTopicPagePattern = Pattern.compile("<div (.*?)data-topic-id=\"([^\"]*)\">");
     private static final Pattern isInSubInTopicPagePattern = Pattern.compile("<span class=\"icon-bell-([^\"]*)\" title=\"[^\"]*\" data-action=\"[^\"]*\"([^>]*)>");
@@ -88,6 +93,8 @@ public final class JVCParser {
     private static final Pattern realSurveyContentPattern = Pattern.compile("\"html\":\"(.*?)\"\\}");
     private static final Pattern numberOfMpJVCPattern = Pattern.compile("<div class=\".*?account-mp.*?\">[^<]*<span[^c]*class=\"jv-account-number-mp[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
     private static final Pattern numberOfNotifJVCPattern = Pattern.compile("<div class=\".*?account-notif.*?\">[^<]*<span[^c]*class=\"jv-account-number-notif[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
+    private static final Pattern numberOfConnectedPattern = Pattern.compile("<span class=\"nb-connect-fofo\">([^<]*)</span>");
+    private static final Pattern listOfModeratorsPattern = Pattern.compile("<span class=\"liste-modo-fofo\">(.*?)</span>", Pattern.DOTALL);
     private static final Pattern overlyJVCQuotePattern = Pattern.compile("(<(/)?blockquote>)");
     private static final Pattern overlyBetterQuotePattern = Pattern.compile("<(/)?blockquote>");
     private static final Pattern jvcLinkPattern = Pattern.compile("<a href=\"([^\"]*)\"( )?( title=\"[^\"]*\")?>.*?</a>");
@@ -255,6 +262,16 @@ public final class JVCParser {
         }
     }
 
+    public static String getForumNameOfThisForum(String forumLink) {
+        Matcher forumLinkNumberMatcher = pageForumLinkNumberPattern.matcher(forumLink);
+
+        if (forumLinkNumberMatcher.find()) {
+            return forumLinkNumberMatcher.group(5);
+        } else {
+            return "";
+        }
+    }
+
     public static String getForumIdOfThisForum(String forumLink) {
         Matcher forumLinkNumberMatcher = pageForumLinkNumberPattern.matcher(forumLink);
 
@@ -372,6 +389,16 @@ public final class JVCParser {
         }
     }
 
+    public static String getMessageAnchorInTopicIfAny(String topicLink) {
+        Matcher messageAnchorInTopicLinkMatcher = messageAnchorInTopicLinkPattern.matcher(topicLink);
+
+        if (messageAnchorInTopicLinkMatcher.find()) {
+            return messageAnchorInTopicLinkMatcher.group(1);
+        } else {
+            return "";
+        }
+    }
+
     public static SurveyInfos getSurveyInfosFromSurveyBlock(String surveyBlock) {
         SurveyInfos currentInfos = new SurveyInfos();
         Matcher surveyTitleMatcher = surveyTitlePattern.matcher(surveyBlock);
@@ -434,6 +461,54 @@ public final class JVCParser {
         }
 
         return listOfForums;
+    }
+
+    public static ArrayList<NameAndLink> getListOfSubforumsInForumPage(String pageSource) {
+        ArrayList<NameAndLink> listOfSubforums = new ArrayList<>();
+        Matcher subforumListInForumPageMatcher = subforumListInForumPagePattern.matcher(pageSource);
+
+        if (subforumListInForumPageMatcher.find()) {
+            Matcher subforumInListMatcher = subforumInListPattern.matcher(subforumListInForumPageMatcher.group(1));
+            int lastOffset = 0;
+
+            while (subforumInListMatcher.find(lastOffset)) {
+                NameAndLink newNameAndLink = new NameAndLink();
+
+                newNameAndLink.name = subforumInListMatcher.group(2).trim();
+                if (!subforumInListMatcher.group(1).isEmpty()) {
+                    newNameAndLink.link = "http://www.jeuxvideo.com" + subforumInListMatcher.group(1);
+                }
+
+                listOfSubforums.add(newNameAndLink);
+                lastOffset = subforumInListMatcher.end();
+            }
+        }
+
+        return listOfSubforums;
+    }
+
+    public static ArrayList<NameAndLink> getListOfNoMissTopicsInForumPage(String pageSource) {
+        ArrayList<NameAndLink> listOfNoMissTopics = new ArrayList<>();
+        Matcher noMissTopicsListInForumPageMatcher = noMissTopicsListInForumPagePattern.matcher(pageSource);
+
+        if (noMissTopicsListInForumPageMatcher.find()) {
+            Matcher noMissTopicInListMatcher = noMissTopicInListPattern.matcher(noMissTopicsListInForumPageMatcher.group(1));
+            int lastOffset = 0;
+
+            while (noMissTopicInListMatcher.find(lastOffset)) {
+                NameAndLink newNameAndLink = new NameAndLink();
+
+                newNameAndLink.name = noMissTopicInListMatcher.group(2).trim();
+                if (!noMissTopicInListMatcher.group(1).isEmpty()) {
+                    newNameAndLink.link = "http://www.jeuxvideo.com" + noMissTopicInListMatcher.group(1);
+                }
+
+                listOfNoMissTopics.add(newNameAndLink);
+                lastOffset = noMissTopicInListMatcher.end();
+            }
+        }
+
+        return listOfNoMissTopics;
     }
 
     public static ArrayList<NameAndLink> getListOfForumsFavs(String pageSource) {
@@ -562,6 +637,26 @@ public final class JVCParser {
             return numberOfNotifJVCMatcher.group(1);
         } else {
             return null;
+        }
+    }
+
+    public static String getNumberOfConnectFromPage(String pageSource) {
+        Matcher numberOfConnectedMatcher = numberOfConnectedPattern.matcher(pageSource);
+
+        if (numberOfConnectedMatcher.find()) {
+            return numberOfConnectedMatcher.group(1);
+        } else {
+            return "";
+        }
+    }
+
+    public static String getListOfModeratorsFromPage(String pageSource) {
+        Matcher listOfModeratorsMatcher = listOfModeratorsPattern.matcher(pageSource);
+
+        if (listOfModeratorsMatcher.find()) {
+            return listOfModeratorsMatcher.group(1).replace("<!--", "").replace("-->", "").replace(" ", "").replace("\n", "").replace(",", ", ");
+        } else {
+            return "";
         }
     }
 
@@ -937,7 +1032,7 @@ public final class JVCParser {
         }
 
         if (settings.showNoelshackImages) {
-            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 3, "<a href=\"", "\"><img src=\"http://", 2, "\"/></a>");
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 3, "", "", new MakeNoelshackImageLink(settings.enableAlphaInNoelshackMini), null);
         } else {
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 3, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         }
@@ -963,7 +1058,7 @@ public final class JVCParser {
         }
 
         if (!settings.pseudoOfUser.isEmpty() && settings.colorPseudoOfUserInMessage) {
-            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, Pattern.compile("(?i)" + settings.pseudoOfUser.replace("[", "\\[").replace("]", "\\]") + "(?![^<>]*(>|</a>))"), 0, "<font color=\"" + settings.colorPseudoUser + "\">", "</font>", null, null);
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, Pattern.compile("(?i)\\b" + settings.pseudoOfUser.replace("[", "\\[").replace("]", "\\]") + "\\b(?![^<>]*(>|</a>))"), 0, "<font color=\"" + settings.colorPseudoUser + "\">", "</font>", null, null);
         }
 
         return messageInBuilder.toString();
@@ -1404,31 +1499,6 @@ public final class JVCParser {
             }
         }
 
-        public static void parseThisMessageWithThisPattern(StringBuilder messageToParse, Pattern patternToUse, int groupToUse, String stringBefore, String stringAfter, int secondGroupToUse, String stringAfterAfter) {
-            Matcher matcherToUse = patternToUse.matcher(messageToParse);
-            int lastOffset = 0;
-
-            while (matcherToUse.find(lastOffset)) {
-                StringBuilder newMessage = new StringBuilder(stringBefore);
-
-                if (groupToUse != -1) {
-                    newMessage.append(matcherToUse.group(groupToUse));
-                }
-
-                newMessage.append(stringAfter);
-
-                if (secondGroupToUse != -1) {
-                    newMessage.append(matcherToUse.group(secondGroupToUse));
-                }
-
-                newMessage.append(stringAfterAfter);
-
-                messageToParse.replace(matcherToUse.start(), matcherToUse.end(), newMessage.toString());
-                lastOffset = matcherToUse.start() + newMessage.length();
-                matcherToUse = patternToUse.matcher(messageToParse);
-            }
-        }
-
         public static void replaceStringByAnother(StringBuilder builder, String from, String to)
         {
             int index = builder.indexOf(from);
@@ -1859,7 +1929,7 @@ public final class JVCParser {
         public String changeString(String baseString) {
             if (isCodeBlock) {
                 while (baseString.startsWith("\n")) {
-                    baseString = baseString.substring(1, baseString.length());
+                    baseString = baseString.substring(1);
                 }
                 while (baseString.endsWith("\n")) {
                     baseString = baseString.substring(0, baseString.length() - 1);
@@ -1867,7 +1937,7 @@ public final class JVCParser {
                 baseString = baseString.replace("\n", "<br />");
             } else {
                 if (baseString.startsWith(" ")) {
-                    baseString = "&nbsp;" + baseString.substring(1, baseString.length());
+                    baseString = "&nbsp;" + baseString.substring(1);
                 }
                 if (baseString.endsWith(" ")) {
                     baseString = baseString.substring(0, baseString.length() - 1) + "&nbsp;";
@@ -1879,8 +1949,8 @@ public final class JVCParser {
     }
 
     private static class MakeShortenedLinkIfPossible implements Utils.StringModifier {
-        final int maxStringSize;
-        final boolean forceLinkCreation;
+        private final int maxStringSize;
+        private final boolean forceLinkCreation;
 
         MakeShortenedLinkIfPossible(int newMaxStringSize, boolean newForceLinkCreation) {
             maxStringSize = newMaxStringSize;
@@ -1900,12 +1970,34 @@ public final class JVCParser {
         }
     }
 
+    private static class MakeNoelshackImageLink implements Utils.StringModifier {
+        private final boolean useFichierXsForPng;
+
+        MakeNoelshackImageLink(boolean newUseFichierXsForPng) {
+            useFichierXsForPng = newUseFichierXsForPng;
+        }
+
+        @Override
+        public String changeString(String baseString) {
+            String imageLink = noelshackToDirectLink(baseString);
+
+            if (useFichierXsForPng && imageLink.endsWith(".png")) {
+                imageLink = "http://image.noelshack.com/fichiers-xs/" + imageLink.substring(("http://image.noelshack.com/fichiers/").length());
+            } else {
+                imageLink = "http://image.noelshack.com/minis/" + imageLink.substring(("http://image.noelshack.com/fichiers/").length());
+                imageLink = imageLink.substring(0, imageLink.lastIndexOf(".")) + ".png";
+            }
+
+            return "<a href=\"" + baseString + "\"><img src=\"" + imageLink + "\"/></a>";
+        }
+    }
+
     private static class BuildSpoilTag implements Utils.StringModifier {
         private final String spoilButtonCode = "<bg_spoil_button><font color=\"#" + (ThemeManager.currentThemeUseDarkColors() ? "000000" : "FFFFFF") +
                                                "\">&nbsp;SPOIL&nbsp;</font></bg_spoil_button>";
 
         private final ArraySet<Integer> listOfSpoilIdToShow;
-        private boolean showAllSpoils;
+        private final boolean showAllSpoils;
         private int lastIdUsed;
         private boolean itsForSpoilBlock = false;
 
@@ -1954,6 +2046,15 @@ public final class JVCParser {
     public static class ForumAndTopicName {
         public String forum = "";
         public String topic = "";
+
+        public ForumAndTopicName() {
+            //rien
+        }
+
+        public ForumAndTopicName(ForumAndTopicName baseForCopy) {
+            forum = baseForCopy.forum;
+            topic = baseForCopy.topic;
+        }
     }
 
     public static class Settings {
@@ -1975,6 +2076,7 @@ public final class JVCParser {
         public boolean transformStickerToSmiley = false;
         public boolean shortenLongLink = false;
         public boolean hideUglyImages = false;
+        public boolean enableAlphaInNoelshackMini = false;
     }
 
     private static class SpoilTagsInfos {

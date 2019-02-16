@@ -6,8 +6,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.ColorInt;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.ThemeManager;

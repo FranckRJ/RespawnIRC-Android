@@ -6,8 +6,9 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.ColorInt;
-import android.support.v7.widget.CardView;
+import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -181,7 +182,10 @@ public class JVCTopicAdapter extends BaseAdapter {
         downloaderForImage.setImagesCacheDir(parentActivity.getCacheDir());
         downloaderForImage.setDefaultDrawable(ThemeManager.getDrawable(R.attr.themedDownloadImage, parentActivity));
         downloaderForImage.setDeletedDrawable(ThemeManager.getDrawable(R.attr.themedDeletedImage, parentActivity));
-        downloaderForImage.setImagesSize(res.getDimensionPixelSize(R.dimen.miniNoelshackWidthDefault), res.getDimensionPixelSize(R.dimen.miniNoelshackHeightDefault), true);
+        downloaderForImage.setDefaultDrawableResized(ThemeManager.getDrawable(R.attr.themedDownloadImage, parentActivity));
+        downloaderForImage.setDeletedDrawableResized(ThemeManager.getDrawable(R.attr.themedDeletedImage, parentActivity));
+        downloaderForImage.setOptimisedScale(false);
+        downloaderForImage.setImagesSize(res.getDimensionPixelSize(R.dimen.miniNoelshackWidthDefault), res.getDimensionPixelSize(R.dimen.miniNoelshackHeightDefault));
     }
 
     //pas d'intérêt que tout le monde puisse accéder aux messages, seul le .isEmpty() est important sur cette liste.
@@ -251,7 +255,7 @@ public class JVCTopicAdapter extends BaseAdapter {
 
     public void setMiniNoeslahckSizeByWidth(int newWidth) {
         int newHeight = Utils.roundToInt(newWidth * 0.75);
-        downloaderForImage.setImagesSize(newWidth, newHeight, true);
+        downloaderForImage.setImagesSize(newWidth, newHeight);
     }
 
     public void setMessageFontSizeInSp(int newVal) {
@@ -315,6 +319,10 @@ public class JVCTopicAdapter extends BaseAdapter {
         showSurvey = false;
     }
 
+    public void stopAllCurrentTasks() {
+        downloaderForImage.stopAllCurrentTasks();
+    }
+
     public void removeAllItems() {
         listOfMessages.clear();
         listOfContentForMessages.clear();
@@ -375,7 +383,7 @@ public class JVCTopicAdapter extends BaseAdapter {
         }
 
         if (showAvatars && !item.avatarLink.isEmpty() && !item.pseudoIsBlacklisted) {
-            holder.avatarImageDrawable = downloaderForImage.getDrawableFromLink(item.avatarLink);
+            holder.avatarImageDrawable = downloaderForImage.getDrawableFromLink(item.avatarLink, false, false, false);
         } else {
             holder.avatarImageDrawable = null;
         }
@@ -403,7 +411,7 @@ public class JVCTopicAdapter extends BaseAdapter {
         for (final URLSpan urlSpan : urlSpanArray) {
             Utils.replaceSpanByAnotherSpan(spannable, urlSpan, new LongClickableSpan() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(@NonNull View view) {
                     if (urlCLickedListener != null) {
                         urlCLickedListener.getClickedURL(urlSpan.getURL(), false);
                     }
@@ -422,12 +430,12 @@ public class JVCTopicAdapter extends BaseAdapter {
         for (final HoldingStringSpan holdingStringSpan : holdingStringSpanArray) {
             Utils.replaceSpanByAnotherSpan(spannable, holdingStringSpan, new ClickableSpan() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(@NonNull View view) {
                     updateListOfSpoidIdToShow(infosOfMessage, holdingStringSpan.getString());
                 }
 
                 @Override
-                public void updateDrawState(TextPaint ds) {
+                public void updateDrawState(@NonNull TextPaint ds) {
                     //rien
                 }
             });
@@ -477,6 +485,15 @@ public class JVCTopicAdapter extends BaseAdapter {
             return new JVCParser.MessageInfos();
         }
         return listOfMessages.get(position);
+    }
+
+    public int getPositionOfMessageId(long idToSearch) {
+        for (int i = 0; i < listOfMessages.size(); ++i) {
+            if (listOfMessages.get(i).id == idToSearch) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override

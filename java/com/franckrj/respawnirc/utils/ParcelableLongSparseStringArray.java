@@ -2,7 +2,7 @@ package com.franckrj.respawnirc.utils;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v4.util.LongSparseArray;
+import androidx.collection.LongSparseArray;
 
 public class ParcelableLongSparseStringArray extends LongSparseArray<String> implements Parcelable {
     public static final Parcelable.Creator<ParcelableLongSparseStringArray> CREATOR = new Parcelable.Creator<ParcelableLongSparseStringArray>() {

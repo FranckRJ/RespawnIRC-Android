@@ -3,9 +3,9 @@ package com.franckrj.respawnirc.jvcforum;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.ShareActionProvider;
+import androidx.core.view.MenuItemCompat;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.widget.ShareActionProvider;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -78,7 +78,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         pageNavigation.updateAdapterForPagerView();
         pageNavigation.updateCurrentItemAndButtonsToCurrentLink();
         if (pageNavigation.getCurrentItemIndex() > 0) {
-            pageNavigation.clearPageForThisFragment(0);
+            pageNavigation.clearPageForThisFragment(0, true);
         }
     }
 
@@ -388,6 +388,14 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         } else if (!itsAForum && isWhenDrawerIsClosed) {
             readThisTopicOrForum(link, fromLongClick);
         }
+    }
+
+    @Override
+    protected void launchShowForumInfos() {
+        Intent newShowForumInfosIntent = new Intent(this, ShowForumInfosActivity.class);
+        newShowForumInfosIntent.putExtra(ShowForumInfosActivity.EXTRA_FORUM_LINK, pageNavigation.getFirstPageLink());
+        newShowForumInfosIntent.putExtra(ShowForumInfosActivity.EXTRA_COOKIES, PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
+        startActivity(newShowForumInfosIntent);
     }
 
     @Override

@@ -1,9 +1,9 @@
 package com.franckrj.respawnirc.jvctopic;
 
 import android.os.Bundle;
-import android.support.transition.TransitionManager;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
+import androidx.transition.TransitionManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.appcompat.app.ActionBar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ScrollView;
@@ -80,6 +80,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
     private final AbsWebRequestAsyncTask.RequestIsStarted requestIsStartedListener = new AbsWebRequestAsyncTask.RequestIsStarted() {
         @Override
         public void onRequestIsStarted() {
+            backgroundErrorText.setVisibility(View.GONE);
             swipeRefresh.setRefreshing(true);
         }
     };

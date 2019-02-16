@@ -7,8 +7,8 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,13 +42,13 @@ public class ShowImageDialogFragment extends DialogFragment {
 
     private final ImageDownloader.CurrentProgress listenerForCurrentProgress = new ImageDownloader.CurrentProgress() {
         @Override
-        public void newCurrentProgress(int progressInPercent, int sizeOfFile, String fileLink) {
+        public void newCurrentProgress(long progressInPercent, long sizeOfFile, String fileLink) {
             if (linkOfImage.equals(fileLink)) {
                 if (progressBarIndeterminateForImage.getVisibility() == View.VISIBLE) {
-                    float formattedSizeOfFile = sizeOfFile / 1024;
+                    double formattedSizeOfFile = sizeOfFile / 1024.;
 
                     if (formattedSizeOfFile >= 1000) {
-                        formattedSizeOfFile = formattedSizeOfFile / 1024;
+                        formattedSizeOfFile = formattedSizeOfFile / 1024.;
                         textForSizeOfImage.setText(getString(R.string.megaByteNumber, formattedSizeOfFile));
                     } else {
                         textForSizeOfImage.setText(getString(R.string.kiloByteNumber, formattedSizeOfFile));
@@ -58,7 +58,7 @@ public class ShowImageDialogFragment extends DialogFragment {
                     progressBarDeterminateForImage.setVisibility(View.VISIBLE);
                     textForSizeOfImage.setVisibility(View.VISIBLE);
                 }
-                progressBarDeterminateForImage.setProgress(progressInPercent);
+                progressBarDeterminateForImage.setProgress((int)progressInPercent);
             }
         }
     };
@@ -89,16 +89,16 @@ public class ShowImageDialogFragment extends DialogFragment {
             requireActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
             deletedDrawable = Undeprecator.resourcesGetDrawable(requireActivity().getResources(), R.drawable.image_deleted_dark);
-            deletedDrawable.setBounds(0, 0, deletedDrawable.getIntrinsicWidth(), deletedDrawable.getIntrinsicHeight());
 
             downloaderForImage.setParentActivity(requireActivity());
             downloaderForImage.setListenerForDownloadFinished(listenerForDownloadFinished);
             downloaderForImage.setListenerForCurrentProgress(listenerForCurrentProgress);
             downloaderForImage.setImagesCacheDir(requireActivity().getCacheDir());
-            downloaderForImage.setScaleLargeImages(true);
-            downloaderForImage.setDefaultDrawable(deletedDrawable);
-            downloaderForImage.setDeletedDrawable(deletedDrawable);
-            downloaderForImage.setImagesSize(metrics.widthPixels, metrics.heightPixels, false);
+            downloaderForImage.setOptimisedScale(true);
+            downloaderForImage.setUpdateProgress(true);
+            downloaderForImage.setDefaultDrawableResized(deletedDrawable);
+            downloaderForImage.setDeletedDrawableResized(deletedDrawable);
+            downloaderForImage.setImagesSize(metrics.widthPixels, metrics.heightPixels);
         }
     }
 
@@ -131,7 +131,7 @@ public class ShowImageDialogFragment extends DialogFragment {
         textForSizeOfImage.setVisibility(View.INVISIBLE);
         viewForImage.setVisibility(View.INVISIBLE);
 
-        fullsizeImage = downloaderForImage.getDrawableFromLink(linkOfImage);
+        fullsizeImage = downloaderForImage.getDrawableFromLink(linkOfImage, true, true, false);
         if (downloaderForImage.getNumberOfFilesDownloading() == 0) {
             updateViewForImage();
         }

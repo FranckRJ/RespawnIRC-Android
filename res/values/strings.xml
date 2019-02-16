@@ -299,6 +299,20 @@
     <string name="showResult">Afficher les résultats</string>
     <string name="nothing">Rien</string>
     <string name="goToTopicOfForum">Accéder au topic du message</string>
+    <string name="forumInfos">Informations sur le forum</string>
+    <string name="subForums">Sous-forums</string>
+    <string name="enableAlphaInNoelshackMini">Activer la transparence pour les miniatures</string>
+    <string name="enableAlphaInNoelshackMiniSummary">(augmente l\'utilisation de la mémoire et du CPU)</string>
+    <string name="forumManagement">Gestion du forum</string>
+    <string name="errorNumberConnected">X connecté(s)</string>
+    <string name="listOfModeratorsText">Modérateurs : %1$s.</string>
+    <string name="listOfModeratorsTextEmpty">Pas de modérateurs.</string>
+    <string name="contactModerators">Contacter les modérateurs</string>
+    <string name="forumRules">Règles du forum</string>
+    <string name="errorDuringContactModerators">Erreur, impossible de contacter les modérateurs.</string>
+    <string name="errorDuringShowRules">Erreur, impossible d\'accéder aux règles.</string>
+    <string name="noMissTopics">Sujets à ne pas manquer</string>
+    <string name="forumTitleInfo">Forum %1$s</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>
