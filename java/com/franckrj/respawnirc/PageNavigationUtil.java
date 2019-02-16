@@ -1,13 +1,13 @@
 package com.franckrj.respawnirc;
 
-import android.arch.lifecycle.Lifecycle;
+import androidx.lifecycle.Lifecycle;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +36,7 @@ public class PageNavigationUtil {
     private boolean goToBottomOnNextLoad = false;
     private boolean dontLoadOnFirstTimeForNextFragCreate = false;
     private boolean refreshOnNextInstanciate = false;
+    private String anchorForNextLoad = null;
     private int lastPage = 0;
 
     private final Button.OnClickListener changePageWithNavigationButtonListener = new View.OnClickListener() {
@@ -82,10 +83,10 @@ public class PageNavigationUtil {
         public void onPageScrollStateChanged(int state) {
             if (state == ViewPager.SCROLL_STATE_IDLE) {
                 if (getCurrentItemIndex() > 0) {
-                    clearPageForThisFragment(getCurrentItemIndex() - 1);
+                    clearPageForThisFragment(getCurrentItemIndex() - 1, true);
                 }
                 if (getCurrentItemIndex() < adapterForPagerView.getCount() - 1) {
-                    clearPageForThisFragment(getCurrentItemIndex() + 1);
+                    clearPageForThisFragment(getCurrentItemIndex() + 1, true);
                 }
             }
         }
@@ -184,6 +185,10 @@ public class PageNavigationUtil {
                     currentFragment.enableGoToBottomAtPageLoading();
                     goToBottomOnNextLoad = false;
                 }
+                if (anchorForNextLoad != null) {
+                    currentFragment.setAnchorForNextLoad(anchorForNextLoad);
+                    anchorForNextLoad = null;
+                }
                 currentFragment.setPageLink(funcForPageNav.setShowedPageNumberForThisLink(currentLink, position + 1));
             } else {
                 loadNeedToBeDoneOnPageCreate = true;
@@ -191,10 +196,10 @@ public class PageNavigationUtil {
         }
     }
 
-    public void clearPageForThisFragment(int position) {
+    public void clearPageForThisFragment(int position, boolean deleteTemporaryInfos) {
         AbsShowSomethingFragment currentFragment = adapterForPagerView.getFragment(position);
         if (currentFragment != null) {
-            currentFragment.clearContent();
+            currentFragment.clearContent(deleteTemporaryInfos);
         }
     }
 
@@ -271,6 +276,10 @@ public class PageNavigationUtil {
         refreshOnNextInstanciate = newVal;
     }
 
+    public void setAnchorForNextLoad(String newVal) {
+        anchorForNextLoad = newVal;
+    }
+
     public void setDrawableForCurrentPageButton(Drawable thisDrawable) {
         currentPageButton.setCompoundDrawables(null, null, thisDrawable, null);
         currentPageButton.setCompoundDrawablePadding(parentActivity.getResources().getDimensionPixelSize(R.dimen.sizeBetweenTextAndArrow));
@@ -302,8 +311,8 @@ public class PageNavigationUtil {
         }
 
         @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            ((AbsShowSomethingFragment) object).clearContent();
+        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+            ((AbsShowSomethingFragment) object).clearContent(false);
             referenceMap.remove(position);
             super.destroyItem(container, position, object);
         }
@@ -317,6 +326,10 @@ public class PageNavigationUtil {
                     if (goToBottomOnNextLoad) {
                         tmpFragment.enableGoToBottomAtPageLoading();
                         goToBottomOnNextLoad = false;
+                    }
+                    if (anchorForNextLoad != null) {
+                        tmpFragment.setAnchorForNextLoad(anchorForNextLoad);
+                        anchorForNextLoad = null;
                     }
                     if (dontLoadOnFirstTimeForNextFragCreate) {
                         tmpFragment.enableDontLoadOnFirstTime();
@@ -334,7 +347,7 @@ public class PageNavigationUtil {
 
         @NonNull
         @Override
-        public Object instantiateItem(ViewGroup container, int position) {
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
             AbsShowSomethingFragment fragment = (AbsShowSomethingFragment) super.instantiateItem(container, position);
 
             if (refreshOnNextInstanciate && position == getCurrentItemIndex()) {

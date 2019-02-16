@@ -6,24 +6,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Random;
 import java.util.concurrent.Callable;
 
 public class WebManager {
-    private static String userAgentString = "ResdroidIRC";
-
-    public static void generateNewUserAgent() {
-        StringBuilder newUserAgentBuilder = new StringBuilder();
-        String baseForUserAgent = "RespawnIRC jeuxvideo.com bonjour logiciel";
-        Random rand = new Random();
-        int newSize = rand.nextInt(20) + 30;
-
-        for (int i = 0; i < newSize; ++i) {
-            newUserAgentBuilder.append(baseForUserAgent.charAt(rand.nextInt(baseForUserAgent.length())));
-        }
-
-        userAgentString = newUserAgentBuilder.toString();
-    }
+    public static final String userAgentString = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0";
 
     public static String sendRequestWithMultipleTrys(String linkToPage, String requestMethod, String requestParameters, WebInfos currentInfos, int maxNumberOfTrys) {
         int numberOfTrys = 0;
@@ -51,6 +37,7 @@ public class WebManager {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
+        //noinspection TryFinallyCanBeTryWithResources
         try {
             URL urlToPage;
             InputStream inputStream;
@@ -84,6 +71,7 @@ public class WebManager {
             if (requestMethod.equals("POST")) {
                 DataOutputStream writer = null;
 
+                //noinspection TryFinallyCanBeTryWithResources
                 try {
                     urlConnection.setDoOutput(true);
                     urlConnection.setFixedLengthStreamingMode(requestParameters.getBytes().length);

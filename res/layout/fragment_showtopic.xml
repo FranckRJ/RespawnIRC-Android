@@ -12,7 +12,7 @@
         android:gravity="center"
         android:textStyle="bold"/>
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swiperefresh_showtopicfrag"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -25,6 +25,6 @@
             android:scrollbarStyle="outsideOverlay"
             android:scrollbars="vertical"
             android:transcriptMode="normal"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

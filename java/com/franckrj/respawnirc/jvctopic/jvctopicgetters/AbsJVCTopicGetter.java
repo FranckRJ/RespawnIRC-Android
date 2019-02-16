@@ -222,8 +222,7 @@ public abstract class AbsJVCTopicGetter {
             pseudoOfAuthor = baseForCopy.pseudoOfAuthor;
             listOfInputInAString = baseForCopy.listOfInputInAString;
             ajaxInfos = new JVCParser.AjaxInfos(baseForCopy.ajaxInfos);
-            names.forum = baseForCopy.names.forum;
-            names.topic = baseForCopy.names.topic;
+            names = new JVCParser.ForumAndTopicName(baseForCopy.names);
             isInFavs = baseForCopy.isInFavs;
             subId = baseForCopy.subId;
             topicId = baseForCopy.topicId;

@@ -3,7 +3,7 @@ package com.franckrj.respawnirc.jvcforum.jvcforumtools;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.ColorInt;
+import androidx.annotation.ColorInt;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.TypedValue;

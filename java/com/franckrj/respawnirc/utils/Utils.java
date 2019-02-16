@@ -10,8 +10,8 @@ import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
-import android.support.annotation.ColorInt;
-import android.support.text.emoji.EmojiCompat;
+import androidx.annotation.ColorInt;
+import androidx.emoji.text.EmojiCompat;
 import android.text.Spannable;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -39,6 +39,11 @@ public class Utils {
         return (int) (valToRound + 0.5);
     }
 
+    public static long roundToLong(double valToRound) {
+        return (long) (valToRound + 0.5);
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean stringsAreEquals(String str1, String str2) {
         return (str1 == null ? str2 == null : str1.equals(str2));
     }
@@ -112,11 +117,13 @@ public class Utils {
 
     public static String imageLinkToFileName(String link) {
         if (link.startsWith("http://image.noelshack.com/minis/")) {
-            return "img_nlsk_mini_" + link.substring(("http://image.noelshack.com/minis/").length()).replace("/", "_");
+            return "nlsk_mini/" + link.substring(("http://image.noelshack.com/minis/").length()).replace("/", "_");
+        } else if (link.startsWith("http://image.noelshack.com/fichiers-xs/")) {
+            return "nlsk_xs/" + link.substring(("http://image.noelshack.com/fichiers-xs/").length()).replace("/", "_");
         } else if (link.startsWith("http://image.noelshack.com/fichiers/")) {
-            return "img_nlsk_big_" + link.substring(("http://image.noelshack.com/fichiers/").length()).replace("/", "_");
+            return "nlsk_big/" + link.substring(("http://image.noelshack.com/fichiers/").length()).replace("/", "_");
         } else if (link.startsWith("http://image.jeuxvideo.com/avatar")) {
-            return "img_vtr_" + link.substring(("http://image.jeuxvideo.com/avatar").length()).replace("/", "_");
+            return "vtr_sm/" + link.substring(("http://image.jeuxvideo.com/avatar").length()).replace("/", "_");
         } else {
             return "";
         }

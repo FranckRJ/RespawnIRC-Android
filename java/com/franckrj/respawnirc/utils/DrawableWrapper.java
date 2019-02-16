@@ -7,8 +7,8 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Region;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.v4.graphics.drawable.DrawableCompat;
+import androidx.annotation.NonNull;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 /* Classe copiée de https://android.googlesource.com/platform/frameworks/support/+/master/v7/appcompat/src/android/support/v7/graphics/drawable/DrawableWrapper.java
  * mais sans le @RestrictTo(LIBRARY_GROUP) pour pouvoir l'utiliser quand même.
@@ -24,6 +24,17 @@ public class DrawableWrapper extends Drawable implements Drawable.Callback {
     @Override
     public void draw(@NonNull Canvas canvas) {
         mDrawable.draw(canvas);
+    }
+
+    @Override
+    public void setBounds(int left, int top, int right, int bottom) {
+        mDrawable.setBounds(left, top, right, bottom);
+        super.setBounds(left, top, right, bottom);
+    }
+
+    @Override
+    public void setBounds(@NonNull Rect bounds) {
+        setBounds(bounds.left, bounds.top, bounds.right, bounds.bottom);
     }
 
     @Override

@@ -1,9 +1,9 @@
 package com.franckrj.respawnirc.jvctopic.jvctopicviewers;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.ShareActionProvider;
+import androidx.annotation.NonNull;
+import androidx.core.view.MenuItemCompat;
+import androidx.appcompat.widget.ShareActionProvider;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -65,9 +65,9 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
     }
 
     @Override
-    public void clearContent() {
+    public void clearContent(boolean deleteTemporaryInfos) {
         saveOldTopicInfos();
-        super.clearContent();
+        super.clearContent(deleteTemporaryInfos);
     }
 
     @Override
@@ -97,9 +97,9 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
         currentSettings.addBeforeEdit = "";
         currentSettings.addAfterEdit = "";
         showRefreshWhenMessagesShowed = PrefsManager.getBool(PrefsManager.BoolPref.Names.TOPIC_SHOW_REFRESH_WHEN_MESSAGE_SHOWED_MODE_IRC);
-        maxNumberOfMessagesShowed = Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.MAX_NUMBER_OF_MESSAGES));
-        initialNumberOfMessagesShowed = Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.INITIAL_NUMBER_OF_MESSAGES));
-        getterForTopic.setTimeBetweenRefreshTopic(Integer.parseInt(PrefsManager.getString(PrefsManager.StringPref.Names.REFRESH_TOPIC_TIME)));
+        maxNumberOfMessagesShowed = PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.MAX_NUMBER_OF_MESSAGES);
+        initialNumberOfMessagesShowed = PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.INITIAL_NUMBER_OF_MESSAGES);
+        getterForTopic.setTimeBetweenRefreshTopic(PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.REFRESH_TOPIC_TIME));
     }
 
     @Override

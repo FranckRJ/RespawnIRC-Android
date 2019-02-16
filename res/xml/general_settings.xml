@@ -44,6 +44,11 @@
         <CheckBoxPreference
             android:key="@string/settingsRefreshForumOnResume"
             android:title="@string/refreshForumOnResumeTitle"/>
+
+        <CheckBoxPreference
+            android:key="@string/settingsEnableAlphaInNoelshackMini"
+            android:title="@string/enableAlphaInNoelshackMini"
+            android:summary="@string/enableAlphaInNoelshackMiniSummary"/>
     </PreferenceCategory>
 
 </PreferenceScreen>
