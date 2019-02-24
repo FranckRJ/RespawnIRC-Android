@@ -1058,7 +1058,7 @@ public final class JVCParser {
         }
 
         if (!settings.pseudoOfUser.isEmpty() && settings.colorPseudoOfUserInMessage) {
-            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, Pattern.compile("(?i)\\b" + settings.pseudoOfUser.replace("[", "\\[").replace("]", "\\]") + "\\b(?![^<>]*(>|</a>))"), 0, "<font color=\"" + settings.colorPseudoUser + "\">", "</font>", null, null);
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, Pattern.compile("(?i)(?<!\\w)" + settings.pseudoOfUser.replace("[", "\\[").replace("]", "\\]") + "(?!\\w)(?![^<>]*(>|</a>))"), 0, "<font color=\"" + settings.colorPseudoUser + "\">", "</font>", null, null);
         }
 
         return messageInBuilder.toString();
