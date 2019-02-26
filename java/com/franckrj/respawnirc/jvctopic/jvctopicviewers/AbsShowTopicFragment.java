@@ -449,10 +449,12 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     public void onResume() {
         super.onResume();
         updateSettingsDependingOnConnection();
+        adapterForTopic.resumeTasks();
     }
 
     @Override
     public void onPause() {
+        adapterForTopic.pauseTasks();
         absGetterForTopic.stopAllCurrentTask();
         super.onPause();
     }
