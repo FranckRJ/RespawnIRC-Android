@@ -164,6 +164,8 @@ public class ShowImageDialogFragment extends DialogFragment {
     public void onPause() {
         downloaderForImage.stopAllCurrentTasks();
         downloaderForImage.clearMemoryCache();
+        /* Des dismiss et des frees partout, mieux vaut trop que pas assez ? */
+        dismiss();
         super.onPause();
     }
 

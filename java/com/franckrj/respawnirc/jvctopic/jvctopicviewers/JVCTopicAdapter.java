@@ -319,6 +319,14 @@ public class JVCTopicAdapter extends BaseAdapter {
         showSurvey = false;
     }
 
+    public void pauseTasks() {
+        downloaderForImage.pauseNewDownloads();
+    }
+
+    public void resumeTasks() {
+        downloaderForImage.resumeNewDownloads();
+    }
+
     public void stopAllCurrentTasks() {
         downloaderForImage.stopAllCurrentTasks();
     }

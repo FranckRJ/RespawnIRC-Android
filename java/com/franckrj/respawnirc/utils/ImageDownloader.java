@@ -16,7 +16,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChanged {
-    private static final int MAX_NUMBER_OF_CURRENT_TASKS = 32;
+    private static final int MAX_NUMBER_OF_CURRENT_TASKS = 8;
 
     private SimpleArrayMap<String, DrawableWrapper> listOfDrawable = new SimpleArrayMap<>();
     private ArrayList<ImageGetterAsyncTask> listOfCurrentsTasks = new ArrayList<>();
@@ -33,6 +33,7 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
     private Activity parentActivity = null;
     private boolean updateProgress = false;
     private boolean optimisedScale = false;
+    private boolean downloadsArePaused = false;
 
     public int getNumberOfFilesDownloading() {
         return (listOfCurrentsTasks.size() + listOfPendingsTasksInfos.size());
@@ -139,6 +140,15 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
         listOfDrawable.clear();
     }
 
+    public void pauseNewDownloads() {
+        downloadsArePaused = true;
+    }
+
+    public void resumeNewDownloads() {
+        downloadsArePaused = false;
+        launchPendingDownloadsIfPossible();
+    }
+
     public void stopAllCurrentTasks() {
         listOfPendingsTasksInfos.clear();
         for (ImageGetterAsyncTask taskIterator : listOfCurrentsTasks) {
@@ -146,6 +156,13 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
             taskIterator.cancel(false);
         }
         listOfCurrentsTasks.clear();
+    }
+
+    private void launchPendingDownloadsIfPossible() {
+        while (!downloadsArePaused && listOfCurrentsTasks.size() < MAX_NUMBER_OF_CURRENT_TASKS && listOfPendingsTasksInfos.size() > 0) {
+            startDownloadOfThisFileWithInfos(listOfPendingsTasksInfos.get(0));
+            listOfPendingsTasksInfos.remove(0);
+        }
     }
 
     private void startDownloadOfThisFileOrAddToQueue(String linkToFile, DrawableWrapper thisWrapper, boolean setToDefaultSize, boolean scaleToSize, boolean setToDefaultAspectRatio) {
@@ -176,10 +193,7 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
                 break;
             }
         }
-        if (listOfCurrentsTasks.size() < MAX_NUMBER_OF_CURRENT_TASKS && listOfPendingsTasksInfos.size() > 0) {
-            startDownloadOfThisFileWithInfos(listOfPendingsTasksInfos.get(0));
-            listOfPendingsTasksInfos.remove(0);
-        }
+        launchPendingDownloadsIfPossible();
 
         if (listenerForDownloadFinished != null) {
             listenerForDownloadFinished.newDownloadFinished(getNumberOfFilesDownloading());
