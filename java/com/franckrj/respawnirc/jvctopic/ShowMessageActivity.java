@@ -349,6 +349,7 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
     public void onResume() {
         super.onResume();
         updateSettingsDependingOnConnection();
+        adapterForTopic.resumeTasks();
 
         if (messageShowedStatus.message == null) {
             if (getIntent() != null) {
@@ -369,12 +370,23 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
 
     @Override
     public void onPause() {
+        adapterForTopic.pauseTasks();
         if (currentTaskForGetMessage != null) {
             currentTaskForGetMessage.clearListenersAndCancel();
             currentTaskForGetMessage = null;
         }
         swipeRefresh.setRefreshing(false);
         super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        /* On veut stop le téléchargement des images que si on est sur que cette activité ne sera plus jamais utilisée,
+         * donc ici c'est peut-être le meilleur endroit même si c'est pas garanti (que ce soit appelé).
+         * Normalement si onDestroy n'est pas appelé ça veut dire que tout le process a été tué (incluant les
+         * ImageGetterAsyncTask) mais j'en suis pas sur. */
+        adapterForTopic.stopAllCurrentTasks();
+        super.onDestroy();
     }
 
     @Override
