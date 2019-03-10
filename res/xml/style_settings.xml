@@ -16,6 +16,16 @@
     <PreferenceCategory
         android:title="@string/lightThemeColors">
         <ColorPickerPreference
+            android:key="@string/settingsHeaderColorOfLightTheme"
+            android:title="@string/headerColor"
+            app:pref_currentColor="@color/defaultHeaderColorThemeLight"
+            app:pref_colors="@array/choicesForHeaderColor"/>
+
+        <CheckBoxPreference
+            android:key="@string/settingsInvertHeaderTextColor"
+            android:title="@string/invertHeaderTextColorTitle"/>
+
+        <ColorPickerPreference
             android:key="@string/settingsPrimaryColorOfLightTheme"
             android:title="@string/primaryColor"
             app:pref_currentColor="@color/colorPrimaryIndigo"

@@ -188,10 +188,44 @@
     <color name="colorPrimaryDarkerBlack">#000000</color>
     <color name="colorAltBlack">#E0E0E0</color>
     <color name="colorAltDarkerBlack">#BDBDBD</color>
+    <color name="defaultHeaderColorThemeLight">#0F3B68</color>
     <color name="defaultTopicNameAndAccentColorThemeLight">#006BD7</color>
     <color name="defaultColorAltThemeLight">#EEF5FC</color>
     <color name="defaultSurveyMessageColorThemeLight">#FFF0DB</color>
     <color name="defaultDeletedMessageColorThemeLight">#CFF3FE</color>
+
+    <integer-array name="choicesForHeaderColor">
+        <item>@color/colorPrimaryDarkerRealRed</item>
+        <item>@color/colorPrimaryDarkerRed</item>
+        <item>@color/colorPrimaryDarkerPink</item>
+        <item>@color/colorPrimaryDarkerSoftPurple</item>
+        <item>@color/colorPrimaryDarkerPurple</item>
+        <item>@color/colorPrimaryDarkerDeepPurple</item>
+        <item>@color/colorPrimaryDarkerIndigo</item>
+        <item>@color/colorPrimaryDarkerBlue</item>
+        <item>@color/colorPrimaryDarkerLightBlue</item>
+        <item>@color/colorPrimaryDarkerSoftBlue</item>
+        <item>@color/colorPrimaryDarkerCyan</item>
+        <item>@color/colorPrimaryDarkerTeal</item>
+        <item>@color/colorPrimaryDarkerPrestoGreen</item>
+        <item>@color/colorPrimaryDarkerRealGreen</item>
+        <item>@color/colorPrimaryDarkerRealLightGreen</item>
+        <item>@color/colorPrimaryDarkerGreen</item>
+        <item>@color/colorPrimaryDarkerLightGreen</item>
+        <item>@color/colorPrimaryDarkerLime</item>
+        <item>@color/colorPrimaryDarkerYellow</item>
+        <item>@color/colorPrimaryDarkerAmber</item>
+        <item>@color/colorPrimaryDarkerOrange</item>
+        <item>@color/colorPrimaryDarkerDeepOrange</item>
+        <item>@color/colorPrimaryDarkerSoftOrange</item>
+        <item>@color/colorPrimaryDarkerBrown</item>
+        <item>@color/colorPrimaryDarkerGrey</item>
+        <item>@color/colorPrimaryDarkerBlueGrey</item>
+        <item>@color/colorPrimaryDarkerJVC</item>
+        <item>@color/colorPrimaryDarkerSoftBlack</item>
+        <item>@color/colorPrimaryDarkerBlack</item>
+        <item>@color/defaultHeaderColorThemeLight</item>
+    </integer-array>
 
     <integer-array name="choicesForPrimaryColor">
         <item>@color/colorPrimaryRealRed</item>

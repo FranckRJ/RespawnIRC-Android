@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.content.pm.ShortcutManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.core.view.GravityCompat;
@@ -521,6 +523,12 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         layoutForDrawer.addDrawerListener(toggleForDrawer);
         layoutForDrawer.setDrawerShadow(ThemeManager.getDrawable(R.attr.themedShadowDrawer, this), GravityCompat.START);
         updateNavigationMenu();
+
+        if (ThemeManager.getThemeUsed() == ThemeManager.ThemeName.LIGHT_THEME && ThemeManager.getHeaderColorUsedForThemeLight() != Undeprecator.resourcesGetColor(getResources(), R.color.defaultHeaderColorThemeLight)) {
+            Drawable newHeaderBackground = Undeprecator.resourcesGetDrawable(getResources(), R.drawable.navigation_header_background_base);
+            newHeaderBackground.setColorFilter(ThemeManager.getHeaderColorUsedForThemeLight(), PorterDuff.Mode.OVERLAY);
+            navigationHeader.setBackgroundDrawable(newHeaderBackground);
+        }
     }
 
     @Override
