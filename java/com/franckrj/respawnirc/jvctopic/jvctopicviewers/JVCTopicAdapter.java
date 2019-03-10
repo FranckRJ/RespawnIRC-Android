@@ -498,7 +498,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     public int getPositionOfMessageId(long idToSearch) {
         for (int i = 0; i < listOfMessages.size(); ++i) {
             if (listOfMessages.get(i).id == idToSearch) {
-                return i;
+                return i + (showSurvey ? 1 : 0);
             }
         }
         return -1;
