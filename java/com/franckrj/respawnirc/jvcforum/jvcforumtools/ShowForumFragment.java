@@ -19,6 +19,7 @@ import com.franckrj.respawnirc.utils.IgnoreListManager;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.ThemeManager;
+import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -161,8 +162,12 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         adapterForForum.setTopicNameColor(ThemeManager.getColorInt(R.attr.themedTopicNameColor, requireActivity()));
         adapterForForum.setPseudoModoColor(ThemeManager.getColorInt(R.attr.themedPseudoModoColor, requireActivity()));
         adapterForForum.setPseudoAdminColor(ThemeManager.getColorInt(R.attr.themedPseudoAdminColor, requireActivity()));
-        adapterForForum.setAltBackgroundColor(ThemeManager.getColorInt(R.attr.themedAltBackgroundColor, requireActivity()));
         adapterForForum.setDefaultBackgroundColor(ThemeManager.getColorInt(R.attr.themedDefaultBackgroundColor, requireActivity()));
+        if (ThemeManager.getThemeUsed() == ThemeManager.ThemeName.LIGHT_THEME && PrefsManager.getBool(PrefsManager.BoolPref.Names.BRIGHTEN_ALT_COLOR)) {
+            adapterForForum.setAltBackgroundColor(Utils.brightenColor(ThemeManager.getColorInt(R.attr.themedAltBackgroundColor, requireActivity())));
+        } else {
+            adapterForForum.setAltBackgroundColor(ThemeManager.getColorInt(R.attr.themedAltBackgroundColor, requireActivity()));
+        }
     }
 
     private void reloadSettings() {

@@ -48,6 +48,10 @@
             app:pref_currentColor="@color/defaultColorAltThemeLight"
             app:pref_colors="@array/choicesForAltColor"/>
 
+        <CheckBoxPreference
+            android:key="@string/settingsBrightenAltColor"
+            android:title="@string/brightenAltColorTitle"/>
+
         <ColorPickerPreference
             android:key="@string/settingsSurveyColorOfLightTheme"
             android:title="@string/surveyMessageColor"

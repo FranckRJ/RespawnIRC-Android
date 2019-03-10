@@ -315,6 +315,7 @@
     <string name="forumTitleInfo">Forum %1$s</string>
     <string name="headerColor">Couleur du header</string>
     <string name="invertHeaderTextColorTitle">Inverser la couleur du texte du header</string>
+    <string name="brightenAltColorTitle">Éclaircir la couleur alternative des messages</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>

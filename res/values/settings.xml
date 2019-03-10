@@ -65,4 +65,5 @@
     <string name="settingsEnableAlphaInNoelshackMini" translatable="false">settings.enableAlphaInNoelshackMini</string>
     <string name="settingsHeaderColorOfLightTheme" translatable="false">settings.customColor.headerColorOfLightTheme</string>
     <string name="settingsInvertHeaderTextColor" translatable="false">settings.invertHeaderTextColor</string>
+    <string name="settingsBrightenAltColor" translatable="false">settings.brightenAltColor</string>
 </resources>
