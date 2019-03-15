@@ -36,17 +36,6 @@ public class Utils {
         return String.format("#%08X", colorValue);
     }
 
-    public static @ColorInt int brightenColor(@ColorInt int color) {
-        int a = Color.alpha(color);
-        int r = (int)Math.round(Color.red(color) * 1.035);
-        int g = (int)Math.round(Color.green(color) * 1.035);
-        int b = (int)Math.round(Color.blue(color) * 1.035);
-        return Color.argb(a,
-                Math.min(r,255),
-                Math.min(g,255),
-                Math.min(b,255));
-    }
-
     public static int roundToInt(double valToRound) {
         return (int) (valToRound + 0.5);
     }

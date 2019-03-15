@@ -286,11 +286,7 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
         adapterForTopic.setSurveyMessageBackgroundColor(ThemeManager.getColorInt(R.attr.themedSurveyMessageBackgroundColor, this));
         adapterForTopic.setDeletedMessageBackgroundColor(ThemeManager.getColorInt(R.attr.themedDeletedMessageBackgroundColor, this));
         adapterForTopic.setDefaultMessageBackgroundColor(ThemeManager.getColorInt(R.attr.themedDefaultBackgroundColor, this));
-        if (ThemeManager.getThemeUsed() == ThemeManager.ThemeName.LIGHT_THEME && PrefsManager.getBool(PrefsManager.BoolPref.Names.BRIGHTEN_ALT_COLOR)) {
-            adapterForTopic.setAltMessageBackgroundColor(Utils.brightenColor(ThemeManager.getColorInt(R.attr.themedAltBackgroundColor, this)));
-        } else {
-            adapterForTopic.setAltMessageBackgroundColor(ThemeManager.getColorInt(R.attr.themedAltBackgroundColor, this));
-        }
+        adapterForTopic.setAltMessageBackgroundColor(ThemeManager.getColorInt(R.attr.themedAltBackgroundColor, this));
 
         if (cardDesignIsEnabled) {
             int paddingForMsgList = getResources().getDimensionPixelSize(R.dimen.spaceAroundSingleCard);

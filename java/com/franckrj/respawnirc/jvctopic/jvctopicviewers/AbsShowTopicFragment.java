@@ -1,7 +1,6 @@
 package com.franckrj.respawnirc.jvctopic.jvctopicviewers;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -238,11 +237,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         adapterForTopic.setSurveyMessageBackgroundColor(ThemeManager.getColorInt(R.attr.themedSurveyMessageBackgroundColor, requireActivity()));
         adapterForTopic.setDeletedMessageBackgroundColor(ThemeManager.getColorInt(R.attr.themedDeletedMessageBackgroundColor, requireActivity()));
         adapterForTopic.setDefaultMessageBackgroundColor(ThemeManager.getColorInt(R.attr.themedDefaultBackgroundColor, requireActivity()));
-        if (ThemeManager.getThemeUsed() == ThemeManager.ThemeName.LIGHT_THEME && PrefsManager.getBool(PrefsManager.BoolPref.Names.BRIGHTEN_ALT_COLOR)) {
-            adapterForTopic.setAltMessageBackgroundColor(Utils.brightenColor(ThemeManager.getColorInt(R.attr.themedAltBackgroundColor, requireActivity())));
-        } else {
-            adapterForTopic.setAltMessageBackgroundColor(ThemeManager.getColorInt(R.attr.themedAltBackgroundColor, requireActivity()));
-        }
+        adapterForTopic.setAltMessageBackgroundColor(ThemeManager.getColorInt(R.attr.themedAltBackgroundColor, requireActivity()));
     }
 
     protected void updateSettingsDependingOnConnection() {
