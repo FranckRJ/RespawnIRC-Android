@@ -5,13 +5,10 @@ import java.util.List;
 
 public class AccountManager {
     private static List<AccountInfos> listOfAccountsInReserve = new ArrayList<>();
+    private static AccountInfos currentAccount = null;
 
-    public static void addThisAccountToReserveList(AccountInfos newAccount) {
-        for (int i = 0; i < listOfAccountsInReserve.size(); ++i) {
-            if (listOfAccountsInReserve.get(i).pseudo.toLowerCase().equals(newAccount.pseudo.toLowerCase())) {
-                return;
-            }
-        }
+    public static void addOrReplaceThisAccountInReserveList(AccountInfos newAccount) {
+        removeAccountFromReserveList(newAccount.pseudo);
         listOfAccountsInReserve.add(newAccount);
     }
 
@@ -25,29 +22,33 @@ public class AccountManager {
     }
 
     public static AccountInfos getCurrentAccount() {
-        AccountInfos currentAccount = new AccountInfos();
+        if (currentAccount == null) {
+            String pseudo = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER);
+            String cookie = PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST);
+            boolean isModo = PrefsManager.getBool(PrefsManager.BoolPref.Names.USER_IS_MODO);
 
-        currentAccount.pseudo = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER);
-        currentAccount.cookie = PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST);
-        currentAccount.isModo = PrefsManager.getBool(PrefsManager.BoolPref.Names.USER_IS_MODO);
+            currentAccount = new AccountInfos(pseudo, cookie, isModo);
+        }
         return currentAccount;
     }
 
     public static void setCurrentAccount(AccountInfos newCurrentAccount) {
-        PrefsManager.putString(PrefsManager.StringPref.Names.PSEUDO_OF_USER, newCurrentAccount.pseudo);
-        PrefsManager.putString(PrefsManager.StringPref.Names.COOKIES_LIST, newCurrentAccount.cookie);
-        PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, newCurrentAccount.isModo);
+        currentAccount = new AccountInfos(newCurrentAccount.pseudo, newCurrentAccount.cookie, newCurrentAccount.isModo);
+        PrefsManager.putString(PrefsManager.StringPref.Names.PSEUDO_OF_USER, currentAccount.pseudo);
+        PrefsManager.putString(PrefsManager.StringPref.Names.COOKIES_LIST, currentAccount.cookie);
+        PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, currentAccount.isModo);
         PrefsManager.applyChanges();
     }
 
     public static void replaceCurrentAccountAndAddInReserve(AccountInfos newCurrentAccount) {
-        addThisAccountToReserveList(getCurrentAccount());
+        addOrReplaceThisAccountInReserveList(getCurrentAccount());
         removeAccountFromReserveList(newCurrentAccount.pseudo);
         setCurrentAccount(newCurrentAccount);
     }
 
     public static void setCurrentAccountIsModo(boolean newVal) {
-        PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, newVal);
+        currentAccount = new AccountInfos(currentAccount.pseudo, currentAccount.cookie, newVal);
+        PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, currentAccount.isModo);
         PrefsManager.applyChanges();
     }
 
@@ -56,11 +57,10 @@ public class AccountManager {
 
         listOfAccountsInReserve.clear();
         for (int i = 0; i < numberOfAccounts; ++i) {
-            AccountInfos newAccount = new AccountInfos();
-            newAccount.pseudo = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.RESERVE_ACCOUNT_PSEUDO, String.valueOf(i));
-            newAccount.cookie = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.RESERVE_ACCOUNT_COOKIE, String.valueOf(i));
-            newAccount.isModo = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.RESERVE_ACCOUNT_IS_MODO, String.valueOf(i)).equals("true");
-            listOfAccountsInReserve.add(newAccount);
+            String pseudo = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.RESERVE_ACCOUNT_PSEUDO, String.valueOf(i));
+            String cookie = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.RESERVE_ACCOUNT_COOKIE, String.valueOf(i));
+            boolean isModo = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.RESERVE_ACCOUNT_IS_MODO, String.valueOf(i)).equals("true");
+            listOfAccountsInReserve.add(new AccountInfos(pseudo, cookie, isModo));
         }
     }
 
@@ -87,12 +87,12 @@ public class AccountManager {
     }
 
     public static class AccountInfos {
-        public String pseudo = "";
-        public String cookie = "";
-        public boolean isModo = false;
+        public final String pseudo;
+        public final String cookie;
+        public final boolean isModo;
 
         public AccountInfos() {
-            //vide
+            this("", "", false);
         }
 
         public AccountInfos(String newPseudo, String newCookie, boolean newIsModo) {

@@ -55,11 +55,9 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
                 }
 
                 if (connectCookieValue != null) {
-                    AccountManager.AccountInfos newAccount = new AccountManager.AccountInfos();
-                    newAccount.pseudo = pseudoText.getText().toString().trim();
-                    newAccount.cookie = "coniunctio=" + connectCookieValue;
-                    newAccount.isModo = false;
-                    AccountManager.replaceCurrentAccountAndAddInReserve(newAccount);
+                    String pseudo = pseudoText.getText().toString().trim();
+                    String cookie = "coniunctio=" + connectCookieValue;
+                    AccountManager.replaceCurrentAccountAndAddInReserve(new AccountManager.AccountInfos(pseudo, cookie, false));
                     AccountManager.saveListOfAccountsInReserve();
 
                     Toast.makeText(ConnectActivity.this, R.string.connectionSuccessful, Toast.LENGTH_SHORT).show();
