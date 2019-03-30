@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.franckrj.respawnirc.base.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.utils.AccountManager;
 import com.franckrj.respawnirc.utils.IgnoreListManager;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
@@ -166,9 +167,10 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
     }
 
     private void reloadSettings() {
+        AccountManager.AccountInfos currentAccount = AccountManager.getCurrentAccount();
         reloadAdapterSettings();
-        getterForForum.setCookieListInAString(PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
-        pseudoOfUserInLC = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER).toLowerCase();
+        getterForForum.setCookieListInAString(currentAccount.cookie);
+        pseudoOfUserInLC = currentAccount.pseudo.toLowerCase();
         ignoreTopicToo = PrefsManager.getBool(PrefsManager.BoolPref.Names.IGNORE_TOPIC_TOO);
         clearTopicsOnRefresh = true;
     }

@@ -38,6 +38,7 @@ import com.franckrj.respawnirc.jvctopic.jvctopicviewers.ShowTopicModeIRCFragment
 import com.franckrj.respawnirc.base.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.PageNavigationUtil;
 import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
+import com.franckrj.respawnirc.utils.AccountManager;
 import com.franckrj.respawnirc.utils.AddOrRemoveThingToFavs;
 import com.franckrj.respawnirc.utils.AddOrRemoveTopicToSubs;
 import com.franckrj.respawnirc.utils.JVCParser;
@@ -72,8 +73,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     private ImageButton messageSendButton = null;
     private EditText messageSendEdit = null;
     private View messageSendLayout = null;
-    private String pseudoOfUser = "";
-    private String cookieListInAString = "";
+    private AccountManager.AccountInfos currentAccount = new AccountManager.AccountInfos();
     private String lastMessageSended = "";
     private AddOrRemoveThingToFavs currentTaskForFavs = null;
     private AddOrRemoveTopicToSubs currentTaskForSubs = null;
@@ -138,14 +138,14 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             if (messageSendButton.isEnabled() && topicStatus.lockReason == null) {
                 String tmpLastMessageSended = "";
 
-                if (!pseudoOfUser.isEmpty() && !messageSendEdit.getText().toString().isEmpty()) {
+                if (!currentAccount.pseudo.isEmpty() && !messageSendEdit.getText().toString().isEmpty()) {
                     if (!senderForMessages.getIsInEdit()) {
                         boolean messageIsSended = false;
                         if (topicStatus.listOfInputInAString != null) {
                             String tmpListOfInputToUse = JVCMessageToTopicSender.addPostTypeToListOfInput(topicStatus.listOfInputInAString, topicStatus.userCanPostAsModo && PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE));
                             messageSendButton.setEnabled(false);
                             tmpLastMessageSended = messageSendEdit.getText().toString();
-                            messageIsSended = senderForMessages.sendThisMessage(tmpLastMessageSended, pageNavigation.getCurrentPageLink(), tmpListOfInputToUse, cookieListInAString);
+                            messageIsSended = senderForMessages.sendThisMessage(tmpLastMessageSended, pageNavigation.getCurrentPageLink(), tmpListOfInputToUse, currentAccount.cookie);
                         }
 
                         if (!messageIsSended) {
@@ -154,10 +154,10 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                     } else {
                         messageSendButton.setEnabled(false);
                         tmpLastMessageSended = messageSendEdit.getText().toString();
-                        senderForMessages.sendEditMessage(tmpLastMessageSended, cookieListInAString);
+                        senderForMessages.sendEditMessage(tmpLastMessageSended, currentAccount.cookie);
                     }
                 } else {
-                    if (pseudoOfUser.isEmpty()) {
+                    if (currentAccount.pseudo.isEmpty()) {
                         Toast.makeText(ShowTopicActivity.this, R.string.errorConnectedNeededBeforePost, Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(ShowTopicActivity.this, R.string.errorMessageContentNeededForSend, Toast.LENGTH_LONG).show();
@@ -339,8 +339,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     }
 
     private void initializeSettings() {
-        pseudoOfUser = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER);
-        cookieListInAString = PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST);
+        currentAccount = AccountManager.getCurrentAccount();
         lastMessageSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_MESSAGE_SENDED);
         goToBottomOnLoadIsEnabled = PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_GO_TO_BOTTOM_ON_LOAD);
         linkTypeForInternalBrowser.setTypeFromString(PrefsManager.getString(PrefsManager.StringPref.Names.LINK_TYPE_FOR_INTERNAL_BROWSER));
@@ -412,7 +411,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         if (messageSendButton.isEnabled() && topicStatus.ajaxInfos.list != null) {
             messageSendButton.setEnabled(false);
             messageSendButton.setImageDrawable(ThemeManager.getDrawable(R.attr.themedContentEditIcon, this));
-            infoForEditAreGetted = senderForMessages.getInfosForEditMessage(messageID, topicStatus.ajaxInfos.list, cookieListInAString, useMessageToEdit);
+            infoForEditAreGetted = senderForMessages.getInfosForEditMessage(messageID, topicStatus.ajaxInfos.list, currentAccount.cookie, useMessageToEdit);
         }
 
         if (!infoForEditAreGetted) {
@@ -624,7 +623,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             pinItem.setTitle(R.string.pinTopic);
         }
 
-        if (topicStatus.isInFavs != null && !pseudoOfUser.isEmpty()) {
+        if (topicStatus.isInFavs != null && !currentAccount.pseudo.isEmpty()) {
             favItem.setEnabled(true);
             if (topicStatus.isInFavs) {
                 favItem.setTitle(R.string.removeFromFavs);
@@ -635,7 +634,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             favItem.setEnabled(false);
         }
 
-        if (topicStatus.subId != null && !pseudoOfUser.isEmpty()) {
+        if (topicStatus.subId != null && !currentAccount.pseudo.isEmpty()) {
             subItem.setEnabled(true);
             if (topicStatus.subId.isEmpty()) {
                 subItem.setTitle(R.string.subToTopic);
@@ -663,7 +662,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 if (topicStatus.isInFavs != null) {
                     if (currentTaskForFavs == null) {
                         currentTaskForFavs = new AddOrRemoveThingToFavs(!topicStatus.isInFavs, this);
-                        currentTaskForFavs.execute(JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), topicStatus.topicId, topicStatus.ajaxInfos.pref, cookieListInAString);
+                        currentTaskForFavs.execute(JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), topicStatus.topicId, topicStatus.ajaxInfos.pref, currentAccount.cookie);
                     } else {
                         Toast.makeText(ShowTopicActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
                     }
@@ -675,7 +674,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 if (topicStatus.subId != null) {
                     if (currentTaskForSubs == null) {
                         currentTaskForSubs = new AddOrRemoveTopicToSubs(topicStatus.subId.isEmpty(), this);
-                        currentTaskForSubs.execute(topicStatus.topicId, topicStatus.subId, topicStatus.ajaxInfos.sub, cookieListInAString);
+                        currentTaskForSubs.execute(topicStatus.topicId, topicStatus.subId, topicStatus.ajaxInfos.sub, currentAccount.cookie);
                     } else {
                         Toast.makeText(ShowTopicActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
                     }
@@ -689,14 +688,14 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                     newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_ID_FORUM, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()));
                     newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_ID_TOPIC, topicStatus.topicId);
                     newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_AJAX_MOD, topicStatus.ajaxInfos.mod);
-                    newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_COOKIES, cookieListInAString);
+                    newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_COOKIES, currentAccount.cookie);
                     startActivityForResult(newLockTopicIntent, LOCK_TOPIC_REQUEST_CODE);
                 } else {
-                    actionsForTopic.startUnlockThisTopic(topicStatus.ajaxInfos, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), topicStatus.topicId, cookieListInAString);
+                    actionsForTopic.startUnlockThisTopic(topicStatus.ajaxInfos, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), topicStatus.topicId, currentAccount.cookie);
                 }
                 return true;
             case R.id.action_change_pin_topic_value_showtopic:
-                actionsForTopic.startPinOrUnpinTopic(!topicStatus.topicIsPinned, topicStatus.ajaxInfos, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), topicStatus.topicId, cookieListInAString);
+                actionsForTopic.startPinOrUnpinTopic(!topicStatus.topicIsPinned, topicStatus.ajaxInfos, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), topicStatus.topicId, currentAccount.cookie);
                 return true;
             case R.id.action_open_in_browser_showtopic:
                 Utils.openCorrespondingBrowser(linkTypeForInternalBrowser, pageNavigation.getCurrentPageLink(), this);
@@ -749,12 +748,12 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     public boolean onMenuItemClickedInMessage(MenuItem item, JVCParser.MessageInfos fromThisMessage) {
         switch (item.getItemId()) {
             case R.id.menu_quote_message:
-                if (pseudoOfUser.isEmpty()) {
+                if (currentAccount.pseudo.isEmpty()) {
                     Toast.makeText(this, R.string.errorConnectNeeded, Toast.LENGTH_SHORT).show();
                 } else if (topicStatus.lockReason != null) {
                     Toast.makeText(this, R.string.errorTopicIsLocked, Toast.LENGTH_SHORT).show();
                 } else {
-                    actionsForTopic.startQuoteThisMessage(topicStatus.ajaxInfos, fromThisMessage, cookieListInAString);
+                    actionsForTopic.startQuoteThisMessage(topicStatus.ajaxInfos, fromThisMessage, currentAccount.cookie);
                 }
                 return true;
             case R.id.menu_edit_message:
@@ -770,10 +769,10 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
                 return true;
             case R.id.menu_delete_message:
-                actionsForTopic.startDeleteThisMessage(topicStatus.ajaxInfos, fromThisMessage, cookieListInAString);
+                actionsForTopic.startDeleteThisMessage(topicStatus.ajaxInfos, fromThisMessage, currentAccount.cookie);
                 return true;
             case R.id.menu_restore_message:
-                actionsForTopic.startRestoreThisMessage(topicStatus.ajaxInfos, fromThisMessage, cookieListInAString);
+                actionsForTopic.startRestoreThisMessage(topicStatus.ajaxInfos, fromThisMessage, currentAccount.cookie);
                 return true;
             case R.id.menu_kick_author_message:
                 Intent newKickPseudoIntent = new Intent(ShowTopicActivity.this, KickPseudoActivity.class);
@@ -782,11 +781,11 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_ID_FORUM, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()));
                 newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_ID_MESSAGE, String.valueOf(fromThisMessage.id));
                 newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_AJAX_MOD, topicStatus.ajaxInfos.mod);
-                newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_COOKIES, cookieListInAString);
+                newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_COOKIES, currentAccount.cookie);
                 startActivity(newKickPseudoIntent);
                 return true;
             case R.id.menu_dekick_author_message:
-                actionsForTopic.startDekickThisPseudo(fromThisMessage.pseudo, topicStatus.ajaxInfos, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), fromThisMessage.idAlias, cookieListInAString);
+                actionsForTopic.startDekickThisPseudo(fromThisMessage.pseudo, topicStatus.ajaxInfos, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), fromThisMessage.idAlias, currentAccount.cookie);
                 return true;
             default:
                 return false;
@@ -992,7 +991,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         newShowSurveyIntent.putExtra(ShowSurveyActivity.EXTRA_SURVEY_REPLYS_WITH_INFOS, listOfReplysWithInfos);
         newShowSurveyIntent.putExtra(ShowSurveyActivity.EXTRA_TOPIC_ID, topicId);
         newShowSurveyIntent.putExtra(ShowSurveyActivity.EXTRA_AJAX_INFOS, ajaxInfos);
-        newShowSurveyIntent.putExtra(ShowSurveyActivity.EXTRA_COOKIES, cookieListInAString);
+        newShowSurveyIntent.putExtra(ShowSurveyActivity.EXTRA_COOKIES, currentAccount.cookie);
         startActivity(newShowSurveyIntent);
     }
 
@@ -1002,7 +1001,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             Bundle argForFrag = new Bundle();
             MessageMenuDialogFragment messageMenuDialogFragment = new MessageMenuDialogFragment();
             argForFrag.putString(MessageMenuDialogFragment.ARG_PSEUDO_MESSAGE, messageClicked.pseudo);
-            argForFrag.putString(MessageMenuDialogFragment.ARG_PSEUDO_USER, pseudoOfUser);
+            argForFrag.putString(MessageMenuDialogFragment.ARG_PSEUDO_USER, currentAccount.pseudo);
             argForFrag.putString(MessageMenuDialogFragment.ARG_MESSAGE_ID, String.valueOf(messageClicked.id));
             argForFrag.putInt(MessageMenuDialogFragment.ARG_LINK_TYPE_FOR_INTERNAL_BROWSER, linkTypeForInternalBrowser.type);
             argForFrag.putString(MessageMenuDialogFragment.ARG_MESSAGE_CONTENT, messageClicked.messageNotParsed);

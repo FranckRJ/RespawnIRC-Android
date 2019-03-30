@@ -54,6 +54,7 @@ public class PrefsManager {
         addIntPref(IntPref.Names.CURRENT_TOPIC_MODE, "pref.currentTopicMode", AbsShowTopicFragment.MODE_FORUM);
         addIntPref(IntPref.Names.FORUM_FAV_ARRAY_SIZE, "pref.forumFavArraySize", 0);
         addIntPref(IntPref.Names.TOPIC_FAV_ARRAY_SIZE, "pref.topicFavArraySize", 0);
+        addIntPref(IntPref.Names.RESERVE_ACCOUNT_ARRAY_SIZE, "pref.reserveAccountArraySize", 0);
         addIntPref(IntPref.Names.LAST_ROW_SELECTED_INSERTSTUFF, "pref.lastRowSelecetdInsertstuff", 1);
         addIntPref(IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED, "pref.numberOfWebviewOpenSinceCacheCleared", 0);
         addIntPref(IntPref.Names.SHORTCUT_VERSION_NUMBER, "pref.shortcutVersionNumber", 0);
@@ -65,6 +66,9 @@ public class PrefsManager {
         addStringPref(StringPref.Names.FORUM_FAV_LINK, "pref.forumFavLink.", "");
         addStringPref(StringPref.Names.TOPIC_FAV_NAME, "pref.topicFavName.", "");
         addStringPref(StringPref.Names.TOPIC_FAV_LINK, "pref.topicFavLink.", "");
+        addStringPref(StringPref.Names.RESERVE_ACCOUNT_PSEUDO, "pref.reserveAccountPseudo.", "");
+        addStringPref(StringPref.Names.RESERVE_ACCOUNT_COOKIE, "pref.reserveAccountCookie.", "");
+        addStringPref(StringPref.Names.RESERVE_ACCOUNT_IS_MODO, "pref.reserveAccountIsModo.", "false");
         addStringPref(StringPref.Names.TOPIC_URL_TO_FETCH, "pref.topicUrlToFetch", "");
         addStringPref(StringPref.Names.FORUM_URL_TO_FETCH, "pref.forumUrlToFetch", "");
         addStringPref(StringPref.Names.PSEUDO_OF_AUTHOR_OF_TOPIC, "pref.pseudoOfAuthorOfTopic", "");
@@ -348,7 +352,7 @@ public class PrefsManager {
         public enum Names {
             LAST_ACTIVITY_VIEWED,
             CURRENT_TOPIC_MODE,
-            FORUM_FAV_ARRAY_SIZE, TOPIC_FAV_ARRAY_SIZE,
+            FORUM_FAV_ARRAY_SIZE, TOPIC_FAV_ARRAY_SIZE, RESERVE_ACCOUNT_ARRAY_SIZE,
             LAST_ROW_SELECTED_INSERTSTUFF,
             HEADER_COLOR_OF_LIGHT_THEME, PRIMARY_COLOR_OF_LIGHT_THEME, TOPIC_NAME_AND_ACCENT_COLOR_OF_LIGHT_THEME,
             ALT_COLOR_OF_LIGHT_THEME, SURVEY_COLOR_OF_LIGHT_THEME, DELETED_COLOR_OF_LIGHT_THEME,
@@ -384,6 +388,7 @@ public class PrefsManager {
             PSEUDO_OF_USER, COOKIES_LIST,
             LAST_MESSAGE_SENDED,
             FORUM_FAV_NAME, FORUM_FAV_LINK, TOPIC_FAV_NAME, TOPIC_FAV_LINK,
+            RESERVE_ACCOUNT_PSEUDO, RESERVE_ACCOUNT_COOKIE, RESERVE_ACCOUNT_IS_MODO,
             TOPIC_URL_TO_FETCH, FORUM_URL_TO_FETCH, PSEUDO_OF_AUTHOR_OF_TOPIC,
             OLD_URL_FOR_TOPIC,
             LAST_TOPIC_TITLE_SENDED, LAST_TOPIC_CONTENT_SENDED, LAST_SURVEY_TITLE_SENDED, LAST_SURVEY_REPLY_SENDED_IN_A_STRING,

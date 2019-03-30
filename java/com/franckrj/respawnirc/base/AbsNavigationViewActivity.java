@@ -27,6 +27,7 @@ import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.SettingsActivity;
 import com.franckrj.respawnirc.jvcforumlist.SelectForumInListActivity;
 import com.franckrj.respawnirc.dialogs.RefreshFavDialogFragment;
+import com.franckrj.respawnirc.utils.AccountManager;
 import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
@@ -68,7 +69,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected ImageView contextConnectImageNavigation = null;
     protected ActionBarDrawerToggle toggleForDrawer = null;
     protected int lastItemSelected = -1;
-    protected String pseudoOfUser = "";
+    protected AccountManager.AccountInfos currentAccount = new AccountManager.AccountInfos();
     protected boolean isInNavigationConnectMode = false;
     protected String newFavSelected = "";
     protected boolean newFavIsSelectedByLongClick = false;
@@ -76,7 +77,6 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected int currentNavigationMenuMode = -1;
     protected ArrayList<NavigationMenuAdapter.MenuItemInfo> currentListOfMenuItem = null;
     protected boolean backIsOpenDrawer = false;
-    protected boolean userIsModo = false;
     protected boolean drawerIsDisabled = false;
 
     protected final AdapterView.OnItemClickListener itemInNavigationClickedListener = new AdapterView.OnItemClickListener() {
@@ -86,13 +86,13 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             int currentGroupId = adapterForNavigationMenu.getGroupIdOfRow((int) id);
 
             if ((currentItemId == ITEM_ID_REFRESH_FORUM_FAV || currentItemId == ITEM_ID_REFRESH_TOPIC_FAV) && currentGroupId == GROUP_ID_BASIC) {
-                if (!pseudoOfUser.isEmpty()) {
+                if (!currentAccount.pseudo.isEmpty()) {
                     if (!getSupportFragmentManager().isStateSaved()) {
                         Bundle argForFrag = new Bundle();
                         RefreshFavDialogFragment refreshFavsDialogFragment = new RefreshFavDialogFragment();
 
-                        argForFrag.putString(RefreshFavDialogFragment.ARG_PSEUDO, pseudoOfUser);
-                        argForFrag.putString(RefreshFavDialogFragment.ARG_COOKIE_LIST, PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
+                        argForFrag.putString(RefreshFavDialogFragment.ARG_PSEUDO, currentAccount.pseudo);
+                        argForFrag.putString(RefreshFavDialogFragment.ARG_COOKIE_LIST, currentAccount.cookie);
                         if (currentItemId == ITEM_ID_REFRESH_FORUM_FAV) {
                             argForFrag.putInt(RefreshFavDialogFragment.ARG_FAV_TYPE, RefreshFavDialogFragment.FAV_FORUM);
                         } else {
@@ -152,7 +152,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     private final View.OnClickListener headerClickedListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (!pseudoOfUser.isEmpty()) {
+            if (!currentAccount.pseudo.isEmpty()) {
                 isInNavigationConnectMode = !isInNavigationConnectMode;
                 updateNavigationMenu();
             } else {
@@ -293,8 +293,8 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     private void updateNavigationMenu() {
         int newNavigationMenuMode;
 
-        if (!pseudoOfUser.isEmpty()) {
-            pseudoTextNavigation.setText(pseudoOfUser);
+        if (!currentAccount.pseudo.isEmpty()) {
+            pseudoTextNavigation.setText(currentAccount.pseudo);
         } else {
             pseudoTextNavigation.setText(R.string.connectToJVC);
             isInNavigationConnectMode = false;
@@ -331,13 +331,13 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             updateFavsInNavigationMenu(false);
             adapterForNavigationMenu.setRowSelected(adapterForNavigationMenu.getPositionDependingOnId(idOfBaseActivity, GROUP_ID_BASIC));
 
-            if (pseudoOfUser.isEmpty()) {
+            if (currentAccount.pseudo.isEmpty()) {
                 contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_add_circle_outline_dark));
             } else {
                 contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_expand_more_dark));
             }
 
-            if (userIsModo && !pseudoOfUser.isEmpty()) {
+            if (currentAccount.isModo && !currentAccount.pseudo.isEmpty()) {
                 pseudoTextNavigation.setTextColor(Undeprecator.resourcesGetColor(getResources(), R.color.colorPseudoModoThemeDark));
 
                 if (positionOfShowGTAItem == -1) {
@@ -441,8 +441,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         initializeListsOfMenuItem();
         initializeViewAndToolbar();
 
-        pseudoOfUser = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER);
-        userIsModo = PrefsManager.getBool(PrefsManager.BoolPref.Names.USER_IS_MODO);
+        currentAccount = AccountManager.getCurrentAccount();
 
         toggleForDrawer = new ActionBarDrawerToggle(this, layoutForDrawer, R.string.openDrawerContentDescRes, R.string.closeDrawerContentDescRes) {
             @Override
@@ -477,7 +476,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                             Utils.openLinkInInternalBrowser("http://www.jeuxvideo.com/messages-prives/boite-reception.php", AbsNavigationViewActivity.this);
                             break;
                         case ITEM_ID_SHOWNOTIF:
-                            Utils.openLinkInInternalBrowser("http://www.jeuxvideo.com/profil/" + pseudoOfUser.toLowerCase() + "?mode=abonnements", AbsNavigationViewActivity.this);
+                            Utils.openLinkInInternalBrowser("http://www.jeuxvideo.com/profil/" + currentAccount.pseudo.toLowerCase() + "?mode=abonnements", AbsNavigationViewActivity.this);
                             break;
                         case ITEM_ID_SHOWGTA:
                             Utils.openLinkInInternalBrowser("http://www.jeuxvideo.com/gta/hp_alerte.php", AbsNavigationViewActivity.this);
@@ -540,13 +539,11 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     @Override
     public void onResume() {
         super.onResume();
-        String tmpPseudoOfUser = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER);
-        boolean tmpUserIsModo = PrefsManager.getBool(PrefsManager.BoolPref.Names.USER_IS_MODO);
+        AccountManager.AccountInfos tmpAccount = AccountManager.getCurrentAccount();
         backIsOpenDrawer = PrefsManager.getBool(PrefsManager.BoolPref.Names.BACK_IS_OPEN_DRAWER);
 
-        if (!tmpPseudoOfUser.equals(pseudoOfUser) || tmpUserIsModo != userIsModo) {
-            pseudoOfUser = tmpPseudoOfUser;
-            userIsModo = tmpUserIsModo;
+        if (!currentAccount.equals(tmpAccount)) {
+            currentAccount = tmpAccount;
             updateNavigationMenu();
         }
     }
