@@ -44,12 +44,31 @@ public class AccountManager {
         addOrReplaceThisAccountInReserveList(getCurrentAccount());
         removeAccountFromReserveList(newCurrentAccount.pseudo);
         setCurrentAccount(newCurrentAccount);
+        AccountManager.saveListOfAccountsInReserve();
     }
 
     public static void setCurrentAccountIsModo(boolean newVal) {
         currentAccount = new AccountInfos(currentAccount.pseudo, currentAccount.cookie, newVal);
         PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, currentAccount.isModo);
         PrefsManager.applyChanges();
+    }
+
+    public static AccountInfos getReserveAccountAtIndex(int index) {
+        if (index >= listOfAccountsInReserve.size()) {
+            return new AccountInfos();
+        } else {
+            return (listOfAccountsInReserve.get(index));
+        }
+    }
+
+    public static List<String> getListOfReserveAccountPseudo() {
+        List<String> listOfPseudo = new ArrayList<>();
+
+        for (AccountInfos thisAccount : listOfAccountsInReserve) {
+            listOfPseudo.add(thisAccount.pseudo);
+        }
+
+        return listOfPseudo;
     }
 
     public static void loadListOfAccountsInReserve() {

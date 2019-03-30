@@ -197,6 +197,18 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         adapterForForum.notifyDataSetChanged();
     }
 
+    public void refreshContentBecauseAccountChanged() {
+        AccountManager.AccountInfos currentAccount = AccountManager.getCurrentAccount();
+
+        getterForForum.stopAllCurrentTask();
+        getterForForum.setCookieListInAString(currentAccount.cookie);
+        pseudoOfUserInLC = currentAccount.pseudo.toLowerCase();
+        adapterForForum.removeAllItems();
+        adapterForForum.notifyDataSetChanged();
+
+        refreshContent();
+    }
+
     @Override
     public void refreshContent() {
         reloadAllForum(true);

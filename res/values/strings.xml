@@ -56,7 +56,7 @@
     <string name="showNoelshackImageTitle">Afficher les miniatures</string>
     <string name="errorInvalidLink">Erreur, lien invalide.</string>
     <string name="pastLastMessageSended">Coller le dernier message envoyé</string>
-    <string name="connectWithAnotherAccount">Changer de compte</string>
+    <string name="addAnAccount">Ajouter un compte</string>
     <string name="loadingFavs">Chargement des favoris…</string>
     <string name="forumFav">Forums favoris</string>
     <string name="errorDuringFetchFavs">Erreur durant la récupération des favoris.</string>
@@ -316,6 +316,7 @@
     <string name="headerColor">Couleur du header</string>
     <string name="invertHeaderTextColorTitle">Inverser la couleur du texte du header</string>
     <string name="brightenAltColorTitle">Éclaircir la couleur alternative des messages</string>
+    <string name="accounts">Comptes</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>

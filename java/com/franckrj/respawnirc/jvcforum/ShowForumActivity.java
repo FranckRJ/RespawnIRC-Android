@@ -20,7 +20,6 @@ import com.franckrj.respawnirc.jvcforum.jvcforumtools.JVCForumGetter;
 import com.franckrj.respawnirc.jvcforum.jvcforumtools.ShowForumFragment;
 import com.franckrj.respawnirc.base.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.PageNavigationUtil;
-import com.franckrj.respawnirc.utils.AccountManager;
 import com.franckrj.respawnirc.utils.AddOrRemoveThingToFavs;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.base.AbsNavigationViewActivity;
@@ -397,6 +396,15 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         newShowForumInfosIntent.putExtra(ShowForumInfosActivity.EXTRA_FORUM_LINK, pageNavigation.getFirstPageLink());
         newShowForumInfosIntent.putExtra(ShowForumInfosActivity.EXTRA_COOKIES, currentAccount.cookie);
         startActivity(newShowForumInfosIntent);
+    }
+
+    @Override
+    protected void updateAccountDependentInfos() {
+        forumStatus.numberOfMp = null;
+        forumStatus.numberOfNotif = null;
+        if (getCurrentFragment() != null) {
+            getCurrentFragment().refreshContentBecauseAccountChanged();
+        }
     }
 
     @Override
