@@ -7,18 +7,28 @@ public class AccountManager {
     private static List<AccountInfos> listOfAccountsInReserve = new ArrayList<>();
     private static AccountInfos currentAccount = null;
 
-    public static void addOrReplaceThisAccountInReserveList(AccountInfos newAccount) {
-        removeAccountFromReserveList(newAccount.pseudo);
-        listOfAccountsInReserve.add(newAccount);
+    public static void addOrReplaceThisAccountInReserveList(AccountInfos newAccount, int positionOfNewAccount) {
+        int indexIfExisted = removeAccountFromReserveList(newAccount.pseudo);
+
+        if (indexIfExisted >= 0 && indexIfExisted < positionOfNewAccount) {
+            --positionOfNewAccount;
+        }
+
+        if (positionOfNewAccount < 0 || positionOfNewAccount > listOfAccountsInReserve.size()) {
+            listOfAccountsInReserve.add(newAccount);
+        } else {
+            listOfAccountsInReserve.add(positionOfNewAccount, newAccount);
+        }
     }
 
-    public static void removeAccountFromReserveList(String accountPseudo) {
+    public static int removeAccountFromReserveList(String accountPseudo) {
         for (int i = 0; i < listOfAccountsInReserve.size(); ++i) {
             if (listOfAccountsInReserve.get(i).pseudo.toLowerCase().equals(accountPseudo.toLowerCase())) {
                 listOfAccountsInReserve.remove(i);
-                break;
+                return i;
             }
         }
+        return -1;
     }
 
     public static AccountInfos getCurrentAccount() {
@@ -40,9 +50,9 @@ public class AccountManager {
         PrefsManager.applyChanges();
     }
 
-    public static void replaceCurrentAccountAndAddInReserve(AccountInfos newCurrentAccount) {
-        addOrReplaceThisAccountInReserveList(getCurrentAccount());
+    public static void replaceCurrentAccountAndAddInReserve(AccountInfos newCurrentAccount, int positionOfNewAccount) {
         removeAccountFromReserveList(newCurrentAccount.pseudo);
+        addOrReplaceThisAccountInReserveList(getCurrentAccount(), positionOfNewAccount);
         setCurrentAccount(newCurrentAccount);
         AccountManager.saveListOfAccountsInReserve();
     }
@@ -54,7 +64,7 @@ public class AccountManager {
     }
 
     public static AccountInfos getReserveAccountAtIndex(int index) {
-        if (index >= listOfAccountsInReserve.size()) {
+        if (index < 0 || index >= listOfAccountsInReserve.size()) {
             return new AccountInfos();
         } else {
             return (listOfAccountsInReserve.get(index));

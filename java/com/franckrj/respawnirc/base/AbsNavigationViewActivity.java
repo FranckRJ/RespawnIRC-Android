@@ -124,7 +124,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                 adapterForNavigationMenu.setRowSelected((int) id);
             } else if (currentGroupId == GROUP_ID_ACCOUNT_RESERVE) {
                 lastItemSelected = ITEM_ID_RESERVE_ACCOUNT_SELECTED;
-                AccountManager.replaceCurrentAccountAndAddInReserve(AccountManager.getReserveAccountAtIndex(currentItemId));
+                AccountManager.replaceCurrentAccountAndAddInReserve(AccountManager.getReserveAccountAtIndex(currentItemId), currentItemId);
                 currentAccount = AccountManager.getCurrentAccount();
                 pseudoTextNavigation.setText(currentAccount.pseudo);
                 updateMpAndNotifNumberShowed(null, null);
