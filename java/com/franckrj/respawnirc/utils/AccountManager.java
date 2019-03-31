@@ -55,7 +55,9 @@ public class AccountManager {
 
     public static void replaceCurrentAccountAndAddInReserve(AccountInfos newCurrentAccount, int positionOfNewAccount) {
         removeAccountFromReserveList(newCurrentAccount.pseudo);
-        addOrReplaceThisAccountInReserveList(getCurrentAccount(), positionOfNewAccount);
+        if (!getCurrentAccount().pseudo.toLowerCase().equals(newCurrentAccount.pseudo.toLowerCase())) {
+            addOrReplaceThisAccountInReserveList(getCurrentAccount(), positionOfNewAccount);
+        }
         setCurrentAccount(newCurrentAccount);
         AccountManager.saveListOfAccountsInReserve();
     }
