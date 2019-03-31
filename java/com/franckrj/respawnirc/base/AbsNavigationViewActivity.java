@@ -126,9 +126,9 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                 lastItemSelected = ITEM_ID_RESERVE_ACCOUNT_SELECTED;
                 AccountManager.replaceCurrentAccountAndAddInReserve(AccountManager.getReserveAccountAtIndex(currentItemId), currentItemId);
                 currentAccount = AccountManager.getCurrentAccount();
-                pseudoTextNavigation.setText(currentAccount.pseudo);
                 updateMpAndNotifNumberShowed(null, null);
                 updateAccountDependentInfos();
+                updatePseudoFromCurrentAccount();
                 updateAccountInReserveInNavigationMenu(false);
             } else {
                 lastItemSelected = currentItemId;
@@ -312,13 +312,25 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         }
     }
 
-    private void updateNavigationMenu() {
-        int newNavigationMenuMode;
-
+    private void updatePseudoFromCurrentAccount() {
         if (!currentAccount.pseudo.isEmpty()) {
             pseudoTextNavigation.setText(currentAccount.pseudo);
         } else {
             pseudoTextNavigation.setText(R.string.connectToJVC);
+        }
+
+        if (currentAccount.isModo && !currentAccount.pseudo.isEmpty()) {
+            pseudoTextNavigation.setTextColor(Undeprecator.resourcesGetColor(getResources(), R.color.colorPseudoModoThemeDark));
+        } else {
+            pseudoTextNavigation.setTextColor(Color.WHITE);
+        }
+    }
+
+    private void updateNavigationMenu() {
+        int newNavigationMenuMode;
+
+        updatePseudoFromCurrentAccount();
+        if (currentAccount.pseudo.isEmpty()) {
             isInNavigationConnectMode = false;
         }
 
@@ -360,15 +372,11 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             }
 
             if (currentAccount.isModo && !currentAccount.pseudo.isEmpty()) {
-                pseudoTextNavigation.setTextColor(Undeprecator.resourcesGetColor(getResources(), R.color.colorPseudoModoThemeDark));
-
                 if (positionOfShowGTAItem == -1) {
                     int positionOfPrefItem = adapterForNavigationMenu.getPositionDependingOnId(ITEM_ID_PREF, GROUP_ID_BASIC);
                     currentListOfMenuItem.add(positionOfPrefItem, showGTAMenuItem);
                 }
             } else {
-                pseudoTextNavigation.setTextColor(Color.WHITE);
-
                 if (positionOfShowGTAItem != -1) {
                     currentListOfMenuItem.remove(positionOfShowGTAItem);
                 }
