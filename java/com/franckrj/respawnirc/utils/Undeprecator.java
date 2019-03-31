@@ -61,13 +61,14 @@ public class Undeprecator {
         settings.setSavePassword(newVal);
     }
 
-    public static void cookieManagerRemoveAllCookies(CookieManager manager) {
+    public static void cookieManagerRemoveAllCookiesAndSetDefault(CookieManager manager) {
         if (Build.VERSION.SDK_INT >= 21) {
             manager.removeAllCookies(null);
         } else {
             //noinspection deprecation
             manager.removeAllCookie();
         }
+        manager.setCookie("http://www.jeuxvideo.com", "euconsent=set");
     }
 
     public static void vibratorVibrate(Vibrator vibratorService, long[] pattern, int repeat) {

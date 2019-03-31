@@ -88,9 +88,7 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
         helpDialogFragment = new HelpConnectDialogFragment();
         saveCookieButton.setOnClickListener(saveCookieClickedListener);
 
-        Undeprecator.cookieManagerRemoveAllCookies(CookieManager.getInstance());
-        //suppression de la notification d'utilisation de cookie de JVC dans la webview
-        CookieManager.getInstance().setCookie("http://www.jeuxvideo.com/", "wbCookieNotifier=1");
+        Undeprecator.cookieManagerRemoveAllCookiesAndSetDefault(CookieManager.getInstance());
 
         jvcWebView.setWebViewClient(new WebViewClient());
         jvcWebView.setWebChromeClient(new WebChromeClient());
