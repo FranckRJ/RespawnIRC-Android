@@ -110,7 +110,6 @@ public class PrefsManager {
         addBoolPref(BoolPref.Names.HIDE_TOTALLY_MESSAGES_OF_IGNORED_PSEUDOS, currentContext.getString(R.string.settingsHideTotallyMessagesOfIgnoredPseudos), true);
         addBoolPref(BoolPref.Names.ENABLE_FAST_REFRESH_OF_IMAGES, currentContext.getString(R.string.settingsEnableFastRefreshOfImages), false);
         addBoolPref(BoolPref.Names.ENABLE_COLOR_DELETED_MESSAGES, currentContext.getString(R.string.settingsEnableColorDeletedMessages), true);
-        addBoolPref(BoolPref.Names.COLOR_PSEUDO_OF_USER_IN_MESSAGE, currentContext.getString(R.string.settingsColorPseudoOfUserInMessage), true);
         addBoolPref(BoolPref.Names.BACK_IS_OPEN_DRAWER, currentContext.getString(R.string.settingsBackIsOpenDrawer), false);
         addBoolPref(BoolPref.Names.SAVE_LAST_ROW_USED_INSERTSTUFF, currentContext.getString(R.string.settingsSaveLastRowUsedInsertstuff), true);
         addBoolPref(BoolPref.Names.INVERT_TOOLBAR_TEXT_COLOR, currentContext.getString(R.string.settingsInvertToolbarTextColor), false);
@@ -143,6 +142,7 @@ public class PrefsManager {
         addStringPref(StringPref.Names.MESSAGE_INFOS_FONT_SIZE, currentContext.getString(R.string.settingsMessageInfosFontSize), "14");
         addStringPref(StringPref.Names.MESSAGE_SIGNATURE_FONT_SIZE, currentContext.getString(R.string.settingsMessageSignatureFontSize), "14");
         addStringPref(StringPref.Names.TYPE_OF_PSEUDO_TO_COLOR_IN_INFO, currentContext.getString(R.string.settingsTypeOfPseudoToColorInInfo), String.valueOf(PseudoColorType.ALL_ACCOUNTS));
+        addStringPref(StringPref.Names.TYPE_OF_PSEUDO_TO_COLOR_IN_MESSAGE, currentContext.getString(R.string.settingsTypeOfPseudoToColorInMessage), String.valueOf(PseudoColorType.ALL_ACCOUNTS));
     }
 
     public static boolean getBool(BoolPref.Names prefName) {
@@ -327,7 +327,6 @@ public class PrefsManager {
             USER_IS_MODO, POST_AS_MODO_WHEN_POSSIBLE,
             IGNORE_TOPIC_TOO, HIDE_TOTALLY_MESSAGES_OF_IGNORED_PSEUDOS,
             ENABLE_FAST_REFRESH_OF_IMAGES,
-            COLOR_PSEUDO_OF_USER_IN_MESSAGE,
             BACK_IS_OPEN_DRAWER,
             SAVE_LAST_ROW_USED_INSERTSTUFF,
             INVERT_TOOLBAR_TEXT_COLOR,
@@ -402,7 +401,7 @@ public class PrefsManager {
             SAVE_MESSAGES_AND_TOPICS_AS_DRAFT_TYPE,
             MESSAGE_DRAFT, TOPIC_TITLE_DRAFT, TOPIC_CONTENT_DRAFT, SURVEY_TITLE_DRAFT, SURVEY_REPLY_IN_A_STRING_DRAFT,
             TOPIC_TITLE_FONT_SIZE, TOPIC_INFOS_FONT_SIZE, MESSAGE_FONT_SIZE, MESSAGE_INFOS_FONT_SIZE, MESSAGE_SIGNATURE_FONT_SIZE,
-            TYPE_OF_PSEUDO_TO_COLOR_IN_INFO
+            TYPE_OF_PSEUDO_TO_COLOR_IN_INFO, TYPE_OF_PSEUDO_TO_COLOR_IN_MESSAGE
         }
     }
 

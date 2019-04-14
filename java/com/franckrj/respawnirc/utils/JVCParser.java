@@ -1058,8 +1058,10 @@ public final class JVCParser {
             ToolForParsing.removeOverlyQuoteInPrettyMessage(messageInBuilder, settings.maxNumberOfOverlyQuotes);
         }
 
-        if (!settings.pseudoOfUser.isEmpty() && settings.colorPseudoOfUserInMessage) {
+        if (settings.typeOfPseudoToColorInMessage.type == PrefsManager.PseudoColorType.CURRENT_ONLY && !settings.pseudoOfUser.isEmpty()) {
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, Pattern.compile("(?i)(?<!\\w)" + settings.pseudoOfUser.replace("[", "\\[").replace("]", "\\]") + "(?!\\w)(?![^<>]*(>|</a>))"), 0, "<font color=\"" + settings.colorPseudoUser + "\">", "</font>", null, null);
+        } else if (settings.typeOfPseudoToColorInMessage.type == PrefsManager.PseudoColorType.ALL_ACCOUNTS) {
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, Pattern.compile("(?i)(?<!\\w)" + AccountManager.getAllAccountsPseudoRegex() + "(?!\\w)(?![^<>]*(>|</a>))"), 0, "<font color=\"" + settings.colorPseudoUser + "\">", "</font>", null, null);
         }
 
         return messageInBuilder.toString();
@@ -2071,7 +2073,7 @@ public final class JVCParser {
         public String colorPseudoAdmin;
         public int maxNumberOfOverlyQuotes = 0;
         public PrefsManager.PseudoColorType typeOfPseudoToColorInInfoLine = new PrefsManager.PseudoColorType(PrefsManager.PseudoColorType.ALL_ACCOUNTS);
-        public boolean colorPseudoOfUserInMessage = true;
+        public PrefsManager.PseudoColorType typeOfPseudoToColorInMessage = new PrefsManager.PseudoColorType(PrefsManager.PseudoColorType.ALL_ACCOUNTS);
         public boolean applyMarkToPseudoAuthor = false;
         public boolean showNoelshackImages = false;
         public boolean transformStickerToSmiley = false;

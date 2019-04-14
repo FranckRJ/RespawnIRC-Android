@@ -8,6 +8,7 @@ import java.util.List;
 public class AccountManager {
     private static List<AccountInfos> listOfAccountsInReserve = new ArrayList<>();
     private static AccountInfos currentAccount = null;
+    private static String allAccountsPseudoRegex = null;
 
     public static void addOrReplaceThisAccountInReserveList(AccountInfos newAccount, int positionOfNewAccount) {
         int indexIfExisted = removeAccountFromReserveList(newAccount.pseudo);
@@ -21,9 +22,11 @@ public class AccountManager {
         } else {
             listOfAccountsInReserve.add(positionOfNewAccount, newAccount);
         }
+        allAccountsPseudoRegex = null;
     }
 
     public static int removeAccountFromReserveList(String accountPseudo) {
+        allAccountsPseudoRegex = null;
         for (int i = 0; i < listOfAccountsInReserve.size(); ++i) {
             if (listOfAccountsInReserve.get(i).pseudo.toLowerCase().equals(accountPseudo.toLowerCase())) {
                 listOfAccountsInReserve.remove(i);
@@ -44,6 +47,23 @@ public class AccountManager {
         return currentAccount;
     }
 
+    public static String getAllAccountsPseudoRegex() {
+        if (allAccountsPseudoRegex == null) {
+            StringBuilder strBuilder = new StringBuilder();
+            if (!getCurrentAccount().pseudo.isEmpty()) {
+                strBuilder.append("(?:").append(getCurrentAccount().pseudo.toLowerCase().replace("[", "\\[").replace("]", "\\]"));
+                for (AccountInfos thisAccount : listOfAccountsInReserve) {
+                    if (!thisAccount.pseudo.isEmpty()) {
+                        strBuilder.append("|").append(thisAccount.pseudo.toLowerCase().replace("[", "\\[").replace("]", "\\]"));
+                    }
+                }
+                strBuilder.append(")");
+            }
+            allAccountsPseudoRegex = strBuilder.toString();
+        }
+        return allAccountsPseudoRegex;
+    }
+
     public static void setCurrentAccount(AccountInfos newCurrentAccount) {
         currentAccount = new AccountInfos(newCurrentAccount.pseudo, newCurrentAccount.cookie, newCurrentAccount.isModo);
         Undeprecator.cookieManagerRemoveAllCookiesAndSetDefault(CookieManager.getInstance());
@@ -51,6 +71,7 @@ public class AccountManager {
         PrefsManager.putString(PrefsManager.StringPref.Names.COOKIES_LIST, currentAccount.cookie);
         PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, currentAccount.isModo);
         PrefsManager.applyChanges();
+        allAccountsPseudoRegex = null;
     }
 
     public static void replaceCurrentAccountAndAddInReserve(AccountInfos newCurrentAccount, int positionOfNewAccount) {
@@ -60,6 +81,7 @@ public class AccountManager {
         }
         setCurrentAccount(newCurrentAccount);
         AccountManager.saveListOfAccountsInReserve();
+        allAccountsPseudoRegex = null;
     }
 
     public static void setCurrentAccountIsModo(boolean newVal) {
@@ -111,6 +133,7 @@ public class AccountManager {
             boolean isModo = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.RESERVE_ACCOUNT_IS_MODO, String.valueOf(i)).equals("true");
             listOfAccountsInReserve.add(new AccountInfos(pseudo, cookie, isModo));
         }
+        allAccountsPseudoRegex = null;
     }
 
     public static void saveListOfAccountsInReserve() {

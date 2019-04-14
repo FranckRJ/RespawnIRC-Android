@@ -210,8 +210,8 @@
     <string name="surveyTitlePlaceholder">(vide pour ne pas créer de sondage)</string>
     <string name="pressBackTwoTimesToLeaveSurvey">Appuyez une deuxième fois sur retour pour quitter sans valider le sondage (les modifications seront perdues).</string>
     <string name="kickSuccessful">Kick effectué.</string>
-    <string name="typeOfPseudoToColorInInfoTitle">Colorer les pseudos de :</string>
-    <string name="colorPseudoOfUserInMessageTitle">Colorer votre pseudo dans les messages</string>
+    <string name="typeOfPseudoToColorInInfoTitle">Colorer le pseudo de :</string>
+    <string name="typeOfPseudoToColorInMessageTitle">Colorer dans les messages le pseudo de :</string>
     <string name="backIsOpenDrawerTitle">Retour pour ouvrir le menu latéral</string>
     <string name="gta">GTA</string>
     <string name="avatarSizeTitle">Taille des avatars (en dp)</string>

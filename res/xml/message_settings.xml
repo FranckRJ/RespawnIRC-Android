@@ -24,9 +24,12 @@
             android:entries="@array/choicesForPseudoColorReadable"
             android:entryValues="@array/threeChoicesValue"/>
 
-        <CheckBoxPreference
-            android:key="@string/settingsColorPseudoOfUserInMessage"
-            android:title="@string/colorPseudoOfUserInMessageTitle"/>
+        <ListPreference
+            android:key="@string/settingsTypeOfPseudoToColorInMessage"
+            android:title="@string/typeOfPseudoToColorInMessageTitle"
+            android:summary="%s"
+            android:entries="@array/choicesForPseudoColorReadable"
+            android:entryValues="@array/threeChoicesValue"/>
     </PreferenceCategory>
 
     <PreferenceCategory

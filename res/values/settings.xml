@@ -41,7 +41,6 @@
     <string name="settingsHideTotallyMessagesOfIgnoredPseudos" translatable="false">settings.hideTotallyMessagesOfIgnoredPseudos</string>
     <string name="settingsEnableFastRefreshOfImages" translatable="false">settings.enableFastRefreshOfImages</string>
     <string name="settingsEnableColorDeletedMessages" translatable="false">settings.enableColorDeletedMessages</string>
-    <string name="settingsColorPseudoOfUserInMessage" translatable="false">settings.colorPseudoOfUserInMessage</string>
     <string name="settingsBackIsOpenDrawer" translatable="false">settings.backIsOpenDrawer</string>
     <string name="settingsAvatarSize" translatable="false">settings.avatarSize</string>
     <string name="settingsStickerSize" translatable="false">settings.stickerSize</string>
@@ -65,4 +64,5 @@
     <string name="settingsHeaderColorOfLightTheme" translatable="false">settings.customColor.headerColorOfLightTheme</string>
     <string name="settingsBrightenAltColor" translatable="false">settings.customColor.brightenAltColor</string>
     <string name="settingsTypeOfPseudoToColorInInfo" translatable="false">settings.typeOfPseudoToColorInInfo</string>
+    <string name="settingsTypeOfPseudoToColorInMessage" translatable="false">settings.typeOfPseudoToColorInMessage</string>
 </resources>

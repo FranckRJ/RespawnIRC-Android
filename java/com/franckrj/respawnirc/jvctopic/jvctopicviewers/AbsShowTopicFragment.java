@@ -219,7 +219,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         currentSettings.enableAlphaInNoelshackMini = PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_ALPHA_IN_NOELSHACK_MINI);
         currentSettings.pseudoOfUser = AccountManager.getCurrentAccount().pseudo;
         currentSettings.typeOfPseudoToColorInInfoLine.setTypeFromString(PrefsManager.getString(PrefsManager.StringPref.Names.TYPE_OF_PSEUDO_TO_COLOR_IN_INFO));
-        currentSettings.colorPseudoOfUserInMessage = PrefsManager.getBool(PrefsManager.BoolPref.Names.COLOR_PSEUDO_OF_USER_IN_MESSAGE);
+        currentSettings.typeOfPseudoToColorInMessage.setTypeFromString(PrefsManager.getString(PrefsManager.StringPref.Names.TYPE_OF_PSEUDO_TO_COLOR_IN_MESSAGE));
         absGetterForTopic.setCookieListInAString(AccountManager.getCurrentAccount().cookie);
         smoothScrollIsEnabled = PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_SMOOTH_SCROLL);
         adapterForTopic.setShowSpoilDefault(PrefsManager.getBool(PrefsManager.BoolPref.Names.DEFAULT_SHOW_SPOIL_VAL));
