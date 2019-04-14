@@ -123,6 +123,7 @@ public class PrefsManager {
         addIntPref(IntPref.Names.ALT_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsAltColorOfLightTheme), 0);
         addIntPref(IntPref.Names.SURVEY_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsSurveyColorOfLightTheme), 0);
         addIntPref(IntPref.Names.DELETED_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsDeletedColorOfLightTheme), 0);
+        addIntPref(IntPref.Names.PSEUDO_USER_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsPseudoUserColorOfLightTheme), 0);
 
         addStringPref(StringPref.Names.MAX_NUMBER_OF_OVERLY_QUOTE, currentContext.getString(R.string.settingsMaxNumberOfOverlyQuote), "2", 0, 15);
         addStringPref(StringPref.Names.SHOW_AVATAR_MODE_FORUM, currentContext.getString(R.string.settingsShowAvatarModeForum), String.valueOf(ShowImageType.ALWAYS));
@@ -354,7 +355,8 @@ public class PrefsManager {
             HEADER_COLOR_OF_LIGHT_THEME, PRIMARY_COLOR_OF_LIGHT_THEME, TOPIC_NAME_AND_ACCENT_COLOR_OF_LIGHT_THEME,
             ALT_COLOR_OF_LIGHT_THEME, SURVEY_COLOR_OF_LIGHT_THEME, DELETED_COLOR_OF_LIGHT_THEME,
             NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED,
-            SHORTCUT_VERSION_NUMBER
+            SHORTCUT_VERSION_NUMBER,
+            PSEUDO_USER_COLOR_OF_LIGHT_THEME
         }
     }
 

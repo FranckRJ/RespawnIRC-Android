@@ -39,6 +39,12 @@
             app:pref_colors="@array/choicesForTopicNameAndAccentColor"/>
 
         <ColorPickerPreference
+            android:key="@string/settingsPseudoUserColorOfLightTheme"
+            android:title="@string/pseudoUserColorTitle"
+            app:pref_currentColor="@color/defaultColorPseudoUserThemeLight"
+            app:pref_colors="@array/choicesForPseudoUserColor"/>
+
+        <ColorPickerPreference
             android:key="@string/settingsAltColorOfLightTheme"
             android:title="@string/altColorOfMessages"
             app:pref_currentColor="@color/defaultColorAltThemeLight"

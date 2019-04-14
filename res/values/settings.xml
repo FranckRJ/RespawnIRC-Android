@@ -65,4 +65,5 @@
     <string name="settingsBrightenAltColor" translatable="false">settings.customColor.brightenAltColor</string>
     <string name="settingsTypeOfPseudoToColorInInfo" translatable="false">settings.typeOfPseudoToColorInInfo</string>
     <string name="settingsTypeOfPseudoToColorInMessage" translatable="false">settings.typeOfPseudoToColorInMessage</string>
+    <string name="settingsPseudoUserColorOfLightTheme" translatable="false">settings.customColor.pseudoUserColorOfLightTheme</string>
 </resources>

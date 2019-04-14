@@ -320,6 +320,7 @@
     <string name="allAcounts">Tous les comptes</string>
     <string name="currentAccountOnly">Uniquement le compte actuel</string>
     <string name="noneAccount">Aucun compte</string>
+    <string name="pseudoUserColorTitle">Couleur de votre pseudo</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>

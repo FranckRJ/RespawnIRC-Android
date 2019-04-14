@@ -7,7 +7,6 @@
     <color name="shadowColorThemeLight">#50000000</color>
     <color name="colorControlHighlightThemeLight">#757575</color>
     <color name="colorQuoteBackgroundThemeLight">#0D000000</color>
-    <color name="colorPseudoUserThemeLight">#3399ff</color>
     <color name="colorPseudoOtherModeForumThemeLight">#80000000</color>
     <color name="colorPseudoOtherModeIrcThemeLight">#000025</color>
     <color name="colorPseudoModoThemeLight">#3A9D23</color>
@@ -193,6 +192,7 @@
     <color name="defaultColorAltThemeLight">#EEF5FC</color>
     <color name="defaultSurveyMessageColorThemeLight">#FFF0DB</color>
     <color name="defaultDeletedMessageColorThemeLight">#CFF3FE</color>
+    <color name="defaultColorPseudoUserThemeLight">#3399ff</color>
 
     <integer-array name="choicesForHeaderColor">
         <item>@color/colorPrimaryDarkerRealRed</item>
@@ -290,6 +290,39 @@
         <item>@color/colorPrimarySoftBlack</item>
         <item>@color/colorPrimaryBlack</item>
         <item>@color/defaultTopicNameAndAccentColorThemeLight</item>
+    </integer-array>
+
+    <integer-array name="choicesForPseudoUserColor">
+        <item>@color/colorPrimaryRealRed</item>
+        <item>@color/colorPrimaryRed</item>
+        <item>@color/colorPrimaryPink</item>
+        <item>@color/colorPrimarySoftPurple</item>
+        <item>@color/colorPrimaryPurple</item>
+        <item>@color/colorPrimaryDeepPurple</item>
+        <item>@color/colorPrimaryIndigo</item>
+        <item>@color/colorPrimaryBlue</item>
+        <item>@color/colorPrimaryLightBlue</item>
+        <item>@color/colorPrimarySoftBlue</item>
+        <item>@color/colorPrimaryCyan</item>
+        <item>@color/colorPrimaryTeal</item>
+        <item>@color/colorPrimaryPrestoGreen</item>
+        <item>@color/colorPrimaryRealGreen</item>
+        <item>@color/colorPrimaryRealLightGreen</item>
+        <item>@color/colorPrimaryGreen</item>
+        <item>@color/colorPrimaryLightGreen</item>
+        <item>@color/colorPrimaryLime</item>
+        <item>@color/colorPrimaryYellow</item>
+        <item>@color/colorPrimaryAmber</item>
+        <item>@color/colorPrimaryOrange</item>
+        <item>@color/colorPrimaryDeepOrange</item>
+        <item>@color/colorPrimarySoftOrange</item>
+        <item>@color/colorPrimaryBrown</item>
+        <item>@color/colorPrimaryGrey</item>
+        <item>@color/colorPrimaryBlueGrey</item>
+        <item>@color/colorPrimaryJVC</item>
+        <item>@color/colorPrimarySoftBlack</item>
+        <item>@color/colorPrimaryBlack</item>
+        <item>@color/defaultColorPseudoUserThemeLight</item>
     </integer-array>
 
     <integer-array name="choicesForAltColor">
