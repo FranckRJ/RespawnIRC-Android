@@ -959,7 +959,8 @@ public final class JVCParser {
             ToolForParsing.replaceStringByAnother(newFirstLine, "<%DATE_COLOR_END%>", "");
         }
 
-        if (thisMessageInfo.pseudo.toLowerCase().equals(settings.pseudoOfUser.toLowerCase()) && settings.colorPseudoOfUserInInfoLine) {
+        if ((settings.typeOfPseudoToColorInInfoLine.type == PrefsManager.PseudoColorType.CURRENT_ONLY && thisMessageInfo.pseudo.toLowerCase().equals(settings.pseudoOfUser.toLowerCase()) ||
+                (settings.typeOfPseudoToColorInInfoLine.type == PrefsManager.PseudoColorType.ALL_ACCOUNTS && AccountManager.thisPseudoIsFromAnAccount(thisMessageInfo.pseudo)))) {
             ToolForParsing.replaceStringByAnother(newFirstLine, "<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoUser + "\">");
         } else if (thisMessageInfo.pseudoType.equals("modo")){
             ToolForParsing.replaceStringByAnother(newFirstLine, "<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoModo + "\">");
@@ -2069,7 +2070,7 @@ public final class JVCParser {
         public String colorPseudoModo;
         public String colorPseudoAdmin;
         public int maxNumberOfOverlyQuotes = 0;
-        public boolean colorPseudoOfUserInInfoLine = true;
+        public PrefsManager.PseudoColorType typeOfPseudoToColorInInfoLine = new PrefsManager.PseudoColorType(PrefsManager.PseudoColorType.ALL_ACCOUNTS);
         public boolean colorPseudoOfUserInMessage = true;
         public boolean applyMarkToPseudoAuthor = false;
         public boolean showNoelshackImages = false;

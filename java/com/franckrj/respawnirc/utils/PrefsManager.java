@@ -110,7 +110,6 @@ public class PrefsManager {
         addBoolPref(BoolPref.Names.HIDE_TOTALLY_MESSAGES_OF_IGNORED_PSEUDOS, currentContext.getString(R.string.settingsHideTotallyMessagesOfIgnoredPseudos), true);
         addBoolPref(BoolPref.Names.ENABLE_FAST_REFRESH_OF_IMAGES, currentContext.getString(R.string.settingsEnableFastRefreshOfImages), false);
         addBoolPref(BoolPref.Names.ENABLE_COLOR_DELETED_MESSAGES, currentContext.getString(R.string.settingsEnableColorDeletedMessages), true);
-        addBoolPref(BoolPref.Names.COLOR_PSEUDO_OF_USER_IN_INFO, currentContext.getString(R.string.settingsColorPseudoOfUserInInfo), true);
         addBoolPref(BoolPref.Names.COLOR_PSEUDO_OF_USER_IN_MESSAGE, currentContext.getString(R.string.settingsColorPseudoOfUserInMessage), true);
         addBoolPref(BoolPref.Names.BACK_IS_OPEN_DRAWER, currentContext.getString(R.string.settingsBackIsOpenDrawer), false);
         addBoolPref(BoolPref.Names.SAVE_LAST_ROW_USED_INSERTSTUFF, currentContext.getString(R.string.settingsSaveLastRowUsedInsertstuff), true);
@@ -143,6 +142,7 @@ public class PrefsManager {
         addStringPref(StringPref.Names.MESSAGE_FONT_SIZE, currentContext.getString(R.string.settingsMessageFontSize), "14");
         addStringPref(StringPref.Names.MESSAGE_INFOS_FONT_SIZE, currentContext.getString(R.string.settingsMessageInfosFontSize), "14");
         addStringPref(StringPref.Names.MESSAGE_SIGNATURE_FONT_SIZE, currentContext.getString(R.string.settingsMessageSignatureFontSize), "14");
+        addStringPref(StringPref.Names.TYPE_OF_PSEUDO_TO_COLOR_IN_INFO, currentContext.getString(R.string.settingsTypeOfPseudoToColorInInfo), String.valueOf(PseudoColorType.ALL_ACCOUNTS));
     }
 
     public static boolean getBool(BoolPref.Names prefName) {
@@ -327,7 +327,7 @@ public class PrefsManager {
             USER_IS_MODO, POST_AS_MODO_WHEN_POSSIBLE,
             IGNORE_TOPIC_TOO, HIDE_TOTALLY_MESSAGES_OF_IGNORED_PSEUDOS,
             ENABLE_FAST_REFRESH_OF_IMAGES,
-            COLOR_PSEUDO_OF_USER_IN_INFO, COLOR_PSEUDO_OF_USER_IN_MESSAGE,
+            COLOR_PSEUDO_OF_USER_IN_MESSAGE,
             BACK_IS_OPEN_DRAWER,
             SAVE_LAST_ROW_USED_INSERTSTUFF,
             INVERT_TOOLBAR_TEXT_COLOR,
@@ -401,7 +401,8 @@ public class PrefsManager {
             LINK_TYPE_FOR_INTERNAL_BROWSER,
             SAVE_MESSAGES_AND_TOPICS_AS_DRAFT_TYPE,
             MESSAGE_DRAFT, TOPIC_TITLE_DRAFT, TOPIC_CONTENT_DRAFT, SURVEY_TITLE_DRAFT, SURVEY_REPLY_IN_A_STRING_DRAFT,
-            TOPIC_TITLE_FONT_SIZE, TOPIC_INFOS_FONT_SIZE, MESSAGE_FONT_SIZE, MESSAGE_INFOS_FONT_SIZE, MESSAGE_SIGNATURE_FONT_SIZE
+            TOPIC_TITLE_FONT_SIZE, TOPIC_INFOS_FONT_SIZE, MESSAGE_FONT_SIZE, MESSAGE_INFOS_FONT_SIZE, MESSAGE_SIGNATURE_FONT_SIZE,
+            TYPE_OF_PSEUDO_TO_COLOR_IN_INFO
         }
     }
 
@@ -419,6 +420,17 @@ public class PrefsManager {
         }
     }
 
+    public static class PseudoColorType extends IntValueType{
+        public static final int ALL_ACCOUNTS = 0;
+        public static final int CURRENT_ONLY = 1;
+        @SuppressWarnings("unused")
+        public static final int NONE = 2;
+
+        public PseudoColorType(int newDefaultType) {
+            super(newDefaultType);
+        }
+    }
+
     public static class LinkType extends IntValueType{
         public static final int ALL_LINKS = 0;
         public static final int JVC_LINKS_ONLY = 1;
@@ -432,7 +444,8 @@ public class PrefsManager {
     public static class ShowImageType extends IntValueType {
         public static final int ALWAYS = 0;
         public static final int WIFI_ONLY = 1;
-        //public static final int NEVER = 2;
+        @SuppressWarnings("unused")
+        public static final int NEVER = 2;
 
         public ShowImageType(int newDefaultType) {
             super(newDefaultType);

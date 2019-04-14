@@ -271,7 +271,7 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
         currentSettings.hideUglyImages = PrefsManager.getBool(PrefsManager.BoolPref.Names.HIDE_UGLY_IMAGES);
         currentSettings.enableAlphaInNoelshackMini = PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_ALPHA_IN_NOELSHACK_MINI);
         currentSettings.pseudoOfUser = AccountManager.getCurrentAccount().pseudo;
-        currentSettings.colorPseudoOfUserInInfoLine = PrefsManager.getBool(PrefsManager.BoolPref.Names.COLOR_PSEUDO_OF_USER_IN_INFO);
+        currentSettings.typeOfPseudoToColorInInfoLine.setTypeFromString(PrefsManager.getString(PrefsManager.StringPref.Names.TYPE_OF_PSEUDO_TO_COLOR_IN_INFO));
         currentSettings.colorPseudoOfUserInMessage = PrefsManager.getBool(PrefsManager.BoolPref.Names.COLOR_PSEUDO_OF_USER_IN_MESSAGE);
         adapterForTopic.setShowSpoilDefault(PrefsManager.getBool(PrefsManager.BoolPref.Names.DEFAULT_SHOW_SPOIL_VAL));
         adapterForTopic.setColorDeletedMessages(PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_COLOR_DELETED_MESSAGES));

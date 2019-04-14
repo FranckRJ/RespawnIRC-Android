@@ -86,6 +86,21 @@ public class AccountManager {
         return listOfPseudo;
     }
 
+    public static boolean thisPseudoIsFromAnAccount(String pseudoToSearch) {
+        pseudoToSearch = pseudoToSearch.toLowerCase();
+
+        if (pseudoToSearch.equals(getCurrentAccount().pseudo.toLowerCase())) {
+            return true;
+        } else {
+            for (AccountInfos thisAccount : listOfAccountsInReserve) {
+                if (pseudoToSearch.equals(thisAccount.pseudo.toLowerCase())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static void loadListOfAccountsInReserve() {
         int numberOfAccounts = PrefsManager.getInt(PrefsManager.IntPref.Names.RESERVE_ACCOUNT_ARRAY_SIZE);
 
