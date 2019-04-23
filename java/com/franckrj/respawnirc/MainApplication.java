@@ -34,7 +34,7 @@ public class MainApplication extends Application {
         ThemeManager.updateThemeUsed();
         ThemeManager.updateToolbarTextColor();
         ThemeManager.updateColorsUsed(getResources());
-        AccountManager.loadListOfAccountsInReserve();
+        AccountManager.loadListOfAccounts();
         IgnoreListManager.loadListOfIgnoredPseudos();
         StickerConverter.initializeBasesRules();
 

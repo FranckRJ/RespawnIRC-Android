@@ -6,30 +6,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AccountManager {
-    private static List<AccountInfos> listOfAccountsInReserve = new ArrayList<>();
+    private static List<AccountInfos> listOfAccounts = new ArrayList<>();
     private static AccountInfos currentAccount = null;
     private static String allAccountsPseudoRegex = null;
 
-    public static void addOrReplaceThisAccountInReserveList(AccountInfos newAccount, int positionOfNewAccount) {
-        int indexIfExisted = removeAccountFromReserveList(newAccount.pseudo);
+    /* Retourne true en cas d'ajout, false en cas de replacement. */
+    public static boolean addOrReplaceThisAccountInList(AccountInfos newAccount) {
+        int indexIfExisted = getIndexOfThisAccount(newAccount.pseudo);
 
-        if (indexIfExisted >= 0 && indexIfExisted < positionOfNewAccount) {
-            --positionOfNewAccount;
-        }
-
-        if (positionOfNewAccount < 0 || positionOfNewAccount > listOfAccountsInReserve.size()) {
-            listOfAccountsInReserve.add(newAccount);
+        if (indexIfExisted < 0 || indexIfExisted > listOfAccounts.size()) {
+            listOfAccounts.add(newAccount);
+            allAccountsPseudoRegex = null;
+            return true;
         } else {
-            listOfAccountsInReserve.add(positionOfNewAccount, newAccount);
+            listOfAccounts.set(indexIfExisted, newAccount);
+            return false;
         }
-        allAccountsPseudoRegex = null;
     }
 
-    public static int removeAccountFromReserveList(String accountPseudo) {
+    public static int removeAccountFromList(String accountPseudo) {
         allAccountsPseudoRegex = null;
-        for (int i = 0; i < listOfAccountsInReserve.size(); ++i) {
-            if (listOfAccountsInReserve.get(i).pseudo.toLowerCase().equals(accountPseudo.toLowerCase())) {
-                listOfAccountsInReserve.remove(i);
+        for (int i = 0; i < listOfAccounts.size(); ++i) {
+            if (listOfAccounts.get(i).pseudo.toLowerCase().equals(accountPseudo.toLowerCase())) {
+                listOfAccounts.remove(i);
                 return i;
             }
         }
@@ -50,11 +49,17 @@ public class AccountManager {
     public static String getAllAccountsPseudoRegex() {
         if (allAccountsPseudoRegex == null) {
             StringBuilder strBuilder = new StringBuilder();
-            if (!getCurrentAccount().pseudo.isEmpty()) {
-                strBuilder.append("(?:").append(getCurrentAccount().pseudo.toLowerCase().replace("[", "\\[").replace("]", "\\]"));
-                for (AccountInfos thisAccount : listOfAccountsInReserve) {
+            if (!listOfAccounts.isEmpty()) {
+                boolean isFirstAccount = true;
+                strBuilder.append("(?:");
+                for (AccountInfos thisAccount : listOfAccounts) {
                     if (!thisAccount.pseudo.isEmpty()) {
-                        strBuilder.append("|").append(thisAccount.pseudo.toLowerCase().replace("[", "\\[").replace("]", "\\]"));
+                        if (isFirstAccount) {
+                            isFirstAccount = false;
+                        } else {
+                            strBuilder.append("|");
+                        }
+                        strBuilder.append(thisAccount.pseudo.toLowerCase().replace("[", "\\[").replace("]", "\\]"));
                     }
                 }
                 strBuilder.append(")");
@@ -71,16 +76,8 @@ public class AccountManager {
         PrefsManager.putString(PrefsManager.StringPref.Names.COOKIES_LIST, currentAccount.cookie);
         PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, currentAccount.isModo);
         PrefsManager.applyChanges();
-        allAccountsPseudoRegex = null;
-    }
-
-    public static void replaceCurrentAccountAndAddInReserve(AccountInfos newCurrentAccount, int positionOfNewAccount) {
-        removeAccountFromReserveList(newCurrentAccount.pseudo);
-        if (!getCurrentAccount().pseudo.toLowerCase().equals(newCurrentAccount.pseudo.toLowerCase())) {
-            addOrReplaceThisAccountInReserveList(getCurrentAccount(), positionOfNewAccount);
-        }
-        setCurrentAccount(newCurrentAccount);
-        AccountManager.saveListOfAccountsInReserve();
+        addOrReplaceThisAccountInList(currentAccount);
+        AccountManager.saveListOfAccounts();
         allAccountsPseudoRegex = null;
     }
 
@@ -88,71 +85,78 @@ public class AccountManager {
         currentAccount = new AccountInfos(currentAccount.pseudo, currentAccount.cookie, newVal);
         PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, currentAccount.isModo);
         PrefsManager.applyChanges();
+        addOrReplaceThisAccountInList(currentAccount);
+        saveListOfAccounts();
     }
 
-    public static AccountInfos getReserveAccountAtIndex(int index) {
-        if (index < 0 || index >= listOfAccountsInReserve.size()) {
+    public static AccountInfos getAccountAtIndex(int index) {
+        if (index < 0 || index >= listOfAccounts.size()) {
             return new AccountInfos();
         } else {
-            return (listOfAccountsInReserve.get(index));
+            return (listOfAccounts.get(index));
         }
     }
 
-    public static List<String> getListOfReserveAccountPseudo() {
+    public static List<String> getListOfAccountPseudo() {
         List<String> listOfPseudo = new ArrayList<>();
 
-        for (AccountInfos thisAccount : listOfAccountsInReserve) {
+        for (AccountInfos thisAccount : listOfAccounts) {
             listOfPseudo.add(thisAccount.pseudo);
         }
 
         return listOfPseudo;
     }
 
-    public static boolean thisPseudoIsFromAnAccount(String pseudoToSearch) {
+    public static int getIndexOfThisAccount(String pseudoToSearch) {
         pseudoToSearch = pseudoToSearch.toLowerCase();
 
-        if (pseudoToSearch.equals(getCurrentAccount().pseudo.toLowerCase())) {
-            return true;
-        } else {
-            for (AccountInfos thisAccount : listOfAccountsInReserve) {
-                if (pseudoToSearch.equals(thisAccount.pseudo.toLowerCase())) {
-                    return true;
-                }
+        for (int i = 0; i < listOfAccounts.size(); ++i) {
+            if (pseudoToSearch.equals(listOfAccounts.get(i).pseudo.toLowerCase())) {
+                return i;
             }
         }
-        return false;
+        return -1;
     }
 
-    public static void loadListOfAccountsInReserve() {
-        int numberOfAccounts = PrefsManager.getInt(PrefsManager.IntPref.Names.RESERVE_ACCOUNT_ARRAY_SIZE);
+    public static void loadListOfAccounts() {
+        /* Si le pseudo du compte actuel est vide c'est qu'il n'y a pas de compte actuel donc on part du principe qu'il a été trouvé. */
+        boolean hasFoundCurrentAccount = getCurrentAccount().pseudo.isEmpty();
+        int numberOfAccounts = PrefsManager.getInt(PrefsManager.IntPref.Names.ACCOUNT_ARRAY_SIZE);
 
-        listOfAccountsInReserve.clear();
+        listOfAccounts.clear();
         for (int i = 0; i < numberOfAccounts; ++i) {
-            String pseudo = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.RESERVE_ACCOUNT_PSEUDO, String.valueOf(i));
-            String cookie = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.RESERVE_ACCOUNT_COOKIE, String.valueOf(i));
-            boolean isModo = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.RESERVE_ACCOUNT_IS_MODO, String.valueOf(i)).equals("true");
-            listOfAccountsInReserve.add(new AccountInfos(pseudo, cookie, isModo));
+            String pseudo = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.ACCOUNT_PSEUDO, String.valueOf(i));
+            String cookie = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.ACCOUNT_COOKIE, String.valueOf(i));
+            boolean isModo = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.ACCOUNT_IS_MODO, String.valueOf(i)).equals("true");
+            listOfAccounts.add(new AccountInfos(pseudo, cookie, isModo));
+            if (!hasFoundCurrentAccount && pseudo.toLowerCase().equals(getCurrentAccount().pseudo.toLowerCase())) {
+                hasFoundCurrentAccount = true;
+            }
+        }
+        if (!hasFoundCurrentAccount) {
+            listOfAccounts.add(getCurrentAccount());
+            saveListOfAccounts();
         }
         allAccountsPseudoRegex = null;
     }
 
-    public static void saveListOfAccountsInReserve() {
-        int numberOfAccounts = PrefsManager.getInt(PrefsManager.IntPref.Names.RESERVE_ACCOUNT_ARRAY_SIZE);
+    public static void saveListOfAccounts() {
+        int numberOfAccounts = PrefsManager.getInt(PrefsManager.IntPref.Names.ACCOUNT_ARRAY_SIZE);
 
         for (int i = 0; i < numberOfAccounts; ++i) {
-            PrefsManager.removeStringWithSufix(PrefsManager.StringPref.Names.RESERVE_ACCOUNT_PSEUDO, String.valueOf(i));
-            PrefsManager.removeStringWithSufix(PrefsManager.StringPref.Names.RESERVE_ACCOUNT_COOKIE, String.valueOf(i));
-            PrefsManager.removeStringWithSufix(PrefsManager.StringPref.Names.RESERVE_ACCOUNT_IS_MODO, String.valueOf(i));
+            PrefsManager.removeStringWithSufix(PrefsManager.StringPref.Names.ACCOUNT_PSEUDO, String.valueOf(i));
+            PrefsManager.removeStringWithSufix(PrefsManager.StringPref.Names.ACCOUNT_COOKIE, String.valueOf(i));
+            PrefsManager.removeStringWithSufix(PrefsManager.StringPref.Names.ACCOUNT_IS_MODO, String.valueOf(i));
         }
 
-        numberOfAccounts = listOfAccountsInReserve.size();
-        PrefsManager.putInt(PrefsManager.IntPref.Names.RESERVE_ACCOUNT_ARRAY_SIZE, numberOfAccounts);
+        numberOfAccounts = listOfAccounts.size();
+        PrefsManager.putInt(PrefsManager.IntPref.Names.ACCOUNT_ARRAY_SIZE, numberOfAccounts);
 
         for (int i = 0; i < numberOfAccounts; ++i) {
-            AccountInfos accountToSave = listOfAccountsInReserve.get(i);
-            PrefsManager.putStringWithSufix(PrefsManager.StringPref.Names.RESERVE_ACCOUNT_PSEUDO, String.valueOf(i), accountToSave.pseudo);
-            PrefsManager.putStringWithSufix(PrefsManager.StringPref.Names.RESERVE_ACCOUNT_COOKIE, String.valueOf(i), accountToSave.cookie);
-            PrefsManager.putStringWithSufix(PrefsManager.StringPref.Names.RESERVE_ACCOUNT_IS_MODO, String.valueOf(i), (accountToSave.isModo ? "true" : "false"));
+            AccountInfos accountToSave = listOfAccounts.get(i);
+            PrefsManager.putStringWithSufix(PrefsManager.StringPref.Names.ACCOUNT_PSEUDO, String.valueOf(i), accountToSave.pseudo);
+            PrefsManager.putStringWithSufix(PrefsManager.StringPref.Names.ACCOUNT_COOKIE, String.valueOf(i), accountToSave.cookie);
+            PrefsManager.putStringWithSufix(PrefsManager.StringPref.Names.ACCOUNT_IS_MODO, String.valueOf(i), (accountToSave.isModo ? "true" : "false"));
         }
 
         PrefsManager.applyChanges();

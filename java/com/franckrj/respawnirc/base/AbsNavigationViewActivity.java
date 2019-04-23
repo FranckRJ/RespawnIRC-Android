@@ -41,7 +41,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected static final int GROUP_ID_BASIC = 0;
     protected static final int GROUP_ID_FORUM_FAV = 1;
     protected static final int GROUP_ID_TOPIC_FAV = 2;
-    protected static final int GROUP_ID_ACCOUNT_RESERVE = 3;
+    protected static final int GROUP_ID_ACCOUNT_LIST = 3;
     protected static final int ITEM_ID_HOME = 0;
     protected static final int ITEM_ID_FORUM = 1;
     protected static final int ITEM_ID_SHOWMP = 2;
@@ -52,7 +52,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected static final int ITEM_ID_REFRESH_FORUM_FAV = 7;
     protected static final int ITEM_ID_TOPIC_FAV_SELECTED = 8;
     protected static final int ITEM_ID_REFRESH_TOPIC_FAV = 9;
-    protected static final int ITEM_ID_RESERVE_ACCOUNT_SELECTED = 10;
+    protected static final int ITEM_ID_ACCOUNT_SELECTED = 10;
     protected static final int ITEM_ID_CONNECT_AS_MODO = 11;
     protected static final int ITEM_ID_CONNECT = 12;
     protected static final int MODE_HOME = 0;
@@ -122,14 +122,14 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                 newForumOrTopicToRead(newFavSelected, false, false, false);
                 layoutForDrawer.closeDrawer(GravityCompat.START);
                 adapterForNavigationMenu.setRowSelected((int) id);
-            } else if (currentGroupId == GROUP_ID_ACCOUNT_RESERVE) {
-                lastItemSelected = ITEM_ID_RESERVE_ACCOUNT_SELECTED;
-                AccountManager.replaceCurrentAccountAndAddInReserve(AccountManager.getReserveAccountAtIndex(currentItemId), currentItemId);
+            } else if (currentGroupId == GROUP_ID_ACCOUNT_LIST) {
+                lastItemSelected = ITEM_ID_ACCOUNT_SELECTED;
+                AccountManager.setCurrentAccount(AccountManager.getAccountAtIndex(currentItemId));
                 currentAccount = AccountManager.getCurrentAccount();
                 updateMpAndNotifNumberShowed(null, null);
                 updateAccountDependentInfos();
                 updatePseudoFromCurrentAccount();
-                updateAccountInReserveInNavigationMenu(false);
+                updateAccountListInNavigationMenu(false);
             } else {
                 lastItemSelected = currentItemId;
                 layoutForDrawer.closeDrawer(GravityCompat.START);
@@ -382,7 +382,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                 }
             }
         } else {
-            updateAccountInReserveInNavigationMenu(false);
+            updateAccountListInNavigationMenu(false);
             adapterForNavigationMenu.setRowSelected(-1);
             contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_expand_less_dark));
         }
@@ -430,21 +430,21 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         }
     }
 
-    private void updateAccountInReserveInNavigationMenu(@SuppressWarnings("SameParameterValue") boolean needToUpdateAdapter) {
-        List<String> listOfAccountInReservePseudo = AccountManager.getListOfReserveAccountPseudo();
+    private void updateAccountListInNavigationMenu(@SuppressWarnings("SameParameterValue") boolean needToUpdateAdapter) {
+        List<String> listOfAccountPseudo = AccountManager.getListOfAccountPseudo();
         int positionOfAddAnAccount;
 
-        adapterForNavigationMenu.removeAllItemsFromGroup(GROUP_ID_ACCOUNT_RESERVE);
+        adapterForNavigationMenu.removeAllItemsFromGroup(GROUP_ID_ACCOUNT_LIST);
         positionOfAddAnAccount = adapterForNavigationMenu.getPositionDependingOnId(ITEM_ID_CONNECT, GROUP_ID_BASIC);
-        for (int i = 0; i < listOfAccountInReservePseudo.size(); ++i) {
+        for (int i = 0; i < listOfAccountPseudo.size(); ++i) {
             NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
-            tmpItemInfo.textContent = listOfAccountInReservePseudo.get(i);
+            tmpItemInfo.textContent = listOfAccountPseudo.get(i);
             tmpItemInfo.iconResId = 0;
             tmpItemInfo.buttonResId = 0;
             tmpItemInfo.isHeader = false;
             tmpItemInfo.isEnabled = true;
             tmpItemInfo.itemId = i;
-            tmpItemInfo.groupId = GROUP_ID_ACCOUNT_RESERVE;
+            tmpItemInfo.groupId = GROUP_ID_ACCOUNT_LIST;
             currentListOfMenuItem.add(positionOfAddAnAccount, tmpItemInfo);
             ++positionOfAddAnAccount;
         }

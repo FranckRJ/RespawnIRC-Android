@@ -960,7 +960,7 @@ public final class JVCParser {
         }
 
         if ((settings.typeOfPseudoToColorInInfoLine.type == PrefsManager.PseudoColorType.CURRENT_ONLY && thisMessageInfo.pseudo.toLowerCase().equals(settings.pseudoOfUser.toLowerCase()) ||
-                (settings.typeOfPseudoToColorInInfoLine.type == PrefsManager.PseudoColorType.ALL_ACCOUNTS && AccountManager.thisPseudoIsFromAnAccount(thisMessageInfo.pseudo)))) {
+                (settings.typeOfPseudoToColorInInfoLine.type == PrefsManager.PseudoColorType.ALL_ACCOUNTS && AccountManager.getIndexOfThisAccount(thisMessageInfo.pseudo) >= 0))) {
             ToolForParsing.replaceStringByAnother(newFirstLine, "<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoUser + "\">");
         } else if (thisMessageInfo.pseudoType.equals("modo")){
             ToolForParsing.replaceStringByAnother(newFirstLine, "<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoModo + "\">");
