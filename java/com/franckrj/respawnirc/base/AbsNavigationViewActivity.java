@@ -124,12 +124,15 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                 adapterForNavigationMenu.setRowSelected((int) id);
             } else if (currentGroupId == GROUP_ID_ACCOUNT_LIST) {
                 lastItemSelected = ITEM_ID_ACCOUNT_SELECTED;
-                AccountManager.setCurrentAccount(AccountManager.getAccountAtIndex(currentItemId));
-                currentAccount = AccountManager.getCurrentAccount();
-                updateMpAndNotifNumberShowed(null, null);
-                updateAccountDependentInfos();
-                updatePseudoFromCurrentAccount();
-                updateAccountListInNavigationMenu(false);
+                if (!currentAccount.pseudo.toLowerCase().equals(AccountManager.getAccountAtIndex(currentItemId).pseudo.toLowerCase())) {
+                    AccountManager.setCurrentAccount(AccountManager.getAccountAtIndex(currentItemId));
+                    currentAccount = AccountManager.getCurrentAccount();
+                    updateMpAndNotifNumberShowed(null, null);
+                    updateAccountDependentInfos();
+                    updatePseudoFromCurrentAccount();
+                    updateAccountListInNavigationMenu(false);
+                }
+                adapterForNavigationMenu.setRowSelected((int) id);
             } else {
                 lastItemSelected = currentItemId;
                 layoutForDrawer.closeDrawer(GravityCompat.START);
@@ -383,7 +386,6 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             }
         } else {
             updateAccountListInNavigationMenu(false);
-            adapterForNavigationMenu.setRowSelected(-1);
             contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_expand_less_dark));
         }
 
@@ -446,6 +448,9 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             tmpItemInfo.itemId = i;
             tmpItemInfo.groupId = GROUP_ID_ACCOUNT_LIST;
             currentListOfMenuItem.add(positionOfAddAnAccount, tmpItemInfo);
+            if (listOfAccountPseudo.get(i).toLowerCase().equals(currentAccount.pseudo.toLowerCase())) {
+                adapterForNavigationMenu.setRowSelected(positionOfAddAnAccount);
+            }
             ++positionOfAddAnAccount;
         }
 
