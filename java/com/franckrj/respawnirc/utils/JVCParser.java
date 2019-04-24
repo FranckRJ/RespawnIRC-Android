@@ -232,6 +232,10 @@ public final class JVCParser {
                 linkToCheck.startsWith("http://www.jeuxvideo.com/forums/42-");
     }
 
+    public static boolean checkIfItsSearchFormatedLink(String linkToCheck) {
+        return linkToCheck.startsWith("http://www.jeuxvideo.com/recherche/forums/0-");
+    }
+
     public static boolean checkIfItsMessageFormatedLink(String linkToCheck) {
         if (linkToCheck.startsWith("http://www.jeuxvideo.com/")) {
             String partOfLinkToCheck = linkToCheck.substring(("http://www.jeuxvideo.com/").length());
@@ -248,7 +252,8 @@ public final class JVCParser {
 
     /* Retourne vrai si c'est un lien ouvrable via RespawnIRC. */
     public static boolean checkIfItsOpennableFormatedLink(String linkToCheck) {
-        return checkIfItsForumFormatedLink(linkToCheck) || checkIfItsTopicFormatedLink(linkToCheck) || checkIfItsMessageFormatedLink(linkToCheck);
+        return checkIfItsForumFormatedLink(linkToCheck) || checkIfItsTopicFormatedLink(linkToCheck) ||
+                 checkIfItsSearchFormatedLink(linkToCheck) || checkIfItsMessageFormatedLink(linkToCheck);
     }
 
     public static String getFirstPageForThisTopicLink(String topicLink) {

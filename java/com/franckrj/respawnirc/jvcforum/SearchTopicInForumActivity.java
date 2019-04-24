@@ -30,6 +30,7 @@ import com.franckrj.respawnirc.utils.Utils;
 
 public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements ShowForumFragment.NewTopicWantRead, PageNavigationUtil.PageNavigationFunctions {
     public static final String EXTRA_FORUM_LINK = "com.franckrj.respawnirc.EXTRA_FORUM_LINK";
+    public static final String EXTRA_SEARCH_LINK = "com.franckrj.respawnirc.EXTRA_SEARCH_LINK";
     public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.EXTRA_FORUM_NAME";
 
     private static final String SAVE_SEARCH_FORUM_CONTENT = "saveSearchForumContent";

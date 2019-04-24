@@ -29,6 +29,7 @@ import com.franckrj.respawnirc.dialogs.MessageMenuDialogFragment;
 import com.franckrj.respawnirc.dialogs.InsertStuffDialogFragment;
 import com.franckrj.respawnirc.dialogs.SelectTextDialogFragment;
 import com.franckrj.respawnirc.dialogs.ShowImageDialogFragment;
+import com.franckrj.respawnirc.jvcforum.SearchTopicInForumActivity;
 import com.franckrj.respawnirc.jvctopic.jvctopicgetters.AbsJVCTopicGetter;
 import com.franckrj.respawnirc.jvctopic.jvctopicgetters.JVCTopicModeForumGetter;
 import com.franckrj.respawnirc.jvctopic.jvctopicviewers.AbsShowTopicFragment;
@@ -905,6 +906,10 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 newShowForumIntent.putExtra(ShowForumActivity.EXTRA_NEW_LINK, possibleNewLink);
                 newShowForumIntent.putExtra(ShowForumActivity.EXTRA_IS_FIRST_ACTIVITY, false);
                 startActivity(newShowForumIntent);
+            } else if (JVCParser.checkIfItsSearchFormatedLink(possibleNewLink)) {
+                Intent newSearchInForumIntent = new Intent(this, SearchTopicInForumActivity.class);
+                newSearchInForumIntent.putExtra(SearchTopicInForumActivity.EXTRA_SEARCH_LINK, possibleNewLink);
+                startActivity(newSearchInForumIntent);
             } else if (JVCParser.checkIfItsMessageFormatedLink(possibleNewLink)) {
                 Intent newShowMessageIntent = new Intent(this, ShowMessageActivity.class);
                 newShowMessageIntent.putExtra(ShowMessageActivity.EXTRA_MESSAGE_PERMALINK, possibleNewLink);
