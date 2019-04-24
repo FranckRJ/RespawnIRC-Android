@@ -2,6 +2,7 @@ package com.franckrj.respawnirc.utils;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.collection.ArraySet;
 
@@ -52,9 +53,9 @@ public final class JVCParser {
     private static final Pattern spoilLinePattern = Pattern.compile("<span class=\"bloc-spoil-jv en-ligne\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
     private static final Pattern spoilBlockPattern = Pattern.compile("<div class=\"bloc-spoil-jv\">.*?<div class=\"contenu-spoil\">(.*?)</div></div>", Pattern.DOTALL);
     private static final Pattern spoilOverlyPattern = Pattern.compile("(<(span|div) class=\"bloc-spoil-jv[^\"]*\">.*?<(span|div) class=\"contenu-spoil\">|</span></span>|</div></div>)", Pattern.DOTALL);
-    private static final Pattern pageTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/[0-9]*-([0-9]*)-([0-9]*)-)([0-9]*)(-[0-9]*-[0-9]*-[0-9]*-[^.]*\\.htm)");
-    private static final Pattern pageForumLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/[0-9]*-([0-9]*)-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-([^.]*)\\.htm)");
-    private static final Pattern pageSearchTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/recherche/forums/[0-9]*-[0-9]*-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-.*)");
+    private static final Pattern pageTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/(?:1|42)-([0-9]*)-([0-9]*)-)([0-9]*)(-[0-9]*-[0-9]*-[0-9]*-[^./]*\\.htm)[#?]?");
+    private static final Pattern pageForumLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/0-([0-9]*)-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-([^./]*)\\.htm)[#?]?");
+    private static final Pattern pageSearchTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/recherche/forums/(0-[0-9]*-[0-9]*-[0-9]*-[0-9]*-))([0-9]*)(-[0-9]*-[^./]*\\.htm)([#?]?.*)");
     private static final Pattern messageAnchorInTopicLinkPattern = Pattern.compile("#post_([0-9]*)");
     private static final Pattern jvCarePattern = Pattern.compile("<span class=\"JvCare [^\"]*\">([^<]*)</span>");
     private static final Pattern lastEditMessagePattern = Pattern.compile("<div class=\"info-edition-msg\">[^M]*(Message édité le ([^ ]* [^ ]* [^ ]* [^ ]* [0-9:]*) par.*?)</div>", Pattern.DOTALL);
@@ -372,26 +373,67 @@ public final class JVCParser {
         }
     }
 
-    public static String getPageNumberForThisSearchTopicLink(String forumLink) {
-        Matcher pageSearchTopicLinkNumberMatcher = pageSearchTopicLinkNumberPattern.matcher(forumLink);
+    public static String getPageNumberForThisSearchTopicLink(String searchTopicLink) {
+        Matcher pageSearchTopicLinkNumberMatcher = pageSearchTopicLinkNumberPattern.matcher(searchTopicLink);
 
         if (pageSearchTopicLinkNumberMatcher.find()) {
-            return pageSearchTopicLinkNumberMatcher.group(2);
+            return pageSearchTopicLinkNumberMatcher.group(3);
         }
         else {
             return "";
         }
     }
 
-    public static String setPageNumberForThisSearchTopicLink(String forumLink, int newPageNumber) {
-        Matcher pageSearchTopicLinkNumberMatcher = pageSearchTopicLinkNumberPattern.matcher(forumLink);
+    public static String setPageNumberForThisSearchTopicLink(String searchTopicLink, int newPageNumber) {
+        Matcher pageSearchTopicLinkNumberMatcher = pageSearchTopicLinkNumberPattern.matcher(searchTopicLink);
 
         if (pageSearchTopicLinkNumberMatcher.find()) {
-            return pageSearchTopicLinkNumberMatcher.group(1) + String.valueOf(newPageNumber) + pageSearchTopicLinkNumberMatcher.group(3);
+            return pageSearchTopicLinkNumberMatcher.group(1) + String.valueOf(newPageNumber) + pageSearchTopicLinkNumberMatcher.group(4) + pageSearchTopicLinkNumberMatcher.group(5);
         }
         else {
             return "";
         }
+    }
+
+    public static String getSuffixForSearchTopicLink(String searchTopicLink) {
+        Matcher pageSearchTopicLinkNumberMatcher = pageSearchTopicLinkNumberPattern.matcher(searchTopicLink);
+
+        if (pageSearchTopicLinkNumberMatcher.find()) {
+            return pageSearchTopicLinkNumberMatcher.group(2) + pageSearchTopicLinkNumberMatcher.group(3) + pageSearchTopicLinkNumberMatcher.group(4);
+        }
+        else {
+            return "";
+        }
+    }
+
+    public static String getTextToSearchForSearchTopicLink(String searchTopicLink) {
+        Matcher pageSearchTopicLinkNumberMatcher = pageSearchTopicLinkNumberPattern.matcher(searchTopicLink);
+
+        if (pageSearchTopicLinkNumberMatcher.find()) {
+            String[] listOfFields = pageSearchTopicLinkNumberMatcher.group(5).substring(1).split("&");
+
+            for (String thisField : listOfFields) {
+                if (thisField.startsWith("search_in_forum=")) {
+                    return Utils.decodeUrlStringToString(thisField.substring(("search_in_forum=").length()));
+                }
+            }
+        }
+        return "";
+    }
+
+    public static String getTypeOfSearchForSearchTopicLink(String searchTopicLink) {
+        Matcher pageSearchTopicLinkNumberMatcher = pageSearchTopicLinkNumberPattern.matcher(searchTopicLink);
+
+        if (pageSearchTopicLinkNumberMatcher.find()) {
+            String[] listOfFields = pageSearchTopicLinkNumberMatcher.group(5).substring(1).split("&");
+
+            for (String thisField : listOfFields) {
+                if (thisField.startsWith("type_search_in_forum=")) {
+                    return Utils.decodeUrlStringToString(thisField.substring(("type_search_in_forum=").length()));
+                }
+            }
+        }
+        return "";
     }
 
     public static String getMessageAnchorInTopicIfAny(String topicLink) {
