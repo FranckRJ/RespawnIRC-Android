@@ -3,6 +3,7 @@ package com.franckrj.respawnirc.jvcforum;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.core.view.MenuItemCompat;
+import androidx.lifecycle.Lifecycle;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.widget.ShareActionProvider;
 
@@ -74,7 +75,9 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
     private final RadioGroup.OnCheckedChangeListener searchTypeChangedListener = new RadioGroup.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
-            performSearch(false);
+            if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+                performSearch(false);
+            }
         }
     };
 
