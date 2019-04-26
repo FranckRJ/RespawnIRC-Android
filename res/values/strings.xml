@@ -321,6 +321,8 @@
     <string name="currentAccountOnly">Uniquement le compte actuel</string>
     <string name="noneAccount">Aucun compte</string>
     <string name="pseudoUserColorTitle">Couleur de votre pseudo</string>
+    <string name="accountList">Liste des comptes</string>
+    <string name="noAccountInList">La liste des comptes est vide.</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>

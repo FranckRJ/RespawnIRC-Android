@@ -118,6 +118,10 @@
             android:label="@string/ignoreList"/>
 
         <activity
+            android:name=".ManageAccountListActivity"
+            android:label="@string/accountList"/>
+
+        <activity
             android:name=".WebBrowserActivity"
             android:label="@string/app_name"/>
 

@@ -10,25 +10,38 @@ public class AccountManager {
     private static AccountInfos currentAccount = null;
     private static String allAccountsPseudoRegex = null;
 
-    /* Retourne true en cas d'ajout, false en cas de replacement. */
+    /* Retourne true en cas d'ajout, false en cas de replacement ou si le pseudo est invalide. */
     public static boolean addOrReplaceThisAccountInList(AccountInfos newAccount) {
-        int indexIfExisted = getIndexOfThisAccount(newAccount.pseudo);
+        if (!newAccount.pseudo.isEmpty()) {
+            int indexIfExisted = getIndexOfThisAccount(newAccount.pseudo);
 
-        if (indexIfExisted < 0 || indexIfExisted > listOfAccounts.size()) {
-            listOfAccounts.add(newAccount);
-            allAccountsPseudoRegex = null;
-            return true;
+            if (indexIfExisted < 0 || indexIfExisted > listOfAccounts.size()) {
+                listOfAccounts.add(newAccount);
+                allAccountsPseudoRegex = null;
+                return true;
+            } else {
+                listOfAccounts.set(indexIfExisted, newAccount);
+                return false;
+            }
         } else {
-            listOfAccounts.set(indexIfExisted, newAccount);
             return false;
         }
     }
 
-    public static int removeAccountFromList(String accountPseudo) {
+    public static int removeAccountFromListAndUpdateCurrentAccountIfNeeded(String accountPseudo) {
         allAccountsPseudoRegex = null;
         for (int i = 0; i < listOfAccounts.size(); ++i) {
             if (listOfAccounts.get(i).pseudo.toLowerCase().equals(accountPseudo.toLowerCase())) {
                 listOfAccounts.remove(i);
+
+                if (getCurrentAccount().pseudo.toLowerCase().equals(accountPseudo.toLowerCase())) {
+                    if (listOfAccounts.isEmpty()) {
+                        setCurrentAccount(new AccountInfos("", "", false));
+                    } else {
+                        setCurrentAccount(listOfAccounts.get(0));
+                    }
+                }
+
                 return i;
             }
         }
@@ -76,8 +89,10 @@ public class AccountManager {
         PrefsManager.putString(PrefsManager.StringPref.Names.COOKIES_LIST, currentAccount.cookie);
         PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, currentAccount.isModo);
         PrefsManager.applyChanges();
-        addOrReplaceThisAccountInList(currentAccount);
-        AccountManager.saveListOfAccounts();
+        if (!currentAccount.pseudo.isEmpty()) {
+            addOrReplaceThisAccountInList(currentAccount);
+            AccountManager.saveListOfAccounts();
+        }
         allAccountsPseudoRegex = null;
     }
 

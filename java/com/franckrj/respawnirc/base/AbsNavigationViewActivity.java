@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.franckrj.respawnirc.ConnectActivity;
 import com.franckrj.respawnirc.ConnectAsModoActivity;
+import com.franckrj.respawnirc.ManageAccountListActivity;
 import com.franckrj.respawnirc.NavigationMenuAdapter;
 import com.franckrj.respawnirc.NavigationMenuListView;
 import com.franckrj.respawnirc.R;
@@ -52,9 +53,10 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected static final int ITEM_ID_REFRESH_FORUM_FAV = 7;
     protected static final int ITEM_ID_TOPIC_FAV_SELECTED = 8;
     protected static final int ITEM_ID_REFRESH_TOPIC_FAV = 9;
-    protected static final int ITEM_ID_ACCOUNT_SELECTED = 10;
-    protected static final int ITEM_ID_CONNECT_AS_MODO = 11;
-    protected static final int ITEM_ID_CONNECT = 12;
+    protected static final int ITEM_ID_MANAGE_ACCOUNT = 10;
+    protected static final int ITEM_ID_ACCOUNT_SELECTED = 11;
+    protected static final int ITEM_ID_CONNECT_AS_MODO = 12;
+    protected static final int ITEM_ID_CONNECT = 13;
     protected static final int MODE_HOME = 0;
     protected static final int MODE_FORUM = 1;
     protected static final int MODE_CONNECT = 2;
@@ -284,11 +286,11 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.accounts);
                 tmpItemInfo.iconResId = 0;
-                tmpItemInfo.buttonResId = 0;
+                tmpItemInfo.buttonResId = R.drawable.ictb_settings_dark;
                 tmpItemInfo.isHeader = true;
                 tmpItemInfo.isEnabled = true;
-                tmpItemInfo.itemId = -1;
-                tmpItemInfo.groupId = -1;
+                tmpItemInfo.itemId = ITEM_ID_MANAGE_ACCOUNT;
+                tmpItemInfo.groupId = GROUP_ID_BASIC;
                 listOfMenuItemInfoForConnect.add(tmpItemInfo);
             }
             {
@@ -552,6 +554,9 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                         case ITEM_ID_TOPIC_FAV_SELECTED:
                             newForumOrTopicToRead(newFavSelected, false, true, newFavIsSelectedByLongClick);
                             newFavSelected = "";
+                            break;
+                        case ITEM_ID_MANAGE_ACCOUNT:
+                            startActivity(new Intent(AbsNavigationViewActivity.this, ManageAccountListActivity.class));
                             break;
                     }
                 }
