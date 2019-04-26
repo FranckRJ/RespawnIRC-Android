@@ -66,13 +66,15 @@ public class AccountManager {
                 boolean isFirstAccount = true;
                 strBuilder.append("(?:");
                 for (AccountInfos thisAccount : listOfAccounts) {
+                    if (isFirstAccount) {
+                        isFirstAccount = false;
+                    } else {
+                        strBuilder.append("|");
+                    }
                     if (!thisAccount.pseudo.isEmpty()) {
-                        if (isFirstAccount) {
-                            isFirstAccount = false;
-                        } else {
-                            strBuilder.append("|");
-                        }
                         strBuilder.append(thisAccount.pseudo.toLowerCase().replace("[", "\\[").replace("]", "\\]"));
+                    } else {
+                        strBuilder.append("lolpktvidecpasduttlogicmdr");
                     }
                 }
                 strBuilder.append(")");
