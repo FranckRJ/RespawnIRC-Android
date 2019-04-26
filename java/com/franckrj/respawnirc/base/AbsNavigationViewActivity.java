@@ -61,6 +61,8 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected static final int MODE_FORUM = 1;
     protected static final int MODE_CONNECT = 2;
 
+    protected static final String SAVE_MP_AND_NOTIF_IS_HIDDEN = "saveMpAndNotifIsHidden";
+
     protected static ArrayList<NavigationMenuAdapter.MenuItemInfo> listOfMenuItemInfoForHome = null;
     protected static ArrayList<NavigationMenuAdapter.MenuItemInfo> listOfMenuItemInfoForForum = null;
     protected static ArrayList<NavigationMenuAdapter.MenuItemInfo> listOfMenuItemInfoForConnect = null;
@@ -83,6 +85,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected ArrayList<NavigationMenuAdapter.MenuItemInfo> currentListOfMenuItem = null;
     protected boolean backIsOpenDrawer = false;
     protected boolean drawerIsDisabled = false;
+    protected boolean mpAndNotifNumberIsHidden = false;
 
     protected final AdapterView.OnItemClickListener itemInNavigationClickedListener = new AdapterView.OnItemClickListener() {
         @Override
@@ -321,8 +324,14 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     private void updatePseudoFromCurrentAccount() {
         if (!currentAccount.pseudo.isEmpty()) {
             pseudoTextNavigation.setText(currentAccount.pseudo);
+            if (!mpAndNotifNumberIsHidden) {
+                mpTextNavigation.setVisibility(View.VISIBLE);
+                notifTextNavigation.setVisibility(View.VISIBLE);
+            }
         } else {
             pseudoTextNavigation.setText(R.string.connectToJVC);
+            mpTextNavigation.setVisibility(View.GONE);
+            notifTextNavigation.setVisibility(View.GONE);
         }
 
         if (currentAccount.isModo && !currentAccount.pseudo.isEmpty()) {
@@ -465,6 +474,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected void hideMpAndNotifNumber() {
         mpTextNavigation.setVisibility(View.GONE);
         notifTextNavigation.setVisibility(View.GONE);
+        mpAndNotifNumberIsHidden = true;
     }
 
     protected void updateMpAndNotifNumberShowed(String newNumberOfMp, String newNumberOfNotif) {
@@ -503,6 +513,10 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         super.onCreate(savedInstanceState);
         initializeListsOfMenuItem();
         initializeViewAndToolbar();
+
+        if (savedInstanceState != null) {
+            mpAndNotifNumberIsHidden = savedInstanceState.getBoolean(SAVE_MP_AND_NOTIF_IS_HIDDEN, false);
+        }
 
         currentAccount = AccountManager.getCurrentAccount();
 
@@ -612,6 +626,12 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             currentAccount = tmpAccount;
             updateNavigationMenu();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(SAVE_MP_AND_NOTIF_IS_HIDDEN, mpAndNotifNumberIsHidden);
     }
 
     @Override
