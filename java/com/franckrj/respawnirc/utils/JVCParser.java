@@ -1107,7 +1107,7 @@ public final class JVCParser {
 
         if (settings.typeOfPseudoToColorInMessage.type == PrefsManager.PseudoColorType.CURRENT_ONLY && !settings.pseudoOfUser.isEmpty()) {
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, Pattern.compile("(?i)(?<!\\w)" + settings.pseudoOfUser.replace("[", "\\[").replace("]", "\\]") + "(?!\\w)(?![^<>]*(>|</a>))"), 0, "<font color=\"" + settings.colorPseudoUser + "\">", "</font>", null, null);
-        } else if (settings.typeOfPseudoToColorInMessage.type == PrefsManager.PseudoColorType.ALL_ACCOUNTS) {
+        } else if (settings.typeOfPseudoToColorInMessage.type == PrefsManager.PseudoColorType.ALL_ACCOUNTS && !AccountManager.getAllAccountsPseudoRegex().isEmpty()) {
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, Pattern.compile("(?i)(?<!\\w)" + AccountManager.getAllAccountsPseudoRegex() + "(?!\\w)(?![^<>]*(>|</a>))"), 0, "<font color=\"" + settings.colorPseudoUser + "\">", "</font>", null, null);
         }
 
