@@ -131,6 +131,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                     updateAccountDependentInfos();
                     updatePseudoFromCurrentAccount();
                     updateAccountListInNavigationMenu(false);
+                    layoutForDrawer.closeDrawer(GravityCompat.START);
                 }
                 adapterForNavigationMenu.setRowSelected((int) id);
             } else {
