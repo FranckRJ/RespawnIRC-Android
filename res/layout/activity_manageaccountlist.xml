@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/text_emptylist_manageaccountlist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:layout_below="@+id/toolbar_manageaccountlist"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:text="@string/noAccountInList"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/account_list_manageaccountlist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar_manageaccountlist"
+            android:scrollbars="vertical"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:background="?attr/themedShadowTop"
+            android:layout_below="@+id/toolbar_manageaccountlist"/>
+
+        <include
+            android:id="@+id/toolbar_manageaccountlist"
+            layout="@layout/toolbar"/>
+
+    </RelativeLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

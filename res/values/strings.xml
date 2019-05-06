@@ -56,7 +56,7 @@
     <string name="showNoelshackImageTitle">Afficher les miniatures</string>
     <string name="errorInvalidLink">Erreur, lien invalide.</string>
     <string name="pastLastMessageSended">Coller le dernier message envoyé</string>
-    <string name="connectWithAnotherAccount">Changer de compte</string>
+    <string name="addAnAccount">Ajouter un compte</string>
     <string name="loadingFavs">Chargement des favoris…</string>
     <string name="forumFav">Forums favoris</string>
     <string name="errorDuringFetchFavs">Erreur durant la récupération des favoris.</string>
@@ -210,8 +210,8 @@
     <string name="surveyTitlePlaceholder">(vide pour ne pas créer de sondage)</string>
     <string name="pressBackTwoTimesToLeaveSurvey">Appuyez une deuxième fois sur retour pour quitter sans valider le sondage (les modifications seront perdues).</string>
     <string name="kickSuccessful">Kick effectué.</string>
-    <string name="colorPseudoOfUserInInfoTitle">Colorer votre pseudo</string>
-    <string name="colorPseudoOfUserInMessageTitle">Colorer votre pseudo dans les messages</string>
+    <string name="typeOfPseudoToColorInInfoTitle">Colorer le pseudo de :</string>
+    <string name="typeOfPseudoToColorInMessageTitle">Colorer dans les messages le pseudo de :</string>
     <string name="backIsOpenDrawerTitle">Retour pour ouvrir le menu latéral</string>
     <string name="gta">GTA</string>
     <string name="avatarSizeTitle">Taille des avatars (en dp)</string>
@@ -313,6 +313,16 @@
     <string name="errorDuringShowRules">Erreur, impossible d\'accéder aux règles.</string>
     <string name="noMissTopics">Sujets à ne pas manquer</string>
     <string name="forumTitleInfo">Forum %1$s</string>
+    <string name="headerColor">Couleur du header</string>
+    <string name="invertHeaderTextColorTitle">Inverser la couleur du texte du header</string>
+    <string name="brightenAltColorTitle">Éclaircir la couleur alternative des messages</string>
+    <string name="accounts">Comptes</string>
+    <string name="allAcounts">Tous les comptes</string>
+    <string name="currentAccountOnly">Uniquement le compte actuel</string>
+    <string name="noneAccount">Aucun compte</string>
+    <string name="pseudoUserColorTitle">Couleur de votre pseudo</string>
+    <string name="accountList">Liste des comptes</string>
+    <string name="noAccountInList">La liste des comptes est vide.</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>
@@ -327,6 +337,11 @@
         <item>@string/copyPermalink</item>
         <item>@string/goToDirectLinkForDDB</item>
         <item>@string/selectText</item>
+    </string-array>
+    <string-array name="choicesForPseudoColorReadable">
+        <item>@string/allAcounts</item>
+        <item>@string/currentAccountOnly</item>
+        <item>@string/noneAccount</item>
     </string-array>
     <string-array name="choicesForConnectionReadable">
         <item>@string/always</item>

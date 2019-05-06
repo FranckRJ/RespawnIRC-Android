@@ -13,6 +13,7 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.base.AbsToolbarActivity;
+import com.franckrj.respawnirc.utils.AccountManager;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
@@ -42,12 +43,12 @@ public class WebBrowserActivity extends AbsToolbarActivity {
         setContentView(R.layout.activity_webbrowser);
         initToolbar(R.id.toolbar_webbrowser);
 
-        String cookies = PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST);
+        String cookies = AccountManager.getCurrentAccount().cookie;
 
         /*L'ancienne COOKIES_LIST contenait deux cookies, la nouvelle n'en contient plus qu'un.*/
         if (cookies.contains(";")) {
             String firstCookie = cookies.substring(0, cookies.indexOf(";"));
-            String secondCookie = cookies.substring(cookies.indexOf(";") + 1, cookies.length());
+            String secondCookie = cookies.substring(cookies.indexOf(";") + 1);
             CookieManager.getInstance().setCookie("http://www.jeuxvideo.com/", firstCookie);
             CookieManager.getInstance().setCookie("http://www.jeuxvideo.com/", secondCookie);
         } else {

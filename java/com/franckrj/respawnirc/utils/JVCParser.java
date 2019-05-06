@@ -2,6 +2,7 @@ package com.franckrj.respawnirc.utils;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.collection.ArraySet;
 
@@ -52,9 +53,9 @@ public final class JVCParser {
     private static final Pattern spoilLinePattern = Pattern.compile("<span class=\"bloc-spoil-jv en-ligne\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
     private static final Pattern spoilBlockPattern = Pattern.compile("<div class=\"bloc-spoil-jv\">.*?<div class=\"contenu-spoil\">(.*?)</div></div>", Pattern.DOTALL);
     private static final Pattern spoilOverlyPattern = Pattern.compile("(<(span|div) class=\"bloc-spoil-jv[^\"]*\">.*?<(span|div) class=\"contenu-spoil\">|</span></span>|</div></div>)", Pattern.DOTALL);
-    private static final Pattern pageTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/[0-9]*-([0-9]*)-([0-9]*)-)([0-9]*)(-[0-9]*-[0-9]*-[0-9]*-[^.]*\\.htm)");
-    private static final Pattern pageForumLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/[0-9]*-([0-9]*)-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-([^.]*)\\.htm)");
-    private static final Pattern pageSearchTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/recherche/forums/[0-9]*-[0-9]*-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-.*)");
+    private static final Pattern pageTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/(?:1|42)-([0-9]*)-([0-9]*)-)([0-9]*)(-[0-9]*-[0-9]*-[0-9]*-[^./]*\\.htm)[#?]?");
+    private static final Pattern pageForumLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/0-([0-9]*)-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-([^./]*)\\.htm)[#?]?");
+    private static final Pattern pageSearchTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/recherche/forums/(0-[0-9]*-[0-9]*-[0-9]*-[0-9]*-))([0-9]*)(-[0-9]*-[^./]*\\.htm)([#?]?.*)");
     private static final Pattern messageAnchorInTopicLinkPattern = Pattern.compile("#post_([0-9]*)");
     private static final Pattern jvCarePattern = Pattern.compile("<span class=\"JvCare [^\"]*\">([^<]*)</span>");
     private static final Pattern lastEditMessagePattern = Pattern.compile("<div class=\"info-edition-msg\">[^M]*(Message édité le ([^ ]* [^ ]* [^ ]* [^ ]* [0-9:]*) par.*?)</div>", Pattern.DOTALL);
@@ -232,6 +233,10 @@ public final class JVCParser {
                 linkToCheck.startsWith("http://www.jeuxvideo.com/forums/42-");
     }
 
+    public static boolean checkIfItsSearchFormatedLink(String linkToCheck) {
+        return linkToCheck.startsWith("http://www.jeuxvideo.com/recherche/forums/0-");
+    }
+
     public static boolean checkIfItsMessageFormatedLink(String linkToCheck) {
         if (linkToCheck.startsWith("http://www.jeuxvideo.com/")) {
             String partOfLinkToCheck = linkToCheck.substring(("http://www.jeuxvideo.com/").length());
@@ -248,7 +253,8 @@ public final class JVCParser {
 
     /* Retourne vrai si c'est un lien ouvrable via RespawnIRC. */
     public static boolean checkIfItsOpennableFormatedLink(String linkToCheck) {
-        return checkIfItsForumFormatedLink(linkToCheck) || checkIfItsTopicFormatedLink(linkToCheck) || checkIfItsMessageFormatedLink(linkToCheck);
+        return checkIfItsForumFormatedLink(linkToCheck) || checkIfItsTopicFormatedLink(linkToCheck) ||
+                 checkIfItsSearchFormatedLink(linkToCheck) || checkIfItsMessageFormatedLink(linkToCheck);
     }
 
     public static String getFirstPageForThisTopicLink(String topicLink) {
@@ -367,26 +373,67 @@ public final class JVCParser {
         }
     }
 
-    public static String getPageNumberForThisSearchTopicLink(String forumLink) {
-        Matcher pageSearchTopicLinkNumberMatcher = pageSearchTopicLinkNumberPattern.matcher(forumLink);
+    public static String getPageNumberForThisSearchTopicLink(String searchTopicLink) {
+        Matcher pageSearchTopicLinkNumberMatcher = pageSearchTopicLinkNumberPattern.matcher(searchTopicLink);
 
         if (pageSearchTopicLinkNumberMatcher.find()) {
-            return pageSearchTopicLinkNumberMatcher.group(2);
+            return pageSearchTopicLinkNumberMatcher.group(3);
         }
         else {
             return "";
         }
     }
 
-    public static String setPageNumberForThisSearchTopicLink(String forumLink, int newPageNumber) {
-        Matcher pageSearchTopicLinkNumberMatcher = pageSearchTopicLinkNumberPattern.matcher(forumLink);
+    public static String setPageNumberForThisSearchTopicLink(String searchTopicLink, int newPageNumber) {
+        Matcher pageSearchTopicLinkNumberMatcher = pageSearchTopicLinkNumberPattern.matcher(searchTopicLink);
 
         if (pageSearchTopicLinkNumberMatcher.find()) {
-            return pageSearchTopicLinkNumberMatcher.group(1) + String.valueOf(newPageNumber) + pageSearchTopicLinkNumberMatcher.group(3);
+            return pageSearchTopicLinkNumberMatcher.group(1) + String.valueOf(newPageNumber) + pageSearchTopicLinkNumberMatcher.group(4) + pageSearchTopicLinkNumberMatcher.group(5);
         }
         else {
             return "";
         }
+    }
+
+    public static String getSuffixForSearchTopicLink(String searchTopicLink) {
+        Matcher pageSearchTopicLinkNumberMatcher = pageSearchTopicLinkNumberPattern.matcher(searchTopicLink);
+
+        if (pageSearchTopicLinkNumberMatcher.find()) {
+            return pageSearchTopicLinkNumberMatcher.group(2) + pageSearchTopicLinkNumberMatcher.group(3) + pageSearchTopicLinkNumberMatcher.group(4);
+        }
+        else {
+            return "";
+        }
+    }
+
+    public static String getTextToSearchForSearchTopicLink(String searchTopicLink) {
+        Matcher pageSearchTopicLinkNumberMatcher = pageSearchTopicLinkNumberPattern.matcher(searchTopicLink);
+
+        if (pageSearchTopicLinkNumberMatcher.find()) {
+            String[] listOfFields = pageSearchTopicLinkNumberMatcher.group(5).substring(1).split("&");
+
+            for (String thisField : listOfFields) {
+                if (thisField.startsWith("search_in_forum=")) {
+                    return Utils.decodeUrlStringToString(thisField.substring(("search_in_forum=").length()));
+                }
+            }
+        }
+        return "";
+    }
+
+    public static String getTypeOfSearchForSearchTopicLink(String searchTopicLink) {
+        Matcher pageSearchTopicLinkNumberMatcher = pageSearchTopicLinkNumberPattern.matcher(searchTopicLink);
+
+        if (pageSearchTopicLinkNumberMatcher.find()) {
+            String[] listOfFields = pageSearchTopicLinkNumberMatcher.group(5).substring(1).split("&");
+
+            for (String thisField : listOfFields) {
+                if (thisField.startsWith("type_search_in_forum=")) {
+                    return Utils.decodeUrlStringToString(thisField.substring(("type_search_in_forum=").length()));
+                }
+            }
+        }
+        return "";
     }
 
     public static String getMessageAnchorInTopicIfAny(String topicLink) {
@@ -959,7 +1006,8 @@ public final class JVCParser {
             ToolForParsing.replaceStringByAnother(newFirstLine, "<%DATE_COLOR_END%>", "");
         }
 
-        if (thisMessageInfo.pseudo.toLowerCase().equals(settings.pseudoOfUser.toLowerCase()) && settings.colorPseudoOfUserInInfoLine) {
+        if ((settings.typeOfPseudoToColorInInfoLine.type == PrefsManager.PseudoColorType.CURRENT_ONLY && thisMessageInfo.pseudo.toLowerCase().equals(settings.pseudoOfUser.toLowerCase()) ||
+                (settings.typeOfPseudoToColorInInfoLine.type == PrefsManager.PseudoColorType.ALL_ACCOUNTS && AccountManager.getIndexOfThisAccount(thisMessageInfo.pseudo) >= 0))) {
             ToolForParsing.replaceStringByAnother(newFirstLine, "<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoUser + "\">");
         } else if (thisMessageInfo.pseudoType.equals("modo")){
             ToolForParsing.replaceStringByAnother(newFirstLine, "<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoModo + "\">");
@@ -1057,8 +1105,10 @@ public final class JVCParser {
             ToolForParsing.removeOverlyQuoteInPrettyMessage(messageInBuilder, settings.maxNumberOfOverlyQuotes);
         }
 
-        if (!settings.pseudoOfUser.isEmpty() && settings.colorPseudoOfUserInMessage) {
+        if (settings.typeOfPseudoToColorInMessage.type == PrefsManager.PseudoColorType.CURRENT_ONLY && !settings.pseudoOfUser.isEmpty()) {
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, Pattern.compile("(?i)(?<!\\w)" + settings.pseudoOfUser.replace("[", "\\[").replace("]", "\\]") + "(?!\\w)(?![^<>]*(>|</a>))"), 0, "<font color=\"" + settings.colorPseudoUser + "\">", "</font>", null, null);
+        } else if (settings.typeOfPseudoToColorInMessage.type == PrefsManager.PseudoColorType.ALL_ACCOUNTS && !AccountManager.getAllAccountsPseudoRegex().isEmpty()) {
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, Pattern.compile("(?i)(?<!\\w)" + AccountManager.getAllAccountsPseudoRegex() + "(?!\\w)(?![^<>]*(>|</a>))"), 0, "<font color=\"" + settings.colorPseudoUser + "\">", "</font>", null, null);
         }
 
         return messageInBuilder.toString();
@@ -2069,8 +2119,8 @@ public final class JVCParser {
         public String colorPseudoModo;
         public String colorPseudoAdmin;
         public int maxNumberOfOverlyQuotes = 0;
-        public boolean colorPseudoOfUserInInfoLine = true;
-        public boolean colorPseudoOfUserInMessage = true;
+        public PrefsManager.PseudoColorType typeOfPseudoToColorInInfoLine = new PrefsManager.PseudoColorType(PrefsManager.PseudoColorType.ALL_ACCOUNTS);
+        public PrefsManager.PseudoColorType typeOfPseudoToColorInMessage = new PrefsManager.PseudoColorType(PrefsManager.PseudoColorType.ALL_ACCOUNTS);
         public boolean applyMarkToPseudoAuthor = false;
         public boolean showNoelshackImages = false;
         public boolean transformStickerToSmiley = false;

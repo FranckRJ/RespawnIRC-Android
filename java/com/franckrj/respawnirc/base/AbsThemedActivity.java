@@ -17,6 +17,7 @@ public abstract class AbsThemedActivity extends AppCompatActivity {
     protected static @ColorInt int colorUsedForGenerateTaskDesc = 0;
     protected ThemeManager.ThemeName lastThemeUsed = null;
     protected boolean toolbarTextColorIsInverted = false;
+    protected @ColorInt int lastHeaderColorUsed = 0;
     protected int lastPrimaryColorUsed = -1;
     protected int lastTopicNameAndAccentColorUsed = -1;
     protected boolean statusBarNeedToBeTransparent = false;
@@ -28,6 +29,7 @@ public abstract class AbsThemedActivity extends AppCompatActivity {
         ThemeManager.changeActivityThemedColorsIfNeeded(this);
         lastThemeUsed = ThemeManager.getThemeUsed();
         toolbarTextColorIsInverted = ThemeManager.getToolbarTextColorIsInvertedForThemeLight();
+        lastHeaderColorUsed = ThemeManager.getHeaderColorUsedForThemeLight();
         lastPrimaryColorUsed = ThemeManager.getPrimaryColorIdUsedForThemeLight();
         lastTopicNameAndAccentColorUsed = ThemeManager.getTopicNameAndAccentColorIdUsedForThemeLight();
 
@@ -52,7 +54,8 @@ public abstract class AbsThemedActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
 
-        if ((lastThemeUsed != ThemeManager.getThemeUsed()) || (lastPrimaryColorUsed != ThemeManager.getPrimaryColorIdUsedForThemeLight()) ||
+        if ((lastThemeUsed != ThemeManager.getThemeUsed()) || (lastHeaderColorUsed != ThemeManager.getHeaderColorUsedForThemeLight()) ||
+                (lastPrimaryColorUsed != ThemeManager.getPrimaryColorIdUsedForThemeLight()) ||
                 (lastTopicNameAndAccentColorUsed != ThemeManager.getTopicNameAndAccentColorIdUsedForThemeLight()) ||
                 (toolbarTextColorIsInverted != ThemeManager.getToolbarTextColorIsInvertedForThemeLight())) {
             recreate();

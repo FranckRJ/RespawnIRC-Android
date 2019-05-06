@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.content.pm.ShortcutManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.core.view.GravityCompat;
@@ -19,12 +21,14 @@ import android.widget.Toast;
 
 import com.franckrj.respawnirc.ConnectActivity;
 import com.franckrj.respawnirc.ConnectAsModoActivity;
+import com.franckrj.respawnirc.ManageAccountListActivity;
 import com.franckrj.respawnirc.NavigationMenuAdapter;
 import com.franckrj.respawnirc.NavigationMenuListView;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.SettingsActivity;
 import com.franckrj.respawnirc.jvcforumlist.SelectForumInListActivity;
 import com.franckrj.respawnirc.dialogs.RefreshFavDialogFragment;
+import com.franckrj.respawnirc.utils.AccountManager;
 import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
@@ -32,11 +36,13 @@ import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbsNavigationViewActivity extends AbsToolbarActivity implements RefreshFavDialogFragment.NewFavsAvailable {
     protected static final int GROUP_ID_BASIC = 0;
     protected static final int GROUP_ID_FORUM_FAV = 1;
     protected static final int GROUP_ID_TOPIC_FAV = 2;
+    protected static final int GROUP_ID_ACCOUNT_LIST = 3;
     protected static final int ITEM_ID_HOME = 0;
     protected static final int ITEM_ID_FORUM = 1;
     protected static final int ITEM_ID_SHOWMP = 2;
@@ -47,11 +53,15 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected static final int ITEM_ID_REFRESH_FORUM_FAV = 7;
     protected static final int ITEM_ID_TOPIC_FAV_SELECTED = 8;
     protected static final int ITEM_ID_REFRESH_TOPIC_FAV = 9;
-    protected static final int ITEM_ID_CONNECT = 10;
-    protected static final int ITEM_ID_CONNECT_AS_MODO = 11;
+    protected static final int ITEM_ID_MANAGE_ACCOUNT = 10;
+    protected static final int ITEM_ID_ACCOUNT_SELECTED = 11;
+    protected static final int ITEM_ID_CONNECT_AS_MODO = 12;
+    protected static final int ITEM_ID_CONNECT = 13;
     protected static final int MODE_HOME = 0;
     protected static final int MODE_FORUM = 1;
     protected static final int MODE_CONNECT = 2;
+
+    protected static final String SAVE_MP_AND_NOTIF_IS_HIDDEN = "saveMpAndNotifIsHidden";
 
     protected static ArrayList<NavigationMenuAdapter.MenuItemInfo> listOfMenuItemInfoForHome = null;
     protected static ArrayList<NavigationMenuAdapter.MenuItemInfo> listOfMenuItemInfoForForum = null;
@@ -66,7 +76,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected ImageView contextConnectImageNavigation = null;
     protected ActionBarDrawerToggle toggleForDrawer = null;
     protected int lastItemSelected = -1;
-    protected String pseudoOfUser = "";
+    protected AccountManager.AccountInfos currentAccount = new AccountManager.AccountInfos();
     protected boolean isInNavigationConnectMode = false;
     protected String newFavSelected = "";
     protected boolean newFavIsSelectedByLongClick = false;
@@ -74,8 +84,8 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected int currentNavigationMenuMode = -1;
     protected ArrayList<NavigationMenuAdapter.MenuItemInfo> currentListOfMenuItem = null;
     protected boolean backIsOpenDrawer = false;
-    protected boolean userIsModo = false;
     protected boolean drawerIsDisabled = false;
+    protected boolean mpAndNotifNumberIsHidden = false;
 
     protected final AdapterView.OnItemClickListener itemInNavigationClickedListener = new AdapterView.OnItemClickListener() {
         @Override
@@ -84,13 +94,13 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             int currentGroupId = adapterForNavigationMenu.getGroupIdOfRow((int) id);
 
             if ((currentItemId == ITEM_ID_REFRESH_FORUM_FAV || currentItemId == ITEM_ID_REFRESH_TOPIC_FAV) && currentGroupId == GROUP_ID_BASIC) {
-                if (!pseudoOfUser.isEmpty()) {
+                if (!currentAccount.pseudo.isEmpty()) {
                     if (!getSupportFragmentManager().isStateSaved()) {
                         Bundle argForFrag = new Bundle();
                         RefreshFavDialogFragment refreshFavsDialogFragment = new RefreshFavDialogFragment();
 
-                        argForFrag.putString(RefreshFavDialogFragment.ARG_PSEUDO, pseudoOfUser);
-                        argForFrag.putString(RefreshFavDialogFragment.ARG_COOKIE_LIST, PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
+                        argForFrag.putString(RefreshFavDialogFragment.ARG_PSEUDO, currentAccount.pseudo);
+                        argForFrag.putString(RefreshFavDialogFragment.ARG_COOKIE_LIST, currentAccount.cookie);
                         if (currentItemId == ITEM_ID_REFRESH_FORUM_FAV) {
                             argForFrag.putInt(RefreshFavDialogFragment.ARG_FAV_TYPE, RefreshFavDialogFragment.FAV_FORUM);
                         } else {
@@ -116,6 +126,18 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                 newFavSelected = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.TOPIC_FAV_LINK, String.valueOf(currentItemId));
                 newForumOrTopicToRead(newFavSelected, false, false, false);
                 layoutForDrawer.closeDrawer(GravityCompat.START);
+                adapterForNavigationMenu.setRowSelected((int) id);
+            } else if (currentGroupId == GROUP_ID_ACCOUNT_LIST) {
+                lastItemSelected = ITEM_ID_ACCOUNT_SELECTED;
+                if (!currentAccount.pseudo.toLowerCase().equals(AccountManager.getAccountAtIndex(currentItemId).pseudo.toLowerCase())) {
+                    AccountManager.setCurrentAccount(AccountManager.getAccountAtIndex(currentItemId));
+                    currentAccount = AccountManager.getCurrentAccount();
+                    updateMpAndNotifNumberShowed(null, null);
+                    updateAccountDependentInfos();
+                    updatePseudoFromCurrentAccount();
+                    updateAccountListInNavigationMenu(false);
+                    layoutForDrawer.closeDrawer(GravityCompat.START);
+                }
                 adapterForNavigationMenu.setRowSelected((int) id);
             } else {
                 lastItemSelected = currentItemId;
@@ -150,7 +172,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     private final View.OnClickListener headerClickedListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (!pseudoOfUser.isEmpty()) {
+            if (!currentAccount.pseudo.isEmpty()) {
                 isInNavigationConnectMode = !isInNavigationConnectMode;
                 updateNavigationMenu();
             } else {
@@ -254,23 +276,34 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             }
             {
                 NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
-                tmpItemInfo.textContent = getString(R.string.connectWithAnotherAccount);
-                tmpItemInfo.iconResId = R.drawable.ic_add_dark_zoom;
-                tmpItemInfo.buttonResId = 0;
-                tmpItemInfo.isHeader = false;
-                tmpItemInfo.isEnabled = true;
-                tmpItemInfo.itemId = ITEM_ID_CONNECT;
-                tmpItemInfo.groupId = GROUP_ID_BASIC;
-                listOfMenuItemInfoForConnect.add(tmpItemInfo);
-            }
-            {
-                NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
                 tmpItemInfo.textContent = getString(R.string.connnectAsModoText);
                 tmpItemInfo.iconResId = R.drawable.ic_empty;
                 tmpItemInfo.buttonResId = 0;
                 tmpItemInfo.isHeader = false;
                 tmpItemInfo.isEnabled = true;
                 tmpItemInfo.itemId = ITEM_ID_CONNECT_AS_MODO;
+                tmpItemInfo.groupId = GROUP_ID_BASIC;
+                listOfMenuItemInfoForConnect.add(tmpItemInfo);
+            }
+            {
+                NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
+                tmpItemInfo.textContent = getString(R.string.accounts);
+                tmpItemInfo.iconResId = 0;
+                tmpItemInfo.buttonResId = R.drawable.ictb_settings_dark;
+                tmpItemInfo.isHeader = true;
+                tmpItemInfo.isEnabled = true;
+                tmpItemInfo.itemId = ITEM_ID_MANAGE_ACCOUNT;
+                tmpItemInfo.groupId = GROUP_ID_BASIC;
+                listOfMenuItemInfoForConnect.add(tmpItemInfo);
+            }
+            {
+                NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
+                tmpItemInfo.textContent = getString(R.string.addAnAccount);
+                tmpItemInfo.iconResId = R.drawable.ic_add_dark_zoom;
+                tmpItemInfo.buttonResId = 0;
+                tmpItemInfo.isHeader = false;
+                tmpItemInfo.isEnabled = true;
+                tmpItemInfo.itemId = ITEM_ID_CONNECT;
                 tmpItemInfo.groupId = GROUP_ID_BASIC;
                 listOfMenuItemInfoForConnect.add(tmpItemInfo);
             }
@@ -288,13 +321,31 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         }
     }
 
+    private void updatePseudoFromCurrentAccount() {
+        if (!currentAccount.pseudo.isEmpty()) {
+            pseudoTextNavigation.setText(currentAccount.pseudo);
+            if (!mpAndNotifNumberIsHidden) {
+                mpTextNavigation.setVisibility(View.VISIBLE);
+                notifTextNavigation.setVisibility(View.VISIBLE);
+            }
+        } else {
+            pseudoTextNavigation.setText(R.string.connectToJVC);
+            mpTextNavigation.setVisibility(View.GONE);
+            notifTextNavigation.setVisibility(View.GONE);
+        }
+
+        if (currentAccount.isModo && !currentAccount.pseudo.isEmpty()) {
+            pseudoTextNavigation.setTextColor(Undeprecator.resourcesGetColor(getResources(), R.color.colorPseudoModoThemeDark));
+        } else {
+            pseudoTextNavigation.setTextColor(Color.WHITE);
+        }
+    }
+
     private void updateNavigationMenu() {
         int newNavigationMenuMode;
 
-        if (!pseudoOfUser.isEmpty()) {
-            pseudoTextNavigation.setText(pseudoOfUser);
-        } else {
-            pseudoTextNavigation.setText(R.string.connectToJVC);
+        updatePseudoFromCurrentAccount();
+        if (currentAccount.pseudo.isEmpty()) {
             isInNavigationConnectMode = false;
         }
 
@@ -329,28 +380,24 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             updateFavsInNavigationMenu(false);
             adapterForNavigationMenu.setRowSelected(adapterForNavigationMenu.getPositionDependingOnId(idOfBaseActivity, GROUP_ID_BASIC));
 
-            if (pseudoOfUser.isEmpty()) {
+            if (currentAccount.pseudo.isEmpty()) {
                 contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_add_circle_outline_dark));
             } else {
                 contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_expand_more_dark));
             }
 
-            if (userIsModo && !pseudoOfUser.isEmpty()) {
-                pseudoTextNavigation.setTextColor(Undeprecator.resourcesGetColor(getResources(), R.color.colorPseudoModoThemeDark));
-
+            if (currentAccount.isModo && !currentAccount.pseudo.isEmpty()) {
                 if (positionOfShowGTAItem == -1) {
                     int positionOfPrefItem = adapterForNavigationMenu.getPositionDependingOnId(ITEM_ID_PREF, GROUP_ID_BASIC);
                     currentListOfMenuItem.add(positionOfPrefItem, showGTAMenuItem);
                 }
             } else {
-                pseudoTextNavigation.setTextColor(Color.WHITE);
-
                 if (positionOfShowGTAItem != -1) {
                     currentListOfMenuItem.remove(positionOfShowGTAItem);
                 }
             }
         } else {
-            adapterForNavigationMenu.setRowSelected(-1);
+            updateAccountListInNavigationMenu(false);
             contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_expand_less_dark));
         }
 
@@ -397,9 +444,37 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         }
     }
 
+    private void updateAccountListInNavigationMenu(@SuppressWarnings("SameParameterValue") boolean needToUpdateAdapter) {
+        List<String> listOfAccountPseudo = AccountManager.getListOfAccountPseudo();
+        int positionOfAddAnAccount;
+
+        adapterForNavigationMenu.removeAllItemsFromGroup(GROUP_ID_ACCOUNT_LIST);
+        positionOfAddAnAccount = adapterForNavigationMenu.getPositionDependingOnId(ITEM_ID_CONNECT, GROUP_ID_BASIC);
+        for (int i = 0; i < listOfAccountPseudo.size(); ++i) {
+            NavigationMenuAdapter.MenuItemInfo tmpItemInfo = new NavigationMenuAdapter.MenuItemInfo();
+            tmpItemInfo.textContent = listOfAccountPseudo.get(i);
+            tmpItemInfo.iconResId = 0;
+            tmpItemInfo.buttonResId = 0;
+            tmpItemInfo.isHeader = false;
+            tmpItemInfo.isEnabled = true;
+            tmpItemInfo.itemId = i;
+            tmpItemInfo.groupId = GROUP_ID_ACCOUNT_LIST;
+            currentListOfMenuItem.add(positionOfAddAnAccount, tmpItemInfo);
+            if (listOfAccountPseudo.get(i).toLowerCase().equals(currentAccount.pseudo.toLowerCase())) {
+                adapterForNavigationMenu.setRowSelected(positionOfAddAnAccount);
+            }
+            ++positionOfAddAnAccount;
+        }
+
+        if (needToUpdateAdapter) {
+            adapterForNavigationMenu.notifyDataSetChanged();
+        }
+    }
+
     protected void hideMpAndNotifNumber() {
         mpTextNavigation.setVisibility(View.GONE);
         notifTextNavigation.setVisibility(View.GONE);
+        mpAndNotifNumberIsHidden = true;
     }
 
     protected void updateMpAndNotifNumberShowed(String newNumberOfMp, String newNumberOfNotif) {
@@ -439,8 +514,11 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         initializeListsOfMenuItem();
         initializeViewAndToolbar();
 
-        pseudoOfUser = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER);
-        userIsModo = PrefsManager.getBool(PrefsManager.BoolPref.Names.USER_IS_MODO);
+        if (savedInstanceState != null) {
+            mpAndNotifNumberIsHidden = savedInstanceState.getBoolean(SAVE_MP_AND_NOTIF_IS_HIDDEN, false);
+        }
+
+        currentAccount = AccountManager.getCurrentAccount();
 
         toggleForDrawer = new ActionBarDrawerToggle(this, layoutForDrawer, R.string.openDrawerContentDescRes, R.string.closeDrawerContentDescRes) {
             @Override
@@ -475,7 +553,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                             Utils.openLinkInInternalBrowser("http://www.jeuxvideo.com/messages-prives/boite-reception.php", AbsNavigationViewActivity.this);
                             break;
                         case ITEM_ID_SHOWNOTIF:
-                            Utils.openLinkInInternalBrowser("http://www.jeuxvideo.com/profil/" + pseudoOfUser.toLowerCase() + "?mode=abonnements", AbsNavigationViewActivity.this);
+                            Utils.openLinkInInternalBrowser("http://www.jeuxvideo.com/profil/" + currentAccount.pseudo.toLowerCase() + "?mode=abonnements", AbsNavigationViewActivity.this);
                             break;
                         case ITEM_ID_SHOWGTA:
                             Utils.openLinkInInternalBrowser("http://www.jeuxvideo.com/gta/hp_alerte.php", AbsNavigationViewActivity.this);
@@ -490,6 +568,9 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
                         case ITEM_ID_TOPIC_FAV_SELECTED:
                             newForumOrTopicToRead(newFavSelected, false, true, newFavIsSelectedByLongClick);
                             newFavSelected = "";
+                            break;
+                        case ITEM_ID_MANAGE_ACCOUNT:
+                            startActivity(new Intent(AbsNavigationViewActivity.this, ManageAccountListActivity.class));
                             break;
                     }
                 }
@@ -521,6 +602,12 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         layoutForDrawer.addDrawerListener(toggleForDrawer);
         layoutForDrawer.setDrawerShadow(ThemeManager.getDrawable(R.attr.themedShadowDrawer, this), GravityCompat.START);
         updateNavigationMenu();
+
+        if (ThemeManager.getThemeUsed() == ThemeManager.ThemeName.LIGHT_THEME && ThemeManager.getHeaderColorUsedForThemeLight() != Undeprecator.resourcesGetColor(getResources(), R.color.defaultHeaderColorThemeLight)) {
+            Drawable newHeaderBackground = Undeprecator.resourcesGetDrawable(getResources(), R.drawable.navigation_header_background_base);
+            newHeaderBackground.setColorFilter(ThemeManager.getHeaderColorUsedForThemeLight(), PorterDuff.Mode.OVERLAY);
+            navigationHeader.setBackgroundDrawable(newHeaderBackground);
+        }
     }
 
     @Override
@@ -532,15 +619,19 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     @Override
     public void onResume() {
         super.onResume();
-        String tmpPseudoOfUser = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER);
-        boolean tmpUserIsModo = PrefsManager.getBool(PrefsManager.BoolPref.Names.USER_IS_MODO);
+        AccountManager.AccountInfos tmpAccount = AccountManager.getCurrentAccount();
         backIsOpenDrawer = PrefsManager.getBool(PrefsManager.BoolPref.Names.BACK_IS_OPEN_DRAWER);
 
-        if (!tmpPseudoOfUser.equals(pseudoOfUser) || tmpUserIsModo != userIsModo) {
-            pseudoOfUser = tmpPseudoOfUser;
-            userIsModo = tmpUserIsModo;
+        if (!currentAccount.equals(tmpAccount)) {
+            currentAccount = tmpAccount;
             updateNavigationMenu();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(SAVE_MP_AND_NOTIF_IS_HIDDEN, mpAndNotifNumberIsHidden);
     }
 
     @Override
@@ -624,4 +715,5 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected abstract void initializeViewAndToolbar();
     protected abstract void newForumOrTopicToRead(String link, boolean itsAForum, boolean isWhenDrawerIsClosed, boolean fromLongClick);
     protected abstract void launchShowForumInfos();
+    protected abstract void updateAccountDependentInfos();
 }

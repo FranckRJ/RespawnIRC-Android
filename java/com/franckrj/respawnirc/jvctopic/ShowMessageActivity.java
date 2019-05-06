@@ -20,8 +20,10 @@ import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 import com.franckrj.respawnirc.dialogs.LinkMenuDialogFragment;
 import com.franckrj.respawnirc.dialogs.MessageMenuDialogFragment;
 import com.franckrj.respawnirc.dialogs.ShowImageDialogFragment;
+import com.franckrj.respawnirc.jvcforum.SearchTopicInForumActivity;
 import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
 import com.franckrj.respawnirc.jvctopic.jvctopicviewers.JVCTopicAdapter;
+import com.franckrj.respawnirc.utils.AccountManager;
 import com.franckrj.respawnirc.utils.ImageDownloader;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
@@ -119,6 +121,10 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
                     newShowForumIntent.putExtra(ShowForumActivity.EXTRA_NEW_LINK, possibleNewLink);
                     newShowForumIntent.putExtra(ShowForumActivity.EXTRA_IS_FIRST_ACTIVITY, false);
                     startActivity(newShowForumIntent);
+                } else if (JVCParser.checkIfItsSearchFormatedLink(possibleNewLink)) {
+                    Intent newSearchInForumIntent = new Intent(ShowMessageActivity.this, SearchTopicInForumActivity.class);
+                    newSearchInForumIntent.putExtra(SearchTopicInForumActivity.EXTRA_SEARCH_LINK, possibleNewLink);
+                    startActivity(newSearchInForumIntent);
                 } else if (JVCParser.checkIfItsMessageFormatedLink(possibleNewLink)) {
                     Intent newShowMessageIntent = new Intent(ShowMessageActivity.this, ShowMessageActivity.class);
                     newShowMessageIntent.putExtra(ShowMessageActivity.EXTRA_MESSAGE_PERMALINK, possibleNewLink);
@@ -269,9 +275,9 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
         currentSettings.shortenLongLink = PrefsManager.getBool(PrefsManager.BoolPref.Names.SHORTEN_LONG_LINK);
         currentSettings.hideUglyImages = PrefsManager.getBool(PrefsManager.BoolPref.Names.HIDE_UGLY_IMAGES);
         currentSettings.enableAlphaInNoelshackMini = PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_ALPHA_IN_NOELSHACK_MINI);
-        currentSettings.pseudoOfUser = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER);
-        currentSettings.colorPseudoOfUserInInfoLine = PrefsManager.getBool(PrefsManager.BoolPref.Names.COLOR_PSEUDO_OF_USER_IN_INFO);
-        currentSettings.colorPseudoOfUserInMessage = PrefsManager.getBool(PrefsManager.BoolPref.Names.COLOR_PSEUDO_OF_USER_IN_MESSAGE);
+        currentSettings.pseudoOfUser = AccountManager.getCurrentAccount().pseudo;
+        currentSettings.typeOfPseudoToColorInInfoLine.setTypeFromString(PrefsManager.getString(PrefsManager.StringPref.Names.TYPE_OF_PSEUDO_TO_COLOR_IN_INFO));
+        currentSettings.typeOfPseudoToColorInMessage.setTypeFromString(PrefsManager.getString(PrefsManager.StringPref.Names.TYPE_OF_PSEUDO_TO_COLOR_IN_MESSAGE));
         adapterForTopic.setShowSpoilDefault(PrefsManager.getBool(PrefsManager.BoolPref.Names.DEFAULT_SHOW_SPOIL_VAL));
         adapterForTopic.setColorDeletedMessages(PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_COLOR_DELETED_MESSAGES));
         adapterForTopic.setMessageFontSizeInSp(PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.MESSAGE_FONT_SIZE));
@@ -357,7 +363,7 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
                     currentTaskForGetMessage = new GetMessageToShow();
                     currentTaskForGetMessage.setRequestIsStartedListener(getMessageIsStartedListener);
                     currentTaskForGetMessage.setRequestIsFinishedListener(getMessageIsFinishedListener);
-                    currentTaskForGetMessage.execute(getIntent().getStringExtra(EXTRA_MESSAGE_PERMALINK), PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
+                    currentTaskForGetMessage.execute(getIntent().getStringExtra(EXTRA_MESSAGE_PERMALINK), AccountManager.getCurrentAccount().cookie);
                 }
             }
 

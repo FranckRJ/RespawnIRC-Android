@@ -41,8 +41,6 @@
     <string name="settingsHideTotallyMessagesOfIgnoredPseudos" translatable="false">settings.hideTotallyMessagesOfIgnoredPseudos</string>
     <string name="settingsEnableFastRefreshOfImages" translatable="false">settings.enableFastRefreshOfImages</string>
     <string name="settingsEnableColorDeletedMessages" translatable="false">settings.enableColorDeletedMessages</string>
-    <string name="settingsColorPseudoOfUserInInfo" translatable="false">settings.colorPseudoOfUserInInfo</string>
-    <string name="settingsColorPseudoOfUserInMessage" translatable="false">settings.colorPseudoOfUserInMessage</string>
     <string name="settingsBackIsOpenDrawer" translatable="false">settings.backIsOpenDrawer</string>
     <string name="settingsAvatarSize" translatable="false">settings.avatarSize</string>
     <string name="settingsStickerSize" translatable="false">settings.stickerSize</string>
@@ -63,4 +61,9 @@
     <string name="settingsMessageSignatureFontSize" translatable="false">settings.messageSignatureFontSizeV2</string>
     <string name="settingsRefreshForumOnResume" translatable="false">settings.refreshForumOnResume</string>
     <string name="settingsEnableAlphaInNoelshackMini" translatable="false">settings.enableAlphaInNoelshackMini</string>
+    <string name="settingsHeaderColorOfLightTheme" translatable="false">settings.customColor.headerColorOfLightTheme</string>
+    <string name="settingsBrightenAltColor" translatable="false">settings.customColor.brightenAltColor</string>
+    <string name="settingsTypeOfPseudoToColorInInfo" translatable="false">settings.typeOfPseudoToColorInInfo</string>
+    <string name="settingsTypeOfPseudoToColorInMessage" translatable="false">settings.typeOfPseudoToColorInMessage</string>
+    <string name="settingsPseudoUserColorOfLightTheme" translatable="false">settings.customColor.pseudoUserColorOfLightTheme</string>
 </resources>

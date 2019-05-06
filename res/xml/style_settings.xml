@@ -16,6 +16,12 @@
     <PreferenceCategory
         android:title="@string/lightThemeColors">
         <ColorPickerPreference
+            android:key="@string/settingsHeaderColorOfLightTheme"
+            android:title="@string/headerColor"
+            app:pref_currentColor="@color/defaultHeaderColorThemeLight"
+            app:pref_colors="@array/choicesForHeaderColor"/>
+
+        <ColorPickerPreference
             android:key="@string/settingsPrimaryColorOfLightTheme"
             android:title="@string/primaryColor"
             app:pref_currentColor="@color/colorPrimaryIndigo"
@@ -33,10 +39,20 @@
             app:pref_colors="@array/choicesForTopicNameAndAccentColor"/>
 
         <ColorPickerPreference
+            android:key="@string/settingsPseudoUserColorOfLightTheme"
+            android:title="@string/pseudoUserColorTitle"
+            app:pref_currentColor="@color/defaultColorPseudoUserThemeLight"
+            app:pref_colors="@array/choicesForPseudoUserColor"/>
+
+        <ColorPickerPreference
             android:key="@string/settingsAltColorOfLightTheme"
             android:title="@string/altColorOfMessages"
             app:pref_currentColor="@color/defaultColorAltThemeLight"
             app:pref_colors="@array/choicesForAltColor"/>
+
+        <CheckBoxPreference
+            android:key="@string/settingsBrightenAltColor"
+            android:title="@string/brightenAltColorTitle"/>
 
         <ColorPickerPreference
             android:key="@string/settingsSurveyColorOfLightTheme"

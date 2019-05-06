@@ -305,7 +305,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         updateShareAction();
         menu.findItem(R.id.action_send_topic_showforum).setEnabled(!Utils.stringIsEmptyOrNull(forumStatus.listOfInputInAString) && !pageNavigation.getCurrentLinkIsEmpty());
 
-        if (forumStatus.isInFavs != null && !pseudoOfUser.isEmpty()) {
+        if (forumStatus.isInFavs != null && !currentAccount.pseudo.isEmpty()) {
             favItem.setEnabled(true);
             if (forumStatus.isInFavs) {
                 favItem.setTitle(R.string.removeFromFavs);
@@ -325,7 +325,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
             case R.id.action_change_forum_fav_value_showforum:
                 if (currentTaskForFavs == null) {
                     currentTaskForFavs = new AddOrRemoveThingToFavs(!forumStatus.isInFavs, this);
-                    currentTaskForFavs.execute(JVCParser.getForumIdOfThisForum(pageNavigation.getCurrentPageLink()), forumStatus.ajaxInfos.pref, PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
+                    currentTaskForFavs.execute(JVCParser.getForumIdOfThisForum(pageNavigation.getCurrentPageLink()), forumStatus.ajaxInfos.pref, currentAccount.cookie);
                 } else {
                     Toast.makeText(ShowForumActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
                 }
@@ -394,8 +394,17 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     protected void launchShowForumInfos() {
         Intent newShowForumInfosIntent = new Intent(this, ShowForumInfosActivity.class);
         newShowForumInfosIntent.putExtra(ShowForumInfosActivity.EXTRA_FORUM_LINK, pageNavigation.getFirstPageLink());
-        newShowForumInfosIntent.putExtra(ShowForumInfosActivity.EXTRA_COOKIES, PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
+        newShowForumInfosIntent.putExtra(ShowForumInfosActivity.EXTRA_COOKIES, currentAccount.cookie);
         startActivity(newShowForumInfosIntent);
+    }
+
+    @Override
+    protected void updateAccountDependentInfos() {
+        forumStatus.numberOfMp = null;
+        forumStatus.numberOfNotif = null;
+        if (getCurrentFragment() != null) {
+            getCurrentFragment().refreshContentBecauseAccountChanged();
+        }
     }
 
     @Override

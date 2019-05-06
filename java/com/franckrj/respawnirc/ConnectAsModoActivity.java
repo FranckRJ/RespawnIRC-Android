@@ -12,8 +12,8 @@ import android.widget.Toast;
 
 import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
 import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
+import com.franckrj.respawnirc.utils.AccountManager;
 import com.franckrj.respawnirc.utils.JVCParser;
-import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
@@ -71,8 +71,7 @@ public class ConnectAsModoActivity extends AbsHomeIsBackActivity {
 
                         return;
                     } else if (JVCParser.getErrorMessageWhenModoConnect(reqResult).isEmpty()) {
-                        PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, true);
-                        PrefsManager.applyChanges();
+                        AccountManager.setCurrentAccountIsModo(true);
                         Toast.makeText(ConnectAsModoActivity.this, R.string.youAreAlreadyConnectedAsModo, Toast.LENGTH_SHORT).show();
                         finish();
                         return;
@@ -82,8 +81,7 @@ public class ConnectAsModoActivity extends AbsHomeIsBackActivity {
                     latestListOfInputInAString = JVCParser.getListOfInputInAStringInModoConnectFormForThisPage(reqResult);
 
                     if (errorWhenConnecting.isEmpty()) {
-                        PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, true);
-                        PrefsManager.applyChanges();
+                        AccountManager.setCurrentAccountIsModo(true);
                         Toast.makeText(ConnectAsModoActivity.this, R.string.connectionSuccessful, Toast.LENGTH_SHORT).show();
                         finish();
                     } else {
@@ -134,7 +132,7 @@ public class ConnectAsModoActivity extends AbsHomeIsBackActivity {
         modoPasswordText.setOnEditorActionListener(actionInPasswordEditTextListener);
         validateButton.setOnClickListener(validateButtonClickedListener);
 
-        currentCookieList = PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST);
+        currentCookieList = AccountManager.getCurrentAccount().cookie;
 
         if (savedInstanceState != null) {
             String tmpListOfInputInAString = savedInstanceState.getString(SAVE_LIST_OF_INPUT, null);

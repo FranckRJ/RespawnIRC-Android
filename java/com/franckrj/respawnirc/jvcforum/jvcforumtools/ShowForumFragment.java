@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.franckrj.respawnirc.base.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.utils.AccountManager;
 import com.franckrj.respawnirc.utils.IgnoreListManager;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
@@ -161,14 +162,15 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         adapterForForum.setTopicNameColor(ThemeManager.getColorInt(R.attr.themedTopicNameColor, requireActivity()));
         adapterForForum.setPseudoModoColor(ThemeManager.getColorInt(R.attr.themedPseudoModoColor, requireActivity()));
         adapterForForum.setPseudoAdminColor(ThemeManager.getColorInt(R.attr.themedPseudoAdminColor, requireActivity()));
-        adapterForForum.setAltBackgroundColor(ThemeManager.getColorInt(R.attr.themedAltBackgroundColor, requireActivity()));
         adapterForForum.setDefaultBackgroundColor(ThemeManager.getColorInt(R.attr.themedDefaultBackgroundColor, requireActivity()));
+        adapterForForum.setAltBackgroundColor(ThemeManager.getColorInt(R.attr.themedAltBackgroundColor, requireActivity()));
     }
 
     private void reloadSettings() {
+        AccountManager.AccountInfos currentAccount = AccountManager.getCurrentAccount();
         reloadAdapterSettings();
-        getterForForum.setCookieListInAString(PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
-        pseudoOfUserInLC = PrefsManager.getString(PrefsManager.StringPref.Names.PSEUDO_OF_USER).toLowerCase();
+        getterForForum.setCookieListInAString(currentAccount.cookie);
+        pseudoOfUserInLC = currentAccount.pseudo.toLowerCase();
         ignoreTopicToo = PrefsManager.getBool(PrefsManager.BoolPref.Names.IGNORE_TOPIC_TOO);
         clearTopicsOnRefresh = true;
     }
@@ -193,6 +195,18 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
             adapterForForum.addItem(thisTopicInfo);
         }
         adapterForForum.notifyDataSetChanged();
+    }
+
+    public void refreshContentBecauseAccountChanged() {
+        AccountManager.AccountInfos currentAccount = AccountManager.getCurrentAccount();
+
+        getterForForum.stopAllCurrentTask();
+        getterForForum.setCookieListInAString(currentAccount.cookie);
+        pseudoOfUserInLC = currentAccount.pseudo.toLowerCase();
+        adapterForForum.removeAllItems();
+        adapterForForum.notifyDataSetChanged();
+
+        refreshContent();
     }
 
     @Override

@@ -180,6 +180,12 @@ public class NavigationMenuAdapter extends BaseAdapter {
         return convertView;
     }
 
+    @Override
+    public boolean isEnabled(int position) {
+        MenuItemInfo itemInfo = listOfMenuItem.get(position);
+        return (!itemInfo.isHeader || itemInfo.buttonResId != 0) && itemInfo.isEnabled;
+    }
+
     private class CustomViewHolder {
         public TextView contentTextView = null;
         public View upperLineView = null;

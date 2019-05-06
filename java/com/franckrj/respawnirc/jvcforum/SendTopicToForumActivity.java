@@ -20,6 +20,7 @@ import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
 import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 import com.franckrj.respawnirc.dialogs.InsertStuffDialogFragment;
+import com.franckrj.respawnirc.utils.AccountManager;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Utils;
@@ -148,7 +149,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
     }
 
     private void updatePostTypeTextAndVisibility() {
-        if (PrefsManager.getBool(PrefsManager.BoolPref.Names.USER_IS_MODO) || userCanPostAsModo) {
+        if (AccountManager.getCurrentAccount().isModo || userCanPostAsModo) {
             postTypeText.setVisibility(View.VISIBLE);
 
             if (userCanPostAsModo && PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE)) {
@@ -177,7 +178,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
     }
 
     private void initializeSettings() {
-        currentInfos.cookieList = PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST);
+        currentInfos.cookieList = AccountManager.getCurrentAccount().cookie;
         lastTopicTitleSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_TOPIC_TITLE_SENDED);
         lastTopicContentSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_TOPIC_CONTENT_SENDED);
         lastSurveyTitleSended = PrefsManager.getString(PrefsManager.StringPref.Names.LAST_SURVEY_TITLE_SENDED);
