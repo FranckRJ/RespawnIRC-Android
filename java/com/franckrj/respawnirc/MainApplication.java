@@ -7,6 +7,7 @@ import androidx.emoji.text.EmojiCompat;
 import androidx.emoji.text.FontRequestEmojiCompatConfig;
 import androidx.core.provider.FontRequest;
 
+import com.franckrj.respawnirc.utils.AccountManager;
 import com.franckrj.respawnirc.utils.IgnoreListManager;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.StickerConverter;
@@ -33,6 +34,7 @@ public class MainApplication extends Application {
         ThemeManager.updateThemeUsed();
         ThemeManager.updateToolbarTextColor();
         ThemeManager.updateColorsUsed(getResources());
+        AccountManager.loadListOfAccounts();
         IgnoreListManager.loadListOfIgnoredPseudos();
         StickerConverter.initializeBasesRules();
 

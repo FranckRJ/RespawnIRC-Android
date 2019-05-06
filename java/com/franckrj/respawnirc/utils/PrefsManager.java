@@ -54,6 +54,7 @@ public class PrefsManager {
         addIntPref(IntPref.Names.CURRENT_TOPIC_MODE, "pref.currentTopicMode", AbsShowTopicFragment.MODE_FORUM);
         addIntPref(IntPref.Names.FORUM_FAV_ARRAY_SIZE, "pref.forumFavArraySize", 0);
         addIntPref(IntPref.Names.TOPIC_FAV_ARRAY_SIZE, "pref.topicFavArraySize", 0);
+        addIntPref(IntPref.Names.ACCOUNT_ARRAY_SIZE, "pref.reserveAccountArraySize", 0);
         addIntPref(IntPref.Names.LAST_ROW_SELECTED_INSERTSTUFF, "pref.lastRowSelecetdInsertstuff", 1);
         addIntPref(IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED, "pref.numberOfWebviewOpenSinceCacheCleared", 0);
         addIntPref(IntPref.Names.SHORTCUT_VERSION_NUMBER, "pref.shortcutVersionNumber", 0);
@@ -65,6 +66,9 @@ public class PrefsManager {
         addStringPref(StringPref.Names.FORUM_FAV_LINK, "pref.forumFavLink.", "");
         addStringPref(StringPref.Names.TOPIC_FAV_NAME, "pref.topicFavName.", "");
         addStringPref(StringPref.Names.TOPIC_FAV_LINK, "pref.topicFavLink.", "");
+        addStringPref(StringPref.Names.ACCOUNT_PSEUDO, "pref.reserveAccountPseudo.", "");
+        addStringPref(StringPref.Names.ACCOUNT_COOKIE, "pref.reserveAccountCookie.", "");
+        addStringPref(StringPref.Names.ACCOUNT_IS_MODO, "pref.reserveAccountIsModo.", "false");
         addStringPref(StringPref.Names.TOPIC_URL_TO_FETCH, "pref.topicUrlToFetch", "");
         addStringPref(StringPref.Names.FORUM_URL_TO_FETCH, "pref.forumUrlToFetch", "");
         addStringPref(StringPref.Names.PSEUDO_OF_AUTHOR_OF_TOPIC, "pref.pseudoOfAuthorOfTopic", "");
@@ -106,19 +110,20 @@ public class PrefsManager {
         addBoolPref(BoolPref.Names.HIDE_TOTALLY_MESSAGES_OF_IGNORED_PSEUDOS, currentContext.getString(R.string.settingsHideTotallyMessagesOfIgnoredPseudos), true);
         addBoolPref(BoolPref.Names.ENABLE_FAST_REFRESH_OF_IMAGES, currentContext.getString(R.string.settingsEnableFastRefreshOfImages), false);
         addBoolPref(BoolPref.Names.ENABLE_COLOR_DELETED_MESSAGES, currentContext.getString(R.string.settingsEnableColorDeletedMessages), true);
-        addBoolPref(BoolPref.Names.COLOR_PSEUDO_OF_USER_IN_INFO, currentContext.getString(R.string.settingsColorPseudoOfUserInInfo), true);
-        addBoolPref(BoolPref.Names.COLOR_PSEUDO_OF_USER_IN_MESSAGE, currentContext.getString(R.string.settingsColorPseudoOfUserInMessage), true);
         addBoolPref(BoolPref.Names.BACK_IS_OPEN_DRAWER, currentContext.getString(R.string.settingsBackIsOpenDrawer), false);
         addBoolPref(BoolPref.Names.SAVE_LAST_ROW_USED_INSERTSTUFF, currentContext.getString(R.string.settingsSaveLastRowUsedInsertstuff), true);
         addBoolPref(BoolPref.Names.INVERT_TOOLBAR_TEXT_COLOR, currentContext.getString(R.string.settingsInvertToolbarTextColor), false);
         addBoolPref(BoolPref.Names.REFRESH_FORUM_ON_RESUME, currentContext.getString(R.string.settingsRefreshForumOnResume), false);
         addBoolPref(BoolPref.Names.ENABLE_ALPHA_IN_NOELSHACK_MINI, currentContext.getString(R.string.settingsEnableAlphaInNoelshackMini), false);
+        addBoolPref(BoolPref.Names.BRIGHTEN_ALT_COLOR, currentContext.getString(R.string.settingsBrightenAltColor), false);
 
+        addIntPref(IntPref.Names.HEADER_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsHeaderColorOfLightTheme), Undeprecator.resourcesGetColor(currentContext.getResources(), R.color.defaultHeaderColorThemeLight));
         addIntPref(IntPref.Names.PRIMARY_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsPrimaryColorOfLightTheme), 0);
         addIntPref(IntPref.Names.TOPIC_NAME_AND_ACCENT_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsTopicNameAndAccentColorOfLightTheme), 0);
         addIntPref(IntPref.Names.ALT_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsAltColorOfLightTheme), 0);
         addIntPref(IntPref.Names.SURVEY_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsSurveyColorOfLightTheme), 0);
         addIntPref(IntPref.Names.DELETED_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsDeletedColorOfLightTheme), 0);
+        addIntPref(IntPref.Names.PSEUDO_USER_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsPseudoUserColorOfLightTheme), 0);
 
         addStringPref(StringPref.Names.MAX_NUMBER_OF_OVERLY_QUOTE, currentContext.getString(R.string.settingsMaxNumberOfOverlyQuote), "2", 0, 15);
         addStringPref(StringPref.Names.SHOW_AVATAR_MODE_FORUM, currentContext.getString(R.string.settingsShowAvatarModeForum), String.valueOf(ShowImageType.ALWAYS));
@@ -137,6 +142,8 @@ public class PrefsManager {
         addStringPref(StringPref.Names.MESSAGE_FONT_SIZE, currentContext.getString(R.string.settingsMessageFontSize), "14");
         addStringPref(StringPref.Names.MESSAGE_INFOS_FONT_SIZE, currentContext.getString(R.string.settingsMessageInfosFontSize), "14");
         addStringPref(StringPref.Names.MESSAGE_SIGNATURE_FONT_SIZE, currentContext.getString(R.string.settingsMessageSignatureFontSize), "14");
+        addStringPref(StringPref.Names.TYPE_OF_PSEUDO_TO_COLOR_IN_INFO, currentContext.getString(R.string.settingsTypeOfPseudoToColorInInfo), String.valueOf(PseudoColorType.ALL_ACCOUNTS));
+        addStringPref(StringPref.Names.TYPE_OF_PSEUDO_TO_COLOR_IN_MESSAGE, currentContext.getString(R.string.settingsTypeOfPseudoToColorInMessage), String.valueOf(PseudoColorType.ALL_ACCOUNTS));
     }
 
     public static boolean getBool(BoolPref.Names prefName) {
@@ -321,13 +328,13 @@ public class PrefsManager {
             USER_IS_MODO, POST_AS_MODO_WHEN_POSSIBLE,
             IGNORE_TOPIC_TOO, HIDE_TOTALLY_MESSAGES_OF_IGNORED_PSEUDOS,
             ENABLE_FAST_REFRESH_OF_IMAGES,
-            COLOR_PSEUDO_OF_USER_IN_INFO, COLOR_PSEUDO_OF_USER_IN_MESSAGE,
             BACK_IS_OPEN_DRAWER,
             SAVE_LAST_ROW_USED_INSERTSTUFF,
             INVERT_TOOLBAR_TEXT_COLOR,
             USE_LAST_MESSAGE_DRAFT_SAVED, USE_LAST_TOPIC_DRAFT_SAVED,
             REFRESH_FORUM_ON_RESUME,
-            ENABLE_ALPHA_IN_NOELSHACK_MINI
+            ENABLE_ALPHA_IN_NOELSHACK_MINI,
+            BRIGHTEN_ALT_COLOR
         }
     }
 
@@ -343,12 +350,13 @@ public class PrefsManager {
         public enum Names {
             LAST_ACTIVITY_VIEWED,
             CURRENT_TOPIC_MODE,
-            FORUM_FAV_ARRAY_SIZE, TOPIC_FAV_ARRAY_SIZE,
+            FORUM_FAV_ARRAY_SIZE, TOPIC_FAV_ARRAY_SIZE, ACCOUNT_ARRAY_SIZE,
             LAST_ROW_SELECTED_INSERTSTUFF,
-            PRIMARY_COLOR_OF_LIGHT_THEME, TOPIC_NAME_AND_ACCENT_COLOR_OF_LIGHT_THEME,
+            HEADER_COLOR_OF_LIGHT_THEME, PRIMARY_COLOR_OF_LIGHT_THEME, TOPIC_NAME_AND_ACCENT_COLOR_OF_LIGHT_THEME,
             ALT_COLOR_OF_LIGHT_THEME, SURVEY_COLOR_OF_LIGHT_THEME, DELETED_COLOR_OF_LIGHT_THEME,
             NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED,
-            SHORTCUT_VERSION_NUMBER
+            SHORTCUT_VERSION_NUMBER,
+            PSEUDO_USER_COLOR_OF_LIGHT_THEME
         }
     }
 
@@ -379,6 +387,7 @@ public class PrefsManager {
             PSEUDO_OF_USER, COOKIES_LIST,
             LAST_MESSAGE_SENDED,
             FORUM_FAV_NAME, FORUM_FAV_LINK, TOPIC_FAV_NAME, TOPIC_FAV_LINK,
+            ACCOUNT_PSEUDO, ACCOUNT_COOKIE, ACCOUNT_IS_MODO,
             TOPIC_URL_TO_FETCH, FORUM_URL_TO_FETCH, PSEUDO_OF_AUTHOR_OF_TOPIC,
             OLD_URL_FOR_TOPIC,
             LAST_TOPIC_TITLE_SENDED, LAST_TOPIC_CONTENT_SENDED, LAST_SURVEY_TITLE_SENDED, LAST_SURVEY_REPLY_SENDED_IN_A_STRING,
@@ -393,7 +402,8 @@ public class PrefsManager {
             LINK_TYPE_FOR_INTERNAL_BROWSER,
             SAVE_MESSAGES_AND_TOPICS_AS_DRAFT_TYPE,
             MESSAGE_DRAFT, TOPIC_TITLE_DRAFT, TOPIC_CONTENT_DRAFT, SURVEY_TITLE_DRAFT, SURVEY_REPLY_IN_A_STRING_DRAFT,
-            TOPIC_TITLE_FONT_SIZE, TOPIC_INFOS_FONT_SIZE, MESSAGE_FONT_SIZE, MESSAGE_INFOS_FONT_SIZE, MESSAGE_SIGNATURE_FONT_SIZE
+            TOPIC_TITLE_FONT_SIZE, TOPIC_INFOS_FONT_SIZE, MESSAGE_FONT_SIZE, MESSAGE_INFOS_FONT_SIZE, MESSAGE_SIGNATURE_FONT_SIZE,
+            TYPE_OF_PSEUDO_TO_COLOR_IN_INFO, TYPE_OF_PSEUDO_TO_COLOR_IN_MESSAGE
         }
     }
 
@@ -411,6 +421,17 @@ public class PrefsManager {
         }
     }
 
+    public static class PseudoColorType extends IntValueType{
+        public static final int ALL_ACCOUNTS = 0;
+        public static final int CURRENT_ONLY = 1;
+        @SuppressWarnings("unused")
+        public static final int NONE = 2;
+
+        public PseudoColorType(int newDefaultType) {
+            super(newDefaultType);
+        }
+    }
+
     public static class LinkType extends IntValueType{
         public static final int ALL_LINKS = 0;
         public static final int JVC_LINKS_ONLY = 1;
@@ -424,7 +445,8 @@ public class PrefsManager {
     public static class ShowImageType extends IntValueType {
         public static final int ALWAYS = 0;
         public static final int WIFI_ONLY = 1;
-        //public static final int NEVER = 2;
+        @SuppressWarnings("unused")
+        public static final int NEVER = 2;
 
         public ShowImageType(int newDefaultType) {
             super(newDefaultType);

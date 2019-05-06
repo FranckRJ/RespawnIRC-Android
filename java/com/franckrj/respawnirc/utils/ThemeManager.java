@@ -48,9 +48,26 @@ public class ThemeManager {
     private static boolean toolbarTextColorIsInvertedForThemeLight = false;
     private static int primaryColorIdUsedForThemeLight = COLOR_ID_INDIGO;
     private static int topicNameAndAccentColorIdUsedForThemeLight = COLOR_ID_DEFAULT;
+    private static @ColorInt int realHeaderColorUsedForLightTheme = 0;
+    private static @ColorInt int realPseudoUserColorUsedForLightTheme = 0;
     private static @ColorInt int realAltColorUsedForLightTheme = 0;
     private static @ColorInt int realSurveyColorUsedForLightTheme = 0;
     private static @ColorInt int realDeletedColorUsedForLightTheme = 0;
+
+    private static @ColorInt int brightenColor(@ColorInt int color) {
+        if (color == 0) {
+            return 0;
+        } else {
+            int a = Color.alpha(color);
+            int r = (int) Math.round((Color.red(color) + 255) / 2.);
+            int g = (int) Math.round((Color.green(color) + 255) / 2.);
+            int b = (int) Math.round((Color.blue(color) + 255) / 2.);
+            return Color.argb(a,
+                    Math.min(r, 255),
+                    Math.min(g, 255),
+                    Math.min(b, 255));
+        }
+    }
 
     public static void updateThemeUsed() {
         String themeStringId = PrefsManager.getString(PrefsManager.StringPref.Names.THEME_USED);
@@ -83,9 +100,16 @@ public class ThemeManager {
         int[] arrayOfTopicNameAndAccentColors = res.getIntArray(R.array.choicesForTopicNameAndAccentColor);
         int primaryColorChoosed = PrefsManager.getInt(PrefsManager.IntPref.Names.PRIMARY_COLOR_OF_LIGHT_THEME);
         int topicNameAndAccentColorChoosed = PrefsManager.getInt(PrefsManager.IntPref.Names.TOPIC_NAME_AND_ACCENT_COLOR_OF_LIGHT_THEME);
-        realAltColorUsedForLightTheme = PrefsManager.getInt(PrefsManager.IntPref.Names.ALT_COLOR_OF_LIGHT_THEME);
+        realHeaderColorUsedForLightTheme = PrefsManager.getInt(PrefsManager.IntPref.Names.HEADER_COLOR_OF_LIGHT_THEME);
+        realPseudoUserColorUsedForLightTheme = PrefsManager.getInt(PrefsManager.IntPref.Names.PSEUDO_USER_COLOR_OF_LIGHT_THEME);
         realSurveyColorUsedForLightTheme = PrefsManager.getInt(PrefsManager.IntPref.Names.SURVEY_COLOR_OF_LIGHT_THEME);
         realDeletedColorUsedForLightTheme = PrefsManager.getInt(PrefsManager.IntPref.Names.DELETED_COLOR_OF_LIGHT_THEME);
+
+        if (PrefsManager.getBool(PrefsManager.BoolPref.Names.BRIGHTEN_ALT_COLOR)) {
+            realAltColorUsedForLightTheme = brightenColor(PrefsManager.getInt(PrefsManager.IntPref.Names.ALT_COLOR_OF_LIGHT_THEME));
+        } else {
+            realAltColorUsedForLightTheme = PrefsManager.getInt(PrefsManager.IntPref.Names.ALT_COLOR_OF_LIGHT_THEME);
+        }
 
         primaryColorIdUsedForThemeLight = -1;
         topicNameAndAccentColorIdUsedForThemeLight = -1;
@@ -341,6 +365,10 @@ public class ThemeManager {
         return toolbarTextColorIsInvertedForThemeLight;
     }
 
+    public static int getHeaderColorUsedForThemeLight() {
+        return realHeaderColorUsedForLightTheme;
+    }
+
     public static int getPrimaryColorIdUsedForThemeLight() {
         return primaryColorIdUsedForThemeLight;
     }
@@ -357,6 +385,12 @@ public class ThemeManager {
     public static int getColorInt(@AttrRes int thisAttrColor, Context fromThisContext) {
         if (themeUsed == ThemeName.LIGHT_THEME) {
             switch (thisAttrColor) {
+                case R.attr.themedPseudoUserColor:
+                    if (realPseudoUserColorUsedForLightTheme != 0) {
+                        return realPseudoUserColorUsedForLightTheme;
+                    } else {
+                        break;
+                    }
                 case R.attr.themedAltBackgroundColor:
                     if (realAltColorUsedForLightTheme != 0) {
                         return realAltColorUsedForLightTheme;

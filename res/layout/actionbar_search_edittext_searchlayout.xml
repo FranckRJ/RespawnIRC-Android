@@ -13,7 +13,7 @@
         android:layout_toStartOf="@+id/search_button_searchlayout"
         android:layout_centerVertical="true"
         android:hint="@string/search"
-        android:imeOptions="actionSearch"
+        android:imeOptions="actionSearch|flagNoExtractUi"
         android:inputType="text"
         android:background="@android:color/transparent"
         android:textCursorDrawable="?attr/themedToolbarSearchCursor"/>

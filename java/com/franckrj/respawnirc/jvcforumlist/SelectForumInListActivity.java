@@ -151,7 +151,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
                 currentAsyncTaskForGetSearchedForums = new GetSearchedForums();
                 currentAsyncTaskForGetSearchedForums.setRequestIsStartedListener(getSearchedForumsIsStartedListener);
                 currentAsyncTaskForGetSearchedForums.setRequestIsFinishedListener(getSearchedForumsIsFinishedListener);
-                currentAsyncTaskForGetSearchedForums.execute(textForSearch.getText().toString(), PrefsManager.getString(PrefsManager.StringPref.Names.COOKIES_LIST));
+                currentAsyncTaskForGetSearchedForums.execute(textForSearch.getText().toString(), currentAccount.cookie);
             }
 
             Utils.hideSoftKeyboard(SelectForumInListActivity.this);
@@ -393,6 +393,11 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
 
     @Override
     protected void launchShowForumInfos() {
+        //rien
+    }
+
+    @Override
+    protected void updateAccountDependentInfos() {
         //rien
     }
 

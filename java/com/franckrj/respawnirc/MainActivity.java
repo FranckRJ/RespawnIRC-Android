@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.webkit.WebView;
 
+import com.franckrj.respawnirc.jvcforum.SearchTopicInForumActivity;
 import com.franckrj.respawnirc.jvcforumlist.SelectForumInListActivity;
 import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
 import com.franckrj.respawnirc.jvctopic.ShowMessageActivity;
@@ -124,17 +125,24 @@ public class MainActivity extends AppCompatActivity {
                         newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_LINK, linkToOpen);
                         newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_OPENED_FROM_FORUM, false);
                         startActivity(newShowTopicIntent);
+                        return;
                     } else if (JVCParser.checkIfItsForumFormatedLink(linkToOpen)) {
                         Intent newShowForumIntent = new Intent(this, ShowForumActivity.class);
                         newShowForumIntent.putExtra(ShowForumActivity.EXTRA_NEW_LINK, linkToOpen);
                         newShowForumIntent.putExtra(ShowForumActivity.EXTRA_IS_FIRST_ACTIVITY, false);
                         startActivity(newShowForumIntent);
-                    } else {
+                        return;
+                    } else if (JVCParser.checkIfItsSearchFormatedLink(linkToOpen)) {
+                        Intent newSearchInForumIntent = new Intent(this, SearchTopicInForumActivity.class);
+                        newSearchInForumIntent.putExtra(SearchTopicInForumActivity.EXTRA_SEARCH_LINK, linkToOpen);
+                        startActivity(newSearchInForumIntent);
+                        return;
+                    } else if (JVCParser.checkIfItsMessageFormatedLink(linkToOpen)) {
                         Intent newShowMessageIntent = new Intent(this, ShowMessageActivity.class);
                         newShowMessageIntent.putExtra(ShowMessageActivity.EXTRA_MESSAGE_PERMALINK, linkToOpen);
                         startActivity(newShowMessageIntent);
+                        return;
                     }
-                    return;
                 }
             }
         }

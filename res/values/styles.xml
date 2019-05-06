@@ -29,7 +29,7 @@
         <item name="themedTopicNameColor">@color/defaultTopicNameAndAccentColorThemeLight</item>
         <item name="themedQuoteBackgroundColor">@color/colorQuoteBackgroundThemeLight</item>
         <item name="themedQuoteStripeColor">?attr/colorPrimary</item>
-        <item name="themedPseudoUserColor">@color/colorPseudoUserThemeLight</item>
+        <item name="themedPseudoUserColor">@color/defaultColorPseudoUserThemeLight</item>
         <item name="themedPseudoOtherModeForumColor">@color/colorPseudoOtherModeForumThemeLight</item>
         <item name="themedPseudoOtherModeIrcColor">@color/colorPseudoOtherModeIrcThemeLight</item>
         <item name="themedPseudoModoColor">@color/colorPseudoModoThemeLight</item>
