@@ -5,10 +5,10 @@ android {
     buildToolsVersion "28.0.3"
     defaultConfig {
         applicationId "com.franckrj.respawnirc"
-        minSdkVersion 15
+        minSdkVersion 21
         targetSdkVersion 28
-        versionCode 1_013_2_000
-        versionName "1.13"
+        versionCode 2_000_1_001
+        versionName "2.0b1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         resConfigs "fr"
     }
