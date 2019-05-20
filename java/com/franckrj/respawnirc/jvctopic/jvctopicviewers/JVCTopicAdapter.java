@@ -383,7 +383,7 @@ public class JVCTopicAdapter extends BaseAdapter {
             item.listOfSpoilIdToShow.add(-1);
         }
 
-        holder.infoLineContent = new SpannableString(Undeprecator.htmlFromHtml(JVCParser.createMessageInfoLineFromInfos(item, currentSettings)));
+        holder.infoLineContent = new SpannableString(Utils.applyEmojiCompatIfPossible(Undeprecator.htmlFromHtml(JVCParser.createMessageInfoLineFromInfos(item, currentSettings))));
         if (!item.pseudoIsBlacklisted) {
             holder.messageLineContent = replaceNeededSpansAndEmojis(Undeprecator.htmlFromHtml(JVCParser.createMessageMessageLineFromInfos(item, currentSettings), jvcImageGetter, tagHandler), item);
         } else {
@@ -581,11 +581,11 @@ public class JVCTopicAdapter extends BaseAdapter {
             if (viewHolder.avatarImage != null) {
                 if (currentContent.avatarImageDrawable != null) {
                     ViewGroup.LayoutParams avatarLayoutParams = viewHolder.avatarImage.getLayoutParams();
-                    
+
                     viewHolder.avatarImage.setVisibility(View.VISIBLE);
                     viewHolder.avatarImage.setImageDrawable(null);
                     viewHolder.avatarImage.setImageDrawable(currentContent.avatarImageDrawable);
-                    
+
                     if (avatarLayoutParams.width != avatarSize && avatarSize >= 0) {
                         avatarLayoutParams.height = avatarSize;
                         avatarLayoutParams.width = avatarSize;

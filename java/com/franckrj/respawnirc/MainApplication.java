@@ -20,7 +20,7 @@ public class MainApplication extends Application {
                 "com.google.android.gms",
                 "Noto Color Emoji Compat",
                 R.array.com_google_android_gms_fonts_certs);
-        EmojiCompat.Config config = new FontRequestEmojiCompatConfig(this, fontRequest).setReplaceAll(false);
+        EmojiCompat.Config config = new FontRequestEmojiCompatConfig(this, fontRequest).setReplaceAll(true);
         EmojiCompat.init(config);
     }
 
