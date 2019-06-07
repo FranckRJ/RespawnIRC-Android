@@ -2,9 +2,6 @@ package com.franckrj.respawnirc.jvctopic.jvctopicviewers;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.widget.ShareActionProvider;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -15,9 +12,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.franckrj.respawnirc.base.AbsShowSomethingFragment;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.ShareActionProvider;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.franckrj.respawnirc.NetworkBroadcastReceiver;
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.base.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.jvctopic.jvctopicgetters.AbsJVCTopicGetter;
 import com.franckrj.respawnirc.utils.AccountManager;
 import com.franckrj.respawnirc.utils.ImageDownloader;
@@ -473,7 +474,16 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(SAVE_ALL_MESSAGES_SHOWED, adapterForTopic.getAllItems());
+        long totalLengthOfMessages = 0;
+
+        for (JVCParser.MessageInfos currentMessage : adapterForTopic.getAllItems()) {
+            totalLengthOfMessages += currentMessage.messageNotParsed.length();
+        }
+
+        //todo fix temporaire
+        if (totalLengthOfMessages < 200_000) {
+            outState.putParcelableArrayList(SAVE_ALL_MESSAGES_SHOWED, adapterForTopic.getAllItems());
+        }
         outState.putBoolean(SAVE_GO_TO_BOTTOM_PAGE_LOADING, goToBottomAtPageLoading);
         outState.putString(SAVE_ANCHOR_FOR_NEXT_LOAD, anchorForNextLoad);
         outState.putString(SAVE_SETTINGS_PSEUDO_OF_AUTHOR, currentSettings.pseudoOfAuthor);
