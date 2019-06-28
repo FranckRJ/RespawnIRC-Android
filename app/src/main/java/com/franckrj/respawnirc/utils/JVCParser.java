@@ -1019,7 +1019,7 @@ public final class JVCParser {
         ToolForParsing.replaceStringByAnother(newFirstLine, "<%PSEUDO_COLOR_END%>", "</font>");
 
         if (settings.applyMarkToPseudoAuthor && thisMessageInfo.pseudo.toLowerCase().equals(settings.pseudoOfAuthor.toLowerCase())) {
-            ToolForParsing.replaceStringByAnother(newFirstLine, "<%MARK_FOR_PSEUDO%>", " \ud38d\udd8a\ufe0f");
+            ToolForParsing.replaceStringByAnother(newFirstLine, "<%MARK_FOR_PSEUDO%>", " \ud83d\udd8a\ufe0f");
         } else {
             ToolForParsing.replaceStringByAnother(newFirstLine, "<%MARK_FOR_PSEUDO%>", "");
         }
