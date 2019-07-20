@@ -3,13 +3,9 @@ package com.franckrj.respawnirc.jvcforum;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.core.view.MenuItemCompat;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.widget.ShareActionProvider;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.franckrj.respawnirc.MainActivity;
@@ -44,23 +40,19 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     private JVCForumGetter.ForumStatusInfos forumStatus = new JVCForumGetter.ForumStatusInfos();
     private AddOrRemoveThingToFavs currentTaskForFavs = null;
     private PageNavigationUtil pageNavigation;
-    private ShareActionProvider shareAction = null;
     private boolean refreshNeededOnNextResume = false;
     private boolean dontConsumeRefreshOnNextResume = false;
     private PrefsManager.LinkType linkTypeForInternalBrowser = new PrefsManager.LinkType(PrefsManager.LinkType.NO_LINKS);
 
-    private final View.OnLongClickListener showForumTitleListener = new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View v) {
-            if (!getSupportFragmentManager().isStateSaved()) {
-                Bundle argForFrag = new Bundle();
-                SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
-                argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumNames, forumStatus.forumName));
-                selectTextDialogFragment.setArguments(argForFrag);
-                selectTextDialogFragment.show(getSupportFragmentManager(), "SelectTextDialogFragment");
-            }
-            return true;
+    private final View.OnLongClickListener showForumTitleListener = v -> {
+        if (!getSupportFragmentManager().isStateSaved()) {
+            Bundle argForFrag = new Bundle();
+            SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
+            argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumNames, forumStatus.forumName));
+            selectTextDialogFragment.setArguments(argForFrag);
+            selectTextDialogFragment.show(getSupportFragmentManager(), "SelectTextDialogFragment");
         }
+        return true;
     };
 
     public ShowForumActivity() {
@@ -175,24 +167,14 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         return newActivityIsLaunched;
     }
 
-    private void updateShareAction() {
-        if (shareAction != null) {
-            Intent shareIntent = new Intent();
-            shareIntent.setAction(Intent.ACTION_SEND);
-            shareIntent.putExtra(Intent.EXTRA_TEXT, pageNavigation.getCurrentPageLink());
-            shareIntent.setType("text/plain");
-            shareAction.setShareIntent(shareIntent);
-        }
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         boolean newActivityIsLaunched = false;
 
-        pageNavigation.initializePagerView((ViewPager) findViewById(R.id.pager_showforum));
-        pageNavigation.initializeNavigationButtons((Button) findViewById(R.id.firstpage_button_showforum), (Button) findViewById(R.id.previouspage_button_showforum),
-                        (Button) findViewById(R.id.currentpage_button_showforum), (Button) findViewById(R.id.nextpage_button_showforum), null);
+        pageNavigation.initializePagerView(findViewById(R.id.pager_showforum));
+        pageNavigation.initializeNavigationButtons(findViewById(R.id.firstpage_button_showforum), findViewById(R.id.previouspage_button_showforum),
+                findViewById(R.id.currentpage_button_showforum), findViewById(R.id.nextpage_button_showforum), null);
         pageNavigation.updateAdapterForPagerView();
 
         if (savedInstanceState == null) {
@@ -290,7 +272,6 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_showforum, menu);
-        shareAction = (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share_showforum));
         return true;
     }
 
@@ -302,7 +283,6 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
 
         menu.findItem(R.id.action_search_topic_showforum).setEnabled(!pageNavigation.getCurrentLinkIsEmpty());
         menu.findItem(R.id.action_share_showforum).setEnabled(!pageNavigation.getCurrentLinkIsEmpty());
-        updateShareAction();
         menu.findItem(R.id.action_send_topic_showforum).setEnabled(!Utils.stringIsEmptyOrNull(forumStatus.listOfInputInAString) && !pageNavigation.getCurrentLinkIsEmpty());
 
         if (forumStatus.isInFavs != null && !currentAccount.pseudo.isEmpty()) {
@@ -349,6 +329,9 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
                 startActivityForResult(newSendTopicIntent, SEND_TOPIC_REQUEST_CODE);
                 refreshNeededOnNextResume = true;
                 return true;
+            case R.id.action_share_showforum:
+                Utils.shareThisLink(pageNavigation.getCurrentPageLink(), this);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -356,6 +339,8 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == SEND_TOPIC_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 String newTopicLink = data.getStringExtra(SendTopicToForumActivity.RESULT_EXTRA_TOPIC_LINK_TO_MOVE);
