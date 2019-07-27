@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,45 +11,15 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.fragment.app.DialogFragment
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
+import com.bumptech.glide.request.RequestOptions
 import com.franckrj.respawnirc.R
+import com.franckrj.respawnirc.utils.GlideProgressImageLoader
 
 class ShowImageDialogFragment : DialogFragment() {
     companion object {
         const val ARG_IMAGE_LINK = "com.franckrj.respawnirc.showimagedialogfragment.ARG_IMAGE_LINK"
-    }
-
-    lateinit var viewForImage: ImageView
-    lateinit var indeterminateProgressBar: ProgressBar
-
-    val imageDownloadRequestListener = object : RequestListener<Drawable> {
-        override fun onLoadFailed(
-            e: GlideException?,
-            model: Any?,
-            target: Target<Drawable>?,
-            isFirstResource: Boolean
-        ): Boolean {
-            indeterminateProgressBar.visibility = View.GONE
-            viewForImage.visibility = View.VISIBLE
-            return false
-        }
-
-        override fun onResourceReady(
-            resource: Drawable?,
-            model: Any?,
-            target: Target<Drawable>?,
-            dataSource: DataSource?,
-            isFirstResource: Boolean
-        ): Boolean {
-            indeterminateProgressBar.visibility = View.GONE
-            viewForImage.visibility = View.VISIBLE
-            return false
-        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -69,26 +38,33 @@ class ShowImageDialogFragment : DialogFragment() {
         super.onCreateView(inflater, container, savedInstanceState)
         val currentArgs: Bundle? = arguments
         var linkIsValid = false
-        val mainView = inflater.inflate(R.layout.dialog_showimage, container, false)
+        val mainView: View = inflater.inflate(R.layout.dialog_showimage, container, false)
 
-        viewForImage = mainView.findViewById(R.id.imageview_image_showimage)!!
-        indeterminateProgressBar = mainView.findViewById(R.id.dl_indeterminate_image_showimage)!!
+        val viewForImage: ImageView = mainView.findViewById(R.id.imageview_image_showimage)!!
+        val indeterminateProgressBar: ProgressBar = mainView.findViewById(R.id.dl_indeterminate_image_showimage)!!
+        val determinateProgressBar: ProgressBar = mainView.findViewById(R.id.dl_determinate_image_showimage)!!
+        val textForSizeOfImage: TextView = mainView.findViewById(R.id.text_size_image_showimage)!!
 
         viewForImage.visibility = View.INVISIBLE
         indeterminateProgressBar.indeterminateDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
+        determinateProgressBar.progressDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
 
         if (currentArgs != null) {
             val linkOfImage: String = currentArgs.getString(ARG_IMAGE_LINK, "")
 
             if (linkOfImage.isNotEmpty()) {
-                linkIsValid = true
-
-                Glide.with(this)
-                    .load(linkOfImage)
-                    .listener(imageDownloadRequestListener)
+                val optionsOfImageLoader = RequestOptions()
                     .error(R.drawable.image_deleted_dark)
                     .fitCenter()
-                    .into(viewForImage)
+
+                linkIsValid = true
+
+                GlideProgressImageLoader(
+                    viewForImage,
+                    indeterminateProgressBar,
+                    determinateProgressBar,
+                    textForSizeOfImage
+                ).load(linkOfImage, optionsOfImageLoader)
             }
         }
 
