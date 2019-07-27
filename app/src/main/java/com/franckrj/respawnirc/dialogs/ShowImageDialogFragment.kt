@@ -22,6 +22,8 @@ class ShowImageDialogFragment : DialogFragment() {
         const val ARG_IMAGE_LINK = "com.franckrj.respawnirc.showimagedialogfragment.ARG_IMAGE_LINK"
     }
 
+    private lateinit var imageLoader: GlideProgressImageLoader
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog: Dialog = super.onCreateDialog(savedInstanceState)
         val dialogWindow: Window? = dialog.window
@@ -49,6 +51,14 @@ class ShowImageDialogFragment : DialogFragment() {
         indeterminateProgressBar.indeterminateDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
         determinateProgressBar.progressDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
 
+        imageLoader = GlideProgressImageLoader(
+            this,
+            viewForImage,
+            indeterminateProgressBar,
+            determinateProgressBar,
+            textForSizeOfImage
+        )
+
         if (currentArgs != null) {
             val linkOfImage: String = currentArgs.getString(ARG_IMAGE_LINK, "")
 
@@ -59,12 +69,7 @@ class ShowImageDialogFragment : DialogFragment() {
 
                 linkIsValid = true
 
-                GlideProgressImageLoader(
-                    viewForImage,
-                    indeterminateProgressBar,
-                    determinateProgressBar,
-                    textForSizeOfImage
-                ).load(linkOfImage, optionsOfImageLoader)
+                imageLoader.startNewLoad(linkOfImage, optionsOfImageLoader)
             }
         }
 
