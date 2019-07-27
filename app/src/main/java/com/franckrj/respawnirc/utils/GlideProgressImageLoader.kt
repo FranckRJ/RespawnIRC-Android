@@ -63,7 +63,7 @@ class GlideProgressImageLoader(
         viewForImage.visibility = View.VISIBLE
     }
 
-    private fun clearCurrentUrl() {
+    fun clearCurrentUrl() {
         currentUrl?.let { CustomAppGlideModule.forget(it) }
         currentUrl = null
     }

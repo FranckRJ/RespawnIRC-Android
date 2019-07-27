@@ -95,6 +95,7 @@ class ShowImageDialogFragment : DialogFragment() {
     }
 
     override fun onPause() {
+        imageLoader.clearCurrentUrl()
         dismiss()
         super.onPause()
     }
