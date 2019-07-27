@@ -28,8 +28,6 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        System.setProperty("http.keepAlive", "true");
-
         PrefsManager.initializeSharedPrefs(getApplicationContext());
         ThemeManager.updateThemeUsed();
         ThemeManager.updateToolbarTextColor();
