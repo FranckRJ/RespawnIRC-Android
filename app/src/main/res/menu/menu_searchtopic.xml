@@ -10,6 +10,5 @@
         app:actionLayout="@layout/actionbar_search_edittext_searchlayout"/>
     <item
         android:id="@+id/action_share_searchforum"
-        android:title="@string/share"
-        app:actionProviderClass="androidx.appcompat.widget.ShareActionProvider"/>
+        android:title="@string/share"/>
 </menu>

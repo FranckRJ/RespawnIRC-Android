@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
-import android.graphics.Color;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
 import androidx.annotation.ColorInt;
@@ -26,6 +25,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Utils {
     public static String colorToString(@ColorInt int colorValue) {
@@ -46,7 +46,7 @@ public class Utils {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean stringsAreEquals(String str1, String str2) {
-        return (str1 == null ? str2 == null : str1.equals(str2));
+        return (Objects.equals(str1, str2));
     }
 
     public static String truncateString(String baseString, int maxSize, String endingPartIfCuted) {
@@ -162,6 +162,13 @@ public class Utils {
         Intent newBrowserIntent = new Intent(parentActivity, WebBrowserActivity.class);
         newBrowserIntent.putExtra(WebBrowserActivity.EXTRA_URL_LOAD, link);
         parentActivity.startActivity(newBrowserIntent);
+    }
+
+    public static void shareThisLink(String link, Activity parentActivity) {
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, link);
+        parentActivity.startActivity(Intent.createChooser(sharingIntent, parentActivity.getString(R.string.share)));
     }
 
     public static void putStringInClipboard(String textToCopy, Activity fromThisActivity) {

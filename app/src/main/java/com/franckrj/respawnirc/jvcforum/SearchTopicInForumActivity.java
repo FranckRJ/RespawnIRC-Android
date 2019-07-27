@@ -2,19 +2,16 @@ package com.franckrj.respawnirc.jvcforum;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.core.view.MenuItemCompat;
-import androidx.lifecycle.Lifecycle;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.widget.ShareActionProvider;
 
-import android.view.KeyEvent;
+import androidx.annotation.NonNull;
+import androidx.lifecycle.Lifecycle;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
@@ -50,37 +47,25 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
     private RadioGroup searchModeRadioGroup = null;
     private String lastSearchedText = null;
     private PageNavigationUtil pageNavigation;
-    private ShareActionProvider shareAction = null;
     private String baseSearchLink = "";
     private String currentForumName = "";
     private int idOfTypeOfSearch = 0;
     private boolean launchSearchOnResumeAndResetPageNumber = false;
     private boolean shouldOpenKeyboard = false;
 
-    private final View.OnClickListener searchButtonClickedListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
+    private final View.OnClickListener searchButtonClickedListener = view -> performSearch(true);
+
+    private final TextView.OnEditorActionListener actionInSearchEditTextListener = (v, actionId, event) -> {
+        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
             performSearch(true);
+            return true;
         }
+        return false;
     };
 
-    private final TextView.OnEditorActionListener actionInSearchEditTextListener = new TextView.OnEditorActionListener() {
-        @Override
-        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                performSearch(true);
-                return true;
-            }
-            return false;
-        }
-    };
-
-    private final RadioGroup.OnCheckedChangeListener searchTypeChangedListener = new RadioGroup.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(RadioGroup group, int checkedId) {
-            if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
-                performSearch(false);
-            }
+    private final RadioGroup.OnCheckedChangeListener searchTypeChangedListener = (group, checkedId) -> {
+        if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+            performSearch(false);
         }
     };
 
@@ -99,24 +84,13 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
 
     private static int getSearchTypeIdForSearchTypeInText(String searchTypeText) {
         switch (searchTypeText) {
-            case "titre_topic":
-                return R.id.topicmode_radio_searchtopic;
             case "auteur_topic":
                 return R.id.authormode_radio_searchtopic;
             case "texte_message":
                 return R.id.messagemode_radio_searchtopic;
+            case "titre_topic":
             default:
                 return R.id.topicmode_radio_searchtopic;
-        }
-    }
-
-    private void updateShareAction() {
-        if (shareAction != null) {
-            Intent shareIntent = new Intent();
-            shareIntent.setAction(Intent.ACTION_SEND);
-            shareIntent.putExtra(Intent.EXTRA_TEXT, pageNavigation.getCurrentPageLink());
-            shareIntent.setType("text/plain");
-            shareAction.setShareIntent(shareIntent);
         }
     }
 
@@ -150,9 +124,9 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
         setContentView(R.layout.activity_searchtopic);
         initToolbar(R.id.toolbar_searchtopic);
 
-        pageNavigation.initializePagerView((ViewPager) findViewById(R.id.pager_searchtopic));
-        pageNavigation.initializeNavigationButtons((Button) findViewById(R.id.firstpage_button_searchtopic), (Button) findViewById(R.id.previouspage_button_searchtopic),
-                        (Button) findViewById(R.id.currentpage_button_searchtopic), (Button) findViewById(R.id.nextpage_button_searchtopic), null);
+        pageNavigation.initializePagerView(findViewById(R.id.pager_searchtopic));
+        pageNavigation.initializeNavigationButtons(findViewById(R.id.firstpage_button_searchtopic), findViewById(R.id.previouspage_button_searchtopic),
+                findViewById(R.id.currentpage_button_searchtopic), findViewById(R.id.nextpage_button_searchtopic), null);
         pageNavigation.updateAdapterForPagerView();
 
         searchModeRadioGroup = findViewById(R.id.radiogroup_layout_searchtopic);
@@ -247,7 +221,7 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         boolean hasSavedSearch = false;
 
@@ -273,7 +247,6 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_searchtopic, menu);
         searchExpandableItem = menu.findItem(R.id.action_search_searchtopic);
-        shareAction = (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share_searchforum));
 
         View rootView = searchExpandableItem.getActionView();
         ImageButton buttonForSearch = rootView.findViewById(R.id.search_button_searchlayout);
@@ -307,11 +280,19 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-
         menu.findItem(R.id.action_share_searchforum).setEnabled(!pageNavigation.getCurrentLinkIsEmpty());
-        updateShareAction();
-
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_share_searchforum:
+                Utils.shareThisLink(pageNavigation.getCurrentPageLink(), this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
