@@ -1,175 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <ScrollView
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_content_insertstuff"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/list_separator_insertstuff"
         android:layout_toStartOf="@+id/list_separator_insertstuff"
-        android:scrollbars="vertical">
-        <TextView
-            android:id="@+id/showstuff_text_insertstuff"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </ScrollView>
+        android:scrollbars="vertical" />
+
     <View
         android:id="@+id/list_separator_insertstuff"
-        android:layout_toLeftOf="@+id/list_scrollview_insertstuff"
-        android:layout_toStartOf="@+id/list_scrollview_insertstuff"
         android:layout_width="2dp"
         android:layout_height="match_parent"
-        android:background="?attr/themedDarkerPopupBackgroundColor"/>
+        android:layout_toStartOf="@+id/list_scrollview_insertstuff"
+        android:background="?attr/themedDarkerPopupBackgroundColor" />
+
     <ScrollView
         android:id="@+id/list_scrollview_insertstuff"
         android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:scrollbars="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <ImageView
                 android:id="@+id/smiley_button_insertstuff"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:contentDescription="@string/insertStuff"
                 android:padding="8dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/smiley_general"
-                android:contentDescription="@string/insertStuff"/>
+                android:src="@drawable/smiley_general" />
+
             <ImageView
                 android:id="@+id/textformat_button_insertstuff"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:contentDescription="@string/insertStuff"
                 android:padding="8dp"
                 android:scaleType="fitCenter"
-                android:src="?attr/themedTextFormatGeneral"
-                android:contentDescription="@string/insertStuff"/>
+                android:src="?attr/themedTextFormatGeneral" />
+
             <ImageView
                 android:id="@+id/sticker_1_button_insertstuff"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:contentDescription="@string/insertStuff"
                 android:padding="8dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/sticker_zuc"
-                android:contentDescription="@string/insertStuff"/>
+                android:src="@drawable/sticker_zuc" />
+
             <ImageView
                 android:id="@+id/sticker_2_button_insertstuff"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:contentDescription="@string/insertStuff"
                 android:padding="8dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/sticker_1jnd"
-                android:contentDescription="@string/insertStuff"/>
+                android:src="@drawable/sticker_1jnd" />
+
             <ImageView
                 android:id="@+id/sticker_3_button_insertstuff"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:contentDescription="@string/insertStuff"
                 android:padding="8dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/sticker_1kgu"
-                android:contentDescription="@string/insertStuff"/>
+                android:src="@drawable/sticker_1kgu" />
+
             <ImageView
                 android:id="@+id/sticker_4_button_insertstuff"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:contentDescription="@string/insertStuff"
                 android:padding="8dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/sticker_1kkh"
-                android:contentDescription="@string/insertStuff"/>
+                android:src="@drawable/sticker_1kkh" />
+
             <ImageView
                 android:id="@+id/sticker_5_button_insertstuff"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:contentDescription="@string/insertStuff"
                 android:padding="8dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/sticker_1kkr"
-                android:contentDescription="@string/insertStuff"/>
+                android:src="@drawable/sticker_1kkr" />
+
             <ImageView
                 android:id="@+id/sticker_6_button_insertstuff"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:contentDescription="@string/insertStuff"
                 android:padding="8dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/sticker_1kl6"
-                android:contentDescription="@string/insertStuff"/>
+                android:src="@drawable/sticker_1kl6" />
+
             <ImageView
                 android:id="@+id/sticker_7_button_insertstuff"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:contentDescription="@string/insertStuff"
                 android:padding="8dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/sticker_1lgg"
-                android:contentDescription="@string/insertStuff"/>
+                android:src="@drawable/sticker_1lgg" />
+
             <ImageView
                 android:id="@+id/sticker_8_button_insertstuff"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:contentDescription="@string/insertStuff"
                 android:padding="8dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/sticker_1ljl"
-                android:contentDescription="@string/insertStuff"/>
+                android:src="@drawable/sticker_1ljl" />
+
             <ImageView
                 android:id="@+id/sticker_9_button_insertstuff"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:contentDescription="@string/insertStuff"
                 android:padding="8dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/sticker_1lm9"
-                android:contentDescription="@string/insertStuff"/>
+                android:src="@drawable/sticker_1lm9" />
+
             <ImageView
                 android:id="@+id/sticker_10_button_insertstuff"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:contentDescription="@string/insertStuff"
                 android:padding="8dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/sticker_1nub"
-                android:contentDescription="@string/insertStuff"/>
+                android:src="@drawable/sticker_1nub" />
+
             <ImageView
                 android:id="@+id/sticker_11_button_insertstuff"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:contentDescription="@string/insertStuff"
                 android:padding="8dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/sticker_1ltd"
-                android:contentDescription="@string/insertStuff"/>
+                android:src="@drawable/sticker_1ltd" />
+
             <ImageView
                 android:id="@+id/sticker_12_button_insertstuff"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:contentDescription="@string/insertStuff"
                 android:padding="8dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/sticker_1n1p"
-                android:contentDescription="@string/insertStuff"/>
+                android:src="@drawable/sticker_1n1p" />
+
             <ImageView
                 android:id="@+id/sticker_13_button_insertstuff"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:contentDescription="@string/insertStuff"
                 android:padding="8dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/sticker_1n2c"
-                android:contentDescription="@string/insertStuff"/>
+                android:src="@drawable/sticker_1n2c" />
+
             <ImageView
                 android:id="@+id/sticker_14_button_insertstuff"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:contentDescription="@string/insertStuff"
                 android:padding="8dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/sticker_1o33"
-                android:contentDescription="@string/insertStuff"/>
+                android:src="@drawable/sticker_1o33" />
+
             <ImageView
                 android:id="@+id/sticker_15_button_insertstuff"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:contentDescription="@string/insertStuff"
                 android:padding="8dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/sticker_1ptd"
-                android:contentDescription="@string/insertStuff"/>
+                android:src="@drawable/sticker_1ptd" />
+
         </LinearLayout>
+
     </ScrollView>
+
 </RelativeLayout>
