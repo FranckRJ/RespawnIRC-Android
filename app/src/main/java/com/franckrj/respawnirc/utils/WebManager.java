@@ -9,7 +9,7 @@ import java.net.URL;
 import java.util.concurrent.Callable;
 
 public class WebManager {
-    public static final String userAgentString = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0";
+    public static final String userAgentString = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0";
 
     public static String sendRequestWithMultipleTrys(String linkToPage, String requestMethod, String requestParameters, WebInfos currentInfos, int maxNumberOfTrys) {
         int numberOfTrys = 0;
@@ -37,7 +37,6 @@ public class WebManager {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
-        //noinspection TryFinallyCanBeTryWithResources
         try {
             URL urlToPage;
             InputStream inputStream;
@@ -71,7 +70,6 @@ public class WebManager {
             if (requestMethod.equals("POST")) {
                 DataOutputStream writer = null;
 
-                //noinspection TryFinallyCanBeTryWithResources
                 try {
                     urlConnection.setDoOutput(true);
                     urlConnection.setFixedLengthStreamingMode(requestParameters.getBytes().length);
