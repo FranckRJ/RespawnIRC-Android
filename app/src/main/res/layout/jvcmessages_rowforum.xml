@@ -18,7 +18,7 @@
         android:layout_alignParentLeft="true"/>
 
     <ImageButton
-        style="@style/SelectableItemBackground"
+        style="@style/SelectableItemBackgroundBorderless"
         android:id="@+id/menuoverflow_image_jvcmessages_row"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

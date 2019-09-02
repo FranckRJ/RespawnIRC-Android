@@ -32,7 +32,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"/>
         <ImageButton
-            style="@style/SelectableItemBackground"
+            style="@style/SelectableItemBackgroundBorderless"
             android:id="@+id/menuoverflow_image_jvcmessages_row"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

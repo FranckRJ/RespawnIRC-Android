@@ -160,9 +160,14 @@
         <item name="colorControlHighlight">?attr/themedControlHighlightColor</item>
     </style>
 
-    <style name="SelectableItemBackground">
+    <style name="SelectableItemBackgroundBorderless">
         <item name="android:theme">@style/SelectableItemTheme</item>
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+    </style>
+
+    <style name="SelectableItemBackground">
+        <item name="android:theme">@style/SelectableItemTheme</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
     </style>
 
     <style name="AppActivityAnimation" parent="@android:style/Animation.Activity">
