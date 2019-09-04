@@ -6,10 +6,6 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,26 +15,30 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+
 import com.franckrj.respawnirc.DraftUtils;
 import com.franckrj.respawnirc.MainActivity;
+import com.franckrj.respawnirc.PageNavigationUtil;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
+import com.franckrj.respawnirc.base.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.dialogs.ChoosePageNumberDialogFragment;
+import com.franckrj.respawnirc.dialogs.InsertStuffDialogFragment;
 import com.franckrj.respawnirc.dialogs.LinkMenuDialogFragment;
 import com.franckrj.respawnirc.dialogs.MessageMenuDialogFragment;
-import com.franckrj.respawnirc.dialogs.InsertStuffDialogFragment;
 import com.franckrj.respawnirc.dialogs.SelectTextDialogFragment;
 import com.franckrj.respawnirc.dialogs.ShowImageDialogFragment;
 import com.franckrj.respawnirc.jvcforum.SearchTopicInForumActivity;
+import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
 import com.franckrj.respawnirc.jvctopic.jvctopicgetters.AbsJVCTopicGetter;
 import com.franckrj.respawnirc.jvctopic.jvctopicgetters.JVCTopicModeForumGetter;
 import com.franckrj.respawnirc.jvctopic.jvctopicviewers.AbsShowTopicFragment;
 import com.franckrj.respawnirc.jvctopic.jvctopicviewers.JVCTopicAdapter;
 import com.franckrj.respawnirc.jvctopic.jvctopicviewers.ShowTopicModeForumFragment;
 import com.franckrj.respawnirc.jvctopic.jvctopicviewers.ShowTopicModeIRCFragment;
-import com.franckrj.respawnirc.base.AbsShowSomethingFragment;
-import com.franckrj.respawnirc.PageNavigationUtil;
-import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
 import com.franckrj.respawnirc.utils.AccountManager;
 import com.franckrj.respawnirc.utils.AddOrRemoveThingToFavs;
 import com.franckrj.respawnirc.utils.AddOrRemoveTopicToSubs;
@@ -907,9 +907,9 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     }
 
     @Override
-    public void getStringInserted(String newStringToAdd, int posOfCenterFromEnd) {
+    public void insertThisString(@NonNull String stringToInsert, int posOfCenterOfString) {
         if (topicStatus.lockReason == null) {
-            Utils.insertStringInEditText(messageSendEdit, newStringToAdd, posOfCenterFromEnd);
+            Utils.insertStringInEditText(messageSendEdit, stringToInsert, posOfCenterOfString);
         }
     }
 

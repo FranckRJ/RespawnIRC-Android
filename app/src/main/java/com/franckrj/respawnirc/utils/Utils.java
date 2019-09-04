@@ -180,21 +180,24 @@ public class Utils {
         }
     }
 
-    public static void insertStringInEditText(EditText currentEditText, String stringToInsert, int posOfCenterFromEnd) {
+    public static void insertStringInEditText(EditText currentEditText, String stringToInsert, int posOfCenterOfString) {
         int currentCursorPos = currentEditText.getSelectionStart();
         int currentEndOfSelec = currentEditText.getSelectionEnd();
         if (currentCursorPos == -1) {
             currentCursorPos = 0;
         }
-        if (currentEndOfSelec > currentCursorPos && posOfCenterFromEnd > 0) {
-            String firstStringToAdd = stringToInsert.substring(0, stringToInsert.length() - posOfCenterFromEnd);
-            String secondStringToAdd = stringToInsert.substring(stringToInsert.length() - posOfCenterFromEnd);
+        if (posOfCenterOfString < 0) {
+            posOfCenterOfString = stringToInsert.length();
+        }
+        if (currentEndOfSelec > currentCursorPos && posOfCenterOfString < stringToInsert.length()) {
+            String firstStringToAdd = stringToInsert.substring(0, posOfCenterOfString);
+            String secondStringToAdd = stringToInsert.substring(posOfCenterOfString);
             currentEditText.getText().insert(currentEndOfSelec, secondStringToAdd);
             currentEditText.getText().insert(currentCursorPos, firstStringToAdd);
-            currentEditText.setSelection(currentEndOfSelec + stringToInsert.length() - posOfCenterFromEnd);
+            currentEditText.setSelection(currentEndOfSelec + posOfCenterOfString);
         } else {
             currentEditText.getText().insert(currentCursorPos, stringToInsert);
-            currentEditText.setSelection(currentCursorPos + stringToInsert.length() - posOfCenterFromEnd);
+            currentEditText.setSelection(currentCursorPos + posOfCenterOfString);
         }
     }
 

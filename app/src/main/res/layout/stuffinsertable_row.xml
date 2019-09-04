@@ -2,7 +2,7 @@
 <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/SelectableItemBackground"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="70dp"
     android:contentDescription="@string/insertStuff"
     android:padding="4dp"
     android:scaleType="fitCenter" />
