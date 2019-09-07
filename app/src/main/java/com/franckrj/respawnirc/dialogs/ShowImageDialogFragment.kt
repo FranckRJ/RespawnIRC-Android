@@ -16,6 +16,7 @@ import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.request.RequestOptions
 import com.franckrj.respawnirc.R
 import com.franckrj.respawnirc.utils.GlideProgressImageLoader
+import com.franckrj.respawnirc.utils.Undeprecator
 
 class ShowImageDialogFragment : DialogFragment() {
     companion object {
@@ -48,8 +49,16 @@ class ShowImageDialogFragment : DialogFragment() {
         val textForSizeOfImage: TextView = mainView.findViewById(R.id.text_size_image_showimage)!!
 
         viewForImage.visibility = View.INVISIBLE
-        indeterminateProgressBar.indeterminateDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
-        determinateProgressBar.progressDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
+        Undeprecator.drawableSetColorFilter(
+            indeterminateProgressBar.indeterminateDrawable,
+            Color.WHITE,
+            PorterDuff.Mode.SRC_IN
+        )
+        Undeprecator.drawableSetColorFilter(
+            determinateProgressBar.progressDrawable,
+            Color.WHITE,
+            PorterDuff.Mode.SRC_IN
+        )
 
         imageLoader = GlideProgressImageLoader(
             this,

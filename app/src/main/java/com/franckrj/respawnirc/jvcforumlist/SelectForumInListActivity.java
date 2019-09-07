@@ -2,10 +2,6 @@ package com.franckrj.respawnirc.jvcforumlist;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.IdRes;
-import androidx.transition.TransitionManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,14 +16,19 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.transition.TransitionManager;
+
 import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.base.AbsNavigationViewActivity;
 import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 import com.franckrj.respawnirc.dialogs.ChooseTopicOrForumLinkDialogFragment;
 import com.franckrj.respawnirc.dialogs.HelpFirstLaunchDialogFragment;
 import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
 import com.franckrj.respawnirc.utils.JVCParser;
-import com.franckrj.respawnirc.base.AbsNavigationViewActivity;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.Utils;
@@ -61,78 +62,56 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
     private String lastSearchedText = null;
     private boolean searchTextIsOpened = false;
 
-    private final View.OnClickListener searchButtonClickedListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
+    private final View.OnClickListener searchButtonClickedListener = view -> performSearch();
+
+    private final View.OnClickListener baseForumButtonClickedListener = view -> {
+        if (view.getTag() != null && view.getTag() instanceof String) {
+            readNewTopicOrForum((String) view.getTag(), false);
+        }
+    };
+
+    private final TextView.OnEditorActionListener actionInSearchEditTextListener = (v, actionId, event) -> {
+        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
             performSearch();
+            return true;
         }
+        return false;
     };
 
-    private final View.OnClickListener baseForumButtonClickedListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (view.getTag() != null && view.getTag() instanceof String) {
-                readNewTopicOrForum((String) view.getTag(), false);
-            }
-        }
+    private final AbsWebRequestAsyncTask.RequestIsStarted getSearchedForumsIsStartedListener = () -> {
+        adapterForForumList.setNewListOfForums(null);
+        noResultFoundTextView.setVisibility(View.GONE);
+        baseForumListLayout.setVisibility(View.GONE);
+        swipeRefresh.setRefreshing(true);
     };
 
-    private final TextView.OnEditorActionListener actionInSearchEditTextListener = new TextView.OnEditorActionListener() {
-        @Override
-        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                performSearch();
-                return true;
-            }
-            return false;
-        }
-    };
+    private final AdapterView.OnItemClickListener forumClickedInListView = (parent, view, position, id) -> readNewTopicOrForum(adapterForForumList.getForumLinkAtThisPos(position), false);
 
-    private final AbsWebRequestAsyncTask.RequestIsStarted getSearchedForumsIsStartedListener = new AbsWebRequestAsyncTask.RequestIsStarted() {
-        @Override
-        public void onRequestIsStarted() {
-            adapterForForumList.setNewListOfForums(null);
-            noResultFoundTextView.setVisibility(View.GONE);
-            baseForumListLayout.setVisibility(View.GONE);
-            swipeRefresh.setRefreshing(true);
-        }
-    };
+    private final AbsWebRequestAsyncTask.RequestIsFinished<String> getSearchedForumsIsFinishedListener = reqResult -> {
+        ArrayList<JVCParser.NameAndLink> newListOfForums = null;
+        swipeRefresh.setRefreshing(false);
 
-    private final AdapterView.OnItemClickListener forumClickedInListView = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            readNewTopicOrForum(adapterForForumList.getForumLinkAtThisPos(position), false);
-        }
-    };
+        currentAsyncTaskForGetSearchedForums = null;
 
-    private final AbsWebRequestAsyncTask.RequestIsFinished<String> getSearchedForumsIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<String>() {
-        @Override
-        public void onRequestIsFinished(String reqResult) {
-            ArrayList<JVCParser.NameAndLink> newListOfForums = null;
-            swipeRefresh.setRefreshing(false);
-
-            currentAsyncTaskForGetSearchedForums = null;
-
-            if (reqResult != null) {
-                if (reqResult.startsWith("respawnirc:redirect:")) {
-                    String newLink = reqResult.substring(("respawnirc:redirect:").length());
-                    if (!newLink.isEmpty()) {
-                        readNewTopicOrForum("http://www.jeuxvideo.com" + newLink, false);
-                        return;
-                    }
-                } else {
-                    newListOfForums = JVCParser.getListOfForumsInSearchPage(reqResult);
+        if (reqResult != null) {
+            if (reqResult.startsWith("respawnirc:redirect:")) {
+                String newLink = reqResult.substring(("respawnirc:redirect:").length());
+                if (!newLink.isEmpty()) {
+                    readNewTopicOrForum("http://www.jeuxvideo.com" + newLink, false);
+                    return;
                 }
-            }
-
-            adapterForForumList.setNewListOfForums(newListOfForums);
-            if (adapterForForumList.getCount() == 0) {
-                noResultFoundTextView.setVisibility(View.VISIBLE);
             } else {
-                noResultFoundTextView.setVisibility(View.GONE);
+                newListOfForums = JVCParser.getListOfForumsInSearchPage(reqResult);
             }
-            baseForumListLayout.setVisibility(View.GONE);
         }
+
+        adapterForForumList.setNewListOfForums(newListOfForums);
+        if (adapterForForumList.getCount() == 0) {
+            noResultFoundTextView.setVisibility(View.VISIBLE);
+        } else {
+            noResultFoundTextView.setVisibility(View.GONE);
+        }
+        baseForumListLayout.setVisibility(View.GONE);
     };
 
     public SelectForumInListActivity() {
@@ -193,12 +172,9 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
             }
         }
 
-        category.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TransitionManager.beginDelayedTransition(baseForumListLayout);
-                currentForumlist.setOpened(!currentForumlist.isOpened());
-            }
+        category.setOnClickListener(view -> {
+            TransitionManager.beginDelayedTransition(baseForumListLayout);
+            currentForumlist.setOpened(!currentForumlist.isOpened());
         });
 
         return currentForumlist;
@@ -264,12 +240,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
                 baseForumlistCatHobbies.setOpened(true);
             }
 
-            baseForumListLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    baseForumListLayout.scrollTo(0, savedInstanceState.getInt(SAVE_BASE_FORUMLIST_SCROLL_POSITION, 0));
-                }
-            });
+            baseForumListLayout.post(() -> baseForumListLayout.scrollTo(0, savedInstanceState.getInt(SAVE_BASE_FORUMLIST_SCROLL_POSITION, 0)));
         }
 
         if (PrefsManager.getBool(PrefsManager.BoolPref.Names.IS_FIRST_LAUNCH)) {
@@ -296,7 +267,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         adapterForForumList.saveToBundle(outState);
 
@@ -362,7 +333,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_select_topic_or_forum_selectforum:
                 if (!getSupportFragmentManager().isStateSaved()) {

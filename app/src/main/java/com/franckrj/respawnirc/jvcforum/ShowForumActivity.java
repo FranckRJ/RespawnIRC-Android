@@ -8,17 +8,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.franckrj.respawnirc.MainActivity;
+import com.franckrj.respawnirc.PageNavigationUtil;
 import com.franckrj.respawnirc.R;
+import com.franckrj.respawnirc.base.AbsNavigationViewActivity;
+import com.franckrj.respawnirc.base.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.dialogs.SelectTextDialogFragment;
-import com.franckrj.respawnirc.jvctopic.ShowTopicActivity;
 import com.franckrj.respawnirc.jvcforum.jvcforumtools.JVCForumGetter;
 import com.franckrj.respawnirc.jvcforum.jvcforumtools.ShowForumFragment;
-import com.franckrj.respawnirc.base.AbsShowSomethingFragment;
-import com.franckrj.respawnirc.PageNavigationUtil;
+import com.franckrj.respawnirc.jvctopic.ShowTopicActivity;
 import com.franckrj.respawnirc.utils.AddOrRemoveThingToFavs;
 import com.franckrj.respawnirc.utils.JVCParser;
-import com.franckrj.respawnirc.base.AbsNavigationViewActivity;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Utils;
 
@@ -260,7 +262,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(SAVE_DRAWER_IS_DISABLED, drawerIsDisabled);
         outState.putParcelable(SAVE_FORUM_STATUS, forumStatus);
@@ -300,7 +302,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_change_forum_fav_value_showforum:
                 if (currentTaskForFavs == null) {
