@@ -7,8 +7,8 @@ android {
         applicationId "com.franckrj.respawnirc"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 1_013_2_001
-        versionName "1.13.1"
+        versionCode 1_013_2_002
+        versionName "1.13.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         resConfigs "fr"
     }
