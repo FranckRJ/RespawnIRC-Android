@@ -34,7 +34,7 @@ public class JVCMessageToTopicSender {
 
             currentAsyncTaskForSendMessage = null;
 
-            if (!Utils.stringIsEmptyOrNull(reqResult)) {
+            if (!Utils.stringIsEmptyOrNull(reqResult) && !reqResult.contains("<meta http-equiv=\"refresh\"")) {
                 if (reqResult.equals("respawnirc:resendneeded")) {
                     errorWhenSending = parentActivity.getString(R.string.unknownErrorPleaseRetry);
                 } else if (!isInEdit) {
