@@ -363,6 +363,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
                 }
             }
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
