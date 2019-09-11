@@ -98,9 +98,9 @@ public final class JVCParser {
     private static final Pattern listOfModeratorsPattern = Pattern.compile("<span class=\"liste-modo-fofo\">(.*?)</span>", Pattern.DOTALL);
     private static final Pattern overlyJVCQuotePattern = Pattern.compile("(<(/)?blockquote>)");
     private static final Pattern overlyBetterQuotePattern = Pattern.compile("<(/)?blockquote>");
-    private static final Pattern jvcLinkPattern = Pattern.compile("<a href=\"([^\"]*)\"( )?( title=\"[^\"]*\")?>.*?</a>");
-    private static final Pattern shortLinkPattern = Pattern.compile("<span class=\"JvCare [^\"]*\"[^>]*?target=\"_blank\">([^<]*)</span>");
-    private static final Pattern longLinkPattern = Pattern.compile("<span class=\"JvCare [^\"]*\"[^i]*itle=\"([^\"]*)\">[^<]*<i></i><span>[^<]*</span>[^<]*</span>");
+    private static final Pattern jvcLinkPattern = Pattern.compile("<a +(title=\"[^\"]*\" )?href=\"([^\"]*)\"( title=\"[^\"]*\")? *>.*?</a>");
+    private static final Pattern shortLinkPattern = Pattern.compile("<span +class=\"JvCare [^\"]*\"[^>]*?target=\"_blank\" *>([^<]*)</span>");
+    private static final Pattern longLinkPattern = Pattern.compile("<span +class=\"JvCare [^\"]*\"[^i]*itle=\"([^\"]*)\" *>[^<]*<i></i><span>[^<]*</span>[^<]*</span>");
     private static final Pattern smileyPattern = Pattern.compile("<img src=\"http(s)?://image\\.jeuxvideo\\.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-code=\"([^\"]*)\" title=\"[^\"]*\" [^>]*>");
     private static final Pattern embedVideoPattern = Pattern.compile("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe.*?src=\"([^\"]*)\"[^>]*></iframe></div></div>");
     private static final Pattern jvcVideoPattern = Pattern.compile("<div class=\"player-contenu\">.*?<div class=\"player-jv\" id=\"player-jv-([^-]*)-.*?</div>[^<]*</div>[^<]*</div>[^<]*</div>", Pattern.DOTALL);
@@ -1069,9 +1069,9 @@ public final class JVCParser {
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, stickerPattern, 1, "<img src=\"sticker_", ".png\"/>", new ConvertUrlToStickerId(), new ConvertStringToString("-", "_"));
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, smileyPattern, 2, "<img src=\"smiley_", "\"/>", null, null);
 
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, embedVideoPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcVideoPattern, 1, "", "", new AddPrefixString("http://www.jeuxvideo.com/videos/iframe/"), makeLinkDependingOnSettingsAndForceMake);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, embedVideoPattern, 1, "<p>", "</p>", makeLinkDependingOnSettingsAndForceMake, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcVideoPattern, 1, "<p>", "</p>", new AddPrefixString("http://www.jeuxvideo.com/videos/iframe/"), makeLinkDependingOnSettingsAndForceMake);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcLinkPattern, 2, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
 
@@ -1122,9 +1122,9 @@ public final class JVCParser {
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, stickerPattern, 1, "[[sticker:p/", "]]", new ConvertUrlToStickerId(), null);
         ToolForParsing.replaceStringByAnother(messageInBuilder, "\n", "");
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, smileyPattern, 3, "", "", null, null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, embedVideoPattern, 1, "", "", null, null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcVideoPattern, 1, "http://www.jeuxvideo.com/videos/iframe/", "", null, null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcLinkPattern, 1, "", "", null, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, embedVideoPattern, 1, "<p>", "</p>", null, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcVideoPattern, 1, "<p>http://www.jeuxvideo.com/videos/iframe/", "</p>", null, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcLinkPattern, 2, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longLinkPattern, 1, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 3, "", "", null, null);
@@ -2009,7 +2009,7 @@ public final class JVCParser {
 
         @Override
         public String changeString(String baseString) {
-            if (forceLinkCreation || ((baseString.startsWith("http://") || baseString.startsWith("https://")) && !baseString.contains(" "))) {
+            if (baseString != null && (forceLinkCreation || ((baseString.startsWith("http://") || baseString.startsWith("https://")) && !baseString.contains(" ")))) {
                 String linkShowed = baseString;
                 if (maxStringSize > 0 && linkShowed.length() > maxStringSize + 3) {
                     linkShowed = linkShowed.substring(0, maxStringSize / 2) + "[…]" + linkShowed.substring(linkShowed.length() - (maxStringSize / 2));
