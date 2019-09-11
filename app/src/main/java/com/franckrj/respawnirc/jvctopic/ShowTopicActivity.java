@@ -692,6 +692,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         if (requestCode == LOCK_TOPIC_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             refreshTopicSafely();
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

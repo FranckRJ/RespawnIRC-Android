@@ -357,6 +357,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
                 }
             }
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

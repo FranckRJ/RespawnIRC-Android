@@ -344,6 +344,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
                 }
             }
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -385,7 +386,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
                     pageContent = "respawnirc:resendneeded";
                 }
 
-                if (Utils.stringIsEmptyOrNull(pageContent)) {
+                if (Utils.stringIsEmptyOrNull(pageContent) || pageContent.contains("<meta http-equiv=\"refresh\"")) {
                     pageContent = "respawnirc:move:" + currentWebInfos.currentUrl;
                 }
 
