@@ -1,9 +1,9 @@
 package com.franckrj.respawnirc.jvctopic.jvctopicviewers;
 
 import android.os.Bundle;
-import androidx.core.view.MenuItemCompat;
+
+import androidx.annotation.NonNull;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.widget.ShareActionProvider;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,12 +24,9 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
     private boolean clearMessagesOnRefresh = true;
     private boolean autoScrollIsEnabled = true;
 
-    private final SwipeRefreshLayout.OnRefreshListener listenerForRefresh = new SwipeRefreshLayout.OnRefreshListener() {
-        @Override
-        public void onRefresh() {
-            if (!reloadAllTopic()) {
-                swipeRefresh.setRefreshing(false);
-            }
+    private final SwipeRefreshLayout.OnRefreshListener listenerForRefresh = () -> {
+        if (!reloadAllTopic()) {
+            swipeRefresh.setRefreshing(false);
         }
     };
 
@@ -210,17 +207,15 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_showtopicforum, menu);
-        shareAction = (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share_showtopicboth));
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.action_share_showtopicboth).setEnabled(!getterForTopic.getUrlForTopicPage().isEmpty());
-        updateShareAction();
     }
 
     @Override

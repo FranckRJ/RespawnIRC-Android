@@ -44,7 +44,10 @@ public class CustomImageGetter implements Html.ImageGetter {
                     tmpBitmap = Bitmap.createScaledBitmap(tmpBitmap, tmpBitmap.getWidth() * 2, tmpBitmap.getHeight() * 2, false);
                     drawable = new BitmapDrawable(res, tmpBitmap);
                 } else {
-                    drawable = Undeprecator.resourcesGetDrawable(res, resId);
+                    drawable = parentActivity.getDrawable(resId);
+                    if (drawable == null) {
+                        throw new NullPointerException();
+                    }
                 }
             } catch (Exception e) {
                 drawable = deletedDrawable;

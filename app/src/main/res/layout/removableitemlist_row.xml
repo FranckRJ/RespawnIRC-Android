@@ -19,7 +19,7 @@
         android:textStyle="bold"/>
 
     <ImageButton
-        style="@style/SelectableItemBackground"
+        style="@style/SelectableItemBackgroundBorderless"
         android:id="@+id/image_button_action_removableitemlist_row"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

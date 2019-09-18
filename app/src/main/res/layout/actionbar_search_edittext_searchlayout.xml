@@ -18,7 +18,7 @@
         android:background="@android:color/transparent"
         android:textCursorDrawable="?attr/themedToolbarSearchCursor"/>
     <ImageButton
-        style="@style/SelectableItemBackground"
+        style="@style/SelectableItemBackgroundBorderless"
         android:id="@+id/search_button_searchlayout"
         android:layout_width="48dp"
         android:layout_height="48dp"

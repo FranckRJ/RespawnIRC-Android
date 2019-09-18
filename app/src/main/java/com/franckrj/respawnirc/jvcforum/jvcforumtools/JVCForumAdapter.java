@@ -46,13 +46,13 @@ public class JVCForumAdapter extends BaseAdapter {
 
     public JVCForumAdapter(Activity parentActivity) {
         serviceInflater = (LayoutInflater) parentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        iconMarqueOn = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_marque_on);
-        iconMarqueOff = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_marque_off);
-        iconDossier2 = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_dossier2);
+        iconMarqueOn = parentActivity.getDrawable(R.drawable.icon_topic_marque_on);
+        iconMarqueOff = parentActivity.getDrawable(R.drawable.icon_topic_marque_off);
+        iconDossier2 = parentActivity.getDrawable(R.drawable.icon_topic_dossier2);
         iconLock = ThemeManager.getDrawable(R.attr.themedTopicLockIcon, parentActivity);
-        iconResolu = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_resolu);
-        iconGhost = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_ghost);
-        iconDossier1 = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), R.drawable.icon_topic_dossier1);
+        iconResolu = parentActivity.getDrawable(R.drawable.icon_topic_resolu);
+        iconGhost = parentActivity.getDrawable(R.drawable.icon_topic_ghost);
+        iconDossier1 = parentActivity.getDrawable(R.drawable.icon_topic_dossier1);
     }
 
     public ArrayList<JVCParser.TopicInfos> getAllItems() {
