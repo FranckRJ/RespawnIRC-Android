@@ -9,7 +9,7 @@ import java.net.URL;
 import java.util.concurrent.Callable;
 
 public class WebManager {
-    public static final String userAgentString = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0";
+    public static final String userAgentString = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0";
 
     public static String sendRequestWithMultipleTrys(String linkToPage, String requestMethod, String requestParameters, WebInfos currentInfos, int maxNumberOfTrys) {
         int numberOfTrys = 0;
