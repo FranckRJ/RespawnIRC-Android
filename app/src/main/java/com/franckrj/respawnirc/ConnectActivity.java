@@ -88,7 +88,8 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
         helpDialogFragment = new HelpConnectDialogFragment();
         saveCookieButton.setOnClickListener(saveCookieClickedListener);
 
-        Undeprecator.cookieManagerRemoveAllCookiesAndSetDefault(CookieManager.getInstance());
+        CookieManager.getInstance().removeAllCookies(null);
+        CookieManager.getInstance().setCookie("http://www.jeuxvideo.com", "euconsent=set");
 
         jvcWebView.setWebViewClient(new WebViewClient());
         jvcWebView.setWebChromeClient(new WebChromeClient());

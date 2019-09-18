@@ -4,7 +4,6 @@ import android.app.ActivityManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.ColorInt;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,18 +34,16 @@ public abstract class AbsThemedActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-        if (Build.VERSION.SDK_INT >= 21) {
-            if (generalTaskDesc == null || colorUsedForGenerateTaskDesc != ThemeManager.getColorInt(R.attr.colorPrimary, this)) {
-                Bitmap appIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_rirc);
-                colorUsedForGenerateTaskDesc = ThemeManager.getColorInt(R.attr.colorPrimary, this);
-                generalTaskDesc = new ActivityManager.TaskDescription(getString(R.string.app_name), appIcon, colorUsedForGenerateTaskDesc);
-            }
-            setTaskDescription(generalTaskDesc);
+        if (generalTaskDesc == null || colorUsedForGenerateTaskDesc != ThemeManager.getColorInt(R.attr.colorPrimary, this)) {
+            Bitmap appIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_rirc);
+            colorUsedForGenerateTaskDesc = ThemeManager.getColorInt(R.attr.colorPrimary, this);
+            generalTaskDesc = new ActivityManager.TaskDescription(getString(R.string.app_name), appIcon, colorUsedForGenerateTaskDesc);
+        }
+        setTaskDescription(generalTaskDesc);
 
-            /* Pour corriger un bug de la SL 27.1.0. */
-            if (statusBarNeedToBeTransparent) {
-                getWindow().setStatusBarColor(Color.TRANSPARENT);
-            }
+        /* Pour corriger un bug de la SL 27.1.0. */
+        if (statusBarNeedToBeTransparent) {
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
     }
 

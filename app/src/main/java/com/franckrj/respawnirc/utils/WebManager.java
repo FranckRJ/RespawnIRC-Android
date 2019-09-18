@@ -37,7 +37,6 @@ public class WebManager {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
-        //noinspection TryFinallyCanBeTryWithResources
         try {
             URL urlToPage;
             InputStream inputStream;
@@ -71,7 +70,6 @@ public class WebManager {
             if (requestMethod.equals("POST")) {
                 DataOutputStream writer = null;
 
-                //noinspection TryFinallyCanBeTryWithResources
                 try {
                     urlConnection.setDoOutput(true);
                     urlConnection.setFixedLengthStreamingMode(requestParameters.getBytes().length);

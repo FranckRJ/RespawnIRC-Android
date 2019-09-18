@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 
@@ -54,65 +55,53 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
     private DraftUtils utilsForDraft = new DraftUtils(PrefsManager.SaveDraftType.ALWAYS, PrefsManager.BoolPref.Names.USE_LAST_TOPIC_DRAFT_SAVED);
     private boolean userCanPostAsModo = false;
 
-    private final View.OnClickListener insertStuffButtonClicked = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (!getSupportFragmentManager().isStateSaved()) {
-                InsertStuffDialogFragment insertStuffDialogFragment = new InsertStuffDialogFragment();
-                insertStuffDialogFragment.show(getSupportFragmentManager(), "InsertStuffDialogFragment");
-            }
+    private final View.OnClickListener insertStuffButtonClicked = view -> {
+        if (!getSupportFragmentManager().isStateSaved()) {
+            InsertStuffDialogFragment insertStuffDialogFragment = new InsertStuffDialogFragment();
+            insertStuffDialogFragment.show(getSupportFragmentManager(), "InsertStuffDialogFragment");
         }
     };
 
-    private final View.OnClickListener manageSurveyButtonClicked = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            Intent newManageSurveyIntent = new Intent(SendTopicToForumActivity.this, ManageSurveyOfTopicActivity.class);
-            newManageSurveyIntent.putExtra(ManageSurveyOfTopicActivity.EXTRA_SURVEY_TITLE, currentInfos.surveyTitle);
-            newManageSurveyIntent.putStringArrayListExtra(ManageSurveyOfTopicActivity.EXTRA_SURVEY_REPLYS_LIST, currentInfos.surveyReplysList);
-            startActivityForResult(newManageSurveyIntent, MANAGE_SURVEY_REQUEST_CODE);
-        }
+    private final View.OnClickListener manageSurveyButtonClicked = view -> {
+        Intent newManageSurveyIntent = new Intent(SendTopicToForumActivity.this, ManageSurveyOfTopicActivity.class);
+        newManageSurveyIntent.putExtra(ManageSurveyOfTopicActivity.EXTRA_SURVEY_TITLE, currentInfos.surveyTitle);
+        newManageSurveyIntent.putStringArrayListExtra(ManageSurveyOfTopicActivity.EXTRA_SURVEY_REPLYS_LIST, currentInfos.surveyReplysList);
+        startActivityForResult(newManageSurveyIntent, MANAGE_SURVEY_REQUEST_CODE);
     };
 
-    private final AbsWebRequestAsyncTask.RequestIsFinished<String> sendTopicIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<String>() {
-        @Override
-        public void onRequestIsFinished(String reqResult) {
-            currentAsyncTaskForSendTopic = null;
+    private final AbsWebRequestAsyncTask.RequestIsFinished<String> sendTopicIsFinishedListener = reqResult -> {
+        currentAsyncTaskForSendTopic = null;
 
-            if (Utils.stringIsEmptyOrNull(reqResult)) {
-                reqResult = "error";
+        if (Utils.stringIsEmptyOrNull(reqResult)) {
+            reqResult = "error";
+        }
+
+        if (reqResult.equals("respawnirc:resendneeded")) {
+            Toast.makeText(SendTopicToForumActivity.this, R.string.unknownErrorPleaseRetry, Toast.LENGTH_SHORT).show();
+            return;
+        } else if (reqResult.startsWith("respawnirc:move:")) {
+            Intent data = new Intent();
+            reqResult = reqResult.substring(("respawnirc:move:").length());
+
+            if (reqResult.startsWith("/forums/")) {
+                reqResult = "http://www.jeuxvideo.com" + reqResult;
+            } else if (!reqResult.startsWith("http:")) {
+                reqResult = "http:" + reqResult;
             }
 
-            if (reqResult.equals("respawnirc:resendneeded")) {
-                Toast.makeText(SendTopicToForumActivity.this, R.string.unknownErrorPleaseRetry, Toast.LENGTH_SHORT).show();
-                return;
-            } else if (reqResult.startsWith("respawnirc:move:")) {
-                Intent data = new Intent();
-                reqResult = reqResult.substring(("respawnirc:move:").length());
+            data.putExtra(RESULT_EXTRA_TOPIC_LINK_TO_MOVE, reqResult);
+            setResult(Activity.RESULT_OK, data);
+        } else {
+            Toast.makeText(SendTopicToForumActivity.this, JVCParser.getErrorMessage(reqResult), Toast.LENGTH_SHORT).show();
+        }
 
-                if (reqResult.startsWith("/forums/")) {
-                    reqResult = "http://www.jeuxvideo.com" + reqResult;
-                } else if (!reqResult.startsWith("http:")) {
-                    reqResult = "http:" + reqResult;
-                }
+        clearWholeTopicIncludingSurvey();
+        finish();
+    };
 
-                data.putExtra(RESULT_EXTRA_TOPIC_LINK_TO_MOVE, reqResult);
-                setResult(Activity.RESULT_OK, data);
-            } else {
-                Toast.makeText(SendTopicToForumActivity.this, JVCParser.getErrorMessage(reqResult), Toast.LENGTH_SHORT).show();
-            }
-
+    private final DialogInterface.OnClickListener onClickInClearWholeTopicConfirmationListener = (dialog, which) -> {
+        if (which == DialogInterface.BUTTON_POSITIVE) {
             clearWholeTopicIncludingSurvey();
-            finish();
-        }
-    };
-
-    private final DialogInterface.OnClickListener onClickInClearWholeTopicConfirmationListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            if (which == DialogInterface.BUTTON_POSITIVE) {
-                clearWholeTopicIncludingSurvey();
-            }
         }
     };
 
@@ -189,22 +178,12 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
 
     private static String surveyReplyListToString(ArrayList<String> thisSurveyReplyList) {
         return TextUtils.join("&", Utils.mapStringArrayList(thisSurveyReplyList,
-                                                                     new Utils.StringModifier() {
-                                                                         @Override
-                                                                         public String changeString(String baseString) {
-                                                                             return Utils.encodeStringToUrlString(baseString);
-                                                                         }
-                                                                     }));
+                Utils::encodeStringToUrlString));
     }
 
     private static ArrayList<String> surveyReplyStringToList(String thisSurveyReplyString) {
         ArrayList<String> tmpList = Utils.mapStringArrayList(Arrays.asList(thisSurveyReplyString.split("&")),
-                                                             new Utils.StringModifier() {
-                                                                 @Override
-                                                                 public String changeString(String baseString) {
-                                                                     return Utils.decodeUrlStringToString(baseString);
-                                                                 }
-                                                             });
+                Utils::decodeUrlStringToString);
         tmpList.removeAll(Arrays.asList("", null));
         return tmpList;
     }
@@ -281,7 +260,7 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(SAVE_SURVEY_TITLE, currentInfos.surveyTitle);
         outState.putStringArrayList(SAVE_SURVEY_REPLY_LIST, currentInfos.surveyReplysList);
@@ -350,6 +329,8 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == MANAGE_SURVEY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 String newSurveyTitle = data.getStringExtra(ManageSurveyOfTopicActivity.EXTRA_SURVEY_TITLE);
@@ -367,8 +348,8 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
     }
 
     @Override
-    public void getStringInserted(String newStringToAdd, int posOfCenterFromEnd) {
-        Utils.insertStringInEditText(topicContentEdit, newStringToAdd, posOfCenterFromEnd);
+    public void insertThisString(@NonNull String stringToInsert, int posOfCenterOfString) {
+        Utils.insertStringInEditText(topicContentEdit, stringToInsert, posOfCenterOfString);
     }
 
     private static class SendTopicToJVC extends AbsWebRequestAsyncTask<SendTopicInfos, Void, String> {

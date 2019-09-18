@@ -9,15 +9,17 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.franckrj.respawnirc.ConnectActivity;
 import com.franckrj.respawnirc.ConnectAsModoActivity;
@@ -26,12 +28,12 @@ import com.franckrj.respawnirc.NavigationMenuAdapter;
 import com.franckrj.respawnirc.NavigationMenuListView;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.SettingsActivity;
-import com.franckrj.respawnirc.jvcforumlist.SelectForumInListActivity;
 import com.franckrj.respawnirc.dialogs.RefreshFavDialogFragment;
+import com.franckrj.respawnirc.jvcforumlist.SelectForumInListActivity;
 import com.franckrj.respawnirc.utils.AccountManager;
-import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
+import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
 
@@ -87,98 +89,89 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected boolean drawerIsDisabled = false;
     protected boolean mpAndNotifNumberIsHidden = false;
 
-    protected final AdapterView.OnItemClickListener itemInNavigationClickedListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            int currentItemId = adapterForNavigationMenu.getItemIdOfRow((int) id);
-            int currentGroupId = adapterForNavigationMenu.getGroupIdOfRow((int) id);
+    protected final AdapterView.OnItemClickListener itemInNavigationClickedListener = (parent, view, position, id) -> {
+        int currentItemId = adapterForNavigationMenu.getItemIdOfRow((int) id);
+        int currentGroupId = adapterForNavigationMenu.getGroupIdOfRow((int) id);
 
-            if ((currentItemId == ITEM_ID_REFRESH_FORUM_FAV || currentItemId == ITEM_ID_REFRESH_TOPIC_FAV) && currentGroupId == GROUP_ID_BASIC) {
-                if (!currentAccount.pseudo.isEmpty()) {
-                    if (!getSupportFragmentManager().isStateSaved()) {
-                        Bundle argForFrag = new Bundle();
-                        RefreshFavDialogFragment refreshFavsDialogFragment = new RefreshFavDialogFragment();
-
-                        argForFrag.putString(RefreshFavDialogFragment.ARG_PSEUDO, currentAccount.pseudo);
-                        argForFrag.putString(RefreshFavDialogFragment.ARG_COOKIE_LIST, currentAccount.cookie);
-                        if (currentItemId == ITEM_ID_REFRESH_FORUM_FAV) {
-                            argForFrag.putInt(RefreshFavDialogFragment.ARG_FAV_TYPE, RefreshFavDialogFragment.FAV_FORUM);
-                        } else {
-                            argForFrag.putInt(RefreshFavDialogFragment.ARG_FAV_TYPE, RefreshFavDialogFragment.FAV_TOPIC);
-                        }
-
-                        refreshFavsDialogFragment.setArguments(argForFrag);
-                        refreshFavsDialogFragment.show(getSupportFragmentManager(), "RefreshFavDialogFragment");
-                    }
-                } else {
-                    Toast.makeText(AbsNavigationViewActivity.this, R.string.errorConnectNeeded, Toast.LENGTH_SHORT).show();
-                }
-            } else if (currentGroupId == GROUP_ID_FORUM_FAV) {
-                lastItemSelected = ITEM_ID_FORUM_FAV_SELECTED;
-                newFavIsSelectedByLongClick = false;
-                newFavSelected = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.FORUM_FAV_LINK, String.valueOf(currentItemId));
-                newForumOrTopicToRead(newFavSelected, true, false, false);
-                layoutForDrawer.closeDrawer(GravityCompat.START);
-                adapterForNavigationMenu.setRowSelected((int) id);
-            } else if (currentGroupId == GROUP_ID_TOPIC_FAV) {
-                lastItemSelected = ITEM_ID_TOPIC_FAV_SELECTED;
-                newFavIsSelectedByLongClick = false;
-                newFavSelected = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.TOPIC_FAV_LINK, String.valueOf(currentItemId));
-                newForumOrTopicToRead(newFavSelected, false, false, false);
-                layoutForDrawer.closeDrawer(GravityCompat.START);
-                adapterForNavigationMenu.setRowSelected((int) id);
-            } else if (currentGroupId == GROUP_ID_ACCOUNT_LIST) {
-                lastItemSelected = ITEM_ID_ACCOUNT_SELECTED;
-                if (!currentAccount.pseudo.toLowerCase().equals(AccountManager.getAccountAtIndex(currentItemId).pseudo.toLowerCase())) {
-                    AccountManager.setCurrentAccount(AccountManager.getAccountAtIndex(currentItemId));
-                    currentAccount = AccountManager.getCurrentAccount();
-                    updateMpAndNotifNumberShowed(null, null);
-                    updateAccountDependentInfos();
-                    updatePseudoFromCurrentAccount();
-                    updateAccountListInNavigationMenu(false);
-                    layoutForDrawer.closeDrawer(GravityCompat.START);
-                }
-                adapterForNavigationMenu.setRowSelected((int) id);
-            } else {
-                lastItemSelected = currentItemId;
-                layoutForDrawer.closeDrawer(GravityCompat.START);
-                adapterForNavigationMenu.setRowSelected((int) id);
-            }
-            adapterForNavigationMenu.notifyDataSetChanged();
-        }
-    };
-
-    protected final AdapterView.OnItemLongClickListener itemInNavigationLongClickedListener = new AdapterView.OnItemLongClickListener() {
-        @Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            int currentItemId = adapterForNavigationMenu.getItemIdOfRow((int) id);
-            int currentGroupId = adapterForNavigationMenu.getGroupIdOfRow((int) id);
-
-            if (currentGroupId == GROUP_ID_TOPIC_FAV) {
-                lastItemSelected = ITEM_ID_TOPIC_FAV_SELECTED;
-                newFavIsSelectedByLongClick = true;
-                newFavSelected = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.TOPIC_FAV_LINK, String.valueOf(currentItemId));
-                newForumOrTopicToRead(newFavSelected, false, false, true);
-                layoutForDrawer.closeDrawer(GravityCompat.START);
-                adapterForNavigationMenu.setRowSelected((int) id);
-                adapterForNavigationMenu.notifyDataSetChanged();
-                return true;
-            }
-
-            return false;
-        }
-    };
-
-    private final View.OnClickListener headerClickedListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
+        if ((currentItemId == ITEM_ID_REFRESH_FORUM_FAV || currentItemId == ITEM_ID_REFRESH_TOPIC_FAV) && currentGroupId == GROUP_ID_BASIC) {
             if (!currentAccount.pseudo.isEmpty()) {
-                isInNavigationConnectMode = !isInNavigationConnectMode;
-                updateNavigationMenu();
+                if (!getSupportFragmentManager().isStateSaved()) {
+                    Bundle argForFrag = new Bundle();
+                    RefreshFavDialogFragment refreshFavsDialogFragment = new RefreshFavDialogFragment();
+
+                    argForFrag.putString(RefreshFavDialogFragment.ARG_PSEUDO, currentAccount.pseudo);
+                    argForFrag.putString(RefreshFavDialogFragment.ARG_COOKIE_LIST, currentAccount.cookie);
+                    if (currentItemId == ITEM_ID_REFRESH_FORUM_FAV) {
+                        argForFrag.putInt(RefreshFavDialogFragment.ARG_FAV_TYPE, RefreshFavDialogFragment.FAV_FORUM);
+                    } else {
+                        argForFrag.putInt(RefreshFavDialogFragment.ARG_FAV_TYPE, RefreshFavDialogFragment.FAV_TOPIC);
+                    }
+
+                    refreshFavsDialogFragment.setArguments(argForFrag);
+                    refreshFavsDialogFragment.show(getSupportFragmentManager(), "RefreshFavDialogFragment");
+                }
             } else {
-                lastItemSelected = ITEM_ID_CONNECT;
+                Toast.makeText(AbsNavigationViewActivity.this, R.string.errorConnectNeeded, Toast.LENGTH_SHORT).show();
+            }
+        } else if (currentGroupId == GROUP_ID_FORUM_FAV) {
+            lastItemSelected = ITEM_ID_FORUM_FAV_SELECTED;
+            newFavIsSelectedByLongClick = false;
+            newFavSelected = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.FORUM_FAV_LINK, String.valueOf(currentItemId));
+            newForumOrTopicToRead(newFavSelected, true, false, false);
+            layoutForDrawer.closeDrawer(GravityCompat.START);
+            adapterForNavigationMenu.setRowSelected((int) id);
+        } else if (currentGroupId == GROUP_ID_TOPIC_FAV) {
+            lastItemSelected = ITEM_ID_TOPIC_FAV_SELECTED;
+            newFavIsSelectedByLongClick = false;
+            newFavSelected = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.TOPIC_FAV_LINK, String.valueOf(currentItemId));
+            newForumOrTopicToRead(newFavSelected, false, false, false);
+            layoutForDrawer.closeDrawer(GravityCompat.START);
+            adapterForNavigationMenu.setRowSelected((int) id);
+        } else if (currentGroupId == GROUP_ID_ACCOUNT_LIST) {
+            lastItemSelected = ITEM_ID_ACCOUNT_SELECTED;
+            if (!currentAccount.pseudo.toLowerCase().equals(AccountManager.getAccountAtIndex(currentItemId).pseudo.toLowerCase())) {
+                AccountManager.setCurrentAccount(AccountManager.getAccountAtIndex(currentItemId));
+                currentAccount = AccountManager.getCurrentAccount();
+                updateMpAndNotifNumberShowed(null, null);
+                updateAccountDependentInfos();
+                updatePseudoFromCurrentAccount();
+                updateAccountListInNavigationMenu(false);
                 layoutForDrawer.closeDrawer(GravityCompat.START);
             }
+            adapterForNavigationMenu.setRowSelected((int) id);
+        } else {
+            lastItemSelected = currentItemId;
+            layoutForDrawer.closeDrawer(GravityCompat.START);
+            adapterForNavigationMenu.setRowSelected((int) id);
+        }
+        adapterForNavigationMenu.notifyDataSetChanged();
+    };
+
+    protected final AdapterView.OnItemLongClickListener itemInNavigationLongClickedListener = (parent, view, position, id) -> {
+        int currentItemId = adapterForNavigationMenu.getItemIdOfRow((int) id);
+        int currentGroupId = adapterForNavigationMenu.getGroupIdOfRow((int) id);
+
+        if (currentGroupId == GROUP_ID_TOPIC_FAV) {
+            lastItemSelected = ITEM_ID_TOPIC_FAV_SELECTED;
+            newFavIsSelectedByLongClick = true;
+            newFavSelected = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.TOPIC_FAV_LINK, String.valueOf(currentItemId));
+            newForumOrTopicToRead(newFavSelected, false, false, true);
+            layoutForDrawer.closeDrawer(GravityCompat.START);
+            adapterForNavigationMenu.setRowSelected((int) id);
+            adapterForNavigationMenu.notifyDataSetChanged();
+            return true;
+        }
+
+        return false;
+    };
+
+    private final View.OnClickListener headerClickedListener = view -> {
+        if (!currentAccount.pseudo.isEmpty()) {
+            isInNavigationConnectMode = !isInNavigationConnectMode;
+            updateNavigationMenu();
+        } else {
+            lastItemSelected = ITEM_ID_CONNECT;
+            layoutForDrawer.closeDrawer(GravityCompat.START);
         }
     };
 
@@ -358,15 +351,13 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         if (newNavigationMenuMode != currentNavigationMenuMode) {
             currentNavigationMenuMode = newNavigationMenuMode;
             switch (currentNavigationMenuMode) {
-                case MODE_HOME:
-                    currentListOfMenuItem = listOfMenuItemInfoForHome;
-                    break;
                 case MODE_FORUM:
                     currentListOfMenuItem = listOfMenuItemInfoForForum;
                     break;
                 case MODE_CONNECT:
                     currentListOfMenuItem = listOfMenuItemInfoForConnect;
                     break;
+                case MODE_HOME:
                 default:
                     currentListOfMenuItem = listOfMenuItemInfoForHome;
                     break;
@@ -381,9 +372,9 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             adapterForNavigationMenu.setRowSelected(adapterForNavigationMenu.getPositionDependingOnId(idOfBaseActivity, GROUP_ID_BASIC));
 
             if (currentAccount.pseudo.isEmpty()) {
-                contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_add_circle_outline_dark));
+                contextConnectImageNavigation.setImageDrawable(getDrawable(R.drawable.ic_add_circle_outline_dark));
             } else {
-                contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_expand_more_dark));
+                contextConnectImageNavigation.setImageDrawable(getDrawable(R.drawable.ic_expand_more_dark));
             }
 
             if (currentAccount.isModo && !currentAccount.pseudo.isEmpty()) {
@@ -398,7 +389,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             }
         } else {
             updateAccountListInNavigationMenu(false);
-            contextConnectImageNavigation.setImageDrawable(Undeprecator.resourcesGetDrawable(getResources(), R.drawable.ic_expand_less_dark));
+            contextConnectImageNavigation.setImageDrawable(getDrawable(R.drawable.ic_expand_less_dark));
         }
 
         adapterForNavigationMenu.notifyDataSetChanged();
@@ -604,9 +595,9 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         updateNavigationMenu();
 
         if (ThemeManager.getThemeUsed() == ThemeManager.ThemeName.LIGHT_THEME && ThemeManager.getHeaderColorUsedForThemeLight() != Undeprecator.resourcesGetColor(getResources(), R.color.defaultHeaderColorThemeLight)) {
-            Drawable newHeaderBackground = Undeprecator.resourcesGetDrawable(getResources(), R.drawable.navigation_header_background_base);
-            newHeaderBackground.setColorFilter(ThemeManager.getHeaderColorUsedForThemeLight(), PorterDuff.Mode.OVERLAY);
-            navigationHeader.setBackgroundDrawable(newHeaderBackground);
+            Drawable newHeaderBackground = getDrawable(R.drawable.navigation_header_background_base);
+            Undeprecator.drawableSetColorFilter(newHeaderBackground, ThemeManager.getHeaderColorUsedForThemeLight(), PorterDuff.Mode.OVERLAY);
+            navigationHeader.setBackground(newHeaderBackground);
         }
     }
 
@@ -629,7 +620,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(SAVE_MP_AND_NOTIF_IS_HIDDEN, mpAndNotifNumberIsHidden);
     }
@@ -646,13 +637,13 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         toggleForDrawer.onConfigurationChanged(newConfig);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (drawerIsDisabled) {
             if (item.getItemId() == android.R.id.home) {
                 super.onBackPressed();

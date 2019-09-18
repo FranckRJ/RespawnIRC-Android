@@ -1,17 +1,22 @@
 package com.franckrj.respawnirc.utils;
 
 import android.content.res.Resources;
+import android.graphics.BlendMode;
+import android.graphics.BlendModeColorFilter;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import androidx.annotation.ColorInt;
-import androidx.annotation.ColorRes;
-import androidx.annotation.DrawableRes;
 import android.text.Html;
 import android.text.Spanned;
-import android.webkit.CookieManager;
 import android.webkit.WebSettings;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
+
+import java.security.InvalidParameterException;
 
 public class Undeprecator {
     @ColorInt
@@ -24,12 +29,21 @@ public class Undeprecator {
         }
     }
 
-    public static Drawable resourcesGetDrawable(Resources resources, @DrawableRes int drawableId) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            return resources.getDrawable(drawableId, null);
+    public static void drawableSetColorFilter(Drawable drawable, @ColorInt int color, @NonNull PorterDuff.Mode mode) {
+        if (mode != PorterDuff.Mode.SRC_ATOP && mode != PorterDuff.Mode.SRC_IN && mode != PorterDuff.Mode.OVERLAY) {
+            throw new InvalidParameterException();
+        }
+
+        if (Build.VERSION.SDK_INT >= 29) {
+            if (mode == PorterDuff.Mode.SRC_ATOP) {
+                drawable.setColorFilter(new BlendModeColorFilter(color, BlendMode.SRC_ATOP));
+            } else if (mode == PorterDuff.Mode.SRC_IN) {
+                drawable.setColorFilter(new BlendModeColorFilter(color, BlendMode.SRC_IN));
+            } else if (mode == PorterDuff.Mode.OVERLAY) {
+                drawable.setColorFilter(new BlendModeColorFilter(color, BlendMode.OVERLAY));
+            }
         } else {
-            //noinspection deprecation
-            return resources.getDrawable(drawableId);
+            drawable.setColorFilter(color, mode);
         }
     }
 
@@ -59,16 +73,6 @@ public class Undeprecator {
     public static void webSettingsSetSavePassword(WebSettings settings, boolean newVal) {
         //noinspection deprecation
         settings.setSavePassword(newVal);
-    }
-
-    public static void cookieManagerRemoveAllCookiesAndSetDefault(CookieManager manager) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            manager.removeAllCookies(null);
-        } else {
-            //noinspection deprecation
-            manager.removeAllCookie();
-        }
-        manager.setCookie("http://www.jeuxvideo.com", "euconsent=set");
     }
 
     public static void vibratorVibrate(Vibrator vibratorService, long[] pattern, int repeat) {

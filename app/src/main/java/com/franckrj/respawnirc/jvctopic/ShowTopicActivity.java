@@ -6,39 +6,39 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+
 import com.franckrj.respawnirc.DraftUtils;
 import com.franckrj.respawnirc.MainActivity;
+import com.franckrj.respawnirc.PageNavigationUtil;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
+import com.franckrj.respawnirc.base.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.dialogs.ChoosePageNumberDialogFragment;
+import com.franckrj.respawnirc.dialogs.InsertStuffDialogFragment;
 import com.franckrj.respawnirc.dialogs.LinkMenuDialogFragment;
 import com.franckrj.respawnirc.dialogs.MessageMenuDialogFragment;
-import com.franckrj.respawnirc.dialogs.InsertStuffDialogFragment;
 import com.franckrj.respawnirc.dialogs.SelectTextDialogFragment;
 import com.franckrj.respawnirc.dialogs.ShowImageDialogFragment;
 import com.franckrj.respawnirc.jvcforum.SearchTopicInForumActivity;
+import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
 import com.franckrj.respawnirc.jvctopic.jvctopicgetters.AbsJVCTopicGetter;
 import com.franckrj.respawnirc.jvctopic.jvctopicgetters.JVCTopicModeForumGetter;
 import com.franckrj.respawnirc.jvctopic.jvctopicviewers.AbsShowTopicFragment;
 import com.franckrj.respawnirc.jvctopic.jvctopicviewers.JVCTopicAdapter;
 import com.franckrj.respawnirc.jvctopic.jvctopicviewers.ShowTopicModeForumFragment;
 import com.franckrj.respawnirc.jvctopic.jvctopicviewers.ShowTopicModeIRCFragment;
-import com.franckrj.respawnirc.base.AbsShowSomethingFragment;
-import com.franckrj.respawnirc.PageNavigationUtil;
-import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
 import com.franckrj.respawnirc.utils.AccountManager;
 import com.franckrj.respawnirc.utils.AddOrRemoveThingToFavs;
 import com.franckrj.respawnirc.utils.AddOrRemoveTopicToSubs;
@@ -115,199 +115,169 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         }
     };
 
-    private final JVCMessageToTopicSender.NewMessagePostedListener listenerForNewMessagePosted = new JVCMessageToTopicSender.NewMessagePostedListener() {
-        @Override
-        public void lastMessageIsSended(String withThisError) {
-            if (topicStatus.lockReason == null) {
-                messageSendButton.setEnabled(true);
-                messageSendButton.setImageDrawable(ThemeManager.getDrawable(R.attr.themedContentSendIcon, ShowTopicActivity.this));
+    private final JVCMessageToTopicSender.NewMessagePostedListener listenerForNewMessagePosted = withThisError -> {
+        if (topicStatus.lockReason == null) {
+            messageSendButton.setEnabled(true);
+            messageSendButton.setImageDrawable(ThemeManager.getDrawable(R.attr.themedContentSendIcon, ShowTopicActivity.this));
 
-                if (withThisError != null) {
-                    showErrorWhenSendingMessage(withThisError);
-                } else {
-                    messageSendEdit.setText("");
-                }
-
-                refreshTopicSafely();
+            if (withThisError != null) {
+                showErrorWhenSendingMessage(withThisError);
+            } else {
+                messageSendEdit.setText("");
             }
+
+            refreshTopicSafely();
         }
     };
 
-    private final View.OnClickListener sendMessageToTopicListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View buttonView) {
-            if (messageSendButton.isEnabled() && topicStatus.lockReason == null) {
-                String tmpLastMessageSended = "";
+    private final View.OnClickListener sendMessageToTopicListener = buttonView -> {
+        if (messageSendButton.isEnabled() && topicStatus.lockReason == null) {
+            String tmpLastMessageSended = "";
 
-                if (!currentAccount.pseudo.isEmpty() && !messageSendEdit.getText().toString().isEmpty()) {
-                    if (!senderForMessages.getIsInEdit()) {
-                        boolean messageIsSended = false;
-                        if (topicStatus.listOfInputInAString != null) {
-                            String tmpListOfInputToUse = JVCMessageToTopicSender.addPostTypeToListOfInput(topicStatus.listOfInputInAString, topicStatus.userCanPostAsModo && PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE));
-                            messageSendButton.setEnabled(false);
-                            tmpLastMessageSended = messageSendEdit.getText().toString();
-                            messageIsSended = senderForMessages.sendThisMessage(tmpLastMessageSended, pageNavigation.getCurrentPageLink(), tmpListOfInputToUse, currentAccount.cookie);
-                        }
-
-                        if (!messageIsSended) {
-                            Toast.makeText(ShowTopicActivity.this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
+            if (!currentAccount.pseudo.isEmpty() && !messageSendEdit.getText().toString().isEmpty()) {
+                if (!senderForMessages.getIsInEdit()) {
+                    boolean messageIsSended = false;
+                    if (topicStatus.listOfInputInAString != null) {
+                        String tmpListOfInputToUse = JVCMessageToTopicSender.addPostTypeToListOfInput(topicStatus.listOfInputInAString, topicStatus.userCanPostAsModo && PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE));
                         messageSendButton.setEnabled(false);
                         tmpLastMessageSended = messageSendEdit.getText().toString();
-                        senderForMessages.sendEditMessage(tmpLastMessageSended, currentAccount.cookie);
+                        messageIsSended = senderForMessages.sendThisMessage(tmpLastMessageSended, pageNavigation.getCurrentPageLink(), tmpListOfInputToUse, currentAccount.cookie);
+                    }
+
+                    if (!messageIsSended) {
+                        Toast.makeText(ShowTopicActivity.this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    if (currentAccount.pseudo.isEmpty()) {
-                        Toast.makeText(ShowTopicActivity.this, R.string.errorConnectedNeededBeforePost, Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(ShowTopicActivity.this, R.string.errorMessageContentNeededForSend, Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                Utils.hideSoftKeyboard(ShowTopicActivity.this);
-                messageSendLayout.requestFocus();
-
-                if (!tmpLastMessageSended.isEmpty()) {
-                    lastMessageSended = tmpLastMessageSended;
-                    PrefsManager.putString(PrefsManager.StringPref.Names.LAST_MESSAGE_SENDED, lastMessageSended);
-                    PrefsManager.applyChanges();
+                    messageSendButton.setEnabled(false);
+                    tmpLastMessageSended = messageSendEdit.getText().toString();
+                    senderForMessages.sendEditMessage(tmpLastMessageSended, currentAccount.cookie);
                 }
             } else {
-                Toast.makeText(ShowTopicActivity.this, R.string.errorMessageAlreadySending, Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
-
-    private final View.OnLongClickListener showForumAndTopicTitleListener = new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View v) {
-            if (!getSupportFragmentManager().isStateSaved()) {
-                Bundle argForFrag = new Bundle();
-                SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
-                argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumAndTopicNames, topicStatus.names.forum, topicStatus.names.topic));
-                selectTextDialogFragment.setArguments(argForFrag);
-                selectTextDialogFragment.show(getSupportFragmentManager(), "SelectTextDialogFragment");
-            }
-            return true;
-        }
-    };
-
-    private final View.OnLongClickListener refreshFromSendButton = new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View v) {
-            refreshTopicSafely();
-            return true;
-        }
-    };
-
-    private final View.OnClickListener selectStickerClickedListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View buttonView) {
-            if (!getSupportFragmentManager().isStateSaved()) {
-                InsertStuffDialogFragment insertStuffDialogFragment = new InsertStuffDialogFragment();
-                insertStuffDialogFragment.show(getSupportFragmentManager(), "InsertStuffDialogFragment");
-            }
-        }
-    };
-
-    private final View.OnLongClickListener showSendmessageActionListener = new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View buttonView) {
-            PopupMenu popup = new PopupMenu(ShowTopicActivity.this, buttonView);
-            MenuItem postAsModoItem;
-
-            popup.getMenuInflater().inflate(R.menu.menu_sendmessage_action, popup.getMenu());
-            popup.setOnMenuItemClickListener(onSendmessageActionClickedListener);
-
-            postAsModoItem = popup.getMenu().findItem(R.id.enable_postasmodo_sendmessage_action);
-            postAsModoItem.setChecked(PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE));
-            postAsModoItem.setEnabled(topicStatus.userCanPostAsModo);
-            popup.getMenu().findItem(R.id.past_last_message_sended_sendmessage_action).setEnabled(!lastMessageSended.isEmpty());
-
-            if (senderForMessages.getIsInEdit()) {
-                popup.getMenu().add(Menu.NONE, R.id.cancel_edit_sendmessage_action, Menu.NONE, R.string.cancelEdit);
+                if (currentAccount.pseudo.isEmpty()) {
+                    Toast.makeText(ShowTopicActivity.this, R.string.errorConnectedNeededBeforePost, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(ShowTopicActivity.this, R.string.errorMessageContentNeededForSend, Toast.LENGTH_LONG).show();
+                }
             }
 
-            popup.show();
+            Utils.hideSoftKeyboard(ShowTopicActivity.this);
+            messageSendLayout.requestFocus();
 
-            return true;
-        }
-    };
-
-    private final PopupMenu.OnMenuItemClickListener onSendmessageActionClickedListener = new PopupMenu.OnMenuItemClickListener() {
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.enable_postasmodo_sendmessage_action:
-                    /* La valeur de isChecked est inversée car le changement d'état ne se fait pas automatiquement
-                     * donc c'est la valeur avant d'avoir cliqué qui est retournée. */
-                    PrefsManager.putBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE, !item.isChecked());
-                    PrefsManager.applyChanges();
-                    updatePostTypeNotice();
-                    return true;
-                case R.id.delete_message_sendmessage_action:
-                    AlertDialog.Builder builder = new AlertDialog.Builder(ShowTopicActivity.this);
-                    builder.setTitle(R.string.deleteMessage).setMessage(R.string.deleteCurrentWritedMessageWarning)
-                            .setPositiveButton(R.string.yes, onClickInDeleteCurrentWritedMessageConfirmationListener).setNegativeButton(R.string.no, null);
-                    builder.show();
-                    return true;
-                case R.id.past_last_message_sended_sendmessage_action:
-                    if (topicStatus.lockReason == null) {
-                        messageSendEdit.setText(lastMessageSended);
-                    }
-                    return true;
-                case R.id.cancel_edit_sendmessage_action:
-                    cancelEditAndHideKeyboardAndCursor();
-                    return true;
-                default:
-                    return false;
+            if (!tmpLastMessageSended.isEmpty()) {
+                lastMessageSended = tmpLastMessageSended;
+                PrefsManager.putString(PrefsManager.StringPref.Names.LAST_MESSAGE_SENDED, lastMessageSended);
+                PrefsManager.applyChanges();
             }
+        } else {
+            Toast.makeText(ShowTopicActivity.this, R.string.errorMessageAlreadySending, Toast.LENGTH_SHORT).show();
         }
     };
 
-    private final DialogInterface.OnClickListener onClickInDeleteCurrentWritedMessageConfirmationListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            if (which == DialogInterface.BUTTON_POSITIVE) {
-                messageSendEdit.setText("");
-                Utils.hideSoftKeyboard(ShowTopicActivity.this);
-                messageSendLayout.requestFocus();
-            }
+    private final View.OnLongClickListener showForumAndTopicTitleListener = v -> {
+        if (!getSupportFragmentManager().isStateSaved()) {
+            Bundle argForFrag = new Bundle();
+            SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
+            argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.showForumAndTopicNames, topicStatus.names.forum, topicStatus.names.topic));
+            selectTextDialogFragment.setArguments(argForFrag);
+            selectTextDialogFragment.show(getSupportFragmentManager(), "SelectTextDialogFragment");
+        }
+        return true;
+    };
+
+    private final View.OnLongClickListener refreshFromSendButton = v -> {
+        refreshTopicSafely();
+        return true;
+    };
+
+    private final View.OnClickListener selectStickerClickedListener = buttonView -> {
+        if (!getSupportFragmentManager().isStateSaved()) {
+            InsertStuffDialogFragment insertStuffDialogFragment = new InsertStuffDialogFragment();
+            insertStuffDialogFragment.show(getSupportFragmentManager(), "InsertStuffDialogFragment");
         }
     };
 
-    private final JVCActionsInTopic.NewMessageIsQuoted messageIsQuotedListener = new JVCActionsInTopic.NewMessageIsQuoted() {
-        @Override
-        public void getNewMessageQuoted(String messageQuoted) {
-            if (topicStatus.lockReason == null) {
-                String currentMessage = messageSendEdit.getText().toString();
+    private final DialogInterface.OnClickListener onClickInDeleteCurrentWritedMessageConfirmationListener = (dialog, which) -> {
+        if (which == DialogInterface.BUTTON_POSITIVE) {
+            messageSendEdit.setText("");
+            Utils.hideSoftKeyboard(ShowTopicActivity.this);
+            messageSendLayout.requestFocus();
+        }
+    };
 
-                if (!currentMessage.isEmpty() && !currentMessage.endsWith("\n\n")) {
-                    if (!currentMessage.endsWith("\n")) {
-                        currentMessage += "\n";
-                    }
+    private final PopupMenu.OnMenuItemClickListener onSendmessageActionClickedListener = item -> {
+        switch (item.getItemId()) {
+            case R.id.enable_postasmodo_sendmessage_action:
+                /* La valeur de isChecked est inversée car le changement d'état ne se fait pas automatiquement
+                 * donc c'est la valeur avant d'avoir cliqué qui est retournée. */
+                PrefsManager.putBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE, !item.isChecked());
+                PrefsManager.applyChanges();
+                updatePostTypeNotice();
+                return true;
+            case R.id.delete_message_sendmessage_action:
+                AlertDialog.Builder builder = new AlertDialog.Builder(ShowTopicActivity.this);
+                builder.setTitle(R.string.deleteMessage).setMessage(R.string.deleteCurrentWritedMessageWarning)
+                        .setPositiveButton(R.string.yes, onClickInDeleteCurrentWritedMessageConfirmationListener).setNegativeButton(R.string.no, null);
+                builder.show();
+                return true;
+            case R.id.past_last_message_sended_sendmessage_action:
+                if (topicStatus.lockReason == null) {
+                    messageSendEdit.setText(lastMessageSended);
+                }
+                return true;
+            case R.id.cancel_edit_sendmessage_action:
+                cancelEditAndHideKeyboardAndCursor();
+                return true;
+            default:
+                return false;
+        }
+    };
+
+    private final View.OnLongClickListener showSendmessageActionListener = buttonView -> {
+        PopupMenu popup = new PopupMenu(ShowTopicActivity.this, buttonView);
+        MenuItem postAsModoItem;
+
+        popup.getMenuInflater().inflate(R.menu.menu_sendmessage_action, popup.getMenu());
+        popup.setOnMenuItemClickListener(onSendmessageActionClickedListener);
+
+        postAsModoItem = popup.getMenu().findItem(R.id.enable_postasmodo_sendmessage_action);
+        postAsModoItem.setChecked(PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE));
+        postAsModoItem.setEnabled(topicStatus.userCanPostAsModo);
+        popup.getMenu().findItem(R.id.past_last_message_sended_sendmessage_action).setEnabled(!lastMessageSended.isEmpty());
+
+        if (senderForMessages.getIsInEdit()) {
+            popup.getMenu().add(Menu.NONE, R.id.cancel_edit_sendmessage_action, Menu.NONE, R.string.cancelEdit);
+        }
+
+        popup.show();
+
+        return true;
+    };
+
+    private final JVCActionsInTopic.NewMessageIsQuoted messageIsQuotedListener = messageQuoted -> {
+        if (topicStatus.lockReason == null) {
+            String currentMessage = messageSendEdit.getText().toString();
+
+            if (!currentMessage.isEmpty() && !currentMessage.endsWith("\n\n")) {
+                if (!currentMessage.endsWith("\n")) {
                     currentMessage += "\n";
                 }
-                currentMessage += messageQuoted;
-
-                messageSendEdit.setText(currentMessage);
-                messageSendEdit.setSelection(currentMessage.length());
-                messageSendEdit.requestFocus();
+                currentMessage += "\n";
             }
+            currentMessage += messageQuoted;
+
+            messageSendEdit.setText(currentMessage);
+            messageSendEdit.setSelection(currentMessage.length());
+            messageSendEdit.requestFocus();
         }
     };
 
-    private final View.OnClickListener lockReasonCLickedListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (topicStatus.lockReason != null && !getSupportFragmentManager().isStateSaved()) {
-                Bundle argForFrag = new Bundle();
-                SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
-                argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.topicLockedForReason, topicStatus.lockReason));
-                selectTextDialogFragment.setArguments(argForFrag);
-                selectTextDialogFragment.show(getSupportFragmentManager(), "SelectTextDialogFragment");
-            }
+    private final View.OnClickListener lockReasonCLickedListener = v -> {
+        if (topicStatus.lockReason != null && !getSupportFragmentManager().isStateSaved()) {
+            Bundle argForFrag = new Bundle();
+            SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
+            argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, getString(R.string.topicLockedForReason, topicStatus.lockReason));
+            selectTextDialogFragment.setArguments(argForFrag);
+            selectTextDialogFragment.show(getSupportFragmentManager(), "SelectTextDialogFragment");
         }
     };
 
@@ -453,9 +423,9 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         insertStuffButton = findViewById(R.id.insertstuff_button_showtopic);
 
         pageNavigation.initializeLayoutForAllNavigationButtons(findViewById(R.id.header_layout_showtopic), findViewById(R.id.shadow_header_showtopic));
-        pageNavigation.initializePagerView((ViewPager) findViewById(R.id.pager_showtopic));
-        pageNavigation.initializeNavigationButtons((Button) findViewById(R.id.firstpage_button_showtopic), (Button) findViewById(R.id.previouspage_button_showtopic),
-                (Button) findViewById(R.id.currentpage_button_showtopic), (Button) findViewById(R.id.nextpage_button_showtopic), (Button) findViewById(R.id.lastpage_button_showtopic));
+        pageNavigation.initializePagerView(findViewById(R.id.pager_showtopic));
+        pageNavigation.initializeNavigationButtons(findViewById(R.id.firstpage_button_showtopic), findViewById(R.id.previouspage_button_showtopic),
+                findViewById(R.id.currentpage_button_showtopic), findViewById(R.id.nextpage_button_showtopic), findViewById(R.id.lastpage_button_showtopic));
 
         pageNavigation.setDrawableForCurrentPageButton(arrowDrawable);
 
@@ -582,7 +552,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(SAVE_TOPIC_OPENED_FROM_FORUM, topicHasBeenOpenedFromAForum);
         outState.putParcelable(SAVE_TOPIC_STATUS, topicStatus);
@@ -717,6 +687,8 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == LOCK_TOPIC_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             refreshTopicSafely();
         }
@@ -936,9 +908,9 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     }
 
     @Override
-    public void getStringInserted(String newStringToAdd, int posOfCenterFromEnd) {
+    public void insertThisString(@NonNull String stringToInsert, int posOfCenterOfString) {
         if (topicStatus.lockReason == null) {
-            Utils.insertStringInEditText(messageSendEdit, newStringToAdd, posOfCenterFromEnd);
+            Utils.insertStringInEditText(messageSendEdit, stringToInsert, posOfCenterOfString);
         }
     }
 

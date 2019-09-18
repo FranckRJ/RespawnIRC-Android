@@ -4,13 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import androidx.annotation.ColorInt;
-import androidx.annotation.DrawableRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
 
 import com.franckrj.respawnirc.utils.Undeprecator;
 
@@ -144,25 +145,25 @@ public class NavigationMenuAdapter extends BaseAdapter {
             Drawable compoundRightDrawable = null;
 
             if (currentMenuItemInfo.iconResId != 0) {
-                compoundLeftDrawable = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), currentMenuItemInfo.iconResId).mutate();
+                compoundLeftDrawable = parentActivity.getDrawable(currentMenuItemInfo.iconResId).mutate();
             }
             if (currentMenuItemInfo.buttonResId != 0) {
-                compoundRightDrawable = Undeprecator.resourcesGetDrawable(parentActivity.getResources(), currentMenuItemInfo.buttonResId).mutate();
+                compoundRightDrawable = parentActivity.getDrawable(currentMenuItemInfo.buttonResId).mutate();
             }
 
             if (rowSelected == position && currentMenuItemInfo.isEnabled) {
                 if (compoundLeftDrawable != null) {
-                    compoundLeftDrawable.setColorFilter(selectedItemColor, PorterDuff.Mode.SRC_ATOP);
+                    Undeprecator.drawableSetColorFilter(compoundLeftDrawable, selectedItemColor, PorterDuff.Mode.SRC_ATOP);
                 }
                 if (compoundRightDrawable != null) {
-                    compoundRightDrawable.setColorFilter(selectedItemColor, PorterDuff.Mode.SRC_ATOP);
+                    Undeprecator.drawableSetColorFilter(compoundRightDrawable, selectedItemColor, PorterDuff.Mode.SRC_ATOP);
                 }
             } else {
                 if (compoundLeftDrawable != null) {
-                    compoundLeftDrawable.setColorFilter(unselectedItemColor, PorterDuff.Mode.SRC_ATOP);
+                    Undeprecator.drawableSetColorFilter(compoundLeftDrawable, unselectedItemColor, PorterDuff.Mode.SRC_ATOP);
                 }
                 if (compoundRightDrawable != null) {
-                    compoundRightDrawable.setColorFilter(unselectedItemColor, PorterDuff.Mode.SRC_ATOP);
+                    Undeprecator.drawableSetColorFilter(compoundRightDrawable, unselectedItemColor, PorterDuff.Mode.SRC_ATOP);
                 }
             }
 

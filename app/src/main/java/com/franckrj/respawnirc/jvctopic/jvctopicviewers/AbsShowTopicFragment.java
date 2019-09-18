@@ -1,6 +1,5 @@
 package com.franckrj.respawnirc.jvctopic.jvctopicviewers;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.ShareActionProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.franckrj.respawnirc.NetworkBroadcastReceiver;
@@ -47,7 +45,6 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected JVCParser.Settings currentSettings = new JVCParser.Settings();
     protected NewModeNeededListener listenerForNewModeNeeded = null;
     protected SwipeRefreshLayout swipeRefresh = null;
-    protected ShareActionProvider shareAction = null;
     protected boolean allMessagesShowedAreFromIgnoredPseudos = false;
     protected PrefsManager.ShowImageType showNoelshackImageType = new PrefsManager.ShowImageType(PrefsManager.ShowImageType.ALWAYS);
     protected boolean showRefreshWhenMessagesShowed = true;
@@ -57,125 +54,107 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected boolean hideTotallyMessagesOfIgnoredPseudos = true;
     protected boolean fastRefreshOfImages = false;
 
-    protected final AbsJVCTopicGetter.NewGetterStateListener listenerForNewGetterState = new AbsJVCTopicGetter.NewGetterStateListener() {
-        @Override
-        public void newStateSetted(int newState) {
-            if (showNoelshackImageType.type == PrefsManager.ShowImageType.WIFI_ONLY && newState == AbsJVCTopicGetter.STATE_LOADING) {
-                updateSettingsDependingOnConnection();
-            }
+    protected final AbsJVCTopicGetter.NewGetterStateListener listenerForNewGetterState = newState -> {
+        if (showNoelshackImageType.type == PrefsManager.ShowImageType.WIFI_ONLY && newState == AbsJVCTopicGetter.STATE_LOADING) {
+            updateSettingsDependingOnConnection();
+        }
 
+        if (newState == AbsJVCTopicGetter.STATE_LOADING) {
+            errorBackgroundMessage.setVisibility(View.GONE);
+        }
+
+        if (showRefreshWhenMessagesShowed || adapterForTopic.getAllItems().isEmpty()) {
             if (newState == AbsJVCTopicGetter.STATE_LOADING) {
-                errorBackgroundMessage.setVisibility(View.GONE);
-            }
-
-            if (showRefreshWhenMessagesShowed || adapterForTopic.getAllItems().isEmpty()) {
-                if (newState == AbsJVCTopicGetter.STATE_LOADING) {
-                    swipeRefresh.setRefreshing(true);
-                } else if (newState == AbsJVCTopicGetter.STATE_NOT_LOADING) {
-                    swipeRefresh.setRefreshing(false);
-                }
+                swipeRefresh.setRefreshing(true);
+            } else if (newState == AbsJVCTopicGetter.STATE_NOT_LOADING) {
+                swipeRefresh.setRefreshing(false);
             }
         }
     };
 
-    protected final AbsJVCTopicGetter.NewTopicStatusListener listenerForNewTopicStatus = new AbsJVCTopicGetter.NewTopicStatusListener() {
-        @Override
-        public void getNewTopicStatus(AbsJVCTopicGetter.TopicStatusInfos newTopicStatus, AbsJVCTopicGetter.TopicStatusInfos oldTopicStatus) {
-            if (!newTopicStatus.htmlSurveyTitle.equals(oldTopicStatus.htmlSurveyTitle)) {
-                if (!newTopicStatus.htmlSurveyTitle.isEmpty()) {
-                    adapterForTopic.enableSurvey(newTopicStatus.htmlSurveyTitle);
-                } else {
-                    adapterForTopic.disableSurvey();
-                }
+    protected final AbsJVCTopicGetter.NewTopicStatusListener listenerForNewTopicStatus = (newTopicStatus, oldTopicStatus) -> {
+        if (!newTopicStatus.htmlSurveyTitle.equals(oldTopicStatus.htmlSurveyTitle)) {
+            if (!newTopicStatus.htmlSurveyTitle.isEmpty()) {
+                adapterForTopic.enableSurvey(newTopicStatus.htmlSurveyTitle);
+            } else {
+                adapterForTopic.disableSurvey();
+            }
+            adapterForTopic.notifyDataSetChanged();
+        }
+
+        if (getActivity() instanceof AbsJVCTopicGetter.NewTopicStatusListener) {
+            ((AbsJVCTopicGetter.NewTopicStatusListener) getActivity()).getNewTopicStatus(newTopicStatus, oldTopicStatus);
+        }
+    };
+
+    private final AbsJVCTopicGetter.NewMessagesListener listenerForNewMessages = (listOfNewMessages, itsReallyEmpty, dontShowMessages) -> {
+        disableTranscriptModeOnJvcMsgList();
+        processAddOfNewMessagesToJvcMsgList(listOfNewMessages, itsReallyEmpty, dontShowMessages);
+        enableTranscriptModeOnJvcMsgList();
+    };
+
+    protected final View.OnClickListener surveyItemClickedListener = view -> {
+        if (adapterForTopic.getShowSurvey()) {
+            if (getActivity() instanceof NewSurveyNeedToBeShown) {
+                /* Pour raccourcir un peu la ligne suivante. */
+                AbsJVCTopicGetter.TopicStatusInfos tmpTopicStatus = absGetterForTopic.getTopicStatus();
+                ((NewSurveyNeedToBeShown) getActivity()).getNewSurveyInfos(JVCParser.specialCharToNormalChar(tmpTopicStatus.htmlSurveyTitle), tmpTopicStatus.topicId, tmpTopicStatus.ajaxInfos.list, tmpTopicStatus.listOfSurveyReplyWithInfos);
+            }
+        }
+    };
+
+    protected final JVCTopicAdapter.MenuItemClickedInMessage menuItemClickedInMessageListener = (item, fromThisMessage) -> {
+        switch (item.getItemId()) {
+            case R.id.menu_show_spoil_message:
+                fromThisMessage.listOfSpoilIdToShow.add(-1);
+                adapterForTopic.updateThisItem(fromThisMessage, false);
                 adapterForTopic.notifyDataSetChanged();
-            }
-
-            if (getActivity() instanceof AbsJVCTopicGetter.NewTopicStatusListener) {
-                ((AbsJVCTopicGetter.NewTopicStatusListener) getActivity()).getNewTopicStatus(newTopicStatus, oldTopicStatus);
-            }
-        }
-    };
-
-    private final AbsJVCTopicGetter.NewMessagesListener listenerForNewMessages = new AbsJVCTopicGetter.NewMessagesListener() {
-        @Override
-        public void getNewMessages(ArrayList<JVCParser.MessageInfos> listOfNewMessages, boolean itsReallyEmpty, boolean dontShowMessages) {
-            disableTranscriptModeOnJvcMsgList();
-            processAddOfNewMessagesToJvcMsgList(listOfNewMessages, itsReallyEmpty, dontShowMessages);
-            enableTranscriptModeOnJvcMsgList();
-        }
-    };
-
-    protected final View.OnClickListener surveyItemClickedListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (adapterForTopic.getShowSurvey()) {
-                if (getActivity() instanceof NewSurveyNeedToBeShown) {
-                    /* Pour raccourcir un peu la ligne suivante. */
-                    AbsJVCTopicGetter.TopicStatusInfos tmpTopicStatus = absGetterForTopic.getTopicStatus();
-                    ((NewSurveyNeedToBeShown) getActivity()).getNewSurveyInfos(JVCParser.specialCharToNormalChar(tmpTopicStatus.htmlSurveyTitle), tmpTopicStatus.topicId, tmpTopicStatus.ajaxInfos.list, tmpTopicStatus.listOfSurveyReplyWithInfos);
+                return true;
+            case R.id.menu_hide_spoil_message:
+                fromThisMessage.listOfSpoilIdToShow.clear();
+                adapterForTopic.updateThisItem(fromThisMessage, false);
+                adapterForTopic.notifyDataSetChanged();
+                return true;
+            case R.id.menu_show_quote_message:
+                fromThisMessage.showOverlyQuote = true;
+                adapterForTopic.updateThisItem(fromThisMessage, false);
+                adapterForTopic.notifyDataSetChanged();
+                return true;
+            case R.id.menu_hide_quote_message:
+                fromThisMessage.showOverlyQuote = false;
+                adapterForTopic.updateThisItem(fromThisMessage, false);
+                adapterForTopic.notifyDataSetChanged();
+                return true;
+            case R.id.menu_show_ugly_images_message:
+                fromThisMessage.showUglyImages = true;
+                adapterForTopic.updateThisItem(fromThisMessage, false);
+                adapterForTopic.notifyDataSetChanged();
+                return true;
+            case R.id.menu_hide_ugly_images_message:
+                fromThisMessage.showUglyImages = false;
+                adapterForTopic.updateThisItem(fromThisMessage, false);
+                adapterForTopic.notifyDataSetChanged();
+                return true;
+            case R.id.menu_show_blacklisted_message:
+                fromThisMessage.pseudoIsBlacklisted = false;
+                adapterForTopic.updateThisItem(fromThisMessage, false);
+                adapterForTopic.notifyDataSetChanged();
+                return true;
+            default:
+                //noinspection SimplifiableIfStatement
+                if (getActivity() instanceof JVCTopicAdapter.MenuItemClickedInMessage) {
+                    return ((JVCTopicAdapter.MenuItemClickedInMessage) getActivity()).onMenuItemClickedInMessage(item, fromThisMessage);
+                } else {
+                    return false;
                 }
-            }
         }
     };
 
-    protected final JVCTopicAdapter.MenuItemClickedInMessage menuItemClickedInMessageListener = new JVCTopicAdapter.MenuItemClickedInMessage() {
-        @Override
-        public boolean onMenuItemClickedInMessage(MenuItem item, JVCParser.MessageInfos fromThisMessage) {
-            switch (item.getItemId()) {
-                case R.id.menu_show_spoil_message:
-                    fromThisMessage.listOfSpoilIdToShow.add(-1);
-                    adapterForTopic.updateThisItem(fromThisMessage, false);
-                    adapterForTopic.notifyDataSetChanged();
-                    return true;
-                case R.id.menu_hide_spoil_message:
-                    fromThisMessage.listOfSpoilIdToShow.clear();
-                    adapterForTopic.updateThisItem(fromThisMessage, false);
-                    adapterForTopic.notifyDataSetChanged();
-                    return true;
-                case R.id.menu_show_quote_message:
-                    fromThisMessage.showOverlyQuote = true;
-                    adapterForTopic.updateThisItem(fromThisMessage, false);
-                    adapterForTopic.notifyDataSetChanged();
-                    return true;
-                case R.id.menu_hide_quote_message:
-                    fromThisMessage.showOverlyQuote = false;
-                    adapterForTopic.updateThisItem(fromThisMessage, false);
-                    adapterForTopic.notifyDataSetChanged();
-                    return true;
-                case R.id.menu_show_ugly_images_message:
-                    fromThisMessage.showUglyImages = true;
-                    adapterForTopic.updateThisItem(fromThisMessage, false);
-                    adapterForTopic.notifyDataSetChanged();
-                    return true;
-                case R.id.menu_hide_ugly_images_message:
-                    fromThisMessage.showUglyImages = false;
-                    adapterForTopic.updateThisItem(fromThisMessage, false);
-                    adapterForTopic.notifyDataSetChanged();
-                    return true;
-                case R.id.menu_show_blacklisted_message:
-                    fromThisMessage.pseudoIsBlacklisted = false;
-                    adapterForTopic.updateThisItem(fromThisMessage, false);
-                    adapterForTopic.notifyDataSetChanged();
-                    return true;
-                default:
-                    //noinspection SimplifiableIfStatement
-                    if (getActivity() instanceof JVCTopicAdapter.MenuItemClickedInMessage) {
-                        return ((JVCTopicAdapter.MenuItemClickedInMessage) getActivity()).onMenuItemClickedInMessage(item, fromThisMessage);
-                    } else {
-                        return false;
-                    }
-            }
-        }
-    };
-
-    private final ImageDownloader.DownloadFinished listenerForDownloadFinished = new ImageDownloader.DownloadFinished() {
-        @Override
-        public void newDownloadFinished(int numberOfDownloadRemaining) {
-            if (numberOfDownloadRemaining == 0 || fastRefreshOfImages) {
-                disableTranscriptModeOnJvcMsgList();
-                jvcMsgList.invalidateViews();
-                enableTranscriptModeOnJvcMsgList();
-            }
+    private final ImageDownloader.DownloadFinished listenerForDownloadFinished = numberOfDownloadRemaining -> {
+        if (numberOfDownloadRemaining == 0 || fastRefreshOfImages) {
+            disableTranscriptModeOnJvcMsgList();
+            jvcMsgList.invalidateViews();
+            enableTranscriptModeOnJvcMsgList();
         }
     };
 
@@ -288,27 +267,12 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         errorBackgroundMessage.setVisibility(View.VISIBLE);
     }
 
-    protected void updateShareAction() {
-        if (shareAction != null && absGetterForTopic != null) {
-            Intent shareIntent = new Intent();
-            shareIntent.setAction(Intent.ACTION_SEND);
-            shareIntent.putExtra(Intent.EXTRA_TEXT, absGetterForTopic.getUrlForTopicPage());
-            shareIntent.setType("text/plain");
-            shareAction.setShareIntent(shareIntent);
-        }
-    }
-
     protected void disableTranscriptModeOnJvcMsgList() {
         jvcMsgList.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_DISABLED);
     }
 
     protected void enableTranscriptModeOnJvcMsgList() {
-        jvcMsgList.post(new Runnable() {
-            @Override
-            public void run() {
-                jvcMsgList.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL);
-            }
-        });
+        jvcMsgList.post(() -> jvcMsgList.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL));
     }
 
     @Override
@@ -489,6 +453,17 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         outState.putString(SAVE_SETTINGS_PSEUDO_OF_AUTHOR, currentSettings.pseudoOfAuthor);
         outState.putBoolean(SAVE_MESSAGES_ARE_FROM_IGNORED_PSEUDOS, allMessagesShowedAreFromIgnoredPseudos);
         absGetterForTopic.saveToBundle(outState);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_share_showtopicboth:
+                Utils.shareThisLink(absGetterForTopic.getUrlForTopicPage(), requireActivity());
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public interface NewModeNeededListener {

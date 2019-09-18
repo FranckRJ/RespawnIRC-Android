@@ -31,7 +31,7 @@
         android:background="@android:color/transparent"/>
 
     <ImageButton
-        style="@style/SelectableItemBackground"
+        style="@style/SelectableItemBackgroundBorderless"
         android:id="@+id/image_button_action_replysurveyrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

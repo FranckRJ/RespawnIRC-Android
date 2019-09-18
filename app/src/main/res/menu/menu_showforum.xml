@@ -21,6 +21,5 @@
         android:title="@string/sendATopic"/>
     <item
         android:id="@+id/action_share_showforum"
-        android:title="@string/share"
-        app:actionProviderClass="androidx.appcompat.widget.ShareActionProvider"/>
+        android:title="@string/share"/>
 </menu>

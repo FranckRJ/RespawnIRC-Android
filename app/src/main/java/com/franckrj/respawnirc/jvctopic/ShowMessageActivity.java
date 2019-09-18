@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.ActionBar;
 import android.util.TypedValue;
@@ -50,149 +52,129 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
     private boolean showOverviewOnImageClick = false;
     private MessageShowedStatusInfos messageShowedStatus = new MessageShowedStatusInfos();
 
-    private final JVCTopicAdapter.MenuItemClickedInMessage menuItemClickedInMessageListener = new JVCTopicAdapter.MenuItemClickedInMessage() {
-        @Override
-        public boolean onMenuItemClickedInMessage(MenuItem item, JVCParser.MessageInfos fromThisMessage) {
-            switch (item.getItemId()) {
-                case R.id.menu_show_spoil_message:
-                    fromThisMessage.listOfSpoilIdToShow.add(-1);
-                    adapterForTopic.updateThisItem(fromThisMessage, false);
-                    adapterForTopic.notifyDataSetChanged();
-                    return true;
-                case R.id.menu_hide_spoil_message:
-                    fromThisMessage.listOfSpoilIdToShow.clear();
-                    adapterForTopic.updateThisItem(fromThisMessage, false);
-                    adapterForTopic.notifyDataSetChanged();
-                    return true;
-                case R.id.menu_show_quote_message:
-                    fromThisMessage.showOverlyQuote = true;
-                    adapterForTopic.updateThisItem(fromThisMessage, false);
-                    adapterForTopic.notifyDataSetChanged();
-                    return true;
-                case R.id.menu_hide_quote_message:
-                    fromThisMessage.showOverlyQuote = false;
-                    adapterForTopic.updateThisItem(fromThisMessage, false);
-                    adapterForTopic.notifyDataSetChanged();
-                    return true;
-                case R.id.menu_show_ugly_images_message:
-                    fromThisMessage.showUglyImages = true;
-                    adapterForTopic.updateThisItem(fromThisMessage, false);
-                    adapterForTopic.notifyDataSetChanged();
-                    return true;
-                case R.id.menu_hide_ugly_images_message:
-                    fromThisMessage.showUglyImages = false;
-                    adapterForTopic.updateThisItem(fromThisMessage, false);
-                    adapterForTopic.notifyDataSetChanged();
-                    return true;
-                default:
-                    return false;
-            }
+    private final JVCTopicAdapter.MenuItemClickedInMessage menuItemClickedInMessageListener = (item, fromThisMessage) -> {
+        switch (item.getItemId()) {
+            case R.id.menu_show_spoil_message:
+                fromThisMessage.listOfSpoilIdToShow.add(-1);
+                adapterForTopic.updateThisItem(fromThisMessage, false);
+                adapterForTopic.notifyDataSetChanged();
+                return true;
+            case R.id.menu_hide_spoil_message:
+                fromThisMessage.listOfSpoilIdToShow.clear();
+                adapterForTopic.updateThisItem(fromThisMessage, false);
+                adapterForTopic.notifyDataSetChanged();
+                return true;
+            case R.id.menu_show_quote_message:
+                fromThisMessage.showOverlyQuote = true;
+                adapterForTopic.updateThisItem(fromThisMessage, false);
+                adapterForTopic.notifyDataSetChanged();
+                return true;
+            case R.id.menu_hide_quote_message:
+                fromThisMessage.showOverlyQuote = false;
+                adapterForTopic.updateThisItem(fromThisMessage, false);
+                adapterForTopic.notifyDataSetChanged();
+                return true;
+            case R.id.menu_show_ugly_images_message:
+                fromThisMessage.showUglyImages = true;
+                adapterForTopic.updateThisItem(fromThisMessage, false);
+                adapterForTopic.notifyDataSetChanged();
+                return true;
+            case R.id.menu_hide_ugly_images_message:
+                fromThisMessage.showUglyImages = false;
+                adapterForTopic.updateThisItem(fromThisMessage, false);
+                adapterForTopic.notifyDataSetChanged();
+                return true;
+            default:
+                return false;
         }
     };
 
-    private final ImageDownloader.DownloadFinished listenerForDownloadFinished = new ImageDownloader.DownloadFinished() {
-        @Override
-        public void newDownloadFinished(int numberOfDownloadRemaining) {
-            if (numberOfDownloadRemaining == 0 || fastRefreshOfImages) {
-                jvcMsgList.invalidateViews();
-            }
+    private final ImageDownloader.DownloadFinished listenerForDownloadFinished = numberOfDownloadRemaining -> {
+        if (numberOfDownloadRemaining == 0 || fastRefreshOfImages) {
+            jvcMsgList.invalidateViews();
         }
     };
 
-    private final JVCTopicAdapter.URLClicked listenerForUrlClicked = new JVCTopicAdapter.URLClicked() {
-        @Override
-        public void getClickedURL(String link, boolean itsLongClick) {
-            if (convertNoelshackLinkToDirectLink) {
-                if (JVCParser.checkIfItsNoelshackLink(link)) {
-                    link = JVCParser.noelshackToDirectLink(link);
+    private final JVCTopicAdapter.URLClicked listenerForUrlClicked = (link, itsLongClick) -> {
+        if (convertNoelshackLinkToDirectLink) {
+            if (JVCParser.checkIfItsNoelshackLink(link)) {
+                link = JVCParser.noelshackToDirectLink(link);
+            }
+        }
+
+        if (!itsLongClick) {
+            String possibleNewLink = JVCParser.formatThisUrlToClassicJvcUrl(link);
+
+            if (JVCParser.checkIfItsTopicFormatedLink(possibleNewLink)) {
+                Intent newShowTopicIntent = new Intent(ShowMessageActivity.this, ShowTopicActivity.class);
+                newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_LINK, possibleNewLink);
+                newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_OPENED_FROM_FORUM, false);
+                startActivity(newShowTopicIntent);
+            } else if (JVCParser.checkIfItsForumFormatedLink(possibleNewLink)) {
+                Intent newShowForumIntent = new Intent(ShowMessageActivity.this, ShowForumActivity.class);
+                newShowForumIntent.putExtra(ShowForumActivity.EXTRA_NEW_LINK, possibleNewLink);
+                newShowForumIntent.putExtra(ShowForumActivity.EXTRA_IS_FIRST_ACTIVITY, false);
+                startActivity(newShowForumIntent);
+            } else if (JVCParser.checkIfItsSearchFormatedLink(possibleNewLink)) {
+                Intent newSearchInForumIntent = new Intent(ShowMessageActivity.this, SearchTopicInForumActivity.class);
+                newSearchInForumIntent.putExtra(SearchTopicInForumActivity.EXTRA_SEARCH_LINK, possibleNewLink);
+                startActivity(newSearchInForumIntent);
+            } else if (JVCParser.checkIfItsMessageFormatedLink(possibleNewLink)) {
+                Intent newShowMessageIntent = new Intent(ShowMessageActivity.this, ShowMessageActivity.class);
+                newShowMessageIntent.putExtra(ShowMessageActivity.EXTRA_MESSAGE_PERMALINK, possibleNewLink);
+                startActivity(newShowMessageIntent);
+            } else if (showOverviewOnImageClick && JVCParser.checkIfItsNoelshackLink(link)) {
+                if (!getSupportFragmentManager().isStateSaved()) {
+                    Bundle argForFrag = new Bundle();
+                    ShowImageDialogFragment showImageDialogFragment = new ShowImageDialogFragment();
+                    argForFrag.putString(ShowImageDialogFragment.ARG_IMAGE_LINK, JVCParser.noelshackToDirectLink(link));
+                    showImageDialogFragment.setArguments(argForFrag);
+                    showImageDialogFragment.show(getSupportFragmentManager(), "ShowImageDialogFragment");
                 }
-            }
-
-            if (!itsLongClick) {
-                String possibleNewLink = JVCParser.formatThisUrlToClassicJvcUrl(link);
-
-                if (JVCParser.checkIfItsTopicFormatedLink(possibleNewLink)) {
-                    Intent newShowTopicIntent = new Intent(ShowMessageActivity.this, ShowTopicActivity.class);
-                    newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_LINK, possibleNewLink);
-                    newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_OPENED_FROM_FORUM, false);
-                    startActivity(newShowTopicIntent);
-                } else if (JVCParser.checkIfItsForumFormatedLink(possibleNewLink)) {
-                    Intent newShowForumIntent = new Intent(ShowMessageActivity.this, ShowForumActivity.class);
-                    newShowForumIntent.putExtra(ShowForumActivity.EXTRA_NEW_LINK, possibleNewLink);
-                    newShowForumIntent.putExtra(ShowForumActivity.EXTRA_IS_FIRST_ACTIVITY, false);
-                    startActivity(newShowForumIntent);
-                } else if (JVCParser.checkIfItsSearchFormatedLink(possibleNewLink)) {
-                    Intent newSearchInForumIntent = new Intent(ShowMessageActivity.this, SearchTopicInForumActivity.class);
-                    newSearchInForumIntent.putExtra(SearchTopicInForumActivity.EXTRA_SEARCH_LINK, possibleNewLink);
-                    startActivity(newSearchInForumIntent);
-                } else if (JVCParser.checkIfItsMessageFormatedLink(possibleNewLink)) {
-                    Intent newShowMessageIntent = new Intent(ShowMessageActivity.this, ShowMessageActivity.class);
-                    newShowMessageIntent.putExtra(ShowMessageActivity.EXTRA_MESSAGE_PERMALINK, possibleNewLink);
-                    startActivity(newShowMessageIntent);
-                } else if (showOverviewOnImageClick && JVCParser.checkIfItsNoelshackLink(link)) {
-                    if (!getSupportFragmentManager().isStateSaved()) {
-                        Bundle argForFrag = new Bundle();
-                        ShowImageDialogFragment showImageDialogFragment = new ShowImageDialogFragment();
-                        argForFrag.putString(ShowImageDialogFragment.ARG_IMAGE_LINK, JVCParser.noelshackToDirectLink(link));
-                        showImageDialogFragment.setArguments(argForFrag);
-                        showImageDialogFragment.show(getSupportFragmentManager(), "ShowImageDialogFragment");
-                    }
-                } else {
-                    Utils.openCorrespondingBrowser(linkTypeForInternalBrowser, link, ShowMessageActivity.this);
-                }
-            } else if (!getSupportFragmentManager().isStateSaved()) {
-                Bundle argForFrag = new Bundle();
-                LinkMenuDialogFragment linkMenuDialogFragment = new LinkMenuDialogFragment();
-                argForFrag.putString(LinkMenuDialogFragment.ARG_URL, link);
-                linkMenuDialogFragment.setArguments(argForFrag);
-                linkMenuDialogFragment.show(getSupportFragmentManager(), "LinkMenuDialogFragment");
-            }
-        }
-    };
-
-    private final JVCTopicAdapter.PseudoClicked listenerForPseudoClicked = new JVCTopicAdapter.PseudoClicked() {
-        @Override
-        public void getMessageOfPseudoClicked(JVCParser.MessageInfos messageClicked) {
-            if (!getSupportFragmentManager().isStateSaved()) {
-                Bundle argForFrag = new Bundle();
-                MessageMenuDialogFragment messageMenuDialogFragment = new MessageMenuDialogFragment();
-                argForFrag.putString(MessageMenuDialogFragment.ARG_PSEUDO_MESSAGE, messageClicked.pseudo);
-                argForFrag.putString(MessageMenuDialogFragment.ARG_PSEUDO_USER, currentSettings.pseudoOfUser);
-                argForFrag.putString(MessageMenuDialogFragment.ARG_MESSAGE_ID, String.valueOf(messageClicked.id));
-                argForFrag.putInt(MessageMenuDialogFragment.ARG_LINK_TYPE_FOR_INTERNAL_BROWSER, linkTypeForInternalBrowser.type);
-                argForFrag.putString(MessageMenuDialogFragment.ARG_MESSAGE_CONTENT, messageClicked.messageNotParsed);
-                messageMenuDialogFragment.setArguments(argForFrag);
-                messageMenuDialogFragment.show(getSupportFragmentManager(), "MessageMenuDialogFragment");
-            }
-        }
-    };
-
-    private final AbsWebRequestAsyncTask.RequestIsStarted getMessageIsStartedListener = new AbsWebRequestAsyncTask.RequestIsStarted() {
-        @Override
-        public void onRequestIsStarted() {
-            swipeRefresh.setRefreshing(true);
-        }
-    };
-
-    private final AbsWebRequestAsyncTask.RequestIsFinished<MessageShowedStatusInfos> getMessageIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<MessageShowedStatusInfos>() {
-        @Override
-        public void onRequestIsFinished(MessageShowedStatusInfos reqResult) {
-            swipeRefresh.setRefreshing(false);
-            messageShowedStatus = reqResult;
-
-            if (messageShowedStatus.message == null) {
-                backgroundErrorText.setVisibility(View.VISIBLE);
-                backgroundErrorText.setText(R.string.errorDownloadFailed);
             } else {
-                ActionBar myActionBar = getSupportActionBar();
-                adapterForTopic.addItem(messageShowedStatus.message, true);
-                if (myActionBar != null) {
-                    myActionBar.setSubtitle(messageShowedStatus.message.pseudo);
-                }
+                Utils.openCorrespondingBrowser(linkTypeForInternalBrowser, link, ShowMessageActivity.this);
             }
-
-            currentTaskForGetMessage = null;
+        } else if (!getSupportFragmentManager().isStateSaved()) {
+            Bundle argForFrag = new Bundle();
+            LinkMenuDialogFragment linkMenuDialogFragment = new LinkMenuDialogFragment();
+            argForFrag.putString(LinkMenuDialogFragment.ARG_URL, link);
+            linkMenuDialogFragment.setArguments(argForFrag);
+            linkMenuDialogFragment.show(getSupportFragmentManager(), "LinkMenuDialogFragment");
         }
+    };
+
+    private final JVCTopicAdapter.PseudoClicked listenerForPseudoClicked = messageClicked -> {
+        if (!getSupportFragmentManager().isStateSaved()) {
+            Bundle argForFrag = new Bundle();
+            MessageMenuDialogFragment messageMenuDialogFragment = new MessageMenuDialogFragment();
+            argForFrag.putString(MessageMenuDialogFragment.ARG_PSEUDO_MESSAGE, messageClicked.pseudo);
+            argForFrag.putString(MessageMenuDialogFragment.ARG_PSEUDO_USER, currentSettings.pseudoOfUser);
+            argForFrag.putString(MessageMenuDialogFragment.ARG_MESSAGE_ID, String.valueOf(messageClicked.id));
+            argForFrag.putInt(MessageMenuDialogFragment.ARG_LINK_TYPE_FOR_INTERNAL_BROWSER, linkTypeForInternalBrowser.type);
+            argForFrag.putString(MessageMenuDialogFragment.ARG_MESSAGE_CONTENT, messageClicked.messageNotParsed);
+            messageMenuDialogFragment.setArguments(argForFrag);
+            messageMenuDialogFragment.show(getSupportFragmentManager(), "MessageMenuDialogFragment");
+        }
+    };
+
+    private final AbsWebRequestAsyncTask.RequestIsStarted getMessageIsStartedListener = () -> swipeRefresh.setRefreshing(true);
+
+    private final AbsWebRequestAsyncTask.RequestIsFinished<MessageShowedStatusInfos> getMessageIsFinishedListener = reqResult -> {
+        swipeRefresh.setRefreshing(false);
+        messageShowedStatus = reqResult;
+
+        if (messageShowedStatus.message == null) {
+            backgroundErrorText.setVisibility(View.VISIBLE);
+            backgroundErrorText.setText(R.string.errorDownloadFailed);
+        } else {
+            ActionBar myActionBar = getSupportActionBar();
+            adapterForTopic.addItem(messageShowedStatus.message, true);
+            if (myActionBar != null) {
+                myActionBar.setSubtitle(messageShowedStatus.message.pseudo);
+            }
+        }
+
+        currentTaskForGetMessage = null;
     };
 
     private void initializeSettingsAndList() {
@@ -396,7 +378,7 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(SAVE_MESSAGE_SHOWED, messageShowedStatus);
     }

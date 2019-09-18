@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
-import android.graphics.Color;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
 import androidx.annotation.ColorInt;
@@ -26,6 +25,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Utils {
     public static String colorToString(@ColorInt int colorValue) {
@@ -46,7 +46,7 @@ public class Utils {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean stringsAreEquals(String str1, String str2) {
-        return (str1 == null ? str2 == null : str1.equals(str2));
+        return (Objects.equals(str1, str2));
     }
 
     public static String truncateString(String baseString, int maxSize, String endingPartIfCuted) {
@@ -164,6 +164,13 @@ public class Utils {
         parentActivity.startActivity(newBrowserIntent);
     }
 
+    public static void shareThisLink(String link, Activity parentActivity) {
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, link);
+        parentActivity.startActivity(Intent.createChooser(sharingIntent, parentActivity.getString(R.string.share)));
+    }
+
     public static void putStringInClipboard(String textToCopy, Activity fromThisActivity) {
         ClipboardManager clipboard = (ClipboardManager) fromThisActivity.getSystemService(Context.CLIPBOARD_SERVICE);
 
@@ -173,21 +180,24 @@ public class Utils {
         }
     }
 
-    public static void insertStringInEditText(EditText currentEditText, String stringToInsert, int posOfCenterFromEnd) {
+    public static void insertStringInEditText(EditText currentEditText, String stringToInsert, int posOfCenterOfString) {
         int currentCursorPos = currentEditText.getSelectionStart();
         int currentEndOfSelec = currentEditText.getSelectionEnd();
         if (currentCursorPos == -1) {
             currentCursorPos = 0;
         }
-        if (currentEndOfSelec > currentCursorPos && posOfCenterFromEnd > 0) {
-            String firstStringToAdd = stringToInsert.substring(0, stringToInsert.length() - posOfCenterFromEnd);
-            String secondStringToAdd = stringToInsert.substring(stringToInsert.length() - posOfCenterFromEnd);
+        if (posOfCenterOfString < 0) {
+            posOfCenterOfString = stringToInsert.length();
+        }
+        if (currentEndOfSelec > currentCursorPos && posOfCenterOfString < stringToInsert.length()) {
+            String firstStringToAdd = stringToInsert.substring(0, posOfCenterOfString);
+            String secondStringToAdd = stringToInsert.substring(posOfCenterOfString);
             currentEditText.getText().insert(currentEndOfSelec, secondStringToAdd);
             currentEditText.getText().insert(currentCursorPos, firstStringToAdd);
-            currentEditText.setSelection(currentEndOfSelec + stringToInsert.length() - posOfCenterFromEnd);
+            currentEditText.setSelection(currentEndOfSelec + posOfCenterOfString);
         } else {
             currentEditText.getText().insert(currentCursorPos, stringToInsert);
-            currentEditText.setSelection(currentCursorPos + stringToInsert.length() - posOfCenterFromEnd);
+            currentEditText.setSelection(currentCursorPos + posOfCenterOfString);
         }
     }
 
