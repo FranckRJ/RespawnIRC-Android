@@ -91,6 +91,15 @@
                 android:layout_height="wrap_content"
                 app:layout_columnSpan="3"
                 app:layout_columnWeight="1"
+                android:text="@string/forumlistHardwarePs5"
+                android:tag="@string/forumlistHardwarePs5Link"/>
+
+            <Button
+                android:theme="?attr/themedButtonBlueStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
                 android:text="@string/forumlistHardwarePs4"
                 android:tag="@string/forumlistHardwarePs4Link"/>
 
@@ -109,24 +118,6 @@
                 app:layout_columnWeight="1"
                 android:text="@string/forumlistHardwarePsVr"
                 android:tag="@string/forumlistHardwarePsVrLink"/>
-
-            <Button
-                android:theme="?attr/themedButtonBlueStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_columnSpan="3"
-                app:layout_columnWeight="1"
-                android:text="@string/forumlistHardwarePs3"
-                android:tag="@string/forumlistHardwarePs3Link"/>
-
-            <Button
-                android:theme="?attr/themedButtonBlueStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_columnSpan="3"
-                app:layout_columnWeight="1"
-                android:text="@string/forumlistHardwarePsVita"
-                android:tag="@string/forumlistHardwarePsVitaLink"/>
 
             <Button
                 android:theme="?attr/themedButtonBlueStyle"
@@ -180,6 +171,15 @@
                 app:layout_columnWeight="1"
                 android:text="@string/forumlistHardwareIThings"
                 android:tag="@string/forumlistHardwareIThingsLink"/>
+
+            <Button
+                android:theme="?attr/themedButtonGreenStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnSpan="3"
+                app:layout_columnWeight="1"
+                android:text="@string/forumlistHardwareXBoxScarlett"
+                android:tag="@string/forumlistHardwareXBoxScarlettLink"/>
 
             <Button
                 android:theme="?attr/themedButtonGreenStyle"
