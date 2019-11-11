@@ -27,8 +27,6 @@
 
     <string name="forumlistJvcCommunity" translatable="false">Communauté</string>
     <string name="forumlistJvcCommunityLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000021-0-1-0-1-0-communaute.htm</string>
-    <string name="forumlistJvcRedacAndYou" translatable="false">La rédac et vous</string>
-    <string name="forumlistJvcRedacAndYouLink" translatable="false">http://www.jeuxvideo.com/forums/0-99-0-1-0-1-0-la-redac-et-vous.htm</string>
     <string name="forumlistJvcSuggestionsJvc" translatable="false">Suggestions JVC</string>
     <string name="forumlistJvcSuggestionsJvcLink" translatable="false">http://www.jeuxvideo.com/forums/0-13-0-1-0-1-0-suggestions-jeuxvideo-com.htm</string>
     <string name="forumlistJvcStoreJvc" translatable="false">Boutique JVC</string>
@@ -72,6 +70,10 @@
     <string name="forumlistVideoGameRetrogamingLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000010-0-1-0-1-0-retrogaming.htm</string>
     <string name="forumlistVideoGameNds" translatable="false">Nintendo DS</string>
     <string name="forumlistVideoGameNdsLink" translatable="false">http://www.jeuxvideo.com/forums/0-56-0-1-0-1-0-nintendo-ds.htm</string>
+    <string name="forumlistVideoGamePs3" translatable="false">Playstation 3</string>
+    <string name="forumlistVideoGamePs3Link" translatable="false">http://www.jeuxvideo.com/forums/0-60-0-1-0-1-0-playstation-3.htm</string>
+    <string name="forumlistVideoGamePsVita" translatable="false">Playstation Vita</string>
+    <string name="forumlistVideoGamePsVitaLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000006-0-1-0-1-0-playstation-vita.htm</string>
     <string name="forumlistVideoGameDreamcast" translatable="false">Dreamcast</string>
     <string name="forumlistVideoGameDreamcastLink" translatable="false">http://www.jeuxvideo.com/forums/0-12-0-1-0-1-0-dreamcast.htm</string>
     <string name="forumlistVideoGamePs2" translatable="false">PlayStation 2</string>
@@ -129,14 +131,12 @@
     <string name="forumlistHardwareDlOnPcLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000040-0-1-0-1-0-plateforme-de-telechargement-pc.htm</string>
     <string name="forumlistHardwareOculusRift" translatable="false">Oculus Rift</string>
     <string name="forumlistHardwareOculusRiftLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000046-0-1-0-1-0-oculus-rift.htm</string>
+    <string name="forumlistHardwarePs5" translatable="false">PlayStation 5</string>
+    <string name="forumlistHardwarePs5Link" translatable="false">http://www.jeuxvideo.com/forums/0-3017788-0-1-0-1-0-playstation-5.htm</string>
     <string name="forumlistHardwarePs4" translatable="false">PlayStation 4</string>
     <string name="forumlistHardwarePs4Link" translatable="false">http://www.jeuxvideo.com/forums/0-1000043-0-1-0-1-0-playstation-4.htm</string>
     <string name="forumlistHardwarePsVr" translatable="false">Playstation VR</string>
     <string name="forumlistHardwarePsVrLink" translatable="false">http://www.jeuxvideo.com/forums/0-3000032-0-1-0-1-0-playstation-vr.htm</string>
-    <string name="forumlistHardwarePs3" translatable="false">PlayStation 3</string>
-    <string name="forumlistHardwarePs3Link" translatable="false">http://www.jeuxvideo.com/forums/0-60-0-1-0-1-0-playstation-3.htm</string>
-    <string name="forumlistHardwarePsVita" translatable="false">PlayStation Vita</string>
-    <string name="forumlistHardwarePsVitaLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000006-0-1-0-1-0-playstation-vita.htm</string>
     <string name="forumlistHardwarePsStore" translatable="false">PlayStation Store</string>
     <string name="forumlistHardwarePsStoreLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000015-0-1-0-1-0-playstation-store.htm</string>
     <string name="forumlistHardwareSmartphone" translatable="false"><![CDATA[Smartphones & tablettes]]></string>
@@ -147,6 +147,8 @@
     <string name="forumlistHardwareWindowsPhoneLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000041-0-1-0-1-0-windows-phone.htm</string>
     <string name="forumlistHardwareIThings" translatable="false">iPhone / iPod / iPad / Watch</string>
     <string name="forumlistHardwareIThingsLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000029-0-1-0-1-0-iphone-ipod-ipad-watch.htm</string>
+    <string name="forumlistHardwareXBoxScarlett" translatable="false">Xbox Scarlett</string>
+    <string name="forumlistHardwareXBoxScarlettLink" translatable="false">http://www.jeuxvideo.com/forums/0-3017784-0-1-0-1-0-xbox-scarlett.htm</string>
     <string name="forumlistHardwareXBoxOne" translatable="false">Xbox One</string>
     <string name="forumlistHardwareXBoxOneLink" translatable="false">http://www.jeuxvideo.com/forums/0-1000044-0-1-0-1-0-xbox-one.htm</string>
     <string name="forumlistHardwareXBox360" translatable="false">Xbox 360</string>
@@ -168,8 +170,8 @@
 
     <string name="forumlistHobbiesComputers" translatable="false">Informatique</string>
     <string name="forumlistHobbiesComputersLink" translatable="false">http://www.jeuxvideo.com/forums/0-1-0-1-0-1-0-informatique.htm</string>
-    <string name="forumlistHobbiesComputerParts" translatable="false">Matériel informatique</string>
-    <string name="forumlistHobbiesComputerPartsLink" translatable="false">http://www.jeuxvideo.com/forums/0-6-0-1-0-1-0-materiel-informatique.htm</string>
+    <string name="forumlistHobbiesHardware" translatable="false">Hardware</string>
+    <string name="forumlistHobbiesHardwareLink" translatable="false">http://www.jeuxvideo.com/forums/0-6-0-1-0-1-0-materiel-informatique.htm</string>
     <string name="forumlistHobbiesWebDev" translatable="false">Création de sites web</string>
     <string name="forumlistHobbiesWebDevLink" translatable="false">http://www.jeuxvideo.com/forums/0-30-0-1-0-1-0-creation-de-sites-web.htm</string>
     <string name="forumlistHobbiesMac" translatable="false">Mac</string>

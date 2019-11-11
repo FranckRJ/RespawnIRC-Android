@@ -195,10 +195,28 @@
             <View
                 android:layout_width="2dp"
                 android:layout_height="0dp"
-                app:layout_rowSpan="7"
+                app:layout_rowSpan="8"
                 app:layout_rowWeight="1"
                 android:layout_margin="4dp"
                 android:background="?attr/themedDarkerBackgroundColor"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGamePs3"
+                android:tag="@string/forumlistVideoGamePs3Link"/>
+
+            <Button
+                android:theme="?attr/themedButtonSubForumStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                android:text="@string/forumlistVideoGamePsVita"
+                android:tag="@string/forumlistVideoGamePsVitaLink"/>
 
             <Button
                 android:theme="?attr/themedButtonSubForumStyle"

@@ -125,6 +125,7 @@ class InsertStuffDialogFragment : DialogFragment() {
                     StuffInsertableAdapter.StuffInfos(R.drawable.smiley_loveyou, ":loveyou:", -1),
                     StuffInsertableAdapter.StuffInfos(R.drawable.smiley_nyu, ":cute:", -1),
                     StuffInsertableAdapter.StuffInfos(R.drawable.smiley_objection, ":objection:", -1),
+                    StuffInsertableAdapter.StuffInfos(R.drawable.smiley_pave, ":pave:", -1),
                     StuffInsertableAdapter.StuffInfos(R.drawable.smiley_pf, ":pf:", -1),
                     StuffInsertableAdapter.StuffInfos(R.drawable.smiley_play, ":play:", -1),
                     StuffInsertableAdapter.StuffInfos(R.drawable.smiley_siffle, ":siffle:", -1)
