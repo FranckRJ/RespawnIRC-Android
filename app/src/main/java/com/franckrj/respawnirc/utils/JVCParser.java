@@ -298,6 +298,16 @@ public final class JVCParser {
         }
     }
 
+    public static String getTopicIdOfThisTopic(String topicLink) {
+        Matcher topicLinkNumberMatcher = pageTopicLinkNumberPattern.matcher(topicLink);
+
+        if (topicLinkNumberMatcher.find()) {
+            return topicLinkNumberMatcher.group(3);
+        } else {
+            return "";
+        }
+    }
+
     public static String getTopicIdInThisTopicPage(String topicContent) {
         Matcher topicIdInTopicPageMatcher = topicIdInTopicPagePattern.matcher(topicContent);
 

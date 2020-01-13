@@ -6,6 +6,7 @@ import android.os.Parcelable;
 
 import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 import com.franckrj.respawnirc.utils.JVCParser;
+import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
 import java.util.ArrayList;
@@ -139,7 +140,8 @@ public abstract class AbsJVCTopicGetter {
         boolean pageDownloadedIsAnalysable = true;
 
         if (!newPageInfos.newUrlForTopicPage.isEmpty()) {
-            if (JVCParser.checkIfTopicAreSame(urlForTopicPage, newPageInfos.newUrlForTopicPage)) {
+            if (JVCParser.checkIfItsTopicFormatedLink(newPageInfos.newUrlForTopicPage)
+                    && Utils.stringsAreEquals(JVCParser.getTopicIdOfThisTopic(urlForTopicPage), JVCParser.getTopicIdOfThisTopic(newPageInfos.newUrlForTopicPage))) {
                 if (JVCParser.getPageNumberForThisTopicLink(urlForTopicPage).equals(JVCParser.getPageNumberForThisTopicLink(newPageInfos.newUrlForTopicPage))) {
                     urlForTopicPage = newPageInfos.newUrlForTopicPage;
                     if (listenerForTopicLinkChanged != null) {
