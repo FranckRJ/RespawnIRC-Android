@@ -127,6 +127,7 @@
         <item name="themedDividerColor">@color/dividerColorThemeGrey</item>
         <item name="themedBackgroundAvatar">@drawable/avatar_image_border_grey</item>
         <item name="themedAltBackgroundColor">@color/altBackgroundColorThemeGrey</item>
+        <item name="themedTopicNameColor">@color/topicNameColorThemeGrey</item>
         <item name="themedQuoteStripeColor">@color/colorQuoteStripeThemeGrey</item>
         <item name="themedButtonSubForumStyle">@style/ButtonSubForumGreyAndBlackStyle</item>
         <item name="themedButtonBlueStyle">@style/ButtonForumGreyStyle</item>
