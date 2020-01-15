@@ -276,6 +276,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
                 if (source != null && !source.isEmpty()) {
                     ForumInfos newForumInfos = new ForumInfos();
 
+                    newForumInfos.mainForum = JVCParser.getMainForumNameAndLinkInForumPage(source);
                     newForumInfos.forumName = JVCParser.getForumNameInForumPage(source);
                     newForumInfos.numberOfConnected = JVCParser.getNumberOfConnectFromPage(source);
                     newForumInfos.listOfSubforums = JVCParser.getListOfSubforumsInForumPage(source);
@@ -289,6 +290,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
     }
 
     private static class ForumInfos implements Parcelable {
+        public JVCParser.NameAndLink mainForum = null;
         public String forumName = "";
         public String numberOfConnected = "";
         public ArrayList<JVCParser.NameAndLink> listOfSubforums = new ArrayList<>();
@@ -312,6 +314,12 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
         }
 
         private ForumInfos(Parcel in) {
+            if (in.readByte() == 1) {
+                mainForum = in.readParcelable(JVCParser.NameAndLink.class.getClassLoader());
+            } else {
+                mainForum = null;
+            }
+
             forumName = in.readString();
             numberOfConnected = in.readString();
             in.readTypedList(listOfSubforums, JVCParser.NameAndLink.CREATOR);
@@ -326,6 +334,13 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
 
         @Override
         public void writeToParcel(Parcel out, int flags) {
+            if (mainForum != null) {
+                out.writeByte((byte)1);
+                out.writeParcelable(mainForum, flags);
+            } else {
+                out.writeByte((byte)0);
+            }
+
             out.writeString(forumName);
             out.writeString(numberOfConnected);
             out.writeTypedList(listOfSubforums);

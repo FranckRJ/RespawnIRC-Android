@@ -61,7 +61,7 @@ public final class JVCParser {
     private static final Pattern lastEditMessagePattern = Pattern.compile("<div class=\"info-edition-msg\">[^M]*(Message édité le ([^ ]* [^ ]* [^ ]* [^ ]* [0-9:]*) par.*?)</div>", Pattern.DOTALL);
     private static final Pattern messageEditInfoPattern = Pattern.compile("<textarea((.*?)(?=id=\"text_commentaire\")|(.*?)(?=>))id=\"text_commentaire\"[^>]*>(.*?)</textarea>", Pattern.DOTALL);
     private static final Pattern allArianeStringPattern = Pattern.compile("<div class=\"fil-ariane-crumb\">.*?</h1>", Pattern.DOTALL);
-    private static final Pattern forumNameInArianeStringPattern = Pattern.compile("<span><a href=\"/forums/0-[^\"]*\">([^<]*)</a></span>");
+    private static final Pattern forumNameInArianeStringPattern = Pattern.compile("<span><a href=\"(/forums/0-[^\"]*)\">([^<]*)</a></span>");
     private static final Pattern topicNameInArianeStringPattern = Pattern.compile("<span><a href=\"/forums/(42|1)-[^\"]*\">([^<]*)</a></span>");
     private static final Pattern highlightInArianeStringPattern = Pattern.compile("<h1 class=\"highlight\">([^<]*)</h1>");
     private static final Pattern topicNameAndLinkPattern = Pattern.compile("<a class=\"lien-jv topic-title[^\"]*\" href=\"([^\"]*\" title=\"[^\"]*)\"[^>]*>");
@@ -625,7 +625,7 @@ public final class JVCParser {
             int lastOffset = 0;
 
             while (forumNameMatcher.find(lastOffset)) {
-                forumName = forumNameMatcher.group(1);
+                forumName = forumNameMatcher.group(2);
                 lastOffset = forumNameMatcher.end();
             }
             if (highlightMatcher.find()) {
@@ -643,6 +643,38 @@ public final class JVCParser {
         return forumName;
     }
 
+    public static NameAndLink getMainForumNameAndLinkInForumPage(String pageSource) {
+        NameAndLink mainForum = new NameAndLink();
+        Matcher allArianeStringMatcher = allArianeStringPattern.matcher(pageSource);
+
+        if (allArianeStringMatcher.find()) {
+            String allArianeString = allArianeStringMatcher.group();
+            Matcher forumNameMatcher = forumNameInArianeStringPattern.matcher(allArianeString);
+            int lastOffset = 0;
+
+            while (forumNameMatcher.find(lastOffset)) {
+                mainForum.name = forumNameMatcher.group(2);
+                mainForum.link = forumNameMatcher.group(1);
+                lastOffset = forumNameMatcher.end();
+            }
+
+            if (mainForum.name.startsWith("Forum principal")) {
+                mainForum.name =  mainForum.name.substring(("Forum principal").length());
+            }
+            mainForum.name = specialCharToNormalChar(mainForum.name.trim());
+
+            if (!mainForum.link.isEmpty()) {
+                mainForum.link = "http://www.jeuxvideo.com" + mainForum.link;
+            }
+        }
+
+        if (mainForum.name.isEmpty()) {
+            return null;
+        } else {
+            return mainForum;
+        }
+    }
+
     public static ForumAndTopicName getForumAndTopicNameInTopicPage(String pageSource) {
         ForumAndTopicName currentNames = new ForumAndTopicName();
         Matcher allArianeStringMatcher = allArianeStringPattern.matcher(pageSource);
@@ -655,7 +687,7 @@ public final class JVCParser {
             int lastOffset = 0;
 
             while (forumNameMatcher.find(lastOffset)) {
-                currentNames.forum = forumNameMatcher.group(1);
+                currentNames.forum = forumNameMatcher.group(2);
                 lastOffset = forumNameMatcher.end();
             }
             if (topicNameMatcher.find()) {
