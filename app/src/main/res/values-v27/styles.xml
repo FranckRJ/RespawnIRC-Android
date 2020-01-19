@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme.Dark.Real" parent="AppTheme.Dark.Base">
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+    </style>
+    <style name="AppTheme.Grey.Real" parent="AppTheme.Grey.Base">
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+    </style>
+    <style name="AppTheme.Black.Real" parent="AppTheme.Black.Base">
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+    </style>
+</resources>

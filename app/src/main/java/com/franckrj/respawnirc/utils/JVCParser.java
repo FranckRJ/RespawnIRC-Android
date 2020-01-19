@@ -61,7 +61,7 @@ public final class JVCParser {
     private static final Pattern lastEditMessagePattern = Pattern.compile("<div class=\"info-edition-msg\">[^M]*(Message édité le ([^ ]* [^ ]* [^ ]* [^ ]* [0-9:]*) par.*?)</div>", Pattern.DOTALL);
     private static final Pattern messageEditInfoPattern = Pattern.compile("<textarea((.*?)(?=id=\"text_commentaire\")|(.*?)(?=>))id=\"text_commentaire\"[^>]*>(.*?)</textarea>", Pattern.DOTALL);
     private static final Pattern allArianeStringPattern = Pattern.compile("<div class=\"fil-ariane-crumb\">.*?</h1>", Pattern.DOTALL);
-    private static final Pattern forumNameInArianeStringPattern = Pattern.compile("<span><a href=\"/forums/0-[^\"]*\">([^<]*)</a></span>");
+    private static final Pattern forumNameInArianeStringPattern = Pattern.compile("<span><a href=\"(/forums/0-[^\"]*)\">([^<]*)</a></span>");
     private static final Pattern topicNameInArianeStringPattern = Pattern.compile("<span><a href=\"/forums/(42|1)-[^\"]*\">([^<]*)</a></span>");
     private static final Pattern highlightInArianeStringPattern = Pattern.compile("<h1 class=\"highlight\">([^<]*)</h1>");
     private static final Pattern topicNameAndLinkPattern = Pattern.compile("<a class=\"lien-jv topic-title[^\"]*\" href=\"([^\"]*\" title=\"[^\"]*)\"[^>]*>");
@@ -98,9 +98,11 @@ public final class JVCParser {
     private static final Pattern listOfModeratorsPattern = Pattern.compile("<span class=\"liste-modo-fofo\">(.*?)</span>", Pattern.DOTALL);
     private static final Pattern overlyJVCQuotePattern = Pattern.compile("(<(/)?blockquote>)");
     private static final Pattern overlyBetterQuotePattern = Pattern.compile("<(/)?blockquote>");
-    private static final Pattern jvcLinkPattern = Pattern.compile("<a +(title=\"[^\"]*\" )?href=\"([^\"]*)\"( title=\"[^\"]*\")? *>.*?</a>");
+    private static final Pattern shortJvcLinkPattern = Pattern.compile("<span +class=\"JvCare [^\"]*\" *>(http(s)?://[^<]*)</span>");
+    private static final Pattern longJvcLinkPattern = Pattern.compile("<a +title=\"[^\"]*\" +href=\"([^\"]*)\"[^>]*>[^<]*<i></i><span>[^<]*</span>[^<]*</a>");
     private static final Pattern shortLinkPattern = Pattern.compile("<span +class=\"JvCare [^\"]*\"[^>]*?target=\"_blank\"[^>]*>([^<]*)</span>");
     private static final Pattern longLinkPattern = Pattern.compile("<span +class=\"JvCare [^\"]*\"[^i]*itle=\"([^\"]*)\"[^>]*>[^<]*<i></i><span>[^<]*</span>[^<]*</span>");
+    private static final Pattern textLinkPattern = Pattern.compile("http(s)?://[a-zA-Z0-9/%._~!$&'()*+,;=:@?#-]*(?![^<>]*(>|</a>))", Pattern.CASE_INSENSITIVE);
     private static final Pattern smileyPattern = Pattern.compile("<img src=\"http(s)?://image\\.jeuxvideo\\.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-code=\"([^\"]*)\" title=\"[^\"]*\" [^>]*>");
     private static final Pattern embedVideoPattern = Pattern.compile("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe.*?src=\"([^\"]*)\"[^>]*></iframe></div></div>");
     private static final Pattern jvcVideoPattern = Pattern.compile("<div class=\"player-contenu\">.*?<div class=\"player-jv\" id=\"player-jv-([^-]*)-.*?</div>[^<]*</div>[^<]*</div>[^<]*</div>", Pattern.DOTALL);
@@ -293,6 +295,16 @@ public final class JVCParser {
 
         if (topicLinkNumberMatcher.find()) {
             return topicLinkNumberMatcher.group(2);
+        } else {
+            return "";
+        }
+    }
+
+    public static String getTopicIdOfThisTopic(String topicLink) {
+        Matcher topicLinkNumberMatcher = pageTopicLinkNumberPattern.matcher(topicLink);
+
+        if (topicLinkNumberMatcher.find()) {
+            return topicLinkNumberMatcher.group(3);
         } else {
             return "";
         }
@@ -614,7 +626,7 @@ public final class JVCParser {
             int lastOffset = 0;
 
             while (forumNameMatcher.find(lastOffset)) {
-                forumName = forumNameMatcher.group(1);
+                forumName = forumNameMatcher.group(2);
                 lastOffset = forumNameMatcher.end();
             }
             if (highlightMatcher.find()) {
@@ -632,6 +644,38 @@ public final class JVCParser {
         return forumName;
     }
 
+    public static NameAndLink getMainForumNameAndLinkInForumPage(String pageSource) {
+        NameAndLink mainForum = new NameAndLink();
+        Matcher allArianeStringMatcher = allArianeStringPattern.matcher(pageSource);
+
+        if (allArianeStringMatcher.find()) {
+            String allArianeString = allArianeStringMatcher.group();
+            Matcher forumNameMatcher = forumNameInArianeStringPattern.matcher(allArianeString);
+            int lastOffset = 0;
+
+            while (forumNameMatcher.find(lastOffset)) {
+                mainForum.name = forumNameMatcher.group(2);
+                mainForum.link = forumNameMatcher.group(1);
+                lastOffset = forumNameMatcher.end();
+            }
+
+            if (mainForum.name.startsWith("Forum principal")) {
+                mainForum.name =  mainForum.name.substring(("Forum principal").length());
+            }
+            mainForum.name = specialCharToNormalChar(mainForum.name.trim());
+
+            if (!mainForum.link.isEmpty()) {
+                mainForum.link = "http://www.jeuxvideo.com" + mainForum.link;
+            }
+        }
+
+        if (mainForum.name.isEmpty()) {
+            return null;
+        } else {
+            return mainForum;
+        }
+    }
+
     public static ForumAndTopicName getForumAndTopicNameInTopicPage(String pageSource) {
         ForumAndTopicName currentNames = new ForumAndTopicName();
         Matcher allArianeStringMatcher = allArianeStringPattern.matcher(pageSource);
@@ -644,7 +688,7 @@ public final class JVCParser {
             int lastOffset = 0;
 
             while (forumNameMatcher.find(lastOffset)) {
-                currentNames.forum = forumNameMatcher.group(1);
+                currentNames.forum = forumNameMatcher.group(2);
                 lastOffset = forumNameMatcher.end();
             }
             if (topicNameMatcher.find()) {
@@ -1071,7 +1115,8 @@ public final class JVCParser {
 
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, embedVideoPattern, 1, "<p>", "</p>", makeLinkDependingOnSettingsAndForceMake, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcVideoPattern, 1, "<p>", "</p>", new AddPrefixString("http://www.jeuxvideo.com/videos/iframe/"), makeLinkDependingOnSettingsAndForceMake);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcLinkPattern, 2, "", "", makeLinkDependingOnSettingsAndForceMake, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortJvcLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longJvcLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
 
@@ -1111,6 +1156,8 @@ public final class JVCParser {
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, Pattern.compile("(?i)(?<!\\w)" + AccountManager.getAllAccountsPseudoRegex() + "(?!\\w)(?![^<>]*(>|</a>))"), 0, "<font color=\"" + settings.colorPseudoUser + "\">", "</font>", null, null);
         }
 
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, textLinkPattern, 0, "", "", new MakeShortenedLinkIfPossible(0, false), null);
+
         return messageInBuilder.toString();
     }
 
@@ -1124,7 +1171,8 @@ public final class JVCParser {
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, smileyPattern, 3, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, embedVideoPattern, 1, "<p>", "</p>", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcVideoPattern, 1, "<p>http://www.jeuxvideo.com/videos/iframe/", "</p>", null, null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcLinkPattern, 2, "", "", null, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortJvcLinkPattern, 1, "", "", null, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longJvcLinkPattern, 1, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longLinkPattern, 1, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 3, "", "", null, null);
