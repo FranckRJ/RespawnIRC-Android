@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.cardview.widget.CardView;
 import android.view.View;
@@ -38,6 +40,8 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
     private LinearLayout mainLayout = null;
     private TextView forumNameText = null;
     private TextView numberOfConnectedView = null;
+    private CardView mainForumCardView = null;
+    private Button mainForumButton = null;
     private CardView subforumsCardView = null;
     private LinearLayout layoutListOfSubforums = null;
     private TextView listOfModeratorsText = null;
@@ -46,85 +50,64 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
     private DownloadForumInfos currentTaskForDownload = null;
     private ForumInfos infosForForum = null;
 
-    private final View.OnClickListener subforumButtonClickedListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View button) {
-            if (button.getTag() != null && button.getTag() instanceof String) {
-                Intent newShowForumIntent = new Intent(ShowForumInfosActivity.this, ShowForumActivity.class);
-                newShowForumIntent.putExtra(ShowForumActivity.EXTRA_NEW_LINK, (String) button.getTag());
-                newShowForumIntent.putExtra(ShowForumActivity.EXTRA_IS_FIRST_ACTIVITY, false);
-                startActivity(newShowForumIntent);
-            }
+    private final View.OnClickListener forumButtonClickedListener = button -> {
+        if (button.getTag() != null && button.getTag() instanceof String) {
+            Intent newShowForumIntent = new Intent(ShowForumInfosActivity.this, ShowForumActivity.class);
+            newShowForumIntent.putExtra(ShowForumActivity.EXTRA_NEW_LINK, (String) button.getTag());
+            newShowForumIntent.putExtra(ShowForumActivity.EXTRA_IS_FIRST_ACTIVITY, false);
+            startActivity(newShowForumIntent);
         }
     };
 
-    private final View.OnClickListener noMissTopicButtonClickedListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View button) {
-            if (button.getTag() != null && button.getTag() instanceof String) {
-                noMissTopicButtonClicked((String) button.getTag(), false);
-            }
+    private final View.OnClickListener noMissTopicButtonClickedListener = button -> {
+        if (button.getTag() != null && button.getTag() instanceof String) {
+            noMissTopicButtonClicked((String) button.getTag(), false);
         }
     };
 
-    private final View.OnLongClickListener noMissTopicButtonLongClickedListener = new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View button) {
-            if (button.getTag() != null && button.getTag() instanceof String) {
-                noMissTopicButtonClicked((String) button.getTag(), true);
-            }
-            return true;
+    private final View.OnLongClickListener noMissTopicButtonLongClickedListener = button -> {
+        if (button.getTag() != null && button.getTag() instanceof String) {
+            noMissTopicButtonClicked((String) button.getTag(), true);
+        }
+        return true;
+    };
+
+    private final View.OnClickListener contactModeratorsButtonClickedListener = view -> {
+        if (infosForForum != null && !infosForForum.listOfModeratorsString.isEmpty()) {
+            Utils.openLinkInInternalBrowser("http://www.jeuxvideo.com/messages-prives/nouveau.php?all_dest=" + infosForForum.listOfModeratorsString.replace(", ", ";"), ShowForumInfosActivity.this);
+        } else {
+            Toast.makeText(ShowForumInfosActivity.this, R.string.errorDuringContactModerators, Toast.LENGTH_SHORT).show();
         }
     };
 
-    private final View.OnClickListener contactModeratorsButtonClickedListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (infosForForum != null && !infosForForum.listOfModeratorsString.isEmpty()) {
-                Utils.openLinkInInternalBrowser("http://www.jeuxvideo.com/messages-prives/nouveau.php?all_dest=" + infosForForum.listOfModeratorsString.replace(", ", ";"), ShowForumInfosActivity.this);
-            } else {
-                Toast.makeText(ShowForumInfosActivity.this, R.string.errorDuringContactModerators, Toast.LENGTH_SHORT).show();
-            }
+    private final View.OnClickListener showForumRulesButtonClickedListener = view -> {
+        if (getIntent() != null && getIntent().getStringExtra(EXTRA_FORUM_LINK) != null) {
+            PrefsManager.LinkType linkTypeForInternalBrowser = new PrefsManager.LinkType(PrefsManager.LinkType.NO_LINKS);
+            String forumLink = getIntent().getStringExtra(EXTRA_FORUM_LINK);
+
+            linkTypeForInternalBrowser.setTypeFromString(PrefsManager.getString(PrefsManager.StringPref.Names.LINK_TYPE_FOR_INTERNAL_BROWSER));
+            Utils.openCorrespondingBrowser(linkTypeForInternalBrowser, "http://www.jeuxvideo.com/forums/" + JVCParser.getForumNameOfThisForum(forumLink) + "/regles-forum/" + JVCParser.getForumIdOfThisForum(forumLink), ShowForumInfosActivity.this);
+        } else {
+            Toast.makeText(ShowForumInfosActivity.this, R.string.errorDuringShowRules, Toast.LENGTH_SHORT).show();
         }
     };
 
-    private final View.OnClickListener showForumRulesButtonClickedListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (getIntent() != null && getIntent().getStringExtra(EXTRA_FORUM_LINK) != null) {
-                PrefsManager.LinkType linkTypeForInternalBrowser = new PrefsManager.LinkType(PrefsManager.LinkType.NO_LINKS);
-                String forumLink = getIntent().getStringExtra(EXTRA_FORUM_LINK);
-
-                linkTypeForInternalBrowser.setTypeFromString(PrefsManager.getString(PrefsManager.StringPref.Names.LINK_TYPE_FOR_INTERNAL_BROWSER));
-                Utils.openCorrespondingBrowser(linkTypeForInternalBrowser, "http://www.jeuxvideo.com/forums/" + JVCParser.getForumNameOfThisForum(forumLink) + "/regles-forum/" + JVCParser.getForumIdOfThisForum(forumLink), ShowForumInfosActivity.this);
-            } else {
-                Toast.makeText(ShowForumInfosActivity.this, R.string.errorDuringShowRules, Toast.LENGTH_SHORT).show();
-            }
-        }
+    private final AbsWebRequestAsyncTask.RequestIsStarted requestIsStartedListener = () -> {
+        backgroundErrorText.setVisibility(View.GONE);
+        swipeRefresh.setRefreshing(true);
     };
 
-    private final AbsWebRequestAsyncTask.RequestIsStarted requestIsStartedListener = new AbsWebRequestAsyncTask.RequestIsStarted() {
-        @Override
-        public void onRequestIsStarted() {
-            backgroundErrorText.setVisibility(View.GONE);
-            swipeRefresh.setRefreshing(true);
+    private final AbsWebRequestAsyncTask.RequestIsFinished<ForumInfos> downloadInfosIsFinishedListener = newInfos -> {
+        swipeRefresh.setRefreshing(false);
+
+        if (newInfos != null) {
+            infosForForum = newInfos;
+            updateDisplayedInfos();
+        } else {
+            backgroundErrorText.setVisibility(View.VISIBLE);
         }
-    };
 
-    private final AbsWebRequestAsyncTask.RequestIsFinished<ForumInfos> downloadInfosIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<ForumInfos>() {
-        @Override
-        public void onRequestIsFinished(ForumInfos newInfos) {
-            swipeRefresh.setRefreshing(false);
-
-            if (newInfos != null) {
-                infosForForum = newInfos;
-                updateDisplayedInfos();
-            } else {
-                backgroundErrorText.setVisibility(View.VISIBLE);
-            }
-
-            currentTaskForDownload = null;
-        }
+        currentTaskForDownload = null;
     };
 
     private void noMissTopicButtonClicked(String linkClicked, boolean isFromLongClick) {
@@ -146,6 +129,14 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
             } else {
                 numberOfConnectedView.setText(R.string.errorNumberConnected);
             }
+            if (infosForForum.mainForum != null) {
+                mainForumCardView.setVisibility(View.VISIBLE);
+                mainForumButton.setText(Undeprecator.htmlFromHtml(infosForForum.mainForum.name));
+                mainForumButton.setTag(infosForForum.mainForum.link);
+                mainForumButton.setOnClickListener(forumButtonClickedListener);
+            } else {
+                mainForumCardView.setVisibility(View.GONE);
+            }
             if (!infosForForum.listOfSubforums.isEmpty()) {
                 subforumsCardView.setVisibility(View.VISIBLE);
                 for (JVCParser.NameAndLink nameAndLink : infosForForum.listOfSubforums) {
@@ -153,7 +144,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
 
                     newSubforumButton.setText(Undeprecator.htmlFromHtml(nameAndLink.name));
                     newSubforumButton.setTag(nameAndLink.link);
-                    newSubforumButton.setOnClickListener(subforumButtonClickedListener);
+                    newSubforumButton.setOnClickListener(forumButtonClickedListener);
 
                     layoutListOfSubforums.addView(newSubforumButton);
                 }
@@ -206,6 +197,8 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
         mainLayout = findViewById(R.id.main_layout_showforuminfos);
         forumNameText = findViewById(R.id.foruminfos_title_showforuminfos);
         numberOfConnectedView = findViewById(R.id.text_numberofconnected_showforuminfos);
+        mainForumCardView = findViewById(R.id.mainforum_card_showforuminfos);
+        mainForumButton = findViewById(R.id.mainforum_button_showforuminfos);
         subforumsCardView = findViewById(R.id.subforum_card_showforuminfos);
         layoutListOfSubforums = findViewById(R.id.subforum_list_showforuminfos);
         listOfModeratorsText = findViewById(R.id.listofmoderators_text_showforuminfos);
@@ -224,12 +217,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
             infosForForum = savedInstanceState.getParcelable(SAVE_FORUM_INFOS);
             updateDisplayedInfos();
 
-            mainScrollView.post(new Runnable() {
-                @Override
-                public void run() {
-                    mainScrollView.scrollTo(0, savedInstanceState.getInt(SAVE_SCROLL_POSITION, 0));
-                }
-            });
+            mainScrollView.post(() -> mainScrollView.scrollTo(0, savedInstanceState.getInt(SAVE_SCROLL_POSITION, 0)));
         }
     }
 
@@ -260,7 +248,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(SAVE_FORUM_INFOS, infosForForum);
         outState.putInt(SAVE_SCROLL_POSITION, mainScrollView.getScrollY());
@@ -276,6 +264,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
                 if (source != null && !source.isEmpty()) {
                     ForumInfos newForumInfos = new ForumInfos();
 
+                    newForumInfos.mainForum = JVCParser.getMainForumNameAndLinkInForumPage(source);
                     newForumInfos.forumName = JVCParser.getForumNameInForumPage(source);
                     newForumInfos.numberOfConnected = JVCParser.getNumberOfConnectFromPage(source);
                     newForumInfos.listOfSubforums = JVCParser.getListOfSubforumsInForumPage(source);
@@ -289,6 +278,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
     }
 
     private static class ForumInfos implements Parcelable {
+        public JVCParser.NameAndLink mainForum = null;
         public String forumName = "";
         public String numberOfConnected = "";
         public ArrayList<JVCParser.NameAndLink> listOfSubforums = new ArrayList<>();
@@ -312,6 +302,12 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
         }
 
         private ForumInfos(Parcel in) {
+            if (in.readByte() == 1) {
+                mainForum = in.readParcelable(JVCParser.NameAndLink.class.getClassLoader());
+            } else {
+                mainForum = null;
+            }
+
             forumName = in.readString();
             numberOfConnected = in.readString();
             in.readTypedList(listOfSubforums, JVCParser.NameAndLink.CREATOR);
@@ -326,6 +322,13 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
 
         @Override
         public void writeToParcel(Parcel out, int flags) {
+            if (mainForum != null) {
+                out.writeByte((byte)1);
+                out.writeParcelable(mainForum, flags);
+            } else {
+                out.writeByte((byte)0);
+            }
+
             out.writeString(forumName);
             out.writeString(numberOfConnected);
             out.writeTypedList(listOfSubforums);
