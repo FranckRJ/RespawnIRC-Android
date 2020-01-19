@@ -40,6 +40,8 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
     private LinearLayout mainLayout = null;
     private TextView forumNameText = null;
     private TextView numberOfConnectedView = null;
+    private CardView mainForumCardView = null;
+    private Button mainForumButton = null;
     private CardView subforumsCardView = null;
     private LinearLayout layoutListOfSubforums = null;
     private TextView listOfModeratorsText = null;
@@ -48,7 +50,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
     private DownloadForumInfos currentTaskForDownload = null;
     private ForumInfos infosForForum = null;
 
-    private final View.OnClickListener subforumButtonClickedListener = button -> {
+    private final View.OnClickListener forumButtonClickedListener = button -> {
         if (button.getTag() != null && button.getTag() instanceof String) {
             Intent newShowForumIntent = new Intent(ShowForumInfosActivity.this, ShowForumActivity.class);
             newShowForumIntent.putExtra(ShowForumActivity.EXTRA_NEW_LINK, (String) button.getTag());
@@ -127,6 +129,14 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
             } else {
                 numberOfConnectedView.setText(R.string.errorNumberConnected);
             }
+            if (infosForForum.mainForum != null) {
+                mainForumCardView.setVisibility(View.VISIBLE);
+                mainForumButton.setText(Undeprecator.htmlFromHtml(infosForForum.mainForum.name));
+                mainForumButton.setTag(infosForForum.mainForum.link);
+                mainForumButton.setOnClickListener(forumButtonClickedListener);
+            } else {
+                mainForumCardView.setVisibility(View.GONE);
+            }
             if (!infosForForum.listOfSubforums.isEmpty()) {
                 subforumsCardView.setVisibility(View.VISIBLE);
                 for (JVCParser.NameAndLink nameAndLink : infosForForum.listOfSubforums) {
@@ -134,7 +144,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
 
                     newSubforumButton.setText(Undeprecator.htmlFromHtml(nameAndLink.name));
                     newSubforumButton.setTag(nameAndLink.link);
-                    newSubforumButton.setOnClickListener(subforumButtonClickedListener);
+                    newSubforumButton.setOnClickListener(forumButtonClickedListener);
 
                     layoutListOfSubforums.addView(newSubforumButton);
                 }
@@ -187,6 +197,8 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
         mainLayout = findViewById(R.id.main_layout_showforuminfos);
         forumNameText = findViewById(R.id.foruminfos_title_showforuminfos);
         numberOfConnectedView = findViewById(R.id.text_numberofconnected_showforuminfos);
+        mainForumCardView = findViewById(R.id.mainforum_card_showforuminfos);
+        mainForumButton = findViewById(R.id.mainforum_button_showforuminfos);
         subforumsCardView = findViewById(R.id.subforum_card_showforuminfos);
         layoutListOfSubforums = findViewById(R.id.subforum_list_showforuminfos);
         listOfModeratorsText = findViewById(R.id.listofmoderators_text_showforuminfos);

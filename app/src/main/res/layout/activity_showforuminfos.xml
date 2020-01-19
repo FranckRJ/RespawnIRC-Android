@@ -70,6 +70,38 @@
                     </androidx.cardview.widget.CardView>
 
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/mainforum_card_showforuminfos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        app:cardElevation="@dimen/elevationOfCards"
+                        app:cardCornerRadius="@dimen/cornerRadiusOfCards"
+                        app:cardBackgroundColor="?attr/themedDefaultBackgroundColor">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="16dp"
+                            android:paddingRight="16dp"
+                            android:paddingTop="12dp"
+                            android:paddingBottom="12dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="12dp"
+                                android:text="@string/mainForum"
+                                android:textAllCaps="true"
+                                android:textColor="?attr/themedForumListCatTitleColor"
+                                android:textStyle="bold"/>
+                            <Button
+                                android:id="@+id/mainforum_button_showforuminfos"
+                                android:theme="?attr/themedButtonSubForumStyle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
                         android:id="@+id/subforum_card_showforuminfos"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
