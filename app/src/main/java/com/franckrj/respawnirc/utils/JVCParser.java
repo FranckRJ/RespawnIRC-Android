@@ -1105,6 +1105,7 @@ public final class JVCParser {
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeBlockPattern, 1, "<p><font face=\"monospace\">", "</font></p>", new MakeCodeTagGreatAgain(true), null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeLinePattern, 1, " <font face=\"monospace\">", "</font> ", new MakeCodeTagGreatAgain(false), null);
         ToolForParsing.replaceStringByAnother(messageInBuilder, "\n", "");
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "<span&nbsp;&nbsp;", "<span  "); // Fix sale pour que les liens longs fonctionnent dans les balises.
 
         StickerConverter.convertStickerWithThisRule(messageInBuilder, StickerConverter.ruleForNoLangageSticker);
         if (settings.transformStickerToSmiley) {
