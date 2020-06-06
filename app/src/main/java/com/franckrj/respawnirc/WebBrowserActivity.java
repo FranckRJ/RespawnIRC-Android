@@ -152,7 +152,7 @@ public class WebBrowserActivity extends AbsToolbarActivity {
                 return true;
             case R.id.action_reload_page_webbrowser:
                 browserWebView.reload();
-                return super.onOptionsItemSelected(item);
+                return true;
             case R.id.action_share_url_webbrowser:
                 Utils.shareThisLink(currentUrl, this);
                 return true;
