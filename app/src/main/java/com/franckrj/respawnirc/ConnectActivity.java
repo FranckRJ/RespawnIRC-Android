@@ -23,6 +23,7 @@ import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
 import com.franckrj.respawnirc.utils.AccountManager;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
+import com.franckrj.respawnirc.utils.Utils;
 
 public class ConnectActivity extends AbsHomeIsBackActivity {
     private static final long MAX_TIME_USER_HAVE_TO_LEAVE_IN_MS = 3_500;
@@ -36,7 +37,7 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
         @Override
         public void onClick(View v) {
             if (!pseudoText.getText().toString().isEmpty()) {
-                String allCookiesInstring = CookieManager.getInstance().getCookie("http://www.jeuxvideo.com/");
+                String allCookiesInstring = CookieManager.getInstance().getCookie("https://www.jeuxvideo.com/");
                 String[] allCookiesInStringArray = TextUtils.split(allCookiesInstring, ";");
                 String connectCookieValue = null;
 
@@ -88,8 +89,7 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
         helpDialogFragment = new HelpConnectDialogFragment();
         saveCookieButton.setOnClickListener(saveCookieClickedListener);
 
-        CookieManager.getInstance().removeAllCookies(null);
-        CookieManager.getInstance().setCookie("http://www.jeuxvideo.com", "euconsent=set");
+        Utils.setupCookiesForJvc(CookieManager.getInstance());
 
         jvcWebView.setWebViewClient(new WebViewClient());
         jvcWebView.setWebChromeClient(new WebChromeClient());

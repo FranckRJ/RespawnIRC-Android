@@ -97,7 +97,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
             if (reqResult.startsWith("respawnirc:redirect:")) {
                 String newLink = reqResult.substring(("respawnirc:redirect:").length());
                 if (!newLink.isEmpty()) {
-                    readNewTopicOrForum("http://www.jeuxvideo.com" + newLink, false);
+                    readNewTopicOrForum("https://www.jeuxvideo.com" + newLink, false);
                     return;
                 }
             } else {
@@ -384,9 +384,9 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
                 String pageResult;
                 WebManager.WebInfos currentWebInfos = initWebInfos(params[1], false);
 
-                pageResult = WebManager.sendRequest("http://www.jeuxvideo.com/forums/recherche.php", "GET", "q=" + Utils.encodeStringToUrlString(params[0]), currentWebInfos);
+                pageResult = WebManager.sendRequest("https://www.jeuxvideo.com/forums/recherche.php", "GET", "q=" + Utils.encodeStringToUrlString(params[0]), currentWebInfos);
 
-                if (!currentWebInfos.currentUrl.isEmpty() && !currentWebInfos.currentUrl.startsWith("http://www.jeuxvideo.com/forums/recherche.php")) {
+                if (!currentWebInfos.currentUrl.isEmpty() && !currentWebInfos.currentUrl.startsWith("https://www.jeuxvideo.com/forums/recherche.php")) {
                     return "respawnirc:redirect:" + currentWebInfos.currentUrl;
                 } else {
                     return pageResult;

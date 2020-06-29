@@ -49,10 +49,10 @@ public class WebBrowserActivity extends AbsToolbarActivity {
         if (cookies.contains(";")) {
             String firstCookie = cookies.substring(0, cookies.indexOf(";"));
             String secondCookie = cookies.substring(cookies.indexOf(";") + 1);
-            CookieManager.getInstance().setCookie("http://www.jeuxvideo.com/", firstCookie);
-            CookieManager.getInstance().setCookie("http://www.jeuxvideo.com/", secondCookie);
+            CookieManager.getInstance().setCookie("https://www.jeuxvideo.com/", firstCookie);
+            CookieManager.getInstance().setCookie("https://www.jeuxvideo.com/", secondCookie);
         } else {
-            CookieManager.getInstance().setCookie("http://www.jeuxvideo.com/", cookies);
+            CookieManager.getInstance().setCookie("https://www.jeuxvideo.com/", cookies);
         }
 
         browserWebView = findViewById(R.id.webview_webbrowser);

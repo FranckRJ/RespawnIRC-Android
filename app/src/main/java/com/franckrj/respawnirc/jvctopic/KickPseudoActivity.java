@@ -155,7 +155,7 @@ public class KickPseudoActivity extends AbsHomeIsBackActivity {
         protected String doInBackground(KickInfos... infoOfKick) {
             if (infoOfKick.length == 1) {
                 WebManager.WebInfos currentWebInfos = initWebInfos(infoOfKick[0].cookies, false);
-                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_kick.php", "POST", "action=post&motif_kick=" + infoOfKick[0].motive + "&raison_kick=" + Utils.encodeStringToUrlString(infoOfKick[0].reason) +
+                return WebManager.sendRequest("https://www.jeuxvideo.com/forums/ajax_kick.php", "POST", "action=post&motif_kick=" + infoOfKick[0].motive + "&raison_kick=" + Utils.encodeStringToUrlString(infoOfKick[0].reason) +
                         "&duree_kick=3&id_alias_a_kick=" + infoOfKick[0].idAliasPseudo + "&id_forum=" + infoOfKick[0].idForum + "&id_message=" + infoOfKick[0].idMessage + "&" + infoOfKick[0].ajaxInfos, currentWebInfos);
             }
             return "erreurlol";

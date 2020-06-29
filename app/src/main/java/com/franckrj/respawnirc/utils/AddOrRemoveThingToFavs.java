@@ -66,7 +66,7 @@ public class AddOrRemoveThingToFavs extends AbsWebRequestAsyncTask<String, Void,
             actionToDo = "delete";
         }
 
-        pageContent = WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_forum_prefere.php", "POST", "id_forum=" + forumId + "&id_topic=" + topicId + "&action=" + actionToDo + "&type=" + typeOfAction + "&" + ajaxInfos, currentWebInfos);
+        pageContent = WebManager.sendRequest("https://www.jeuxvideo.com/forums/ajax_forum_prefere.php", "POST", "id_forum=" + forumId + "&id_topic=" + topicId + "&action=" + actionToDo + "&type=" + typeOfAction + "&" + ajaxInfos, currentWebInfos);
 
         if (!Utils.stringIsEmptyOrNull(pageContent)) {
             return JVCParser.getErrorMessageInJsonMode(pageContent);

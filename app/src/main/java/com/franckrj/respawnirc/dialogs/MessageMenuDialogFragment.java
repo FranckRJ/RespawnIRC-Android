@@ -62,12 +62,12 @@ public class MessageMenuDialogFragment extends DialogFragment {
                 if (getActivity() != null) {
                     switch (which) {
                         case POS_OPEN_CDV: {
-                            String link = "http://www.jeuxvideo.com/profil/" + pseudoOfMessage.toLowerCase() + "?mode=infos";
+                            String link = "https://www.jeuxvideo.com/profil/" + pseudoOfMessage.toLowerCase() + "?mode=infos";
                             Utils.openCorrespondingBrowser(linkTypeForInternalBrowser, link, getActivity());
                             break;
                         }
                         case POS_SEND_MP: {
-                            Utils.openLinkInInternalBrowser("http://www.jeuxvideo.com/messages-prives/nouveau.php?all_dest=" + pseudoOfMessage, getActivity());
+                            Utils.openLinkInInternalBrowser("https://www.jeuxvideo.com/messages-prives/nouveau.php?all_dest=" + pseudoOfMessage, getActivity());
                             break;
                         }
                         case POS_IGNORE: {
@@ -93,12 +93,12 @@ public class MessageMenuDialogFragment extends DialogFragment {
                             break;
                         }
                         case POS_COPY_PERMALINK: {
-                            Utils.putStringInClipboard("http://www.jeuxvideo.com/" + pseudoOfMessage.toLowerCase() + "/forums/message/" + idOfMessage, getActivity());
+                            Utils.putStringInClipboard("https://www.jeuxvideo.com/" + pseudoOfMessage.toLowerCase() + "/forums/message/" + idOfMessage, getActivity());
                             Toast.makeText(getActivity(), R.string.copyDone, Toast.LENGTH_SHORT).show();
                             break;
                         }
                         case POS_DDB: {
-                            Utils.openLinkInInternalBrowser("http://www.jeuxvideo.com/" + pseudoOfMessage.toLowerCase() + "/forums/message/" + idOfMessage, getActivity());
+                            Utils.openLinkInInternalBrowser("https://www.jeuxvideo.com/" + pseudoOfMessage.toLowerCase() + "/forums/message/" + idOfMessage, getActivity());
                             break;
                         }
                         case POS_SELECT_TEXT: {

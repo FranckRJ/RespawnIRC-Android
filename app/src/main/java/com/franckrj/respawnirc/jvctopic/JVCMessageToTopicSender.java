@@ -130,7 +130,7 @@ public class JVCMessageToTopicSender {
     }
 
     public void sendEditMessage(String messageEditedToSend, String cookieListInAString) {
-        sendThisMessage(messageEditedToSend, "http://www.jeuxvideo.com/forums/ajax_edit_message.php", lastInfosForEdit, cookieListInAString);
+        sendThisMessage(messageEditedToSend, "https://www.jeuxvideo.com/forums/ajax_edit_message.php", lastInfosForEdit, cookieListInAString);
     }
 
     public void stopAllCurrentTask() {
@@ -194,7 +194,7 @@ public class JVCMessageToTopicSender {
         protected String doInBackground(String... params) {
             if (params.length > 2) {
                 WebManager.WebInfos currentWebInfos = initWebInfos(params[2], false);
-                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_edit_message.php", "GET", "id_message=" + params[0] + "&" + params[1] + "&action=get", currentWebInfos);
+                return WebManager.sendRequest("https://www.jeuxvideo.com/forums/ajax_edit_message.php", "GET", "id_message=" + params[0] + "&" + params[1] + "&action=get", currentWebInfos);
             } else {
                 return null;
             }
