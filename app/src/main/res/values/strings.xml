@@ -329,6 +329,7 @@
         <item>@string/openInExternalBrowser</item>
         <item>@string/openInInternBrowser</item>
         <item>@string/copy</item>
+        <item>@string/share</item>
     </string-array>
     <string-array name="choicesForMessageMenu">
         <item>@string/openCDV</item>
