@@ -343,7 +343,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
         protected String doInBackground(String... params) {
             if (params.length > 2) {
                 WebManager.WebInfos currentWebInfos = initWebInfos(params[2], false);
-                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_topic_sondage_view_response.php", "GET", "id_topic=" + params[0] + "&action=view_vote&" + params[1], currentWebInfos);
+                return WebManager.sendRequest("https://www.jeuxvideo.com/forums/ajax_topic_sondage_view_response.php", "GET", "id_topic=" + params[0] + "&action=view_vote&" + params[1], currentWebInfos);
             }
             return null;
         }
@@ -354,7 +354,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
         protected String doInBackground(String... params) {
             if (params.length > 3) {
                 WebManager.WebInfos currentWebInfos = initWebInfos(params[3], false);
-                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_topic_sondage_vote.php", "GET", "id_topic=" + params[0] + "&" + params[1] + "&" + params[2], currentWebInfos);
+                return WebManager.sendRequest("https://www.jeuxvideo.com/forums/ajax_topic_sondage_vote.php", "GET", "id_topic=" + params[0] + "&" + params[1] + "&" + params[2], currentWebInfos);
             }
             return null;
         }

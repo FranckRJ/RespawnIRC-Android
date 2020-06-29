@@ -74,7 +74,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
 
     private final View.OnClickListener contactModeratorsButtonClickedListener = view -> {
         if (infosForForum != null && !infosForForum.listOfModeratorsString.isEmpty()) {
-            Utils.openLinkInInternalBrowser("http://www.jeuxvideo.com/messages-prives/nouveau.php?all_dest=" + infosForForum.listOfModeratorsString.replace(", ", ";"), ShowForumInfosActivity.this);
+            Utils.openLinkInInternalBrowser("https://www.jeuxvideo.com/messages-prives/nouveau.php?all_dest=" + infosForForum.listOfModeratorsString.replace(", ", ";"), ShowForumInfosActivity.this);
         } else {
             Toast.makeText(ShowForumInfosActivity.this, R.string.errorDuringContactModerators, Toast.LENGTH_SHORT).show();
         }
@@ -86,7 +86,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
             String forumLink = getIntent().getStringExtra(EXTRA_FORUM_LINK);
 
             linkTypeForInternalBrowser.setTypeFromString(PrefsManager.getString(PrefsManager.StringPref.Names.LINK_TYPE_FOR_INTERNAL_BROWSER));
-            Utils.openCorrespondingBrowser(linkTypeForInternalBrowser, "http://www.jeuxvideo.com/forums/" + JVCParser.getForumNameOfThisForum(forumLink) + "/regles-forum/" + JVCParser.getForumIdOfThisForum(forumLink), ShowForumInfosActivity.this);
+            Utils.openCorrespondingBrowser(linkTypeForInternalBrowser, "https://www.jeuxvideo.com/forums/" + JVCParser.getForumNameOfThisForum(forumLink) + "/regles-forum/" + JVCParser.getForumIdOfThisForum(forumLink), ShowForumInfosActivity.this);
         } else {
             Toast.makeText(ShowForumInfosActivity.this, R.string.errorDuringShowRules, Toast.LENGTH_SHORT).show();
         }

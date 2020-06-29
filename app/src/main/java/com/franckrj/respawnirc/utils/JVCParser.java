@@ -26,7 +26,7 @@ public final class JVCParser {
     private static final Pattern entireMessageInPermalinkPattern = Pattern.compile("(<div class=\"bloc-message-forum[^\"]*\".*?)<div class=\"bloc-return-topic\">", Pattern.DOTALL);
     private static final Pattern topicLinkInPermalinkPattern = Pattern.compile("<div class=\"bloc-return-topic\">[^<]*<a href=\"([^\"]*)");
     private static final Pattern signaturePattern = Pattern.compile("<div class=\"signature-msg[^\"]*\">(.*)", Pattern.DOTALL);
-    private static final Pattern avatarPattern = Pattern.compile("<img src=\"[^\"]*\" data-srcset=\"(http:)?//([^\"]*)\" class=\"user-avatar-msg\"", Pattern.DOTALL);
+    private static final Pattern avatarPattern = Pattern.compile("<img src=\"[^\"]*\" data-srcset=\"(https?:)?//([^\"]*)\" class=\"user-avatar-msg\"", Pattern.DOTALL);
     private static final Pattern entireTopicPattern = Pattern.compile("<li (class=\"[^\"]*\" data-id=\"[^\"]*\"|class=\"message[^\"]*\")>.*?<span class=\"topic-subject\">.*?</li>", Pattern.DOTALL);
     private static final Pattern pseudoIsBlacklistedPattern = Pattern.compile("<div class=\"bloc-message-forum msg-pseudo-blacklist[^\"]*\" data-id=\"");
     private static final Pattern messageIsDeletedPattern = Pattern.compile("<div class=\"bloc-message-forum msg-supprime[^\"]*\" data-id=\"");
@@ -53,9 +53,9 @@ public final class JVCParser {
     private static final Pattern spoilLinePattern = Pattern.compile("<span class=\"bloc-spoil-jv en-ligne\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
     private static final Pattern spoilBlockPattern = Pattern.compile("<div class=\"bloc-spoil-jv\">.*?<div class=\"contenu-spoil\">(.*?)</div></div>", Pattern.DOTALL);
     private static final Pattern spoilOverlyPattern = Pattern.compile("(<(span|div) class=\"bloc-spoil-jv[^\"]*\">.*?<(span|div) class=\"contenu-spoil\">|</span></span>|</div></div>)", Pattern.DOTALL);
-    private static final Pattern pageTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/(?:1|42)-([0-9]*)-([0-9]*)-)([0-9]*)(-[0-9]*-[0-9]*-[0-9]*-[^./]*\\.htm)[#?]?");
-    private static final Pattern pageForumLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/forums/0-([0-9]*)-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-([^./]*)\\.htm)[#?]?");
-    private static final Pattern pageSearchTopicLinkNumberPattern = Pattern.compile("^(http://www\\.jeuxvideo\\.com/recherche/forums/(0-[0-9]*-[0-9]*-[0-9]*-[0-9]*-))([0-9]*)(-[0-9]*-[^./]*\\.htm)([#?]?.*)");
+    private static final Pattern pageTopicLinkNumberPattern = Pattern.compile("^(https?://www\\.jeuxvideo\\.com/forums/(?:1|42)-([0-9]*)-([0-9]*)-)([0-9]*)(-[0-9]*-[0-9]*-[0-9]*-[^./]*\\.htm)[#?]?");
+    private static final Pattern pageForumLinkNumberPattern = Pattern.compile("^(https?://www\\.jeuxvideo\\.com/forums/0-([0-9]*)-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-([^./]*)\\.htm)[#?]?");
+    private static final Pattern pageSearchTopicLinkNumberPattern = Pattern.compile("^(https?://www\\.jeuxvideo\\.com/recherche/forums/(0-[0-9]*-[0-9]*-[0-9]*-[0-9]*-))([0-9]*)(-[0-9]*-[^./]*\\.htm)([#?]?.*)");
     private static final Pattern messageAnchorInTopicLinkPattern = Pattern.compile("#post_([0-9]*)");
     private static final Pattern jvCarePattern = Pattern.compile("<span class=\"JvCare [^\"]*\">([^<]*)</span>");
     private static final Pattern lastEditMessagePattern = Pattern.compile("<div class=\"info-edition-msg\">[^M]*(Message édité le ([^ ]* [^ ]* [^ ]* [^ ]* [0-9:]*) par.*?)</div>", Pattern.DOTALL);
@@ -125,23 +125,23 @@ public final class JVCParser {
         Matcher pageTopicLinkNumberMatcher = pageTopicLinkNumberPattern.matcher(topicLink);
 
         if (pageTopicLinkNumberMatcher.find()) {
-            return "http://www.jeuxvideo.com/forums/0-" + pageTopicLinkNumberMatcher.group(2) + "-0-1-0-1-0-respawn-irc.htm";
+            return "https://www.jeuxvideo.com/forums/0-" + pageTopicLinkNumberMatcher.group(2) + "-0-1-0-1-0-respawn-irc.htm";
         } else {
             return "";
         }
     }
 
     public static String formatThisUrlToClassicJvcUrl(String urlToChange) {
-        if (urlToChange.startsWith("https://")) {
-            urlToChange = "http://" + urlToChange.substring(("https://").length());
-        } else if (!urlToChange.startsWith("http://")) {
-            urlToChange = "http://" + urlToChange;
+        if (urlToChange.startsWith("http://")) {
+            urlToChange = "https://" + urlToChange.substring(("http://").length());
+        } else if (!urlToChange.startsWith("https://")) {
+            urlToChange = "https://" + urlToChange;
         }
 
-        if (urlToChange.startsWith("http://m.jeuxvideo.com/")) {
-            urlToChange = "http://www.jeuxvideo.com/" + urlToChange.substring(("http://m.jeuxvideo.com/").length());
-        } else if (urlToChange.startsWith("http://jeuxvideo.com/")) {
-            urlToChange = "http://www.jeuxvideo.com/" + urlToChange.substring(("http://jeuxvideo.com/").length());
+        if (urlToChange.startsWith("https://m.jeuxvideo.com/")) {
+            urlToChange = "https://www.jeuxvideo.com/" + urlToChange.substring(("https://m.jeuxvideo.com/").length());
+        } else if (urlToChange.startsWith("https://jeuxvideo.com/")) {
+            urlToChange = "https://www.jeuxvideo.com/" + urlToChange.substring(("https://jeuxvideo.com/").length());
         }
 
         return urlToChange;
@@ -227,21 +227,21 @@ public final class JVCParser {
     }
 
     public static boolean checkIfItsForumFormatedLink(String linkToCheck) {
-        return linkToCheck.startsWith("http://www.jeuxvideo.com/forums/0-");
+        return linkToCheck.startsWith("https://www.jeuxvideo.com/forums/0-");
     }
 
     public static boolean checkIfItsTopicFormatedLink(String linkToCheck) {
-        return linkToCheck.startsWith("http://www.jeuxvideo.com/forums/1-") ||
-                linkToCheck.startsWith("http://www.jeuxvideo.com/forums/42-");
+        return linkToCheck.startsWith("https://www.jeuxvideo.com/forums/1-") ||
+                linkToCheck.startsWith("https://www.jeuxvideo.com/forums/42-");
     }
 
     public static boolean checkIfItsSearchFormatedLink(String linkToCheck) {
-        return linkToCheck.startsWith("http://www.jeuxvideo.com/recherche/forums/0-");
+        return linkToCheck.startsWith("https://www.jeuxvideo.com/recherche/forums/0-");
     }
 
     public static boolean checkIfItsMessageFormatedLink(String linkToCheck) {
-        if (linkToCheck.startsWith("http://www.jeuxvideo.com/")) {
-            String partOfLinkToCheck = linkToCheck.substring(("http://www.jeuxvideo.com/").length());
+        if (linkToCheck.startsWith("https://www.jeuxvideo.com/")) {
+            String partOfLinkToCheck = linkToCheck.substring(("https://www.jeuxvideo.com/").length());
 
             if (partOfLinkToCheck.contains("/")) {
                 partOfLinkToCheck = partOfLinkToCheck.substring(partOfLinkToCheck.indexOf('/'));
@@ -512,7 +512,7 @@ public final class JVCParser {
 
             newNameAndLink.name = forumInSearchPageMatcher.group(2).replace("<em>", "").replace("</em>", "");
             if (!forumInSearchPageMatcher.group(1).isEmpty()) {
-                newNameAndLink.link = "http://www.jeuxvideo.com" + forumInSearchPageMatcher.group(1);
+                newNameAndLink.link = "https://www.jeuxvideo.com" + forumInSearchPageMatcher.group(1);
             }
 
             listOfForums.add(newNameAndLink);
@@ -535,7 +535,7 @@ public final class JVCParser {
 
                 newNameAndLink.name = subforumInListMatcher.group(2).trim();
                 if (!subforumInListMatcher.group(1).isEmpty()) {
-                    newNameAndLink.link = "http://www.jeuxvideo.com" + subforumInListMatcher.group(1);
+                    newNameAndLink.link = "https://www.jeuxvideo.com" + subforumInListMatcher.group(1);
                 }
 
                 listOfSubforums.add(newNameAndLink);
@@ -559,7 +559,7 @@ public final class JVCParser {
 
                 newNameAndLink.name = noMissTopicInListMatcher.group(2).trim();
                 if (!noMissTopicInListMatcher.group(1).isEmpty()) {
-                    newNameAndLink.link = "http://www.jeuxvideo.com" + noMissTopicInListMatcher.group(1);
+                    newNameAndLink.link = "https://www.jeuxvideo.com" + noMissTopicInListMatcher.group(1);
                 }
 
                 listOfNoMissTopics.add(newNameAndLink);
@@ -601,9 +601,9 @@ public final class JVCParser {
             newFav.name = specialCharToNormalChar(favMatcher.group(2));
 
             if (tmpLink.startsWith("/forums/")) {
-                newFav.link = "http://www.jeuxvideo.com" + tmpLink;
-            } else if (!tmpLink.startsWith("http:")) {
-                newFav.link = "http:" + tmpLink;
+                newFav.link = "https://www.jeuxvideo.com" + tmpLink;
+            } else if (!tmpLink.startsWith("https:")) {
+                newFav.link = "https:" + tmpLink;
             } else {
                 newFav.link = tmpLink;
             }
@@ -665,7 +665,7 @@ public final class JVCParser {
             mainForum.name = specialCharToNormalChar(mainForum.name.trim());
 
             if (!mainForum.link.isEmpty()) {
-                mainForum.link = "http://www.jeuxvideo.com" + mainForum.link;
+                mainForum.link = "https://www.jeuxvideo.com" + mainForum.link;
             }
         }
 
@@ -1010,7 +1010,7 @@ public final class JVCParser {
         while (pageLinkMatcher.find()) {
             if (Integer.parseInt(pageLinkMatcher.group(2)) > currentPageNumber) {
                 currentPageNumber = Integer.parseInt(pageLinkMatcher.group(2));
-                lastPage = "http://www.jeuxvideo.com" + pageLinkMatcher.group(1);
+                lastPage = "https://www.jeuxvideo.com" + pageLinkMatcher.group(1);
             }
         }
 
@@ -1028,7 +1028,7 @@ public final class JVCParser {
 
         while (pageLinkMatcher.find()) {
             if (Integer.parseInt(pageLinkMatcher.group(2)) == (currentPageNumber + 1)) {
-                return "http://www.jeuxvideo.com" + pageLinkMatcher.group(1);
+                return "https://www.jeuxvideo.com" + pageLinkMatcher.group(1);
             }
         }
 
@@ -1115,7 +1115,7 @@ public final class JVCParser {
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, smileyPattern, 2, "<img src=\"smiley_", "\"/>", null, null);
 
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, embedVideoPattern, 1, "<p>", "</p>", makeLinkDependingOnSettingsAndForceMake, null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcVideoPattern, 1, "<p>", "</p>", new AddPrefixString("http://www.jeuxvideo.com/videos/iframe/"), makeLinkDependingOnSettingsAndForceMake);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcVideoPattern, 1, "<p>", "</p>", new AddPrefixString("https://www.jeuxvideo.com/videos/iframe/"), makeLinkDependingOnSettingsAndForceMake);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortJvcLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longJvcLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
@@ -1171,7 +1171,7 @@ public final class JVCParser {
         ToolForParsing.replaceStringByAnother(messageInBuilder, "\n", "");
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, smileyPattern, 3, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, embedVideoPattern, 1, "<p>", "</p>", null, null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcVideoPattern, 1, "<p>http://www.jeuxvideo.com/videos/iframe/", "</p>", null, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcVideoPattern, 1, "<p>https://www.jeuxvideo.com/videos/iframe/", "</p>", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortJvcLinkPattern, 1, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longJvcLinkPattern, 1, "", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", null, null);
@@ -1258,7 +1258,7 @@ public final class JVCParser {
         }
 
         if (avatarMatcher.find()) {
-            newMessageInfo.avatarLink = "http://" + avatarMatcher.group(2);
+            newMessageInfo.avatarLink = "https://" + avatarMatcher.group(2);
         }
 
         if (messageIdMatcher.find()) {
@@ -1311,7 +1311,7 @@ public final class JVCParser {
 
         if (topicNameAndLinkMatcher.find()) {
             String topicNameAndLinkString = topicNameAndLinkMatcher.group(1);
-            newTopicInfo.link = "http://www.jeuxvideo.com" + topicNameAndLinkString.substring(0, topicNameAndLinkString.indexOf("\""));
+            newTopicInfo.link = "https://www.jeuxvideo.com" + topicNameAndLinkString.substring(0, topicNameAndLinkString.indexOf("\""));
             newTopicInfo.htmlName = topicNameAndLinkString.substring(topicNameAndLinkString.indexOf("title=\"") + 7);
         }
 
@@ -1341,7 +1341,7 @@ public final class JVCParser {
         }
 
         if (topicNameAndLinkMatcher.find()) {
-            newTopicInfo.link = "http://www.jeuxvideo.com" + topicNameAndLinkMatcher.group(1);
+            newTopicInfo.link = "https://www.jeuxvideo.com" + topicNameAndLinkMatcher.group(1);
             newTopicInfo.htmlName = topicNameAndLinkMatcher.group(2).replace("\r", "").replace("\n", "").replace("em>", "u>").trim();
         }
 
@@ -1383,7 +1383,7 @@ public final class JVCParser {
         Matcher topicLinkMatcher = topicLinkInPermalinkPattern.matcher(sourcePage);
 
         if (topicLinkMatcher.find()) {
-            return "http://www.jeuxvideo.com" + topicLinkMatcher.group(1);
+            return "https://www.jeuxvideo.com" + topicLinkMatcher.group(1);
         }
 
         return "";

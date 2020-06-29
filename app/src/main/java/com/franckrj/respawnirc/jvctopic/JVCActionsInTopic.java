@@ -283,7 +283,7 @@ public class JVCActionsInTopic {
                 WebManager.WebInfos currentWebInfos = initWebInfos(params[2], false);
                 String pageContent;
 
-                pageContent = WebManager.sendRequestWithMultipleTrys("http://www.jeuxvideo.com/forums/ajax_citation.php", "POST", "id_message=" + params[0] + "&" + params[1], currentWebInfos, 2);
+                pageContent = WebManager.sendRequestWithMultipleTrys("https://www.jeuxvideo.com/forums/ajax_citation.php", "POST", "id_message=" + params[0] + "&" + params[1], currentWebInfos, 2);
 
                 if (pageContent != null) {
                     return JVCParser.getMessageQuoted(pageContent);
@@ -305,7 +305,7 @@ public class JVCActionsInTopic {
             if (params.length > 2) {
                 String typeOfAction = (itsADelete ? "delete" : "restore");
                 WebManager.WebInfos currentWebInfos = initWebInfos(params[2], false);
-                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/modal_del_message.php", "POST", "tab_message[]=" + params[0] + "&type=" + typeOfAction + "&" + params[1], currentWebInfos);
+                return WebManager.sendRequest("https://www.jeuxvideo.com/forums/modal_del_message.php", "POST", "tab_message[]=" + params[0] + "&type=" + typeOfAction + "&" + params[1], currentWebInfos);
             }
             return null;
         }
@@ -316,7 +316,7 @@ public class JVCActionsInTopic {
         protected String doInBackground(String... params) {
             if (params.length > 3) {
                 WebManager.WebInfos currentWebInfos = initWebInfos(params[3], false);
-                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/modal_moderation_topic.php", "GET", "id_forum=" + params[0] + "&tab_topic[]=" + params[1] + "&type=unlock&action=get&" + params[2], currentWebInfos);
+                return WebManager.sendRequest("https://www.jeuxvideo.com/forums/modal_moderation_topic.php", "GET", "id_forum=" + params[0] + "&tab_topic[]=" + params[1] + "&type=unlock&action=get&" + params[2], currentWebInfos);
             }
             return "erreurlol";
         }
@@ -334,7 +334,7 @@ public class JVCActionsInTopic {
             if (params.length > 3) {
                 String typeOfAction = (itsAPin ? "epingle" : "desepingle");
                 WebManager.WebInfos currentWebInfos = initWebInfos(params[3], false);
-                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/modal_moderation_topic.php", "POST", "id_forum=" + params[0] + "&tab_topic[]=" + params[1] + "&type=" + typeOfAction + "&" + params[2], currentWebInfos);
+                return WebManager.sendRequest("https://www.jeuxvideo.com/forums/modal_moderation_topic.php", "POST", "id_forum=" + params[0] + "&tab_topic[]=" + params[1] + "&type=" + typeOfAction + "&" + params[2], currentWebInfos);
             }
             return "erreurlol";
         }
@@ -351,7 +351,7 @@ public class JVCActionsInTopic {
         protected String doInBackground(String... params) {
             if (params.length > 3) {
                 WebManager.WebInfos currentWebInfos = initWebInfos(params[3], false);
-                return WebManager.sendRequest("http://www.jeuxvideo.com/forums/ajax_unkick.php", "POST", "id_forum=" + params[0] + "&id_alias_a_unkick=" + params[1] + "&" + params[2], currentWebInfos);
+                return WebManager.sendRequest("https://www.jeuxvideo.com/forums/ajax_unkick.php", "POST", "id_forum=" + params[0] + "&id_alias_a_unkick=" + params[1] + "&" + params[2], currentWebInfos);
             }
             return "erreurlol";
         }

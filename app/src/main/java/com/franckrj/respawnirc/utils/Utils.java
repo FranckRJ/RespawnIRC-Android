@@ -15,6 +15,7 @@ import androidx.emoji.text.EmojiCompat;
 import android.text.Spannable;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.CookieManager;
 import android.widget.EditText;
 
 import com.franckrj.respawnirc.MainActivity;
@@ -44,7 +45,6 @@ public class Utils {
         return (long) (valToRound + 0.5);
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean stringsAreEquals(String str1, String str2) {
         return (Objects.equals(str1, str2));
     }
@@ -123,11 +123,23 @@ public class Utils {
             return "nlsk_xs/" + link.substring(("http://image.noelshack.com/fichiers-xs/").length()).replace("/", "_");
         } else if (link.startsWith("http://image.noelshack.com/fichiers/")) {
             return "nlsk_big/" + link.substring(("http://image.noelshack.com/fichiers/").length()).replace("/", "_");
+        } else if (link.startsWith("https://image.jeuxvideo.com/avatar")) {
+            return "vtr_sm/" + link.substring(("https://image.jeuxvideo.com/avatar").length()).replace("/", "_");
         } else if (link.startsWith("http://image.jeuxvideo.com/avatar")) {
             return "vtr_sm/" + link.substring(("http://image.jeuxvideo.com/avatar").length()).replace("/", "_");
         } else {
             return "";
         }
+    }
+
+    public static void setupCookiesForJvc(CookieManager cookieManager) {
+        cookieManager.removeAllCookies(null);
+        cookieManager.setCookie("https://www.jeuxvideo.com", "_cmpQcif3pcsupported=1");
+        cookieManager.setCookie("https://jeuxvideo.com", "_gcl_au=1.1.1298996599.1593456467");
+        cookieManager.setCookie("https://www.jeuxvideo.com", "euconsent=BO1ximpO1ximpAKAiCENDQAAAAAweAAA");
+        cookieManager.setCookie("https://www.jeuxvideo.com", "googlepersonalization=O1ximpO1ximpAA");
+        cookieManager.setCookie("https://www.jeuxvideo.com", "noniabvendorconsent=O1ximpO1ximpAKAiAA8AAA");
+        cookieManager.setCookie("https://www.jeuxvideo.com", "visitor_country=FR");
     }
 
     public static void openCorrespondingBrowser(PrefsManager.LinkType linkTypeToOpenInternalBrowser, String link, Activity parentActivity) {
@@ -212,7 +224,7 @@ public class Utils {
     @TargetApi(25)
     public static void updateShortcuts(Activity parentActivity, ShortcutManager shortcutManager, int sizeOfForumFavArray) {
         ArrayList<ShortcutInfo> listOfShortcuts = new ArrayList<>();
-        int sizeOfShortcutArray = (sizeOfForumFavArray > 4 ? 4 : sizeOfForumFavArray);
+        int sizeOfShortcutArray = Math.min(sizeOfForumFavArray, 4);
 
         for (int i = 0; i < sizeOfShortcutArray; ++i) {
             String currentShortcutLink = PrefsManager.getStringWithSufix(PrefsManager.StringPref.Names.FORUM_FAV_LINK, String.valueOf(i));
