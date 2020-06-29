@@ -41,10 +41,10 @@ public class AddOrRemoveTopicToSubs extends AbsWebRequestAsyncTask<String, Void,
             WebManager.WebInfos currentWebInfos = initWebInfos(params[3], false);
 
             if (addToSubs) {
-                linkToUse = "http://www.jeuxvideo.com/abonnements/ajax/ajax_abo_insert.php";
+                linkToUse = "https://www.jeuxvideo.com/abonnements/ajax/ajax_abo_insert.php";
                 paramsForReq = "type=topic&ids_liste=" + params[0] + "&" + params[2];
             } else {
-                linkToUse = "http://www.jeuxvideo.com/abonnements/ajax/ajax_abo_delete.php";
+                linkToUse = "https://www.jeuxvideo.com/abonnements/ajax/ajax_abo_delete.php";
                 paramsForReq = "id=" + params[1] + "&" + params[2];
             }
 

@@ -119,7 +119,7 @@ public class RefreshFavDialogFragment extends DialogFragment {
             if (params.length > 1) {
                 WebManager.WebInfos currentWebInfos = initWebInfos(params[1], false);
                 String pageContent;
-                pageContent = WebManager.sendRequest("http://www.jeuxvideo.com/profil/" + params[0].toLowerCase(), "GET", "mode=favoris", currentWebInfos);
+                pageContent = WebManager.sendRequest("https://www.jeuxvideo.com/profil/" + params[0].toLowerCase(), "GET", "mode=favoris", currentWebInfos);
 
                 if (pageContent != null) {
                     if (typeOfFav == FAV_FORUM) {

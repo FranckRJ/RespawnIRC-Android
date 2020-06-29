@@ -37,7 +37,7 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
         @Override
         public void onClick(View v) {
             if (!pseudoText.getText().toString().isEmpty()) {
-                String allCookiesInstring = CookieManager.getInstance().getCookie("http://www.jeuxvideo.com/");
+                String allCookiesInstring = CookieManager.getInstance().getCookie("https://www.jeuxvideo.com/");
                 String[] allCookiesInStringArray = TextUtils.split(allCookiesInstring, ";");
                 String connectCookieValue = null;
 

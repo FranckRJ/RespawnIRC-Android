@@ -143,7 +143,7 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
                 if (!suffixForSearch.isEmpty()) {
                     lastSearchedText = textToSearch;
                     idOfTypeOfSearch = getSearchTypeIdForSearchTypeInText(typeOfSearch);
-                    baseSearchLink = "http://www.jeuxvideo.com/recherche/forums/" + suffixForSearch;
+                    baseSearchLink = "https://www.jeuxvideo.com/recherche/forums/" + suffixForSearch;
                     launchSearchOnResumeAndResetPageNumber = true;
                 }
             } else {
@@ -151,7 +151,7 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
 
                 if (newLinkForSearch != null) {
                     if (newLinkForSearch.lastIndexOf("/") != -1) {
-                        baseSearchLink = "http://www.jeuxvideo.com/recherche/forums/" + newLinkForSearch.substring(newLinkForSearch.lastIndexOf("/") + 1);
+                        baseSearchLink = "https://www.jeuxvideo.com/recherche/forums/" + newLinkForSearch.substring(newLinkForSearch.lastIndexOf("/") + 1);
                     }
                 }
                 shouldOpenKeyboard = true;

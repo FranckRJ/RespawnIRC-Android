@@ -84,9 +84,9 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
             reqResult = reqResult.substring(("respawnirc:move:").length());
 
             if (reqResult.startsWith("/forums/")) {
-                reqResult = "http://www.jeuxvideo.com" + reqResult;
-            } else if (!reqResult.startsWith("http:")) {
-                reqResult = "http:" + reqResult;
+                reqResult = "https://www.jeuxvideo.com" + reqResult;
+            } else if (!reqResult.startsWith("https:")) {
+                reqResult = "https:" + reqResult;
             }
 
             data.putExtra(RESULT_EXTRA_TOPIC_LINK_TO_MOVE, reqResult);
