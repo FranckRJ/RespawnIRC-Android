@@ -50,7 +50,6 @@ public class LinkMenuDialogFragment extends DialogFragment {
                     case POS_SHARE_URL:
                         Utils.shareThisLink(urlOfLink, getActivity());
                         break;
-
                 }
             }
             dialog.dismiss();
