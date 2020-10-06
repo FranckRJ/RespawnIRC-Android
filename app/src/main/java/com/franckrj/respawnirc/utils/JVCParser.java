@@ -244,9 +244,9 @@ public final class JVCParser {
             String partOfLinkToCheck = linkToCheck.substring(("https://www.jeuxvideo.com/").length());
 
             if (partOfLinkToCheck.contains("/")) {
-                partOfLinkToCheck = partOfLinkToCheck.substring(partOfLinkToCheck.indexOf('/'));
+                String partOfLinkToCheckWithoutFirstPart = partOfLinkToCheck.substring(partOfLinkToCheck.indexOf('/') + 1);
 
-                return partOfLinkToCheck.startsWith("/forums/message/");
+                return partOfLinkToCheck.startsWith("forums/message/") || partOfLinkToCheckWithoutFirstPart.startsWith("forums/message/");
             }
         }
 
