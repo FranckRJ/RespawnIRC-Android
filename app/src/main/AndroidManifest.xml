@@ -46,6 +46,7 @@
                 <data android:pathPrefix="/forums/42-"/>
                 <data android:pathPrefix="/recherche/forums/0-"/>
                 <data android:pathPattern="/.*/forums/message/.*"/>
+                <data android:pathPattern="/forums/message/.*"/>
             </intent-filter>
         </activity>
 
