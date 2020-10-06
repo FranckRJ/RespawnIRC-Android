@@ -93,12 +93,12 @@ public class MessageMenuDialogFragment extends DialogFragment {
                             break;
                         }
                         case POS_COPY_PERMALINK: {
-                            Utils.putStringInClipboard("https://www.jeuxvideo.com/" + pseudoOfMessage.toLowerCase() + "/forums/message/" + idOfMessage, getActivity());
+                            Utils.putStringInClipboard("https://www.jeuxvideo.com/forums/message/" + idOfMessage, getActivity());
                             Toast.makeText(getActivity(), R.string.copyDone, Toast.LENGTH_SHORT).show();
                             break;
                         }
                         case POS_DDB: {
-                            Utils.openLinkInInternalBrowser("https://www.jeuxvideo.com/" + pseudoOfMessage.toLowerCase() + "/forums/message/" + idOfMessage, getActivity());
+                            Utils.openLinkInInternalBrowser("https://www.jeuxvideo.com/forums/message/" + idOfMessage, getActivity());
                             break;
                         }
                         case POS_SELECT_TEXT: {
