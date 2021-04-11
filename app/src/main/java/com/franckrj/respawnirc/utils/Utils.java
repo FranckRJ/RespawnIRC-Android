@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.text.Spannable;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.CookieManager;
 import android.widget.EditText;
 
 import androidx.annotation.ColorInt;
@@ -133,20 +132,9 @@ public class Utils {
         }
     }
 
-    public static void setupCookiesForJvc(CookieManager cookieManager) {
-        cookieManager.removeAllCookies(null);
-        cookieManager.setCookie("https://www.jeuxvideo.com", "visitor_country=FR");
-        cookieManager.setCookie("https://www.jeuxvideo.com", "_gcl_au=1.1.52990352.1602440566");
-        cookieManager.setCookie("https://www.jeuxvideo.com", "didomi_token=eyJ1c2VyX2lkIjoiMTczZjgzOTQtNDJmYi02MjM1LTk4NDktYmE0MWU3MmY1ZDBlIiwiY3JlYXRlZCI6IjIwMjEtMDQtMTBUMjM6NTM6MDAuMTM2WiIsInVwZGF0ZWQiOiIyMDIxLTA0LTEwVDIzOjUzOjAwLjEzNloiLCJ2ZXJzaW9uIjoyLCJwdXJwb3NlcyI6eyJlbmFibGVkIjpbImRldmljZV9jaGFyYWN0ZXJpc3RpY3MiLCJnZW9sb2NhdGlvbl9kYXRhIl19LCJ2ZW5kb3JzIjp7ImVuYWJsZWQiOlsiZ29vZ2xlIiwiYzpkbXB3ZWJlZGktblRCSEFrNDQiLCJjOmJhdGNoLWJKdEd0dHhMIiwiYzphbWF6b250YW0tZVk0aU40TlYiLCJjOndhcm5lcmJyby1BUEpXeUFHUCIsImM6c25hcGNoYXQtaFcyck1KZlkiLCJjOnRpa3Rvay1XYnlwQTNaZCIsImM6dHdpdHRlci14YkRFeEpQayIsImM6ZmFjZWJvb2std0RpR25KV1YiLCJjOmdvb2dsZWFuYS1YTXFhZ2F3YSJdfSwidmVuZG9yc19saSI6eyJlbmFibGVkIjpbImdvb2dsZSJdfX0=");
-        cookieManager.setCookie("https://www.jeuxvideo.com", "euconsent-v2=CPEdkeZPEdkeZAHABBENBUCsAP_AAH_AAAAAHrNf_X__b3_j-_59__t0eY1f9_7_v-0zjhfdt-8N2f_X_L8X42M7vF36pq4KuR4Eu3LBIQdlHOHcTUmw6okVrTPsbk2Mr7NKJ7PEinMbe2dYGH9_n93TuZKY7__8___z__-__v__7_f_r-3_3__p9X---_e_V399xLv9f_A9UAkw1L4ALMSxwZJo0qhRAhCsJDoBQAUUIwtE1hAyuCnZXAR6ggYAITUBGBECDEFGLAIABAIAkIiAkAPBAIgCIBAACAFSAhAARsAgsALAwCAAUA0LECKAIQJCDI4KjlMCAiRaKCeSsASi72NMIQyiwAoFH9FRgIlSCBYGQAAA.f_gAD_gAAAAA");
-        cookieManager.setCookie("https://jeuxvideo.com", "_gcl_au=1.1.52990352.1602440566");
-        cookieManager.setCookie("https://jeuxvideo.com", "didomi_token=eyJ1c2VyX2lkIjoiMTczZjgzOTQtNDJmYi02MjM1LTk4NDktYmE0MWU3MmY1ZDBlIiwiY3JlYXRlZCI6IjIwMjEtMDQtMTBUMjM6NTM6MDAuMTM2WiIsInVwZGF0ZWQiOiIyMDIxLTA0LTEwVDIzOjUzOjAwLjEzNloiLCJ2ZXJzaW9uIjoyLCJwdXJwb3NlcyI6eyJlbmFibGVkIjpbImRldmljZV9jaGFyYWN0ZXJpc3RpY3MiLCJnZW9sb2NhdGlvbl9kYXRhIl19LCJ2ZW5kb3JzIjp7ImVuYWJsZWQiOlsiZ29vZ2xlIiwiYzpkbXB3ZWJlZGktblRCSEFrNDQiLCJjOmJhdGNoLWJKdEd0dHhMIiwiYzphbWF6b250YW0tZVk0aU40TlYiLCJjOndhcm5lcmJyby1BUEpXeUFHUCIsImM6c25hcGNoYXQtaFcyck1KZlkiLCJjOnRpa3Rvay1XYnlwQTNaZCIsImM6dHdpdHRlci14YkRFeEpQayIsImM6ZmFjZWJvb2std0RpR25KV1YiLCJjOmdvb2dsZWFuYS1YTXFhZ2F3YSJdfSwidmVuZG9yc19saSI6eyJlbmFibGVkIjpbImdvb2dsZSJdfX0=");
-        cookieManager.setCookie("https://jeuxvideo.com", "euconsent-v2=CPEdkeZPEdkeZAHABBENBUCsAP_AAH_AAAAAHrNf_X__b3_j-_59__t0eY1f9_7_v-0zjhfdt-8N2f_X_L8X42M7vF36pq4KuR4Eu3LBIQdlHOHcTUmw6okVrTPsbk2Mr7NKJ7PEinMbe2dYGH9_n93TuZKY7__8___z__-__v__7_f_r-3_3__p9X---_e_V399xLv9f_A9UAkw1L4ALMSxwZJo0qhRAhCsJDoBQAUUIwtE1hAyuCnZXAR6ggYAITUBGBECDEFGLAIABAIAkIiAkAPBAIgCIBAACAFSAhAARsAgsALAwCAAUA0LECKAIQJCDI4KjlMCAiRaKCeSsASi72NMIQyiwAoFH9FRgIlSCBYGQAAA.f_gAD_gAAAAA");
-    }
-
     public static void openCorrespondingBrowser(PrefsManager.LinkType linkTypeToOpenInternalBrowser, String link, Activity parentActivity) {
         boolean itsAJVCLink = link.matches("(?i)^http(s)?://((www|m)\\.)?jeuxvideo\\.com$") ||
-                              link.matches("(?i)^http(s)?://((www|m)\\.)?jeuxvideo\\.com/.*");
+                link.matches("(?i)^http(s)?://((www|m)\\.)?jeuxvideo\\.com/.*");
 
         if (linkTypeToOpenInternalBrowser.type == PrefsManager.LinkType.ALL_LINKS ||
                 (linkTypeToOpenInternalBrowser.type == PrefsManager.LinkType.JVC_LINKS_ONLY && itsAJVCLink)) {

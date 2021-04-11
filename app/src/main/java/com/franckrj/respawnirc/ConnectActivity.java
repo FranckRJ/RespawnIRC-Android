@@ -2,11 +2,7 @@ package com.franckrj.respawnirc;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
-import androidx.appcompat.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,11 +15,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
+
 import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
 import com.franckrj.respawnirc.utils.AccountManager;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
-import com.franckrj.respawnirc.utils.Utils;
 
 public class ConnectActivity extends AbsHomeIsBackActivity {
     private static final long MAX_TIME_USER_HAVE_TO_LEAVE_IN_MS = 3_500;
@@ -33,46 +32,43 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
     private HelpConnectDialogFragment helpDialogFragment = null;
     private long lastTimeUserTryToLeaveInMs = -MAX_TIME_USER_HAVE_TO_LEAVE_IN_MS;
 
-    private final View.OnClickListener saveCookieClickedListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (!pseudoText.getText().toString().isEmpty()) {
-                String allCookiesInstring = CookieManager.getInstance().getCookie("https://www.jeuxvideo.com/");
-                String[] allCookiesInStringArray = TextUtils.split(allCookiesInstring, ";");
-                String connectCookieValue = null;
+    private final View.OnClickListener saveCookieClickedListener = view -> {
+        if (!pseudoText.getText().toString().isEmpty()) {
+            String allCookiesInstring = CookieManager.getInstance().getCookie("https://www.jeuxvideo.com/");
+            String[] allCookiesInStringArray = TextUtils.split(allCookiesInstring, ";");
+            String connectCookieValue = null;
 
-                for (String thisCookie : allCookiesInStringArray) {
-                    String[] cookieInfos;
+            for (String thisCookie : allCookiesInStringArray) {
+                String[] cookieInfos;
 
-                    thisCookie = thisCookie.trim();
-                    cookieInfos = TextUtils.split(thisCookie, "=");
+                thisCookie = thisCookie.trim();
+                cookieInfos = TextUtils.split(thisCookie, "=");
 
-                    if (cookieInfos.length > 1) {
-                        if (cookieInfos[0].equals("coniunctio")) {
-                            connectCookieValue = cookieInfos[1];
-                            break;
-                        }
+                if (cookieInfos.length > 1) {
+                    if (cookieInfos[0].equals("coniunctio")) {
+                        connectCookieValue = cookieInfos[1];
+                        break;
                     }
                 }
-
-                if (connectCookieValue != null) {
-                    String pseudo = pseudoText.getText().toString().trim();
-                    String cookie = "coniunctio=" + connectCookieValue;
-                    AccountManager.setCurrentAccount(new AccountManager.AccountInfos(pseudo, cookie, false));
-
-                    Toast.makeText(ConnectActivity.this, R.string.connectionSuccessful, Toast.LENGTH_SHORT).show();
-
-                    finish();
-                    return;
-                }
-            } else {
-                Toast.makeText(ConnectActivity.this, R.string.errorPseudoMissingConnect, Toast.LENGTH_LONG).show();
-
-                return;
             }
 
-            Toast.makeText(ConnectActivity.this, R.string.errorCookiesMissingConnect, Toast.LENGTH_LONG).show();
+            if (connectCookieValue != null) {
+                String pseudo = pseudoText.getText().toString().trim();
+                String cookie = "coniunctio=" + connectCookieValue;
+                AccountManager.setCurrentAccount(new AccountManager.AccountInfos(pseudo, cookie, false));
+
+                Toast.makeText(ConnectActivity.this, R.string.connectionSuccessful, Toast.LENGTH_SHORT).show();
+
+                finish();
+                return;
+            }
+        } else {
+            Toast.makeText(ConnectActivity.this, R.string.errorPseudoMissingConnect, Toast.LENGTH_LONG).show();
+
+            return;
         }
+
+        Toast.makeText(ConnectActivity.this, R.string.errorCookiesMissingConnect, Toast.LENGTH_LONG).show();
     };
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -89,9 +85,16 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
         helpDialogFragment = new HelpConnectDialogFragment();
         saveCookieButton.setOnClickListener(saveCookieClickedListener);
 
-        Utils.setupCookiesForJvc(CookieManager.getInstance());
+        CookieManager.getInstance().removeAllCookies(null);
 
-        jvcWebView.setWebViewClient(new WebViewClient());
+        jvcWebView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                if (url.startsWith("https://www.jeuxvideo.com")) {
+                    jvcWebView.evaluateJavascript("Didomi.setUserAgreeToAll();", null);
+                }
+            }
+        });
         jvcWebView.setWebChromeClient(new WebChromeClient());
         jvcWebView.getSettings().setJavaScriptEnabled(true);
         Undeprecator.webSettingsSetSaveFormData(jvcWebView.getSettings(), false);
@@ -166,12 +169,7 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
             builder.setTitle(R.string.help).setMessage(R.string.help_dialog_connect)
-                    .setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.dismiss();
-                        }
-                    });
+                    .setNeutralButton(R.string.ok, (dialog, id) -> dialog.dismiss());
             return builder.create();
         }
     }
