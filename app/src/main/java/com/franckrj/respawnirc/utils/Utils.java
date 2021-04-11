@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.text.Spannable;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.CookieManager;
 import android.widget.EditText;
 
 import androidx.annotation.ColorInt;
@@ -133,31 +132,9 @@ public class Utils {
         }
     }
 
-    public static void setupCookiesForJvc(CookieManager cookieManager) {
-        cookieManager.removeAllCookies(null);
-        cookieManager.setCookie("https://www.jeuxvideo.com", "_cmpQcif3pcsupported=1");
-        cookieManager.setCookie("https://www.jeuxvideo.com", "euconsent=BO1ximpO1ximpAKAiCENDQAAAAAweAAA");
-        cookieManager.setCookie("https://www.jeuxvideo.com", "googlepersonalization=O1ximpO1ximpAA");
-        cookieManager.setCookie("https://www.jeuxvideo.com", "noniabvendorconsent=O1ximpO1ximpAKAiAA8AAA");
-        cookieManager.setCookie("https://www.jeuxvideo.com", "visitor_country=FR");
-        cookieManager.setCookie("https://www.jeuxvideo.com", "_gcl_au=1.1.932555791.1601975855");
-        cookieManager.setCookie("https://www.jeuxvideo.com", "_ga=GA1.2.314248087.1601975855");
-        cookieManager.setCookie("https://www.jeuxvideo.com", "_gid=GA1.2.241172429.1601975855");
-        cookieManager.setCookie("https://www.jeuxvideo.com", "_gat=1");
-        cookieManager.setCookie("https://www.jeuxvideo.com", "didomi_token=eyJ1c2VyX2lkIjoiMTc0ZmQzM2EtMjRjNy02OWEyLWE1YjMtZjdlYzA3YWYxNjU3IiwiY3JlYXRlZCI6IjIwMjAtMTAtMDZUMDk6MjA6MDYuMzU4WiIsInVwZGF0ZWQiOiIyMDIwLTEwLTA2VDA5OjIwOjA2LjM1OFoiLCJ2ZXJzaW9uIjoyLCJwdXJwb3NlcyI6eyJlbmFibGVkIjpbImRldmljZV9jaGFyYWN0ZXJpc3RpY3MiLCJnZW9sb2NhdGlvbl9kYXRhIl19LCJ2ZW5kb3JzIjp7ImVuYWJsZWQiOlsiZ29vZ2xlIiwiYzpkbXB3ZWJlZGktblRCSEFrNDQiLCJjOmJhdGNoLWJKdEd0dHhMIiwiYzphbWF6b250YW0tZVk0aU40TlYiLCJjOndhcm5lcmJyby1BUEpXeUFHUCIsImM6c25hcGNoYXQtaFcyck1KZlkiLCJjOnRpa3Rvay1XYnlwQTNaZCIsImM6dHdpdHRlci14YkRFeEpQayIsImM6ZmFjZWJvb2std0RpR25KV1YiXX0sInZlbmRvcnNfbGkiOnsiZW5hYmxlZCI6WyJnb29nbGUiXX19");
-        cookieManager.setCookie("https://www.jeuxvideo.com", "euconsent-v2=CO62iPAO62iPAAHABBENA5CsAP_AAH_AAAAAGvNf_X_fb2_j-_5999t0eY1f9_6_v2wzjgeds-8Nyd_X_L8X62MyvB36pq4KuR4Eu3LBAQdlHOHcTQmQ4IkVqTLsbk2Mq7NKJ7LEilMbM2dYGH9vn9XTuZKY70_s___z_3-_-___77f_r-3_3_A14Akw1L4CDMSxgJJo0qhRAhCuJDoAQAUUIwtElhASuCnZXAR6ggQAIDUBGBECDEFGLIIAAAAAkoiAEgPBAIgCIBAACAFaAhAARIAgsAJAwCAAUA0LACKIJQJCDI4KjlECAqRaKCeSMCSC52MMIAAA.f_gAD_gAAAAA");
-        cookieManager.setCookie("https://jeuxvideo.com", "_gcl_au=1.1.1298996599.1593456467");
-        cookieManager.setCookie("https://jeuxvideo.com", "_gcl_au=1.1.932555791.1601975855");
-        cookieManager.setCookie("https://jeuxvideo.com", "_ga=GA1.2.314248087.1601975855");
-        cookieManager.setCookie("https://jeuxvideo.com", "_gid=GA1.2.241172429.1601975855");
-        cookieManager.setCookie("https://jeuxvideo.com", "_gat=1");
-        cookieManager.setCookie("https://jeuxvideo.com", "didomi_token=eyJ1c2VyX2lkIjoiMTc0ZmQzM2EtMjRjNy02OWEyLWE1YjMtZjdlYzA3YWYxNjU3IiwiY3JlYXRlZCI6IjIwMjAtMTAtMDZUMDk6MjA6MDYuMzU4WiIsInVwZGF0ZWQiOiIyMDIwLTEwLTA2VDA5OjIwOjA2LjM1OFoiLCJ2ZXJzaW9uIjoyLCJwdXJwb3NlcyI6eyJlbmFibGVkIjpbImRldmljZV9jaGFyYWN0ZXJpc3RpY3MiLCJnZW9sb2NhdGlvbl9kYXRhIl19LCJ2ZW5kb3JzIjp7ImVuYWJsZWQiOlsiZ29vZ2xlIiwiYzpkbXB3ZWJlZGktblRCSEFrNDQiLCJjOmJhdGNoLWJKdEd0dHhMIiwiYzphbWF6b250YW0tZVk0aU40TlYiLCJjOndhcm5lcmJyby1BUEpXeUFHUCIsImM6c25hcGNoYXQtaFcyck1KZlkiLCJjOnRpa3Rvay1XYnlwQTNaZCIsImM6dHdpdHRlci14YkRFeEpQayIsImM6ZmFjZWJvb2std0RpR25KV1YiXX0sInZlbmRvcnNfbGkiOnsiZW5hYmxlZCI6WyJnb29nbGUiXX19");
-        cookieManager.setCookie("https://jeuxvideo.com", "euconsent-v2=CO62iPAO62iPAAHABBENA5CsAP_AAH_AAAAAGvNf_X_fb2_j-_5999t0eY1f9_6_v2wzjgeds-8Nyd_X_L8X62MyvB36pq4KuR4Eu3LBAQdlHOHcTQmQ4IkVqTLsbk2Mq7NKJ7LEilMbM2dYGH9vn9XTuZKY70_s___z_3-_-___77f_r-3_3_A14Akw1L4CDMSxgJJo0qhRAhCuJDoAQAUUIwtElhASuCnZXAR6ggQAIDUBGBECDEFGLIIAAAAAkoiAEgPBAIgCIBAACAFaAhAARIAgsAJAwCAAUA0LACKIJQJCDI4KjlECAqRaKCeSMCSC52MMIAAA.f_gAD_gAAAAA");
-    }
-
     public static void openCorrespondingBrowser(PrefsManager.LinkType linkTypeToOpenInternalBrowser, String link, Activity parentActivity) {
         boolean itsAJVCLink = link.matches("(?i)^http(s)?://((www|m)\\.)?jeuxvideo\\.com$") ||
-                              link.matches("(?i)^http(s)?://((www|m)\\.)?jeuxvideo\\.com/.*");
+                link.matches("(?i)^http(s)?://((www|m)\\.)?jeuxvideo\\.com/.*");
 
         if (linkTypeToOpenInternalBrowser.type == PrefsManager.LinkType.ALL_LINKS ||
                 (linkTypeToOpenInternalBrowser.type == PrefsManager.LinkType.JVC_LINKS_ONLY && itsAJVCLink)) {

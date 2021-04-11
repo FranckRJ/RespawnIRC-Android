@@ -3,7 +3,6 @@ package com.franckrj.respawnirc;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import androidx.appcompat.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.CookieManager;
@@ -12,11 +11,15 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
+
 import com.franckrj.respawnirc.base.AbsToolbarActivity;
 import com.franckrj.respawnirc.utils.AccountManager;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.Undeprecator;
 import com.franckrj.respawnirc.utils.Utils;
+
+import org.jetbrains.annotations.NotNull;
 
 public class WebBrowserActivity extends AbsToolbarActivity {
     public static final String EXTRA_URL_LOAD = "com.franckrj.respawnirc.webbrowseractivity.EXTRA_URL_LOAD";
@@ -59,9 +62,16 @@ public class WebBrowserActivity extends AbsToolbarActivity {
 
         browserWebView.setWebViewClient(new WebViewClient() {
             @Override
-            public void onPageStarted (WebView view, String url, Bitmap favicon) {
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 currentUrl = url;
                 updateTitleAndSubtitle();
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                if (url.startsWith("https://www.jeuxvideo.com")) {
+                    browserWebView.evaluateJavascript("Didomi.setUserAgreeToAll();", null);
+                }
             }
         });
         browserWebView.setWebChromeClient(new WebChromeClient() {
@@ -99,7 +109,7 @@ public class WebBrowserActivity extends AbsToolbarActivity {
         updateTitleAndSubtitle();
 
         PrefsManager.putInt(PrefsManager.IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED,
-                            PrefsManager.getInt(PrefsManager.IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED) + 1);
+                PrefsManager.getInt(PrefsManager.IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED) + 1);
         PrefsManager.applyChanges();
     }
 
@@ -131,7 +141,7 @@ public class WebBrowserActivity extends AbsToolbarActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(SAVE_TITLE_FOR_BROWSER, currentTitle);
         outState.putString(SAVE_URL_FOR_BROWSER, currentUrl);

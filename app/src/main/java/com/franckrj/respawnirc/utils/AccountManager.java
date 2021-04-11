@@ -86,7 +86,7 @@ public class AccountManager {
 
     public static void setCurrentAccount(AccountInfos newCurrentAccount) {
         currentAccount = new AccountInfos(newCurrentAccount.pseudo, newCurrentAccount.cookie, newCurrentAccount.isModo);
-        Utils.setupCookiesForJvc(CookieManager.getInstance());
+        CookieManager.getInstance().removeAllCookies(null);
         PrefsManager.putString(PrefsManager.StringPref.Names.PSEUDO_OF_USER, currentAccount.pseudo);
         PrefsManager.putString(PrefsManager.StringPref.Names.COOKIES_LIST, currentAccount.cookie);
         PrefsManager.putBool(PrefsManager.BoolPref.Names.USER_IS_MODO, currentAccount.isModo);
