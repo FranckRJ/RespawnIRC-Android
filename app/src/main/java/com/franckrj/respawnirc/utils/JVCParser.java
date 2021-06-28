@@ -88,7 +88,7 @@ public final class JVCParser {
     private static final Pattern surveyTitlePattern = Pattern.compile("<div class=\"intitule-sondage\">([^<]*)</div>");
     private static final Pattern surveyResultPattern = Pattern.compile("<div class=\"pied-result\">([^<]*)</div>");
     private static final Pattern surveyReplyPattern = Pattern.compile("<td class=\"result-pourcent\">[^<]*<div class=\"pourcent\">([^<]*)</div>.*?<td class=\"reponse\">([^<]*)</td>", Pattern.DOTALL);
-    private static final Pattern surveyReplyWithInfosPattern = Pattern.compile("<a href=\"#\" class=\"btn-sondage-reponse\" data-id-sondage=\"([^\"]*)\" data-id-reponse=\"([^\"]*)\">(.*?)</a>", Pattern.DOTALL);
+    private static final Pattern surveyReplyWithInfosPattern = Pattern.compile("<a href=\"#\" class=\"btn-sondage-reponse\" data-id-sondage=\"([^\"]*)\" data-id-reponse=\"([^\"]*)\">[^<]*<i class=\"icon icon-arrow-right\"></i>(.*?)</a>", Pattern.DOTALL);
     /* Parce que c'est faux, l'échappement n'est pas redondant s'il est supprimé la regexp est invalide. */
     @SuppressWarnings("RegExpRedundantEscape")
     private static final Pattern realSurveyContentPattern = Pattern.compile("\"html\":\"(.*?)\"\\}");
