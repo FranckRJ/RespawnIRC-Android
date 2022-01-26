@@ -92,8 +92,8 @@ public final class JVCParser {
     /* Parce que c'est faux, l'échappement n'est pas redondant s'il est supprimé la regexp est invalide. */
     @SuppressWarnings("RegExpRedundantEscape")
     private static final Pattern realSurveyContentPattern = Pattern.compile("\"html\":\"(.*?)\"\\}");
-    private static final Pattern numberOfMpJVCPattern = Pattern.compile("<div class=\".*?account-mp.*?\">[^<]*<span[^c]*class=\"jv-account-number-mp[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
-    private static final Pattern numberOfNotifJVCPattern = Pattern.compile("<div class=\".*?account-notif.*?\">[^<]*<span[^c]*class=\"jv-account-number-notif[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
+    private static final Pattern numberOfMpJVCPattern = Pattern.compile("<div class=\".*?headerAccount--pm.*?\">[^<]*<span[^c]*class=\"headerAccount__pm[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
+    private static final Pattern numberOfNotifJVCPattern = Pattern.compile("<div class=\".*?headerAccount--notif.*?\">[^<]*<span[^c]*class=\"headerAccount__notif[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
     private static final Pattern numberOfConnectedPattern = Pattern.compile("<span class=\"nb-connect-fofo\">([^<]*)</span>");
     private static final Pattern listOfModeratorsPattern = Pattern.compile("<span class=\"liste-modo-fofo\">(.*?)</span>", Pattern.DOTALL);
     private static final Pattern overlyJVCQuotePattern = Pattern.compile("(<(/)?blockquote>)");
