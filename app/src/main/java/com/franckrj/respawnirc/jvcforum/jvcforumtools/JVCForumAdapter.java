@@ -208,28 +208,28 @@ public class JVCForumAdapter extends BaseAdapter {
 
         holder.topicIcon.setVisibility(View.VISIBLE);
         switch (currentTopicInfos.type) {
-            case "marque-on":
+            case "topic-pin-on":
                 holder.topicIcon.setImageDrawable(iconMarqueOn);
                 break;
-            case "marque-off":
+            case "topic-pin-off":
                 holder.topicIcon.setImageDrawable(iconMarqueOff);
                 break;
-            case "dossier2":
+            case "topic-folder2":
                 holder.topicIcon.setImageDrawable(iconDossier2);
                 break;
-            case "lock":
+            case "topic-lock":
                 holder.topicIcon.setImageDrawable(iconLock);
                 break;
-            case "resolu":
+            case "topic-resolved":
                 holder.topicIcon.setImageDrawable(iconResolu);
                 break;
-            case "ghost":
+            case "topic-removed":
                 holder.topicIcon.setImageDrawable(iconGhost);
                 break;
-            case "message":
+            case "topic-message":
                 holder.topicIcon.setVisibility(View.INVISIBLE);
                 break;
-            case "dossier1":
+            case "topic-folder1":
             default:
                 holder.topicIcon.setImageDrawable(iconDossier1);
                 break;
