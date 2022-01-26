@@ -86,6 +86,7 @@ public class WebBrowserActivity extends AbsToolbarActivity {
         browserWebView.getSettings().setBuiltInZoomControls(true);
         browserWebView.getSettings().setDisplayZoomControls(false);
         browserWebView.getSettings().setJavaScriptEnabled(true);
+        browserWebView.getSettings().setDomStorageEnabled(true);
         Undeprecator.webSettingsSetSaveFormData(browserWebView.getSettings(), false);
         Undeprecator.webSettingsSetSavePassword(browserWebView.getSettings(), false);
 
