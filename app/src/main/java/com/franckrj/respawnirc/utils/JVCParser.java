@@ -80,7 +80,7 @@ public final class JVCParser {
     private static final Pattern noMissTopicsListInForumPagePattern = Pattern.compile("<ul class=\"liste-sujets-nomiss\">(.*?)</ul>", Pattern.DOTALL);
     private static final Pattern subforumInListPattern = Pattern.compile("<li class=\"line-ellipsis\">[^<]*<a href=\"([^\"]*)\" class=\"lien-jv\">([^<]*)</a>[^<]*</li>");
     private static final Pattern noMissTopicInListPattern = Pattern.compile("<a href=\"//www.jeuxvideo.com([^\"]*)\" class=\"lien-jv\">([^<]*)</a>");
-    private static final Pattern isInFavPattern = Pattern.compile("<span class=\"picto-favoris([^\"]*)\"");
+    private static final Pattern isInFavPattern = Pattern.compile("<span class=\"breadcrumb-icon ([^ ]*) js-favorite\" title=\"[^\"]*\" data-action=\"[^\"]*\" data-type=\"[^\"]*\">[^<]*<span>Etoile</span>");
     private static final Pattern topicIdInTopicPagePattern = Pattern.compile("<div (.*?)data-topic-id=\"([^\"]*)\">");
     private static final Pattern isInSubInTopicPagePattern = Pattern.compile("<span class=\"icon-bell-([^\"]*)\" title=\"[^\"]*\" data-action=\"[^\"]*\"([^>]*)>");
     private static final Pattern subIdInSubButtonPattern = Pattern.compile("data-id-abonnement=\"([^\"]*)\"");
@@ -759,7 +759,7 @@ public final class JVCParser {
         Matcher isInFavMatcher = isInFavPattern.matcher(pageSource);
 
         if (isInFavMatcher.find()) {
-            return !isInFavMatcher.group(1).isEmpty();
+            return isInFavMatcher.group(1).equals("icon-star-on");
         } else {
             return null;
         }
