@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
+import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -97,10 +98,15 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
         });
         jvcWebView.setWebChromeClient(new WebChromeClient());
         jvcWebView.getSettings().setJavaScriptEnabled(true);
+        jvcWebView.getSettings().setDomStorageEnabled(true);
         Undeprecator.webSettingsSetSaveFormData(jvcWebView.getSettings(), false);
         Undeprecator.webSettingsSetSavePassword(jvcWebView.getSettings(), false);
         jvcWebView.clearCache(true);
         jvcWebView.clearHistory();
+
+        // Clears HTML5, SQL and JS cache (DOM storage).
+        // Disables dark mode as a side effect, however.
+        WebStorage.getInstance().deleteAllData();
 
         jvcWebView.loadUrl("https://www.jeuxvideo.com/login");
 
