@@ -226,7 +226,7 @@ public class JVCForumAdapter extends BaseAdapter {
             case "topic-removed":
                 holder.topicIcon.setImageDrawable(iconGhost);
                 break;
-            case "topic-message":
+            case "message":
                 holder.topicIcon.setVisibility(View.INVISIBLE);
                 break;
             case "topic-folder1":
