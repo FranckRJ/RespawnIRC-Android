@@ -94,7 +94,7 @@ public final class JVCParser {
     private static final Pattern realSurveyContentPattern = Pattern.compile("\"html\":\"(.*?)\"\\}");
     private static final Pattern numberOfMpJVCPattern = Pattern.compile("<div class=\".*?headerAccount--pm.*?\">[^<]*<span[^c]*class=\"headerAccount__pm[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
     private static final Pattern numberOfNotifJVCPattern = Pattern.compile("<div class=\".*?headerAccount--notif.*?\">[^<]*<span[^c]*class=\"headerAccount__notif[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
-    private static final Pattern numberOfConnectedPattern = Pattern.compile("<span class=\"nb-connect-fofo\">([^<]*)</span>");
+    private static final Pattern numberOfConnectedPattern = Pattern.compile("<span class=\"nb-connect-fofo\"><i class=\"icon-people\"></i>([^<]*)</span>");
     private static final Pattern listOfModeratorsPattern = Pattern.compile("<span class=\"liste-modo-fofo\">(.*?)</span>", Pattern.DOTALL);
     private static final Pattern overlyJVCQuotePattern = Pattern.compile("(<(/)?blockquote>)");
     private static final Pattern overlyBetterQuotePattern = Pattern.compile("<(/)?blockquote>");
@@ -735,7 +735,7 @@ public final class JVCParser {
         Matcher numberOfConnectedMatcher = numberOfConnectedPattern.matcher(pageSource);
 
         if (numberOfConnectedMatcher.find()) {
-            return numberOfConnectedMatcher.group(1);
+            return numberOfConnectedMatcher.group(1).trim();
         } else {
             return "";
         }
