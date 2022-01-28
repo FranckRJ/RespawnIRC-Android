@@ -22,7 +22,7 @@ public final class JVCParser {
     private static final Pattern ajaxPrefHashPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_hash_preference_user\" id=\"ajax_hash_preference_user\" value=\"([^\"]*)\" />");
     private static final Pattern ajaxSubHashPattern = Pattern.compile("<body *data-abo-session=\"([^\"]*)\">");
     private static final Pattern messageQuotePattern = Pattern.compile("\"txt\":\"(.*)\"", Pattern.DOTALL);
-    private static final Pattern entireMessagePattern = Pattern.compile("(<div class=\"bloc-message-forum[^\"]*\".*?)(<span id=\"post_[^\"]*\" class=\"bloc-message-forum-anchor\">|<div class=\"bloc-outils-plus-modo bloc-outils-bottom\">|<div class=\"bloc-pagi-default[^\"]*\">)", Pattern.DOTALL);
+    private static final Pattern entireMessagePattern = Pattern.compile("(<div class=\"bloc-message-forum[^\"]*\".*?)(<span id=\"post_[^\"]*\" class=\"bloc-message-forum-anchor\">|<div class=\"bloc-outils-plus-modo bloc-outils-bottom[^\"]*\">|<div class=\"bloc-pagi-default[^\"]*\">)", Pattern.DOTALL);
     private static final Pattern entireMessageInPermalinkPattern = Pattern.compile("(<div class=\"bloc-message-forum[^\"]*\".*?)<div class=\"bloc-return-topic\">", Pattern.DOTALL);
     private static final Pattern topicLinkInPermalinkPattern = Pattern.compile("<div class=\"bloc-return-topic\">[^<]*<a href=\"([^\"]*)");
     private static final Pattern signaturePattern = Pattern.compile("<div class=\"signature-msg[^\"]*\">(.*)", Pattern.DOTALL);
@@ -42,7 +42,7 @@ public final class JVCParser {
     private static final Pattern modoConnectFormPattern = Pattern.compile("(<form role=\"form\" action=\"\" method=\"post\" id=\"form_connexion\" class=\"form-connect-jv\" autocomplete=\"off\">.*?</form>)", Pattern.DOTALL);
     private static final Pattern inputFormPattern = Pattern.compile("<input (type|name|value)=\"([^\"]*)\" (type|name|value)=\"([^\"]*)\" (type|name|value)=\"([^\"]*)\"/>");
     private static final Pattern dateMessagePattern = Pattern.compile("<div class=\"bloc-date-msg\">([^<]*<span class=\"JvCare [^ ]* lien-jv\" target=\"_blank\">)?[^a-zA-Z0-9]*([^ ]* [^ ]* [^ ]* [^ ]* ([0-9:]*))");
-    private static final Pattern messageIdPattern = Pattern.compile("<div class=\"bloc-message-forum[^\"]*\" data-id=\"([^\"]*)\">");
+    private static final Pattern messageIdPattern = Pattern.compile("<div class=\"bloc-message-forum[^\"]*\" data-id=\"([0-9]*)[^\"]*\">");
     private static final Pattern unicodeInTextPattern = Pattern.compile("\\\\u([a-zA-Z0-9]{4})");
     private static final Pattern alertPattern = Pattern.compile("<div class=\"alert-row\">([^<]*)</div>");
     private static final Pattern errorBlocPattern = Pattern.compile("<div class=\"bloc-erreur\">([^<]*)</div>");
@@ -92,8 +92,8 @@ public final class JVCParser {
     /* Parce que c'est faux, l'échappement n'est pas redondant s'il est supprimé la regexp est invalide. */
     @SuppressWarnings("RegExpRedundantEscape")
     private static final Pattern realSurveyContentPattern = Pattern.compile("\"html\":\"(.*?)\"\\}");
-    private static final Pattern numberOfMpJVCPattern = Pattern.compile("<div class=\".*?account-mp.*?\">[^<]*<span[^c]*class=\"jv-account-number-mp[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
-    private static final Pattern numberOfNotifJVCPattern = Pattern.compile("<div class=\".*?account-notif.*?\">[^<]*<span[^c]*class=\"jv-account-number-notif[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
+    private static final Pattern numberOfMpJVCPattern = Pattern.compile("<div class=\".*?headerAccount--pm.*?\">[^<]*<span[^c]*class=\"headerAccount__pm[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
+    private static final Pattern numberOfNotifJVCPattern = Pattern.compile("<div class=\".*?headerAccount--notif.*?\">[^<]*<span[^c]*class=\"headerAccount__notif[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
     private static final Pattern numberOfConnectedPattern = Pattern.compile("<span class=\"nb-connect-fofo\">([^<]*)</span>");
     private static final Pattern listOfModeratorsPattern = Pattern.compile("<span class=\"liste-modo-fofo\">(.*?)</span>", Pattern.DOTALL);
     private static final Pattern overlyJVCQuotePattern = Pattern.compile("(<(/)?blockquote>)");
