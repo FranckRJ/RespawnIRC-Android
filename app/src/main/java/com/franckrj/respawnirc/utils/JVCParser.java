@@ -23,10 +23,10 @@ public final class JVCParser {
     private static final Pattern ajaxSubHashPattern = Pattern.compile("<body *data-abo-session=\"([^\"]*)\">");
     private static final Pattern messageQuotePattern = Pattern.compile("\"txt\":\"(.*)\"", Pattern.DOTALL);
     private static final Pattern entireMessagePattern = Pattern.compile("(<div class=\"bloc-message-forum[^\"]*\".*?)(<span id=\"post_[^\"]*\" class=\"bloc-message-forum-anchor\">|<div class=\"bloc-outils-plus-modo bloc-outils-bottom[^\"]*\">|<div class=\"bloc-pagi-default[^\"]*\">)", Pattern.DOTALL);
-    private static final Pattern entireMessageInPermalinkPattern = Pattern.compile("(<div class=\"bloc-message-forum[^\"]*\".*?)<div class=\"bloc-return-topic\">", Pattern.DOTALL);
-    private static final Pattern topicLinkInPermalinkPattern = Pattern.compile("<div class=\"bloc-return-topic\">[^<]*<a href=\"([^\"]*)");
+    private static final Pattern entireMessageInPermalinkPattern = Pattern.compile("(<div class=\"bloc-message-forum[^\"]*\".*?)(<div class=\"bloc-return-topic[^\"]*\">)", Pattern.DOTALL);
+    private static final Pattern topicLinkInPermalinkPattern = Pattern.compile("(<div class=\"bloc-return-topic[^\"]*\">)[^<]*<a href=\"([^\"]*)");
     private static final Pattern signaturePattern = Pattern.compile("<div class=\"signature-msg[^\"]*\">(.*)", Pattern.DOTALL);
-    private static final Pattern avatarPattern = Pattern.compile("<img src=\"[^\"]*\" data-src=\"(https?:)?//([^\"]*)\" class=\"user-avatar-msg js-lazy\"", Pattern.DOTALL);
+    private static final Pattern avatarPattern = Pattern.compile("<img src=\"[^\"]*\" data-src=\"(https?:)?//([^\"]*)\" class=\"user-avatar-msg js-lazy avatar\"", Pattern.DOTALL);
     private static final Pattern entireTopicPattern = Pattern.compile("<li (class=\"[^\"]*\" data-id=\"[^\"]*\"|class=\"message[^\"]*\")>.*?<span class=\"topic-subject\">.*?</li>", Pattern.DOTALL);
     private static final Pattern pseudoIsBlacklistedPattern = Pattern.compile("<div class=\"bloc-message-forum msg-pseudo-blacklist[^\"]*\" data-id=\"");
     private static final Pattern messageIsDeletedPattern = Pattern.compile("<div class=\"bloc-message-forum msg-supprime[^\"]*\" data-id=\"");
@@ -140,6 +140,8 @@ public final class JVCParser {
 
         if (urlToChange.startsWith("https://m.jeuxvideo.com/")) {
             urlToChange = "https://www.jeuxvideo.com/" + urlToChange.substring(("https://m.jeuxvideo.com/").length());
+        } else if (urlToChange.startsWith("https://api.jeuxvideo.com/")) {
+            urlToChange = "https://www.jeuxvideo.com/" + urlToChange.substring(("https://api.jeuxvideo.com/").length());
         } else if (urlToChange.startsWith("https://jeuxvideo.com/")) {
             urlToChange = "https://www.jeuxvideo.com/" + urlToChange.substring(("https://jeuxvideo.com/").length());
         }
@@ -174,7 +176,7 @@ public final class JVCParser {
             }
         }
 
-        return "http://image.noelshack.com/fichiers/" + baseLink;
+        return "https://image.noelshack.com/fichiers/" + baseLink;
     }
 
     public static boolean checkIfItsNoelshackLink(String linkToCheck) {
@@ -1383,7 +1385,7 @@ public final class JVCParser {
         Matcher topicLinkMatcher = topicLinkInPermalinkPattern.matcher(sourcePage);
 
         if (topicLinkMatcher.find()) {
-            return "https://www.jeuxvideo.com" + topicLinkMatcher.group(1);
+            return "https://www.jeuxvideo.com" + topicLinkMatcher.group(2);
         }
 
         return "";
@@ -2081,9 +2083,9 @@ public final class JVCParser {
             String imageLink = noelshackToDirectLink(baseString);
 
             if (useFichierXsForPng && imageLink.endsWith(".png")) {
-                imageLink = "http://image.noelshack.com/fichiers-xs/" + imageLink.substring(("http://image.noelshack.com/fichiers/").length());
+                imageLink = "https://image.noelshack.com/fichiers-xs/" + imageLink.substring(("https://image.noelshack.com/fichiers/").length());
             } else {
-                imageLink = "http://image.noelshack.com/minis/" + imageLink.substring(("http://image.noelshack.com/fichiers/").length());
+                imageLink = "https://image.noelshack.com/minis/" + imageLink.substring(("https://image.noelshack.com/fichiers/").length());
                 imageLink = imageLink.substring(0, imageLink.lastIndexOf(".")) + ".png";
             }
 
