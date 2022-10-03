@@ -29,7 +29,7 @@ public final class JVCParser {
     private static final Pattern avatarPattern = Pattern.compile("<img src=\"[^\"]*\" data-src=\"(https?:)?//([^\"]*)\" class=\"user-avatar-msg js-lazy avatar\"", Pattern.DOTALL);
     private static final Pattern entireTopicPattern = Pattern.compile("<li (class=\"[^\"]*\" data-id=\"[^\"]*\"|class=\"message[^\"]*\")>.*?<span class=\"topic-subject\">.*?</li>", Pattern.DOTALL);
     private static final Pattern pseudoIsBlacklistedPattern = Pattern.compile("<div class=\"bloc-message-forum msg-pseudo-blacklist[^\"]*\" data-id=\"");
-    private static final Pattern messageIsDeletedPattern = Pattern.compile("<div class=\"bloc-message-forum msg-supprime[^\"]*\" data-id=\"");
+    private static final Pattern messageIsDeletedPattern = Pattern.compile("<div class=\"bloc-message-forum.*msg-supprime[^\"]*\" data-id=\"");
     private static final Pattern userCanDeleteOrRestoreMessagePattern = Pattern.compile("<span class=\"picto-msg-(croix|restaurer)\" title=\"(Supprimer|Restaurer)\" data-type=\"(delete|restore)\">");
     private static final Pattern userCanEditMessagePattern = Pattern.compile("<span class=\"picto-msg-crayon\" title=\"Editer\">");
     private static final Pattern userCanKickOrDekickAuthorPattern = Pattern.compile("<span class=\"picto-msg-(kick|dekick)\" title=\"(Kicker|Dékicker)\" data-id-alias=\"[^\"]*\">");
