@@ -99,7 +99,7 @@ public class StickerConverter {
             stickerIdToReplace = newBaseStickerId;
 
             if (itsAConvertToSmiley) {
-                replacement = "<img src=\"http://image.jeuxvideo.com/smileys_img/" + replacementString + "\" alt=\"\" data-code=\"\" title=\"\" />";
+                replacement = "<img src=\"https://image.jeuxvideo.com/smileys_img/" + replacementString + "\" alt=\"\" data-code=\"\" title=\"\" />";
             } else {
                 replacement = "<img class=\"img-stickers\" src=\"" + replacementString + "\"/>";
             }

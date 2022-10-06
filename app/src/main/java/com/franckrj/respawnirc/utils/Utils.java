@@ -117,12 +117,12 @@ public class Utils {
     }
 
     public static String imageLinkToFileName(String link) {
-        if (link.startsWith("http://image.noelshack.com/minis/")) {
-            return "nlsk_mini/" + link.substring(("http://image.noelshack.com/minis/").length()).replace("/", "_");
-        } else if (link.startsWith("http://image.noelshack.com/fichiers-xs/")) {
-            return "nlsk_xs/" + link.substring(("http://image.noelshack.com/fichiers-xs/").length()).replace("/", "_");
-        } else if (link.startsWith("http://image.noelshack.com/fichiers/")) {
-            return "nlsk_big/" + link.substring(("http://image.noelshack.com/fichiers/").length()).replace("/", "_");
+        if (link.startsWith("https://image.noelshack.com/minis/")) {
+            return "nlsk_mini/" + link.substring(("https://image.noelshack.com/minis/").length()).replace("/", "_");
+        } else if (link.startsWith("https://image.noelshack.com/fichiers-xs/")) {
+            return "nlsk_xs/" + link.substring(("https://image.noelshack.com/fichiers-xs/").length()).replace("/", "_");
+        } else if (link.startsWith("https://image.noelshack.com/fichiers/")) {
+            return "nlsk_big/" + link.substring(("https://image.noelshack.com/fichiers/").length()).replace("/", "_");
         } else if (link.startsWith("https://image.jeuxvideo.com/avatar")) {
             return "vtr_sm/" + link.substring(("https://image.jeuxvideo.com/avatar").length()).replace("/", "_");
         } else if (link.startsWith("http://image.jeuxvideo.com/avatar")) {
