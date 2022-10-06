@@ -96,7 +96,7 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
 
     public SearchTopicInForumActivity() {
         pageNavigation = new PageNavigationUtil(this);
-        pageNavigation.setLastPageNumber(100);
+        pageNavigation.setLastPageNumber(250);
     }
 
     public void performSearch(boolean initiatedBySearchButton) {
