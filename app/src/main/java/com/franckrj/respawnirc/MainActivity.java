@@ -5,10 +5,10 @@ import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.webkit.WebView;
 
+import com.franckrj.respawnirc.base.AbsBaseActivity;
 import com.franckrj.respawnirc.jvcforum.SearchTopicInForumActivity;
 import com.franckrj.respawnirc.jvcforumlist.SelectForumInListActivity;
 import com.franckrj.respawnirc.jvcforum.ShowForumActivity;
@@ -22,49 +22,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AbsBaseActivity {
     public static final int ACTIVITY_SHOW_FORUM = 0;
     public static final int ACTIVITY_SHOW_TOPIC = 1;
     public static final int ACTIVITY_SELECT_FORUM_IN_LIST = 2;
 
     public static final String ACTION_OPEN_SHORTCUT = "com.franckrj.respawnirc.ACTION_OPEN_SHORTCUT";
-
-    private void manageWebViewCache() {
-        //vidage du cache des webviews
-        if (PrefsManager.getInt(PrefsManager.IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED) > 10) {
-            WebView obj = new WebView(this);
-            obj.clearCache(true);
-            PrefsManager.putInt(PrefsManager.IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED, 0);
-            PrefsManager.applyChanges();
-        }
-    }
-
-    private void manageThisImageCache(String cacheName, int imageNbLimit) {
-        File cacheDir = new File(getCacheDir().getPath() + "/" + cacheName);
-        if (!cacheDir.exists()) {
-            //noinspection ResultOfMethodCallIgnored
-            cacheDir.mkdirs();
-        }
-        File[] listOfImagesCached = cacheDir.listFiles();
-        if (listOfImagesCached != null) {
-            if (listOfImagesCached.length > imageNbLimit) {
-                for (File thisFile : listOfImagesCached) {
-                    if (!thisFile.isDirectory()) {
-                        //noinspection ResultOfMethodCallIgnored
-                        thisFile.delete();
-                    }
-                }
-            }
-        }
-    }
-
-    private void manageImagesCache() {
-        manageThisImageCache("nlsk_mini", 500);
-        manageThisImageCache("nlsk_xs", 200);
-        manageThisImageCache("nlsk_md", 20);
-        manageThisImageCache("nlsk_big", 5);
-        manageThisImageCache("vtr_sm", 500);
-    }
 
     private void manageShortcuts() {
         if (Build.VERSION.SDK_INT >= 25) {

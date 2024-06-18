@@ -411,6 +411,12 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        manageImagesCache();
+    }
+
     private static class GetMessageToShow extends AbsWebRequestAsyncTask<String, Void, MessageShowedStatusInfos> {
         @Override
         protected MessageShowedStatusInfos doInBackground(String... params) {
