@@ -44,7 +44,7 @@ public final class JVCParser {
     private static final Pattern dateMessagePattern = Pattern.compile("<div class=\"bloc-date-msg\">([^<]*<span class=\"JvCare [^ ]* lien-jv\" target=\"_blank\">)?[^a-zA-Z0-9]*([^ ]* [^ ]* [^ ]* [^ ]* ([0-9:]*))");
     private static final Pattern messageIdPattern = Pattern.compile("<div class=\"bloc-message-forum[^\"]*\" data-id=\"([0-9]*)[^\"]*\">");
     private static final Pattern unicodeInTextPattern = Pattern.compile("\\\\u([a-zA-Z0-9]{4})");
-    private static final Pattern alertPattern = Pattern.compile("<div class=\"alert-row\">([^<]*)</div>");
+    private static final Pattern alertPattern = Pattern.compile("<div class=\"alert alert-danger[^\"]*\">.*?<p class=\"([^\"]*)\">([^<]*)</p>.*?</div>", Pattern.DOTALL);
     private static final Pattern errorBlocPattern = Pattern.compile("<div class=\"bloc-erreur\">([^<]*)</div>");
     private static final Pattern errorInJsonModePattern = Pattern.compile("\"(erreur|error)(s)?\":(\\[)?\"([^\"]*)\"");
     private static final Pattern subIdInJsonPattern = Pattern.compile("\"id-abonnement\":([0-9]*)");
@@ -802,7 +802,7 @@ public final class JVCParser {
         Matcher errorMatcher = alertPattern.matcher(pageSource);
 
         if (errorMatcher.find()) {
-            return "Erreur : " + specialCharToNormalChar(errorMatcher.group(1)).trim();
+            return "Erreur : " + specialCharToNormalChar(errorMatcher.group(2)).trim();
         } else {
             return "Erreur : le message n'a pas été envoyé.";
         }
@@ -817,13 +817,13 @@ public final class JVCParser {
             Matcher alertMatcher = alertPattern.matcher(pageSource);
 
             if (alertMatcher.find()) {
-                if (!alertMatcher.group(1).trim().isEmpty()) {
+                if (!alertMatcher.group(2).trim().isEmpty()) {
                     return "";
                 }
             }
         }
 
-        return "Erreur : la connexion à échouée.";
+        return "Erreur : la connexion a échoué.";
     }
 
     public static String getErrorMessageInJsonMode(String pageSource) {
