@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private void manageImagesCache() {
         manageThisImageCache("nlsk_mini", 500);
         manageThisImageCache("nlsk_xs", 200);
+        manageThisImageCache("nlsk_md", 20);
         manageThisImageCache("nlsk_big", 5);
         manageThisImageCache("vtr_sm", 500);
     }

@@ -121,6 +121,8 @@ public class Utils {
             return "nlsk_mini/" + link.substring(("https://image.noelshack.com/minis/").length()).replace("/", "_");
         } else if (link.startsWith("https://image.noelshack.com/fichiers-xs/")) {
             return "nlsk_xs/" + link.substring(("https://image.noelshack.com/fichiers-xs/").length()).replace("/", "_");
+        } else if (link.startsWith("https://image.noelshack.com/fichiers-md/")) {
+            return "nlsk_md/" + link.substring(("https://image.noelshack.com/fichiers-md/").length()).replace("/", "_");
         } else if (link.startsWith("https://image.noelshack.com/fichiers/")) {
             return "nlsk_big/" + link.substring(("https://image.noelshack.com/fichiers/").length()).replace("/", "_");
         } else if (link.startsWith("https://image.jeuxvideo.com/avatar")) {
