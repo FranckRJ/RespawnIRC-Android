@@ -140,8 +140,13 @@ public abstract class AbsJVCTopicGetter {
         boolean pageDownloadedIsAnalysable = true;
 
         if (!newPageInfos.newUrlForTopicPage.isEmpty()) {
+            // 2024-06-18 : Les IDs dans l'adresse URL des topics pré-Respawn ne correspondent plus entre la liste des sujets et le topic en lui-même.
+            //              Précédemment, le code vérifiait que l'ID entre la page demandée et la page reçue correspondent.
+            //              Quand un topic n'existe pas, le site redirige vers la page principale des forums.
+            //              Il me semble donc correct de seulement vérifier si l'ID existe plutôt que son égalité.
+            //              Si le topic n'existe pas, l'ID sera vide suite à la redirection donc ce code fonctionne quand même. -Fox
             if (JVCParser.checkIfItsTopicFormatedLink(newPageInfos.newUrlForTopicPage)
-                    && Utils.stringsAreEquals(JVCParser.getTopicIdOfThisTopic(urlForTopicPage), JVCParser.getTopicIdOfThisTopic(newPageInfos.newUrlForTopicPage))) {
+                    && !Utils.stringIsEmptyOrNull(JVCParser.getTopicIdOfThisTopic(urlForTopicPage)) && !Utils.stringIsEmptyOrNull(JVCParser.getTopicIdOfThisTopic(newPageInfos.newUrlForTopicPage))) {
                 if (JVCParser.getPageNumberForThisTopicLink(urlForTopicPage).equals(JVCParser.getPageNumberForThisTopicLink(newPageInfos.newUrlForTopicPage))) {
                     urlForTopicPage = newPageInfos.newUrlForTopicPage;
                     if (listenerForTopicLinkChanged != null) {
@@ -152,6 +157,8 @@ public abstract class AbsJVCTopicGetter {
                     pageDownloadedIsAnalysable = false;
                 }
             } else {
+                System.err.println(JVCParser.getTopicIdOfThisTopic(urlForTopicPage));
+                System.err.println(JVCParser.getTopicIdOfThisTopic(newPageInfos.newUrlForTopicPage));
                 lastTypeOfError = ErrorType.TOPIC_DOES_NOT_EXIST;
                 pageDownloadedIsAnalysable = false;
             }
