@@ -102,6 +102,7 @@ public final class JVCParser {
     private static final Pattern longJvcLinkPattern = Pattern.compile("<a +title=\"[^\"]*\" +href=\"([^\"]*)\"[^>]*>[^<]*<i></i><span>[^<]*</span>[^<]*</a>");
     private static final Pattern shortLinkPattern = Pattern.compile("<span +class=\"JvCare [^\"]*\"[^>]*?target=\"_blank\"[^>]*>([^<]*)</span>");
     private static final Pattern longLinkPattern = Pattern.compile("<span +class=\"JvCare [^\"]*\"[^i]*itle=\"([^\"]*)\"[^>]*>[^<]*<i></i><span>[^<]*</span>[^<]*</span>");
+    private static final Pattern alloCineLinkPattern = Pattern.compile("<a +target=\"[^\"]*\" +title=\"[^\"]*\" +href=\"([^\"]*)\"[^>]*>[^<]*<i></i><span>[^<]*</span>[^<]*</a>");
     private static final Pattern textLinkPattern = Pattern.compile("http(s)?://[a-zA-Z0-9/%._~!$&'()*+,;=:@?#-]*(?![^<>]*(>|</a>))", Pattern.CASE_INSENSITIVE);
     private static final Pattern smileyPattern = Pattern.compile("<img src=\"http(s)?://image\\.jeuxvideo\\.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-code=\"([^\"]*)\" title=\"[^\"]*\" [^>]*>");
     private static final Pattern embedVideoPattern = Pattern.compile("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe.*?src=\"([^\"]*)\"[^>]*></iframe></div></div>");
@@ -1122,6 +1123,7 @@ public final class JVCParser {
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longJvcLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, alloCineLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
 
         if (settings.hideUglyImages && !showUglyImages) {
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 0, "", "", new SuppressIfContainUglyNames(), null);
