@@ -324,6 +324,7 @@
     <string name="accountList">Liste des comptes</string>
     <string name="noAccountInList">La liste des comptes est vide.</string>
     <string name="mainForum">Forum principal</string>
+    <string name="enableNiveauModeForum">Afficher les niveaux</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>

@@ -114,6 +114,7 @@ public final class JVCParser {
     private static final Pattern userCanLockOrUnlockTopicPattern = Pattern.compile("<span class=\"btn btn-forum-modo btn-lock-topic\" data-type=\"(un)?lock\">");
     private static final Pattern userCanPinOrUnpinTopicPattern = Pattern.compile("<span class=\"btn btn-forum-modo btn-epingle-topic\" data-type=\"(des)?epingle\">");
     private static final Pattern uglyImagesNamePattern = Pattern.compile("issou|risi|rizi|jesus|picsart|chancla|larry|sermion");
+    private static final Pattern jvcNiveauPattern = Pattern.compile("<div +class=\"bloc-user-level[^\"]*\">(.*?)Niveau ([0-9]*)(.*?)</div>", Pattern.DOTALL);
     private static final Pattern adPattern = Pattern.compile("<ins[^>]*></ins>");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
     private static final Pattern multipleSpacesPattern = Pattern.compile(" +");
@@ -1045,6 +1046,14 @@ public final class JVCParser {
         ToolForParsing.replaceStringByAnother(newFirstLine, "<%DATE_FULL%>", thisMessageInfo.wholeDate);
         ToolForParsing.replaceStringByAnother(newFirstLine, "<%PSEUDO_PSEUDO%>", (thisMessageInfo.pseudoIsBlacklisted ? "Auteur blacklisté" : thisMessageInfo.pseudo));
 
+        if(settings.enableNiveauModeForum && !Utils.stringIsEmptyOrNull(thisMessageInfo.niveau)) {
+            ToolForParsing.replaceStringByAnother(newFirstLine, "<%NIVEAU_LINE%>", "<br>Niveau " + thisMessageInfo.niveau);
+        }
+        else
+        {
+            ToolForParsing.replaceStringByAnother(newFirstLine, "<%NIVEAU_LINE%>", "");
+        }
+
         if (thisMessageInfo.isAnEdit) {
             ToolForParsing.replaceStringByAnother(newFirstLine, "<%DATE_COLOR_START%>", "<font color=\"#008000\">");
             ToolForParsing.replaceStringByAnother(newFirstLine, "<%DATE_COLOR_END%>", "</font>");
@@ -1233,6 +1242,7 @@ public final class JVCParser {
         Matcher dateMessageMatcher = dateMessagePattern.matcher(thisEntireMessage);
         Matcher lastEditMessageMatcher = lastEditMessagePattern.matcher(thisEntireMessage);
         Matcher messageIdMatcher = messageIdPattern.matcher(thisEntireMessage);
+        Matcher niveauMatcher = jvcNiveauPattern.matcher(thisEntireMessage);
 
         newMessageInfo.pseudoIsBlacklisted = pseudoIsBlacklistedMatcher.find();
         newMessageInfo.messageIsDeleted = messageIsDeletedMatcher.find();
@@ -1272,6 +1282,10 @@ public final class JVCParser {
         if (dateMessageMatcher.find()) {
             newMessageInfo.dateTime = dateMessageMatcher.group(3);
             newMessageInfo.wholeDate = dateMessageMatcher.group(2);
+        }
+
+        if(niveauMatcher.find()) {
+            newMessageInfo.niveau = niveauMatcher.group(2);
         }
 
         if (messageMatcher.find()) {
@@ -1704,6 +1718,7 @@ public final class JVCParser {
         public String messageNotParsed = "";
         public String signatureNotParsed = "";
         public String avatarLink = "";
+        public String niveau = "";
         public String dateTime = "";
         public String wholeDate = "";
         public String lastTimeEdit = "";
@@ -2180,6 +2195,7 @@ public final class JVCParser {
         public boolean shortenLongLink = false;
         public boolean hideUglyImages = false;
         public boolean enableAlphaInNoelshackMini = false;
+        public boolean enableNiveauModeForum = true;
     }
 
     private static class SpoilTagsInfos {

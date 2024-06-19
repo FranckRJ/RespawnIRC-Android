@@ -165,6 +165,13 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
 
         try {
             avatarSizeInDP = PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.AVATAR_SIZE);
+            if(PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_NIVEAU_MODE_FORUM)) {
+                PrefsManager.StringPref avatarSizePref = PrefsManager.getStringInfos(getContext().getString(R.string.settingsAvatarSize));
+                int minValWithNiveaux = avatarSizePref.minVal + 15;
+                if(avatarSizeInDP < minValWithNiveaux) {
+                    avatarSizeInDP = minValWithNiveaux;
+                }
+            }
         } catch (Exception e) {
             avatarSizeInDP = -1;
         }
@@ -200,6 +207,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         currentSettings.pseudoOfUser = AccountManager.getCurrentAccount().pseudo;
         currentSettings.typeOfPseudoToColorInInfoLine.setTypeFromString(PrefsManager.getString(PrefsManager.StringPref.Names.TYPE_OF_PSEUDO_TO_COLOR_IN_INFO));
         currentSettings.typeOfPseudoToColorInMessage.setTypeFromString(PrefsManager.getString(PrefsManager.StringPref.Names.TYPE_OF_PSEUDO_TO_COLOR_IN_MESSAGE));
+        currentSettings.enableNiveauModeForum = PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_NIVEAU_MODE_FORUM);
         absGetterForTopic.setCookieListInAString(AccountManager.getCurrentAccount().cookie);
         smoothScrollIsEnabled = PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_SMOOTH_SCROLL);
         adapterForTopic.setShowSpoilDefault(PrefsManager.getBool(PrefsManager.BoolPref.Names.DEFAULT_SHOW_SPOIL_VAL));
