@@ -157,8 +157,6 @@ public abstract class AbsJVCTopicGetter {
                     pageDownloadedIsAnalysable = false;
                 }
             } else {
-                System.err.println(JVCParser.getTopicIdOfThisTopic(urlForTopicPage));
-                System.err.println(JVCParser.getTopicIdOfThisTopic(newPageInfos.newUrlForTopicPage));
                 lastTypeOfError = ErrorType.TOPIC_DOES_NOT_EXIST;
                 pageDownloadedIsAnalysable = false;
             }
