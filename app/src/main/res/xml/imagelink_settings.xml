@@ -8,7 +8,7 @@
             android:key="@string/settingsAvatarSize"
             android:numeric="integer"
             android:title="@string/avatarSizeTitle"
-            app:summary="\n(Si les niveaux sont activés, le minimum est 55.)" />
+            app:summary="@string/avatarSizeNiveauSummary" />
 
         <EditTextPreference
             android:key="@string/settingsStickerSize"
