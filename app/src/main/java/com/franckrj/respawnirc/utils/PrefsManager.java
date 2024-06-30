@@ -116,6 +116,7 @@ public class PrefsManager {
         addBoolPref(BoolPref.Names.REFRESH_FORUM_ON_RESUME, currentContext.getString(R.string.settingsRefreshForumOnResume), false);
         addBoolPref(BoolPref.Names.ENABLE_ALPHA_IN_NOELSHACK_MINI, currentContext.getString(R.string.settingsEnableAlphaInNoelshackMini), false);
         addBoolPref(BoolPref.Names.BRIGHTEN_ALT_COLOR, currentContext.getString(R.string.settingsBrightenAltColor), false);
+        addBoolPref(BoolPref.Names.ENABLE_NIVEAU_MODE_FORUM, currentContext.getString(R.string.settingsEnableNiveauModeForum), true);
 
         addIntPref(IntPref.Names.HEADER_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsHeaderColorOfLightTheme), Undeprecator.resourcesGetColor(currentContext.getResources(), R.color.defaultHeaderColorThemeLight));
         addIntPref(IntPref.Names.PRIMARY_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsPrimaryColorOfLightTheme), 0);
@@ -334,7 +335,8 @@ public class PrefsManager {
             USE_LAST_MESSAGE_DRAFT_SAVED, USE_LAST_TOPIC_DRAFT_SAVED,
             REFRESH_FORUM_ON_RESUME,
             ENABLE_ALPHA_IN_NOELSHACK_MINI,
-            BRIGHTEN_ALT_COLOR
+            BRIGHTEN_ALT_COLOR,
+            ENABLE_NIVEAU_MODE_FORUM
         }
     }
 

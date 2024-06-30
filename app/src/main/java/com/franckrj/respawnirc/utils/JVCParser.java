@@ -44,7 +44,7 @@ public final class JVCParser {
     private static final Pattern dateMessagePattern = Pattern.compile("<div class=\"bloc-date-msg\">([^<]*<span class=\"JvCare [^ ]* lien-jv\" target=\"_blank\">)?[^a-zA-Z0-9]*([^ ]* [^ ]* [^ ]* [^ ]* ([0-9:]*))");
     private static final Pattern messageIdPattern = Pattern.compile("<div class=\"bloc-message-forum[^\"]*\" data-id=\"([0-9]*)[^\"]*\">");
     private static final Pattern unicodeInTextPattern = Pattern.compile("\\\\u([a-zA-Z0-9]{4})");
-    private static final Pattern alertPattern = Pattern.compile("<div class=\"alert-row\">([^<]*)</div>");
+    private static final Pattern alertPattern = Pattern.compile("<div class=\"alert alert-danger[^\"]*\">.*?<p class=\"([^\"]*)\">([^<]*)</p>.*?</div>", Pattern.DOTALL);
     private static final Pattern errorBlocPattern = Pattern.compile("<div class=\"bloc-erreur\">([^<]*)</div>");
     private static final Pattern errorInJsonModePattern = Pattern.compile("\"(erreur|error)(s)?\":(\\[)?\"([^\"]*)\"");
     private static final Pattern subIdInJsonPattern = Pattern.compile("\"id-abonnement\":([0-9]*)");
@@ -102,6 +102,7 @@ public final class JVCParser {
     private static final Pattern longJvcLinkPattern = Pattern.compile("<a +title=\"[^\"]*\" +href=\"([^\"]*)\"[^>]*>[^<]*<i></i><span>[^<]*</span>[^<]*</a>");
     private static final Pattern shortLinkPattern = Pattern.compile("<span +class=\"JvCare [^\"]*\"[^>]*?target=\"_blank\"[^>]*>([^<]*)</span>");
     private static final Pattern longLinkPattern = Pattern.compile("<span +class=\"JvCare [^\"]*\"[^i]*itle=\"([^\"]*)\"[^>]*>[^<]*<i></i><span>[^<]*</span>[^<]*</span>");
+    private static final Pattern alloCineLinkPattern = Pattern.compile("<a +target=\"[^\"]*\" +title=\"[^\"]*\" +href=\"([^\"]*)\"[^>]*>[^<]*<i></i><span>[^<]*</span>[^<]*</a>");
     private static final Pattern textLinkPattern = Pattern.compile("http(s)?://[a-zA-Z0-9/%._~!$&'()*+,;=:@?#-]*(?![^<>]*(>|</a>))", Pattern.CASE_INSENSITIVE);
     private static final Pattern smileyPattern = Pattern.compile("<img src=\"http(s)?://image\\.jeuxvideo\\.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-code=\"([^\"]*)\" title=\"[^\"]*\" [^>]*>");
     private static final Pattern embedVideoPattern = Pattern.compile("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe.*?src=\"([^\"]*)\"[^>]*></iframe></div></div>");
@@ -113,6 +114,7 @@ public final class JVCParser {
     private static final Pattern userCanLockOrUnlockTopicPattern = Pattern.compile("<span class=\"btn btn-forum-modo btn-lock-topic\" data-type=\"(un)?lock\">");
     private static final Pattern userCanPinOrUnpinTopicPattern = Pattern.compile("<span class=\"btn btn-forum-modo btn-epingle-topic\" data-type=\"(des)?epingle\">");
     private static final Pattern uglyImagesNamePattern = Pattern.compile("issou|risi|rizi|jesus|picsart|chancla|larry|sermion");
+    private static final Pattern jvcNiveauPattern = Pattern.compile("<div +class=\"bloc-user-level[^\"]*\">(.*?)Niveau ([0-9]*)(.*?)</div>", Pattern.DOTALL);
     private static final Pattern adPattern = Pattern.compile("<ins[^>]*></ins>");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
     private static final Pattern multipleSpacesPattern = Pattern.compile(" +");
@@ -156,7 +158,7 @@ public final class JVCParser {
             return baseLink;
         }
 
-        if (baseLink.startsWith("fichiers/") || baseLink.startsWith("fichiers-xs/") || baseLink.startsWith("minis/")) {
+        if (baseLink.startsWith("fichiers/") || baseLink.startsWith("fichiers-xs/") || baseLink.startsWith("fichiers-md/") || baseLink.startsWith("minis/")) {
             baseLink = baseLink.substring(baseLink.indexOf("/") + 1);
         } else {
             baseLink = baseLink.replaceFirst("-", "/").replaceFirst("-", "/");
@@ -801,7 +803,7 @@ public final class JVCParser {
         Matcher errorMatcher = alertPattern.matcher(pageSource);
 
         if (errorMatcher.find()) {
-            return "Erreur : " + specialCharToNormalChar(errorMatcher.group(1)).trim();
+            return "Erreur : " + specialCharToNormalChar(errorMatcher.group(2)).trim();
         } else {
             return "Erreur : le message n'a pas été envoyé.";
         }
@@ -816,13 +818,13 @@ public final class JVCParser {
             Matcher alertMatcher = alertPattern.matcher(pageSource);
 
             if (alertMatcher.find()) {
-                if (!alertMatcher.group(1).trim().isEmpty()) {
+                if (!alertMatcher.group(2).trim().isEmpty()) {
                     return "";
                 }
             }
         }
 
-        return "Erreur : la connexion à échouée.";
+        return "Erreur : la connexion a échoué.";
     }
 
     public static String getErrorMessageInJsonMode(String pageSource) {
@@ -1044,6 +1046,14 @@ public final class JVCParser {
         ToolForParsing.replaceStringByAnother(newFirstLine, "<%DATE_FULL%>", thisMessageInfo.wholeDate);
         ToolForParsing.replaceStringByAnother(newFirstLine, "<%PSEUDO_PSEUDO%>", (thisMessageInfo.pseudoIsBlacklisted ? "Auteur blacklisté" : thisMessageInfo.pseudo));
 
+        if(settings.enableNiveauModeForum && !Utils.stringIsEmptyOrNull(thisMessageInfo.niveau)) {
+            ToolForParsing.replaceStringByAnother(newFirstLine, "<%NIVEAU_LINE%>", "<br>Niveau " + thisMessageInfo.niveau);
+        }
+        else
+        {
+            ToolForParsing.replaceStringByAnother(newFirstLine, "<%NIVEAU_LINE%>", "");
+        }
+
         if (thisMessageInfo.isAnEdit) {
             ToolForParsing.replaceStringByAnother(newFirstLine, "<%DATE_COLOR_START%>", "<font color=\"#008000\">");
             ToolForParsing.replaceStringByAnother(newFirstLine, "<%DATE_COLOR_END%>", "</font>");
@@ -1122,6 +1132,7 @@ public final class JVCParser {
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longJvcLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, alloCineLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
 
         if (settings.hideUglyImages && !showUglyImages) {
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 0, "", "", new SuppressIfContainUglyNames(), null);
@@ -1231,6 +1242,7 @@ public final class JVCParser {
         Matcher dateMessageMatcher = dateMessagePattern.matcher(thisEntireMessage);
         Matcher lastEditMessageMatcher = lastEditMessagePattern.matcher(thisEntireMessage);
         Matcher messageIdMatcher = messageIdPattern.matcher(thisEntireMessage);
+        Matcher niveauMatcher = jvcNiveauPattern.matcher(thisEntireMessage);
 
         newMessageInfo.pseudoIsBlacklisted = pseudoIsBlacklistedMatcher.find();
         newMessageInfo.messageIsDeleted = messageIsDeletedMatcher.find();
@@ -1270,6 +1282,10 @@ public final class JVCParser {
         if (dateMessageMatcher.find()) {
             newMessageInfo.dateTime = dateMessageMatcher.group(3);
             newMessageInfo.wholeDate = dateMessageMatcher.group(2);
+        }
+
+        if(niveauMatcher.find()) {
+            newMessageInfo.niveau = niveauMatcher.group(2);
         }
 
         if (messageMatcher.find()) {
@@ -1702,6 +1718,7 @@ public final class JVCParser {
         public String messageNotParsed = "";
         public String signatureNotParsed = "";
         public String avatarLink = "";
+        public String niveau = "";
         public String dateTime = "";
         public String wholeDate = "";
         public String lastTimeEdit = "";
@@ -2178,6 +2195,7 @@ public final class JVCParser {
         public boolean shortenLongLink = false;
         public boolean hideUglyImages = false;
         public boolean enableAlphaInNoelshackMini = false;
+        public boolean enableNiveauModeForum = true;
     }
 
     private static class SpoilTagsInfos {

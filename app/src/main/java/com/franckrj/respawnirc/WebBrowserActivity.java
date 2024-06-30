@@ -46,6 +46,8 @@ public class WebBrowserActivity extends AbsToolbarActivity {
         setContentView(R.layout.activity_webbrowser);
         initToolbar(R.id.toolbar_webbrowser);
 
+        manageWebViewCache();
+
         String cookies = AccountManager.getCurrentAccount().cookie;
 
         /*L'ancienne COOKIES_LIST contenait deux cookies, la nouvelle n'en contient plus qu'un.*/

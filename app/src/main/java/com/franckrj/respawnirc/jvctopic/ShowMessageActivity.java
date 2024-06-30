@@ -212,6 +212,13 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
 
         try {
             avatarSizeInDP = PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.AVATAR_SIZE);
+            if(PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_NIVEAU_MODE_FORUM)) {
+                PrefsManager.StringPref avatarSizePref = PrefsManager.getStringInfos(getApplicationContext().getString(R.string.settingsAvatarSize));
+                int minValWithNiveaux = avatarSizePref.minVal + 15;
+                if(avatarSizeInDP < minValWithNiveaux) {
+                    avatarSizeInDP = minValWithNiveaux;
+                }
+            }
         } catch (Exception e) {
             avatarSizeInDP = -1;
         }
@@ -243,7 +250,7 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
         convertNoelshackLinkToDirectLink = PrefsManager.getBool(PrefsManager.BoolPref.Names.USE_DIRECT_NOELSHACK_LINK);
         showOverviewOnImageClick = PrefsManager.getBool(PrefsManager.BoolPref.Names.SHOW_OVERVIEW_ON_IMAGE_CLICK);
         fastRefreshOfImages = PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_FAST_REFRESH_OF_IMAGES);
-        currentSettings.firstLineFormat = "<b><%PSEUDO_COLOR_START%><%PSEUDO_PSEUDO%><%PSEUDO_COLOR_END%></b><small><%MARK_FOR_PSEUDO%><br>Le <%DATE_COLOR_START%><%DATE_FULL%><%DATE_COLOR_END%></small>";
+        currentSettings.firstLineFormat = "<b><%PSEUDO_COLOR_START%><%PSEUDO_PSEUDO%><%PSEUDO_COLOR_END%></b><small><%MARK_FOR_PSEUDO%><%NIVEAU_LINE%><br>Le <%DATE_COLOR_START%><%DATE_FULL%><%DATE_COLOR_END%></small>";
         currentSettings.colorPseudoUser = Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoUserColor, this));
         currentSettings.colorPseudoOther = Utils.colorToStringWithAlpha(ThemeManager.getColorInt(R.attr.themedPseudoOtherModeForumColor, this));
         currentSettings.colorPseudoModo = Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoModoColor, this));
@@ -260,6 +267,7 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
         currentSettings.pseudoOfUser = AccountManager.getCurrentAccount().pseudo;
         currentSettings.typeOfPseudoToColorInInfoLine.setTypeFromString(PrefsManager.getString(PrefsManager.StringPref.Names.TYPE_OF_PSEUDO_TO_COLOR_IN_INFO));
         currentSettings.typeOfPseudoToColorInMessage.setTypeFromString(PrefsManager.getString(PrefsManager.StringPref.Names.TYPE_OF_PSEUDO_TO_COLOR_IN_MESSAGE));
+        currentSettings.enableNiveauModeForum = PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_NIVEAU_MODE_FORUM);
         adapterForTopic.setShowSpoilDefault(PrefsManager.getBool(PrefsManager.BoolPref.Names.DEFAULT_SHOW_SPOIL_VAL));
         adapterForTopic.setColorDeletedMessages(PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_COLOR_DELETED_MESSAGES));
         adapterForTopic.setMessageFontSizeInSp(PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.MESSAGE_FONT_SIZE));
@@ -409,6 +417,12 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        manageImagesCache();
     }
 
     private static class GetMessageToShow extends AbsWebRequestAsyncTask<String, Void, MessageShowedStatusInfos> {

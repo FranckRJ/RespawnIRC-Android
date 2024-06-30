@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
         android:title="@string/avatarsAndStickers">
         <EditTextPreference
             android:key="@string/settingsAvatarSize"
+            android:numeric="integer"
             android:title="@string/avatarSizeTitle"
-            android:numeric="integer"/>
+            app:summary="@string/avatarSizeNiveauSummary" />
 
         <EditTextPreference
             android:key="@string/settingsStickerSize"

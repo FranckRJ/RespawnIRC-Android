@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.ThemeManager;
 
-public abstract class AbsThemedActivity extends AppCompatActivity {
+public abstract class AbsThemedActivity extends AbsBaseActivity {
     protected static ActivityManager.TaskDescription generalTaskDesc = null;
     protected static @ColorInt int colorUsedForGenerateTaskDesc = 0;
     protected ThemeManager.ThemeName lastThemeUsed = null;

@@ -1031,6 +1031,14 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 myActionBar.setSubtitle(Utils.applyEmojiCompatIfPossible(topicStatus.names.topic));
             }
         }
+
+        /* Certains appareils effacent le cache pendant que l'application fonctionne quand l'espace disque est bas.
+         * Il faut donc vérifier le cache à chaque rafraîchissement.
+         * Ce n'est pas le meilleur endroit mais c'est celui qui garantit que tous les rafraîchissements sont couverts.
+         * onResume()/onStart() ne conviennent que lors de l'entrée initiale sur un topic ou quand l'utilisateur
+         * revient sur l'application mais pas lors d'un rafraîchissement.
+         */
+        manageImagesCache();
     }
 
     @Override
