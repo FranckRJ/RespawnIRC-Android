@@ -1047,11 +1047,9 @@ public final class JVCParser {
         ToolForParsing.replaceStringByAnother(newFirstLine, "<%PSEUDO_PSEUDO%>", (thisMessageInfo.pseudoIsBlacklisted ? "Auteur blacklisté" : thisMessageInfo.pseudo));
 
         if(settings.enableNiveauModeForum && !Utils.stringIsEmptyOrNull(thisMessageInfo.niveau)) {
-            ToolForParsing.replaceStringByAnother(newFirstLine, "<%NIVEAU_LINE%>", "<br>Niveau " + thisMessageInfo.niveau);
-        }
-        else
-        {
-            ToolForParsing.replaceStringByAnother(newFirstLine, "<%NIVEAU_LINE%>", "");
+            ToolForParsing.replaceStringByAnother(newFirstLine, "<%NIVEAU_BLOCK%>", " (lvl " + thisMessageInfo.niveau + ")");
+        } else {
+            ToolForParsing.replaceStringByAnother(newFirstLine, "<%NIVEAU_BLOCK%>", "");
         }
 
         if (thisMessageInfo.isAnEdit) {

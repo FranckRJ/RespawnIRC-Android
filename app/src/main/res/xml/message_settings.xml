@@ -35,19 +35,16 @@
     <PreferenceCategory
         android:title="@string/settingsModeForumTitle">
         <ListPreference
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:entries="@array/choicesForConnectionReadable"
-            android:entryValues="@array/threeChoicesValue"
             android:key="@string/settingsShowAvatarModeForum"
+            android:title="@string/showAvatarTitle"
             android:summary="@string/needToBeEnabledOnJVCFirstSummaryWithString"
-            android:title="@string/showAvatarTitle" />
+            android:entries="@array/choicesForConnectionReadable"
+            android:entryValues="@array/threeChoicesValue"/>
 
         <CheckBoxPreference
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:key="@string/settingsEnableNiveauModeForum"
             android:title="@string/enableNiveauModeForum" />
+
         <CheckBoxPreference
             android:key="@string/settingsShowSignatureModeForum"
             android:title="@string/showSignatureTitle"

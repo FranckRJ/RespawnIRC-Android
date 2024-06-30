@@ -6,9 +6,8 @@
         android:title="@string/avatarsAndStickers">
         <EditTextPreference
             android:key="@string/settingsAvatarSize"
-            android:numeric="integer"
             android:title="@string/avatarSizeTitle"
-            app:summary="@string/avatarSizeNiveauSummary" />
+            android:numeric="integer"/>
 
         <EditTextPreference
             android:key="@string/settingsStickerSize"

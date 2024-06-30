@@ -165,13 +165,6 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
 
         try {
             avatarSizeInDP = PrefsManager.getStringAsInt(PrefsManager.StringPref.Names.AVATAR_SIZE);
-            if(PrefsManager.getBool(PrefsManager.BoolPref.Names.ENABLE_NIVEAU_MODE_FORUM)) {
-                PrefsManager.StringPref avatarSizePref = PrefsManager.getStringInfos(getContext().getString(R.string.settingsAvatarSize));
-                int minValWithNiveaux = avatarSizePref.minVal + 15;
-                if(avatarSizeInDP < minValWithNiveaux) {
-                    avatarSizeInDP = minValWithNiveaux;
-                }
-            }
         } catch (Exception e) {
             avatarSizeInDP = -1;
         }

@@ -98,7 +98,7 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
     protected void initializeSettings() {
         super.initializeSettings();
         showRefreshWhenMessagesShowed = true;
-        currentSettings.firstLineFormat = "<b><%PSEUDO_COLOR_START%><%PSEUDO_PSEUDO%><%PSEUDO_COLOR_END%></b><small><%MARK_FOR_PSEUDO%><%NIVEAU_LINE%><br>Le <%DATE_COLOR_START%><%DATE_FULL%><%DATE_COLOR_END%></small>";
+        currentSettings.firstLineFormat = "<b><%PSEUDO_COLOR_START%><%PSEUDO_PSEUDO%><%PSEUDO_COLOR_END%></b><small><%NIVEAU_BLOCK%><%MARK_FOR_PSEUDO%><br>Le <%DATE_COLOR_START%><%DATE_FULL%><%DATE_COLOR_END%></small>";
         currentSettings.colorPseudoUser = Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoUserColor, requireActivity()));
         currentSettings.colorPseudoOther = Utils.colorToStringWithAlpha(ThemeManager.getColorInt(R.attr.themedPseudoOtherModeForumColor, requireActivity()));
         currentSettings.colorPseudoModo = Utils.colorToString(ThemeManager.getColorInt(R.attr.themedPseudoModoColor, requireActivity()));

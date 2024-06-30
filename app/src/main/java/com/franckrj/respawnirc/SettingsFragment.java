@@ -206,17 +206,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             EditTextPreference editTextPref = (EditTextPreference) pref;
             MinMaxInfos prefMinMax = listOfMinMaxInfos.get(editTextPref.getKey());
             if (prefMinMax != null) {
-                CharSequence oldSummary = editTextPref.getSummary();
-                String newSummaryStr = "Entre " + String.valueOf(prefMinMax.min) + " et " + String.valueOf(prefMinMax.max) + " : " + editTextPref.getText();
-                if(oldSummary != null) {
-                    String oldSummaryStr = editTextPref.getSummary().toString();
-                    int newLineIndex = oldSummaryStr.indexOf(System.lineSeparator());
-                    if(newLineIndex >= 0) {
-                        newSummaryStr += oldSummaryStr.substring(newLineIndex);
-                    }
-                }
-
-                editTextPref.setSummary(newSummaryStr);
+                editTextPref.setSummary("Entre " + String.valueOf(prefMinMax.min) + " et " + String.valueOf(prefMinMax.max) + " : " + editTextPref.getText());
             }
         }
     }
