@@ -128,7 +128,8 @@ class InsertStuffDialogFragment : DialogFragment() {
                     StuffInsertableAdapter.StuffInfos(R.drawable.smiley_pave, ":pave:", -1),
                     StuffInsertableAdapter.StuffInfos(R.drawable.smiley_pf, ":pf:", -1),
                     StuffInsertableAdapter.StuffInfos(R.drawable.smiley_play, ":play:", -1),
-                    StuffInsertableAdapter.StuffInfos(R.drawable.smiley_siffle, ":siffle:", -1)
+                    StuffInsertableAdapter.StuffInfos(R.drawable.smiley_siffle, ":siffle:", -1),
+                    StuffInsertableAdapter.StuffInfos(R.drawable.smiley_opps, ":opps:", -1),
                 )
             }
             1 -> {
