@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.InputType;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,11 +48,7 @@ import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.HashMap;
-
-import android.util.Log;
 
 public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCTopicGetter.NewTopicStatusListener, JVCActionsInTopic.TopicNeedToBeReloaded,
                                                                         JVCTopicAdapter.MenuItemClickedInMessage, JVCTopicModeForumGetter.NewNumbersOfPagesListener, JVCTopicAdapter.PseudoClicked,
@@ -146,7 +140,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                     boolean messageIsSended = false;
                     if (topicStatus.listOfInputInAString != null) {
                         Map<String, String> formData = Utils.prepareMultipartFormForMessage(
-                                Html.escapeHtml(messageSendEdit.getText().toString()),
+                                messageSendEdit.getText().toString(),
                                 JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()),
                                 topicStatus.topicId,
                                 (topicStatus.userCanPostAsModo && PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE) ? "2" : "1"),

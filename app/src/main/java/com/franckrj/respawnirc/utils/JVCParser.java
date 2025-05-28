@@ -861,13 +861,6 @@ public final class JVCParser {
     }
 
     public static String getMessageEdit(String pageSource) {
-        /*Matcher messageEditInfoMatcher = messageEditInfoPattern.matcher(pageSource);
-
-        if (messageEditInfoMatcher.find()) {
-            return specialCharToNormalChar(messageEditInfoMatcher.group(4));
-        } else {
-            return "";
-        }*/
         String res = "";
 
         try

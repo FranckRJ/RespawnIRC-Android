@@ -3,9 +3,11 @@ package com.franckrj.respawnirc.utils;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.Callable;
@@ -69,7 +71,8 @@ public class WebManager {
             urlConnection.setRequestProperty("Cookie", currentInfos.cookiesInAString);
 
             if (requestMethod.equals("POST")) {
-                DataOutputStream writer = null;
+                DataOutputStream wr = null;
+                BufferedWriter writer = null;
 
                 if(currentInfos.currentUrl.contains("https://www.jeuxvideo.com/forums/message/"))
                 {
@@ -81,7 +84,6 @@ public class WebManager {
                     urlConnection.setRequestProperty("X-Requested-With", "XMLHttpRequest");
                     urlConnection.setRequestProperty("Pragma", "no-cache");
                     urlConnection.setRequestProperty("Cache-Control", "no-cache");
-                    Log.e("REQ", requestParameters);
                 }
                 else
                 {
@@ -92,8 +94,9 @@ public class WebManager {
                     urlConnection.setDoOutput(true);
                     urlConnection.setFixedLengthStreamingMode(requestParameters.getBytes().length);
 
-                    writer = new DataOutputStream(urlConnection.getOutputStream());
-                    writer.writeBytes(requestParameters);
+                    wr = new DataOutputStream(urlConnection.getOutputStream());
+                    writer = new BufferedWriter(new OutputStreamWriter(wr, "UTF-8"));
+                    writer.write(requestParameters);
                     writer.flush();
                 } catch (Exception e) {
                     //rien

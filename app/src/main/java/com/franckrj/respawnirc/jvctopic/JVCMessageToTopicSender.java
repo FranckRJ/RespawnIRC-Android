@@ -2,13 +2,9 @@ package com.franckrj.respawnirc.jvctopic;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.text.Html;
-import android.text.TextUtils;
-import android.util.Log;
 
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
-import com.franckrj.respawnirc.jvctopic.jvctopicgetters.AbsJVCTopicGetter;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
@@ -150,7 +146,7 @@ public class JVCMessageToTopicSender {
     }
 
     public void sendEditMessage(String messageEditedToSend, String cookieListInAString) {
-        formData.put("text", Html.escapeHtml(messageEditedToSend));
+        formData.put("text", messageEditedToSend);
         String req = Utils.makeMultipartFormFromMap(formData);
         sendThisMessage(messageEditedToSend, "https://www.jeuxvideo.com/forums/message/edit", req, cookieListInAString);
         //sendThisMessage(messageEditedToSend, "https://www.jeuxvideo.com/forums/ajax_edit_message.php", lastInfosForEdit, cookieListInAString);
@@ -232,16 +228,9 @@ public class JVCMessageToTopicSender {
 
                 pageContent = WebManager.sendRequestWithMultipleTrys(info[0].urlUsed, "POST", info[0].listOfInputUsed, currentWebInfos, 2);
 
-                //if (info[0].urlUsed.equals(currentWebInfos.currentUrl)) {
-                //    pageContent = "respawnirc:resendneeded";
-                //}
-
-                Log.e("BEFORE", currentWebInfos.currentUrl);
-
                 // Si le premier caractère est une accolade, c'est probablement
                 // du JSON. On vérifie.
                 if(pageContent != null && !pageContent.isEmpty() && pageContent.charAt(0) == '{') {
-                    Log.e("JSON", pageContent);
 
                     try {
                         JSONObject json = new JSONObject(pageContent);
@@ -255,15 +244,16 @@ public class JVCMessageToTopicSender {
                             pageContent = "<meta http-equiv=\"refresh\""; // HACK par flemme.
                         } else // Erreurs...
                         {
+                            pageContent = "respawnirc:error:";
+
                             if (json.has("needsCaptcha")) {
                                 boolean needsCaptcha = json.getBoolean("needsCaptcha");
                                 if (needsCaptcha) {
-                                    pageContent = "captcha";
+                                    pageContent += "captcha";
                                 }
                             }
 
                             if (!pageContent.equals("captcha")) {
-                                pageContent = "respawnirc:error:";
 
                                 if (json.has("errors")) {
                                     try {
@@ -285,7 +275,7 @@ public class JVCMessageToTopicSender {
                                 }
                                 else
                                 {
-                                    pageContent += "unknown";
+                                    pageContent += "Erreur inconnue.";
                                 }
                             }
                         }
@@ -298,9 +288,6 @@ public class JVCMessageToTopicSender {
                 {
                     pageContent = "respawnirc:error:Erreur inconnue.";
                 }
-
-                Log.e("AFTER", currentWebInfos.currentUrl);
-                Log.e("OUTTEST", pageContent);
 
                 return pageContent;
             } else {
