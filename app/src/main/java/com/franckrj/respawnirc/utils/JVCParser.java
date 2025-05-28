@@ -2,12 +2,20 @@ package com.franckrj.respawnirc.utils;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Base64;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.collection.ArraySet;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,7 +39,7 @@ public final class JVCParser {
     private static final Pattern pseudoIsBlacklistedPattern = Pattern.compile("<div class=\"bloc-message-forum msg-pseudo-blacklist[^\"]*\" data-id=\"");
     private static final Pattern messageIsDeletedPattern = Pattern.compile("<div class=\"bloc-message-forum.*msg-supprime[^\"]*\" data-id=\"");
     private static final Pattern userCanDeleteOrRestoreMessagePattern = Pattern.compile("<span class=\"picto-msg-(croix|restaurer)\" title=\"(Supprimer|Restaurer)\" data-type=\"(delete|restore)\">");
-    private static final Pattern userCanEditMessagePattern = Pattern.compile("<span class=\"picto-msg-crayon\" title=\"Editer\">");
+    private static final Pattern userCanEditMessagePattern = Pattern.compile("<span class=\"picto-msg-crayon\" title=\"Editer\"");
     private static final Pattern userCanKickOrDekickAuthorPattern = Pattern.compile("<span class=\"picto-msg-(kick|dekick)\" title=\"(Kicker|Dékicker)\" data-id-alias=\"[^\"]*\">");
     private static final Pattern pseudoInfosPattern = Pattern.compile("<span class=\"JvCare [^ ]* bloc-pseudo-msg text-([^\"]*)\" target=\"_blank\">[^a-zA-Z0-9_\\[\\]-]*([a-zA-Z0-9_\\[\\]-]*)(?:[^<]*<div class=\"bloc-genesis-pass\"><i class=\"icon-nft-badge\"></i> </div>)?[^<]*</span>");
     private static final Pattern idAliasPattern = Pattern.compile("data-id-alias=\"([0-9]+)\">");
@@ -115,6 +123,7 @@ public final class JVCParser {
     private static final Pattern userCanPinOrUnpinTopicPattern = Pattern.compile("<span class=\"btn btn-forum-modo btn-epingle-topic\" data-type=\"(des)?epingle\">");
     private static final Pattern uglyImagesNamePattern = Pattern.compile("issou|risi|rizi|jesus|picsart|chancla|larry|sermion");
     private static final Pattern jvcNiveauPattern = Pattern.compile("<div +class=\"bloc-user-level[^\"]*\">(.*?)Niveau ([0-9]*)(.*?)</div>", Pattern.DOTALL);
+    private static final Pattern formSessionPattern = Pattern.compile("<script>window\\.jvc=window\\.jvc\\|\\|\\{\\};window\\.jvc\\.forumsAppPayload=\"([^\"]*)\";</script>");
     private static final Pattern adPattern = Pattern.compile("<ins[^>]*></ins>");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
     private static final Pattern multipleSpacesPattern = Pattern.compile(" +");
@@ -852,13 +861,23 @@ public final class JVCParser {
     }
 
     public static String getMessageEdit(String pageSource) {
-        Matcher messageEditInfoMatcher = messageEditInfoPattern.matcher(pageSource);
+        /*Matcher messageEditInfoMatcher = messageEditInfoPattern.matcher(pageSource);
 
         if (messageEditInfoMatcher.find()) {
             return specialCharToNormalChar(messageEditInfoMatcher.group(4));
         } else {
             return "";
-        }
+        }*/
+        String res = "";
+
+        try
+        {
+            JSONObject json = new JSONObject(pageSource);
+            res = json.getString("jvcode");
+        } catch (JSONException ignored)
+        {}
+
+        return res;
     }
 
     public static String buildMessageQuotedInfoFromThis(MessageInfos thisMessageInfo) {
@@ -909,7 +928,8 @@ public final class JVCParser {
         Matcher ajaxSubHashMatcher = ajaxSubHashPattern.matcher(pageSource);
 
         if (ajaxListTimestampMatcher.find() && ajaxListHashMatcher.find()) {
-            newAjaxInfos.list = "ajax_timestamp=" + ajaxListTimestampMatcher.group(3) + "&ajax_hash=" + ajaxListHashMatcher.group(3);
+            newAjaxInfos.newHash = ajaxListHashMatcher.group(3);
+            newAjaxInfos.list = "ajax_timestamp=" + ajaxListTimestampMatcher.group(3) + "&ajax_hash=" + newAjaxInfos.newHash;
         }
 
         if (ajaxModTimestampMatcher.find() && ajaxModHashMatcher.find()) {
@@ -1424,6 +1444,61 @@ public final class JVCParser {
         return baseMessage.replace("&amp;", "&").replace("&quot;", "\"").replace("&#039;", "\'").replace("&lt;", "<").replace("&gt;", ">");
     }
 
+    public static FormSession getFormSession(String sourcePage, boolean isEdit)
+    {
+        FormSession res = new FormSession();
+        Matcher formSessionMatcher = formSessionPattern.matcher(sourcePage);
+        JSONObject json;
+
+        String fs_object = "formSession";
+        if(isEdit)
+            fs_object = "edit_form_session";
+
+        if(formSessionMatcher.find())
+        {
+            String base64 = formSessionMatcher.group(1);
+            try
+            {
+                JSONObject formSession;
+                byte[] decodedJson = Base64.decode(base64, Base64.DEFAULT);
+                json = new JSONObject(new String(decodedJson));
+                formSession = json.getJSONObject(fs_object);
+
+                JSONArray names = formSession.names();
+                if(names != null)
+                {
+                    for(int i = 0; i < names.length(); i++)
+                    {
+                        String key = names.getString(i);
+                        if(key.equals("fs_session"))
+                        {
+                            res.session = formSession.getString(key);
+                        }
+                        else if(key.equals("fs_timestamp"))
+                        {
+                            res.timestamp = formSession.getString(key);
+                        }
+                        else if(key.equals("fs_version"))
+                        {
+                            res.fs_version = formSession.getString(key);
+                        }
+                        else if(res.keyHash == null)
+                        {
+                            // On part du principe que c'est le fs_ + hash.
+                            // Flemme de regex.
+                            res.keyHash = key;
+                            res.valueHash = formSession.getString(key);
+                        }
+                    }
+                }
+            }
+            catch(JSONException ignored)
+            {}
+        }
+
+        return res;
+    }
+
     public static class ToolForParsing {
         private static final Pattern uolistOpenTagPattern = Pattern.compile("<(ul|ol)[^>]*>");
         private static final Pattern divOpenTagPattern = Pattern.compile("<div[^>]*>");
@@ -1664,6 +1739,7 @@ public final class JVCParser {
         public String mod = null;
         public String pref = null;
         public String sub = null;
+        public String newHash = null;
 
         public static final Parcelable.Creator<AjaxInfos> CREATOR = new Parcelable.Creator<AjaxInfos>() {
             @Override
@@ -1686,6 +1762,7 @@ public final class JVCParser {
             mod = baseForCopy.mod;
             pref = baseForCopy.pref;
             sub = baseForCopy.sub;
+            newHash = baseForCopy.newHash;
         }
 
         private AjaxInfos(Parcel in) {
@@ -1693,6 +1770,7 @@ public final class JVCParser {
             mod = in.readString();
             pref = in.readString();
             sub = in.readString();
+            newHash = in.readString();
         }
 
         @Override
@@ -1706,6 +1784,60 @@ public final class JVCParser {
             out.writeString(mod);
             out.writeString(pref);
             out.writeString(sub);
+        }
+    }
+
+    public static class FormSession implements Parcelable {
+        public String session = null;
+        public String timestamp = null;
+        public String fs_version = null;
+        public String keyHash = null;
+        public String valueHash = null;
+
+        public static final Parcelable.Creator<FormSession> CREATOR = new Parcelable.Creator<FormSession>() {
+            @Override
+            public FormSession createFromParcel(Parcel in) {
+                return new FormSession(in);
+            }
+
+            @Override
+            public FormSession[] newArray(int size) {
+                return new FormSession[size];
+            }
+        };
+
+        public FormSession() {
+            //rien
+        }
+
+        public FormSession(FormSession baseForCopy) {
+            session = baseForCopy.session;
+            timestamp = baseForCopy.timestamp;
+            fs_version = baseForCopy.fs_version;
+            keyHash = baseForCopy.keyHash;
+            valueHash = baseForCopy.valueHash;
+        }
+
+        private FormSession(Parcel in) {
+            session = in.readString();
+            timestamp = in.readString();
+            fs_version = in.readString();
+            keyHash = in.readString();
+            valueHash = in.readString();
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            out.writeString(session);
+            out.writeString(timestamp);
+            out.writeString(fs_version);
+            out.writeString(keyHash);
+            out.writeString(valueHash);
         }
     }
 

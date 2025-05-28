@@ -1,5 +1,7 @@
 package com.franckrj.respawnirc.utils;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStream;
@@ -9,7 +11,7 @@ import java.net.URL;
 import java.util.concurrent.Callable;
 
 public class WebManager {
-    public static final String userAgentString = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0";
+    public static final String userAgentString = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0) Gecko/20100101 Firefox/140.0";
 
     public static String sendRequestWithMultipleTrys(String linkToPage, String requestMethod, String requestParameters, WebInfos currentInfos, int maxNumberOfTrys) {
         int numberOfTrys = 0;
@@ -65,10 +67,26 @@ public class WebManager {
             urlConnection.setRequestProperty("User-Agent", userAgentString);
             urlConnection.setRequestProperty("Connection", "Keep-Alive");
             urlConnection.setRequestProperty("Cookie", currentInfos.cookiesInAString);
-            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
             if (requestMethod.equals("POST")) {
                 DataOutputStream writer = null;
+
+                if(currentInfos.currentUrl.contains("https://www.jeuxvideo.com/forums/message/"))
+                {
+                    String firstLine = requestParameters.substring(2, requestParameters.indexOf("\r"));
+
+                    urlConnection.setRequestProperty("Accept", "application/json");
+                    urlConnection.setRequestProperty("Accept-Language", "fr");
+                    urlConnection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + firstLine);
+                    urlConnection.setRequestProperty("X-Requested-With", "XMLHttpRequest");
+                    urlConnection.setRequestProperty("Pragma", "no-cache");
+                    urlConnection.setRequestProperty("Cache-Control", "no-cache");
+                    Log.e("REQ", requestParameters);
+                }
+                else
+                {
+                    urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                }
 
                 try {
                     urlConnection.setDoOutput(true);
@@ -104,6 +122,12 @@ public class WebManager {
                         return null;
                     }
                 }
+            }
+
+            // DEBUG
+            if(currentInfos.currentUrl.contains("ajax_edit_message"))
+            {
+                Log.w("REPEDIT", buffer.toString());
             }
 
             if (currentInfos.followRedirects) {

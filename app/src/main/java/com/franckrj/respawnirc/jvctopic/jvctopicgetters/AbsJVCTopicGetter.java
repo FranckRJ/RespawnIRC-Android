@@ -10,6 +10,8 @@ import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class AbsJVCTopicGetter {
     public static final int STATE_LOADING = 0;
@@ -118,6 +120,7 @@ public abstract class AbsJVCTopicGetter {
             newPageInfos.listOfMessages = JVCParser.getMessagesOfThisPage(pageContent);
             newPageInfos.topicStatus.listOfInputInAString = JVCParser.getListOfInputInAStringInTopicFormForThisPage(pageContent);
             newPageInfos.topicStatus.ajaxInfos = JVCParser.getAllAjaxInfos(pageContent);
+            newPageInfos.topicStatus.formSession = JVCParser.getFormSession(pageContent, false);
             newPageInfos.topicStatus.names = JVCParser.getForumAndTopicNameInTopicPage(pageContent);
             newPageInfos.topicStatus.isInFavs = JVCParser.getIsInFavsFromPage(pageContent);
             newPageInfos.topicStatus.subId = JVCParser.getSubIdInThisTopicPage(pageContent);
@@ -197,6 +200,7 @@ public abstract class AbsJVCTopicGetter {
         public String pseudoOfAuthor = "";
         public String listOfInputInAString = null;
         public JVCParser.AjaxInfos ajaxInfos = new JVCParser.AjaxInfos();
+        public JVCParser.FormSession formSession = new JVCParser.FormSession();
         public JVCParser.ForumAndTopicName names = new JVCParser.ForumAndTopicName();
         public Boolean isInFavs = null;
         public String subId = null;
@@ -229,6 +233,7 @@ public abstract class AbsJVCTopicGetter {
             pseudoOfAuthor = baseForCopy.pseudoOfAuthor;
             listOfInputInAString = baseForCopy.listOfInputInAString;
             ajaxInfos = new JVCParser.AjaxInfos(baseForCopy.ajaxInfos);
+            formSession = new JVCParser.FormSession(baseForCopy.formSession);
             names = new JVCParser.ForumAndTopicName(baseForCopy.names);
             isInFavs = baseForCopy.isInFavs;
             subId = baseForCopy.subId;
@@ -246,6 +251,7 @@ public abstract class AbsJVCTopicGetter {
             pseudoOfAuthor = in.readString();
             listOfInputInAString = in.readString();
             ajaxInfos = in.readParcelable(JVCParser.AjaxInfos.class.getClassLoader());
+            formSession = in.readParcelable(JVCParser.FormSession.class.getClassLoader());
             names.forum = in.readString();
             names.topic = in.readString();
             byte tmpIsInFav = in.readByte();
@@ -275,6 +281,7 @@ public abstract class AbsJVCTopicGetter {
             out.writeString(pseudoOfAuthor);
             out.writeString(listOfInputInAString);
             out.writeParcelable(ajaxInfos, flags);
+            out.writeParcelable(formSession, flags);
             out.writeString(names.forum);
             out.writeString(names.topic);
             if (isInFavs == null) {

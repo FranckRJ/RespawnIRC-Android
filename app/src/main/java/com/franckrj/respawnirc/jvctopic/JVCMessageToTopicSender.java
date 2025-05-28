@@ -2,12 +2,23 @@ package com.franckrj.respawnirc.jvctopic;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
+import com.franckrj.respawnirc.jvctopic.jvctopicgetters.AbsJVCTopicGetter;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.Serializable;
+import java.util.Map;
 
 public class JVCMessageToTopicSender {
     private static final String SAVE_LAST_AJAX_LIST_INFOS = "mttsSaveLastAjaxListInfos";
@@ -20,7 +31,7 @@ public class JVCMessageToTopicSender {
     private String lastAjaxListInfos = "";
     private boolean useMessageToEdit = true;
     private boolean isInEdit = false;
-    private String lastInfosForEdit = "";
+    private Map<String,String> formData = null;
     private String lastMessageIDUsedForEdit = "";
     private NewMessageWantEditListener listenerForNewMessageWantEdit = null;
     private NewMessagePostedListener listenerForNewMessagePosted = null;
@@ -37,6 +48,8 @@ public class JVCMessageToTopicSender {
             if (!Utils.stringIsEmptyOrNull(reqResult) && !reqResult.contains("<meta http-equiv=\"refresh\"")) {
                 if (reqResult.equals("respawnirc:resendneeded")) {
                     errorWhenSending = parentActivity.getString(R.string.unknownErrorPleaseRetry);
+                } else if(reqResult.startsWith("respawnirc:error:")) {
+                    errorWhenSending = reqResult.replace("respawnirc:error:", "Erreur : ");
                 } else if (!isInEdit) {
                     errorWhenSending = JVCParser.getErrorMessage(reqResult);
                 } else {
@@ -50,7 +63,6 @@ public class JVCMessageToTopicSender {
 
             if (isInEdit && !Utils.stringsAreEquals(reqResult, "respawnirc:resendneeded")) {
                 isInEdit = false;
-                lastInfosForEdit = "";
 
                 if (listenerForNewMessageWantEdit != null && errorWhenSending != null) {
                     listenerForNewMessageWantEdit.editThisMessage(lastMessageIDUsedForEdit);
@@ -67,8 +79,8 @@ public class JVCMessageToTopicSender {
 
             if (!Utils.stringIsEmptyOrNull(reqResult)) {
                 String pageResultParsed = JVCParser.parsingAjaxMessages(reqResult);
-                lastInfosForEdit += lastAjaxListInfos + "&action=post";
-                lastInfosForEdit += JVCParser.getListOfInputInAStringInTopicFormForThisPage(pageResultParsed);
+                //lastInfosForEdit += lastAjaxListInfos + "&action=post";
+                //lastInfosForEdit += JVCParser.getListOfInputInAStringInTopicFormForThisPage(pageResultParsed);
                 newMessageEdit = JVCParser.getMessageEdit(pageResultParsed);
 
                 if (newMessageEdit.isEmpty()) {
@@ -82,7 +94,15 @@ public class JVCMessageToTopicSender {
 
             if (newMessageEdit.isEmpty() || messageIsAnError) {
                 isInEdit = false;
-                lastInfosForEdit = "";
+            }
+            else
+            {
+                // C'est OK, on récupère les infos session.
+                JVCParser.FormSession fs = JVCParser.getFormSession(reqResult, true);
+                formData.put("fs_session", fs.session);
+                formData.put("fs_timestamp", fs.timestamp);
+                formData.put("fs_version", fs.fs_version);
+                formData.put(fs.keyHash, fs.valueHash);
             }
 
             if (listenerForNewMessageWantEdit != null) {
@@ -117,7 +137,7 @@ public class JVCMessageToTopicSender {
         lastAjaxListInfos = savedInstanceState.getString(SAVE_LAST_AJAX_LIST_INFOS, "");
         useMessageToEdit = savedInstanceState.getBoolean(SAVE_USE_MESSAGE_TO_EDIT, true);
         isInEdit = savedInstanceState.getBoolean(SAVE_IS_IN_EDIT, false);
-        lastInfosForEdit = savedInstanceState.getString(SAVE_LAST_INFOS_FOR_EDIT, "");
+        formData = (Map<String, String>) savedInstanceState.getSerializable(SAVE_LAST_INFOS_FOR_EDIT);
         lastMessageIDUsedForEdit = savedInstanceState.getString(SAVE_LAST_MESSAGE_ID_USED_FOR_EDIT, "");
     }
 
@@ -125,12 +145,15 @@ public class JVCMessageToTopicSender {
         savedInstanceState.putString(SAVE_LAST_AJAX_LIST_INFOS, lastAjaxListInfos);
         savedInstanceState.putBoolean(SAVE_USE_MESSAGE_TO_EDIT, useMessageToEdit);
         savedInstanceState.putBoolean(SAVE_IS_IN_EDIT, isInEdit);
-        savedInstanceState.putString(SAVE_LAST_INFOS_FOR_EDIT, lastInfosForEdit);
+        savedInstanceState.putSerializable(SAVE_LAST_INFOS_FOR_EDIT, (Serializable) formData);
         savedInstanceState.putString(SAVE_LAST_MESSAGE_ID_USED_FOR_EDIT, lastMessageIDUsedForEdit);
     }
 
     public void sendEditMessage(String messageEditedToSend, String cookieListInAString) {
-        sendThisMessage(messageEditedToSend, "https://www.jeuxvideo.com/forums/ajax_edit_message.php", lastInfosForEdit, cookieListInAString);
+        formData.put("text", Html.escapeHtml(messageEditedToSend));
+        String req = Utils.makeMultipartFormFromMap(formData);
+        sendThisMessage(messageEditedToSend, "https://www.jeuxvideo.com/forums/message/edit", req, cookieListInAString);
+        //sendThisMessage(messageEditedToSend, "https://www.jeuxvideo.com/forums/ajax_edit_message.php", lastInfosForEdit, cookieListInAString);
     }
 
     public void stopAllCurrentTask() {
@@ -152,7 +175,6 @@ public class JVCMessageToTopicSender {
     public void cancelEdit() {
         stopCurrentEditTask();
         isInEdit = false;
-        lastInfosForEdit = "";
     }
 
     public boolean sendThisMessage(String messageToSend, String urlToSend, String listOfInputToUse, String cookieListInAString) {
@@ -172,17 +194,17 @@ public class JVCMessageToTopicSender {
         }
     }
 
-    public boolean getInfosForEditMessage(String idOfMessage, String ajaxListInfos, String cookieListInAString, boolean newUseMessageToEdit) {
+    public boolean getInfosForEditMessage(String idOfMessage, String ajaxListInfos, String cookieListInAString, Map<String,String> currentFormData, boolean newUseMessageToEdit) {
         if (currentAsyncTaskForGetEditInfos == null) {
             isInEdit = true;
             lastAjaxListInfos = ajaxListInfos;
+            formData = currentFormData;
             useMessageToEdit = newUseMessageToEdit;
             lastMessageIDUsedForEdit = idOfMessage;
-            lastInfosForEdit = "&id_message=" + lastMessageIDUsedForEdit + "&";
 
             currentAsyncTaskForGetEditInfos = new GetEditJVCMessageInfos();
             currentAsyncTaskForGetEditInfos.setRequestIsFinishedListener(getEditInfosIsFinishedListener);
-            currentAsyncTaskForGetEditInfos.execute(lastMessageIDUsedForEdit, lastAjaxListInfos, cookieListInAString);
+            currentAsyncTaskForGetEditInfos.execute(lastMessageIDUsedForEdit, ajaxListInfos, cookieListInAString);
             return true;
         } else {
             return false;
@@ -208,11 +230,77 @@ public class JVCMessageToTopicSender {
                 WebManager.WebInfos currentWebInfos = initWebInfos(info[0].cookiesUsed, false);
                 String pageContent;
 
-                pageContent = WebManager.sendRequestWithMultipleTrys(info[0].urlUsed, "POST", "message_topic=" + Utils.encodeStringToUrlString(info[0].messageSended) + info[0].listOfInputUsed, currentWebInfos, 2);
+                pageContent = WebManager.sendRequestWithMultipleTrys(info[0].urlUsed, "POST", info[0].listOfInputUsed, currentWebInfos, 2);
 
-                if (info[0].urlUsed.equals(currentWebInfos.currentUrl)) {
-                    pageContent = "respawnirc:resendneeded";
+                //if (info[0].urlUsed.equals(currentWebInfos.currentUrl)) {
+                //    pageContent = "respawnirc:resendneeded";
+                //}
+
+                Log.e("BEFORE", currentWebInfos.currentUrl);
+
+                // Si le premier caractère est une accolade, c'est probablement
+                // du JSON. On vérifie.
+                if(pageContent != null && !pageContent.isEmpty() && pageContent.charAt(0) == '{') {
+                    Log.e("JSON", pageContent);
+
+                    try {
+                        JSONObject json = new JSONObject(pageContent);
+                        if (json.has("redirectUrl")) // Post normal.
+                        {
+                            String cleanUrl = json.getString("redirectUrl").replaceAll("\\\\", "");
+                            currentWebInfos.currentUrl = "https://www.jeuxvideo.com" + cleanUrl;
+                            pageContent = "<meta http-equiv=\"refresh\""; // HACK par flemme.
+                        } else if (json.has("html")) // Modification de post.
+                        {
+                            pageContent = "<meta http-equiv=\"refresh\""; // HACK par flemme.
+                        } else // Erreurs...
+                        {
+                            if (json.has("needsCaptcha")) {
+                                boolean needsCaptcha = json.getBoolean("needsCaptcha");
+                                if (needsCaptcha) {
+                                    pageContent = "captcha";
+                                }
+                            }
+
+                            if (!pageContent.equals("captcha")) {
+                                pageContent = "respawnirc:error:";
+
+                                if (json.has("errors")) {
+                                    try {
+                                        // Certaines erreurs retournent un array...
+                                        JSONArray errors = json.getJSONArray("errors");
+                                        if(errors.length() > 0)
+                                        {
+                                            pageContent += errors.getString(0);
+                                        }
+                                    } catch (JSONException ex) {
+                                        // Autres erreurs...
+                                        JSONObject errors = json.getJSONObject("errors");
+                                        JSONArray errorNames = errors.names();
+                                        if(errorNames != null && errorNames.length() > 0)
+                                        {
+                                            pageContent += errors.getString(errorNames.getString(0));
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    pageContent += "unknown";
+                                }
+                            }
+                        }
+                    } catch (JSONException e) {
+                        pageContent = "respawnirc:resendneeded";
+                    }
                 }
+
+                if(pageContent == null)
+                {
+                    pageContent = "respawnirc:error:Erreur inconnue.";
+                }
+
+                Log.e("AFTER", currentWebInfos.currentUrl);
+                Log.e("OUTTEST", pageContent);
 
                 return pageContent;
             } else {

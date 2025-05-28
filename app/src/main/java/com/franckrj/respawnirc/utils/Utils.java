@@ -25,8 +25,11 @@ import com.franckrj.respawnirc.WebBrowserActivity;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 
 public class Utils {
     public static String colorToString(@ColorInt int colorValue) {
@@ -211,6 +214,45 @@ public class Utils {
         } else {
             return baseMessage;
         }
+    }
+
+    public static String makeMultipartFormFromMap(Map<String, String> formData)
+    {
+        Random random = new Random();
+        StringBuilder res = new StringBuilder();
+        String boundary = String.format("------geckoformboundary%x%x", random.nextLong(), random.nextLong());
+        if(formData != null && !formData.isEmpty())
+        {
+            for(String key : formData.keySet())
+            {
+                res.append(String.format("%s\r\nContent-Disposition: form-data; name=\"%s\"\r\n\r\n%s\r\n",
+                        boundary, key, formData.get(key)));
+            }
+
+            res.append(boundary).append("--\r\n");
+        }
+
+        return res.toString();
+    }
+
+    public static Map<String, String> prepareMultipartFormForMessage(String msgToSend, String forumId, String topicId, String group, String messageId, JVCParser.AjaxInfos ajaxInfos, JVCParser.FormSession formSession)
+    {
+        Map<String, String> res = new LinkedHashMap<>();
+        if(ajaxInfos != null && formSession != null)
+        {
+            res.put("text", msgToSend);
+            res.put("topicId", topicId);
+            res.put("forumId", forumId);
+            res.put("group", group);
+            res.put("messageId", messageId);
+            res.put("fs_session", formSession.session);
+            res.put("fs_timestamp", formSession.timestamp);
+            res.put("fs_version", formSession.fs_version);
+            res.put(formSession.keyHash, formSession.valueHash);
+            res.put("ajax_hash", ajaxInfos.newHash);
+        }
+
+        return res;
     }
 
     @TargetApi(25)

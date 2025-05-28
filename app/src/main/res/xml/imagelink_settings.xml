@@ -7,12 +7,12 @@
         <EditTextPreference
             android:key="@string/settingsAvatarSize"
             android:title="@string/avatarSizeTitle"
-            android:numeric="integer"/>
+            android:inputType="number"/>
 
         <EditTextPreference
             android:key="@string/settingsStickerSize"
             android:title="@string/stickerSizeTitle"
-            android:numeric="integer"/>
+            android:inputType="number"/>
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -27,7 +27,7 @@
         <EditTextPreference
             android:key="@string/settingsMiniNoelshackWidth"
             android:title="@string/miniNoelshackWidthTitle"
-            android:numeric="integer"/>
+            android:inputType="number"/>
 
         <CheckBoxPreference
             android:key="@string/settingsShowOverviewOnImageClick"
