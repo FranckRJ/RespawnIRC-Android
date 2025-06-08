@@ -41,7 +41,7 @@ public class JVCMessageToTopicSender {
 
             currentAsyncTaskForSendMessage = null;
 
-            if (!Utils.stringIsEmptyOrNull(reqResult) && !reqResult.contains("<meta http-equiv=\"refresh\"")) {
+            if (!Utils.stringIsEmptyOrNull(reqResult) && !reqResult.contains("respawnirc:move:")) {
                 if (reqResult.equals("respawnirc:resendneeded")) {
                     errorWhenSending = parentActivity.getString(R.string.unknownErrorPleaseRetry);
                 } else if(reqResult.startsWith("respawnirc:error:")) {
@@ -227,62 +227,7 @@ public class JVCMessageToTopicSender {
                 String pageContent;
 
                 pageContent = WebManager.sendRequestWithMultipleTrys(info[0].urlUsed, "POST", info[0].listOfInputUsed, currentWebInfos, 2);
-
-                // Si le premier caractère est une accolade, c'est probablement
-                // du JSON. On vérifie.
-                if(pageContent != null && !pageContent.isEmpty() && pageContent.charAt(0) == '{') {
-
-                    try {
-                        JSONObject json = new JSONObject(pageContent);
-                        if (json.has("redirectUrl")) // Post normal.
-                        {
-                            String cleanUrl = json.getString("redirectUrl").replaceAll("\\\\", "");
-                            currentWebInfos.currentUrl = "https://www.jeuxvideo.com" + cleanUrl;
-                            pageContent = "<meta http-equiv=\"refresh\""; // HACK par flemme.
-                        } else if (json.has("html")) // Modification de post.
-                        {
-                            pageContent = "<meta http-equiv=\"refresh\""; // HACK par flemme.
-                        } else // Erreurs...
-                        {
-                            pageContent = "respawnirc:error:";
-
-                            if (json.has("needsCaptcha")) {
-                                boolean needsCaptcha = json.getBoolean("needsCaptcha");
-                                if (needsCaptcha) {
-                                    pageContent += "captcha";
-                                }
-                            }
-
-                            if (!pageContent.equals("captcha")) {
-
-                                if (json.has("errors")) {
-                                    try {
-                                        // Certaines erreurs retournent un array...
-                                        JSONArray errors = json.getJSONArray("errors");
-                                        if(errors.length() > 0)
-                                        {
-                                            pageContent += errors.getString(0);
-                                        }
-                                    } catch (JSONException ex) {
-                                        // Autres erreurs...
-                                        JSONObject errors = json.getJSONObject("errors");
-                                        JSONArray errorNames = errors.names();
-                                        if(errorNames != null && errorNames.length() > 0)
-                                        {
-                                            pageContent += errors.getString(errorNames.getString(0));
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    pageContent += "Erreur inconnue.";
-                                }
-                            }
-                        }
-                    } catch (JSONException e) {
-                        pageContent = "respawnirc:resendneeded";
-                    }
-                }
+                pageContent = Utils.processJSONResponse(pageContent);
 
                 if(pageContent == null)
                 {

@@ -30,6 +30,7 @@ import com.franckrj.respawnirc.utils.WebManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 
 public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements InsertStuffDialogFragment.StuffInserted {
     public static final String EXTRA_FORUM_NAME = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_FORUM_NAME";
@@ -37,6 +38,8 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
     public static final String EXTRA_INPUT_LIST = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_INPUT_LIST";
     public static final String EXTRA_USER_CAN_POST_AS_MODO = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_USER_CAN_POST_AS_MODO";
     public static final String RESULT_EXTRA_TOPIC_LINK_TO_MOVE = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_TOPIC_LINK_TO_MOVE";
+    public static final String EXTRA_AJAXINFOS = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_AJAXINFOS";
+    public static final String EXTRA_FORMSESSION = "com.franckrj.respawnirc.sendtopicactivity.EXTRA_FORMSESSION";
 
     private static final int MANAGE_SURVEY_REQUEST_CODE = 456;
     private static final String SAVE_SURVEY_TITLE = "saveSurveyTitle";
@@ -91,6 +94,10 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
 
             data.putExtra(RESULT_EXTRA_TOPIC_LINK_TO_MOVE, reqResult);
             setResult(Activity.RESULT_OK, data);
+        } else if(reqResult.startsWith("respawnirc:error:"))
+        {
+            String errorWhenSending = reqResult.replace("respawnirc:error:", "Erreur : ");
+            Toast.makeText(SendTopicToForumActivity.this, errorWhenSending, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(SendTopicToForumActivity.this, JVCParser.getErrorMessage(reqResult), Toast.LENGTH_SHORT).show();
         }
@@ -216,6 +223,18 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
                 currentInfos.listOfInputsInAstring = getIntent().getStringExtra(EXTRA_INPUT_LIST);
             }
             userCanPostAsModo = getIntent().getBooleanExtra(EXTRA_USER_CAN_POST_AS_MODO, false);
+
+            JVCParser.AjaxInfos ajaxInfos = getIntent().getParcelableExtra(EXTRA_AJAXINFOS);
+            if(ajaxInfos != null)
+            {
+                currentInfos.ajaxInfos = ajaxInfos;
+            }
+
+            JVCParser.FormSession formSession = getIntent().getParcelableExtra(EXTRA_FORMSESSION);
+            if(formSession != null)
+            {
+                currentInfos.formSession = formSession;
+            }
         }
 
         initializeSettings();
@@ -357,30 +376,29 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
         protected String doInBackground(SendTopicInfos... infosOfSend) {
             if (infosOfSend.length == 1) {
                 WebManager.WebInfos currentWebInfos = initWebInfos(infosOfSend[0].cookieList, false);
+                Map<String, String> formData;
                 String pageContent;
-                StringBuilder requestBuilder = new StringBuilder("titre_topic=").append(Utils.encodeStringToUrlString(infosOfSend[0].topicTitle))
-                                                                                .append("&message_topic=").append(Utils.encodeStringToUrlString(infosOfSend[0].topicContent))
-                                                                                .append(infosOfSend[0].listOfInputsInAstring).append("&spotify_topic=");
+                String rang;
 
                 if (infosOfSend[0].postAsModo) {
-                    requestBuilder.append("&form_alias_rang=2");
+                    rang = "2";
                 } else {
-                    requestBuilder.append("&form_alias_rang=1");
+                    rang = "1";
                 }
 
-                if (!Utils.stringIsEmptyOrNull(infosOfSend[0].surveyTitle)) {
-                    requestBuilder.append("&submit_sondage=1&question_sondage=").append(Utils.encodeStringToUrlString(infosOfSend[0].surveyTitle));
+                formData = Utils.prepareMultipartFormForTopic(
+                        infosOfSend[0].topicTitle,
+                        infosOfSend[0].topicContent,
+                        infosOfSend[0].surveyTitle,
+                        infosOfSend[0].surveyReplysList,
+                        JVCParser.getForumIdOfThisForum(infosOfSend[0].linkToSend),
+                        rang,
+                        infosOfSend[0].ajaxInfos,
+                        infosOfSend[0].formSession);
 
-                    for (String thisReply : infosOfSend[0].surveyReplysList) {
-                        if (!Utils.stringIsEmptyOrNull(thisReply)) {
-                            requestBuilder.append("&reponse_sondage[]=").append(Utils.encodeStringToUrlString(thisReply));
-                        }
-                    }
-                } else {
-                    requestBuilder.append("&submit_sondage=0&question_sondage=&reponse_sondage[]=");
-                }
+                pageContent = WebManager.sendRequestWithMultipleTrys("https://www.jeuxvideo.com/forums/topic/add", "POST", Utils.makeMultipartFormFromMap(formData), currentWebInfos, 2);
 
-                pageContent = WebManager.sendRequestWithMultipleTrys(infosOfSend[0].linkToSend, "POST", requestBuilder.toString(), currentWebInfos, 2);
+                pageContent = Utils.processJSONResponse(pageContent);
 
                 if (infosOfSend[0].linkToSend.equals(currentWebInfos.currentUrl)) {
                     pageContent = "respawnirc:resendneeded";
@@ -406,6 +424,8 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
         private String surveyTitle = "";
         private ArrayList<String> surveyReplysList = new ArrayList<>();
         private boolean postAsModo = false;
+        private JVCParser.AjaxInfos ajaxInfos = new JVCParser.AjaxInfos();
+        private JVCParser.FormSession formSession = new JVCParser.FormSession();
 
         public SendTopicInfos() {}
 
@@ -418,6 +438,8 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
             surveyTitle = baseForCopy.surveyTitle;
             surveyReplysList = new ArrayList<>(baseForCopy.surveyReplysList);
             postAsModo = baseForCopy.postAsModo;
+            ajaxInfos = baseForCopy.ajaxInfos;
+            formSession = baseForCopy.formSession;
         }
     }
 }

@@ -67,7 +67,6 @@ public final class JVCParser {
     private static final Pattern messageAnchorInTopicLinkPattern = Pattern.compile("#post_([0-9]*)");
     private static final Pattern jvCarePattern = Pattern.compile("<span class=\"JvCare [^\"]*\">([^<]*)</span>");
     private static final Pattern lastEditMessagePattern = Pattern.compile("<div class=\"info-edition-msg\">[^M]*(Message édité le ([^ ]* [^ ]* [^ ]* [^ ]* [0-9:]*) par.*?)</div>", Pattern.DOTALL);
-    private static final Pattern messageEditInfoPattern = Pattern.compile("<textarea((.*?)(?=id=\"text_commentaire\")|(.*?)(?=>))id=\"text_commentaire\"[^>]*>(.*?)</textarea>", Pattern.DOTALL);
     private static final Pattern allArianeStringPattern = Pattern.compile("<nav role=\"navigation\" class=\"breadcrumb\">.*?</nav>", Pattern.DOTALL);
     private static final Pattern forumNameInArianeStringPattern = Pattern.compile("<a class=\"breadcrumb__item\" href=\"(/forums/0-[^\"]*)\">([^<]*)</a>");
     private static final Pattern topicNameInArianeStringPattern = Pattern.compile("<a class=\"breadcrumb__item\" href=\"/forums/(42|1)-[^\"]*\">([^<]*)</a>");
@@ -1777,6 +1776,7 @@ public final class JVCParser {
             out.writeString(mod);
             out.writeString(pref);
             out.writeString(sub);
+            out.writeString(newHash);
         }
     }
 

@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Callable;
 
 public class WebManager {
@@ -74,7 +75,8 @@ public class WebManager {
                 DataOutputStream wr = null;
                 BufferedWriter writer = null;
 
-                if(currentInfos.currentUrl.contains("https://www.jeuxvideo.com/forums/message/"))
+                if(currentInfos.currentUrl.contains("https://www.jeuxvideo.com/forums/message/") ||
+                   currentInfos.currentUrl.contains("https://www.jeuxvideo.com/forums/topic/"))
                 {
                     String firstLine = requestParameters.substring(2, requestParameters.indexOf("\r"));
 
@@ -95,7 +97,7 @@ public class WebManager {
                     urlConnection.setFixedLengthStreamingMode(requestParameters.getBytes().length);
 
                     wr = new DataOutputStream(urlConnection.getOutputStream());
-                    writer = new BufferedWriter(new OutputStreamWriter(wr, "UTF-8"));
+                    writer = new BufferedWriter(new OutputStreamWriter(wr, StandardCharsets.UTF_8));
                     writer.write(requestParameters);
                     writer.flush();
                 } catch (Exception e) {
@@ -115,7 +117,7 @@ public class WebManager {
             if (inputStream == null) {
                 return null;
             }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
+            reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
 
             while ((line = reader.readLine()) != null) {
                 buffer.append(line).append("\n");

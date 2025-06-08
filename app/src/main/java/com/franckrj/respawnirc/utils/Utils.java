@@ -22,6 +22,10 @@ import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.WebBrowserActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -225,8 +229,24 @@ public class Utils {
         {
             for(String key : formData.keySet())
             {
-                res.append(String.format("%s\r\nContent-Disposition: form-data; name=\"%s\"\r\n\r\n%s\r\n",
-                        boundary, key, formData.get(key)));
+                // Un formulaire peut avoir plusieurs champs avec la même clef.
+                // Par exemple, pour chaque réponse de sondage, on a un élément
+                // responsesSurvey[] dans le formulaire.
+                //
+                // On utilise "\r\n" comme délimiteur entre les différentes
+                // valeurs pour une même clé. Ainsi, si on a un champ
+                // responsesSurvey[] avec "reponseA\r\nreponseB", on crée
+                // deux responsesSurvey[] avec le premier "reponseA" puis
+                // le second "reponseB".
+                String value = formData.get(key);
+                if(value != null)
+                {
+                    String[] valuesWithSameKey = value.split("\r\n");
+                    for (String s : valuesWithSameKey) {
+                        res.append(String.format("%s\r\nContent-Disposition: form-data; name=\"%s\"\r\n\r\n%s\r\n",
+                                boundary, key, s));
+                    }
+                }
             }
 
             res.append(boundary).append("--\r\n");
@@ -250,6 +270,107 @@ public class Utils {
             res.put("fs_version", formSession.fs_version);
             res.put(formSession.keyHash, formSession.valueHash);
             res.put("ajax_hash", ajaxInfos.newHash);
+        }
+
+        return res;
+    }
+
+    public static Map<String, String> prepareMultipartFormForTopic(String topicTitle, String message, String surveyQuestion, List<String> surveyAnswers, String forumId, String group, JVCParser.AjaxInfos ajaxInfos, JVCParser.FormSession formSession)
+    {
+        Map<String, String> res = new LinkedHashMap<>();
+        if(ajaxInfos != null && formSession != null)
+        {
+            res.put("topicTitle", topicTitle);
+
+            if(stringIsEmptyOrNull(surveyQuestion) || surveyAnswers == null || surveyAnswers.isEmpty())
+            {
+                // Même lorsqu'il n'y a pas de sondage, on doit
+                // envoyer une question vide et deux réponses vides...
+                // Urgh.
+                res.put("submitSurvey", "false");
+                res.put("answerSurvey", ""); // Aucune erreur, answerSurvey est la QUESTION du sondage pour JVC...
+                res.put("responsesSurvey[]", "\r\n"); // Les réponses sont divisées par un \n.
+            }
+            else
+            {
+                // Sondage présent...
+                StringBuilder answers = new StringBuilder();
+                res.put("submitSurvey", "true");
+                res.put("answerSurvey", surveyQuestion); // Aucune erreur, answerSurvey est la QUESTION du sondage pour JVC...
+
+                // Les réponses sont divisées par un \r\n pour la transformation en multipart dans makeMultipartFormFromMap().
+                answers.append(surveyAnswers.get(0));
+                for(int i = 1; i < surveyAnswers.size(); i++)
+                {
+                    answers.append("\r\n").append(surveyAnswers.get(i));
+                }
+
+                res.put("responsesSurvey[]", answers.toString());
+            }
+
+            res.putAll(prepareMultipartFormForMessage(message, forumId, "0", group, "null", ajaxInfos, formSession));
+        }
+
+        return res;
+    }
+
+    public static String processJSONResponse(String pageContent)
+    {
+        String res = pageContent;
+
+        // Si le premier caractère est une accolade, c'est probablement
+        // du JSON. On vérifie.
+        if(pageContent != null && !pageContent.isEmpty() && pageContent.charAt(0) == '{') {
+
+            try {
+                JSONObject json = new JSONObject(pageContent);
+                if (json.has("redirectUrl")) // Création de topic ou post normal.
+                {
+                    String cleanUrl = json.getString("redirectUrl").replaceAll("\\\\", "");
+                    res = "respawnirc:move:https://www.jeuxvideo.com" + cleanUrl;
+                } else if (json.has("html")) // Modification de post.
+                {
+                    res = "respawnirc:move:";
+                } else // Erreurs...
+                {
+                    res = "respawnirc:error:";
+
+                    if (json.has("needsCaptcha")) {
+                        boolean needsCaptcha = json.getBoolean("needsCaptcha");
+                        if (needsCaptcha) {
+                            res += "captcha";
+                        }
+                    }
+
+                    if (!res.equals("respawnirc:error:captcha")) {
+
+                        if (json.has("errors")) {
+                            try {
+                                // Certaines erreurs retournent un array...
+                                JSONArray errors = json.getJSONArray("errors");
+                                if(errors.length() > 0)
+                                {
+                                    res += errors.getString(0);
+                                }
+                            } catch (JSONException ex) {
+                                // Autres erreurs...
+                                JSONObject errors = json.getJSONObject("errors");
+                                JSONArray errorNames = errors.names();
+                                if(errorNames != null && errorNames.length() > 0)
+                                {
+                                    res += errors.getString(errorNames.getString(0));
+                                }
+                            }
+                        }
+                        else
+                        {
+                            res += "Erreur inconnue.";
+                        }
+                    }
+                }
+            } catch (JSONException e) {
+                res = "respawnirc:resendneeded";
+            }
         }
 
         return res;
