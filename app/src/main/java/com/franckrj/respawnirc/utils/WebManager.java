@@ -75,9 +75,6 @@ public class WebManager {
                 urlConnection.setReadTimeout(5_000);
             }
 
-            /* On nettoie nos cookies potentiellement expirés. */
-            Utils.cleanExpiredCookies();
-
             // On ajoute les cookies...
             cookie = Utils.buildCloudflareCookieString();
             if(cookie.isEmpty()) {
@@ -153,7 +150,7 @@ public class WebManager {
                 }
 
                 if(headerName != null && headerName.equals("Set-Cookie")) {
-                    Utils.saveCloudflareCookies(headerValue, true);
+                    Utils.saveCloudflareCookies(headerValue, false);
                 }
             }
 
