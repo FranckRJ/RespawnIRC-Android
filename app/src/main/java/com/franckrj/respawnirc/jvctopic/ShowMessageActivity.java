@@ -1,5 +1,7 @@
 package com.franckrj.respawnirc.jvctopic;
 
+import static com.franckrj.respawnirc.utils.WebManager.errorStringId;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -165,7 +167,11 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
 
         if (messageShowedStatus.message == null) {
             backgroundErrorText.setVisibility(View.VISIBLE);
-            backgroundErrorText.setText(R.string.errorDownloadFailed);
+            backgroundErrorText.setText(errorStringId);
+            if(errorStringId == R.string.errorCloudflare)
+            {
+                Utils.openCloudflarePage(messageShowedStatus.topicLink, ShowMessageActivity.this);
+            }
         } else {
             ActionBar myActionBar = getSupportActionBar();
             adapterForTopic.addItem(messageShowedStatus.message, true);
@@ -352,7 +358,11 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
 
             if (currentTaskForGetMessage == null) {
                 backgroundErrorText.setVisibility(View.VISIBLE);
-                backgroundErrorText.setText(R.string.errorDownloadFailed);
+                backgroundErrorText.setText(errorStringId);
+                if(errorStringId == R.string.errorCloudflare)
+                {
+                    Utils.openCloudflarePage(messageShowedStatus.topicLink, ShowMessageActivity.this);
+                }
             }
         }
     }

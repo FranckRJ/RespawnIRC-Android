@@ -1,5 +1,7 @@
 package com.franckrj.respawnirc.jvctopic.jvctopicviewers;
 
+import static com.franckrj.respawnirc.utils.WebManager.errorStringId;
+
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -250,7 +252,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
                 idOfErrorTextToShow = R.string.errorPageDoesNotExist;
                 break;
             default:
-                idOfErrorTextToShow = R.string.errorDownloadFailed;
+                idOfErrorTextToShow = errorStringId;
                 break;
         }
 
