@@ -285,7 +285,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
 
         menu.findItem(R.id.action_search_topic_showforum).setEnabled(!pageNavigation.getCurrentLinkIsEmpty());
         menu.findItem(R.id.action_share_showforum).setEnabled(!pageNavigation.getCurrentLinkIsEmpty());
-        menu.findItem(R.id.action_send_topic_showforum).setEnabled(!Utils.stringIsEmptyOrNull(forumStatus.listOfInputInAString) && !pageNavigation.getCurrentLinkIsEmpty());
+        menu.findItem(R.id.action_send_topic_showforum).setEnabled(!Utils.stringIsEmptyOrNull(forumStatus.formSession.session) && !pageNavigation.getCurrentLinkIsEmpty());
 
         if (forumStatus.isInFavs != null && !currentAccount.pseudo.isEmpty()) {
             favItem.setEnabled(true);
@@ -328,6 +328,8 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
                 newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_FORUM_LINK, pageNavigation.getFirstPageLink());
                 newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_INPUT_LIST, forumStatus.listOfInputInAString);
                 newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_USER_CAN_POST_AS_MODO, forumStatus.userCanPostAsModo);
+                newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_AJAXINFOS, forumStatus.ajaxInfos);
+                newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_FORMSESSION, forumStatus.formSession);
                 startActivityForResult(newSendTopicIntent, SEND_TOPIC_REQUEST_CODE);
                 refreshNeededOnNextResume = true;
                 return true;

@@ -20,6 +20,7 @@ import com.franckrj.respawnirc.utils.IgnoreListManager;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.ThemeManager;
+import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -127,6 +128,12 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
                     int idOfErrorTextToShow;
 
                     switch (getterForForum.getLastTypeOfError()) {
+                        case CLOUDFLARE_CHALLENGE:
+                            idOfErrorTextToShow = R.string.errorCloudflare;
+                            errorBackgroundMessage.setText(idOfErrorTextToShow);
+                            errorBackgroundMessage.setVisibility(View.VISIBLE);
+                            Utils.openCloudflarePage("https://www.jeuxvideo.com/forums.htm", getActivity());
+                            break;
                         case FORUM_DOES_NOT_EXIST:
                             idOfErrorTextToShow = R.string.errorForumDoesNotExist;
                             break;

@@ -48,6 +48,7 @@ import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowTopicFragment.NewModeNeededListener, AbsJVCTopicGetter.NewTopicStatusListener, JVCActionsInTopic.TopicNeedToBeReloaded,
                                                                         JVCTopicAdapter.MenuItemClickedInMessage, JVCTopicModeForumGetter.NewNumbersOfPagesListener, JVCTopicAdapter.PseudoClicked,
@@ -138,10 +139,20 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 if (!senderForMessages.getIsInEdit()) {
                     boolean messageIsSended = false;
                     if (topicStatus.listOfInputInAString != null) {
-                        String tmpListOfInputToUse = JVCMessageToTopicSender.addPostTypeToListOfInput(topicStatus.listOfInputInAString, topicStatus.userCanPostAsModo && PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE));
+                        Map<String, String> formData = Utils.prepareMultipartFormForMessage(
+                                messageSendEdit.getText().toString(),
+                                JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()),
+                                topicStatus.topicId,
+                                (topicStatus.userCanPostAsModo && PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE) ? "2" : "1"),
+                                "undefined",
+                                topicStatus.ajaxInfos,
+                                topicStatus.formSession
+                        );
+
+                        //String tmpListOfInputToUse = JVCMessageToTopicSender.addPostTypeToListOfInput(topicStatus.listOfInputInAString, topicStatus.userCanPostAsModo && PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE));
                         messageSendButton.setEnabled(false);
                         tmpLastMessageSended = messageSendEdit.getText().toString();
-                        messageIsSended = senderForMessages.sendThisMessage(tmpLastMessageSended, pageNavigation.getCurrentPageLink(), tmpListOfInputToUse, currentAccount.cookie);
+                        messageIsSended = senderForMessages.sendThisMessage(tmpLastMessageSended, "https://www.jeuxvideo.com/forums/message/add", Utils.makeMultipartFormFromMap(formData), currentAccount.cookie);
                     }
 
                     if (!messageIsSended) {
@@ -380,9 +391,18 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         boolean infoForEditAreGetted = false;
 
         if (messageSendButton.isEnabled() && topicStatus.ajaxInfos.list != null) {
+            Map<String,String> formData = Utils.prepareMultipartFormForMessage(
+                    "", // Sera remplacé lors de la récupération des infos de modif.
+                    JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()),
+                    topicStatus.topicId,
+                    (topicStatus.userCanPostAsModo && PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE) ? "2" : "1"),
+                    messageID,
+                    topicStatus.ajaxInfos,
+                    topicStatus.formSession // Les infos de session seront remplacées lors de la récup.
+            );
             messageSendButton.setEnabled(false);
             messageSendButton.setImageDrawable(ThemeManager.getDrawable(R.attr.themedContentEditIcon, this));
-            infoForEditAreGetted = senderForMessages.getInfosForEditMessage(messageID, topicStatus.ajaxInfos.list, currentAccount.cookie, useMessageToEdit);
+            infoForEditAreGetted = senderForMessages.getInfosForEditMessage(messageID, topicStatus.ajaxInfos.list, currentAccount.cookie, formData, useMessageToEdit);
         }
 
         if (!infoForEditAreGetted) {

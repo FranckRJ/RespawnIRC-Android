@@ -1,9 +1,12 @@
 package com.franckrj.respawnirc.jvcforum.jvcforumtools;
 
+import static com.franckrj.respawnirc.utils.WebManager.errorStringId;
+
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.WebManager;
@@ -86,6 +89,13 @@ public class JVCForumGetter {
                     }
 
                     return;
+                }
+            }
+            else
+            {
+                if(errorStringId == R.string.errorCloudflare)
+                {
+                    lastTypeOfError = ErrorType.CLOUDFLARE_CHALLENGE;
                 }
             }
 
@@ -210,6 +220,7 @@ public class JVCForumGetter {
                     newPageInfos.newUrlForForumPage = currentWebInfos.currentUrl;
                     newPageInfos.forumStatus.forumName = JVCParser.getForumNameInForumPage(pageContent);
                     newPageInfos.forumStatus.ajaxInfos = JVCParser.getAllAjaxInfos(pageContent);
+                    newPageInfos.forumStatus.formSession = JVCParser.getFormSession(pageContent, false);
                     newPageInfos.forumStatus.isInFavs = JVCParser.getIsInFavsFromPage(pageContent);
                     newPageInfos.forumStatus.listOfInputInAString = JVCParser.getListOfInputInAStringInTopicFormForThisPage(pageContent);
                     newPageInfos.forumStatus.numberOfMp = JVCParser.getNumberOfMpFromPage(pageContent);
@@ -228,7 +239,7 @@ public class JVCForumGetter {
     }
 
     public enum ErrorType {
-        NONE_OR_UNKNOWN, SEARCH_IS_EMPTY_AND_ITS_NOT_A_FAIL, FORUM_DOES_NOT_EXIST
+        NONE_OR_UNKNOWN, SEARCH_IS_EMPTY_AND_ITS_NOT_A_FAIL, FORUM_DOES_NOT_EXIST, CLOUDFLARE_CHALLENGE
     }
 
     private static class ForumPageInfos {
@@ -240,6 +251,7 @@ public class JVCForumGetter {
     public static class ForumStatusInfos implements Parcelable {
         public String forumName = "";
         public JVCParser.AjaxInfos ajaxInfos = new JVCParser.AjaxInfos();
+        public JVCParser.FormSession formSession = new JVCParser.FormSession();
         public Boolean isInFavs = null;
         public String listOfInputInAString = null;
         public String numberOfMp = null;
@@ -266,6 +278,7 @@ public class JVCForumGetter {
         public ForumStatusInfos(ForumStatusInfos baseForCopy) {
             forumName = baseForCopy.forumName;
             ajaxInfos = new JVCParser.AjaxInfos(baseForCopy.ajaxInfos);
+            formSession = new JVCParser.FormSession(baseForCopy.formSession);
             isInFavs = baseForCopy.isInFavs;
             listOfInputInAString = baseForCopy.listOfInputInAString;
             numberOfMp = baseForCopy.numberOfMp;
@@ -277,6 +290,7 @@ public class JVCForumGetter {
         private ForumStatusInfos(Parcel in) {
             forumName = in.readString();
             ajaxInfos = in.readParcelable(JVCParser.AjaxInfos.class.getClassLoader());
+            formSession = in.readParcelable(JVCParser.FormSession.class.getClassLoader());
             byte tmpIsInFav = in.readByte();
             if (tmpIsInFav == -1) {
                 isInFavs = null;
@@ -299,6 +313,7 @@ public class JVCForumGetter {
         public void writeToParcel(Parcel out, int flags) {
             out.writeString(forumName);
             out.writeParcelable(ajaxInfos, flags);
+            out.writeParcelable(formSession, flags);
             if (isInFavs == null) {
                 out.writeByte((byte) -1);
             } else {

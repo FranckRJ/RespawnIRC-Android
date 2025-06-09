@@ -8,6 +8,15 @@
     <string name="endConnect">Terminer</string>
     <string name="errorPseudoMissingConnect">Veuillez insérer le pseudo avec lequel vous vous êtes connecté dans le champ en haut.</string>
     <string name="errorCookiesMissingConnect">Vous n\'êtes pas connecté sur JVC.</string>
+    <string name="cloudflareOK">CloudFlare validé.</string>
+    <string name="errorCloudflare">Captcha CloudFlare à valider.</string>
+    <string name="errorAccessDenied">Accès refusé.</string>
+    <string name="errorNotFound">Page introuvable.</string>
+    <string name="errorThreadDeleted">Topic supprimé.</string>
+    <string name="errorMaintenance">Site surchargé ou en maintenance.</string>
+    <string name="errorInternalServerError">Erreur interne du serveur.</string>
+    <string name="errorBadGateway">Réponse du serveur invalide.</string>
+    <string name="errorGatewayTimeout">Le serveur ne répond pas.</string>
     <string name="overflow_menu_desc">Menu déroulant</string>
     <string name="quoteMessage">Citer</string>
     <string name="errorConnectedNeededBeforePost">Erreur, veuillez vous connecter avant d\'envoyer un message.</string>

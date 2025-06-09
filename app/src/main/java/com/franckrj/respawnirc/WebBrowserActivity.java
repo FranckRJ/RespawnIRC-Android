@@ -1,5 +1,7 @@
 package com.franckrj.respawnirc;
 
+import static com.franckrj.respawnirc.utils.WebManager.userAgentString;
+
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class WebBrowserActivity extends AbsToolbarActivity {
     public static final String EXTRA_URL_LOAD = "com.franckrj.respawnirc.webbrowseractivity.EXTRA_URL_LOAD";
+    public static final String IS_CF_CONFIRMATION = "com.franckrj.respawnirc.webbrowseractivity.IS_CF_CONFIRMATION";
 
     private static final String SAVE_TITLE_FOR_BROWSER = "saveTitleForBrowser";
     private static final String SAVE_URL_FOR_BROWSER = "saveUrlForBrowser";
@@ -30,6 +33,7 @@ public class WebBrowserActivity extends AbsToolbarActivity {
     private WebView browserWebView = null;
     private String currentUrl = "";
     private String currentTitle = "";
+    private boolean isCfConfirmation = false;
 
     private void updateTitleAndSubtitle() {
         ActionBar myActionBar = getSupportActionBar();
@@ -67,6 +71,20 @@ public class WebBrowserActivity extends AbsToolbarActivity {
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 currentUrl = url;
                 updateTitleAndSubtitle();
+
+                // On sauvegarde les cookies CloudFlare reçus dans la réponse HTTP quand une page commence à charger.
+                // Quand l'utilisateur valide un captcha CloudFlare, la page JVC est rechargée et ce code est exécuté.
+                boolean cfAutorise = Utils.saveCloudflareCookies(CookieManager.getInstance().getCookie("https://jeuxvideo.com/"), false);
+                if(cfAutorise)
+                {
+                    Toast.makeText(WebBrowserActivity.this, R.string.cloudflareOK, Toast.LENGTH_LONG).show();
+
+                    // Si on a ouvert le navigateur interne uniquement pour le captcha, on le referme maintenant.
+                    if(isCfConfirmation)
+                    {
+                        finish();
+                    }
+                }
             }
 
             @Override
@@ -91,10 +109,12 @@ public class WebBrowserActivity extends AbsToolbarActivity {
         browserWebView.getSettings().setDomStorageEnabled(true);
         Undeprecator.webSettingsSetSaveFormData(browserWebView.getSettings(), false);
         Undeprecator.webSettingsSetSavePassword(browserWebView.getSettings(), false);
+        browserWebView.getSettings().setUserAgentString(userAgentString);
 
         currentTitle = getString(R.string.app_name);
         if (getIntent() != null && savedInstanceState == null) {
             String newUrlToLoad = getIntent().getStringExtra(EXTRA_URL_LOAD);
+            this.isCfConfirmation = getIntent().getBooleanExtra(IS_CF_CONFIRMATION, false);
 
             if (!Utils.stringIsEmptyOrNull(newUrlToLoad)) {
                 currentUrl = newUrlToLoad;

@@ -145,6 +145,10 @@ public class PrefsManager {
         addStringPref(StringPref.Names.MESSAGE_SIGNATURE_FONT_SIZE, currentContext.getString(R.string.settingsMessageSignatureFontSize), "14");
         addStringPref(StringPref.Names.TYPE_OF_PSEUDO_TO_COLOR_IN_INFO, currentContext.getString(R.string.settingsTypeOfPseudoToColorInInfo), String.valueOf(PseudoColorType.ALL_ACCOUNTS));
         addStringPref(StringPref.Names.TYPE_OF_PSEUDO_TO_COLOR_IN_MESSAGE, currentContext.getString(R.string.settingsTypeOfPseudoToColorInMessage), String.valueOf(PseudoColorType.ALL_ACCOUNTS));
+
+        // Cookies CloudFlare ; ils sont stockés globalement et non pas par compte (contrairement à COOKIES_LIST).
+        addStringPref(StringPref.Names.CLOUDFLARE_BOT_PROTECTION, "pref.cloudflareBotProtection", "");
+        addStringPref(StringPref.Names.CLOUDFLARE_CLEARANCE, "pref.cloudflareClearance", "");
     }
 
     public static boolean getBool(BoolPref.Names prefName) {
@@ -405,7 +409,8 @@ public class PrefsManager {
             SAVE_MESSAGES_AND_TOPICS_AS_DRAFT_TYPE,
             MESSAGE_DRAFT, TOPIC_TITLE_DRAFT, TOPIC_CONTENT_DRAFT, SURVEY_TITLE_DRAFT, SURVEY_REPLY_IN_A_STRING_DRAFT,
             TOPIC_TITLE_FONT_SIZE, TOPIC_INFOS_FONT_SIZE, MESSAGE_FONT_SIZE, MESSAGE_INFOS_FONT_SIZE, MESSAGE_SIGNATURE_FONT_SIZE,
-            TYPE_OF_PSEUDO_TO_COLOR_IN_INFO, TYPE_OF_PSEUDO_TO_COLOR_IN_MESSAGE
+            TYPE_OF_PSEUDO_TO_COLOR_IN_INFO, TYPE_OF_PSEUDO_TO_COLOR_IN_MESSAGE,
+            CLOUDFLARE_BOT_PROTECTION, CLOUDFLARE_CLEARANCE
         }
     }
 

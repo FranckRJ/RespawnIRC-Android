@@ -1,5 +1,7 @@
 package com.franckrj.respawnirc.jvctopic.jvctopicviewers;
 
+import static com.franckrj.respawnirc.utils.WebManager.errorStringId;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -181,6 +183,11 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
                 isInErrorMode = true;
             } else {
                 setErrorBackgroundMessageDependingOnLastError();
+                if(errorStringId == R.string.errorCloudflare)
+                {
+                    // On ouvre le navigateur interne pour le captcha CloudFlare.
+                    Utils.openCloudflarePage("https://www.jeuxvideo.com/forums.htm", getActivity());
+                }
             }
         }
     }

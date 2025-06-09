@@ -1,5 +1,7 @@
 package com.franckrj.respawnirc.jvctopic;
 
+import static com.franckrj.respawnirc.utils.WebManager.errorStringId;
+
 import android.os.Bundle;
 import androidx.transition.TransitionManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -170,7 +172,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
             }
         } else {
             if (mainCardView.getVisibility() == View.GONE) {
-                backgroundErrorText.setText(R.string.errorDownloadFailed);
+                backgroundErrorText.setText(errorStringId);
             } else {
                 Toast.makeText(ShowSurveyActivity.this, R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
             }
@@ -302,7 +304,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
 
             if (currentTaskForSurvey == null) {
                 backgroundErrorText.setVisibility(View.VISIBLE);
-                backgroundErrorText.setText(R.string.errorDownloadFailed);
+                backgroundErrorText.setText(errorStringId);
             }
         }
     }
