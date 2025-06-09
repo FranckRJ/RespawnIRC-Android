@@ -81,13 +81,6 @@ public class WebBrowserActivity extends AbsToolbarActivity {
                     if(cfAutorise)
                     {
                         Toast.makeText(WebBrowserActivity.this, R.string.cloudflareOK, Toast.LENGTH_LONG).show();
-
-                        // On restaure les cookies d'origine de la WebView...
-                        CookieManager.getInstance().removeAllCookies(null);
-                        if(cookiesWebView != null)
-                        {
-                            CookieManager.getInstance().setCookie("https://.jeuxvideo.com", cookiesWebView);
-                        }
                         finish();
                     }
                 }
@@ -175,6 +168,17 @@ public class WebBrowserActivity extends AbsToolbarActivity {
 
     @Override
     public void onDestroy() {
+        // On restaure toujours les cookies d'origine de la WebView
+        // si on était en authentification CloudFlare...
+        if(isCfConfirmation)
+        {
+            CookieManager.getInstance().removeAllCookies(null);
+            if(cookiesWebView != null)
+            {
+                CookieManager.getInstance().setCookie("https://.jeuxvideo.com", cookiesWebView);
+            }
+        }
+
         browserWebView.destroy();
         super.onDestroy();
     }
