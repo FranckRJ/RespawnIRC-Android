@@ -6,7 +6,9 @@ import android.content.pm.ShortcutManager;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.webkit.CookieManager;
 import android.webkit.WebView;
+import android.widget.Toast;
 
 import com.franckrj.respawnirc.base.AbsBaseActivity;
 import com.franckrj.respawnirc.jvcforum.SearchTopicInForumActivity;
@@ -132,6 +134,19 @@ public class MainActivity extends AbsBaseActivity {
         manageShortcuts();
 
         launchNeededActivities();
+
+        // Code pour débogage CloudFlare...
+        /*CookieManager.getInstance().removeAllCookies(null);
+
+        String test = PrefsManager.getString(PrefsManager.StringPref.Names.CLOUDFLARE_CLEARANCE);
+        //String test = CookieManager.getInstance().getCookie("https://jeuxvideo.com");
+        if (test.isEmpty()) {
+            test = "RIEN";
+        }
+        Toast.makeText(this, test, Toast.LENGTH_LONG).show();
+        PrefsManager.putString(PrefsManager.StringPref.Names.CLOUDFLARE_BOT_PROTECTION, "");
+        PrefsManager.putString(PrefsManager.StringPref.Names.CLOUDFLARE_CLEARANCE, "");
+        PrefsManager.applyChanges();*/
 
         finish();
     }

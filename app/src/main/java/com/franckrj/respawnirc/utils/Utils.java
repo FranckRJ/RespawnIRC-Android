@@ -1,5 +1,13 @@
 package com.franckrj.respawnirc.utils;
 
+import static java.net.HttpURLConnection.HTTP_BAD_GATEWAY;
+import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
+import static java.net.HttpURLConnection.HTTP_GATEWAY_TIMEOUT;
+import static java.net.HttpURLConnection.HTTP_GONE;
+import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
+import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
+import static java.net.HttpURLConnection.HTTP_UNAVAILABLE;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ClipData;
@@ -11,13 +19,18 @@ import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.text.Spannable;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.CookieManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.emoji.text.EmojiCompat;
 
+import com.franckrj.respawnirc.ConnectActivity;
 import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.WebBrowserActivity;
@@ -373,6 +386,174 @@ public class Utils {
             }
         }
 
+        return res;
+    }
+
+    /**
+     * Vérifie les cookies de la WebView et retire les cookies expirés
+     * du reste de l'application (cookies CloudFlare notamment).
+     *
+     * Idéalement, on pourrait détecter si le cookie de connexion a expiré
+     * et permettre à l'utilisateur de se reconnecter mais j'ai la flemme. -Fox
+     */
+    public static void cleanExpiredCookies() {
+        boolean cfBmCookieExists = false, cfClearanceCookieExists = false;
+        String cookies = CookieManager.getInstance().getCookie("https://.jeuxvideo.com");
+        if(cookies != null) {
+            String[] allCookiesInStringArray = TextUtils.split(cookies, ";");
+            for (String thisCookie : allCookiesInStringArray) {
+                String[] cookieInfos;
+
+                thisCookie = thisCookie.trim();
+                cookieInfos = TextUtils.split(thisCookie, "=");
+
+                if (cookieInfos.length > 1) {
+                    if (cookieInfos[0].equals("__cf_bm")) {
+                        cfBmCookieExists = true;
+                    } else if (cookieInfos[0].equals("cf_clearance")) {
+                        cfClearanceCookieExists = true;
+                    }
+                }
+            }
+        }
+
+        if(!cfBmCookieExists) {
+            PrefsManager.putString(PrefsManager.StringPref.Names.CLOUDFLARE_BOT_PROTECTION, "");
+            PrefsManager.applyChanges();
+        }
+        if(!cfClearanceCookieExists) {
+            PrefsManager.putString(PrefsManager.StringPref.Names.CLOUDFLARE_CLEARANCE, "");
+            PrefsManager.applyChanges();
+        }
+    }
+
+    /**
+     * Sauvegarde les cookies CloudFlare.
+     *
+     * @param cookies les cookies du navigateur
+     * @param setCookiesForWebview si vrai, les cookies sont également ajoutés à la WebView.
+     * @return true si le cookie d'autorisation (clearance) a été configuré, false sinon.
+     */
+    public static boolean saveCloudflareCookies(String cookies, boolean setCookiesForWebview) {
+        boolean res = false;
+        if(cookies != null) {
+            String[] allCookiesInStringArray = TextUtils.split(cookies, ";");
+            for (String thisCookie : allCookiesInStringArray) {
+                String[] cookieInfos;
+
+                thisCookie = thisCookie.trim();
+                cookieInfos = TextUtils.split(thisCookie, "=");
+
+                if (cookieInfos.length > 1) {
+                    if (cookieInfos[0].equals("__cf_bm")) {
+                        String cookieWeHave = PrefsManager.getString(PrefsManager.StringPref.Names.CLOUDFLARE_BOT_PROTECTION);
+                        if(!cookieWeHave.equals(thisCookie)) {
+                            PrefsManager.putString(PrefsManager.StringPref.Names.CLOUDFLARE_BOT_PROTECTION, thisCookie);
+                            PrefsManager.applyChanges();
+                            if(setCookiesForWebview) {
+                                CookieManager.getInstance().setCookie("https://.jeuxvideo.com", thisCookie);
+                            }
+                        }
+                    }
+                    else if(cookieInfos[0].equals("cf_clearance")) {
+                        String cookieWeHave = PrefsManager.getString(PrefsManager.StringPref.Names.CLOUDFLARE_CLEARANCE);
+                        if(!cookieWeHave.equals(thisCookie)) {
+                            res = true;
+                            PrefsManager.putString(PrefsManager.StringPref.Names.CLOUDFLARE_CLEARANCE, thisCookie);
+                            PrefsManager.applyChanges();
+                            if(setCookiesForWebview) {
+                                CookieManager.getInstance().setCookie("https://.jeuxvideo.com", thisCookie);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
+    /**
+     * Gère les erreurs retournées par sendRequest().
+     *
+     * C'est sans doute le pire système possible mais la seule gestion d'erreur des téléchargements est de
+     * vérifier si le résultat est NULL donc ça limite les possibilités sans refactoriser le code considérablement
+     * (et j'ai la flemme). -Fox
+     *
+     * @param statusCode Erreur HTTP à vérifier.
+     * @return l'identifiant strings.xml du message d'erreur. S'il n'y a pas d'erreur, retourne 0.
+     */
+    public static int handleRequestError(int statusCode) {
+        switch(statusCode) {
+            case 0:
+                return 0;
+            case 1:
+                return R.string.errorCloudflare;
+
+            case HTTP_GONE:
+                return R.string.errorThreadDeleted;
+
+            case HTTP_UNAVAILABLE:
+                return R.string.errorMaintenance;
+
+            case HTTP_INTERNAL_ERROR:
+                return R.string.errorInternalServerError;
+
+            case HTTP_NOT_FOUND:
+                return R.string.errorNotFound;
+
+            case HTTP_FORBIDDEN:
+                return R.string.errorAccessDenied;
+
+            case HTTP_BAD_GATEWAY:
+                return R.string.errorBadGateway;
+
+            case HTTP_GATEWAY_TIMEOUT:
+                return R.string.errorGatewayTimeout;
+
+            default:
+                return R.string.errorDownloadFailed;
+        }
+    }
+
+    public static void openCloudflarePage(String link, Activity parentActivity) {
+        Intent newBrowserIntent = new Intent(parentActivity, WebBrowserActivity.class);
+        newBrowserIntent.putExtra(WebBrowserActivity.EXTRA_URL_LOAD, link);
+        newBrowserIntent.putExtra(WebBrowserActivity.IS_CF_CONFIRMATION, true);
+        parentActivity.startActivity(newBrowserIntent);
+    }
+
+    public static void setCloudflareCookiesInWebView() {
+        String cfBm = PrefsManager.getString(PrefsManager.StringPref.Names.CLOUDFLARE_BOT_PROTECTION);
+        String cfClearance = PrefsManager.getString(PrefsManager.StringPref.Names.CLOUDFLARE_CLEARANCE);
+
+        if(!cfBm.isEmpty()) {
+            CookieManager.getInstance().setCookie("https://.jeuxvideo.com", cfBm);
+        }
+        if(!cfClearance.isEmpty()) {
+            CookieManager.getInstance().setCookie("https://.jeuxvideo.com", cfClearance);
+        }
+    }
+
+    public static String buildCloudflareCookieString() {
+        String cfBm = PrefsManager.getString(PrefsManager.StringPref.Names.CLOUDFLARE_BOT_PROTECTION);
+        String cfClearance = PrefsManager.getString(PrefsManager.StringPref.Names.CLOUDFLARE_CLEARANCE);
+        String res = "";
+
+        // On sépare la partie "key=value" du cookie de ses attributs (date d'expiration, etc.).
+        // Seule cette première partie nous intéresse.
+        if(!cfBm.isEmpty()) {
+            String[] cookieInfos = TextUtils.split(cfBm, ";");
+            res = cookieInfos[0];
+        }
+        if(!cfClearance.isEmpty()) {
+            String[] cookieInfos = TextUtils.split(cfClearance, ";");
+            if(res.isEmpty()) {
+                res = cookieInfos[0];
+            }
+            else {
+                res += "; " + cookieInfos[0];
+            }
+        }
         return res;
     }
 

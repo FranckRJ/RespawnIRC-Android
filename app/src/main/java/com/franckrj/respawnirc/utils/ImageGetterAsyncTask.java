@@ -1,5 +1,7 @@
 package com.franckrj.respawnirc.utils;
 
+import static com.franckrj.respawnirc.utils.WebManager.userAgentString;
+
 import android.os.AsyncTask;
 
 import java.io.BufferedInputStream;
@@ -62,6 +64,14 @@ public class ImageGetterAsyncTask extends AsyncTask<Void, Long, String> {
 
             if (updateProgress) {
                 HttpURLConnection conection = (HttpURLConnection) url.openConnection();
+                conection.setRequestProperty("User-Agent", userAgentString);
+                conection.setRequestProperty("Connection", "Keep-Alive");
+                if(url.getHost().contains("jeuxvideo.com")) {
+                    String cookie = Utils.buildCloudflareCookieString();
+                    if(!cookie.isEmpty()) {
+                        conection.setRequestProperty("Cookie", cookie);
+                    }
+                }
                 conection.connect();
                 lenghtOfFile = conection.getContentLength();
                 conection.disconnect();

@@ -1,9 +1,12 @@
 package com.franckrj.respawnirc.jvcforum.jvcforumtools;
 
+import static com.franckrj.respawnirc.utils.WebManager.errorStringId;
+
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.WebManager;
@@ -86,6 +89,13 @@ public class JVCForumGetter {
                     }
 
                     return;
+                }
+            }
+            else
+            {
+                if(errorStringId == R.string.errorCloudflare)
+                {
+                    lastTypeOfError = ErrorType.CLOUDFLARE_CHALLENGE;
                 }
             }
 
@@ -229,7 +239,7 @@ public class JVCForumGetter {
     }
 
     public enum ErrorType {
-        NONE_OR_UNKNOWN, SEARCH_IS_EMPTY_AND_ITS_NOT_A_FAIL, FORUM_DOES_NOT_EXIST
+        NONE_OR_UNKNOWN, SEARCH_IS_EMPTY_AND_ITS_NOT_A_FAIL, FORUM_DOES_NOT_EXIST, CLOUDFLARE_CHALLENGE
     }
 
     private static class ForumPageInfos {
