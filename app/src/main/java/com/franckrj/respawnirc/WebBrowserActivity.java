@@ -34,6 +34,7 @@ public class WebBrowserActivity extends AbsToolbarActivity {
     private String currentUrl = "";
     private String currentTitle = "";
     private boolean isCfConfirmation = false;
+    private String cookiesWebView = "";
 
     private void updateTitleAndSubtitle() {
         ActionBar myActionBar = getSupportActionBar();
@@ -74,14 +75,12 @@ public class WebBrowserActivity extends AbsToolbarActivity {
 
                 // On sauvegarde les cookies CloudFlare reçus dans la réponse HTTP quand une page commence à charger.
                 // Quand l'utilisateur valide un captcha CloudFlare, la page JVC est rechargée et ce code est exécuté.
-                boolean cfAutorise = Utils.saveCloudflareCookies(CookieManager.getInstance().getCookie("https://jeuxvideo.com/"), false);
-                if(cfAutorise)
+                if(isCfConfirmation)
                 {
-                    Toast.makeText(WebBrowserActivity.this, R.string.cloudflareOK, Toast.LENGTH_LONG).show();
-
-                    // Si on a ouvert le navigateur interne uniquement pour le captcha, on le referme maintenant.
-                    if(isCfConfirmation)
+                    boolean cfAutorise = Utils.saveCloudflareCookies(CookieManager.getInstance().getCookie("https://.jeuxvideo.com/"), false);
+                    if(cfAutorise)
                     {
+                        Toast.makeText(WebBrowserActivity.this, R.string.cloudflareOK, Toast.LENGTH_LONG).show();
                         finish();
                     }
                 }
@@ -109,12 +108,29 @@ public class WebBrowserActivity extends AbsToolbarActivity {
         browserWebView.getSettings().setDomStorageEnabled(true);
         Undeprecator.webSettingsSetSaveFormData(browserWebView.getSettings(), false);
         Undeprecator.webSettingsSetSavePassword(browserWebView.getSettings(), false);
-        browserWebView.getSettings().setUserAgentString(userAgentString);
 
         currentTitle = getString(R.string.app_name);
         if (getIntent() != null && savedInstanceState == null) {
             String newUrlToLoad = getIntent().getStringExtra(EXTRA_URL_LOAD);
             this.isCfConfirmation = getIntent().getBooleanExtra(IS_CF_CONFIRMATION, false);
+
+            if(this.isCfConfirmation)
+            {
+                // On sauvegarde les cookies de la WebView normale.
+                //
+                // En effet, les cookies CloudFlare ne fonctionnent que sur
+                // le User-Agent qui a résolu le captcha.
+                //
+                // Pour une confirmation CF de l'appli, on doit changer
+                // le User-Agent de la WebView par celui de Firefox.
+                //
+                // En revanche, dans les autres cas on veut utiliser la WebView
+                // normale. En effet, la WebView avec le User-Agent Firefox
+                // ne passe pas les captchas Turnstile de connexion et de DDB.
+                cookiesWebView = CookieManager.getInstance().getCookie("https://.jeuxvideo.com");
+                CookieManager.getInstance().removeAllCookies(null);
+                browserWebView.getSettings().setUserAgentString(userAgentString);
+            }
 
             if (!Utils.stringIsEmptyOrNull(newUrlToLoad)) {
                 currentUrl = newUrlToLoad;
@@ -152,6 +168,17 @@ public class WebBrowserActivity extends AbsToolbarActivity {
 
     @Override
     public void onDestroy() {
+        // On restaure toujours les cookies d'origine de la WebView
+        // si on était en authentification CloudFlare...
+        if(isCfConfirmation)
+        {
+            CookieManager.getInstance().removeAllCookies(null);
+            if(cookiesWebView != null)
+            {
+                CookieManager.getInstance().setCookie("https://.jeuxvideo.com", cookiesWebView);
+            }
+        }
+
         browserWebView.destroy();
         super.onDestroy();
     }

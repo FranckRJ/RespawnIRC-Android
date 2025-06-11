@@ -1,7 +1,5 @@
 package com.franckrj.respawnirc;
 
-import static com.franckrj.respawnirc.utils.WebManager.userAgentString;
-
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -38,7 +36,6 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
 
     private final View.OnClickListener saveCookieClickedListener = view -> {
         String allCookiesInstring = CookieManager.getInstance().getCookie("https://www.jeuxvideo.com/");
-        Utils.saveCloudflareCookies(allCookiesInstring, false); // On enregistre les cookies CloudFlare dans tous les cas.
         if (!pseudoText.getText().toString().isEmpty()) {
             String[] allCookiesInStringArray = TextUtils.split(allCookiesInstring, ";");
             String connectCookieValue = null;
@@ -90,11 +87,9 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
         helpDialogFragment = new HelpConnectDialogFragment();
         saveCookieButton.setOnClickListener(saveCookieClickedListener);
 
-        /* On nettoie les cookies pour permettre l'authentification. */
-        /* On veut néanmoins préserver les cookies CloudFlare.       */
-        Utils.cleanExpiredCookies();
+        /* On efface tous les cookies de la WebView pour se déconnecter.   */
+        /* On perd les cookies CloudFlare de la WebView mais pas le choix. */
         CookieManager.getInstance().removeAllCookies(null);
-        Utils.setCloudflareCookiesInWebView();
 
         jvcWebView.setWebViewClient(new WebViewClient() {
             @Override
@@ -107,7 +102,6 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
         jvcWebView.setWebChromeClient(new WebChromeClient());
         jvcWebView.getSettings().setJavaScriptEnabled(true);
         jvcWebView.getSettings().setDomStorageEnabled(true);
-        jvcWebView.getSettings().setUserAgentString(userAgentString);
         Undeprecator.webSettingsSetSaveFormData(jvcWebView.getSettings(), false);
         Undeprecator.webSettingsSetSavePassword(jvcWebView.getSettings(), false);
         jvcWebView.clearCache(true);

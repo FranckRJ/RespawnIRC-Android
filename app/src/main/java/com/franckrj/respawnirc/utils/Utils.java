@@ -20,17 +20,14 @@ import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.text.Spannable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.emoji.text.EmojiCompat;
 
-import com.franckrj.respawnirc.ConnectActivity;
 import com.franckrj.respawnirc.MainActivity;
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.WebBrowserActivity;
@@ -387,44 +384,6 @@ public class Utils {
         }
 
         return res;
-    }
-
-    /**
-     * Vérifie les cookies de la WebView et retire les cookies expirés
-     * du reste de l'application (cookies CloudFlare notamment).
-     *
-     * Idéalement, on pourrait détecter si le cookie de connexion a expiré
-     * et permettre à l'utilisateur de se reconnecter mais j'ai la flemme. -Fox
-     */
-    public static void cleanExpiredCookies() {
-        boolean cfBmCookieExists = false, cfClearanceCookieExists = false;
-        String cookies = CookieManager.getInstance().getCookie("https://.jeuxvideo.com");
-        if(cookies != null) {
-            String[] allCookiesInStringArray = TextUtils.split(cookies, ";");
-            for (String thisCookie : allCookiesInStringArray) {
-                String[] cookieInfos;
-
-                thisCookie = thisCookie.trim();
-                cookieInfos = TextUtils.split(thisCookie, "=");
-
-                if (cookieInfos.length > 1) {
-                    if (cookieInfos[0].equals("__cf_bm")) {
-                        cfBmCookieExists = true;
-                    } else if (cookieInfos[0].equals("cf_clearance")) {
-                        cfClearanceCookieExists = true;
-                    }
-                }
-            }
-        }
-
-        if(!cfBmCookieExists) {
-            PrefsManager.putString(PrefsManager.StringPref.Names.CLOUDFLARE_BOT_PROTECTION, "");
-            PrefsManager.applyChanges();
-        }
-        if(!cfClearanceCookieExists) {
-            PrefsManager.putString(PrefsManager.StringPref.Names.CLOUDFLARE_CLEARANCE, "");
-            PrefsManager.applyChanges();
-        }
     }
 
     /**

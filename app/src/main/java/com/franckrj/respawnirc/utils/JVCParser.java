@@ -3,7 +3,6 @@ package com.franckrj.respawnirc.utils;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Base64;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.collection.ArraySet;
@@ -14,8 +13,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
