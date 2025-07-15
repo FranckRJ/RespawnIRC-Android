@@ -74,10 +74,7 @@ public class JVCMessageToTopicSender {
             boolean messageIsAnError = false;
 
             if (!Utils.stringIsEmptyOrNull(reqResult)) {
-                String pageResultParsed = JVCParser.parsingAjaxMessages(reqResult);
-                //lastInfosForEdit += lastAjaxListInfos + "&action=post";
-                //lastInfosForEdit += JVCParser.getListOfInputInAStringInTopicFormForThisPage(pageResultParsed);
-                newMessageEdit = JVCParser.getMessageEdit(pageResultParsed);
+                newMessageEdit = JVCParser.getMessageEdit(reqResult);
 
                 if (newMessageEdit.isEmpty()) {
                     messageIsAnError = true;
