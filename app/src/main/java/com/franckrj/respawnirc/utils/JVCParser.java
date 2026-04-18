@@ -784,9 +784,49 @@ public final class JVCParser {
 
         if (listOfModeratorsMatcher.find()) {
             return listOfModeratorsMatcher.group(1).replace("<!--", "").replace("-->", "").replace(" ", "").replace("\n", "").replace(",", ", ");
-        } else {
-            return "";
         }
+
+        /* Fallback JSON payload : forumInfo.data contient les modérateurs. */
+        Matcher payloadMatcher = formSessionPattern.matcher(pageSource);
+        if (payloadMatcher.find()) {
+            try {
+                byte[] decoded = android.util.Base64.decode(payloadMatcher.group(1), android.util.Base64.DEFAULT);
+                JSONObject json = new JSONObject(new String(decoded));
+                JSONObject forumInfo = json.optJSONObject("forumInfo");
+                if (forumInfo != null) {
+                    JSONArray dataArray = forumInfo.optJSONArray("data");
+                    if (dataArray != null) {
+                        for (int i = 0; i < dataArray.length(); i++) {
+                            JSONObject entry = dataArray.optJSONObject(i);
+                            if (entry != null && "moderator".equals(entry.optString("type"))) {
+                                JSONArray body = entry.optJSONArray("body");
+                                if (body != null && body.length() > 0) {
+                                    JSONObject firstBody = body.optJSONObject(0);
+                                    if (firstBody != null) {
+                                        JSONArray labels = firstBody.optJSONArray("label");
+                                        if (labels != null) {
+                                            StringBuilder modos = new StringBuilder();
+                                            for (int j = 0; j < labels.length(); j++) {
+                                                JSONObject label = labels.optJSONObject(j);
+                                                if (label != null && label.has("value")) {
+                                                    if (modos.length() > 0) {
+                                                        modos.append(", ");
+                                                    }
+                                                    modos.append(label.getString("value"));
+                                                }
+                                            }
+                                            return modos.toString();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (Exception ignored) {}
+        }
+
+        return "";
     }
 
     public static boolean getSearchIsEmptyInPage(String pageSource) {
