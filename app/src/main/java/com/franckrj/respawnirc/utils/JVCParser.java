@@ -911,6 +911,8 @@ public final class JVCParser {
 
     private static String htmlToPlainText(String html) {
         String text = html.replaceAll("(?s)<div class=\"messageUser__dateEdit\">.*?</div>", "");
+        text = text.replace("<i class=\"message__cesure\"></i>", "");
+        text = text.replaceAll("<span class=\"message__middleCesure\">(.*?)</span>", "$1");
         text = text.replace("<br />", "\n").replace("<br>", "\n").replace("<br/>", "\n");
         text = text.replaceAll("</p>\\s*<p[^>]*>", "\n");
         text = text.replaceAll("</li>", "\n");
@@ -1541,6 +1543,8 @@ public final class JVCParser {
     public static String makeBasicMessageParse(String messageToParse, boolean containSpoil) {
         /* Retirer la div "Message édité le..." pour éviter le doublon avec lastTimeEdit. */
         messageToParse = messageToParse.replaceAll("(?s)<div class=\"messageUser__dateEdit\">.*?</div>", "");
+        messageToParse = messageToParse.replace("<i class=\"message__cesure\"></i>", "");
+        messageToParse = messageToParse.replaceAll("<span class=\"message__middleCesure\">(.*?)</span>", "$1");
         StringBuilder messageInBuilder = new StringBuilder(messageToParse);
 
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, adPattern, -1, "", "", null, null);
