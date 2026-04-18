@@ -5,8 +5,6 @@ import android.os.Parcelable;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.util.Base64;
-import android.util.Log;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.collection.ArraySet;
@@ -15,8 +13,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -1929,6 +1925,24 @@ public final class JVCParser {
                 info.type = topicJson.optString("stateIcon", "normal");
 
                 result.add(info);
+
+                /* JVC 2026 : Gestion de la recherche par message. */
+                JSONArray listMessages = topicJson.optJSONArray("messagesList");
+                if(listMessages != null) {
+                    for (int j = 0; j < listMessages.length(); j++) {
+                        JSONObject messageJson = listMessages.optJSONObject(j);
+                        if(messageJson == null) continue;
+
+                        TopicInfos infoMessage = new TopicInfos();
+                        infoMessage.htmlName = messageJson.optString("text", "");
+                        infoMessage.link = messageJson.optString("permalinkUrl", "");
+                        infoMessage.author = messageJson.optString("publishedAuthorName", "Pseudo supprimé");
+                        infoMessage.authorType = messageJson.optString("publishedAuthorRole", "user");
+                        infoMessage.type = "message";
+
+                        result.add(infoMessage);
+                    }
+                }
             }
         } catch (Exception ignored) {}
         return result;
