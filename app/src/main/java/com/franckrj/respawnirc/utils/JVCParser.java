@@ -2,7 +2,11 @@ package com.franckrj.respawnirc.utils;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.Html;
+import android.text.format.DateUtils;
 import android.util.Base64;
+import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.collection.ArraySet;
@@ -11,8 +15,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,7 +42,7 @@ public final class JVCParser {
     private static final Pattern topicLinkInPermalinkPattern = Pattern.compile("(<div class=\"bloc-return-topic[^\"]*\">)[^<]*<a href=\"([^\"]*)");
     private static final Pattern signaturePattern = Pattern.compile("<div class=\"signature-msg[^\"]*\">(.*)", Pattern.DOTALL);
     private static final Pattern avatarPattern = Pattern.compile("<img\\s+src=\"(https?:)?//([^\"]*)\"\\s+class=\"avatar__image\"", Pattern.DOTALL);
-    private static final Pattern entireTopicPattern = Pattern.compile("<li id=\"topic-[0-9]+\" class=\"tablesForum__bodyRow[^\"]*\"[^>]*>.*?</li>", Pattern.DOTALL);
+    private static final Pattern entireTopicPattern = Pattern.compile("<li (id=\"topic-[^\"]*\" )?class=\"tablesForum[^\"]*\">[^<]*<a class=\"tablesForum__cellSubject\" href=\"[^\"]*\"[^>]*>.*?<span class=\"tablesForum__subjectText\">.*?</li>", Pattern.DOTALL);
     private static final Pattern pseudoIsBlacklistedPattern = Pattern.compile("<div class=\"messageUser[^\"]*msg-pseudo-blacklist[^\"]*\" id=\"message-");
     private static final Pattern messageIsDeletedPattern = Pattern.compile("<div class=\"messageUser[^\"]*(?:msg-supprime|messageUser--deleted)[^\"]*\"[^>]*>");
     private static final Pattern userCanDeleteOrRestoreMessagePattern = Pattern.compile("(?:<span class=\"picto-msg-(croix|restaurer)\" title=\"(Supprimer|Restaurer)\" data-type=\"(delete|restore)\">|<i class=\"messageUser__actionIcon icon-(trash|restore)\">)");
@@ -74,12 +83,12 @@ public final class JVCParser {
     private static final Pattern highlightInArianeStringPattern = Pattern.compile("<h1 class=\"breadcrumb__item\">([^<]*)</h1>");
     private static final Pattern topicNameAndLinkPattern = Pattern.compile("<a class=\"tablesForum__cellSubject\" href=\"([^\"]*\" title=\"[^\"]*)\"[^>]*>");
     private static final Pattern topicNameAndLinkInMessageSearchPattern = Pattern.compile("<a href=\"([^\"]*)\" class=\"topic-title icon-down-right-arrow\"[^>]*>(.*?)</a>", Pattern.DOTALL);
-    private static final Pattern topicNumberMessagesPattern = Pattern.compile("tablesForum__cellText--msg\"[^>]*>\\s*([0-9]+)");
+    private static final Pattern topicNumberMessagesPattern = Pattern.compile("<span class=\"tablesForum__cellText[^\"]*\" data-val=\"Réponses[^\"]*\"[^>]*>[^0-9]*([0-9]*)");
     private static final Pattern topicNumberMessagesAdmPattern = Pattern.compile("<span class=\"topic-count-adm\">[^0-9]*([0-9]*)");
-    private static final Pattern topicAuthorPattern = Pattern.compile("avatar tablesForum__firstAvatar(?:\\s+avatar--([a-zA-Z]+))?\"[^>]*title=\"([^\"]+)\"");
+    private static final Pattern topicAuthorPattern = Pattern.compile("<span class=\"JvCare [A-Z0-9]* (?:avatar tablesForum__firstAvatar|tablesForum__authorLink).*?([Mm]oderator|[Aa]dmin|)\" title=\"(.*?)\"[^>]*>.*?</span>", Pattern.DOTALL);
     private static final Pattern topicAuthorInMessageSearchPattern = Pattern.compile("<span class=\".*?text-auteur text-([a-zA-Z]*)[^>]*>[^A-Za-z0-9\\[\\]_-]*([^<\\n\\r ]*)");
-    private static final Pattern topicDatePattern = Pattern.compile("tablesForum__cellLink\"\\s+title=\"([^\"]+)\"");
-    private static final Pattern topicTypePattern = Pattern.compile("<i class=\"tablesForum__subjectMarkerIcon[^\"]*\"");
+    private static final Pattern topicDatePattern = Pattern.compile("<span class=\"JvCare [A-Z0-9]* tablesForum__cellLink\" title=\"(.*?) &agrave; (.*?)\" data-val=\"Activit&eacute; :\"[^>]*>[^<]*</span>", Pattern.DOTALL);
+    private static final Pattern topicTypePattern = Pattern.compile("<i class=\"tablesForum__subjectMarkerIcon (.*?)\"");
     private static final Pattern forumFavsBlocPattern = Pattern.compile("<h2>Mes forums favoris</h2>.*?<ul class=\"display-list-simple\">(.*?)</ul>", Pattern.DOTALL);
     private static final Pattern topicFavsBlocPattern = Pattern.compile("<h2>Mes sujets favoris</h2>.*?<ul class=\"display-list-simple\">(.*?)</ul>", Pattern.DOTALL);
     private static final Pattern favPattern = Pattern.compile("<li><a href=\"([^\"]*)\">([^<]*)</a></li>");
@@ -102,7 +111,7 @@ public final class JVCParser {
     private static final Pattern realSurveyContentPattern = Pattern.compile("\"html\":\"(.*?)\"\\}");
     private static final Pattern numberOfMpJVCPattern = Pattern.compile("<div class=\".*?headerAccount--pm.*?\">[^<]*<span[^c]*class=\"headerAccount__pm[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
     private static final Pattern numberOfNotifJVCPattern = Pattern.compile("<div class=\".*?headerAccount--notif.*?\">[^<]*<span[^c]*class=\"headerAccount__notif[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
-    private static final Pattern numberOfConnectedPattern = Pattern.compile("<span class=\"nb-connect-fofo\"><i class=\"icon-people\"></i>([^<]*)</span>");
+    private static final Pattern numberOfConnectedPattern = Pattern.compile("<span class=\"userCount__number\">([^<]*)</span>");
     private static final Pattern listOfModeratorsPattern = Pattern.compile("<span class=\"liste-modo-fofo\">(.*?)</span>", Pattern.DOTALL);
     private static final Pattern overlyJVCQuotePattern = Pattern.compile("(<(/)?blockquote>)");
     private static final Pattern overlyBetterQuotePattern = Pattern.compile("<(/)?blockquote>");
@@ -128,6 +137,9 @@ public final class JVCParser {
     private static final Pattern adPattern = Pattern.compile("<ins[^>]*></ins>");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
     private static final Pattern multipleSpacesPattern = Pattern.compile(" +");
+
+    private static final SimpleDateFormat dateParser = new SimpleDateFormat("d MMM yyyy", Locale.FRANCE);
+    private static final SimpleDateFormat dateDisplayFormatter = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
 
     private JVCParser() {
         //rien
@@ -1658,14 +1670,7 @@ public final class JVCParser {
 
         if (topicAuthorMatcher.find()) {
             newTopicInfo.author = topicAuthorMatcher.group(2).trim();
-            String avatarKind = topicAuthorMatcher.group(1);
-            if (avatarKind == null) {
-                newTopicInfo.authorType = "user";
-            } else if (avatarKind.equals("moderator")) {
-                newTopicInfo.authorType = "modo";
-            } else {
-                newTopicInfo.authorType = avatarKind;
-            }
+            newTopicInfo.authorType = topicAuthorMatcher.group(1).trim().toLowerCase();
         } else {
             newTopicInfo.author = "Pseudo supprimé";
             newTopicInfo.authorType = "user";
@@ -1684,21 +1689,52 @@ public final class JVCParser {
         }
 
         if (topicDateMatcher.find()) {
-            newTopicInfo.wholeDate = topicDateMatcher.group(1);
+            String s = Html.fromHtml(topicDateMatcher.group(1)).toString(); // 01 janvier 2000
+            String t = topicDateMatcher.group(2); // 03:30:45
+
+            try {
+                Date d = dateParser.parse(s);
+                if(DateUtils.isToday(d.getTime())) {
+                    s = t;
+                }
+                else {
+                    s = dateDisplayFormatter.format(d);
+                }
+            }
+            catch(Exception ex) {
+                // Nothing, really.
+            }
+            newTopicInfo.wholeDate = s;
         }
 
         if (topicTypeMatcher.find()) {
-            String rawClass = topicTypeMatcher.group(0);
-            if (rawClass.contains("topic-pin-on")) {
-                newTopicInfo.type = "topic-pin-on";
-            } else if (rawClass.contains("topic-pin-off")) {
-                newTopicInfo.type = "topic-pin-off";
-            } else if (rawClass.contains("icon-topic-lock")) {
-                newTopicInfo.type = "topic-lock";
-            } else if (rawClass.contains("tablesForum__iconTopicRed")) {
-                newTopicInfo.type = "topic-folder2";
-            } else {
-                newTopicInfo.type = "topic-folder1";
+            switch(topicTypeMatcher.group(1).trim())
+            {
+                case "icon-topic-pin topic-pin-on":
+                    newTopicInfo.type = "pinned";
+                    break;
+                case "icon-topic-pin topic-pin-off":
+                    newTopicInfo.type = "pinned-locked";
+                    break;
+                case "tablesForum__iconTopicRed icon-topic-folder":
+                    newTopicInfo.type = "hot";
+                    break;
+                case "tablesForum__iconLocked icon-topic-lock":
+                    newTopicInfo.type = "locked";
+                    break;
+                case "tablesForum__iconCheckResolved icon-topic-resolved":
+                    newTopicInfo.type = "resolved";
+                    break;
+                case "message":
+                    newTopicInfo.type = "message";
+                    break;
+                case "tablesForum__iconTopicYellow icon-topic-folder":
+                    newTopicInfo.type = "normal";
+                    break;
+                case "topic-removed":
+                default:
+                    newTopicInfo.type = "removed";
+                    break;
             }
         }
 
@@ -1884,34 +1920,13 @@ public final class JVCParser {
                 JSONObject authorJson = topicJson.optJSONObject("author");
                 if (authorJson != null) {
                     info.author = authorJson.optString("pseudo", "");
-                    String role = authorJson.optString("role", "");
-                    if (role.contains("moderator")) {
-                        info.authorType = "modo";
-                    } else if (role.contains("admin")) {
-                        info.authorType = "admin";
-                    } else {
-                        info.authorType = "user";
-                    }
+                    info.authorType = authorJson.optString("role", "");
                 }
 
                 info.nbOfMessages = String.valueOf(topicJson.optInt("responsesCount", 0));
                 info.wholeDate = topicJson.optString("realLastMessageDate", topicJson.optString("lastMessageDate", ""));
 
-                String stateIcon = topicJson.optString("stateIcon", "normal");
-                switch (stateIcon) {
-                    case "hot":
-                        info.type = "topic-folder2";
-                        break;
-                    case "resolved":
-                        info.type = "topic-resolved";
-                        break;
-                    case "locked":
-                        info.type = "topic-lock";
-                        break;
-                    default:
-                        info.type = "topic-folder1";
-                        break;
-                }
+                info.type = topicJson.optString("stateIcon", "normal");
 
                 result.add(info);
             }
