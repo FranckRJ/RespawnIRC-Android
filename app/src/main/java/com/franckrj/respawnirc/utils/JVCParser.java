@@ -27,7 +27,8 @@ public final class JVCParser {
     private static final Pattern ajaxPrefHashPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_hash_preference_user\" id=\"ajax_hash_preference_user\" value=\"([^\"]*)\" />");
     private static final Pattern ajaxSubHashPattern = Pattern.compile("<body[^>]*data-abo-session=\"([^\"]*)\">");
     private static final Pattern messageQuotePattern = Pattern.compile("\"txt\":\"(.*)\"", Pattern.DOTALL);
-    private static final Pattern entireMessagePattern = Pattern.compile("(<div class=\"messageUser js-hybrid-component\" id=\"message-[0-9]+\">.*?)(<span id=\"post_[0-9]+\" class=\"messageUser__anchor\">|<div class=\"container__pagination\">|<div class=\"container__post\">|<div class=\"container__main\">|<ins data-ad-position)", Pattern.DOTALL);
+    private static final Pattern entireMessagePattern = Pattern.compile("(<div class=\"messageUser js-hybrid-component\" id=\"message-[0-9]+\">.*?)(<span id=\"post_[0-9]+\" class=\"messageUser__anchor\">|<div class=\"container__pagination\">|<div class=\"container__post\">|<div class=\"container__main\">)", Pattern.DOTALL);
+    private static final Pattern adInsPattern = Pattern.compile("<ins data-ad-position[^>]*></ins>");
     private static final Pattern entireMessageInPermalinkPattern = Pattern.compile("(<div class=\"messageUser js-hybrid-component\" id=\"message-[0-9]+\">.*?)(<div class=\"bloc-return-topic[^\"]*\">|<div class=\"container__pagination\">|<div class=\"container__post\">)", Pattern.DOTALL);
     private static final Pattern topicLinkInPermalinkPattern = Pattern.compile("(<div class=\"bloc-return-topic[^\"]*\">)[^<]*<a href=\"([^\"]*)");
     private static final Pattern signaturePattern = Pattern.compile("<div class=\"signature-msg[^\"]*\">(.*)", Pattern.DOTALL);
@@ -40,7 +41,7 @@ public final class JVCParser {
     private static final Pattern userCanKickOrDekickAuthorPattern = Pattern.compile("<span class=\"picto-msg-(kick|dekick)\" title=\"(Kicker|Dékicker)\" data-id-alias=\"[^\"]*\">");
     private static final Pattern pseudoInfosPattern = Pattern.compile("<span class=\"JvCare [^\"]*?messageUser__label\\s*\"[^>]*>\\s*([a-zA-Z0-9_\\[\\]-]+)\\s*</span>");
     private static final Pattern idAliasPattern = Pattern.compile("data-id-alias=\"([0-9]+)\">");
-    private static final Pattern messagePattern = Pattern.compile("<div class=\"messageUser__msg js-message-user-msg\">\\s*(.*?)\\s*</div>\\s*(?=<div class=\"messageUser__dateEdit\"|<div class=\"messageUser__separator\"|<div class=\"messageUser__signature\"|<div class=\"messageUser__footer)", Pattern.DOTALL);
+    private static final Pattern messagePattern = Pattern.compile("<div class=\"messageUser__msg js-message-user-msg\">\\s*(.*?)\\s*</div>\\s*(?=<div class=\"messageUser__dateEdit\"|<div class=\"messageUser__separator\"|<div class=\"messageUser__signature\"|<div class=\"messageUser__footer\"|</div>)", Pattern.DOTALL);
     private static final Pattern currentPagePattern = Pattern.compile("<span [^>]*class=\"(?:[^\"]*\\b)?(?:page-active|pagination__item pagination__item--current|pagination__button--isCurrent)(?:\\b[^\"]*)?\"[^>]*>\\s*([0-9]+)\\s*</span>");
     private static final Pattern pageLinkPattern = Pattern.compile("<(?:span[^>]*>\\s*<a href=\"([^\"]*)\" class=\"lien-jv\">([0-9]+)</a>\\s*</span>|a [^>]*class=\"[^\"]*\\b(?:pagination__item|pagination__button)\\b[^\"]*\"[^>]*href=\"([^\"]*)\"[^>]*>\\s*([0-9]+)\\s*</a>|a [^>]*href=\"([^\"]*)\"[^>]*class=\"[^\"]*\\b(?:pagination__item|pagination__button)\\b[^\"]*\"[^>]*>\\s*([0-9]+)\\s*</a>)");
     private static final Pattern topicFormPattern = Pattern.compile("(<form role=\"form\" class=\"form-post-topic[^\"]*\" method=\"post\" action=\"[^\"]*\".*?>.*?</form>)", Pattern.DOTALL);
@@ -1730,6 +1731,8 @@ public final class JVCParser {
 
     public static ArrayList<MessageInfos> getMessagesOfThisPage(String sourcePage) {
         ArrayList<MessageInfos> listOfParsedMessage = new ArrayList<>();
+        /* Retirer les pubs insérées entre les messages pour ne pas casser le regex. */
+        sourcePage = adInsPattern.matcher(sourcePage).replaceAll("");
         Matcher entireMessageMatcher = entireMessagePattern.matcher(sourcePage);
 
         while (entireMessageMatcher.find()) {
