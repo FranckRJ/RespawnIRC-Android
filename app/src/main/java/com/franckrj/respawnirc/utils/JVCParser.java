@@ -1936,6 +1936,8 @@ public final class JVCParser {
                         TopicInfos infoMessage = new TopicInfos();
                         infoMessage.htmlName = messageJson.optString("text", "");
                         infoMessage.link = messageJson.optString("permalinkUrl", "");
+                        if(!infoMessage.link.startsWith("http"))
+                            infoMessage.link = "https://www.jeuxvideo.com" + infoMessage.link;
                         infoMessage.author = messageJson.optString("publishedAuthorName", "Pseudo supprimé");
                         infoMessage.authorType = messageJson.optString("publishedAuthorRole", "user");
                         infoMessage.type = "message";
