@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -92,7 +93,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     private final JVCMessageToTopicSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageToTopicSender.NewMessageWantEditListener() {
         @Override
         public void editThisMessage(String messageID) {
-            startEditThisMessage(messageID, false);
+            startEditThisMessage(messageID, false, "");
         }
 
         @Override
@@ -148,11 +149,10 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                                 topicStatus.ajaxInfos,
                                 topicStatus.formSession
                         );
-
-                        //String tmpListOfInputToUse = JVCMessageToTopicSender.addPostTypeToListOfInput(topicStatus.listOfInputInAString, topicStatus.userCanPostAsModo && PrefsManager.getBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE));
                         messageSendButton.setEnabled(false);
                         tmpLastMessageSended = messageSendEdit.getText().toString();
                         messageIsSended = senderForMessages.sendThisMessage(tmpLastMessageSended, "https://www.jeuxvideo.com/forums/message/add", Utils.makeMultipartFormFromMap(formData), currentAccount.cookie);
+                    } else {
                     }
 
                     if (!messageIsSended) {
@@ -387,7 +387,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         messageSendEdit.setPadding(newXPaddingForMessageSend, yPaddingForMessageSend, newXPaddingForMessageSend, yPaddingForMessageSend);
     }
 
-    private void startEditThisMessage(String messageID, boolean useMessageToEdit) {
+    private void startEditThisMessage(String messageID, boolean useMessageToEdit, String editUrl) {
         boolean infoForEditAreGetted = false;
 
         if (messageSendButton.isEnabled() && topicStatus.ajaxInfos.list != null) {
@@ -402,7 +402,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             );
             messageSendButton.setEnabled(false);
             messageSendButton.setImageDrawable(ThemeManager.getDrawable(R.attr.themedContentEditIcon, this));
-            infoForEditAreGetted = senderForMessages.getInfosForEditMessage(messageID, topicStatus.ajaxInfos.list, currentAccount.cookie, formData, useMessageToEdit);
+            infoForEditAreGetted = senderForMessages.getInfosForEditMessage(messageID, topicStatus.ajaxInfos.list, currentAccount.cookie, formData, useMessageToEdit, editUrl);
         }
 
         if (!infoForEditAreGetted) {
@@ -755,7 +755,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                     if (senderForMessages.getIsInEdit()) {
                         cancelEditAndHideKeyboardAndCursor();
                     } else {
-                        startEditThisMessage(Long.toString(fromThisMessage.id), true);
+                        startEditThisMessage(Long.toString(fromThisMessage.id), true, fromThisMessage.editUrl);
                     }
                 } else {
                     Toast.makeText(this, R.string.errorTopicIsLocked, Toast.LENGTH_SHORT).show();

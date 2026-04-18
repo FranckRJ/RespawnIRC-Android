@@ -2,6 +2,7 @@ package com.franckrj.respawnirc.jvctopic;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.util.Log;
 import androidx.appcompat.app.AlertDialog;
 import android.widget.Toast;
 
@@ -184,7 +185,21 @@ public class JVCActionsInTopic {
     }
 
     public void startQuoteThisMessage(JVCParser.AjaxInfos latestAjaxInfos, JVCParser.MessageInfos currentMessageInfos, String cookieListInAString) {
-        if (latestAjaxInfos.list != null && latestMessageQuotedInfo == null && currentTaskQuoteMessage == null) {
+        if (latestMessageQuotedInfo != null || currentTaskQuoteMessage != null) {
+            Toast.makeText(parentActivity, R.string.errorQuoteAlreadyRunning, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        /* JVC 2026 : l'endpoint ajax_citation.php n'existe plus.
+           On construit la citation localement depuis le contenu HTML du message. */
+        String quotedText = JVCParser.buildLocalQuoteFromMessage(currentMessageInfos);
+        if (!quotedText.isEmpty() && messageIsQuotedListener != null) {
+            messageIsQuotedListener.getNewMessageQuoted(quotedText);
+            return;
+        }
+
+        /* Fallback : appel AJAX (ancien fonctionnement). */
+        if (latestAjaxInfos.list != null) {
             String idOfMessage = Long.toString(currentMessageInfos.id);
             latestMessageQuotedInfo = JVCParser.buildMessageQuotedInfoFromThis(currentMessageInfos);
 
@@ -192,11 +207,7 @@ public class JVCActionsInTopic {
             currentTaskQuoteMessage.setRequestIsFinishedListener(quoteMessageIsFinishedListener);
             currentTaskQuoteMessage.execute(idOfMessage, latestAjaxInfos.list, cookieListInAString);
         } else {
-            if (latestMessageQuotedInfo != null || currentTaskQuoteMessage != null) {
-                Toast.makeText(parentActivity, R.string.errorQuoteAlreadyRunning, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(parentActivity, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
-            }
+            Toast.makeText(parentActivity, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -305,7 +316,12 @@ public class JVCActionsInTopic {
             if (params.length > 2) {
                 String typeOfAction = (itsADelete ? "delete" : "restore");
                 WebManager.WebInfos currentWebInfos = initWebInfos(params[2], false);
-                return WebManager.sendRequest("https://www.jeuxvideo.com/forums/modal_del_message.php", "POST", "tab_message[]=" + params[0] + "&type=" + typeOfAction + "&" + params[1], currentWebInfos);
+                currentWebInfos.followRedirects = true;
+                /* JVC 2026 : les params sont dans la query string, la requête est un POST
+                   avec le body vide (les anciens endpoints utilisaient des query params). */
+                String url = "https://www.jeuxvideo.com/forums/message/delete?ids=" + params[0] + "&type=" + typeOfAction + "&" + params[1];
+                String result = WebManager.sendRequest(url, "POST", "", currentWebInfos);
+                return result;
             }
             return null;
         }
