@@ -758,9 +758,25 @@ public final class JVCParser {
 
         if (numberOfConnectedMatcher.find()) {
             return numberOfConnectedMatcher.group(1).trim();
-        } else {
-            return "";
         }
+
+        /* Fallback JSON payload : forumInfo.header.btnVal contient le nombre de connectés. */
+        Matcher payloadMatcher = formSessionPattern.matcher(pageSource);
+        if (payloadMatcher.find()) {
+            try {
+                byte[] decoded = android.util.Base64.decode(payloadMatcher.group(1), android.util.Base64.DEFAULT);
+                JSONObject json = new JSONObject(new String(decoded));
+                JSONObject forumInfo = json.optJSONObject("forumInfo");
+                if (forumInfo != null) {
+                    JSONObject header = forumInfo.optJSONObject("header");
+                    if (header != null && header.has("btnVal")) {
+                        return String.valueOf(header.getInt("btnVal"));
+                    }
+                }
+            } catch (Exception ignored) {}
+        }
+
+        return "";
     }
 
     public static String getListOfModeratorsFromPage(String pageSource) {
