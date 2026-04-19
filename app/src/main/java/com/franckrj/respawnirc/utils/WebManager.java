@@ -93,8 +93,10 @@ public class WebManager {
                 DataOutputStream wr = null;
                 BufferedWriter writer = null;
 
-                if(currentInfos.currentUrl.contains("https://www.jeuxvideo.com/forums/message/") ||
-                   currentInfos.currentUrl.contains("https://www.jeuxvideo.com/forums/topic/"))
+                if((currentInfos.currentUrl.contains("https://www.jeuxvideo.com/forums/message/add") ||
+                    currentInfos.currentUrl.contains("https://www.jeuxvideo.com/forums/message/edit") ||
+                    currentInfos.currentUrl.contains("https://www.jeuxvideo.com/forums/topic/"))
+                   && requestParameters.contains("\r"))
                 {
                     String firstLine = requestParameters.substring(2, requestParameters.indexOf("\r"));
 

@@ -2,6 +2,8 @@ package com.franckrj.respawnirc.utils;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.Html;
+import android.text.format.DateUtils;
 import android.util.Base64;
 
 import androidx.annotation.NonNull;
@@ -11,8 +13,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,27 +32,31 @@ public final class JVCParser {
     private static final Pattern ajaxPrefHashPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_hash_preference_user\" id=\"ajax_hash_preference_user\" value=\"([^\"]*)\" />");
     private static final Pattern ajaxSubHashPattern = Pattern.compile("<body[^>]*data-abo-session=\"([^\"]*)\">");
     private static final Pattern messageQuotePattern = Pattern.compile("\"txt\":\"(.*)\"", Pattern.DOTALL);
-    private static final Pattern entireMessagePattern = Pattern.compile("(<div class=\"bloc-message-forum[^\"]*\".*?)(<span id=\"post_[^\"]*\" class=\"bloc-message-forum-anchor\">|<div class=\"bloc-outils-plus-modo bloc-outils-bottom[^\"]*\">|<div class=\"bloc-pagi-default[^\"]*\">)", Pattern.DOTALL);
-    private static final Pattern entireMessageInPermalinkPattern = Pattern.compile("(<div class=\"bloc-message-forum[^\"]*\".*?)(<div class=\"bloc-return-topic[^\"]*\">)", Pattern.DOTALL);
+    private static final Pattern entireMessagePattern = Pattern.compile("(<div class=\"messageUser js-hybrid-component\" id=\"message-[0-9]+\">.*?)(<span id=\"post_[0-9]+\" class=\"messageUser__anchor\">|<div class=\"container__pagination\">|<div class=\"container__post\">|<div class=\"container__main\">)", Pattern.DOTALL);
+    private static final Pattern adInsPattern = Pattern.compile("<ins data-ad-position[^>]*></ins>");
+    private static final Pattern entireMessageInPermalinkPattern = Pattern.compile("(<div class=\"messageUser js-hybrid-component\" id=\"message-[0-9]+\">.*?)(<div class=\"bloc-return-topic[^\"]*\">|<div class=\"container__pagination\">|<div class=\"container__post\">)", Pattern.DOTALL);
     private static final Pattern topicLinkInPermalinkPattern = Pattern.compile("(<div class=\"bloc-return-topic[^\"]*\">)[^<]*<a href=\"([^\"]*)");
     private static final Pattern signaturePattern = Pattern.compile("<div class=\"signature-msg[^\"]*\">(.*)", Pattern.DOTALL);
-    private static final Pattern avatarPattern = Pattern.compile("<img src=\"[^\"]*\" data-src=\"(https?:)?//([^\"]*)\" class=\"user-avatar-msg js-lazy avatar\"", Pattern.DOTALL);
-    private static final Pattern entireTopicPattern = Pattern.compile("<li (class=\"[^\"]*\" data-id=\"[^\"]*\"|class=\"message[^\"]*\")>.*?<span class=\"topic-subject\">.*?</li>", Pattern.DOTALL);
-    private static final Pattern pseudoIsBlacklistedPattern = Pattern.compile("<div class=\"bloc-message-forum msg-pseudo-blacklist[^\"]*\" data-id=\"");
-    private static final Pattern messageIsDeletedPattern = Pattern.compile("<div class=\"bloc-message-forum.*msg-supprime[^\"]*\" data-id=\"");
-    private static final Pattern userCanDeleteOrRestoreMessagePattern = Pattern.compile("<span class=\"picto-msg-(croix|restaurer)\" title=\"(Supprimer|Restaurer)\" data-type=\"(delete|restore)\">");
-    private static final Pattern userCanEditMessagePattern = Pattern.compile("<span class=\"picto-msg-crayon\" title=\"Editer\"");
+    private static final Pattern avatarPattern = Pattern.compile("<img\\s+src=\"(https?:)?//([^\"]*)\"\\s+class=\"avatar__image\"", Pattern.DOTALL);
+    private static final Pattern entireTopicPattern = Pattern.compile("<li (id=\"topic-[^\"]*\" )?class=\"tablesForum[^\"]*\">[^<]*<a class=\"tablesForum__cellSubject\" href=\"[^\"]*\"[^>]*>.*?<span class=\"tablesForum__subjectText\">.*?</li>", Pattern.DOTALL);
+    private static final Pattern pseudoIsBlacklistedPattern = Pattern.compile("<div class=\"messageUser[^\"]*msg-pseudo-blacklist[^\"]*\" id=\"message-");
+    private static final Pattern messageIsDeletedPattern = Pattern.compile("<div class=\"messageUser[^\"]*(?:msg-supprime|messageUser--deleted)[^\"]*\"[^>]*>");
+    private static final Pattern userCanDeleteOrRestoreMessagePattern = Pattern.compile("(?:<span class=\"picto-msg-(croix|restaurer)\" title=\"(Supprimer|Restaurer)\" data-type=\"(delete|restore)\">|<i class=\"messageUser__actionIcon icon-(trash|restore)\">)");
+    private static final Pattern userCanEditMessagePattern = Pattern.compile("(?:<span class=\"picto-msg-crayon\" title=\"Editer\"|<i class=\"messageUser__actionIcon icon-pencil2\">)");
     private static final Pattern userCanKickOrDekickAuthorPattern = Pattern.compile("<span class=\"picto-msg-(kick|dekick)\" title=\"(Kicker|Dékicker)\" data-id-alias=\"[^\"]*\">");
-    private static final Pattern pseudoInfosPattern = Pattern.compile("<span class=\"JvCare [^ ]* bloc-pseudo-msg text-([^\"]*)\" target=\"_blank\">[^a-zA-Z0-9_\\[\\]-]*([a-zA-Z0-9_\\[\\]-]*)(?:[^<]*<div class=\"bloc-genesis-pass\"><i class=\"icon-nft-badge\"></i> </div>)?[^<]*</span>");
+    private static final Pattern pseudoInfosPattern = Pattern.compile("<span class=\"JvCare [^\"]*?messageUser__label\\s*\"[^>]*>\\s*([a-zA-Z0-9_\\[\\]-]+)\\s*</span>");
     private static final Pattern idAliasPattern = Pattern.compile("data-id-alias=\"([0-9]+)\">");
-    private static final Pattern messagePattern = Pattern.compile("<div class=\"bloc-contenu\">[^<]*<div class=\"txt-msg +text-[^-]*-forum \">((.*?)(?=<div class=\"info-edition-msg\">)|(.*?)(?=<div class=\"signature-msg)|(.*))", Pattern.DOTALL);
-    private static final Pattern currentPagePattern = Pattern.compile("<span class=\"page-active\">([^<]*)</span>");
-    private static final Pattern pageLinkPattern = Pattern.compile("<span><a href=\"([^\"]*)\" class=\"lien-jv\">([0-9]*)</a></span>");
+    private static final Pattern messagePattern = Pattern.compile("<div class=\"messageUser__msg js-message-user-msg\">\\s*(.*?)\\s*</div>\\s*(?=<div class=\"messageUser__dateEdit\"|<div class=\"messageUser__separator\"|<div class=\"messageUser__signature\"|<div class=\"messageUser__footer\"|</div>)", Pattern.DOTALL);
+    private static final Pattern currentPagePattern = Pattern.compile("<span [^>]*class=\"(?:[^\"]*\\b)?(?:page-active|pagination__item pagination__item--current|pagination__button--isCurrent)(?:\\b[^\"]*)?\"[^>]*>\\s*([0-9]+)\\s*</span>");
+    private static final Pattern pageLinkPattern = Pattern.compile("<(?:span[^>]*>\\s*<a href=\"([^\"]*)\" class=\"lien-jv\">([0-9]+)</a>\\s*</span>|a [^>]*class=\"[^\"]*\\b(?:pagination__item|pagination__button)\\b[^\"]*\"[^>]*href=\"([^\"]*)\"[^>]*>\\s*([0-9]+)\\s*</a>|a [^>]*href=\"([^\"]*)\"[^>]*class=\"[^\"]*\\b(?:pagination__item|pagination__button)\\b[^\"]*\"[^>]*>\\s*([0-9]+)\\s*</a>)");
     private static final Pattern topicFormPattern = Pattern.compile("(<form role=\"form\" class=\"form-post-topic[^\"]*\" method=\"post\" action=\"[^\"]*\".*?>.*?</form>)", Pattern.DOTALL);
-    private static final Pattern modoConnectFormPattern = Pattern.compile("(<form role=\"form\" action=\"\" method=\"post\" id=\"form_connexion\" class=\"form-connect-jv\" autocomplete=\"off\">.*?</form>)", Pattern.DOTALL);
-    private static final Pattern inputFormPattern = Pattern.compile("<input (type|name|value)=\"([^\"]*)\" (type|name|value)=\"([^\"]*)\" (type|name|value)=\"([^\"]*)\"/>");
-    private static final Pattern dateMessagePattern = Pattern.compile("<div class=\"bloc-date-msg\">([^<]*<span class=\"JvCare [^ ]* lien-jv\" target=\"_blank\">)?[^a-zA-Z0-9]*([^ ]* [^ ]* [^ ]* [^ ]* ([0-9:]*))");
-    private static final Pattern messageIdPattern = Pattern.compile("<div class=\"bloc-message-forum[^\"]*\" data-id=\"([0-9]*)[^\"]*\">");
+    private static final Pattern modoConnectFormPattern = Pattern.compile("(<form role=\"form\"[^>]*class=\"form-connect-jv\"[^>]*>.*?</form>)", Pattern.DOTALL);
+    private static final Pattern inputFormPattern = Pattern.compile("<input\\s[^>]*/?>");
+    private static final Pattern inputNameAttrPattern = Pattern.compile("\\sname=\"([^\"]*)\"");
+    private static final Pattern inputValueAttrPattern = Pattern.compile("\\svalue=\"([^\"]*)\"");
+    private static final Pattern inputTypeAttrPattern = Pattern.compile("\\stype=\"([^\"]*)\"");
+    private static final Pattern dateMessagePattern = Pattern.compile("<span class=\"[^\"]*?messageUser__date\"[^>]*>()\\s*([^ <]+ [^ <]+ [^ <]+ [^ <]+ ([0-9:]+))\\s*</span>");
+    private static final Pattern messageIdPattern = Pattern.compile("<div class=\"messageUser[^\"]*\" id=\"message-([0-9]+)\">");
     private static final Pattern unicodeInTextPattern = Pattern.compile("\\\\u([a-zA-Z0-9]{4})");
     private static final Pattern alertPattern = Pattern.compile("<div class=\"alert alert-danger[^\"]*\">.*?<p class=\"([^\"]*)\">([^<]*)</p>.*?</div>", Pattern.DOTALL);
     private static final Pattern errorBlocPattern = Pattern.compile("<div class=\"bloc-erreur\">([^<]*)</div>");
@@ -68,14 +77,14 @@ public final class JVCParser {
     private static final Pattern forumNameInArianeStringPattern = Pattern.compile("<a class=\"breadcrumb__item\" href=\"(/forums/0-[^\"]*)\">([^<]*)</a>");
     private static final Pattern topicNameInArianeStringPattern = Pattern.compile("<a class=\"breadcrumb__item\" href=\"/forums/(42|1)-[^\"]*\">([^<]*)</a>");
     private static final Pattern highlightInArianeStringPattern = Pattern.compile("<h1 class=\"breadcrumb__item\">([^<]*)</h1>");
-    private static final Pattern topicNameAndLinkPattern = Pattern.compile("<a class=\"lien-jv topic-title[^\"]*\" href=\"([^\"]*\" title=\"[^\"]*)\"[^>]*>");
+    private static final Pattern topicNameAndLinkPattern = Pattern.compile("<a class=\"tablesForum__cellSubject\" href=\"([^\"]*\" title=\"[^\"]*)\"[^>]*>");
     private static final Pattern topicNameAndLinkInMessageSearchPattern = Pattern.compile("<a href=\"([^\"]*)\" class=\"topic-title icon-down-right-arrow\"[^>]*>(.*?)</a>", Pattern.DOTALL);
-    private static final Pattern topicNumberMessagesPattern = Pattern.compile("<span class=\"topic-count\">[^0-9]*([0-9]*)");
+    private static final Pattern topicNumberMessagesPattern = Pattern.compile("<span class=\"tablesForum__cellText[^\"]*\" data-val=\"Réponses[^\"]*\"[^>]*>[^0-9]*([0-9]*)");
     private static final Pattern topicNumberMessagesAdmPattern = Pattern.compile("<span class=\"topic-count-adm\">[^0-9]*([0-9]*)");
-    private static final Pattern topicAuthorPattern = Pattern.compile("<span class=\".*?text-([^ ]*) topic-author[^>]*>[^A-Za-z0-9\\[\\]_-]*([^<\\n\\r ]*)");
+    private static final Pattern topicAuthorPattern = Pattern.compile("<span class=\"JvCare [A-Z0-9]* (?:avatar tablesForum__firstAvatar|tablesForum__authorLink).*?([Mm]oderator|[Aa]dmin|)\" title=\"(.*?)\"[^>]*>.*?</span>", Pattern.DOTALL);
     private static final Pattern topicAuthorInMessageSearchPattern = Pattern.compile("<span class=\".*?text-auteur text-([a-zA-Z]*)[^>]*>[^A-Za-z0-9\\[\\]_-]*([^<\\n\\r ]*)");
-    private static final Pattern topicDatePattern = Pattern.compile("<span class=\"topic-date\">[^<]*<span[^>]*>[^0-9/:]*([0-9/:]*)");
-    private static final Pattern topicTypePattern = Pattern.compile("<i title=\"[^\"]*\" class=\"[^ ]* ([^ ]*) topic-img\"");
+    private static final Pattern topicDatePattern = Pattern.compile("<span class=\"JvCare [A-Z0-9]* tablesForum__cellLink\" title=\"(.*?) &agrave; (.*?)\" data-val=\"Activit&eacute; :\"[^>]*>[^<]*</span>", Pattern.DOTALL);
+    private static final Pattern topicTypePattern = Pattern.compile("<i class=\"tablesForum__subjectMarkerIcon (.*?)\"");
     private static final Pattern forumFavsBlocPattern = Pattern.compile("<h2>Mes forums favoris</h2>.*?<ul class=\"display-list-simple\">(.*?)</ul>", Pattern.DOTALL);
     private static final Pattern topicFavsBlocPattern = Pattern.compile("<h2>Mes sujets favoris</h2>.*?<ul class=\"display-list-simple\">(.*?)</ul>", Pattern.DOTALL);
     private static final Pattern favPattern = Pattern.compile("<li><a href=\"([^\"]*)\">([^<]*)</a></li>");
@@ -98,7 +107,7 @@ public final class JVCParser {
     private static final Pattern realSurveyContentPattern = Pattern.compile("\"html\":\"(.*?)\"\\}");
     private static final Pattern numberOfMpJVCPattern = Pattern.compile("<div class=\".*?headerAccount--pm.*?\">[^<]*<span[^c]*class=\"headerAccount__pm[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
     private static final Pattern numberOfNotifJVCPattern = Pattern.compile("<div class=\".*?headerAccount--notif.*?\">[^<]*<span[^c]*class=\"headerAccount__notif[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
-    private static final Pattern numberOfConnectedPattern = Pattern.compile("<span class=\"nb-connect-fofo\"><i class=\"icon-people\"></i>([^<]*)</span>");
+    private static final Pattern numberOfConnectedPattern = Pattern.compile("<span class=\"userCount__number\">([^<]*)</span>");
     private static final Pattern listOfModeratorsPattern = Pattern.compile("<span class=\"liste-modo-fofo\">(.*?)</span>", Pattern.DOTALL);
     private static final Pattern overlyJVCQuotePattern = Pattern.compile("(<(/)?blockquote>)");
     private static final Pattern overlyBetterQuotePattern = Pattern.compile("<(/)?blockquote>");
@@ -113,16 +122,20 @@ public final class JVCParser {
     private static final Pattern jvcVideoPattern = Pattern.compile("<div class=\"player-contenu\">.*?<div class=\"player-jv\" id=\"player-jv-([^-]*)-.*?</div>[^<]*</div>[^<]*</div>[^<]*</div>", Pattern.DOTALL);
     private static final Pattern surroundedBlockquotePattern = Pattern.compile("(<br /> *)*(<(/)?blockquote>)( *<br />)*");
     private static final Pattern noelshackImagePattern = Pattern.compile("<span class=\"JvCare[^>]*><img class=\"img-shack\".*?src=\"http(s)?://([^\"]*)\" alt=\"([^\"]*)\"[^>]*></span>");
+    private static final Pattern noelshackUrlImgPattern = Pattern.compile("<img class=\"message__urlImg[^\"]*\"[^>]*alt=\"([^\"]*)\"[^>]*>");
     private static final Pattern emptySearchPattern = Pattern.compile("<span style=\"[^\"]*\">[ \\n\\r]*Aucune réponse pour votre recherche ![ \\n\\r]*</span>");
     private static final Pattern userCanPostAsModoPattern = Pattern.compile("<select class=\"select-user-post\" id=\"form_alias_rang\" name=\"form_alias_rang\">((.*?)(?=<option value=\"2\")|(.*?)(?=</select>))<option value=\"2\"", Pattern.DOTALL);
     private static final Pattern userCanLockOrUnlockTopicPattern = Pattern.compile("<span class=\"btn btn-forum-modo btn-lock-topic\" data-type=\"(un)?lock\">");
     private static final Pattern userCanPinOrUnpinTopicPattern = Pattern.compile("<span class=\"btn btn-forum-modo btn-epingle-topic\" data-type=\"(des)?epingle\">");
     private static final Pattern uglyImagesNamePattern = Pattern.compile("issou|risi|rizi|jesus|picsart|chancla|larry|sermion");
-    private static final Pattern jvcNiveauPattern = Pattern.compile("<div +class=\"bloc-user-level[^\"]*\">(.*?)Niveau ([0-9]*)(.*?)</div>", Pattern.DOTALL);
+    private static final Pattern jvcNiveauPattern = Pattern.compile("<div class=\"messageUser__level\">(\\s*)Niveau ([0-9]+)(\\s*)</div>");
     private static final Pattern formSessionPattern = Pattern.compile("<script>window\\.jvc=window\\.jvc\\|\\|\\{\\};window\\.jvc\\.forumsAppPayload=\"([^\"]*)\";</script>");
     private static final Pattern adPattern = Pattern.compile("<ins[^>]*></ins>");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
     private static final Pattern multipleSpacesPattern = Pattern.compile(" +");
+
+    private static final SimpleDateFormat dateParser = new SimpleDateFormat("d MMM yyyy", Locale.FRANCE);
+    private static final SimpleDateFormat dateDisplayFormatter = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
 
     private JVCParser() {
         //rien
@@ -745,9 +758,25 @@ public final class JVCParser {
 
         if (numberOfConnectedMatcher.find()) {
             return numberOfConnectedMatcher.group(1).trim();
-        } else {
-            return "";
         }
+
+        /* Fallback JSON payload : forumInfo.header.btnVal contient le nombre de connectés. */
+        Matcher payloadMatcher = formSessionPattern.matcher(pageSource);
+        if (payloadMatcher.find()) {
+            try {
+                byte[] decoded = android.util.Base64.decode(payloadMatcher.group(1), android.util.Base64.DEFAULT);
+                JSONObject json = new JSONObject(new String(decoded));
+                JSONObject forumInfo = json.optJSONObject("forumInfo");
+                if (forumInfo != null) {
+                    JSONObject header = forumInfo.optJSONObject("header");
+                    if (header != null && header.has("btnVal")) {
+                        return String.valueOf(header.getInt("btnVal"));
+                    }
+                }
+            } catch (Exception ignored) {}
+        }
+
+        return "";
     }
 
     public static String getListOfModeratorsFromPage(String pageSource) {
@@ -755,9 +784,49 @@ public final class JVCParser {
 
         if (listOfModeratorsMatcher.find()) {
             return listOfModeratorsMatcher.group(1).replace("<!--", "").replace("-->", "").replace(" ", "").replace("\n", "").replace(",", ", ");
-        } else {
-            return "";
         }
+
+        /* Fallback JSON payload : forumInfo.data contient les modérateurs. */
+        Matcher payloadMatcher = formSessionPattern.matcher(pageSource);
+        if (payloadMatcher.find()) {
+            try {
+                byte[] decoded = android.util.Base64.decode(payloadMatcher.group(1), android.util.Base64.DEFAULT);
+                JSONObject json = new JSONObject(new String(decoded));
+                JSONObject forumInfo = json.optJSONObject("forumInfo");
+                if (forumInfo != null) {
+                    JSONArray dataArray = forumInfo.optJSONArray("data");
+                    if (dataArray != null) {
+                        for (int i = 0; i < dataArray.length(); i++) {
+                            JSONObject entry = dataArray.optJSONObject(i);
+                            if (entry != null && "moderator".equals(entry.optString("type"))) {
+                                JSONArray body = entry.optJSONArray("body");
+                                if (body != null && body.length() > 0) {
+                                    JSONObject firstBody = body.optJSONObject(0);
+                                    if (firstBody != null) {
+                                        JSONArray labels = firstBody.optJSONArray("label");
+                                        if (labels != null) {
+                                            StringBuilder modos = new StringBuilder();
+                                            for (int j = 0; j < labels.length(); j++) {
+                                                JSONObject label = labels.optJSONObject(j);
+                                                if (label != null && label.has("value")) {
+                                                    if (modos.length() > 0) {
+                                                        modos.append(", ");
+                                                    }
+                                                    modos.append(label.getString("value"));
+                                                }
+                                            }
+                                            return modos.toString();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (Exception ignored) {}
+        }
+
+        return "";
     }
 
     public static boolean getSearchIsEmptyInPage(String pageSource) {
@@ -862,7 +931,11 @@ public final class JVCParser {
         try
         {
             JSONObject json = new JSONObject(pageSource);
-            res = json.getString("jvcode");
+            if (json.has("text")) {
+                res = json.getString("text");
+            } else {
+                res = json.getString("jvcode");
+            }
         } catch (JSONException ignored)
         {}
 
@@ -871,6 +944,147 @@ public final class JVCParser {
 
     public static String buildMessageQuotedInfoFromThis(MessageInfos thisMessageInfo) {
         return ">[" + thisMessageInfo.dateTime + "] <" + thisMessageInfo.pseudo + ">";
+    }
+
+    /* JVC 2026 : construction locale de la citation depuis le HTML du message. */
+    private static String decodeHtmlEntities(String text) {
+        text = specialCharToNormalChar(text);
+        text = text.replace("&nbsp;", " ");
+        text = text.replace("&agrave;", "à");
+        text = text.replace("&aacute;", "á");
+        text = text.replace("&acirc;", "â");
+        text = text.replace("&eacute;", "é");
+        text = text.replace("&egrave;", "è");
+        text = text.replace("&ecirc;", "ê");
+        text = text.replace("&euml;", "ë");
+        text = text.replace("&ugrave;", "ù");
+        text = text.replace("&ucirc;", "û");
+        text = text.replace("&ocirc;", "ô");
+        text = text.replace("&iuml;", "ï");
+        text = text.replace("&ccedil;", "ç");
+        /* Entités numériques &#NNN; */
+        java.util.regex.Matcher numMatcher = java.util.regex.Pattern.compile("&#(\\d+);").matcher(text);
+        StringBuffer numSb = new StringBuffer();
+        while (numMatcher.find()) {
+            int code = Integer.parseInt(numMatcher.group(1));
+            numMatcher.appendReplacement(numSb, java.util.regex.Matcher.quoteReplacement(String.valueOf((char) code)));
+        }
+        numMatcher.appendTail(numSb);
+        return numSb.toString();
+    }
+
+    private static String htmlToPlainText(String html) {
+        String text = html.replaceAll("(?s)<div class=\"messageUser__dateEdit\">.*?</div>", "");
+        text = text.replace("<i class=\"message__cesure\"></i>", "");
+        text = text.replaceAll("<span class=\"message__middleCesure\">(.*?)</span>", "$1");
+        text = text.replace("<br />", "\n").replace("<br>", "\n").replace("<br/>", "\n");
+        text = text.replaceAll("</p>\\s*<p[^>]*>", "\n");
+        text = text.replaceAll("</li>", "\n");
+        text = text.replaceAll("<img[^>]*data-code=\"([^\"]*)\"[^>]*/?>", "$1");
+        text = text.replaceAll("<img class=\"img-stickers\" src=\"([^\"]*)\"[^>]*/?>", "$1");
+        text = text.replaceAll("<img class=\"message__urlImg[^\"]*\"[^>]*alt=\"([^\"]*)\"[^>]*/?>", "$1");
+        text = text.replaceAll("<[^>]+>", "");
+        text = decodeHtmlEntities(text);
+        return text.trim();
+    }
+
+    /**
+     * Convertit du HTML en texte cité récursivement.
+     * Chaque niveau de blockquote ajoute un ">" supplémentaire.
+     */
+    private static void htmlToQuotedText(String html, int depth, StringBuilder output) {
+        java.util.regex.Pattern bqPattern = java.util.regex.Pattern.compile("(?s)<blockquote[^>]*>(.*?)</blockquote>");
+        /* On cherche les blockquotes au niveau courant (le lazy ? attrape le plus intérieur d'abord,
+           mais on gère la récursion en rappelant cette méthode sur le contenu). */
+        /* Utiliser une approche manuelle pour trouver les blockquotes de premier niveau. */
+        int pos = 0;
+        while (pos < html.length()) {
+            int openIdx = html.indexOf("<blockquote", pos);
+            if (openIdx == -1) {
+                /* Plus de blockquote, écrire le reste. */
+                String rest = html.substring(pos);
+                String clean = htmlToPlainText(rest).trim();
+                if (!clean.isEmpty()) {
+                    String prefix = buildQuotePrefix(depth);
+                    String[] lines = clean.split("\n");
+                    for (String line : lines) {
+                        String trimmed = line.trim();
+                        if (!trimmed.isEmpty()) {
+                            output.append(prefix).append(trimmed).append("\n");
+                        }
+                    }
+                }
+                break;
+            }
+            /* Texte avant le blockquote. */
+            if (openIdx > pos) {
+                String before = html.substring(pos, openIdx);
+                String clean = htmlToPlainText(before).trim();
+                if (!clean.isEmpty()) {
+                    String prefix = buildQuotePrefix(depth);
+                    String[] lines = clean.split("\n");
+                    for (String line : lines) {
+                        String trimmed = line.trim();
+                        if (!trimmed.isEmpty()) {
+                            output.append(prefix).append(trimmed).append("\n");
+                        }
+                    }
+                }
+            }
+            /* Trouver la fin du tag ouvrant. */
+            int openTagEnd = html.indexOf(">", openIdx);
+            if (openTagEnd == -1) break;
+            /* Trouver le </blockquote> correspondant en comptant les niveaux. */
+            int innerStart = openTagEnd + 1;
+            int nesting = 1;
+            int searchPos = innerStart;
+            int closeIdx = -1;
+            while (nesting > 0 && searchPos < html.length()) {
+                int nextOpen = html.indexOf("<blockquote", searchPos);
+                int nextClose = html.indexOf("</blockquote>", searchPos);
+                if (nextClose == -1) break;
+                if (nextOpen != -1 && nextOpen < nextClose) {
+                    nesting++;
+                    searchPos = nextOpen + 11;
+                } else {
+                    nesting--;
+                    if (nesting == 0) {
+                        closeIdx = nextClose;
+                    }
+                    searchPos = nextClose + 13;
+                }
+            }
+            if (closeIdx == -1) break;
+            String innerHtml = html.substring(innerStart, closeIdx);
+            /* Récursion : le contenu du blockquote est un niveau plus profond. */
+            htmlToQuotedText(innerHtml, depth + 1, output);
+            pos = closeIdx + 13; /* longueur de "</blockquote>" */
+        }
+    }
+
+    private static String buildQuotePrefix(int depth) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < depth; i++) {
+            sb.append("> ");
+        }
+        return sb.toString();
+    }
+
+    public static String buildLocalQuoteFromMessage(MessageInfos messageInfo) {
+        String header = "> Le " + messageInfo.wholeDate + " " + messageInfo.pseudo + " :\n";
+        String msgHtml = messageInfo.messageNotParsed;
+        if (msgHtml == null || msgHtml.isEmpty()) {
+            return "";
+        }
+        StringBuilder content = new StringBuilder();
+        /* depth=1 car tout le message est déjà dans une citation (le "> " de base). */
+        htmlToQuotedText(msgHtml, 1, content);
+
+        StringBuilder quoted = new StringBuilder();
+        quoted.append(header);
+        quoted.append(content);
+        quoted.append("\n");
+        return quoted.toString();
     }
 
     public static String parsingAjaxMessages(String ajaxMessage) {
@@ -933,6 +1147,64 @@ public final class JVCParser {
             newAjaxInfos.sub = "ajax_hash=" + ajaxSubHashMatcher.group(1);
         }
 
+        /* Depuis la refonte JVC 2026, les <input type="hidden" name="ajax_hash_liste_..."> ont disparu :
+           le hash est maintenant exposé via "ajaxToken" dans le payload JSON base64 de forumsAppPayload.
+           On récupère ce token comme fallback quand les patterns HTML n'ont rien trouvé. */
+        Matcher formSessionMatcher = formSessionPattern.matcher(pageSource);
+        if (formSessionMatcher.find()) {
+            try {
+                byte[] decodedJson = Base64.decode(formSessionMatcher.group(1), Base64.DEFAULT);
+                JSONObject json = new JSONObject(new String(decodedJson));
+                String ajaxToken = json.optString("ajaxToken", null);
+                String timestamp = null;
+                if (json.has("formSession")) {
+                    JSONObject fs = json.getJSONObject("formSession");
+                    if (fs.has("fs_timestamp")) {
+                        timestamp = String.valueOf(fs.get("fs_timestamp"));
+                    }
+                }
+                if (ajaxToken != null && !ajaxToken.isEmpty()) {
+                    if (newAjaxInfos.newHash == null) {
+                        newAjaxInfos.newHash = ajaxToken;
+                    }
+                    if (newAjaxInfos.list == null) {
+                        if (timestamp != null) {
+                            newAjaxInfos.list = "ajax_timestamp=" + timestamp + "&ajax_hash=" + ajaxToken;
+                        } else {
+                            newAjaxInfos.list = "ajax_hash=" + ajaxToken;
+                        }
+                    }
+                }
+
+                /* Extraire le hash de modération depuis topicActions.deleteMessageUrl ou deleteTopicUrl.
+                   Format : "/forums/message/delete?type=delete&ajax_hash=XXXX" */
+                if (newAjaxInfos.mod == null) {
+                    JSONObject topicActions = json.optJSONObject("topicActions");
+                    if (topicActions != null) {
+                        String deleteUrl = topicActions.optString("deleteMessageUrl", "");
+                        if (deleteUrl.isEmpty()) {
+                            deleteUrl = topicActions.optString("deleteTopicUrl", "");
+                        }
+                        int hashIdx = deleteUrl.indexOf("ajax_hash=");
+                        if (hashIdx >= 0) {
+                            String modHash = deleteUrl.substring(hashIdx + "ajax_hash=".length());
+                            newAjaxInfos.mod = "ajax_hash=" + modHash;
+                        }
+                    }
+                }
+
+                /* Extraire le hash de préférences depuis ajaxSessionPreferencesToken. */
+                if (newAjaxInfos.pref == null) {
+                    String prefToken = json.optString("ajaxSessionPreferencesToken", "");
+                    if (!prefToken.isEmpty()) {
+                        newAjaxInfos.pref = "ajax_hash=" + prefToken;
+                    }
+                }
+
+                /* Extraire le hash d'abonnement depuis data-abo-session (déjà dans sub via le pattern HTML). */
+            } catch (JSONException ignored) {}
+        }
+
         return newAjaxInfos;
     }
 
@@ -980,37 +1252,116 @@ public final class JVCParser {
     }
 
     public static String getListOfInputInAStringInThisForm(String thisForm) {
+        /* Le nouveau HTML JVC (rupture technologique d'avril 2026) place les attributs des <input>
+           dans un ordre variable et avec un nombre d'attributs variable. On extrait donc name et
+           value indépendamment pour chaque balise rencontrée, en ne gardant que les inputs "hidden"
+           (les autres -- pseudo/password -- sont renseignés par l'utilisateur et ajoutés ailleurs). */
         Matcher inputFormMatcher = inputFormPattern.matcher(thisForm);
         StringBuilder allInputInAString = new StringBuilder();
 
         while (inputFormMatcher.find()) {
-            allInputInAString.append("&");
+            String tag = inputFormMatcher.group();
+            Matcher typeMatcher = inputTypeAttrPattern.matcher(tag);
+            Matcher nameMatcher = inputNameAttrPattern.matcher(tag);
+            Matcher valueMatcher = inputValueAttrPattern.matcher(tag);
 
-            if (inputFormMatcher.group(1).equals("type")) {
-                if (inputFormMatcher.group(3).equals("name")) {
-                    allInputInAString.append(inputFormMatcher.group(4)).append("=").append(inputFormMatcher.group(6));
-                } else {
-                    allInputInAString.append(inputFormMatcher.group(6)).append("=").append(inputFormMatcher.group(4));
-                }
-            } else if (inputFormMatcher.group(3).equals("type")) {
-                if (inputFormMatcher.group(1).equals("name")) {
-                    allInputInAString.append(inputFormMatcher.group(2)).append("=").append(inputFormMatcher.group(6));
-                } else {
-                    allInputInAString.append(inputFormMatcher.group(6)).append("=").append(inputFormMatcher.group(2));
-                }
-            } else {
-                if (inputFormMatcher.group(1).equals("name")) {
-                    allInputInAString.append(inputFormMatcher.group(2)).append("=").append(inputFormMatcher.group(4));
-                } else {
-                    allInputInAString.append(inputFormMatcher.group(4)).append("=").append(inputFormMatcher.group(2));
-                }
+            if (!typeMatcher.find() || !nameMatcher.find()) {
+                continue;
             }
+            if (!"hidden".equals(typeMatcher.group(1))) {
+                continue;
+            }
+            String value = valueMatcher.find() ? valueMatcher.group(1) : "";
+            allInputInAString.append("&").append(nameMatcher.group(1)).append("=").append(value);
         }
 
         return allInputInAString.toString();
     }
 
+    private static String pageLinkHref(Matcher m) {
+        /* pageLinkPattern a trois alternatives :
+           - ancien format <span><a class="lien-jv">: group(1)/group(2)
+           - nouveau format class="..." avant href="...": group(3)/group(4)
+           - nouveau format href="..." avant class="...": group(5)/group(6) */
+        if (m.group(1) != null) return m.group(1);
+        if (m.group(3) != null) return m.group(3);
+        return m.group(5);
+    }
+
+    private static String pageLinkNumber(Matcher m) {
+        if (m.group(2) != null) return m.group(2);
+        if (m.group(4) != null) return m.group(4);
+        return m.group(6);
+    }
+
+    /* Depuis la refonte JVC 2026, la pagination HTML utilise des <span class="JvCare [hex]..."> dont l'URL
+       est obfusquée côté client. La source fiable est le champ "pagerView" du JSON base64 forumsAppPayload
+       (clés utilisées : currentPage, pageCount, pages[], prev.url, next.url, last.url). */
+    private static JSONObject getPagerViewFromPayload(String pageSource) {
+        Matcher formSessionMatcher = formSessionPattern.matcher(pageSource);
+        if (!formSessionMatcher.find()) {
+            return null;
+        }
+        try {
+            byte[] decodedJson = Base64.decode(formSessionMatcher.group(1), Base64.DEFAULT);
+            JSONObject json = new JSONObject(new String(decodedJson));
+            return json.optJSONObject("pagerView");
+        } catch (Exception ignored) {
+            return null;
+        }
+    }
+
+    private static String absolutizeJvcUrl(String url) {
+        if (url == null || url.isEmpty()) {
+            return "";
+        }
+        if (url.startsWith("http://") || url.startsWith("https://")) {
+            return url;
+        }
+        return "https://www.jeuxvideo.com" + url;
+    }
+
     public static String getLastPageOfTopic(String pageSource) {
+        /* Chemin principal : parser pagerView.last.url dans le payload JSON. */
+        JSONObject pagerView = getPagerViewFromPayload(pageSource);
+        if (pagerView != null) {
+            int currentPage = pagerView.optInt("currentPage", 0);
+            int pageCount = pagerView.optInt("pageCount", 0);
+            /* Si on est déjà sur la dernière page, pas besoin d'aller plus loin. */
+            if (currentPage > 0 && pageCount > 0 && currentPage >= pageCount) {
+                return "";
+            }
+            JSONObject last = pagerView.optJSONObject("last");
+            if (last != null) {
+                String url = last.optString("url", "");
+                if (!url.isEmpty()) {
+                    return absolutizeJvcUrl(url);
+                }
+            }
+            /* Si "last" absent (déjà sur la dernière page), on parcourt "pages" pour trouver le plus grand. */
+            JSONArray pages = pagerView.optJSONArray("pages");
+            if (pages != null) {
+                int bestNum = currentPage;
+                String bestUrl = "";
+                for (int i = 0; i < pages.length(); i++) {
+                    JSONObject p = pages.optJSONObject(i);
+                    if (p == null) continue;
+                    int num = p.optInt("pageNumber", 0);
+                    String url = p.optString("url", "");
+                    if (num > bestNum && !url.isEmpty()) {
+                        bestNum = num;
+                        bestUrl = url;
+                    }
+                }
+                if (!bestUrl.isEmpty()) {
+                    return absolutizeJvcUrl(bestUrl);
+                }
+            }
+            /* pagerView trouvé mais pas de page suivante : on est sur la dernière page. */
+            return "";
+        }
+
+        /* Fallback : ancien format HTML (liens <a href>). */
         int currentPageNumber = 0;
         String lastPage = "";
         Matcher currentPageMatcher = currentPagePattern.matcher(pageSource);
@@ -1021,9 +1372,10 @@ public final class JVCParser {
         }
 
         while (pageLinkMatcher.find()) {
-            if (Integer.parseInt(pageLinkMatcher.group(2)) > currentPageNumber) {
-                currentPageNumber = Integer.parseInt(pageLinkMatcher.group(2));
-                lastPage = "https://www.jeuxvideo.com" + pageLinkMatcher.group(1);
+            int pageNum = Integer.parseInt(pageLinkNumber(pageLinkMatcher));
+            if (pageNum > currentPageNumber) {
+                currentPageNumber = pageNum;
+                lastPage = "https://www.jeuxvideo.com" + pageLinkHref(pageLinkMatcher);
             }
         }
 
@@ -1031,6 +1383,36 @@ public final class JVCParser {
     }
 
     public static String getNextPageOfTopic(String pageSource) {
+        /* Chemin principal : parser pagerView.next.url dans le payload JSON. */
+        JSONObject pagerView = getPagerViewFromPayload(pageSource);
+        if (pagerView != null) {
+            JSONObject next = pagerView.optJSONObject("next");
+            if (next != null) {
+                String url = next.optString("url", "");
+                if (!url.isEmpty()) {
+                    return absolutizeJvcUrl(url);
+                }
+            }
+            /* Si "next" est absent mais qu'on a "pages" + currentPage, on cherche currentPage+1 dedans. */
+            JSONArray pages = pagerView.optJSONArray("pages");
+            int currentPage = pagerView.optInt("currentPage", 0);
+            if (pages != null && currentPage > 0) {
+                for (int i = 0; i < pages.length(); i++) {
+                    JSONObject p = pages.optJSONObject(i);
+                    if (p == null) continue;
+                    if (p.optInt("pageNumber", 0) == currentPage + 1) {
+                        String url = p.optString("url", "");
+                        if (!url.isEmpty()) {
+                            return absolutizeJvcUrl(url);
+                        }
+                    }
+                }
+            }
+            /* Payload présent mais pas de next -> on est sur la dernière page. */
+            return "";
+        }
+
+        /* Fallback : ancien format HTML (liens <a href>). */
         int currentPageNumber = 0;
         Matcher currentPageMatcher = currentPagePattern.matcher(pageSource);
         Matcher pageLinkMatcher = pageLinkPattern.matcher(pageSource);
@@ -1040,8 +1422,8 @@ public final class JVCParser {
         }
 
         while (pageLinkMatcher.find()) {
-            if (Integer.parseInt(pageLinkMatcher.group(2)) == (currentPageNumber + 1)) {
-                return "https://www.jeuxvideo.com" + pageLinkMatcher.group(1);
+            if (Integer.parseInt(pageLinkNumber(pageLinkMatcher)) == (currentPageNumber + 1)) {
+                return "https://www.jeuxvideo.com" + pageLinkHref(pageLinkMatcher);
             }
         }
 
@@ -1143,12 +1525,15 @@ public final class JVCParser {
 
         if (settings.hideUglyImages && !showUglyImages) {
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 0, "", "", new SuppressIfContainUglyNames(), null);
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackUrlImgPattern, 0, "", "", new SuppressIfContainUglyNames(), null);
         }
 
         if (settings.showNoelshackImages) {
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 3, "", "", new MakeNoelshackImageLink(settings.enableAlphaInNoelshackMini), null);
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackUrlImgPattern, 1, "", "", new MakeNoelshackImageLink(settings.enableAlphaInNoelshackMini), null);
         } else {
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 3, "", "", makeLinkDependingOnSettingsAndForceMake, null);
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackUrlImgPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         }
 
         if (infosOfSpoilTag.containSpoil) {
@@ -1220,12 +1605,17 @@ public final class JVCParser {
     }
 
     public static String makeBasicMessageParse(String messageToParse, boolean containSpoil) {
+        /* Retirer la div "Message édité le..." pour éviter le doublon avec lastTimeEdit. */
+        messageToParse = messageToParse.replaceAll("(?s)<div class=\"messageUser__dateEdit\">.*?</div>", "");
+        messageToParse = messageToParse.replace("<i class=\"message__cesure\"></i>", "");
+        messageToParse = messageToParse.replaceAll("<span class=\"message__middleCesure\">(.*?)</span>", "$1");
         StringBuilder messageInBuilder = new StringBuilder(messageToParse);
 
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, adPattern, -1, "", "", null, null);
         ToolForParsing.replaceStringByAnother(messageInBuilder, "\r", "");
         ToolForParsing.parseListInMessageIfNeeded(messageInBuilder);
         ToolForParsing.replaceStringByAnother(messageInBuilder, "<blockquote class=\"blockquote-jv\">", "<blockquote>");
+        ToolForParsing.replaceStringByAnother(messageInBuilder, "<blockquote class=\"message__blockquote\">", "<blockquote>");
 
         if (containSpoil) {
             ToolForParsing.removeOverlySpoils(messageInBuilder);
@@ -1262,8 +1652,18 @@ public final class JVCParser {
         }
 
         if (pseudoInfosMatcher.find()) {
-            newMessageInfo.pseudo = pseudoInfosMatcher.group(2);
-            newMessageInfo.pseudoType = pseudoInfosMatcher.group(1);
+            newMessageInfo.pseudo = pseudoInfosMatcher.group(1);
+            /* Le nouveau HTML JVC ne véhicule plus la couleur du pseudo directement sur le label :
+               on détecte le statut via les classes avatar--moderator / avatar--admin si présentes. */
+            if (thisEntireMessage.contains("avatar--admin")) {
+                newMessageInfo.pseudoType = "admin";
+            } else if (thisEntireMessage.contains("avatar--moderator")) {
+                newMessageInfo.pseudoType = "modo";
+            } else if (thisEntireMessage.contains("avatar--staff")) {
+                newMessageInfo.pseudoType = "staff";
+            } else {
+                newMessageInfo.pseudoType = "user";
+            }
         }
 
         if (idAliasMatcher.find()) {
@@ -1322,7 +1722,7 @@ public final class JVCParser {
 
         if (topicAuthorMatcher.find()) {
             newTopicInfo.author = topicAuthorMatcher.group(2).trim();
-            newTopicInfo.authorType = topicAuthorMatcher.group(1).trim();
+            newTopicInfo.authorType = topicAuthorMatcher.group(1).trim().toLowerCase();
         } else {
             newTopicInfo.author = "Pseudo supprimé";
             newTopicInfo.authorType = "user";
@@ -1341,11 +1741,53 @@ public final class JVCParser {
         }
 
         if (topicDateMatcher.find()) {
-            newTopicInfo.wholeDate = topicDateMatcher.group(1);
+            String s = Html.fromHtml(topicDateMatcher.group(1)).toString(); // 01 janvier 2000
+            String t = topicDateMatcher.group(2); // 03:30:45
+
+            try {
+                Date d = dateParser.parse(s);
+                if(DateUtils.isToday(d.getTime())) {
+                    s = t;
+                }
+                else {
+                    s = dateDisplayFormatter.format(d);
+                }
+            }
+            catch(Exception ex) {
+                // Nothing, really.
+            }
+            newTopicInfo.wholeDate = s;
         }
 
         if (topicTypeMatcher.find()) {
-            newTopicInfo.type = topicTypeMatcher.group(1);
+            switch(topicTypeMatcher.group(1).trim())
+            {
+                case "icon-topic-pin topic-pin-on":
+                    newTopicInfo.type = "pinned";
+                    break;
+                case "icon-topic-pin topic-pin-off":
+                    newTopicInfo.type = "pinned-locked";
+                    break;
+                case "tablesForum__iconTopicRed icon-topic-folder":
+                    newTopicInfo.type = "hot";
+                    break;
+                case "tablesForum__iconLocked icon-topic-lock":
+                    newTopicInfo.type = "locked";
+                    break;
+                case "tablesForum__iconCheckResolved icon-topic-resolved":
+                    newTopicInfo.type = "resolved";
+                    break;
+                case "message":
+                    newTopicInfo.type = "message";
+                    break;
+                case "tablesForum__iconTopicYellow icon-topic-folder":
+                    newTopicInfo.type = "normal";
+                    break;
+                case "topic-removed":
+                default:
+                    newTopicInfo.type = "removed";
+                    break;
+            }
         }
 
         return newTopicInfo;
@@ -1381,15 +1823,86 @@ public final class JVCParser {
 
     public static ArrayList<MessageInfos> getMessagesOfThisPage(String sourcePage) {
         ArrayList<MessageInfos> listOfParsedMessage = new ArrayList<>();
+        /* Retirer les pubs insérées entre les messages pour ne pas casser le regex. */
+        sourcePage = adInsPattern.matcher(sourcePage).replaceAll("");
         Matcher entireMessageMatcher = entireMessagePattern.matcher(sourcePage);
 
         while (entireMessageMatcher.find()) {
             listOfParsedMessage.add(createMessageInfoFromEntireMessage(entireMessageMatcher.group(1)));
         }
 
+        /* JVC 2026 : les boutons edit/delete/restore ne sont plus dans le HTML brut.
+           On enrichit chaque message avec les actions trouvées dans le payload JSON base64. */
+        enrichMessagesWithPayloadActions(listOfParsedMessage, sourcePage);
+
         Collections.sort(listOfParsedMessage);
 
         return listOfParsedMessage;
+    }
+
+    private static void enrichMessagesWithPayloadActions(ArrayList<MessageInfos> messages, String sourcePage) {
+        Matcher payloadMatcher = formSessionPattern.matcher(sourcePage);
+        if (!payloadMatcher.find()) {
+            return;
+        }
+        try {
+            byte[] decoded = Base64.decode(payloadMatcher.group(1), Base64.DEFAULT);
+            JSONObject json = new JSONObject(new String(decoded));
+            JSONArray listMessage = json.optJSONArray("listMessage");
+            if (listMessage == null) {
+                return;
+            }
+            for (int i = 0; i < listMessage.length(); i++) {
+                JSONObject msgJson = listMessage.optJSONObject(i);
+                if (msgJson == null) continue;
+                long msgId = msgJson.optLong("id", -1);
+                if (msgId == -1) continue;
+
+                /* Trouver le MessageInfos correspondant par id. */
+                for (MessageInfos msg : messages) {
+                    if (msg.id == msgId) {
+                        JSONObject actions = msgJson.optJSONObject("actions");
+                        if (actions != null) {
+                            msg.userCanEditMessage = actions.has("edit");
+                            msg.userCanDeleteOrRestoreMessage = actions.has("delete") || actions.has("restore");
+                            if (actions.has("edit")) {
+                                JSONObject editObj = actions.optJSONObject("edit");
+                                if (editObj != null) {
+                                    msg.editUrl = editObj.optString("url", "");
+                                }
+                            }
+                        }
+
+                        /* Pseudo depuis le payload JSON (fallback si le regex HTML a échoué). */
+                        if (msg.pseudo.isEmpty() || msg.pseudo.equals("Pseudo supprimé")) {
+                            String authorName = msgJson.optString("publishedAuthorName", "");
+                            if (!authorName.isEmpty()) {
+                                msg.pseudo = authorName;
+                            }
+                        }
+
+                        /* stateMessage : "msg-visible" / "msg-supprime" */
+                        String state = msgJson.optString("stateMessage", "");
+                        if (state.contains("supprime")) {
+                            msg.messageIsDeleted = true;
+                        }
+
+                        /* updatedDate pour la dernière édition. */
+                        String updatedDate = msgJson.optString("updatedDate", null);
+                        if (updatedDate != null && !updatedDate.isEmpty() && !"null".equals(updatedDate)) {
+                            String updatedAuthor = msgJson.optString("updatedAuthorName", "");
+                            if (!updatedAuthor.isEmpty()) {
+                                msg.lastTimeEdit = "Message édité le " + updatedDate + " par " + updatedAuthor;
+                            } else {
+                                msg.lastTimeEdit = "Message édité le " + updatedDate;
+                            }
+                        }
+
+                        break;
+                    }
+                }
+            }
+        } catch (Exception ignored) {}
     }
 
     public static MessageInfos getMessageFromPermalinkPage(String sourcePage) {
@@ -1419,14 +1932,78 @@ public final class JVCParser {
         Matcher entireTopicMatcher = entireTopicPattern.matcher(sourcePage);
 
         while (entireTopicMatcher.find()) {
-            if (entireTopicMatcher.group(1).startsWith("class=\"message")) {
-                listOfParsedTopic.add(createTopicInfoFromEntireTopicMessageSearch(entireTopicMatcher.group(0)));
-            } else {
-                listOfParsedTopic.add(createTopicInfoFromEntireTopic(entireTopicMatcher.group(0)));
-            }
+            listOfParsedTopic.add(createTopicInfoFromEntireTopic(entireTopicMatcher.group(0)));
+        }
+
+        /* JVC 2026 : les pages de recherche (et potentiellement d'autres) ne contiennent plus
+           de <li> HTML pour les topics. Les données sont dans le payload JSON base64. */
+        if (listOfParsedTopic.isEmpty()) {
+            listOfParsedTopic = getTopicsFromPayload(sourcePage);
         }
 
         return listOfParsedTopic;
+    }
+
+    private static ArrayList<TopicInfos> getTopicsFromPayload(String sourcePage) {
+        ArrayList<TopicInfos> result = new ArrayList<>();
+        Matcher payloadMatcher = formSessionPattern.matcher(sourcePage);
+        if (!payloadMatcher.find()) {
+            return result;
+        }
+        try {
+            byte[] decoded = android.util.Base64.decode(payloadMatcher.group(1), android.util.Base64.DEFAULT);
+            JSONObject json = new JSONObject(new String(decoded));
+            JSONArray listTopics = json.optJSONArray("listTopics");
+            if (listTopics == null) {
+                return result;
+            }
+            for (int i = 0; i < listTopics.length(); i++) {
+                JSONObject topicJson = listTopics.optJSONObject(i);
+                if (topicJson == null) continue;
+
+                TopicInfos info = new TopicInfos();
+                info.htmlName = topicJson.optString("title", "");
+                String url = topicJson.optString("url", "");
+                if (!url.startsWith("http")) {
+                    url = "https://www.jeuxvideo.com" + url;
+                }
+                info.link = url;
+
+                JSONObject authorJson = topicJson.optJSONObject("author");
+                if (authorJson != null) {
+                    info.author = authorJson.optString("pseudo", "");
+                    info.authorType = authorJson.optString("role", "");
+                }
+
+                info.nbOfMessages = String.valueOf(topicJson.optInt("responsesCount", 0));
+                info.wholeDate = topicJson.optString("realLastMessageDate", topicJson.optString("lastMessageDate", ""));
+
+                info.type = topicJson.optString("stateIcon", "normal");
+
+                result.add(info);
+
+                /* JVC 2026 : Gestion de la recherche par message. */
+                JSONArray listMessages = topicJson.optJSONArray("messagesList");
+                if(listMessages != null) {
+                    for (int j = 0; j < listMessages.length(); j++) {
+                        JSONObject messageJson = listMessages.optJSONObject(j);
+                        if(messageJson == null) continue;
+
+                        TopicInfos infoMessage = new TopicInfos();
+                        infoMessage.htmlName = messageJson.optString("text", "");
+                        infoMessage.link = messageJson.optString("permalinkUrl", "");
+                        if(!infoMessage.link.startsWith("http"))
+                            infoMessage.link = "https://www.jeuxvideo.com" + infoMessage.link;
+                        infoMessage.author = messageJson.optString("publishedAuthorName", "Pseudo supprimé");
+                        infoMessage.authorType = messageJson.optString("publishedAuthorRole", "user");
+                        infoMessage.type = "message";
+
+                        result.add(infoMessage);
+                    }
+                }
+            }
+        } catch (Exception ignored) {}
+        return result;
     }
 
     public static String specialCharToNormalChar(String baseMessage) {
@@ -1465,7 +2042,8 @@ public final class JVCParser {
                         }
                         else if(key.equals("fs_timestamp"))
                         {
-                            res.timestamp = formSession.getString(key);
+                            /* fs_timestamp est un int dans le JSON, on le convertit en String */
+                            res.timestamp = String.valueOf(formSession.get(key));
                         }
                         else if(key.equals("fs_version"))
                         {
@@ -1485,6 +2063,34 @@ public final class JVCParser {
             {}
         }
 
+        return res;
+    }
+
+    /* JVC 2026 : parse formSession directement depuis une réponse JSON (pas de base64). */
+    public static FormSession getFormSessionFromJson(String jsonResponse) {
+        FormSession res = new FormSession();
+        try {
+            JSONObject json = new JSONObject(jsonResponse);
+            JSONObject formSession = json.optJSONObject("formSession");
+            if (formSession == null) return res;
+
+            JSONArray names = formSession.names();
+            if (names != null) {
+                for (int i = 0; i < names.length(); i++) {
+                    String key = names.getString(i);
+                    if (key.equals("fs_session")) {
+                        res.session = formSession.getString(key);
+                    } else if (key.equals("fs_timestamp")) {
+                        res.timestamp = String.valueOf(formSession.get(key));
+                    } else if (key.equals("fs_version")) {
+                        res.fs_version = formSession.getString(key);
+                    } else if (res.keyHash == null) {
+                        res.keyHash = key;
+                        res.valueHash = formSession.getString(key);
+                    }
+                }
+            }
+        } catch (JSONException ignored) {}
         return res;
     }
 
@@ -1856,6 +2462,7 @@ public final class JVCParser {
         public boolean isAnEdit = false;
         public boolean containUglyImages = false;
         public boolean showUglyImages = false;
+        public String editUrl = "";
         public long id = 0;
         public int lastIdOfSpoilInMessage = -1;
         public ArraySet<Integer> listOfSpoilIdToShow = new ArraySet<>();
@@ -1907,6 +2514,7 @@ public final class JVCParser {
             for (int i = 0; i < sizeOfListOfSpoidIdToShow; ++i) {
                 listOfSpoilIdToShow.add(in.readInt());
             }
+            editUrl = in.readString();
         }
 
         @Override
@@ -1950,6 +2558,7 @@ public final class JVCParser {
                     out.writeInt(-8); //valeur impossible à avoir en temps normal, le minimum est censé être -1.
                 }
             }
+            out.writeString(editUrl);
         }
 
         @Override

@@ -29,6 +29,7 @@ public class JVCMessageToTopicSender {
     private boolean isInEdit = false;
     private Map<String,String> formData = null;
     private String lastMessageIDUsedForEdit = "";
+    private String lastEditUrl = "";
     private NewMessageWantEditListener listenerForNewMessageWantEdit = null;
     private NewMessagePostedListener listenerForNewMessagePosted = null;
     private PostJVCMessage currentAsyncTaskForSendMessage = null;
@@ -91,11 +92,20 @@ public class JVCMessageToTopicSender {
             else
             {
                 // C'est OK, on récupère les infos session.
-                JVCParser.FormSession fs = JVCParser.getFormSession(reqResult, true);
-                formData.put("fs_session", fs.session);
-                formData.put("fs_timestamp", fs.timestamp);
-                formData.put("fs_version", fs.fs_version);
-                formData.put(fs.keyHash, fs.valueHash);
+                // JVC 2026 : la réponse est du JSON direct avec "formSession" dedans.
+                JVCParser.FormSession fs = JVCParser.getFormSessionFromJson(reqResult);
+                if (fs.session == null) {
+                    // Fallback ancien format (base64 dans HTML).
+                    fs = JVCParser.getFormSession(reqResult, true);
+                }
+                if (fs.session != null) {
+                    formData.put("fs_session", fs.session);
+                    formData.put("fs_timestamp", fs.timestamp);
+                    formData.put("fs_version", fs.fs_version);
+                    if (fs.keyHash != null) {
+                        formData.put(fs.keyHash, fs.valueHash);
+                    }
+                }
             }
 
             if (listenerForNewMessageWantEdit != null) {
@@ -187,17 +197,18 @@ public class JVCMessageToTopicSender {
         }
     }
 
-    public boolean getInfosForEditMessage(String idOfMessage, String ajaxListInfos, String cookieListInAString, Map<String,String> currentFormData, boolean newUseMessageToEdit) {
+    public boolean getInfosForEditMessage(String idOfMessage, String ajaxListInfos, String cookieListInAString, Map<String,String> currentFormData, boolean newUseMessageToEdit, String editUrl) {
         if (currentAsyncTaskForGetEditInfos == null) {
             isInEdit = true;
             lastAjaxListInfos = ajaxListInfos;
             formData = currentFormData;
             useMessageToEdit = newUseMessageToEdit;
             lastMessageIDUsedForEdit = idOfMessage;
+            lastEditUrl = (editUrl != null) ? editUrl : "";
 
             currentAsyncTaskForGetEditInfos = new GetEditJVCMessageInfos();
             currentAsyncTaskForGetEditInfos.setRequestIsFinishedListener(getEditInfosIsFinishedListener);
-            currentAsyncTaskForGetEditInfos.execute(lastMessageIDUsedForEdit, ajaxListInfos, cookieListInAString);
+            currentAsyncTaskForGetEditInfos.execute(lastMessageIDUsedForEdit, ajaxListInfos, cookieListInAString, editUrl);
             return true;
         } else {
             return false;
@@ -209,6 +220,14 @@ public class JVCMessageToTopicSender {
         protected String doInBackground(String... params) {
             if (params.length > 2) {
                 WebManager.WebInfos currentWebInfos = initWebInfos(params[2], false);
+                /* JVC 2026 : utiliser l'URL d'edit du payload JSON si disponible. */
+                String editUrl = (params.length > 3 && params[3] != null && !params[3].isEmpty()) ? params[3] : null;
+                if (editUrl != null) {
+                    if (!editUrl.startsWith("http")) {
+                        editUrl = "https://www.jeuxvideo.com" + editUrl;
+                    }
+                    return WebManager.sendRequest(editUrl, "GET", "", currentWebInfos);
+                }
                 return WebManager.sendRequest("https://www.jeuxvideo.com/forums/ajax_edit_message.php", "GET", "id_message=" + params[0] + "&" + params[1] + "&action=get", currentWebInfos);
             } else {
                 return null;

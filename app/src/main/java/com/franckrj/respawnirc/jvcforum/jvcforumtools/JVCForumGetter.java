@@ -67,8 +67,13 @@ public class JVCForumGetter {
                             pageDownloadedIsAnalysable = false;
                         }
                     } else {
-                        lastTypeOfError = ErrorType.SEARCH_IS_EMPTY_AND_ITS_NOT_A_FAIL;
-                        pageDownloadedIsAnalysable = false;
+                        /* JVC 2026 : en mode recherche, une redirection ne signifie plus
+                           forcément que la recherche est vide. On laisse les résultats se parser
+                           seulement si des topics ont été trouvés. */
+                        if (reqResult.listOfTopics.isEmpty()) {
+                            lastTypeOfError = ErrorType.SEARCH_IS_EMPTY_AND_ITS_NOT_A_FAIL;
+                            pageDownloadedIsAnalysable = false;
+                        }
                     }
                 }
 

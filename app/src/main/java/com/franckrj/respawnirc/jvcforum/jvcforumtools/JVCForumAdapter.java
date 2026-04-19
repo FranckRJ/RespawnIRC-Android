@@ -143,7 +143,7 @@ public class JVCForumAdapter extends BaseAdapter {
         }
 
         switch (item.authorType) {
-            case "modo":
+            case "moderator":
                 textForAuthor = "<small><font color=\"" + Utils.colorToString(pseudoModoColor) + "\">" + item.author + "</font></small>";
                 break;
             case "admin":
@@ -208,30 +208,30 @@ public class JVCForumAdapter extends BaseAdapter {
 
         holder.topicIcon.setVisibility(View.VISIBLE);
         switch (currentTopicInfos.type) {
-            case "topic-pin-on":
+            case "pinned":
                 holder.topicIcon.setImageDrawable(iconMarqueOn);
                 break;
-            case "topic-pin-off":
+            case "pinned-locked":
                 holder.topicIcon.setImageDrawable(iconMarqueOff);
                 break;
-            case "topic-folder2":
+            case "hot":
                 holder.topicIcon.setImageDrawable(iconDossier2);
                 break;
-            case "topic-lock":
+            case "locked":
                 holder.topicIcon.setImageDrawable(iconLock);
                 break;
-            case "topic-resolved":
+            case "resolved":
                 holder.topicIcon.setImageDrawable(iconResolu);
-                break;
-            case "topic-removed":
-                holder.topicIcon.setImageDrawable(iconGhost);
                 break;
             case "message":
                 holder.topicIcon.setVisibility(View.INVISIBLE);
                 break;
-            case "topic-folder1":
-            default:
+            case "normal":
                 holder.topicIcon.setImageDrawable(iconDossier1);
+                break;
+            case "removed":
+            default:
+                holder.topicIcon.setImageDrawable(iconGhost);
                 break;
         }
 
