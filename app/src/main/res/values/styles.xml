@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="AppTheme.Light.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">?attr/colorPrimaryDark</item>
         <item name="android:windowAnimationStyle">@style/AppActivityAnimation</item>
@@ -62,6 +63,7 @@
     <style name="AppTheme.Light.Real" parent="AppTheme.Light.Base"/>
 
     <style name="AppTheme.Dark.Base" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">?attr/colorPrimaryDark</item>
         <item name="android:windowAnimationStyle">@style/AppActivityAnimation</item>
@@ -123,6 +125,7 @@
     <style name="AppTheme.Dark.Real" parent="AppTheme.Dark.Base"/>
 
     <style name="AppTheme.Grey.Base" parent="AppTheme.Dark.Base">
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerThemeGrey</item>
         <item name="android:windowBackground">@color/windowBackgroundColorThemeGrey</item>
         <item name="themedControlHighlightColor">@color/colorControlHighlightThemeGrey</item>
@@ -143,6 +146,7 @@
     <style name="AppTheme.Grey.Real" parent="AppTheme.Grey.Base"/>
 
     <style name="AppTheme.Black.Base" parent="AppTheme.Dark.Base">
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
         <item name="colorPrimary">@color/colorPrimaryThemeBlack</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkerThemeBlack</item>
         <item name="android:windowBackground">@color/windowBackgroundColorThemeBlack</item>
