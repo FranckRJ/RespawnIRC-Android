@@ -46,7 +46,7 @@ public final class JVCParser {
     private static final Pattern userCanKickOrDekickAuthorPattern = Pattern.compile("<span class=\"picto-msg-(kick|dekick)\" title=\"(Kicker|Dékicker)\" data-id-alias=\"[^\"]*\">");
     private static final Pattern pseudoInfosPattern = Pattern.compile("<span class=\"JvCare [^\"]*?messageUser__label\\s*\"[^>]*>\\s*([a-zA-Z0-9_\\[\\]-]+)\\s*</span>");
     private static final Pattern idAliasPattern = Pattern.compile("data-id-alias=\"([0-9]+)\">");
-    private static final Pattern messagePattern = Pattern.compile("<div class=\"messageUser__msg js-message-user-msg\">\\s*(.*?)\\s*</div>\\s*(?=<div class=\"messageUser__dateEdit\"|<div class=\"messageUser__separator\"|<div class=\"messageUser__signature\"|<div class=\"messageUser__footer\"|</div>)", Pattern.DOTALL);
+    private static final Pattern messagePattern = Pattern.compile("<div class=\"messageUser__msg js-message-user-msg\">\\s*(.*?)\\s*</div>\\s*(?=<div class=\"messageUser__dateEdit\"|<div class=\"messageUser__separator\"|<div class=\"messageUser__signature\"|<div class=\"messageUser__footer\"|</div>\\s*</div>)", Pattern.DOTALL);
     private static final Pattern currentPagePattern = Pattern.compile("<span [^>]*class=\"(?:[^\"]*\\b)?(?:page-active|pagination__item pagination__item--current|pagination__button--isCurrent)(?:\\b[^\"]*)?\"[^>]*>\\s*([0-9]+)\\s*</span>");
     private static final Pattern pageLinkPattern = Pattern.compile("<(?:span[^>]*>\\s*<a href=\"([^\"]*)\" class=\"lien-jv\">([0-9]+)</a>\\s*</span>|a [^>]*class=\"[^\"]*\\b(?:pagination__item|pagination__button)\\b[^\"]*\"[^>]*href=\"([^\"]*)\"[^>]*>\\s*([0-9]+)\\s*</a>|a [^>]*href=\"([^\"]*)\"[^>]*class=\"[^\"]*\\b(?:pagination__item|pagination__button)\\b[^\"]*\"[^>]*>\\s*([0-9]+)\\s*</a>)");
     private static final Pattern topicFormPattern = Pattern.compile("(<form role=\"form\" class=\"form-post-topic[^\"]*\" method=\"post\" action=\"[^\"]*\".*?>.*?</form>)", Pattern.DOTALL);
@@ -64,8 +64,8 @@ public final class JVCParser {
     private static final Pattern subIdInJsonPattern = Pattern.compile("\"id-abonnement\":([0-9]*)");
     private static final Pattern codeBlockPattern = Pattern.compile("<pre class=\"pre-jv\"><code class=\"code-jv\">([^<]*)</code></pre>");
     private static final Pattern codeLinePattern = Pattern.compile("<code class=\"code-jv\">(.*?)</code>", Pattern.DOTALL);
-    private static final Pattern spoilLinePattern = Pattern.compile("<span class=\"bloc-spoil-jv en-ligne\">.*?<span class=\"contenu-spoil\">(.*?)</span></span>", Pattern.DOTALL);
-    private static final Pattern spoilBlockPattern = Pattern.compile("<div class=\"bloc-spoil-jv\">.*?<div class=\"contenu-spoil\">(.*?)</div></div>", Pattern.DOTALL);
+    private static final Pattern spoilLinePattern = Pattern.compile("<span class=\"message__spoil message__spoil--inline\">.*?<span class=\"message__spoilContent\">(.*?)</span></span>", Pattern.DOTALL);
+    private static final Pattern spoilBlockPattern = Pattern.compile("<div class=\"message__spoil\">.*?<div class=\"message__spoilContent\">(.*?)</div></div>", Pattern.DOTALL);
     private static final Pattern spoilOverlyPattern = Pattern.compile("(<(span|div) class=\"bloc-spoil-jv[^\"]*\">.*?<(span|div) class=\"contenu-spoil\">|</span></span>|</div></div>)", Pattern.DOTALL);
     private static final Pattern pageTopicLinkNumberPattern = Pattern.compile("^(https?://www\\.jeuxvideo\\.com/forums/(?:1|42)-([0-9]*)-([0-9]*)-)([0-9]*)(-[0-9]*-[0-9]*-[0-9]*-[^./]*\\.htm)[#?]?");
     private static final Pattern pageForumLinkNumberPattern = Pattern.compile("^(https?://www\\.jeuxvideo\\.com/forums/0-([0-9]*)-[0-9]*-[0-9]*-[0-9]*-)([0-9]*)(-[0-9]*-([^./]*)\\.htm)[#?]?");
@@ -133,6 +133,7 @@ public final class JVCParser {
     private static final Pattern adPattern = Pattern.compile("<ins[^>]*></ins>");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
     private static final Pattern multipleSpacesPattern = Pattern.compile(" +");
+    private static final Pattern uselessOpenPWithClass = Pattern.compile("<p class=\"(message__p|message__noBlankline)\">");
 
     private static final SimpleDateFormat dateParser = new SimpleDateFormat("d MMM yyyy", Locale.FRANCE);
     private static final SimpleDateFormat dateDisplayFormatter = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
@@ -1494,6 +1495,7 @@ public final class JVCParser {
         StringBuilder messageInBuilder = new StringBuilder(messageInString);
         MakeShortenedLinkIfPossible makeLinkDependingOnSettingsAndForceMake = new MakeShortenedLinkIfPossible((settings.shortenLongLink ? 50 : 0), true);
 
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, uselessOpenPWithClass, -1, "<p>", "", null, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeBlockPattern, 1, "<p><font face=\"monospace\">", "</font></p>", new MakeCodeTagGreatAgain(true), null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeLinePattern, 1, " <font face=\"monospace\">", "</font> ", new MakeCodeTagGreatAgain(false), null);
         ToolForParsing.replaceStringByAnother(messageInBuilder, "\n", "");
@@ -1690,8 +1692,8 @@ public final class JVCParser {
             newMessageInfo.messageNotParsed = messageMatcher.group(1);
             newMessageInfo.containUglyImages = ToolForParsing.hasUglyImagesInNotPrettyMessage(newMessageInfo.messageNotParsed);
 
-            newMessageInfo.messageContentContainSpoil = newMessageInfo.messageNotParsed.contains(" class=\"contenu-spoil\">");
-            newMessageInfo.signatureContainSpoil = newMessageInfo.signatureNotParsed.contains(" class=\"contenu-spoil\">");
+            newMessageInfo.messageContentContainSpoil = newMessageInfo.messageNotParsed.contains(" class=\"message__spoil");
+            newMessageInfo.signatureContainSpoil = newMessageInfo.signatureNotParsed.contains(" class=\"message__spoil");
 
             newMessageInfo.messageNotParsed = makeBasicMessageParse(newMessageInfo.messageNotParsed, newMessageInfo.messageContentContainSpoil);
             newMessageInfo.signatureNotParsed = makeBasicMessageParse(newMessageInfo.signatureNotParsed, newMessageInfo.signatureContainSpoil);
