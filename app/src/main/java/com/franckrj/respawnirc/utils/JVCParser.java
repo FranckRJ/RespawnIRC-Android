@@ -961,29 +961,7 @@ public final class JVCParser {
 
     /* JVC 2026 : construction locale de la citation depuis le HTML du message. */
     private static String decodeHtmlEntities(String text) {
-        text = specialCharToNormalChar(text);
-        text = text.replace("&nbsp;", " ");
-        text = text.replace("&agrave;", "à");
-        text = text.replace("&aacute;", "á");
-        text = text.replace("&acirc;", "â");
-        text = text.replace("&eacute;", "é");
-        text = text.replace("&egrave;", "è");
-        text = text.replace("&ecirc;", "ê");
-        text = text.replace("&euml;", "ë");
-        text = text.replace("&ugrave;", "ù");
-        text = text.replace("&ucirc;", "û");
-        text = text.replace("&ocirc;", "ô");
-        text = text.replace("&iuml;", "ï");
-        text = text.replace("&ccedil;", "ç");
-        /* Entités numériques &#NNN; */
-        java.util.regex.Matcher numMatcher = java.util.regex.Pattern.compile("&#(\\d+);").matcher(text);
-        StringBuffer numSb = new StringBuffer();
-        while (numMatcher.find()) {
-            int code = Integer.parseInt(numMatcher.group(1));
-            numMatcher.appendReplacement(numSb, java.util.regex.Matcher.quoteReplacement(String.valueOf((char) code)));
-        }
-        numMatcher.appendTail(numSb);
-        return numSb.toString();
+        return Html.fromHtml(text).toString();
     }
 
     private static String htmlToPlainText(String html) {
@@ -1084,7 +1062,7 @@ public final class JVCParser {
     }
 
     public static String buildLocalQuoteFromMessage(MessageInfos messageInfo) {
-        String header = "> Le " + messageInfo.wholeDate + " " + messageInfo.pseudo + " :\n";
+        String header = "> Le " + messageInfo.wholeDate + " " + messageInfo.pseudo + " a écrit :\n";
         String msgHtml = messageInfo.messageNotParsed;
         if (msgHtml == null || msgHtml.isEmpty()) {
             return "";
