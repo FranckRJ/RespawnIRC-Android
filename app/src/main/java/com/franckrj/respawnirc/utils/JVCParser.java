@@ -483,7 +483,8 @@ public final class JVCParser {
         }
     }
 
-    public static SurveyInfos getSurveyInfosFromSurveyBlock(String surveyBlock) {
+    public static SurveyInfos getSurveyInfosFromSurveyBlock(JSONObject jsonSurvey) {
+        String surveyBlock = jsonSurvey.toString(); // TODO: Do something to show surveys.
         SurveyInfos currentInfos = new SurveyInfos();
         Matcher surveyTitleMatcher = surveyTitlePattern.matcher(surveyBlock);
         Matcher surveyResultMatcher = surveyResultPattern.matcher(surveyBlock);
@@ -513,15 +514,23 @@ public final class JVCParser {
 
     public static ArrayList<SurveyReplyInfos> getListOfSurveyReplyWithInfos(String pageSource) {
         ArrayList<SurveyReplyInfos> listOfReplys = new ArrayList<>();
-        Matcher replyWithInfosMatcher = surveyReplyWithInfosPattern.matcher(pageSource);
-        int lastOffset = 0;
 
-        while (replyWithInfosMatcher.find(lastOffset)) {
-            String tmpInfosForReply = "id_sondage=" + replyWithInfosMatcher.group(1) + "&id_sondage_reponse=" + replyWithInfosMatcher.group(2);
-            String tmpTitleOfReply = specialCharToNormalChar(replyWithInfosMatcher.group(3).replace("\n", "").replace("\r", "").trim());
-
-            listOfReplys.add(new SurveyReplyInfos(tmpInfosForReply, tmpTitleOfReply));
-            lastOffset = replyWithInfosMatcher.end();
+        JSONObject surveyContent = getRealSurveyContent(pageSource);
+        if (surveyContent != null) {
+            JSONObject surveyData = surveyContent.optJSONObject("data");
+            if (surveyData != null) {
+                String surveyId = String.valueOf(surveyData.optInt("id", 0));
+                JSONArray surveyRespsonses = surveyData.optJSONArray("responses");
+                if (surveyId != null && surveyRespsonses != null) {
+                    for (int i = 0; i < surveyRespsonses.length(); ++i) {
+                        String responseId = String.valueOf(surveyData.optInt("id", 0));
+                        String responseText = surveyData.optString("text", "");
+                        String tmpInfosForReply = "id_sondage=" + surveyId + "&id_sondage_reponse=" + responseId;
+                        String tmpTitleOfReply = specialCharToNormalChar(responseText.replace("\n", "").replace("\r", "").trim());
+                        listOfReplys.add(new SurveyReplyInfos(tmpInfosForReply, tmpTitleOfReply));
+                    }
+                }
+            }
         }
 
         return listOfReplys;
@@ -870,23 +879,30 @@ public final class JVCParser {
     }
 
     public static String getSurveyHtmlTitleFromPage(String pageSource) {
-        Matcher surveyTitleMatcher = surveyTitlePattern.matcher(pageSource);
-
-        if (surveyTitleMatcher.find()) {
-            return surveyTitleMatcher.group(1);
-        } else {
-            return "";
+        JSONObject surveyContent = getRealSurveyContent(pageSource);
+        if (surveyContent != null) {
+            JSONObject surveyData = surveyContent.optJSONObject("data");
+            if (surveyData != null) {
+                return surveyData.optString("title", "");
+            }
         }
+        return "";
     }
 
-    public static String getRealSurveyContent(String pageSource) {
-        Matcher realSurveyContentMatcher = realSurveyContentPattern.matcher(pageSource);
-
-        if (realSurveyContentMatcher.find()) {
-            return parsingAjaxMessages(realSurveyContentMatcher.group(1));
-        } else {
-            return "";
+    public static JSONObject getRealSurveyContent(String pageSource) {
+        Matcher formSessionMatcher = formSessionPattern.matcher(pageSource);
+        if (formSessionMatcher.find()) {
+            try {
+                byte[] decodedJson = Base64.decode(formSessionMatcher.group(1), Base64.DEFAULT);
+                JSONObject json = new JSONObject(new String(decodedJson));
+                if (json != null) {
+                    return json.optJSONObject("survey");
+                }
+            } catch (Exception ignored) {
+                return null;
+            }
         }
+        return null;
     }
 
     public static String getErrorMessage(String pageSource) {
