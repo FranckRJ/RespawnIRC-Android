@@ -2,6 +2,8 @@ package com.franckrj.respawnirc.utils;
 
 import static java.net.HttpURLConnection.HTTP_GATEWAY_TIMEOUT;
 
+import com.franckrj.respawnirc.R;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;
@@ -21,7 +23,7 @@ public class WebManager {
     /**
      * En cas d'erreur, cette variable est renseignée avec l'ID strings.xml de l'erreur.
      */
-    public static int errorStringId = 0;
+    public static int errorStringId = R.string.unknownErrorActionCantBeDone;
 
     public static String sendRequestWithMultipleTrys(String linkToPage, String requestMethod, String requestParameters, WebInfos currentInfos, int maxNumberOfTrys) {
         int numberOfTrys = 0;
@@ -164,7 +166,7 @@ public class WebManager {
             reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
 
             // Si on est passé ici avec succès alors la requête est OK.
-            errorStringId = 0;
+            errorStringId = R.string.unknownErrorActionCantBeDone;
 
             while ((line = reader.readLine()) != null) {
                 buffer.append(line).append("\n");

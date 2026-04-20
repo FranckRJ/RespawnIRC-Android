@@ -334,6 +334,7 @@
     <string name="noAccountInList">La liste des comptes est vide.</string>
     <string name="mainForum">Forum principal</string>
     <string name="enableNiveauModeForum">Afficher les niveaux</string>
+    <string name="unknownErrorActionCantBeDone">Erreur inconnue, action impossible</string>
 
     <string-array name="choicesForLinkMenu">
         <item>@string/openInExternalBrowser</item>
