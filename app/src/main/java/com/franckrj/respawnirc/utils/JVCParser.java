@@ -32,15 +32,15 @@ public final class JVCParser {
     private static final Pattern ajaxPrefHashPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_hash_preference_user\" id=\"ajax_hash_preference_user\" value=\"([^\"]*)\" />");
     private static final Pattern ajaxSubHashPattern = Pattern.compile("<body[^>]*data-abo-session=\"([^\"]*)\">");
     private static final Pattern messageQuotePattern = Pattern.compile("\"txt\":\"(.*)\"", Pattern.DOTALL);
-    private static final Pattern entireMessagePattern = Pattern.compile("(<div class=\"messageUser js-hybrid-component\" id=\"message-[0-9]+\">.*?)(<span id=\"post_[0-9]+\" class=\"messageUser__anchor\">|<div class=\"container__pagination\">|<div class=\"container__post\">|<div class=\"container__main\">)", Pattern.DOTALL);
+    private static final Pattern entireMessagePattern = Pattern.compile("(<div class=\"messageUser (?:messageUser--deleted )?js-hybrid-component\" id=\"message-[0-9]+\">.*?)(<span id=\"post_[0-9]+\" class=\"messageUser__anchor\">|<div class=\"container__pagination\">|<div class=\"container__post\">|<div class=\"container__main\">)", Pattern.DOTALL);
     private static final Pattern adInsPattern = Pattern.compile("<ins data-ad-position[^>]*></ins>");
-    private static final Pattern entireMessageInPermalinkPattern = Pattern.compile("(<div class=\"messageUser js-hybrid-component\" id=\"message-[0-9]+\">.*?)(<div class=\"bloc-return-topic[^\"]*\">|<div class=\"container__pagination\">|<div class=\"messageUser__footer js-message-user-footer\">|<div class=\"container__post\">)", Pattern.DOTALL);
+    private static final Pattern entireMessageInPermalinkPattern = Pattern.compile("(<div class=\"messageUser (?:messageUser--deleted )?js-hybrid-component\" id=\"message-[0-9]+\">.*?)(<div class=\"bloc-return-topic[^\"]*\">|<div class=\"container__pagination\">|<div class=\"messageUser__footer js-message-user-footer\">|<div class=\"container__post\">)", Pattern.DOTALL);
     private static final Pattern topicLinkInPermalinkPattern = Pattern.compile("(<div class=\"bloc-return-topic[^\"]*\">)[^<]*<a href=\"([^\"]*)");
     private static final Pattern signaturePattern = Pattern.compile("<div class=\"messageUser__signature[^\"]*\">(.*)", Pattern.DOTALL);
     private static final Pattern avatarPattern = Pattern.compile("<img\\s+src=\"(https?:)?//([^\"]*)\"\\s+class=\"avatar__image\"", Pattern.DOTALL);
     private static final Pattern entireTopicPattern = Pattern.compile("<li (id=\"topic-[^\"]*\" )?class=\"tablesForum[^\"]*\">[^<]*<a class=\"tablesForum__cellSubject\" href=\"[^\"]*\"[^>]*>.*?<span class=\"tablesForum__subjectText\">.*?</li>", Pattern.DOTALL);
     private static final Pattern pseudoIsBlacklistedPattern = Pattern.compile("<div class=\"messageUser[^\"]*msg-pseudo-blacklist[^\"]*\" id=\"message-");
-    private static final Pattern messageIsDeletedPattern = Pattern.compile("<div class=\"messageUser[^\"]*(?:msg-supprime|messageUser--deleted)[^\"]*\"[^>]*>");
+    private static final Pattern messageIsDeletedPattern = Pattern.compile("<div class=\"messageUser (?:msg-supprime|messageUser--deleted)[^\"]*\"[^>]*>");
     private static final Pattern userCanDeleteOrRestoreMessagePattern = Pattern.compile("(?:<span class=\"picto-msg-(croix|restaurer)\" title=\"(Supprimer|Restaurer)\" data-type=\"(delete|restore)\">|<i class=\"messageUser__actionIcon icon-(trash|restore)\">)");
     private static final Pattern userCanEditMessagePattern = Pattern.compile("(?:<span class=\"picto-msg-crayon\" title=\"Editer\"|<i class=\"messageUser__actionIcon icon-pencil2\">)");
     private static final Pattern userCanKickOrDekickAuthorPattern = Pattern.compile("<span class=\"picto-msg-(kick|dekick)\" title=\"(Kicker|Dékicker)\" data-id-alias=\"[^\"]*\">");
