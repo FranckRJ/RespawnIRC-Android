@@ -36,7 +36,7 @@ public final class JVCParser {
     private static final Pattern adInsPattern = Pattern.compile("<ins data-ad-position[^>]*></ins>");
     private static final Pattern entireMessageInPermalinkPattern = Pattern.compile("(<div class=\"messageUser js-hybrid-component\" id=\"message-[0-9]+\">.*?)(<div class=\"bloc-return-topic[^\"]*\">|<div class=\"container__pagination\">|<div class=\"container__post\">)", Pattern.DOTALL);
     private static final Pattern topicLinkInPermalinkPattern = Pattern.compile("(<div class=\"bloc-return-topic[^\"]*\">)[^<]*<a href=\"([^\"]*)");
-    private static final Pattern signaturePattern = Pattern.compile("<div class=\"signature-msg[^\"]*\">(.*)", Pattern.DOTALL);
+    private static final Pattern signaturePattern = Pattern.compile("<div class=\"messageUser__signature[^\"]*\">(.*)", Pattern.DOTALL);
     private static final Pattern avatarPattern = Pattern.compile("<img\\s+src=\"(https?:)?//([^\"]*)\"\\s+class=\"avatar__image\"", Pattern.DOTALL);
     private static final Pattern entireTopicPattern = Pattern.compile("<li (id=\"topic-[^\"]*\" )?class=\"tablesForum[^\"]*\">[^<]*<a class=\"tablesForum__cellSubject\" href=\"[^\"]*\"[^>]*>.*?<span class=\"tablesForum__subjectText\">.*?</li>", Pattern.DOTALL);
     private static final Pattern pseudoIsBlacklistedPattern = Pattern.compile("<div class=\"messageUser[^\"]*msg-pseudo-blacklist[^\"]*\" id=\"message-");
@@ -135,7 +135,7 @@ public final class JVCParser {
     private static final Pattern adPattern = Pattern.compile("<ins[^>]*></ins>");
     private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
     private static final Pattern multipleSpacesPattern = Pattern.compile(" +");
-    private static final Pattern uselessOpenPWithClass = Pattern.compile("<p class=\"(message__p|message__noBlankline)\">");
+    private static final Pattern uselessOpenPWithClass = Pattern.compile("<p (class=\")?class=\"(message__p|message__noBlankline)\"+>");
 
     private static final SimpleDateFormat dateParser = new SimpleDateFormat("d MMM yyyy", Locale.FRANCE);
     private static final SimpleDateFormat dateDisplayFormatter = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
