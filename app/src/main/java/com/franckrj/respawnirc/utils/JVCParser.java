@@ -111,6 +111,8 @@ public final class JVCParser {
     private static final Pattern listOfModeratorsPattern = Pattern.compile("<span class=\"liste-modo-fofo\">(.*?)</span>", Pattern.DOTALL);
     private static final Pattern overlyJVCQuotePattern = Pattern.compile("(<(/)?blockquote>)");
     private static final Pattern overlyBetterQuotePattern = Pattern.compile("<(/)?blockquote>");
+    private static final Pattern newShortLinkPattern = Pattern.compile("<a +href=\"([^\"]*)\" *>[^<]*</a>");
+    private static final Pattern newLongLinkPattern = Pattern.compile("<span +class=\"JvCare [^\"]*\" +title=\"([^\"]*)\" *>[^:<]*://[^<]*</span>");
     private static final Pattern shortJvcLinkPattern = Pattern.compile("<span +class=\"JvCare [^\"]*\" *>(http(s)?://[^<]*)</span>");
     private static final Pattern longJvcLinkPattern = Pattern.compile("<a +title=\"[^\"]*\" +href=\"([^\"]*)\"[^>]*>[^<]*<i></i><span>[^<]*</span>[^<]*</a>");
     private static final Pattern shortLinkPattern = Pattern.compile("<span +class=\"JvCare [^\"]*\"[^>]*?target=\"_blank\"[^>]*>([^<]*)</span>");
@@ -1510,6 +1512,8 @@ public final class JVCParser {
 
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, embedVideoPattern, 1, "<p>", "</p>", makeLinkDependingOnSettingsAndForceMake, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcVideoPattern, 1, "<p>", "</p>", new AddPrefixString("https://www.jeuxvideo.com/videos/iframe/"), makeLinkDependingOnSettingsAndForceMake);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, newShortLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
+        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, newLongLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortJvcLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longJvcLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
