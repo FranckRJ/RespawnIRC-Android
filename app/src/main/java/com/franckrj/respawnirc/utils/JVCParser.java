@@ -526,19 +526,32 @@ public final class JVCParser {
 
     public static ArrayList<NameAndLink> getListOfForumsInSearchPage(String pageSource) {
         ArrayList<NameAndLink> listOfForums = new ArrayList<>();
-        Matcher forumInSearchPageMatcher = forumInSearchPagePattern.matcher(pageSource);
-        int lastOffset = 0;
 
-        while (forumInSearchPageMatcher.find(lastOffset)) {
-            NameAndLink newNameAndLink = new NameAndLink();
-
-            newNameAndLink.name = forumInSearchPageMatcher.group(2).replace("<em>", "").replace("</em>", "");
-            if (!forumInSearchPageMatcher.group(1).isEmpty()) {
-                newNameAndLink.link = "https://www.jeuxvideo.com" + forumInSearchPageMatcher.group(1);
-            }
-
-            listOfForums.add(newNameAndLink);
-            lastOffset = forumInSearchPageMatcher.end();
+        Matcher payloadMatcher = formSessionPattern.matcher(pageSource);
+        if (payloadMatcher.find()) {
+            try {
+                byte[] decoded = android.util.Base64.decode(payloadMatcher.group(1), android.util.Base64.DEFAULT);
+                JSONObject json = new JSONObject(new String(decoded));
+                JSONObject forum = json.optJSONObject("forum");
+                if (forum != null) {
+                    JSONArray list = forum.optJSONArray("list");
+                    if (list != null) {
+                        for (int i = 0; i < list.length(); i++) {
+                            JSONObject elem = list.optJSONObject(i);
+                            if (elem != null) {
+                                String name = elem.optString("nom", "");
+                                String link = elem.optString("url", "");
+                                if (!name.isEmpty() && !link.isEmpty()) {
+                                    NameAndLink newNameAndLink = new NameAndLink();
+                                    newNameAndLink.name = name;
+                                    newNameAndLink.link = absolutizeJvcUrl(link);
+                                    listOfForums.add(newNameAndLink);
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (Exception ignored) {}
         }
 
         return listOfForums;
