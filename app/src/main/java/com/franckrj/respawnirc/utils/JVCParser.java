@@ -1741,11 +1741,20 @@ public final class JVCParser {
             newTopicInfo.authorType = "user";
         }
 
-        if (topicNumberMessagesAdmMatcher.find()) {
-            newTopicInfo.nbOfMessages = topicNumberMessagesAdmMatcher.group(1);
-        } else if (topicNumberMessagesMatcher.find()) {
-            newTopicInfo.nbOfMessages = topicNumberMessagesMatcher.group(1);
+        int messages = 0;
+        try {
+            if (topicNumberMessagesAdmMatcher.find()) {
+                messages = Integer.parseInt(topicNumberMessagesAdmMatcher.group(1));
+            } else if (topicNumberMessagesMatcher.find()) {
+                messages = Integer.parseInt(topicNumberMessagesMatcher.group(1));
+            }
+        } catch (Exception e) {
+            messages = 0;
         }
+        if (messages > 0) {
+            messages -= 1;
+        }
+        newTopicInfo.nbOfMessages = String.valueOf(messages);
 
         if (topicNameAndLinkMatcher.find()) {
             String topicNameAndLinkString = topicNameAndLinkMatcher.group(1);
@@ -1988,7 +1997,11 @@ public final class JVCParser {
                     info.authorType = authorJson.optString("role", "");
                 }
 
-                info.nbOfMessages = String.valueOf(topicJson.optInt("responsesCount", 0));
+                int messages = topicJson.optInt("responsesCount", 0);
+                if (messages > 0) {
+                    messages -= 1;
+                }
+                info.nbOfMessages = String.valueOf(messages);
                 info.wholeDate = topicJson.optString("realLastMessageDate", topicJson.optString("lastMessageDate", ""));
 
                 info.type = topicJson.optString("stateIcon", "normal");
