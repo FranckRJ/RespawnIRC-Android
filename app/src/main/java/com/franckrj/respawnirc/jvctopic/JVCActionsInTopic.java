@@ -2,7 +2,6 @@ package com.franckrj.respawnirc.jvctopic;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.util.Log;
 import androidx.appcompat.app.AlertDialog;
 import android.widget.Toast;
 

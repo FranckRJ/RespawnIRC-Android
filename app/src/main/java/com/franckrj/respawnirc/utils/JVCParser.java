@@ -62,7 +62,6 @@ public final class JVCParser {
     private static final Pattern noMissTopicsListInForumPagePattern = Pattern.compile("<ul class=\"liste-sujets-nomiss\">(.*?)</ul>", Pattern.DOTALL);
     private static final Pattern subforumInListPattern = Pattern.compile("<li class=\"line-ellipsis\">[^<]*<a href=\"([^\"]*)\" class=\"lien-jv\">([^<]*)</a>[^<]*</li>");
     private static final Pattern noMissTopicInListPattern = Pattern.compile("<a href=\"//www.jeuxvideo.com([^\"]*)\" class=\"lien-jv\">([^<]*)</a>");
-    private static final Pattern isInFavPattern = Pattern.compile("<span class=\"breadcrumb-icon icon-star-([^ ]*) js-favorite\" title=\"[^\"]*\" data-action=\"[^\"]*\" data-type=\"[^\"]*\"[^>]*>");
     private static final Pattern topicIdInTopicPagePattern = Pattern.compile("<div (.*?)data-topic-id=\"([^\"]*)\">");
     private static final Pattern isInSubInTopicPagePattern = Pattern.compile("<span class=\"breadcrumb-icon icon-bell-([^ ]*) js-subscribe-topic\" title=\"[^\"]*\" data-action=\"[^\"]*\"([^>]*)>");
     private static final Pattern subIdInSubButtonPattern = Pattern.compile("data-id-abonnement=\"([^\"]*)\"");
@@ -1746,6 +1745,8 @@ public final class JVCParser {
 
     public static class ToolForParsing {
         private static final Pattern uolistOpenTagPattern = Pattern.compile("<(ul|ol)[^>]*>");
+        private static final Pattern liBasicOpenTagPattern = Pattern.compile("<li[^>]*>");
+        private static final Pattern liParagraphOpenTagPattern = Pattern.compile("<li[^>]*><p[^>]*><li[^>]*>");
         private static final Pattern divOpenTagPattern = Pattern.compile("<div[^>]*>");
         private static final Pattern largeParagraphePattern = Pattern.compile("(<br /> *){0,2}</p> *<p>( *<br />){0,2}");
         private static final Pattern surroundedParagraphePattern = Pattern.compile("<br /> *<(/)?p> *<br />");
@@ -1754,13 +1755,13 @@ public final class JVCParser {
         private static final Pattern smallParagraphePattern = Pattern.compile("<(/)?p>");
 
         public static void parseListInMessageIfNeeded(StringBuilder message) {
-            if (message.indexOf("<li>") != -1) {
+            if (message.indexOf("<li ") != -1 || message.indexOf("<li>") != -1) {
                 ToolForParsing.parseThisMessageWithThisPattern(message, uolistOpenTagPattern, -1, "<p>", "", null, null);
                 ToolForParsing.replaceStringByAnother(message, "</ul>", "</p>");
                 ToolForParsing.replaceStringByAnother(message, "</ol>", "</p>");
-                ToolForParsing.replaceStringByAnother(message, "<li><p><li>", "<li><li>");
-                ToolForParsing.replaceStringByAnother(message, "<li><p><li>", "<li><li>");
-                ToolForParsing.replaceStringByAnother(message, "<li>", " • ");
+                ToolForParsing.parseThisMessageWithThisPattern(message, liParagraphOpenTagPattern, -1, "<li><li>", "", null, null);
+                ToolForParsing.parseThisMessageWithThisPattern(message, liParagraphOpenTagPattern, -1, "<li><li>", "", null, null);
+                ToolForParsing.parseThisMessageWithThisPattern(message, liBasicOpenTagPattern, -1, " • ", "", null, null);
                 ToolForParsing.replaceStringByAnother(message, "</li></p></li>", "</li>");
                 ToolForParsing.replaceStringByAnother(message, "</li></p></li>", "</li>");
                 ToolForParsing.replaceStringByAnother(message, "</li>", "<br />");
