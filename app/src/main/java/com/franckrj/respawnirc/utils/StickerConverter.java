@@ -101,7 +101,7 @@ public class StickerConverter {
             if (itsAConvertToSmiley) {
                 replacement = "<img src=\"https://image.jeuxvideo.com/smileys_img/" + replacementString + "\" alt=\"\" data-code=\"\" title=\"\" />";
             } else {
-                replacement = "<img class=\"img-stickers\" src=\"" + replacementString + "\"/>";
+                replacement = "<img class=\"message__sticker\" src=\"" + replacementString + "\"/>";
             }
         }
     }
@@ -130,7 +130,7 @@ public class StickerConverter {
                 }
             }
 
-            return "<img class=\"img-stickers\" src=\"" + baseString + "\"/>";
+            return "<img class=\"message__sticker\" src=\"" + baseString + "\"/>";
         }
     }
 }

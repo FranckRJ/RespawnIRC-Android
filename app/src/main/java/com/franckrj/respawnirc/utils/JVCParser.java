@@ -22,7 +22,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class JVCParser {
-    public static final Pattern stickerPattern = Pattern.compile("<img class=\"img-stickers\" src=\"([^\"]*)\".*?/>");
+    public static final Pattern stickerPattern = Pattern.compile("<img class=\"message__sticker\" src=\"([^\"]*)\".*?/>");
 
     private static final Pattern ajaxListTimestampPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_timestamp_liste_(messages|topics)\" id=\"ajax_timestamp_liste_(messages|topics)\" value=\"([^\"]*)\" />");
     private static final Pattern ajaxListHashPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_hash_liste_(messages|topics)\" id=\"ajax_hash_liste_(messages|topics)\" value=\"([^\"]*)\" />");
