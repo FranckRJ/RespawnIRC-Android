@@ -821,14 +821,17 @@ public final class JVCParser {
         return emptySearchPattern.matcher(pageSource).find();
     }
 
-    public static Boolean getIsInFavsFromPage(String pageSource) {
-        Matcher isInFavMatcher = isInFavPattern.matcher(pageSource);
+    public static Boolean getIsInFavsFromPage(JSONObject payload) {
+        JSONObject userParameters = payload.optJSONObject("userParameters");
 
-        if (isInFavMatcher.find()) {
-            return isInFavMatcher.group(1).equals("on");
-        } else {
-            return null;
+        if (userParameters != null) {
+            JSONObject favorite = userParameters.optJSONObject("favorite");
+            if (favorite != null) {
+                return favorite.optBoolean("isActive", false);
+            }
         }
+
+        return null;
     }
 
     public static String getLockReasonFromPage(String pageSource) {
@@ -1043,6 +1046,7 @@ public final class JVCParser {
                     String prefToken = json.optString("ajaxSessionPreferencesToken", "");
                     if (!prefToken.isEmpty()) {
                         newAjaxInfos.pref = "ajax_hash=" + prefToken;
+                        newAjaxInfos.prefRaw = prefToken;
                     }
                 }
 
@@ -1981,6 +1985,7 @@ public final class JVCParser {
         public String pref = null;
         public String sub = null;
         public String newHash = null;
+        public String prefRaw = null;
 
         public static final Parcelable.Creator<AjaxInfos> CREATOR = new Parcelable.Creator<AjaxInfos>() {
             @Override
@@ -2004,6 +2009,7 @@ public final class JVCParser {
             pref = baseForCopy.pref;
             sub = baseForCopy.sub;
             newHash = baseForCopy.newHash;
+            prefRaw = baseForCopy.prefRaw;
         }
 
         private AjaxInfos(Parcel in) {
@@ -2012,6 +2018,7 @@ public final class JVCParser {
             pref = in.readString();
             sub = in.readString();
             newHash = in.readString();
+            prefRaw = in.readString();
         }
 
         @Override
@@ -2026,6 +2033,7 @@ public final class JVCParser {
             out.writeString(pref);
             out.writeString(sub);
             out.writeString(newHash);
+            out.writeString(prefRaw);
         }
     }
 

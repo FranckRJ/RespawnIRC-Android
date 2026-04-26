@@ -229,7 +229,7 @@ public class JVCForumGetter {
                     newPageInfos.forumStatus.forumName = JVCParser.getForumNameInForumPage(pageContent);
                     newPageInfos.forumStatus.ajaxInfos = JVCParser.getAllAjaxInfos(pageContent);
                     newPageInfos.forumStatus.formSession = JVCParser.getFormSession(pageContent, false);
-                    newPageInfos.forumStatus.isInFavs = JVCParser.getIsInFavsFromPage(pageContent);
+                    newPageInfos.forumStatus.isInFavs = JVCParser.getIsInFavsFromPage(payload);
                     newPageInfos.forumStatus.listOfInputInAString = JVCParser.getListOfInputInAStringInTopicFormForThisPage(pageContent);
                     newPageInfos.forumStatus.numberOfMp = JVCParser.getNumberOfMpFromPage(pageContent);
                     newPageInfos.forumStatus.numberOfNotif = JVCParser.getNumberOfNotifFromPage(pageContent);

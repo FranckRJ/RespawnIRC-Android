@@ -307,7 +307,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
             case R.id.action_change_forum_fav_value_showforum:
                 if (currentTaskForFavs == null) {
                     currentTaskForFavs = new AddOrRemoveThingToFavs(!forumStatus.isInFavs, this);
-                    currentTaskForFavs.execute(JVCParser.getForumIdOfThisForum(pageNavigation.getCurrentPageLink()), forumStatus.ajaxInfos.pref, currentAccount.cookie);
+                    currentTaskForFavs.execute(JVCParser.getForumIdOfThisForum(pageNavigation.getCurrentPageLink()), forumStatus.ajaxInfos.prefRaw, currentAccount.cookie);
                 } else {
                     Toast.makeText(ShowForumActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
                 }

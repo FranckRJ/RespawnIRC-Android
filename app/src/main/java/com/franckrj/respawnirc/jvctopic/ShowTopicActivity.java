@@ -653,7 +653,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 if (topicStatus.isInFavs != null) {
                     if (currentTaskForFavs == null) {
                         currentTaskForFavs = new AddOrRemoveThingToFavs(!topicStatus.isInFavs, this);
-                        currentTaskForFavs.execute(JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), topicStatus.topicId, topicStatus.ajaxInfos.pref, currentAccount.cookie);
+                        currentTaskForFavs.execute(JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), topicStatus.topicId, topicStatus.ajaxInfos.prefRaw, currentAccount.cookie);
                     } else {
                         Toast.makeText(ShowTopicActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
                     }

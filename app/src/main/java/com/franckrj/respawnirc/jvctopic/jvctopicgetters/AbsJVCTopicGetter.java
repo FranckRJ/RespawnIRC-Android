@@ -9,6 +9,8 @@ import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -114,6 +116,7 @@ public abstract class AbsJVCTopicGetter {
 
         if (pageContent != null) {
             newPageInfos = new TopicPageInfos();
+            JSONObject payload = JVCParser.getForumsAppPayload(pageContent);
             newPageInfos.newUrlForTopicPage = currentWebInfos.currentUrl;
             newPageInfos.lastPageLink = JVCParser.getLastPageOfTopic(pageContent);
             newPageInfos.nextPageLink = JVCParser.getNextPageOfTopic(pageContent);
@@ -122,7 +125,7 @@ public abstract class AbsJVCTopicGetter {
             newPageInfos.topicStatus.ajaxInfos = JVCParser.getAllAjaxInfos(pageContent);
             newPageInfos.topicStatus.formSession = JVCParser.getFormSession(pageContent, false);
             newPageInfos.topicStatus.names = JVCParser.getForumAndTopicNameInTopicPage(pageContent);
-            newPageInfos.topicStatus.isInFavs = JVCParser.getIsInFavsFromPage(pageContent);
+            newPageInfos.topicStatus.isInFavs = JVCParser.getIsInFavsFromPage(payload);
             newPageInfos.topicStatus.subId = JVCParser.getSubIdInThisTopicPage(pageContent);
             /* JVC 2026 : l'attribut data-topic-id sur les <div> a disparu du HTML. On extrait d'abord
                l'ID depuis l'URL (fiable) puis on retombe sur le parsing HTML en fallback. */
