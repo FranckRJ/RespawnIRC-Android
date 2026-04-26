@@ -13,14 +13,12 @@ import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
 public class JVCActionsInTopic {
-    private QuoteJVCMessage currentTaskQuoteMessage = null;
     private DeleteOrRestoreJVCMessage currentTaskDeleteOrRestoreMessage = null;
     private UnlockJVCTopic currentTaskUnlockTopic = null;
     private PinOrUnpinJVCTopic currentTaskPinOrUnpinTopic = null;
     private DekickJVCPseudo currentTaskDekickPseudo = null;
     private NewMessageIsQuoted messageIsQuotedListener = null;
     private TopicNeedToBeReloaded topicNeedToBeReloadedListener = null;
-    private String latestMessageQuotedInfo = null;
     private DeletesInfos lastDeleteInfos = new DeletesInfos();
     private Activity parentActivity;
 
@@ -36,22 +34,6 @@ public class JVCActionsInTopic {
                     Toast.makeText(parentActivity, R.string.errorDeleteOrRestoreAlreadyRunning, Toast.LENGTH_SHORT).show();
                 }
             }
-        }
-    };
-
-    private final AbsWebRequestAsyncTask.RequestIsFinished<String> quoteMessageIsFinishedListener = new AbsWebRequestAsyncTask.RequestIsFinished<String>() {
-        @Override
-        public void onRequestIsFinished(String reqResult) {
-            if (reqResult != null) {
-                if (messageIsQuotedListener != null) {
-                    messageIsQuotedListener.getNewMessageQuoted(latestMessageQuotedInfo + "\n>" + reqResult + "\n\n");
-                }
-            } else {
-                Toast.makeText(parentActivity, R.string.errorDownloadFailed, Toast.LENGTH_SHORT).show();
-            }
-
-            latestMessageQuotedInfo = null;
-            currentTaskQuoteMessage = null;
         }
     };
 
@@ -161,11 +143,6 @@ public class JVCActionsInTopic {
     }
 
     public void stopAllCurrentTasks() {
-        if (currentTaskQuoteMessage != null) {
-            currentTaskQuoteMessage.clearListenersAndCancel();
-            currentTaskQuoteMessage = null;
-            latestMessageQuotedInfo = null;
-        }
         if (currentTaskDeleteOrRestoreMessage != null) {
             currentTaskDeleteOrRestoreMessage.clearListenersAndCancel();
             currentTaskDeleteOrRestoreMessage = null;
@@ -184,28 +161,9 @@ public class JVCActionsInTopic {
         }
     }
 
-    public void startQuoteThisMessage(JVCParser.AjaxInfos latestAjaxInfos, JVCParser.MessageInfos currentMessageInfos, String cookieListInAString) {
-        if (latestMessageQuotedInfo != null || currentTaskQuoteMessage != null) {
-            Toast.makeText(parentActivity, R.string.errorQuoteAlreadyRunning, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        /* JVC 2026 : l'endpoint ajax_citation.php n'existe plus.
-           On construit la citation localement depuis le contenu HTML du message. */
-        String quotedText = JVCParser.buildLocalQuoteFromMessage(currentMessageInfos);
-        if (!quotedText.isEmpty() && messageIsQuotedListener != null) {
-            messageIsQuotedListener.getNewMessageQuoted(quotedText);
-            return;
-        }
-
-        /* Fallback : appel AJAX (ancien fonctionnement). */
-        if (latestAjaxInfos.list != null) {
-            String idOfMessage = Long.toString(currentMessageInfos.id);
-            latestMessageQuotedInfo = JVCParser.buildMessageQuotedInfoFromThis(currentMessageInfos);
-
-            currentTaskQuoteMessage = new QuoteJVCMessage();
-            currentTaskQuoteMessage.setRequestIsFinishedListener(quoteMessageIsFinishedListener);
-            currentTaskQuoteMessage.execute(idOfMessage, latestAjaxInfos.list, cookieListInAString);
+    public void startQuoteThisMessage(JVCParser.MessageInfos currentMessageInfos) {
+        if (messageIsQuotedListener != null && !currentMessageInfos.messageRaw.isEmpty()) {
+            messageIsQuotedListener.getNewMessageQuoted(JVCParser.buildMessageQuoted(currentMessageInfos));
         } else {
             Toast.makeText(parentActivity, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
         }
@@ -284,23 +242,6 @@ public class JVCActionsInTopic {
             } else {
                 Toast.makeText(parentActivity, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
             }
-        }
-    }
-
-    private static class QuoteJVCMessage extends AbsWebRequestAsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... params) {
-            if (params.length > 2) {
-                WebManager.WebInfos currentWebInfos = initWebInfos(params[2], false);
-                String pageContent;
-
-                pageContent = WebManager.sendRequestWithMultipleTrys("https://www.jeuxvideo.com/forums/ajax_citation.php", "POST", "id_message=" + params[0] + "&" + params[1], currentWebInfos, 2);
-
-                if (pageContent != null) {
-                    return JVCParser.getMessageQuoted(pageContent);
-                }
-            }
-            return null;
         }
     }
 

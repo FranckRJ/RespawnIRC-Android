@@ -747,7 +747,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 } else if (topicStatus.lockReason != null) {
                     Toast.makeText(this, R.string.errorTopicIsLocked, Toast.LENGTH_SHORT).show();
                 } else {
-                    actionsForTopic.startQuoteThisMessage(topicStatus.ajaxInfos, fromThisMessage, currentAccount.cookie);
+                    actionsForTopic.startQuoteThisMessage(fromThisMessage);
                 }
                 return true;
             case R.id.menu_edit_message:
@@ -1002,7 +1002,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             argForFrag.putString(MessageMenuDialogFragment.ARG_PSEUDO_USER, currentAccount.pseudo);
             argForFrag.putString(MessageMenuDialogFragment.ARG_MESSAGE_ID, String.valueOf(messageClicked.id));
             argForFrag.putInt(MessageMenuDialogFragment.ARG_LINK_TYPE_FOR_INTERNAL_BROWSER, linkTypeForInternalBrowser.type);
-            argForFrag.putString(MessageMenuDialogFragment.ARG_MESSAGE_CONTENT, messageClicked.messageNotParsed);
+            argForFrag.putString(MessageMenuDialogFragment.ARG_MESSAGE_CONTENT, messageClicked.messageRaw);
             messageMenuDialogFragment.setArguments(argForFrag);
             messageMenuDialogFragment.show(getSupportFragmentManager(), "MessageMenuDialogFragment");
         }

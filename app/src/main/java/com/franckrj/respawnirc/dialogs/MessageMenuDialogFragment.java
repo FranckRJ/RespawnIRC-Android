@@ -33,7 +33,7 @@ public class MessageMenuDialogFragment extends DialogFragment {
     private String pseudoOfUser;
     private String idOfMessage;
     private PrefsManager.LinkType linkTypeForInternalBrowser = new PrefsManager.LinkType(PrefsManager.LinkType.NO_LINKS);
-    private String messageNotParsed;
+    private String messageRaw;
 
     @NonNull
     @Override
@@ -46,13 +46,13 @@ public class MessageMenuDialogFragment extends DialogFragment {
             pseudoOfUser = currentArgs.getString(ARG_PSEUDO_USER, "");
             idOfMessage = currentArgs.getString(ARG_MESSAGE_ID, "0");
             linkTypeForInternalBrowser.type = currentArgs.getInt(ARG_LINK_TYPE_FOR_INTERNAL_BROWSER, linkTypeForInternalBrowser.getDefaultType());
-            messageNotParsed = currentArgs.getString(ARG_MESSAGE_CONTENT, "");
+            messageRaw = currentArgs.getString(ARG_MESSAGE_CONTENT, "");
         } else {
             pseudoOfMessage = getString(R.string.waitingText);
             pseudoOfUser = "";
             idOfMessage = "0";
             linkTypeForInternalBrowser.type = linkTypeForInternalBrowser.getDefaultType();
-            messageNotParsed = "";
+            messageRaw = "";
         }
 
         builder.setTitle(pseudoOfMessage);
@@ -105,8 +105,8 @@ public class MessageMenuDialogFragment extends DialogFragment {
                             if (!isStateSaved()) {
                                 Bundle argForFrag = new Bundle();
                                 SelectTextDialogFragment selectTextDialogFragment = new SelectTextDialogFragment();
-                                argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, JVCParser.parseMessageToSimpleMessage(messageNotParsed));
-                                argForFrag.putBoolean(SelectTextDialogFragment.ARG_TEXT_IS_HTML, true);
+                                argForFrag.putString(SelectTextDialogFragment.ARG_TEXT_CONTENT, messageRaw);
+                                argForFrag.putBoolean(SelectTextDialogFragment.ARG_TEXT_IS_HTML, false);
                                 selectTextDialogFragment.setArguments(argForFrag);
                                 selectTextDialogFragment.show(getActivity().getSupportFragmentManager(), "SelectTextDialogFragment");
                             }

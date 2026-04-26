@@ -974,127 +974,9 @@ public final class JVCParser {
         return res;
     }
 
-    public static String buildMessageQuotedInfoFromThis(MessageInfos thisMessageInfo) {
-        return ">[" + thisMessageInfo.dateTime + "] <" + thisMessageInfo.pseudo + ">";
-    }
-
-    /* JVC 2026 : construction locale de la citation depuis le HTML du message. */
-    private static String decodeHtmlEntities(String text) {
-        return Html.fromHtml(text).toString();
-    }
-
-    private static String htmlToPlainText(String html) {
-        String text = html.replaceAll("(?s)<div class=\"messageUser__dateEdit\">.*?</div>", "");
-        text = text.replace("<i class=\"message__cesure\"></i>", "");
-        text = text.replaceAll("<span class=\"message__middleCesure\">(.*?)</span>", "$1");
-        text = text.replace("<br />", "\n").replace("<br>", "\n").replace("<br/>", "\n");
-        text = text.replaceAll("</p>\\s*<p[^>]*>", "\n");
-        text = text.replaceAll("</li>", "\n");
-        text = text.replaceAll("<img[^>]*data-code=\"([^\"]*)\"[^>]*/?>", "$1");
-        text = text.replaceAll("<img class=\"img-stickers\" src=\"([^\"]*)\"[^>]*/?>", "$1");
-        text = text.replaceAll("<img class=\"message__urlImg[^\"]*\"[^>]*alt=\"([^\"]*)\"[^>]*/?>", "$1");
-        text = text.replaceAll("<[^>]+>", "");
-        text = decodeHtmlEntities(text);
-        return text.trim();
-    }
-
-    /**
-     * Convertit du HTML en texte cité récursivement.
-     * Chaque niveau de blockquote ajoute un ">" supplémentaire.
-     */
-    private static void htmlToQuotedText(String html, int depth, StringBuilder output) {
-        java.util.regex.Pattern bqPattern = java.util.regex.Pattern.compile("(?s)<blockquote[^>]*>(.*?)</blockquote>");
-        /* On cherche les blockquotes au niveau courant (le lazy ? attrape le plus intérieur d'abord,
-           mais on gère la récursion en rappelant cette méthode sur le contenu). */
-        /* Utiliser une approche manuelle pour trouver les blockquotes de premier niveau. */
-        int pos = 0;
-        while (pos < html.length()) {
-            int openIdx = html.indexOf("<blockquote", pos);
-            if (openIdx == -1) {
-                /* Plus de blockquote, écrire le reste. */
-                String rest = html.substring(pos);
-                String clean = htmlToPlainText(rest).trim();
-                if (!clean.isEmpty()) {
-                    String prefix = buildQuotePrefix(depth);
-                    String[] lines = clean.split("\n");
-                    for (String line : lines) {
-                        String trimmed = line.trim();
-                        if (!trimmed.isEmpty()) {
-                            output.append(prefix).append(trimmed).append("\n");
-                        }
-                    }
-                }
-                break;
-            }
-            /* Texte avant le blockquote. */
-            if (openIdx > pos) {
-                String before = html.substring(pos, openIdx);
-                String clean = htmlToPlainText(before).trim();
-                if (!clean.isEmpty()) {
-                    String prefix = buildQuotePrefix(depth);
-                    String[] lines = clean.split("\n");
-                    for (String line : lines) {
-                        String trimmed = line.trim();
-                        if (!trimmed.isEmpty()) {
-                            output.append(prefix).append(trimmed).append("\n");
-                        }
-                    }
-                }
-            }
-            /* Trouver la fin du tag ouvrant. */
-            int openTagEnd = html.indexOf(">", openIdx);
-            if (openTagEnd == -1) break;
-            /* Trouver le </blockquote> correspondant en comptant les niveaux. */
-            int innerStart = openTagEnd + 1;
-            int nesting = 1;
-            int searchPos = innerStart;
-            int closeIdx = -1;
-            while (nesting > 0 && searchPos < html.length()) {
-                int nextOpen = html.indexOf("<blockquote", searchPos);
-                int nextClose = html.indexOf("</blockquote>", searchPos);
-                if (nextClose == -1) break;
-                if (nextOpen != -1 && nextOpen < nextClose) {
-                    nesting++;
-                    searchPos = nextOpen + 11;
-                } else {
-                    nesting--;
-                    if (nesting == 0) {
-                        closeIdx = nextClose;
-                    }
-                    searchPos = nextClose + 13;
-                }
-            }
-            if (closeIdx == -1) break;
-            String innerHtml = html.substring(innerStart, closeIdx);
-            /* Récursion : le contenu du blockquote est un niveau plus profond. */
-            htmlToQuotedText(innerHtml, depth + 1, output);
-            pos = closeIdx + 13; /* longueur de "</blockquote>" */
-        }
-    }
-
-    private static String buildQuotePrefix(int depth) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < depth; i++) {
-            sb.append("> ");
-        }
-        return sb.toString();
-    }
-
-    public static String buildLocalQuoteFromMessage(MessageInfos messageInfo) {
-        String header = "> Le " + messageInfo.wholeDate + " " + messageInfo.pseudo + " a écrit :\n";
-        String msgHtml = messageInfo.messageNotParsed;
-        if (msgHtml == null || msgHtml.isEmpty()) {
-            return "";
-        }
-        StringBuilder content = new StringBuilder();
-        /* depth=1 car tout le message est déjà dans une citation (le "> " de base). */
-        htmlToQuotedText(msgHtml, 1, content);
-
-        StringBuilder quoted = new StringBuilder();
-        quoted.append(header);
-        quoted.append(content);
-        quoted.append("\n");
-        return quoted.toString();
+    public static String buildMessageQuoted(MessageInfos thisMessageInfo) {
+        return "> Le " + thisMessageInfo.wholeDate + " " + thisMessageInfo.pseudo + " a écrit:\n>"
+                + thisMessageInfo.messageRaw.replaceAll("\n", "\n>");
     }
 
     public static String parsingAjaxMessages(String ajaxMessage) {
@@ -1117,16 +999,6 @@ public final class JVCParser {
         }
 
         return ajaxMessage;
-    }
-
-    public static String getMessageQuoted(String pageSource) {
-        Matcher messageQuoteMatcher = messageQuotePattern.matcher(pageSource);
-
-        if (messageQuoteMatcher.find()) {
-            return specialCharToNormalChar(parsingAjaxMessages(messageQuoteMatcher.group(1)).replace("\n", "\n>"));
-        }
-
-        return "";
     }
 
     public static AjaxInfos getAllAjaxInfos(String pageSource) {
@@ -1464,7 +1336,7 @@ public final class JVCParser {
         if ((settings.typeOfPseudoToColorInInfoLine.type == PrefsManager.PseudoColorType.CURRENT_ONLY && thisMessageInfo.pseudo.toLowerCase().equals(settings.pseudoOfUser.toLowerCase()) ||
                 (settings.typeOfPseudoToColorInInfoLine.type == PrefsManager.PseudoColorType.ALL_ACCOUNTS && AccountManager.getIndexOfThisAccount(thisMessageInfo.pseudo) >= 0))) {
             ToolForParsing.replaceStringByAnother(newFirstLine, "<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoUser + "\">");
-        } else if (thisMessageInfo.pseudoType.equals("modo")){
+        } else if (thisMessageInfo.pseudoType.equals("moderator")){
             ToolForParsing.replaceStringByAnother(newFirstLine, "<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoModo + "\">");
         } else if (thisMessageInfo.pseudoType.equals("admin") || thisMessageInfo.pseudoType.equals("staff")){
             ToolForParsing.replaceStringByAnother(newFirstLine, "<%PSEUDO_COLOR_START%>", "<font color=\"" + settings.colorPseudoAdmin + "\">");
@@ -1580,43 +1452,6 @@ public final class JVCParser {
         return messageInBuilder.toString();
     }
 
-    public static String parseMessageToSimpleMessage(String messageInString) {
-        StringBuilder messageInBuilder = new StringBuilder(messageInString);
-
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeBlockPattern, 1, "<p>&lt;code&gt;", "&lt;/code&gt;</p>", new ConvertStringToString("\n", "<br />"), new ConvertStringToString("  ", "&nbsp;&nbsp;"));
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, codeLinePattern, 1, "&lt;code&gt;", "&lt;/code&gt;", new ConvertStringToString("  ", "&nbsp;&nbsp;"), null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, stickerPattern, 1, "[[sticker:p/", "]]", new ConvertUrlToStickerId(), null);
-        ToolForParsing.replaceStringByAnother(messageInBuilder, "\n", "");
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, smileyPattern, 3, "", "", null, null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, embedVideoPattern, 1, "<p>", "</p>", null, null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvcVideoPattern, 1, "<p>https://www.jeuxvideo.com/videos/iframe/", "</p>", null, null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortJvcLinkPattern, 1, "", "", null, null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longJvcLinkPattern, 1, "", "", null, null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, shortLinkPattern, 1, "", "", null, null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, longLinkPattern, 1, "", "", null, null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 3, "", "", null, null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilLinePattern, 1, "&lt;spoil&gt;", "&lt;/spoil&gt;", new RemoveFirstsAndLastsPAndBr(), null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, spoilBlockPattern, 1, "<p>&lt;spoil&gt;", "&lt;/spoil&gt;</p>",  new RemoveFirstsAndLastsPAndBr(), null);
-        ToolForParsing.removeDivAndAdaptParagraphInMessage(messageInBuilder);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, surroundedBlockquotePattern, -1, "<br /><br />", "", null, null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, jvCarePattern, 1, "", "", null, null);
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, multipleSpacesPattern, -1, " ", "", null, null);
-        ToolForParsing.removeFirstAndLastBrInMessage(messageInBuilder);
-        ToolForParsing.replaceStringByAnother(messageInBuilder, "<strong>", "&#039;&#039;&#039;");
-        ToolForParsing.replaceStringByAnother(messageInBuilder, "</strong>", "&#039;&#039;&#039;");
-        ToolForParsing.replaceStringByAnother(messageInBuilder, "<em>", "&#039;&#039;");
-        ToolForParsing.replaceStringByAnother(messageInBuilder, "</em>", "&#039;&#039;");
-        ToolForParsing.replaceStringByAnother(messageInBuilder, "<u>", "&lt;u&gt;");
-        ToolForParsing.replaceStringByAnother(messageInBuilder, "</u>", "&lt;/u&gt;");
-        ToolForParsing.replaceStringByAnother(messageInBuilder, "<s>", "&lt;s&gt;");
-        ToolForParsing.replaceStringByAnother(messageInBuilder, "</s>", "&lt;/s&gt;");
-
-        ToolForParsing.replaceStringByAnother(messageInBuilder, "<br />", "\n");
-        ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, htmlTagPattern, -1, "", "", null, null);
-        ToolForParsing.replaceStringByAnother(messageInBuilder, "\n", "<br />");
-        return messageInBuilder.toString();
-    }
-
     public static String makeBasicMessageParse(String messageToParse, boolean containSpoil) {
         /* Retirer la div "Message édité le..." pour éviter le doublon avec lastTimeEdit. */
         messageToParse = messageToParse.replaceAll("(?s)<div class=\"messageUser__dateEdit\">.*?</div>", "");
@@ -1637,89 +1472,71 @@ public final class JVCParser {
         return messageInBuilder.toString();
     }
 
-    public static MessageInfos createMessageInfoFromEntireMessage(String thisEntireMessage) {
+    public static MessageInfos createMessageInfoFromEntireMessage(JSONObject thisEntireMessage) {
         MessageInfos newMessageInfo = new MessageInfos();
-        Matcher pseudoIsBlacklistedMatcher = pseudoIsBlacklistedPattern.matcher(thisEntireMessage);
-        Matcher messageIsDeletedMatcher = messageIsDeletedPattern.matcher(thisEntireMessage);
-        Matcher userCanDeleteOrRestoreMessageMatcher = userCanDeleteOrRestoreMessagePattern.matcher(thisEntireMessage);
-        Matcher userCanEditMessageMatcher = userCanEditMessagePattern.matcher(thisEntireMessage);
-        Matcher userCanKickOrDekickAuthorMatcher = userCanKickOrDekickAuthorPattern.matcher(thisEntireMessage);
-        Matcher pseudoInfosMatcher = pseudoInfosPattern.matcher(thisEntireMessage);
-        Matcher idAliasMatcher = idAliasPattern.matcher(thisEntireMessage);
-        Matcher messageMatcher = messagePattern.matcher(thisEntireMessage);
-        Matcher signatureMatcher = signaturePattern.matcher(thisEntireMessage);
-        Matcher avatarMatcher = avatarPattern.matcher(thisEntireMessage);
-        Matcher dateMessageMatcher = dateMessagePattern.matcher(thisEntireMessage);
-        Matcher lastEditMessageMatcher = lastEditMessagePattern.matcher(thisEntireMessage);
-        Matcher messageIdMatcher = messageIdPattern.matcher(thisEntireMessage);
-        Matcher niveauMatcher = jvcNiveauPattern.matcher(thisEntireMessage);
 
-        newMessageInfo.pseudoIsBlacklisted = pseudoIsBlacklistedMatcher.find();
-        newMessageInfo.messageIsDeleted = messageIsDeletedMatcher.find();
-        newMessageInfo.userCanDeleteOrRestoreMessage = userCanDeleteOrRestoreMessageMatcher.find();
-        newMessageInfo.userCanEditMessage = userCanEditMessageMatcher.find();
-        newMessageInfo.userCanKickOrDekickAuthor = userCanKickOrDekickAuthorMatcher.find();
-
-        if (newMessageInfo.userCanKickOrDekickAuthor) {
-            newMessageInfo.authorIsKicked = userCanKickOrDekickAuthorMatcher.group(1).equals("dekick");
+        JSONObject actions = thisEntireMessage.optJSONObject("actions");
+        if (actions == null) {
+            actions = new JSONObject();
         }
 
-        if (pseudoInfosMatcher.find()) {
-            newMessageInfo.pseudo = pseudoInfosMatcher.group(1);
-            /* Le nouveau HTML JVC ne véhicule plus la couleur du pseudo directement sur le label :
-               on détecte le statut via les classes avatar--moderator / avatar--admin si présentes. */
-            if (thisEntireMessage.contains("avatar--admin")) {
-                newMessageInfo.pseudoType = "admin";
-            } else if (thisEntireMessage.contains("avatar--moderator")) {
-                newMessageInfo.pseudoType = "modo";
-            } else if (thisEntireMessage.contains("avatar--staff")) {
-                newMessageInfo.pseudoType = "staff";
-            } else {
-                newMessageInfo.pseudoType = "user";
+        newMessageInfo.pseudoIsBlacklisted = thisEntireMessage.optBoolean("isBlacklisted", false);
+        newMessageInfo.messageIsDeleted = thisEntireMessage.optString("stateMessage", "").equals("msg-deleted");
+        newMessageInfo.userCanDeleteOrRestoreMessage = actions.has("delete") || actions.has("restore");
+        newMessageInfo.userCanEditMessage = actions.has("edit");
+        newMessageInfo.userCanKickOrDekickAuthor = actions.has("kick") || actions.has("dekick");
+
+        if (newMessageInfo.userCanEditMessage) {
+            JSONObject editObj = actions.optJSONObject("edit");
+            if (editObj != null) {
+                newMessageInfo.editUrl = editObj.optString("url", "");
             }
         }
 
-        if (idAliasMatcher.find()) {
-            newMessageInfo.idAlias = idAliasMatcher.group(1);
+        if (newMessageInfo.userCanKickOrDekickAuthor) {
+            newMessageInfo.authorIsKicked = actions.has("dekick");
         }
 
-        if (lastEditMessageMatcher.find()) {
-            newMessageInfo.lastTimeEdit = lastEditMessageMatcher.group(1).replaceAll(htmlTagPattern.pattern(), "");
+        newMessageInfo.pseudo = thisEntireMessage.optString("publishedAuthorName", "Pseudo supprimé");
+        newMessageInfo.pseudoType = thisEntireMessage.optString("publishedAuthorRole", "user");
+        if (newMessageInfo.pseudoType.isEmpty()) {
+            newMessageInfo.pseudoType = "user";
         }
 
-        if (signatureMatcher.find()) {
-            newMessageInfo.signatureNotParsed = signatureMatcher.group(1);
+        newMessageInfo.idAlias = thisEntireMessage.optString("publishedAuthorId", "0");
+        if (!thisEntireMessage.isNull("updatedText")) {
+            newMessageInfo.lastTimeEdit = thisEntireMessage.optString("updatedText", "");
+            if (!newMessageInfo.lastTimeEdit.isEmpty()) {
+                newMessageInfo.lastTimeEdit += thisEntireMessage.optString("updatedAuthorName", "");
+            }
+        }
+        if (!thisEntireMessage.isNull("publishedAuthorSignatureRendered")) {
+            newMessageInfo.signatureNotParsed = thisEntireMessage.optString("publishedAuthorSignatureRendered", "");
+        }
+        if (!thisEntireMessage.isNull("publishedAuthorAvatar")) {
+            newMessageInfo.avatarLink = thisEntireMessage.optString("publishedAuthorAvatar", "");
+        }
+        newMessageInfo.id = thisEntireMessage.optLong("id", 0);
+
+        newMessageInfo.wholeDate = thisEntireMessage.optString("publishedDate", "");
+        String[] dateSplited = newMessageInfo.wholeDate.split("à");
+        if (dateSplited.length > 1) {
+            newMessageInfo.dateTime = dateSplited[1].trim();
         }
 
-        if (avatarMatcher.find()) {
-            newMessageInfo.avatarLink = "https://" + avatarMatcher.group(2);
-        }
+        newMessageInfo.niveau = String.valueOf(thisEntireMessage.optLong("userLevelId", 0));
 
-        if (messageIdMatcher.find()) {
-            newMessageInfo.id = Long.parseLong(messageIdMatcher.group(1));
-        }
+        newMessageInfo.messageRaw = thisEntireMessage.optString("text", "");
+        newMessageInfo.messageNotParsed = thisEntireMessage.optString("renderedText", "");
+        newMessageInfo.containUglyImages = ToolForParsing.hasUglyImagesInNotPrettyMessage(newMessageInfo.messageNotParsed);
 
-        if (dateMessageMatcher.find()) {
-            newMessageInfo.dateTime = dateMessageMatcher.group(3);
-            newMessageInfo.wholeDate = dateMessageMatcher.group(2);
-        }
+        newMessageInfo.messageContentContainSpoil = newMessageInfo.messageNotParsed.contains(" class=\"message__spoil");
+        newMessageInfo.signatureContainSpoil = newMessageInfo.signatureNotParsed.contains(" class=\"message__spoil");
 
-        if(niveauMatcher.find()) {
-            newMessageInfo.niveau = niveauMatcher.group(2);
-        }
+        newMessageInfo.messageNotParsed = makeBasicMessageParse(newMessageInfo.messageNotParsed, newMessageInfo.messageContentContainSpoil);
+        newMessageInfo.signatureNotParsed = makeBasicMessageParse(newMessageInfo.signatureNotParsed, newMessageInfo.signatureContainSpoil);
 
-        if (messageMatcher.find()) {
-            newMessageInfo.messageNotParsed = messageMatcher.group(1);
-            newMessageInfo.containUglyImages = ToolForParsing.hasUglyImagesInNotPrettyMessage(newMessageInfo.messageNotParsed);
-
-            newMessageInfo.messageContentContainSpoil = newMessageInfo.messageNotParsed.contains(" class=\"message__spoil");
-            newMessageInfo.signatureContainSpoil = newMessageInfo.signatureNotParsed.contains(" class=\"message__spoil");
-
-            newMessageInfo.messageNotParsed = makeBasicMessageParse(newMessageInfo.messageNotParsed, newMessageInfo.messageContentContainSpoil);
-            newMessageInfo.signatureNotParsed = makeBasicMessageParse(newMessageInfo.signatureNotParsed, newMessageInfo.signatureContainSpoil);
-
-            newMessageInfo.numberOfOverlyQuote = ToolForParsing.countNumberOfOverlyQuoteInPreParsedMessage(newMessageInfo.messageNotParsed);
-        }
+        newMessageInfo.numberOfOverlyQuote = ToolForParsing.countNumberOfOverlyQuoteInPreParsedMessage(newMessageInfo.messageNotParsed);
 
         return newMessageInfo;
     }
@@ -1845,107 +1662,52 @@ public final class JVCParser {
 
     public static ArrayList<MessageInfos> getMessagesOfThisPage(String sourcePage) {
         ArrayList<MessageInfos> listOfParsedMessage = new ArrayList<>();
-        /* Retirer les pubs insérées entre les messages pour ne pas casser le regex. */
-        sourcePage = adInsPattern.matcher(sourcePage).replaceAll("");
-        Matcher entireMessageMatcher = entireMessagePattern.matcher(sourcePage);
 
-        while (entireMessageMatcher.find()) {
-            listOfParsedMessage.add(createMessageInfoFromEntireMessage(entireMessageMatcher.group(1)));
+        JSONObject payload = getForumsAppPayload(sourcePage);
+        JSONArray messageArray = payload.optJSONArray("listMessage");
+
+        if (messageArray != null) {
+            for (int i = 0; i < messageArray.length(); ++i) {
+                JSONObject messageJson = messageArray.optJSONObject(i);
+                if (messageJson != null) {
+                    listOfParsedMessage.add(createMessageInfoFromEntireMessage(messageJson));
+                }
+            }
         }
-
-        /* JVC 2026 : les boutons edit/delete/restore ne sont plus dans le HTML brut.
-           On enrichit chaque message avec les actions trouvées dans le payload JSON base64. */
-        enrichMessagesWithPayloadActions(listOfParsedMessage, sourcePage);
 
         Collections.sort(listOfParsedMessage);
 
         return listOfParsedMessage;
     }
 
-    private static void enrichMessagesWithPayloadActions(ArrayList<MessageInfos> messages, String sourcePage) {
-        Matcher payloadMatcher = formSessionPattern.matcher(sourcePage);
-        if (!payloadMatcher.find()) {
-            return;
+    public static JSONObject getForumsAppPayload(String source) {
+        Matcher payloadMatcher = formSessionPattern.matcher(source);
+        if (payloadMatcher.find()) {
+            try {
+                byte[] decoded = android.util.Base64.decode(payloadMatcher.group(1), android.util.Base64.DEFAULT);
+                return new JSONObject(new String(decoded));
+            } catch (Exception ignored) {}
         }
-        try {
-            byte[] decoded = Base64.decode(payloadMatcher.group(1), Base64.DEFAULT);
-            JSONObject json = new JSONObject(new String(decoded));
-            JSONArray listMessage = json.optJSONArray("listMessage");
-            if (listMessage == null) {
-                return;
-            }
-            for (int i = 0; i < listMessage.length(); i++) {
-                JSONObject msgJson = listMessage.optJSONObject(i);
-                if (msgJson == null) continue;
-                long msgId = msgJson.optLong("id", -1);
-                if (msgId == -1) continue;
-
-                /* Trouver le MessageInfos correspondant par id. */
-                for (MessageInfos msg : messages) {
-                    if (msg.id == msgId) {
-                        JSONObject actions = msgJson.optJSONObject("actions");
-                        if (actions != null) {
-                            msg.userCanEditMessage = actions.has("edit");
-                            msg.userCanDeleteOrRestoreMessage = actions.has("delete") || actions.has("restore");
-                            if (actions.has("edit")) {
-                                JSONObject editObj = actions.optJSONObject("edit");
-                                if (editObj != null) {
-                                    msg.editUrl = editObj.optString("url", "");
-                                }
-                            }
-                        }
-
-                        /* Pseudo depuis le payload JSON (fallback si le regex HTML a échoué). */
-                        if (msg.pseudo.isEmpty() || msg.pseudo.equals("Pseudo supprimé")) {
-                            String authorName = msgJson.optString("publishedAuthorName", "");
-                            if (!authorName.isEmpty()) {
-                                msg.pseudo = authorName;
-                            }
-                        }
-
-                        /* stateMessage : "msg-visible" / "msg-supprime" */
-                        String state = msgJson.optString("stateMessage", "");
-                        if (state.contains("supprime")) {
-                            msg.messageIsDeleted = true;
-                        }
-
-                        /* updatedDate pour la dernière édition. */
-                        String updatedDate = msgJson.optString("updatedDate", null);
-                        if (updatedDate != null && !updatedDate.isEmpty() && !"null".equals(updatedDate)) {
-                            String updatedAuthor = msgJson.optString("updatedAuthorName", "");
-                            if (!updatedAuthor.isEmpty()) {
-                                msg.lastTimeEdit = "Message édité le " + updatedDate + " par " + updatedAuthor;
-                            } else {
-                                msg.lastTimeEdit = "Message édité le " + updatedDate;
-                            }
-                        }
-
-                        break;
-                    }
-                }
-            }
-        } catch (Exception ignored) {}
+        return null;
     }
 
-    public static MessageInfos getMessageFromPermalinkPage(String sourcePage) {
-        Matcher entireMessageMatcher = entireMessageInPermalinkPattern.matcher(sourcePage);
+    public static MessageInfos getMessageFromPermalinkPage(JSONObject payload) {
+        JSONArray messageArray = payload.optJSONArray("listMessage");
 
-        if (entireMessageMatcher.find()) {
-            MessageInfos newMessage = createMessageInfoFromEntireMessage(entireMessageMatcher.group(1));
-            newMessage.userCanQuoteMessage = false;
-            return newMessage;
+        if (messageArray != null && messageArray.length() > 0) {
+            JSONObject messageJson = messageArray.optJSONObject(0);
+            if (messageJson != null) {
+                MessageInfos newMessage = createMessageInfoFromEntireMessage(messageJson);
+                newMessage.userCanQuoteMessage = false;
+                return newMessage;
+            }
         }
 
         return null;
     }
 
-    public static String getTopicLinkFromPermalinkPage(String sourcePage) {
-        Matcher topicLinkMatcher = topicLinkInPermalinkPattern.matcher(sourcePage);
-
-        if (topicLinkMatcher.find()) {
-            return "https://www.jeuxvideo.com" + topicLinkMatcher.group(2);
-        }
-
+    public static String getTopicLinkFromPermalinkPage(JSONObject payload) {
+        // TODO: build permalink
         return "";
     }
 
@@ -2467,6 +2229,7 @@ public final class JVCParser {
         public String pseudo = "Pseudo supprimé";
         public String pseudoType = "user";
         public String idAlias = "0";
+        public String messageRaw = "";
         public String messageNotParsed = "";
         public String signatureNotParsed = "";
         public String avatarLink = "";
@@ -2513,6 +2276,7 @@ public final class JVCParser {
             pseudo = in.readString();
             pseudoType = in.readString();
             idAlias = in.readString();
+            messageRaw = in.readString();
             messageNotParsed = in.readString();
             signatureNotParsed = in.readString();
             avatarLink = in.readString();
@@ -2553,6 +2317,7 @@ public final class JVCParser {
             out.writeString(pseudo);
             out.writeString(pseudoType);
             out.writeString(idAlias);
+            out.writeString(messageRaw);
             out.writeString(messageNotParsed);
             out.writeString(signatureNotParsed);
             out.writeString(avatarLink);

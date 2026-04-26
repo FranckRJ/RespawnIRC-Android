@@ -35,6 +35,8 @@ import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
+import org.json.JSONObject;
+
 /* Classe dégueulasse créée rapidement pour la 1.11. En espérant que tout soit mieux fait pour la 2.0. */
 public class ShowMessageActivity extends AbsHomeIsBackActivity {
     public static final String EXTRA_MESSAGE_PERMALINK = "com.franckrj.respawnirc.showmessageactivity.EXTRA_MESSAGE_PERMALINK";
@@ -153,7 +155,7 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
             argForFrag.putString(MessageMenuDialogFragment.ARG_PSEUDO_USER, currentSettings.pseudoOfUser);
             argForFrag.putString(MessageMenuDialogFragment.ARG_MESSAGE_ID, String.valueOf(messageClicked.id));
             argForFrag.putInt(MessageMenuDialogFragment.ARG_LINK_TYPE_FOR_INTERNAL_BROWSER, linkTypeForInternalBrowser.type);
-            argForFrag.putString(MessageMenuDialogFragment.ARG_MESSAGE_CONTENT, messageClicked.messageNotParsed);
+            argForFrag.putString(MessageMenuDialogFragment.ARG_MESSAGE_CONTENT, messageClicked.messageRaw);
             messageMenuDialogFragment.setArguments(argForFrag);
             messageMenuDialogFragment.show(getSupportFragmentManager(), "MessageMenuDialogFragment");
         }
@@ -438,8 +440,9 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
                 String source = WebManager.sendRequest(params[0], "GET", "", currentWebInfos);
 
                 if (source != null) {
-                    newMessageShowedStatus.message = JVCParser.getMessageFromPermalinkPage(source);
-                    newMessageShowedStatus.topicLink = JVCParser.getTopicLinkFromPermalinkPage(source);
+                    JSONObject payload = JVCParser.getForumsAppPayload(source);
+                    newMessageShowedStatus.message = JVCParser.getMessageFromPermalinkPage(payload);
+                    newMessageShowedStatus.topicLink = JVCParser.getTopicLinkFromPermalinkPage(payload);
                 }
             }
 
