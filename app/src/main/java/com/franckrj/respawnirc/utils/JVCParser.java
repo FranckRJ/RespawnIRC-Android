@@ -31,22 +31,7 @@ public final class JVCParser {
     private static final Pattern ajaxPrefTimestampPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_timestamp_preference_user\" id=\"ajax_timestamp_preference_user\" value=\"([^\"]*)\" />");
     private static final Pattern ajaxPrefHashPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_hash_preference_user\" id=\"ajax_hash_preference_user\" value=\"([^\"]*)\" />");
     private static final Pattern ajaxSubHashPattern = Pattern.compile("<body[^>]*data-abo-session=\"([^\"]*)\">");
-    private static final Pattern messageQuotePattern = Pattern.compile("\"txt\":\"(.*)\"", Pattern.DOTALL);
-    private static final Pattern entireMessagePattern = Pattern.compile("(<div class=\"messageUser (?:messageUser--deleted )?js-hybrid-component\" id=\"message-[0-9]+\">.*?)(<span id=\"post_[0-9]+\" class=\"messageUser__anchor\">|<div class=\"container__pagination\">|<div class=\"container__post\">|<div class=\"container__main\">)", Pattern.DOTALL);
-    private static final Pattern adInsPattern = Pattern.compile("<ins data-ad-position[^>]*></ins>");
-    private static final Pattern entireMessageInPermalinkPattern = Pattern.compile("(<div class=\"messageUser (?:messageUser--deleted )?js-hybrid-component\" id=\"message-[0-9]+\">.*?)(<div class=\"bloc-return-topic[^\"]*\">|<div class=\"container__pagination\">|<div class=\"messageUser__footer js-message-user-footer\">|<div class=\"container__post\">)", Pattern.DOTALL);
-    private static final Pattern topicLinkInPermalinkPattern = Pattern.compile("(<div class=\"bloc-return-topic[^\"]*\">)[^<]*<a href=\"([^\"]*)");
-    private static final Pattern signaturePattern = Pattern.compile("<div class=\"messageUser__signature[^\"]*\">(.*)", Pattern.DOTALL);
-    private static final Pattern avatarPattern = Pattern.compile("<img\\s+src=\"(https?:)?//([^\"]*)\"\\s+class=\"avatar__image\"", Pattern.DOTALL);
     private static final Pattern entireTopicPattern = Pattern.compile("<li (id=\"topic-[^\"]*\" )?class=\"tablesForum[^\"]*\">[^<]*<a class=\"tablesForum__cellSubject\" href=\"[^\"]*\"[^>]*>.*?<span class=\"tablesForum__subjectText\">.*?</li>", Pattern.DOTALL);
-    private static final Pattern pseudoIsBlacklistedPattern = Pattern.compile("<div class=\"messageUser[^\"]*msg-pseudo-blacklist[^\"]*\" id=\"message-");
-    private static final Pattern messageIsDeletedPattern = Pattern.compile("<div class=\"messageUser (?:msg-supprime|messageUser--deleted)[^\"]*\"[^>]*>");
-    private static final Pattern userCanDeleteOrRestoreMessagePattern = Pattern.compile("(?:<span class=\"picto-msg-(croix|restaurer)\" title=\"(Supprimer|Restaurer)\" data-type=\"(delete|restore)\">|<i class=\"messageUser__actionIcon icon-(trash|restore)\">)");
-    private static final Pattern userCanEditMessagePattern = Pattern.compile("(?:<span class=\"picto-msg-crayon\" title=\"Editer\"|<i class=\"messageUser__actionIcon icon-pencil2\">)");
-    private static final Pattern userCanKickOrDekickAuthorPattern = Pattern.compile("<span class=\"picto-msg-(kick|dekick)\" title=\"(Kicker|Dékicker)\" data-id-alias=\"[^\"]*\">");
-    private static final Pattern pseudoInfosPattern = Pattern.compile("<span class=\"JvCare [^\"]*?messageUser__label\\s*\"[^>]*>\\s*([a-zA-Z0-9_\\[\\]-]+)\\s*</span>");
-    private static final Pattern idAliasPattern = Pattern.compile("data-id-alias=\"([0-9]+)\">");
-    private static final Pattern messagePattern = Pattern.compile("<div class=\"messageUser__msg js-message-user-msg\">\\s*(.*?)\\s*</div>\\s*(?=<div class=\"messageUser__dateEdit\"|<div class=\"messageUser__separator\"|<div class=\"messageUser__signature\"|<div class=\"messageUser__footer\"|</div>\\s*</div>)", Pattern.DOTALL);
     private static final Pattern currentPagePattern = Pattern.compile("<span [^>]*class=\"(?:[^\"]*\\b)?(?:page-active|pagination__item pagination__item--current|pagination__button--isCurrent)(?:\\b[^\"]*)?\"[^>]*>\\s*([0-9]+)\\s*</span>");
     private static final Pattern pageLinkPattern = Pattern.compile("<(?:span[^>]*>\\s*<a href=\"([^\"]*)\" class=\"lien-jv\">([0-9]+)</a>\\s*</span>|a [^>]*class=\"[^\"]*\\b(?:pagination__item|pagination__button)\\b[^\"]*\"[^>]*href=\"([^\"]*)\"[^>]*>\\s*([0-9]+)\\s*</a>|a [^>]*href=\"([^\"]*)\"[^>]*class=\"[^\"]*\\b(?:pagination__item|pagination__button)\\b[^\"]*\"[^>]*>\\s*([0-9]+)\\s*</a>)");
     private static final Pattern topicFormPattern = Pattern.compile("(<form role=\"form\" class=\"form-post-topic[^\"]*\" method=\"post\" action=\"[^\"]*\".*?>.*?</form>)", Pattern.DOTALL);
@@ -55,8 +40,6 @@ public final class JVCParser {
     private static final Pattern inputNameAttrPattern = Pattern.compile("\\sname=\"([^\"]*)\"");
     private static final Pattern inputValueAttrPattern = Pattern.compile("\\svalue=\"([^\"]*)\"");
     private static final Pattern inputTypeAttrPattern = Pattern.compile("\\stype=\"([^\"]*)\"");
-    private static final Pattern dateMessagePattern = Pattern.compile("<span class=\"[^\"]*?messageUser__date\"[^>]*>()\\s*([^ <]+ [^ <]+ [^ <]+ [^ <]+ ([0-9:]+))\\s*</span>");
-    private static final Pattern messageIdPattern = Pattern.compile("<div class=\"messageUser[^\"]*\" id=\"message-([0-9]+)\">");
     private static final Pattern unicodeInTextPattern = Pattern.compile("\\\\u([a-zA-Z0-9]{4})");
     private static final Pattern alertPattern = Pattern.compile("<div class=\"alert alert-danger[^\"]*\">.*?<p class=\"([^\"]*)\">([^<]*)</p>.*?</div>", Pattern.DOTALL);
     private static final Pattern errorBlocPattern = Pattern.compile("<div class=\"bloc-erreur\">([^<]*)</div>");
@@ -72,7 +55,6 @@ public final class JVCParser {
     private static final Pattern pageSearchTopicLinkNumberPattern = Pattern.compile("^(https?://www\\.jeuxvideo\\.com/recherche/forums/(0-[0-9]*-[0-9]*-[0-9]*-[0-9]*-))([0-9]*)(-[0-9]*-[^./]*\\.htm)([#?]?.*)");
     private static final Pattern messageAnchorInTopicLinkPattern = Pattern.compile("#post_([0-9]*)");
     private static final Pattern jvCarePattern = Pattern.compile("<span class=\"JvCare [^\"]*\">([^<]*)</span>");
-    private static final Pattern lastEditMessagePattern = Pattern.compile("<div class=\"info-edition-msg\">[^M]*(Message édité le ([^ ]* [^ ]* [^ ]* [^ ]* [0-9:]*) par.*?)</div>", Pattern.DOTALL);
     private static final Pattern allArianeStringPattern = Pattern.compile("<nav role=\"navigation\" class=\"breadcrumb\">.*?</nav>", Pattern.DOTALL);
     private static final Pattern forumNameInArianeStringPattern = Pattern.compile("<a class=\"breadcrumb__item\" href=\"(/forums/0-[^\"]*)\">([^<]*)</a>");
     private static final Pattern topicNameInArianeStringPattern = Pattern.compile("<a class=\"breadcrumb__item\" href=\"/forums/(42|1)-[^\"]*\">([^<]*)</a>");
@@ -88,7 +70,6 @@ public final class JVCParser {
     private static final Pattern forumFavsBlocPattern = Pattern.compile("<h2>Mes forums favoris</h2>.*?<ul class=\"display-list-simple\">(.*?)</ul>", Pattern.DOTALL);
     private static final Pattern topicFavsBlocPattern = Pattern.compile("<h2>Mes sujets favoris</h2>.*?<ul class=\"display-list-simple\">(.*?)</ul>", Pattern.DOTALL);
     private static final Pattern favPattern = Pattern.compile("<li><a href=\"([^\"]*)\">([^<]*)</a></li>");
-    private static final Pattern forumInSearchPagePattern = Pattern.compile("<a class=\"list-search-forum-name\" href=\"([^\"]*)\"[^>]*>(.*?)</a>");
     private static final Pattern subforumListInForumPagePattern = Pattern.compile("<ul class=\"liste-sous-forums\">(.*?)</ul>", Pattern.DOTALL);
     private static final Pattern noMissTopicsListInForumPagePattern = Pattern.compile("<ul class=\"liste-sujets-nomiss\">(.*?)</ul>", Pattern.DOTALL);
     private static final Pattern subforumInListPattern = Pattern.compile("<li class=\"line-ellipsis\">[^<]*<a href=\"([^\"]*)\" class=\"lien-jv\">([^<]*)</a>[^<]*</li>");
@@ -101,10 +82,6 @@ public final class JVCParser {
     private static final Pattern surveyTitlePattern = Pattern.compile("<div class=\"intitule-sondage\">([^<]*)</div>");
     private static final Pattern surveyResultPattern = Pattern.compile("<div class=\"pied-result\">([^<]*)</div>");
     private static final Pattern surveyReplyPattern = Pattern.compile("<td class=\"result-pourcent\">[^<]*<div class=\"pourcent\">([^<]*)</div>.*?<td class=\"reponse\">([^<]*)</td>", Pattern.DOTALL);
-    private static final Pattern surveyReplyWithInfosPattern = Pattern.compile("<a href=\"#\" class=\"btn-sondage-reponse\" data-id-sondage=\"([^\"]*)\" data-id-reponse=\"([^\"]*)\">[^<]*<i class=\"icon icon-arrow-right\"></i>(.*?)</a>", Pattern.DOTALL);
-    /* Parce que c'est faux, l'échappement n'est pas redondant s'il est supprimé la regexp est invalide. */
-    @SuppressWarnings("RegExpRedundantEscape")
-    private static final Pattern realSurveyContentPattern = Pattern.compile("\"html\":\"(.*?)\"\\}");
     private static final Pattern numberOfMpJVCPattern = Pattern.compile("<div class=\".*?headerAccount--pm.*?\">[^<]*<span[^c]*class=\"headerAccount__pm[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
     private static final Pattern numberOfNotifJVCPattern = Pattern.compile("<div class=\".*?headerAccount--notif.*?\">[^<]*<span[^c]*class=\"headerAccount__notif[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
     private static final Pattern numberOfConnectedPattern = Pattern.compile("<span class=\"userCount__number\">([^<]*)</span>");
@@ -130,11 +107,8 @@ public final class JVCParser {
     private static final Pattern userCanLockOrUnlockTopicPattern = Pattern.compile("<span class=\"btn btn-forum-modo btn-lock-topic\" data-type=\"(un)?lock\">");
     private static final Pattern userCanPinOrUnpinTopicPattern = Pattern.compile("<span class=\"btn btn-forum-modo btn-epingle-topic\" data-type=\"(des)?epingle\">");
     private static final Pattern uglyImagesNamePattern = Pattern.compile("issou|risi|rizi|jesus|picsart|chancla|larry|sermion");
-    private static final Pattern jvcNiveauPattern = Pattern.compile("<div class=\"messageUser__level\">(\\s*)Niveau ([0-9]+)(\\s*)</div>");
     private static final Pattern formSessionPattern = Pattern.compile("<script>window\\.jvc=window\\.jvc\\|\\|\\{\\};window\\.jvc\\.forumsAppPayload=\"([^\"]*)\";</script>");
     private static final Pattern adPattern = Pattern.compile("<ins[^>]*></ins>");
-    private static final Pattern htmlTagPattern = Pattern.compile("<.+?>");
-    private static final Pattern multipleSpacesPattern = Pattern.compile(" +");
     private static final Pattern uselessOpenPWithClass = Pattern.compile("<p (class=\")?class=\"(message__p|message__noBlankline)\"+>");
 
     private static final SimpleDateFormat dateParser = new SimpleDateFormat("d MMM yyyy", Locale.FRANCE);
@@ -1567,9 +1541,6 @@ public final class JVCParser {
             }
         } catch (Exception e) {
             messages = 0;
-        }
-        if (messages > 0) {
-            messages -= 1;
         }
         newTopicInfo.nbOfMessages = String.valueOf(messages);
 
