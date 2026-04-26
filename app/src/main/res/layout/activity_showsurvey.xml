@@ -10,15 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/text_errorbackgroundmessage_showsurvey"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="16dp"
-            android:layout_below="@+id/toolbar_showsurvey"
-            android:gravity="center"
-            android:textStyle="bold"/>
-
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swiperefresh_showsurvey"
             android:layout_width="match_parent"

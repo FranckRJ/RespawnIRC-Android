@@ -66,9 +66,6 @@ public final class JVCParser {
     private static final Pattern isInSubInTopicPagePattern = Pattern.compile("<span class=\"breadcrumb-icon icon-bell-([^ ]*) js-subscribe-topic\" title=\"[^\"]*\" data-action=\"[^\"]*\"([^>]*)>");
     private static final Pattern subIdInSubButtonPattern = Pattern.compile("data-id-abonnement=\"([^\"]*)\"");
     private static final Pattern lockReasonPattern = Pattern.compile("<div class=\"lockInfo__reason\">[^<]*<strong>([^<]*)</strong></div>");
-    private static final Pattern surveyTitlePattern = Pattern.compile("<div class=\"intitule-sondage\">([^<]*)</div>");
-    private static final Pattern surveyResultPattern = Pattern.compile("<div class=\"pied-result\">([^<]*)</div>");
-    private static final Pattern surveyReplyPattern = Pattern.compile("<td class=\"result-pourcent\">[^<]*<div class=\"pourcent\">([^<]*)</div>.*?<td class=\"reponse\">([^<]*)</td>", Pattern.DOTALL);
     private static final Pattern numberOfMpJVCPattern = Pattern.compile("<div class=\".*?headerAccount--pm.*?\">[^<]*<span[^c]*class=\"headerAccount__pm[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
     private static final Pattern numberOfNotifJVCPattern = Pattern.compile("<div class=\".*?headerAccount--notif.*?\">[^<]*<span[^c]*class=\"headerAccount__notif[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
     private static final Pattern numberOfConnectedPattern = Pattern.compile("<span class=\"userCount__number\">([^<]*)</span>");
@@ -445,57 +442,37 @@ public final class JVCParser {
         }
     }
 
-    public static SurveyInfos getSurveyInfosFromSurveyBlock(JSONObject jsonSurvey) {
-        String surveyBlock = jsonSurvey.toString(); // TODO: Do something to show surveys.
+    public static SurveyInfos getSurveyInfosFromPage(JSONObject payload) {
         SurveyInfos currentInfos = new SurveyInfos();
-        Matcher surveyTitleMatcher = surveyTitlePattern.matcher(surveyBlock);
-        Matcher surveyResultMatcher = surveyResultPattern.matcher(surveyBlock);
-        Matcher surveyReplyMatcher = surveyReplyPattern.matcher(surveyBlock);
-        int lastOffset = 0;
 
-        if (surveyTitleMatcher.find()) {
-            currentInfos.htmlTitle = surveyTitleMatcher.group(1);
-        }
-        if (surveyResultMatcher.find()) {
-            currentInfos.numberOfVotes = surveyResultMatcher.group(1).replace("\n", "").replaceAll(" +", " ").trim();
-        }
-        currentInfos.isOpen = !surveyBlock.contains("<span>Sondage fermé</span>");
+        JSONObject jsonSurvey = payload.optJSONObject("survey");
+        if (jsonSurvey != null) {
+            currentInfos.ajax = jsonSurvey.optString("ajaxToken", "");
+            JSONObject jsonData = jsonSurvey.optJSONObject("data");
+            if (jsonData != null) {
+                currentInfos.id = jsonData.optLong("id", 0);
+                currentInfos.htmlTitle = jsonData.optString("title", "");
+                currentInfos.hasVoted = jsonData.optBoolean("hasVoted", false);
+                currentInfos.isOpen = !jsonData.optBoolean("isClosed", false);
+                currentInfos.numberOfVotes = jsonData.optLong("totalResponses", 0);
 
-        while (surveyReplyMatcher.find(lastOffset)) {
-            SurveyInfos.SurveyReply replyForSurvey = new SurveyInfos.SurveyReply();
-
-            replyForSurvey.percentageOfVotes = surveyReplyMatcher.group(1);
-            replyForSurvey.htmlTitle = surveyReplyMatcher.group(2);
-
-            currentInfos.listOfReplys.add(replyForSurvey);
-            lastOffset = surveyReplyMatcher.end();
-        }
-
-        return currentInfos;
-    }
-
-    public static ArrayList<SurveyReplyInfos> getListOfSurveyReplyWithInfos(String pageSource) {
-        ArrayList<SurveyReplyInfos> listOfReplys = new ArrayList<>();
-
-        JSONObject surveyContent = getRealSurveyContent(pageSource);
-        if (surveyContent != null) {
-            JSONObject surveyData = surveyContent.optJSONObject("data");
-            if (surveyData != null) {
-                String surveyId = String.valueOf(surveyData.optInt("id", 0));
-                JSONArray surveyRespsonses = surveyData.optJSONArray("responses");
-                if (surveyId != null && surveyRespsonses != null) {
-                    for (int i = 0; i < surveyRespsonses.length(); ++i) {
-                        String responseId = String.valueOf(surveyData.optInt("id", 0));
-                        String responseText = surveyData.optString("text", "");
-                        String tmpInfosForReply = "id_sondage=" + surveyId + "&id_sondage_reponse=" + responseId;
-                        String tmpTitleOfReply = specialCharToNormalChar(responseText.replace("\n", "").replace("\r", "").trim());
-                        listOfReplys.add(new SurveyReplyInfos(tmpInfosForReply, tmpTitleOfReply));
+                JSONArray responses = jsonData.optJSONArray("responses");
+                if (responses != null) {
+                    for (int i = 0; i < responses.length(); ++i) {
+                        JSONObject response = responses.optJSONObject(i);
+                        if (response != null) {
+                            SurveyInfos.SurveyReply reply = new SurveyInfos.SurveyReply();
+                            reply.id = response.optLong("id", 0);
+                            reply.htmlTitle = response.optString("text", "");
+                            reply.percentageOfVotes = response.optLong("percentage", 0);
+                            currentInfos.listOfReplys.add(reply);
+                        }
                     }
                 }
             }
         }
 
-        return listOfReplys;
+        return currentInfos;
     }
 
     public static ArrayList<NameAndLink> getListOfForumsInSearchPage(String pageSource) {
@@ -841,33 +818,6 @@ public final class JVCParser {
         } else {
             return null;
         }
-    }
-
-    public static String getSurveyHtmlTitleFromPage(String pageSource) {
-        JSONObject surveyContent = getRealSurveyContent(pageSource);
-        if (surveyContent != null) {
-            JSONObject surveyData = surveyContent.optJSONObject("data");
-            if (surveyData != null) {
-                return surveyData.optString("title", "");
-            }
-        }
-        return "";
-    }
-
-    public static JSONObject getRealSurveyContent(String pageSource) {
-        Matcher formSessionMatcher = formSessionPattern.matcher(pageSource);
-        if (formSessionMatcher.find()) {
-            try {
-                byte[] decodedJson = Base64.decode(formSessionMatcher.group(1), Base64.DEFAULT);
-                JSONObject json = new JSONObject(new String(decodedJson));
-                if (json != null) {
-                    return json.optJSONObject("survey");
-                }
-            } catch (Exception ignored) {
-                return null;
-            }
-        }
-        return null;
     }
 
     public static String getErrorMessage(String pageSource) {
@@ -2320,30 +2270,74 @@ public final class JVCParser {
         }
     }
 
-    public static class SurveyReplyInfos implements Parcelable {
-        public final String infosForReply;
-        public final String titleOfReply;
+    public static class SurveyInfos implements Parcelable {
+        public long id = 0;
+        public String ajax = "";
+        public boolean isOpen = true;
+        public boolean hasVoted = true;
+        public String htmlTitle = "";
+        public long numberOfVotes = 0;
+        public ArrayList<SurveyInfos.SurveyReply> listOfReplys = new ArrayList<>();
 
-        public static final Parcelable.Creator<SurveyReplyInfos> CREATOR = new Parcelable.Creator<SurveyReplyInfos>() {
+        public static class SurveyReply {
+            public long id = 0;
+            public String htmlTitle = "";
+            public long percentageOfVotes = 0;
+
+            public SurveyReply() {
+                // Rien.
+            }
+
+            public SurveyReply(SurveyReply other) {
+                id = other.id;
+                htmlTitle = other.htmlTitle;
+                percentageOfVotes = other.percentageOfVotes;
+            }
+        }
+
+        public static final Parcelable.Creator<SurveyInfos> CREATOR = new Parcelable.Creator<SurveyInfos>() {
             @Override
-            public SurveyReplyInfos createFromParcel(Parcel in) {
-                return new SurveyReplyInfos(in);
+            public SurveyInfos createFromParcel(Parcel in) {
+                return new SurveyInfos(in);
             }
 
             @Override
-            public SurveyReplyInfos[] newArray(int size) {
-                return new SurveyReplyInfos[size];
+            public SurveyInfos[] newArray(int size) {
+                return new SurveyInfos[size];
             }
         };
 
-        private SurveyReplyInfos(String newInfos, String newTitle) {
-            infosForReply = newInfos;
-            titleOfReply = newTitle;
+        public SurveyInfos() {
+            // Rien.
         }
 
-        private SurveyReplyInfos(Parcel in) {
-            infosForReply = in.readString();
-            titleOfReply = in.readString();
+        public SurveyInfos(SurveyInfos other) {
+            id = other.id;
+            ajax = other.ajax;
+            isOpen = other.isOpen;
+            hasVoted = other.hasVoted;
+            htmlTitle = other.htmlTitle;
+            numberOfVotes = other.numberOfVotes;
+            for (SurveyReply reply : other.listOfReplys) {
+                listOfReplys.add(new SurveyReply(reply));
+            }
+        }
+
+        private SurveyInfos(Parcel in) {
+            id = in.readLong();
+            ajax = in.readString();
+            isOpen = in.readByte() == 1;
+            hasVoted = in.readByte() == 1;
+            htmlTitle = in.readString();
+            numberOfVotes = in.readLong();
+            long numberOfReplies = in.readLong();
+            for (int i = 0; i < numberOfReplies; ++i) {
+                SurveyReply reply = new SurveyReply();
+                reply.id = in.readLong();
+                reply.htmlTitle = in.readString();
+                reply.percentageOfVotes = in.readLong();
+                listOfReplys.add(reply);
+            }
         }
 
         @Override
@@ -2353,8 +2347,18 @@ public final class JVCParser {
 
         @Override
         public void writeToParcel(Parcel out, int flags) {
-            out.writeString(infosForReply);
-            out.writeString(titleOfReply);
+            out.writeLong(id);
+            out.writeString(ajax);
+            out.writeByte((byte)(isOpen ? 1 : 0));
+            out.writeByte((byte)(hasVoted ? 1 : 0));
+            out.writeString(htmlTitle);
+            out.writeLong(numberOfVotes);
+            out.writeLong(listOfReplys.size());
+            for (SurveyReply reply : listOfReplys) {
+                out.writeLong(reply.id);
+                out.writeString(reply.htmlTitle);
+                out.writeLong(reply.percentageOfVotes);
+            }
         }
     }
 
@@ -2533,18 +2537,6 @@ public final class JVCParser {
             } else {
                 return "<holdstring_o" + id + ">" + spoilButtonCode + "</holdstring_o" + id + ">";
             }
-        }
-    }
-
-    public static class SurveyInfos {
-        public boolean isOpen = true;
-        public String htmlTitle = "";
-        public String numberOfVotes = "";
-        public ArrayList<SurveyReply> listOfReplys = new ArrayList<>();
-
-        public static class SurveyReply {
-            public String htmlTitle = "";
-            public String percentageOfVotes = "";
         }
     }
 

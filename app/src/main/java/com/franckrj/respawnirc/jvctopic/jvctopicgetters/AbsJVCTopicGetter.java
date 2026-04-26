@@ -104,7 +104,7 @@ public abstract class AbsJVCTopicGetter {
     /* Je savais pas comment l'appeler, en gros ça reset les infos affichées dans la liste des messages
     ** pour que lors d'un refresh qui efface les messages ces infos soient retransmisent via listener.*/
     public void resetDirectlyShowedInfos() {
-        currentTopicStatus.htmlSurveyTitle = null;
+        currentTopicStatus.surveyInfos = new JVCParser.SurveyInfos();
     }
 
     protected static TopicPageInfos downloadAndParseTopicPage(String topicLink, WebManager.WebInfos currentWebInfos, boolean useBiggerTimeoutTime) {
@@ -139,10 +139,7 @@ public abstract class AbsJVCTopicGetter {
                 newPageInfos.topicStatus.topicId = JVCParser.getTopicIdInThisTopicPage(pageContent);
             }
             newPageInfos.topicStatus.lockReason = JVCParser.getLockReasonFromPage(pageContent);
-            newPageInfos.topicStatus.htmlSurveyTitle = JVCParser.getSurveyHtmlTitleFromPage(pageContent);
-            if (!newPageInfos.topicStatus.htmlSurveyTitle.isEmpty()) {
-                newPageInfos.topicStatus.listOfSurveyReplyWithInfos = JVCParser.getListOfSurveyReplyWithInfos(pageContent);
-            }
+            newPageInfos.topicStatus.surveyInfos = JVCParser.getSurveyInfosFromPage(payload);
             newPageInfos.topicStatus.userCanPostAsModo = JVCParser.getUserCanPostAsModo(pageContent);
             newPageInfos.topicStatus.userCanLockOrUnlockTopic = JVCParser.getUserCanLockOrUnlockTopic(pageContent);
             newPageInfos.topicStatus.userCanPinOrUnpinTopic = JVCParser.getUserCanPinOrUnpinTopic(pageContent);
@@ -219,8 +216,7 @@ public abstract class AbsJVCTopicGetter {
         public String subId = null;
         public String topicId = "";
         public String lockReason = null;
-        public String htmlSurveyTitle = null;
-        public ArrayList<JVCParser.SurveyReplyInfos> listOfSurveyReplyWithInfos = new ArrayList<>();
+        public JVCParser.SurveyInfos surveyInfos = new JVCParser.SurveyInfos();
         public boolean userCanPostAsModo = false;
         public boolean userCanLockOrUnlockTopic = false;
         public boolean userCanPinOrUnpinTopic = false;
@@ -252,8 +248,7 @@ public abstract class AbsJVCTopicGetter {
             subId = baseForCopy.subId;
             topicId = baseForCopy.topicId;
             lockReason = baseForCopy.lockReason;
-            htmlSurveyTitle = baseForCopy.htmlSurveyTitle;
-            listOfSurveyReplyWithInfos = new ArrayList<>(baseForCopy.listOfSurveyReplyWithInfos);
+            surveyInfos = new JVCParser.SurveyInfos(baseForCopy.surveyInfos);
             userCanPostAsModo = baseForCopy.userCanPostAsModo;
             userCanLockOrUnlockTopic = baseForCopy.userCanLockOrUnlockTopic;
             userCanPinOrUnpinTopic = baseForCopy.userCanPinOrUnpinTopic;
@@ -276,8 +271,7 @@ public abstract class AbsJVCTopicGetter {
             subId = in.readString();
             topicId = in.readString();
             lockReason = in.readString();
-            htmlSurveyTitle = in.readString();
-            in.readTypedList(listOfSurveyReplyWithInfos, JVCParser.SurveyReplyInfos.CREATOR);
+            surveyInfos = in.readParcelable(JVCParser.SurveyInfos.class.getClassLoader());
             userCanPostAsModo = (in.readByte() == 1);
             userCanLockOrUnlockTopic = (in.readByte() == 1);
             userCanPinOrUnpinTopic = (in.readByte() == 1);
@@ -305,8 +299,7 @@ public abstract class AbsJVCTopicGetter {
             out.writeString(subId);
             out.writeString(topicId);
             out.writeString(lockReason);
-            out.writeString(htmlSurveyTitle);
-            out.writeTypedList(listOfSurveyReplyWithInfos);
+            out.writeParcelable(surveyInfos, flags);
             out.writeByte((byte)(userCanPostAsModo ? 1 : 0));
             out.writeByte((byte)(userCanLockOrUnlockTopic ? 1 : 0));
             out.writeByte((byte)(userCanPinOrUnpinTopic ? 1 : 0));

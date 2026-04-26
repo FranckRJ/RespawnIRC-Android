@@ -75,9 +75,9 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     };
 
     protected final AbsJVCTopicGetter.NewTopicStatusListener listenerForNewTopicStatus = (newTopicStatus, oldTopicStatus) -> {
-        if (!newTopicStatus.htmlSurveyTitle.equals(oldTopicStatus.htmlSurveyTitle)) {
-            if (!newTopicStatus.htmlSurveyTitle.isEmpty()) {
-                adapterForTopic.enableSurvey(newTopicStatus.htmlSurveyTitle);
+        if (!newTopicStatus.surveyInfos.htmlTitle.equals(oldTopicStatus.surveyInfos.htmlTitle)) {
+            if (!newTopicStatus.surveyInfos.htmlTitle.isEmpty()) {
+                adapterForTopic.enableSurvey(newTopicStatus.surveyInfos.htmlTitle);
             } else {
                 adapterForTopic.disableSurvey();
             }
@@ -100,7 +100,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             if (getActivity() instanceof NewSurveyNeedToBeShown) {
                 /* Pour raccourcir un peu la ligne suivante. */
                 AbsJVCTopicGetter.TopicStatusInfos tmpTopicStatus = absGetterForTopic.getTopicStatus();
-                ((NewSurveyNeedToBeShown) getActivity()).getNewSurveyInfos(JVCParser.specialCharToNormalChar(tmpTopicStatus.htmlSurveyTitle), tmpTopicStatus.topicId, tmpTopicStatus.ajaxInfos.list, tmpTopicStatus.listOfSurveyReplyWithInfos);
+                ((NewSurveyNeedToBeShown) getActivity()).getNewSurveyInfos(tmpTopicStatus.surveyInfos, tmpTopicStatus.topicId);
             }
         }
     };
@@ -381,8 +381,8 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             allMessagesShowedAreFromIgnoredPseudos = savedInstanceState.getBoolean(SAVE_MESSAGES_ARE_FROM_IGNORED_PSEUDOS, false);
             absGetterForTopic.loadFromBundle(savedInstanceState);
 
-            if (!Utils.stringIsEmptyOrNull(absGetterForTopic.getTopicStatus().htmlSurveyTitle)) {
-                adapterForTopic.enableSurvey(absGetterForTopic.getTopicStatus().htmlSurveyTitle);
+            if (!Utils.stringIsEmptyOrNull(absGetterForTopic.getTopicStatus().surveyInfos.htmlTitle)) {
+                adapterForTopic.enableSurvey(absGetterForTopic.getTopicStatus().surveyInfos.htmlTitle);
             }
 
             disableTranscriptModeOnJvcMsgList();
@@ -474,7 +474,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     }
 
     public interface NewSurveyNeedToBeShown {
-        void getNewSurveyInfos(String surveyTitle, String topicId, String ajaxInfos, ArrayList<JVCParser.SurveyReplyInfos> listOfReplysWithInfos);
+        void getNewSurveyInfos(JVCParser.SurveyInfos surveyInfos, String topicId);
     }
 
     protected abstract void initializeGetterForMessages();
