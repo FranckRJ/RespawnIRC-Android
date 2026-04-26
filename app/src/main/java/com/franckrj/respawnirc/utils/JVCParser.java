@@ -100,6 +100,7 @@ public final class JVCParser {
     private static final Pattern embedVideoPattern = Pattern.compile("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe.*?src=\"([^\"]*)\"[^>]*></iframe></div></div>");
     private static final Pattern jvcVideoPattern = Pattern.compile("<div class=\"player-contenu\">.*?<div class=\"player-jv\" id=\"player-jv-([^-]*)-.*?</div>[^<]*</div>[^<]*</div>[^<]*</div>", Pattern.DOTALL);
     private static final Pattern surroundedBlockquotePattern = Pattern.compile("(<br /> *)*(<(/)?blockquote>)( *<br />)*");
+    private static final Pattern noelshackLargePattern = Pattern.compile("<span class=\"JvCare [^\"]*\" target=\"_blank\"+><span class=\"message__urlImg[^\"]*\" data-src-background=\"([^\"]*)\"\\}?\"?></span></span>");
     private static final Pattern noelshackImagePattern = Pattern.compile("<span class=\"JvCare[^>]*><img class=\"img-shack\".*?src=\"http(s)?://([^\"]*)\" alt=\"([^\"]*)\"[^>]*></span>");
     private static final Pattern noelshackUrlImgPattern = Pattern.compile("<img class=\"message__urlImg[^\"]*\"[^>]*alt=\"([^\"]*)\"[^>]*>");
     private static final Pattern emptySearchPattern = Pattern.compile("<span style=\"[^\"]*\">[ \\n\\r]*Aucune réponse pour votre recherche ![ \\n\\r]*</span>");
@@ -153,7 +154,7 @@ public final class JVCParser {
             return baseLink;
         }
 
-        if (baseLink.startsWith("fichiers/") || baseLink.startsWith("fichiers-xs/") || baseLink.startsWith("fichiers-md/") || baseLink.startsWith("minis/")) {
+        if (baseLink.startsWith("fichiers/") || baseLink.startsWith("fichiers-xs/") || baseLink.startsWith("fichiers-md/")  || baseLink.startsWith("fichiers-lg/") || baseLink.startsWith("minis/")) {
             baseLink = baseLink.substring(baseLink.indexOf("/") + 1);
         } else {
             baseLink = baseLink.replaceFirst("-", "/").replaceFirst("-", "/");
@@ -1384,14 +1385,17 @@ public final class JVCParser {
 
         if (settings.hideUglyImages && !showUglyImages) {
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 0, "", "", new SuppressIfContainUglyNames(), null);
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackLargePattern, 0, "", "", new SuppressIfContainUglyNames(), null);
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackUrlImgPattern, 0, "", "", new SuppressIfContainUglyNames(), null);
         }
 
         if (settings.showNoelshackImages) {
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 3, "", "", new MakeNoelshackImageLink(settings.enableAlphaInNoelshackMini), null);
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackLargePattern, 1, "", "", new MakeNoelshackImageLink(settings.enableAlphaInNoelshackMini), null);
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackUrlImgPattern, 1, "", "", new MakeNoelshackImageLink(settings.enableAlphaInNoelshackMini), null);
         } else {
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackImagePattern, 3, "", "", makeLinkDependingOnSettingsAndForceMake, null);
+            ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackLargePattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
             ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, noelshackUrlImgPattern, 1, "", "", makeLinkDependingOnSettingsAndForceMake, null);
         }
 
