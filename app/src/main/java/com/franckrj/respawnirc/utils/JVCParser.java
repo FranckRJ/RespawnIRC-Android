@@ -2,8 +2,6 @@ package com.franckrj.respawnirc.utils;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.Html;
-import android.text.format.DateUtils;
 import android.util.Base64;
 
 import androidx.annotation.NonNull;
@@ -16,7 +14,6 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,7 +28,6 @@ public final class JVCParser {
     private static final Pattern ajaxPrefTimestampPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_timestamp_preference_user\" id=\"ajax_timestamp_preference_user\" value=\"([^\"]*)\" />");
     private static final Pattern ajaxPrefHashPattern = Pattern.compile("<input type=\"hidden\" name=\"ajax_hash_preference_user\" id=\"ajax_hash_preference_user\" value=\"([^\"]*)\" />");
     private static final Pattern ajaxSubHashPattern = Pattern.compile("<body[^>]*data-abo-session=\"([^\"]*)\">");
-    private static final Pattern entireTopicPattern = Pattern.compile("<li (id=\"topic-[^\"]*\" )?class=\"tablesForum[^\"]*\">[^<]*<a class=\"tablesForum__cellSubject\" href=\"[^\"]*\"[^>]*>.*?<span class=\"tablesForum__subjectText\">.*?</li>", Pattern.DOTALL);
     private static final Pattern currentPagePattern = Pattern.compile("<span [^>]*class=\"(?:[^\"]*\\b)?(?:page-active|pagination__item pagination__item--current|pagination__button--isCurrent)(?:\\b[^\"]*)?\"[^>]*>\\s*([0-9]+)\\s*</span>");
     private static final Pattern pageLinkPattern = Pattern.compile("<(?:span[^>]*>\\s*<a href=\"([^\"]*)\" class=\"lien-jv\">([0-9]+)</a>\\s*</span>|a [^>]*class=\"[^\"]*\\b(?:pagination__item|pagination__button)\\b[^\"]*\"[^>]*href=\"([^\"]*)\"[^>]*>\\s*([0-9]+)\\s*</a>|a [^>]*href=\"([^\"]*)\"[^>]*class=\"[^\"]*\\b(?:pagination__item|pagination__button)\\b[^\"]*\"[^>]*>\\s*([0-9]+)\\s*</a>)");
     private static final Pattern topicFormPattern = Pattern.compile("(<form role=\"form\" class=\"form-post-topic[^\"]*\" method=\"post\" action=\"[^\"]*\".*?>.*?</form>)", Pattern.DOTALL);
@@ -59,14 +55,6 @@ public final class JVCParser {
     private static final Pattern forumNameInArianeStringPattern = Pattern.compile("<a class=\"breadcrumb__item\" href=\"(/forums/0-[^\"]*)\">([^<]*)</a>");
     private static final Pattern topicNameInArianeStringPattern = Pattern.compile("<a class=\"breadcrumb__item\" href=\"/forums/(42|1)-[^\"]*\">([^<]*)</a>");
     private static final Pattern highlightInArianeStringPattern = Pattern.compile("<h1 class=\"breadcrumb__item\">([^<]*)</h1>");
-    private static final Pattern topicNameAndLinkPattern = Pattern.compile("<a class=\"tablesForum__cellSubject\" href=\"([^\"]*\" title=\"[^\"]*)\"[^>]*>");
-    private static final Pattern topicNameAndLinkInMessageSearchPattern = Pattern.compile("<a href=\"([^\"]*)\" class=\"topic-title icon-down-right-arrow\"[^>]*>(.*?)</a>", Pattern.DOTALL);
-    private static final Pattern topicNumberMessagesPattern = Pattern.compile("<span class=\"tablesForum__cellText[^\"]*\" data-val=\"Réponses[^\"]*\"[^>]*>[^0-9]*([0-9]*)");
-    private static final Pattern topicNumberMessagesAdmPattern = Pattern.compile("<span class=\"topic-count-adm\">[^0-9]*([0-9]*)");
-    private static final Pattern topicAuthorPattern = Pattern.compile("<span class=\"JvCare [A-Z0-9]* (?:avatar tablesForum__firstAvatar|tablesForum__authorLink).*?([Mm]oderator|[Aa]dmin|)\" title=\"(.*?)\"[^>]*>.*?</span>", Pattern.DOTALL);
-    private static final Pattern topicAuthorInMessageSearchPattern = Pattern.compile("<span class=\".*?text-auteur text-([a-zA-Z]*)[^>]*>[^A-Za-z0-9\\[\\]_-]*([^<\\n\\r ]*)");
-    private static final Pattern topicDatePattern = Pattern.compile("<span class=\"JvCare [A-Z0-9]* tablesForum__cellLink\" title=\"(.*?) &agrave; (.*?)\" data-val=\"Activit&eacute; :\"[^>]*>[^<]*</span>", Pattern.DOTALL);
-    private static final Pattern topicTypePattern = Pattern.compile("<i class=\"tablesForum__subjectMarkerIcon (.*?)\"");
     private static final Pattern forumFavsBlocPattern = Pattern.compile("<h2>Mes forums favoris</h2>.*?<ul class=\"display-list-simple\">(.*?)</ul>", Pattern.DOTALL);
     private static final Pattern topicFavsBlocPattern = Pattern.compile("<h2>Mes sujets favoris</h2>.*?<ul class=\"display-list-simple\">(.*?)</ul>", Pattern.DOTALL);
     private static final Pattern favPattern = Pattern.compile("<li><a href=\"([^\"]*)\">([^<]*)</a></li>");
@@ -1519,118 +1507,49 @@ public final class JVCParser {
         return newMessageInfo;
     }
 
-    public static TopicInfos createTopicInfoFromEntireTopic(String thisEntireTopic) {
+    public static TopicInfos createTopicInfoFromEntireTopic(JSONObject thisEntireTopic) {
         TopicInfos newTopicInfo = new TopicInfos();
-        Matcher topicNameAndLinkMatcher = topicNameAndLinkPattern.matcher(thisEntireTopic);
-        Matcher topicNumberMessagesMatcher = topicNumberMessagesPattern.matcher(thisEntireTopic);
-        Matcher topicNumberMessagesAdmMatcher = topicNumberMessagesAdmPattern.matcher(thisEntireTopic);
-        Matcher topicAuthorMatcher = topicAuthorPattern.matcher(thisEntireTopic);
-        Matcher topicDateMatcher = topicDatePattern.matcher(thisEntireTopic);
-        Matcher topicTypeMatcher = topicTypePattern.matcher(thisEntireTopic);
 
-        if (topicAuthorMatcher.find()) {
-            newTopicInfo.author = topicAuthorMatcher.group(2).trim();
-            newTopicInfo.authorType = topicAuthorMatcher.group(1).trim().toLowerCase();
+        JSONObject author = thisEntireTopic.optJSONObject("author");
+        if (author != null) {
+            newTopicInfo.author = author.optString("pseudo", "Pseudo supprimé");
+            newTopicInfo.authorType = author.optString("role", "user");
         } else {
             newTopicInfo.author = "Pseudo supprimé";
             newTopicInfo.authorType = "user";
         }
 
-        int messages = 0;
-        try {
-            if (topicNumberMessagesAdmMatcher.find()) {
-                messages = Integer.parseInt(topicNumberMessagesAdmMatcher.group(1));
-            } else if (topicNumberMessagesMatcher.find()) {
-                messages = Integer.parseInt(topicNumberMessagesMatcher.group(1));
-            }
-        } catch (Exception e) {
-            messages = 0;
+        newTopicInfo.nbOfMessages = String.valueOf(thisEntireTopic.optLong("responsesCount", 0));
+
+        String url = thisEntireTopic.optString("url", "");
+        if (!url.startsWith("http")) {
+            url = "https://www.jeuxvideo.com" + url;
         }
-        newTopicInfo.nbOfMessages = String.valueOf(messages);
+        newTopicInfo.link = url;
+        newTopicInfo.htmlName = thisEntireTopic.optString("title", "");
+        newTopicInfo.wholeDate = thisEntireTopic.optString("lastMessageDateAlt", "");
 
-        if (topicNameAndLinkMatcher.find()) {
-            String topicNameAndLinkString = topicNameAndLinkMatcher.group(1);
-            newTopicInfo.link = "https://www.jeuxvideo.com" + topicNameAndLinkString.substring(0, topicNameAndLinkString.indexOf("\""));
-            newTopicInfo.htmlName = topicNameAndLinkString.substring(topicNameAndLinkString.indexOf("title=\"") + 7);
-        }
-
-        if (topicDateMatcher.find()) {
-            String s = Html.fromHtml(topicDateMatcher.group(1)).toString(); // 01 janvier 2000
-            String t = topicDateMatcher.group(2); // 03:30:45
-
-            try {
-                Date d = dateParser.parse(s);
-                if(DateUtils.isToday(d.getTime())) {
-                    s = t;
-                }
-                else {
-                    s = dateDisplayFormatter.format(d);
-                }
-            }
-            catch(Exception ex) {
-                // Nothing, really.
-            }
-            newTopicInfo.wholeDate = s;
-        }
-
-        if (topicTypeMatcher.find()) {
-            switch(topicTypeMatcher.group(1).trim())
+        String stateTopic = thisEntireTopic.optString("stateTopic", "");
+        String stateIcon = thisEntireTopic.optString("stateIcon", "");
+        if (stateTopic.equals("msg-deleted")) {
+            newTopicInfo.type = "removed";
+        } else {
+            switch(stateIcon)
             {
-                case "icon-topic-pin topic-pin-on":
+                case "pinned-on":
                     newTopicInfo.type = "pinned";
                     break;
-                case "icon-topic-pin topic-pin-off":
+                case "pinned-off":
                     newTopicInfo.type = "pinned-locked";
                     break;
-                case "tablesForum__iconTopicRed icon-topic-folder":
-                    newTopicInfo.type = "hot";
-                    break;
-                case "tablesForum__iconLocked icon-topic-lock":
-                    newTopicInfo.type = "locked";
-                    break;
-                case "tablesForum__iconCheckResolved icon-topic-resolved":
-                    newTopicInfo.type = "resolved";
-                    break;
-                case "message":
-                    newTopicInfo.type = "message";
-                    break;
-                case "tablesForum__iconTopicYellow icon-topic-folder":
-                    newTopicInfo.type = "normal";
-                    break;
-                case "topic-removed":
                 default:
-                    newTopicInfo.type = "removed";
+                    newTopicInfo.type = stateIcon;
                     break;
             }
+            if (newTopicInfo.type.isEmpty() || newTopicInfo.type.equals("null")) {
+                newTopicInfo.type = "removed";
+            }
         }
-
-        return newTopicInfo;
-    }
-
-    public static TopicInfos createTopicInfoFromEntireTopicMessageSearch(String thisEntireTopic) {
-        TopicInfos newTopicInfo = new TopicInfos();
-        Matcher topicNameAndLinkMatcher = topicNameAndLinkInMessageSearchPattern.matcher(thisEntireTopic);
-        Matcher topicAuthorMatcher = topicAuthorInMessageSearchPattern.matcher(thisEntireTopic);
-        Matcher topicDateMatcher = topicDatePattern.matcher(thisEntireTopic);
-
-        if (topicAuthorMatcher.find()) {
-            newTopicInfo.author = topicAuthorMatcher.group(2).trim();
-            newTopicInfo.authorType = topicAuthorMatcher.group(1).trim();
-        } else {
-            newTopicInfo.author = "Pseudo supprimé";
-            newTopicInfo.authorType = "user";
-        }
-
-        if (topicNameAndLinkMatcher.find()) {
-            newTopicInfo.link = "https://www.jeuxvideo.com" + topicNameAndLinkMatcher.group(1);
-            newTopicInfo.htmlName = topicNameAndLinkMatcher.group(2).replace("\r", "").replace("\n", "").replace("em>", "u>").trim();
-        }
-
-        if (topicDateMatcher.find()) {
-            newTopicInfo.wholeDate = topicDateMatcher.group(1);
-        }
-
-        newTopicInfo.type = "message";
 
         return newTopicInfo;
     }
@@ -1663,7 +1582,7 @@ public final class JVCParser {
                 return new JSONObject(new String(decoded));
             } catch (Exception ignored) {}
         }
-        return null;
+        return new JSONObject();
     }
 
     public static MessageInfos getMessageFromPermalinkPage(JSONObject payload) {
@@ -1686,87 +1605,51 @@ public final class JVCParser {
         return "";
     }
 
-    public static ArrayList<TopicInfos> getTopicsOfThisPage(String sourcePage) {
+    public static ArrayList<TopicInfos> getTopicsOfThisPage(JSONObject payload) {
         ArrayList<TopicInfos> listOfParsedTopic = new ArrayList<>();
-        Matcher entireTopicMatcher = entireTopicPattern.matcher(sourcePage);
 
-        while (entireTopicMatcher.find()) {
-            listOfParsedTopic.add(createTopicInfoFromEntireTopic(entireTopicMatcher.group(0)));
-        }
-
-        /* JVC 2026 : les pages de recherche (et potentiellement d'autres) ne contiennent plus
-           de <li> HTML pour les topics. Les données sont dans le payload JSON base64. */
-        if (listOfParsedTopic.isEmpty()) {
-            listOfParsedTopic = getTopicsFromPayload(sourcePage);
+        JSONArray listTopics = payload.optJSONArray("listTopics");
+        if (listTopics != null) {
+            for (int i = 0; i < listTopics.length(); i++) {
+                JSONObject topicJson = listTopics.optJSONObject(i);
+                if (topicJson != null) {
+                    listOfParsedTopic.add(createTopicInfoFromEntireTopic(topicJson));
+                    JSONArray listMessages = topicJson.optJSONArray("messagesList");
+                    if (listMessages != null) {
+                        for (int j = 0; j < listMessages.length(); j++) {
+                            JSONObject messageJson = listMessages.optJSONObject(j);
+                            if (messageJson != null) {
+                                listOfParsedTopic.add(createTopicInfoOfSearchMessageFromEntireMessage(messageJson));
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         return listOfParsedTopic;
     }
 
-    private static ArrayList<TopicInfos> getTopicsFromPayload(String sourcePage) {
-        ArrayList<TopicInfos> result = new ArrayList<>();
-        Matcher payloadMatcher = formSessionPattern.matcher(sourcePage);
-        if (!payloadMatcher.find()) {
-            return result;
+    private static TopicInfos createTopicInfoOfSearchMessageFromEntireMessage(JSONObject thisEntireMessage) {
+        TopicInfos newTopicInfo = new TopicInfos();
+
+        newTopicInfo.htmlName = thisEntireMessage.optString("text", "")
+                .replace("<highlight>", "<em>").replace("</highlight>", "</em>");
+        if (!thisEntireMessage.optString("publishedAuthorName", "null").equals("null")) {
+            newTopicInfo.author = thisEntireMessage.optString("publishedAuthorName", "Pseudo supprimé");
+            newTopicInfo.authorType = thisEntireMessage.optString("publishedAuthorRole", "user");
+        } else {
+            newTopicInfo.author = "Pseudo supprimé";
+            newTopicInfo.authorType = "user";
         }
-        try {
-            byte[] decoded = android.util.Base64.decode(payloadMatcher.group(1), android.util.Base64.DEFAULT);
-            JSONObject json = new JSONObject(new String(decoded));
-            JSONArray listTopics = json.optJSONArray("listTopics");
-            if (listTopics == null) {
-                return result;
-            }
-            for (int i = 0; i < listTopics.length(); i++) {
-                JSONObject topicJson = listTopics.optJSONObject(i);
-                if (topicJson == null) continue;
+        newTopicInfo.link = thisEntireMessage.optString("permalinkUrl", "");
+        if (!newTopicInfo.link.startsWith("http")) {
+            newTopicInfo.link = "https://www.jeuxvideo.com" + newTopicInfo.link;
+        }
+        newTopicInfo.wholeDate = thisEntireMessage.optString("publishedDateRelativeAlt", "");
+        newTopicInfo.type = "message";
 
-                TopicInfos info = new TopicInfos();
-                info.htmlName = topicJson.optString("title", "");
-                String url = topicJson.optString("url", "");
-                if (!url.startsWith("http")) {
-                    url = "https://www.jeuxvideo.com" + url;
-                }
-                info.link = url;
-
-                JSONObject authorJson = topicJson.optJSONObject("author");
-                if (authorJson != null) {
-                    info.author = authorJson.optString("pseudo", "");
-                    info.authorType = authorJson.optString("role", "");
-                }
-
-                int messages = topicJson.optInt("responsesCount", 0);
-                if (messages > 0) {
-                    messages -= 1;
-                }
-                info.nbOfMessages = String.valueOf(messages);
-                info.wholeDate = topicJson.optString("realLastMessageDate", topicJson.optString("lastMessageDate", ""));
-
-                info.type = topicJson.optString("stateIcon", "normal");
-
-                result.add(info);
-
-                /* JVC 2026 : Gestion de la recherche par message. */
-                JSONArray listMessages = topicJson.optJSONArray("messagesList");
-                if(listMessages != null) {
-                    for (int j = 0; j < listMessages.length(); j++) {
-                        JSONObject messageJson = listMessages.optJSONObject(j);
-                        if(messageJson == null) continue;
-
-                        TopicInfos infoMessage = new TopicInfos();
-                        infoMessage.htmlName = messageJson.optString("text", "");
-                        infoMessage.link = messageJson.optString("permalinkUrl", "");
-                        if(!infoMessage.link.startsWith("http"))
-                            infoMessage.link = "https://www.jeuxvideo.com" + infoMessage.link;
-                        infoMessage.author = messageJson.optString("publishedAuthorName", "Pseudo supprimé");
-                        infoMessage.authorType = messageJson.optString("publishedAuthorRole", "user");
-                        infoMessage.type = "message";
-
-                        result.add(infoMessage);
-                    }
-                }
-            }
-        } catch (Exception ignored) {}
-        return result;
+        return newTopicInfo;
     }
 
     public static String specialCharToNormalChar(String baseMessage) {

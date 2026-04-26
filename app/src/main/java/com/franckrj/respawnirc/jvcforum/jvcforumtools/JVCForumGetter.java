@@ -11,6 +11,8 @@ import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.WebManager;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class JVCForumGetter {
@@ -221,7 +223,8 @@ public class JVCForumGetter {
 
                 if (pageContent != null) {
                     newPageInfos = new ForumPageInfos();
-                    newPageInfos.listOfTopics = JVCParser.getTopicsOfThisPage(pageContent);
+                    JSONObject payload = JVCParser.getForumsAppPayload(pageContent);
+                    newPageInfos.listOfTopics = JVCParser.getTopicsOfThisPage(payload);
                     newPageInfos.newUrlForForumPage = currentWebInfos.currentUrl;
                     newPageInfos.forumStatus.forumName = JVCParser.getForumNameInForumPage(pageContent);
                     newPageInfos.forumStatus.ajaxInfos = JVCParser.getAllAjaxInfos(pageContent);
