@@ -270,7 +270,7 @@ public class Utils {
         Map<String, String> res = new LinkedHashMap<>();
         if(ajaxInfos != null && formSession != null)
         {
-            res.put("text", msgToSend);
+            res.put("text", msgToSend.replace("\r\n", "\n"));
             res.put("topicId", topicId);
             res.put("forumId", forumId);
             res.put("group", group);

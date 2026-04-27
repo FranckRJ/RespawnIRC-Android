@@ -9,10 +9,6 @@ import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.Utils;
 import com.franckrj.respawnirc.utils.WebManager;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.Serializable;
 import java.util.Map;
 
@@ -153,10 +149,9 @@ public class JVCMessageToTopicSender {
     }
 
     public void sendEditMessage(String messageEditedToSend, String cookieListInAString) {
-        formData.put("text", messageEditedToSend);
+        formData.put("text", messageEditedToSend.replace("\r\n", "\n"));
         String req = Utils.makeMultipartFormFromMap(formData);
-        sendThisMessage(messageEditedToSend, "https://www.jeuxvideo.com/forums/message/edit", req, cookieListInAString);
-        //sendThisMessage(messageEditedToSend, "https://www.jeuxvideo.com/forums/ajax_edit_message.php", lastInfosForEdit, cookieListInAString);
+        sendThisMessage("https://www.jeuxvideo.com/forums/message/edit", req, cookieListInAString);
     }
 
     public void stopAllCurrentTask() {
@@ -180,10 +175,9 @@ public class JVCMessageToTopicSender {
         isInEdit = false;
     }
 
-    public boolean sendThisMessage(String messageToSend, String urlToSend, String listOfInputToUse, String cookieListInAString) {
+    public boolean sendThisMessage(String urlToSend, String listOfInputToUse, String cookieListInAString) {
         if (currentAsyncTaskForSendMessage == null) {
             InfosOfSend infosForCurrentSend = new InfosOfSend();
-            infosForCurrentSend.messageSended = messageToSend;
             infosForCurrentSend.urlUsed = urlToSend;
             infosForCurrentSend.listOfInputUsed = listOfInputToUse;
             infosForCurrentSend.cookiesUsed = cookieListInAString;
@@ -258,7 +252,6 @@ public class JVCMessageToTopicSender {
     }
 
     private class InfosOfSend {
-        String messageSended;
         String urlUsed;
         String listOfInputUsed;
         String cookiesUsed;

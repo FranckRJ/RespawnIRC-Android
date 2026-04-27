@@ -1445,7 +1445,7 @@ public final class JVCParser {
 
         newMessageInfo.niveau = String.valueOf(thisEntireMessage.optLong("userLevelId", 0));
 
-        newMessageInfo.messageRaw = thisEntireMessage.optString("text", "");
+        newMessageInfo.messageRaw = thisEntireMessage.optString("text", "").replace("\r\n", "\n");
         newMessageInfo.messageNotParsed = thisEntireMessage.optString("renderedText", "");
         newMessageInfo.containUglyImages = ToolForParsing.hasUglyImagesInNotPrettyMessage(newMessageInfo.messageNotParsed);
 

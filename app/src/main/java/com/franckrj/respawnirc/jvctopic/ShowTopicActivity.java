@@ -150,8 +150,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                         );
                         messageSendButton.setEnabled(false);
                         tmpLastMessageSended = messageSendEdit.getText().toString();
-                        messageIsSended = senderForMessages.sendThisMessage(tmpLastMessageSended, "https://www.jeuxvideo.com/forums/message/add", Utils.makeMultipartFormFromMap(formData), currentAccount.cookie);
-                    } else {
+                        messageIsSended = senderForMessages.sendThisMessage("https://www.jeuxvideo.com/forums/message/add", Utils.makeMultipartFormFromMap(formData), currentAccount.cookie);
                     }
 
                     if (!messageIsSended) {
