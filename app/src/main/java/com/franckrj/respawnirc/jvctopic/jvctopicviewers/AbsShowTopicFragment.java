@@ -444,11 +444,11 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         long totalLengthOfMessages = 0;
 
         for (JVCParser.MessageInfos currentMessage : adapterForTopic.getAllItems()) {
-            totalLengthOfMessages += currentMessage.messageNotParsed.length();
+            totalLengthOfMessages += currentMessage.messageRaw.length();
         }
 
         //todo fix temporaire
-        if (totalLengthOfMessages < 200_000) {
+        if (totalLengthOfMessages < 150_000) {
             outState.putParcelableArrayList(SAVE_ALL_MESSAGES_SHOWED, adapterForTopic.getAllItems());
         }
         outState.putBoolean(SAVE_GO_TO_BOTTOM_PAGE_LOADING, goToBottomAtPageLoading);

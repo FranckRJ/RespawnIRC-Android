@@ -1276,7 +1276,11 @@ public final class JVCParser {
         infosOfSpoilTags.listOfSpoilIdToShow = thisMessageInfo.listOfSpoilIdToShow;
         infosOfSpoilTags.lastIdOfSpoil = -1;
 
-        finalMessage = finalMessage.replace("<%MESSAGE_MESSAGE%>", parseMessageToPrettyMessage(thisMessageInfo.messageNotParsed, settings, infosOfSpoilTags, thisMessageInfo.showOverlyQuote, thisMessageInfo.showUglyImages));
+        if (!thisMessageInfo.messageNotParsed.isEmpty()) {
+            finalMessage = finalMessage.replace("<%MESSAGE_MESSAGE%>", parseMessageToPrettyMessage(thisMessageInfo.messageNotParsed, settings, infosOfSpoilTags, thisMessageInfo.showOverlyQuote, thisMessageInfo.showUglyImages));
+        } else {
+            finalMessage = finalMessage.replace("<%MESSAGE_MESSAGE%>", thisMessageInfo.messageRaw);
+        }
         thisMessageInfo.lastIdOfSpoilInMessage = infosOfSpoilTags.lastIdOfSpoil;
         if (!thisMessageInfo.lastTimeEdit.isEmpty()) {
             finalMessage = finalMessage.replace("<%EDIT_ALL%>", settings.addBeforeEdit + thisMessageInfo.lastTimeEdit.trim() + settings.addAfterEdit);
