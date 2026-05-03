@@ -62,7 +62,6 @@ public final class JVCParser {
     private static final Pattern noMissTopicsListInForumPagePattern = Pattern.compile("<ul class=\"liste-sujets-nomiss\">(.*?)</ul>", Pattern.DOTALL);
     private static final Pattern subforumInListPattern = Pattern.compile("<li class=\"line-ellipsis\">[^<]*<a href=\"([^\"]*)\" class=\"lien-jv\">([^<]*)</a>[^<]*</li>");
     private static final Pattern noMissTopicInListPattern = Pattern.compile("<a href=\"//www.jeuxvideo.com([^\"]*)\" class=\"lien-jv\">([^<]*)</a>");
-    private static final Pattern topicIdInTopicPagePattern = Pattern.compile("<div (.*?)data-topic-id=\"([^\"]*)\">");
     private static final Pattern isInSubInTopicPagePattern = Pattern.compile("<span class=\"breadcrumb-icon icon-bell-([^ ]*) js-subscribe-topic\" title=\"[^\"]*\" data-action=\"[^\"]*\"([^>]*)>");
     private static final Pattern subIdInSubButtonPattern = Pattern.compile("data-id-abonnement=\"([^\"]*)\"");
     private static final Pattern lockReasonPattern = Pattern.compile("<div class=\"lockInfo__reason\">[^<]*<strong>([^<]*)</strong></div>");
@@ -294,14 +293,14 @@ public final class JVCParser {
         }
     }
 
-    public static String getTopicIdInThisTopicPage(String topicContent) {
-        Matcher topicIdInTopicPageMatcher = topicIdInTopicPagePattern.matcher(topicContent);
-
-        if (topicIdInTopicPageMatcher.find()) {
-            return topicIdInTopicPageMatcher.group(2);
-        } else {
-            return "";
+    public static String getTopicIdInThisTopicPage(JSONObject payload) {
+        String topicId = "";
+        try {
+            topicId = String.valueOf(payload.getLong("topicId"));
+        } catch (Exception e) {
+            // Ignore.
         }
+        return topicId;
     }
 
     /* Retourne l'ID de l'abonnement si l'user est abonné, retourne un string empty s'il ne l'est pas,

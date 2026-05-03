@@ -127,16 +127,12 @@ public abstract class AbsJVCTopicGetter {
             newPageInfos.topicStatus.names = JVCParser.getForumAndTopicNameInTopicPage(pageContent);
             newPageInfos.topicStatus.isInFavs = JVCParser.getIsInFavsFromPage(payload);
             newPageInfos.topicStatus.subId = JVCParser.getSubIdInThisTopicPage(pageContent);
-            /* JVC 2026 : l'attribut data-topic-id sur les <div> a disparu du HTML. On extrait d'abord
-               l'ID depuis l'URL (fiable) puis on retombe sur le parsing HTML en fallback. */
-            String topicIdFromUrl = JVCParser.getTopicIdOfThisTopic(currentWebInfos.currentUrl);
-            if (topicIdFromUrl.isEmpty()) {
-                topicIdFromUrl = JVCParser.getTopicIdOfThisTopic(topicLink);
-            }
-            if (!topicIdFromUrl.isEmpty()) {
-                newPageInfos.topicStatus.topicId = topicIdFromUrl;
-            } else {
-                newPageInfos.topicStatus.topicId = JVCParser.getTopicIdInThisTopicPage(pageContent);
+            newPageInfos.topicStatus.topicId = JVCParser.getTopicIdInThisTopicPage(payload);
+            if (newPageInfos.topicStatus.topicId.isEmpty()) {
+                newPageInfos.topicStatus.topicId = JVCParser.getTopicIdOfThisTopic(currentWebInfos.currentUrl);
+                if (newPageInfos.topicStatus.topicId.isEmpty()) {
+                    newPageInfos.topicStatus.topicId = JVCParser.getTopicIdOfThisTopic(topicLink);
+                }
             }
             newPageInfos.topicStatus.lockReason = JVCParser.getLockReasonFromPage(pageContent);
             newPageInfos.topicStatus.surveyInfos = JVCParser.getSurveyInfosFromPage(payload);
