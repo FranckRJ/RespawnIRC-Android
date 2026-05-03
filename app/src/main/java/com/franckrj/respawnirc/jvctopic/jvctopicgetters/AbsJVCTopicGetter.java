@@ -12,8 +12,6 @@ import com.franckrj.respawnirc.utils.WebManager;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public abstract class AbsJVCTopicGetter {
     public static final int STATE_LOADING = 0;

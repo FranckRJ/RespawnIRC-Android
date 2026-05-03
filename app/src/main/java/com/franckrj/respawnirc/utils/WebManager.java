@@ -18,7 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Callable;
 
 public class WebManager {
-    public static final String userAgentString = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0";
+    public static final String userAgentString = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gecko/20100101 Firefox/150.0";
 
     /**
      * En cas d'erreur, cette variable est renseignée avec l'ID strings.xml de l'erreur.
