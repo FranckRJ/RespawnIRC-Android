@@ -1472,7 +1472,23 @@ public final class JVCParser {
             newTopicInfo.authorType = "user";
         }
 
-        newTopicInfo.nbOfMessages = String.valueOf(thisEntireTopic.optLong("responsesCount", 0));
+        String nbOfMessages = null;
+        String nbOfMessagesRaw = null;
+        try {
+            nbOfMessagesRaw = thisEntireTopic.getString("responsesCount");
+        } catch (Exception e) {
+            // Ignore.
+        }
+        if (nbOfMessagesRaw != null) {
+            String[] numbers = nbOfMessagesRaw.split("/");
+            if (numbers.length > 0) {
+                nbOfMessages = numbers[numbers.length - 1].trim();
+            }
+        }
+        if (nbOfMessages == null) {
+            nbOfMessages = String.valueOf(thisEntireTopic.optLong("responsesCount", 0));
+        }
+        newTopicInfo.nbOfMessages = nbOfMessages;
 
         String url = thisEntireTopic.optString("url", "");
         if (!url.startsWith("http")) {
