@@ -889,7 +889,7 @@ public final class JVCParser {
     }
 
     public static String buildMessageQuoted(MessageInfos thisMessageInfo) {
-        return "> Le " + thisMessageInfo.wholeDate + " " + thisMessageInfo.pseudo + " a écrit:\n>"
+        return "> Le " + thisMessageInfo.wholeDate + " " + thisMessageInfo.pseudo + " a écrit :\n>"
                 + thisMessageInfo.messageRaw.replaceAll("\n", "\n>");
     }
 
