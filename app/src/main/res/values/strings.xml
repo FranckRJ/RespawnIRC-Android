@@ -20,7 +20,7 @@
     <string name="overflow_menu_desc">Menu déroulant</string>
     <string name="quoteMessage">Citer</string>
     <string name="errorConnectedNeededBeforePost">Erreur, veuillez vous connecter avant d\'envoyer un message.</string>
-    <string name="editMessage">Editer</string>
+    <string name="editMessage">Modifier</string>
     <string name="hideSpoilMessage">Cacher les spoil</string>
     <string name="showSpoilMessage">Afficher les spoil</string>
     <string name="preference">Préférences</string>
@@ -57,8 +57,8 @@
     <string name="warningNotConnected">ATTENTION : Vous n\'êtes pas connecté !</string>
     <string name="errorQuoteAlreadyRunning">Erreur, citation déjà en cours.</string>
     <string name="errorInfosMissings">Erreur, informations manquantes (rechargez la page ?).</string>
-    <string name="errorMessageAlreadySending">Erreur, envoie ou édition d\'un message actuellement en cours.</string>
-    <string name="errorCantGetEditInfos">Erreur, impossible de récupérer les informations d\'édition.</string>
+    <string name="errorMessageAlreadySending">Erreur, envoie ou modification d\'un message actuellement en cours.</string>
+    <string name="errorCantGetEditInfos">Erreur, impossible de récupérer les informations de modification.</string>
     <string name="errorDownloadFailed">Erreur, la récupération des informations a échoué.</string>
     <string name="errorForumPageDownloadFailed">Erreur, la récupération des informations a échoué, la page n\'existe peut-être pas.</string>
     <string name="errorConnectNeeded">Erreur, vous devez vous connecter pour effectuer cette action.</string>
@@ -282,7 +282,7 @@
     <string name="unlockTopic">Rouvrir le topic</string>
     <string name="restore">Restaurer</string>
     <string name="restoreSuccess">Message restauré.</string>
-    <string name="cancelEdit">Annuler l\'édition</string>
+    <string name="cancelEdit">Annuler la modification</string>
     <string name="dekick">Dékicker</string>
     <string name="errorUnlockAlreadyRunning">Erreur, réouverture déjà en cours.</string>
     <string name="errorDekickAlreadyRunning">Erreur, dékick déjà en cours.</string>
