@@ -57,7 +57,7 @@
     <string name="warningNotConnected">ATTENTION : Vous n\'êtes pas connecté !</string>
     <string name="errorQuoteAlreadyRunning">Erreur, citation déjà en cours.</string>
     <string name="errorInfosMissings">Erreur, informations manquantes (rechargez la page ?).</string>
-    <string name="errorMessageAlreadySending">Erreur, envoie ou modification d\'un message actuellement en cours.</string>
+    <string name="errorMessageAlreadySending">Erreur, envoi ou modification d\'un message actuellement en cours.</string>
     <string name="errorCantGetEditInfos">Erreur, impossible de récupérer les informations de modification.</string>
     <string name="errorDownloadFailed">Erreur, la récupération des informations a échoué.</string>
     <string name="errorForumPageDownloadFailed">Erreur, la récupération des informations a échoué, la page n\'existe peut-être pas.</string>
