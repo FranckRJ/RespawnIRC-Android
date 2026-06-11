@@ -11,12 +11,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.GZIPInputStream;
 
 public final class JVCParser {
     public static final Pattern stickerPattern = Pattern.compile("<img class=\"message__sticker\" src=\"([^\"]*)\".*?/>");
@@ -479,9 +482,8 @@ public final class JVCParser {
 
         Matcher payloadMatcher = formSessionPattern.matcher(pageSource);
         if (payloadMatcher.find()) {
-            try {
-                byte[] decoded = android.util.Base64.decode(payloadMatcher.group(1), android.util.Base64.DEFAULT);
-                JSONObject json = new JSONObject(new String(decoded));
+            JSONObject json = decodeForumsAppPayload(payloadMatcher.group(1));
+            if (json != null) {
                 JSONObject forum = json.optJSONObject("forum");
                 if (forum != null) {
                     JSONArray list = forum.optJSONArray("list");
@@ -501,7 +503,7 @@ public final class JVCParser {
                         }
                     }
                 }
-            } catch (Exception ignored) {}
+            }
         }
 
         return listOfForums;
@@ -726,17 +728,18 @@ public final class JVCParser {
         /* Fallback JSON payload : forumInfo.header.btnVal contient le nombre de connectés. */
         Matcher payloadMatcher = formSessionPattern.matcher(pageSource);
         if (payloadMatcher.find()) {
-            try {
-                byte[] decoded = android.util.Base64.decode(payloadMatcher.group(1), android.util.Base64.DEFAULT);
-                JSONObject json = new JSONObject(new String(decoded));
-                JSONObject forumInfo = json.optJSONObject("forumInfo");
-                if (forumInfo != null) {
-                    JSONObject header = forumInfo.optJSONObject("header");
-                    if (header != null && header.has("btnVal")) {
-                        return String.valueOf(header.getInt("btnVal"));
+            JSONObject json = decodeForumsAppPayload(payloadMatcher.group(1));
+            if (json != null) {
+                try {
+                    JSONObject forumInfo = json.optJSONObject("forumInfo");
+                    if (forumInfo != null) {
+                        JSONObject header = forumInfo.optJSONObject("header");
+                        if (header != null && header.has("btnVal")) {
+                            return String.valueOf(header.getInt("btnVal"));
+                        }
                     }
-                }
-            } catch (Exception ignored) {}
+                } catch (Exception ignored) {}
+            }
         }
 
         return "";
@@ -752,9 +755,9 @@ public final class JVCParser {
         /* Fallback JSON payload : forumInfo.data contient les modérateurs. */
         Matcher payloadMatcher = formSessionPattern.matcher(pageSource);
         if (payloadMatcher.find()) {
-            try {
-                byte[] decoded = android.util.Base64.decode(payloadMatcher.group(1), android.util.Base64.DEFAULT);
-                JSONObject json = new JSONObject(new String(decoded));
+            JSONObject json = decodeForumsAppPayload(payloadMatcher.group(1));
+            if (json != null) {
+              try {
                 JSONObject forumInfo = json.optJSONObject("forumInfo");
                 if (forumInfo != null) {
                     JSONArray dataArray = forumInfo.optJSONArray("data");
@@ -786,7 +789,8 @@ public final class JVCParser {
                         }
                     }
                 }
-            } catch (Exception ignored) {}
+              } catch (Exception ignored) {}
+            }
         }
 
         return "";
@@ -948,9 +952,8 @@ public final class JVCParser {
            On récupère ce token comme fallback quand les patterns HTML n'ont rien trouvé. */
         Matcher formSessionMatcher = formSessionPattern.matcher(pageSource);
         if (formSessionMatcher.find()) {
-            try {
-                byte[] decodedJson = Base64.decode(formSessionMatcher.group(1), Base64.DEFAULT);
-                JSONObject json = new JSONObject(new String(decodedJson));
+            JSONObject json = decodeForumsAppPayload(formSessionMatcher.group(1));
+            if (json != null) try {
                 String ajaxToken = json.optString("ajaxToken", null);
                 String timestamp = null;
                 if (json.has("formSession")) {
@@ -1099,13 +1102,11 @@ public final class JVCParser {
         if (!formSessionMatcher.find()) {
             return null;
         }
-        try {
-            byte[] decodedJson = Base64.decode(formSessionMatcher.group(1), Base64.DEFAULT);
-            JSONObject json = new JSONObject(new String(decodedJson));
-            return json.optJSONObject("pagerView");
-        } catch (Exception ignored) {
+        JSONObject json = decodeForumsAppPayload(formSessionMatcher.group(1));
+        if (json == null) {
             return null;
         }
+        return json.optJSONObject("pagerView");
     }
 
     private static String absolutizeJvcUrl(String url) {
@@ -1549,12 +1550,32 @@ public final class JVCParser {
     public static JSONObject getForumsAppPayload(String source) {
         Matcher payloadMatcher = formSessionPattern.matcher(source);
         if (payloadMatcher.find()) {
-            try {
-                byte[] decoded = android.util.Base64.decode(payloadMatcher.group(1), android.util.Base64.DEFAULT);
-                return new JSONObject(new String(decoded));
-            } catch (Exception ignored) {}
+            JSONObject payload = decodeForumsAppPayload(payloadMatcher.group(1));
+            if (payload != null) {
+                return payload;
+            }
         }
         return new JSONObject();
+    }
+
+    /* Depuis le 11 juin 2026 à 17h, window.jvc.forumsAppPayload est encodé en base64 d'un gzip de JSON
+       (équivalent PHP du côté de JVC : base64_encode(gzencode(json_encode(...), 6))).
+       Retourne null en cas d'échec. */
+    private static JSONObject decodeForumsAppPayload(String base64) {
+        try {
+            byte[] decoded = Base64.decode(base64, Base64.DEFAULT);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            try (GZIPInputStream gzip = new GZIPInputStream(new ByteArrayInputStream(decoded))) {
+                byte[] buffer = new byte[4096];
+                int n;
+                while ((n = gzip.read(buffer)) != -1) {
+                    out.write(buffer, 0, n);
+                }
+            }
+            return new JSONObject(out.toString("UTF-8"));
+        } catch (Exception ignored) {
+            return null;
+        }
     }
 
     public static MessageInfos getMessageFromPermalinkPage(JSONObject payload) {
@@ -1641,11 +1662,10 @@ public final class JVCParser {
         if(formSessionMatcher.find())
         {
             String base64 = formSessionMatcher.group(1);
-            try
+            json = decodeForumsAppPayload(base64);
+            if (json != null) try
             {
                 JSONObject formSession;
-                byte[] decodedJson = Base64.decode(base64, Base64.DEFAULT);
-                json = new JSONObject(new String(decodedJson));
                 formSession = json.getJSONObject(fs_object);
 
                 JSONArray names = formSession.names();
