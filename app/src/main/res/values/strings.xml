@@ -31,7 +31,7 @@
     <string name="loadTopicFromOldInfos">Poursuivre la lecture</string>
     <string name="help">Aide</string>
     <string name="ok">OK</string>
-    <string name="help_dialog_connect">• Pour commencer, veuillez entrer votre pseudo dans le champ présent tout en haut.\n• Ensuite, veuillez vous connecter sur JVC avec ce même pseudo.\n• Enfin, cliquez sur le bouton \"Terminer\" tout en haut à droite.</string>
+    <string name="help_dialog_connect">• Pour commencer, veuillez entrer votre pseudo dans le champ présent tout en haut.\n• Ensuite, veuillez vous connecter sur JVC avec ce même pseudo.\n• Enfin, appuyez sur le bouton \"Terminer\" tout en haut à droite.</string>
     <string name="welcome">Bienvenue !</string>
     <string name="later">Plus tard</string>
     <string name="help_firstlaunch">Bienvenue sur RespawnIRC !\n\nPour commencer il est conseillé de se connecter à JVC, mais vous pouvez très bien le faire plus tard.</string>
@@ -102,9 +102,9 @@
     <string name="noelshack">Noelshack</string>
     <string name="link">Liens</string>
     <string name="useDirectNoelshackLinkTitle">Utiliser les liens directs</string>
-    <string name="showOverviewOnImageClickTitle">Aperçu lors d\'un clique</string>
+    <string name="showOverviewOnImageClickTitle">Aperçu lors d\'un appui</string>
     <string name="openInBrowser">Ouvrir dans le navigateur</string>
-    <string name="clickHereToSee">Cliquez ici pour le voir.</string>
+    <string name="clickHereToSee">Appuyez ici pour le voir.</string>
     <string name="titleForSurvey">Sondage :</string>
     <string name="titleForClosedSurvey">Sondage fermé :</string>
     <string name="survey">Sondage</string>
@@ -152,12 +152,12 @@
     <string name="forumAlternateBackgroundColorTitle">Alterner la couleur de fond des topics</string>
     <string name="enableSmoothScrollTitle">Activer le smoothscroll</string>
     <string name="whenPossibleSummary">(lorsque possible)</string>
-    <string name="enableGoToBottomOnLoadTitle">Fin de page lors d\'un clique long</string>
+    <string name="enableGoToBottomOnLoadTitle">Fin de page lors d\'un appui long</string>
     <string name="enableGoToBottomOnLoadSummary">(ne s\'applique qu\'aux topics favoris et de la liste des topics)</string>
     <string name="enableAutoScrollTitle">Activer l\'autoscroll</string>
     <string name="enableAutoScrollSummary">(scroll automatiquement après un refresh si déjà en bas de page)</string>
     <string name="informations">Informations</string>
-    <string name="help_dialog_settings">Voici une liste de quelques fonctionnalités importantes que vous ne connaissez peut-être pas :\n\n• Un clique long sur un topic de la liste des topics ou des topics favoris vous permet d\'aller directement à la dernière page.\n• Un clique long sur le bouton d\'insertion (le +) vous permet d\'accéder à des options supplémentaires.\n• Un clique long sur le bouton d\'envoi de message vous permet de rafraîchir la liste des messages sans les effacer.\n• Un clique normal sur le pseudo d\'un message vous permet d\'accéder à des options supplémentaires.\n• Un clique long sur le titre du topic / forum dans la toolbar vous permet de le voir en entier.\n• Un clique long sur un élément de la popup d\'insertion vous permet de l\'insérer sans fermer la popup.\n• Un clique long sur une image ou un lien vous permet d\'accéder à des options supplémentaires.</string>
+    <string name="help_dialog_settings">Voici une liste de quelques fonctionnalités importantes que vous ne connaissez peut-être pas :\n\n• Un appui long sur un topic de la liste des topics ou des topics favoris vous permet d\'aller directement à la dernière page.\n• Un appui long sur le bouton d\'insertion (le +) vous permet d\'accéder à des options supplémentaires.\n• Un appui long sur le bouton d\'envoi de message vous permet de rafraîchir la liste des messages sans les effacer.\n• Un appui simple sur le pseudo d\'un message vous permet d\'accéder à des options supplémentaires.\n• Un appui long sur le titre du topic / forum dans la toolbar vous permet de le voir en entier.\n• Un appui long sur un élément de la popup d\'insertion vous permet de l\'insérer sans fermer la popup.\n• Un appui long sur une image ou un lien vous permet d\'accéder à des options supplémentaires.</string>
     <string name="errorMessageContentNeededForSend">Erreur : Le message doit se composer au minimum de 1 caractère.</string>
     <string name="defaultShowSpoilValTitle">Afficher les spoils par défaut</string>
     <string name="markAuthorPseudoTitle">Marquer l\'auteur du topic</string>
