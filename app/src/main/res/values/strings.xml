@@ -50,7 +50,7 @@
     <string name="topicOrForumLink">Lien du topic/forum…</string>
     <string name="openTopicOrForumLink">Ouvrir un lien de topic/forum</string>
     <string name="topicAlternateBackgroundColorTitle">Alterner la couleur de fond des messages</string>
-    <string name="topicIcon">Icone de topic</string>
+    <string name="topicIcon">Icône de topic</string>
     <string name="showQuoteMessage">Afficher les citations imbriquées</string>
     <string name="hideQuoteMessage">Cacher les citations imbriquées</string>
     <string name="maxNumberOfOverlyQuoteTitle">Nombre max de citations imbriquées</string>
