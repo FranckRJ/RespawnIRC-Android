@@ -92,7 +92,7 @@
     <string name="errorTopicIsLocked">Erreur, le topic est fermé.</string>
     <string name="transformStickerToSmileyTitle">Changer les stickers en smiley</string>
     <string name="transformStickerToSmileySummary">(tous les stickers ne sont pas changés)</string>
-    <string name="unknownErrorPleaseRetry">Erreur inconnue, veuillez ré-essayer.</string>
+    <string name="unknownErrorPleaseRetry">Erreur inconnue, veuillez réessayer.</string>
     <string name="sendATopic">Poster un topic</string>
     <string name="topicTitlePlaceHolder">Titre…</string>
     <string name="pastLastTopicSended">Coller le dernier topic envoyé</string>
@@ -187,7 +187,7 @@
     <string name="reasonOfKick">Raison du kick…</string>
     <string name="errorReasonOrMotiveMissingForKick">Erreur, raison ou motif manquant.</string>
     <string name="selectMotive">Sélectionnez un motif…</string>
-    <string name="noKnownResponseFromJVC">La réponse ne peut pas être analysée, veuillez ré-essayer.</string>
+    <string name="noKnownResponseFromJVC">La réponse ne peut pas être analysée, veuillez réessayer.</string>
     <string name="allMessagesAreFromIgnoredPseudo">Tous les messages de cette page proviennent de pseudos ignorés.</string>
     <string name="allTopicsAreFromIgnoredPseudo">Tous les topics de cette page proviennent de pseudos ignorés.</string>
     <string name="separationBetweenMessagesTitle">Séparation entre les messages</string>
@@ -225,7 +225,7 @@
     <string name="gta">GTA</string>
     <string name="avatarSizeTitle">Taille des avatars (en dp)</string>
     <string name="saveLastRowUsedInsertstuffTitle">Se souvenir du dernier type de sticker utilisé</string>
-    <string name="errorThereIsACaptcha">Erreur, captchas non supportés. Ré-essayez plus tard ou avec un compte plus ancien.</string>
+    <string name="errorThereIsACaptcha">Erreur, captchas non supportés. Réessayez plus tard ou avec un compte plus ancien.</string>
     <string name="replyTitleInSurveyManager">%n% :</string>
     <string name="replyTitleInSurveyHint">Réponse n°%n%</string>
     <string name="addReply">Ajouter une réponse</string>
