@@ -96,6 +96,7 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
             public void onPageFinished(WebView view, String url) {
                 if (url.startsWith("https://www.jeuxvideo.com")) {
                     jvcWebView.evaluateJavascript("Didomi.setUserAgreeToAll();", null);
+                    tryToPrefillPseudoFromPage();
                 }
             }
         });
@@ -116,6 +117,29 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
         PrefsManager.putInt(PrefsManager.IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED,
                 PrefsManager.getInt(PrefsManager.IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED) + 1);
         PrefsManager.applyChanges();
+    }
+
+    /* Une fois connecté sur JVC, le pseudo de l'utilisateur est présent dans l'en-tête de la page    */
+    /* (.headerAccount__pseudo). On le cible via le conteneur .headerAccount--user car déconnecté ce  */
+    /* même .headerAccount__pseudo contient le texte « CONNEXION » (conteneur .headerAccount--connect)*/
+    /* On pré-remplit le champ uniquement s'il est vide afin de ne pas écraser une saisie manuelle.   */
+    private void tryToPrefillPseudoFromPage() {
+        jvcWebView.evaluateJavascript(
+                "(function(){var el=document.querySelector('.headerAccount--user .headerAccount__pseudo');return el?el.textContent.trim():'';})()",
+                value -> {
+                    if (value == null || pseudoText == null || !pseudoText.getText().toString().isEmpty()) {
+                        return;
+                    }
+
+                    String pseudo = value.trim();
+                    if (pseudo.length() >= 2 && pseudo.startsWith("\"") && pseudo.endsWith("\"")) {
+                        pseudo = pseudo.substring(1, pseudo.length() - 1).replace("\\\"", "\"").replace("\\\\", "\\");
+                    }
+
+                    if (!pseudo.isEmpty()) {
+                        pseudoText.setText(pseudo);
+                    }
+                });
     }
 
     @Override
