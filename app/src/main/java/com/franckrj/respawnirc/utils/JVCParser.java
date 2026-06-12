@@ -44,8 +44,8 @@ public final class JVCParser {
     private static final Pattern errorBlocPattern = Pattern.compile("<div class=\"bloc-erreur\">([^<]*)</div>");
     private static final Pattern errorInJsonModePattern = Pattern.compile("\"(erreur|error)(s)?\":(\\[)?\"([^\"]*)\"");
     private static final Pattern subIdInJsonPattern = Pattern.compile("\"id-abonnement\":([0-9]*)");
-    private static final Pattern codeBlockPattern = Pattern.compile("<pre class=\"pre-jv\"><code class=\"code-jv\">([^<]*)</code></pre>");
-    private static final Pattern codeLinePattern = Pattern.compile("<code class=\"code-jv\">(.*?)</code>", Pattern.DOTALL);
+    private static final Pattern codeBlockPattern = Pattern.compile("<pre class=\"message__pre\"><code class=\"message__code\">([^<]*)</code></pre>");
+    private static final Pattern codeLinePattern = Pattern.compile("<code class=\"message__code\">(.*?)</code>", Pattern.DOTALL);
     private static final Pattern spoilLinePattern = Pattern.compile("<span class=\"message__spoil message__spoil--inline\">.*?<span class=\"message__spoilContent\">(.*?)</span></span>", Pattern.DOTALL);
     private static final Pattern spoilBlockPattern = Pattern.compile("<div class=\"message__spoil\">.*?<div class=\"message__spoilContent\">(.*?)</div></div>", Pattern.DOTALL);
     private static final Pattern spoilOverlyPattern = Pattern.compile("(<(span|div) class=\"bloc-spoil-jv[^\"]*\">.*?<(span|div) class=\"contenu-spoil\">|</span></span>|</div></div>)", Pattern.DOTALL);
