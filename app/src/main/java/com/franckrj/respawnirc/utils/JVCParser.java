@@ -1614,7 +1614,13 @@ public final class JVCParser {
             return "";
         }
 
-        return deobfuscateJvcareLink(topicLinkMatcher.group("link"));
+        String topicLink = deobfuscateJvcareLink(topicLinkMatcher.group("link"));
+
+        if (topicLink.startsWith("/")) {
+            topicLink = "https://www.jeuxvideo.com" + topicLink;
+        }
+
+        return topicLink;
     }
 
     public static ArrayList<TopicInfos> getTopicsOfThisPage(JSONObject payload) {
