@@ -20,7 +20,7 @@
     <string name="overflow_menu_desc">Menu déroulant</string>
     <string name="quoteMessage">Citer</string>
     <string name="errorConnectedNeededBeforePost">Erreur, veuillez vous connecter avant d\'envoyer un message.</string>
-    <string name="editMessage">Editer</string>
+    <string name="editMessage">Modifier</string>
     <string name="hideSpoilMessage">Cacher les spoil</string>
     <string name="showSpoilMessage">Afficher les spoil</string>
     <string name="preference">Préférences</string>
@@ -31,7 +31,7 @@
     <string name="loadTopicFromOldInfos">Poursuivre la lecture</string>
     <string name="help">Aide</string>
     <string name="ok">OK</string>
-    <string name="help_dialog_connect">• Pour commencer, veuillez entrer votre pseudo dans le champ présent tout en haut.\n• Ensuite, veuillez vous connecter sur JVC avec ce même pseudo.\n• Enfin, cliquez sur le bouton \"Terminer\" tout en haut à droite.</string>
+    <string name="help_dialog_connect">• Pour commencer, veuillez entrer votre pseudo dans le champ présent tout en haut.\n• Ensuite, veuillez vous connecter sur JVC avec ce même pseudo.\n• Enfin, appuyez sur le bouton \"Terminer\" tout en haut à droite.</string>
     <string name="welcome">Bienvenue !</string>
     <string name="later">Plus tard</string>
     <string name="help_firstlaunch">Bienvenue sur RespawnIRC !\n\nPour commencer il est conseillé de se connecter à JVC, mais vous pouvez très bien le faire plus tard.</string>
@@ -39,7 +39,7 @@
     <string name="closeDrawerContentDescRes">Fermeture du menu latéral</string>
     <string name="switchToForumMode">Passer en mode forum</string>
     <string name="switchToIrcMode">Passer en mode IRC</string>
-    <string name="refresh">Rafraichir</string>
+    <string name="refresh">Rafraîchir</string>
     <string name="topicClearOnRefreshTitle">Effacer les messages lors d\'un refresh</string>
     <string name="nextPageText"><![CDATA[>]]></string>
     <string name="previousPageText"><![CDATA[<]]></string>
@@ -50,15 +50,15 @@
     <string name="topicOrForumLink">Lien du topic/forum…</string>
     <string name="openTopicOrForumLink">Ouvrir un lien de topic/forum</string>
     <string name="topicAlternateBackgroundColorTitle">Alterner la couleur de fond des messages</string>
-    <string name="topicIcon">Icone de topic</string>
+    <string name="topicIcon">Icône de topic</string>
     <string name="showQuoteMessage">Afficher les citations imbriquées</string>
     <string name="hideQuoteMessage">Cacher les citations imbriquées</string>
     <string name="maxNumberOfOverlyQuoteTitle">Nombre max de citations imbriquées</string>
     <string name="warningNotConnected">ATTENTION : Vous n\'êtes pas connecté !</string>
     <string name="errorQuoteAlreadyRunning">Erreur, citation déjà en cours.</string>
     <string name="errorInfosMissings">Erreur, informations manquantes (rechargez la page ?).</string>
-    <string name="errorMessageAlreadySending">Erreur, envoie ou édition d\'un message actuellement en cours.</string>
-    <string name="errorCantGetEditInfos">Erreur, impossible de récupérer les informations d\'édition.</string>
+    <string name="errorMessageAlreadySending">Erreur, envoi ou modification d\'un message actuellement en cours.</string>
+    <string name="errorCantGetEditInfos">Erreur, impossible de récupérer les informations de modification.</string>
     <string name="errorDownloadFailed">Erreur, la récupération des informations a échoué.</string>
     <string name="errorForumPageDownloadFailed">Erreur, la récupération des informations a échoué, la page n\'existe peut-être pas.</string>
     <string name="errorConnectNeeded">Erreur, vous devez vous connecter pour effectuer cette action.</string>
@@ -92,7 +92,7 @@
     <string name="errorTopicIsLocked">Erreur, le topic est fermé.</string>
     <string name="transformStickerToSmileyTitle">Changer les stickers en smiley</string>
     <string name="transformStickerToSmileySummary">(tous les stickers ne sont pas changés)</string>
-    <string name="unknownErrorPleaseRetry">Erreur inconnue, veuillez ré-essayer.</string>
+    <string name="unknownErrorPleaseRetry">Erreur inconnue, veuillez réessayer.</string>
     <string name="sendATopic">Poster un topic</string>
     <string name="topicTitlePlaceHolder">Titre…</string>
     <string name="pastLastTopicSended">Coller le dernier topic envoyé</string>
@@ -102,9 +102,9 @@
     <string name="noelshack">Noelshack</string>
     <string name="link">Liens</string>
     <string name="useDirectNoelshackLinkTitle">Utiliser les liens directs</string>
-    <string name="showOverviewOnImageClickTitle">Aperçu lors d\'un clique</string>
+    <string name="showOverviewOnImageClickTitle">Aperçu lors d\'un appui</string>
     <string name="openInBrowser">Ouvrir dans le navigateur</string>
-    <string name="clickHereToSee">Cliquez ici pour le voir.</string>
+    <string name="clickHereToSee">Appuyez ici pour le voir.</string>
     <string name="titleForSurvey">Sondage :</string>
     <string name="titleForClosedSurvey">Sondage fermé :</string>
     <string name="survey">Sondage</string>
@@ -152,12 +152,12 @@
     <string name="forumAlternateBackgroundColorTitle">Alterner la couleur de fond des topics</string>
     <string name="enableSmoothScrollTitle">Activer le smoothscroll</string>
     <string name="whenPossibleSummary">(lorsque possible)</string>
-    <string name="enableGoToBottomOnLoadTitle">Fin de page lors d\'un clique long</string>
+    <string name="enableGoToBottomOnLoadTitle">Fin de page lors d\'un appui long</string>
     <string name="enableGoToBottomOnLoadSummary">(ne s\'applique qu\'aux topics favoris et de la liste des topics)</string>
     <string name="enableAutoScrollTitle">Activer l\'autoscroll</string>
     <string name="enableAutoScrollSummary">(scroll automatiquement après un refresh si déjà en bas de page)</string>
     <string name="informations">Informations</string>
-    <string name="help_dialog_settings">Voici une liste de quelques fonctionnalités importantes que vous ne connaissez peut-être pas :\n\n• Un clique long sur un topic de la liste des topics ou des topics favoris vous permet d\'aller directement à la dernière page.\n• Un clique long sur le bouton d\'insertion (le +) vous permet d\'accéder à des options supplémentaires.\n• Un clique long sur le bouton d\'envoi de message vous permet de rafraichir la liste des messages sans les effacer.\n• Un clique normal sur le pseudo d\'un message vous permet d\'accéder à des options supplémentaires.\n• Un clique long sur le titre du topic / forum dans la toolbar vous permet de le voir en entier.\n• Un clique long sur un élément de la popup d\'insertion vous permet de l\'insérer sans fermer la popup.\n• Un clique long sur une image ou un lien vous permet d\'accéder à des options supplémentaires.</string>
+    <string name="help_dialog_settings">Voici une liste de quelques fonctionnalités importantes que vous ne connaissez peut-être pas :\n\n• Un appui long sur un topic de la liste des topics ou des topics favoris vous permet d\'aller directement à la dernière page.\n• Un appui long sur le bouton d\'insertion (le +) vous permet d\'accéder à des options supplémentaires.\n• Un appui long sur le bouton d\'envoi de message vous permet de rafraîchir la liste des messages sans les effacer.\n• Un appui simple sur le pseudo d\'un message vous permet d\'accéder à des options supplémentaires.\n• Un appui long sur le titre du topic / forum dans la toolbar vous permet de le voir en entier.\n• Un appui long sur un élément de la popup d\'insertion vous permet de l\'insérer sans fermer la popup.\n• Un appui long sur une image ou un lien vous permet d\'accéder à des options supplémentaires.</string>
     <string name="errorMessageContentNeededForSend">Erreur : Le message doit se composer au minimum de 1 caractère.</string>
     <string name="defaultShowSpoilValTitle">Afficher les spoils par défaut</string>
     <string name="markAuthorPseudoTitle">Marquer l\'auteur du topic</string>
@@ -187,7 +187,7 @@
     <string name="reasonOfKick">Raison du kick…</string>
     <string name="errorReasonOrMotiveMissingForKick">Erreur, raison ou motif manquant.</string>
     <string name="selectMotive">Sélectionnez un motif…</string>
-    <string name="noKnownResponseFromJVC">La réponse ne peut pas être analysée, veuillez ré-essayer.</string>
+    <string name="noKnownResponseFromJVC">La réponse ne peut pas être analysée, veuillez réessayer.</string>
     <string name="allMessagesAreFromIgnoredPseudo">Tous les messages de cette page proviennent de pseudos ignorés.</string>
     <string name="allTopicsAreFromIgnoredPseudo">Tous les topics de cette page proviennent de pseudos ignorés.</string>
     <string name="separationBetweenMessagesTitle">Séparation entre les messages</string>
@@ -225,7 +225,7 @@
     <string name="gta">GTA</string>
     <string name="avatarSizeTitle">Taille des avatars (en dp)</string>
     <string name="saveLastRowUsedInsertstuffTitle">Se souvenir du dernier type de sticker utilisé</string>
-    <string name="errorThereIsACaptcha">Erreur, captchas non supportés. Ré-essayez plus tard ou avec un compte plus ancien.</string>
+    <string name="errorThereIsACaptcha">Erreur, captchas non supportés. Réessayez plus tard ou avec un compte plus ancien.</string>
     <string name="replyTitleInSurveyManager">%n% :</string>
     <string name="replyTitleInSurveyHint">Réponse n°%n%</string>
     <string name="addReply">Ajouter une réponse</string>
@@ -250,16 +250,16 @@
     <string name="topicDraftSaved">Brouillon du topic sauvegardé.</string>
     <string name="grey">Gris</string>
     <string name="invertToolbarTextColorTitle">Inverser la couleur du texte de la toolbar</string>
-    <string name="deleteCurrentWritedMessageWarning">Êtes-vous sûr de vouloir supprimer le message que vous êtes entrain d\'écrire ?</string>
+    <string name="deleteCurrentWritedMessageWarning">Êtes-vous sûr de vouloir supprimer le message que vous êtes en train d\'écrire ?</string>
     <string name="deleteTopic">Supprimer le topic</string>
-    <string name="deleteWholeTopicWarning">Êtes-vous sûr de vouloir supprimer le topic que vous êtes entrain d\'écrire ainsi que son sondage ?</string>
+    <string name="deleteWholeTopicWarning">Êtes-vous sûr de vouloir supprimer le topic que vous êtes en train d\'écrire ainsi que son sondage ?</string>
     <string name="pressBackTwoTimesToLeaveConnect">Appuyez une deuxième fois sur retour pour quitter sans terminer votre connexion.</string>
     <string name="deleteSurvey">Supprimer le sondage</string>
     <string name="deleteWholeSurveyWarning">Êtes-vous sûr de vouloir supprimer la totalité du sondage et de le valider ?</string>
     <string name="askBefore">Demander avant</string>
     <string name="saveDraft">Sauvegarder le brouillon</string>
-    <string name="saveMessageDraftExplained">Voulez-vous sauvegarder le message actuellement entrain d\'être écrit en tant que brouillon ?</string>
-    <string name="saveTopicDraftExplained">Voulez-vous sauvegarder le topic actuellement entrain d\'être écrit en tant que brouillon ?</string>
+    <string name="saveMessageDraftExplained">Voulez-vous sauvegarder le message actuellement en train d\'être écrit en tant que brouillon ?</string>
+    <string name="saveTopicDraftExplained">Voulez-vous sauvegarder le topic actuellement en train d\'être écrit en tant que brouillon ?</string>
     <string name="disabledAfterShortcutUpdate">Raccourci désactivé suite à une mise à jour du système des raccourcis.</string>
     <string name="subToTopic">S\'abonner au topic</string>
     <string name="unsubFromTopic">Se désabonner du topic</string>
@@ -268,7 +268,7 @@
     <string name="generalSettingSummary">Brouillon, divers</string>
     <string name="styleSettingSummary">Thème, couleurs, police</string>
     <string name="messageSettingSummary">Apparence, contenu, formatage</string>
-    <string name="behaviourSettingSummary">Rafraichissement, scrolling, autres</string>
+    <string name="behaviourSettingSummary">Rafraîchissement, scrolling, autres</string>
     <string name="imageLinkSettingSummary">Avatars, stickers, noelshack, ouverture des liens</string>
     <string name="ignoredSettingSummary">Affichage des messages / topics, gestion de la liste</string>
     <string name="topicPostTypeIsModo">Envoi du topic en tant que : Modérateur</string>
@@ -282,7 +282,7 @@
     <string name="unlockTopic">Rouvrir le topic</string>
     <string name="restore">Restaurer</string>
     <string name="restoreSuccess">Message restauré.</string>
-    <string name="cancelEdit">Annuler l\'édition</string>
+    <string name="cancelEdit">Annuler la modification</string>
     <string name="dekick">Dékicker</string>
     <string name="errorUnlockAlreadyRunning">Erreur, réouverture déjà en cours.</string>
     <string name="errorDekickAlreadyRunning">Erreur, dékick déjà en cours.</string>
@@ -290,7 +290,7 @@
     <string name="goToForumOfTopic">Accéder au forum du topic</string>
     <string name="chooseBrowser">Choisissez un navigateur</string>
     <string name="topicNameAndAccentColorSummary">Titres de topic, liens, etc…</string>
-    <string name="refreshForumOnResumeTitle">Rafraichir les forums à chaque affichage</string>
+    <string name="refreshForumOnResumeTitle">Rafraîchir les forums à chaque affichage</string>
     <string name="veryVerySmall">Vraiment très petit</string>
     <string name="verySmall">Très petit</string>
     <string name="small">Petit</string>
@@ -416,7 +416,7 @@
         <item>"2 : Incitation à la haine, discrimination"</item>
         <item>"3 : Mise en danger des personnes"</item>
         <item>"4 : Diffamation, menaces"</item>
-        <item>"5 : Piratage, non respect des droits d\'auteurs"</item>
+        <item>"5 : Piratage, non-respect du droit d\'auteur"</item>
         <item>"6 : Apologie de comportements illégaux"</item>
         <item>"9 : Données personnelles"</item>
         <item>"7 : Pornographie"</item>
