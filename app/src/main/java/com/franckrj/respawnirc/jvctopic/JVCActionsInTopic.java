@@ -162,7 +162,7 @@ public class JVCActionsInTopic {
 
     public void startQuoteThisMessage(JVCParser.MessageInfos currentMessageInfos) {
         if (messageIsQuotedListener != null && !currentMessageInfos.messageRaw.isEmpty()) {
-            messageIsQuotedListener.getNewMessageQuoted(JVCParser.buildMessageQuoted(currentMessageInfos));
+            messageIsQuotedListener.getNewMessageQuoted(JVCParser.buildMessageQuoted(currentMessageInfos) + "\n\n");
         } else {
             Toast.makeText(parentActivity, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
         }
