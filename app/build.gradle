@@ -21,20 +21,20 @@ android {
         jvmTarget = '1.8'
     }
     buildFeatures {
-        viewBinding true
+        viewBinding = true
         dataBinding = true
     }
     buildTypes {
         release {
             minifyEnabled true
-            shrinkResources true
+            shrinkResources = true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
             applicationIdSuffix ".dev"
         }
     }
-    namespace 'com.franckrj.respawnirc'
+    namespace = 'com.franckrj.respawnirc'
 }
 
 dependencies {
