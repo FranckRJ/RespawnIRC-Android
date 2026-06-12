@@ -78,10 +78,10 @@ public final class JVCParser {
     private static final Pattern newShortLinkPattern = Pattern.compile("<a +href=\"([^\"]*)\" *>[^<]*</a>");
     private static final Pattern newLongLinkPattern = Pattern.compile("<span +class=\"JvCare [^\"]*\" +title=\"([^\"]*)\" *>[^:<]*://[^<]*</span>");
     private static final Pattern shortJvcLinkPattern = Pattern.compile("<span +class=\"JvCare [^\"]*\" *>(http(s)?://[^<]*)</span>");
-    private static final Pattern longJvcLinkPattern = Pattern.compile("<a +title=\"[^\"]*\" +href=\"([^\"]*)\"[^>]*>[^<]*<i></i><span>[^<]*</span>[^<]*</a>");
+    private static final Pattern longJvcLinkPattern = Pattern.compile("<a +title=\"[^\"]*\" +href=\"([^\"]*)\"[^>]*>[^<]*<i *(class=\"message__cesure\")?></i><span *(class=\"message__middleCesure\")?>[^<]*</span>[^<]*</a>");
     private static final Pattern shortLinkPattern = Pattern.compile("<span +class=\"JvCare [^\"]*\"[^>]*?target=\"_blank\"[^>]*>([^<]*)</span>");
-    private static final Pattern longLinkPattern = Pattern.compile("<span +class=\"JvCare [^\"]*\"[^i]*itle=\"([^\"]*)\"[^>]*>[^<]*<i></i><span>[^<]*</span>[^<]*</span>");
-    private static final Pattern alloCineLinkPattern = Pattern.compile("<a +target=\"[^\"]*\" +title=\"[^\"]*\" +href=\"([^\"]*)\"[^>]*>[^<]*<i></i><span>[^<]*</span>[^<]*</a>");
+    private static final Pattern longLinkPattern = Pattern.compile("<span +class=\"JvCare [^\"]*\"[^i]*itle=\"([^\"]*)\"[^>]*>[^<]*<i *(class=\"message__cesure\")?></i><span *(class=\"message__middleCesure\")?>[^<]*</span>[^<]*</span>");
+    private static final Pattern alloCineLinkPattern = Pattern.compile("<a +target=\"[^\"]*\" +title=\"[^\"]*\" +href=\"([^\"]*)\"[^>]*>[^<]*<i *(class=\"message__cesure\")?></i><span *(class=\"message__middleCesure\")?>[^<]*</span>[^<]*</a>");
     private static final Pattern textLinkPattern = Pattern.compile("http(s)?://[a-zA-Z0-9/%._~!$&'()*+,;=:@?#-]*(?![^<>]*(>|</a>))", Pattern.CASE_INSENSITIVE);
     private static final Pattern smileyPattern = Pattern.compile("<img src=\"http(s)?://image\\.jeuxvideo\\.com/smileys_img/([^\"]*)\" alt=\"[^\"]*\" data-code=\"([^\"]*)\" title=\"[^\"]*\" [^>]*>");
     private static final Pattern embedVideoPattern = Pattern.compile("<div class=\"player-contenu\"><div class=\"[^\"]*\"><iframe.*?src=\"([^\"]*)\"[^>]*></iframe></div></div>");
@@ -1392,8 +1392,6 @@ public final class JVCParser {
     public static String makeBasicMessageParse(String messageToParse, boolean containSpoil) {
         /* Retirer la div "Message édité le..." pour éviter le doublon avec lastTimeEdit. */
         messageToParse = messageToParse.replaceAll("(?s)<div class=\"messageUser__dateEdit\">.*?</div>", "");
-        messageToParse = messageToParse.replace("<i class=\"message__cesure\"></i>", "");
-        messageToParse = messageToParse.replaceAll("<span class=\"message__middleCesure\">(.*?)</span>", "$1");
         StringBuilder messageInBuilder = new StringBuilder(messageToParse);
 
         ToolForParsing.parseThisMessageWithThisPattern(messageInBuilder, adPattern, -1, "", "", null, null);
