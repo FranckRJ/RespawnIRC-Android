@@ -443,7 +443,7 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
                 if (source != null) {
                     JSONObject payload = JVCParser.getForumsAppPayload(source);
                     newMessageShowedStatus.message = JVCParser.getMessageFromPermalinkPage(payload);
-                    newMessageShowedStatus.topicLink = JVCParser.getTopicLinkFromPermalinkPage(payload);
+                    newMessageShowedStatus.topicLink = JVCParser.getTopicLinkFromPermalinkPage(source);
                 }
             }
 
