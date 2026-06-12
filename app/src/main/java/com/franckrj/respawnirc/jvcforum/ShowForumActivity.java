@@ -18,6 +18,7 @@ import com.franckrj.respawnirc.base.AbsShowSomethingFragment;
 import com.franckrj.respawnirc.dialogs.SelectTextDialogFragment;
 import com.franckrj.respawnirc.jvcforum.jvcforumtools.JVCForumGetter;
 import com.franckrj.respawnirc.jvcforum.jvcforumtools.ShowForumFragment;
+import com.franckrj.respawnirc.jvctopic.ShowMessageActivity;
 import com.franckrj.respawnirc.jvctopic.ShowTopicActivity;
 import com.franckrj.respawnirc.utils.AddOrRemoveThingToFavs;
 import com.franckrj.respawnirc.utils.JVCParser;
@@ -120,6 +121,11 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
                 if (readThisForum(link)) {
                     return false;
                 }
+            } else if (JVCParser.checkIfItsMessageFormatedLink(link)) {
+                Intent newShowMessageIntent = new Intent(this, ShowMessageActivity.class);
+                newShowMessageIntent.putExtra(ShowMessageActivity.EXTRA_MESSAGE_PERMALINK, link);
+                startActivity(newShowMessageIntent);
+                return true;
             } else if (readThisTopic(link, true, null, null, goToLastPage)) {
                 return true;
             }
