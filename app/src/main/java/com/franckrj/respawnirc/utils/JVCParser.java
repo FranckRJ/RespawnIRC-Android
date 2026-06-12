@@ -444,6 +444,19 @@ public final class JVCParser {
         }
     }
 
+    public static String deobfuscateJvcareLink(String obfuscatedLink) {
+        final String base16 = "0A12B34C56D78E9F";
+        StringBuilder link = new StringBuilder();
+
+        for (int i = 0; i + 1 < obfuscatedLink.length(); i += 2) {
+            int high = base16.indexOf(obfuscatedLink.charAt(i));
+            int low = base16.indexOf(obfuscatedLink.charAt(i + 1));
+            link.append((char) (high * 16 + low));
+        }
+
+        return link.toString();
+    }
+
     public static SurveyInfos getSurveyInfosFromPage(JSONObject payload) {
         SurveyInfos currentInfos = new SurveyInfos();
 
