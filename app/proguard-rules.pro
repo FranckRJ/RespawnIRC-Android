@@ -1,25 +1,6 @@
+# Conserver les numéros de ligne pour pouvoir désobfusquer les stack traces des rapports
+# de crash en release (en masquant le nom de fichier source d'origine). À recroiser avec
+# le mapping.txt du build correspondant (build/outputs/mapping/) pour retrouver classes,
+# méthodes et lignes d'origine.
 -renamesourcefileattribute SourceFile
 -keepattributes SourceFile,LineNumberTable
-
-# Coroutine optimisation pour Dispatchers.Main, potentiellement plus nécessaire depuis AS 3.6.
--assumevalues class kotlinx.coroutines.internal.MainDispatcherLoader {
-  boolean FAST_SERVICE_LOADER_ENABLED return false;
-}
-# -checkdiscard class kotlinx.coroutines.internal.FastServiceLoader
-
-# OkHttp
--dontwarn javax.annotation.**
--dontwarn org.codehaus.mojo.animal_sniffer.*
--dontwarn okhttp3.internal.platform.ConscryptPlatform
--keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
-
-# Glide
--keep public class * implements com.bumptech.glide.module.GlideModule
--keep public class * extends com.bumptech.glide.module.AppGlideModule
--keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
-  **[] $VALUES;
-  public *;
-}
-
-# Glide integration libraries
--keep class com.bumptech.glide.GeneratedAppGlideModuleImpl
