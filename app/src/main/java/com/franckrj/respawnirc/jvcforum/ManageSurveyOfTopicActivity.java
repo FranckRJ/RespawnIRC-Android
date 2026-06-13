@@ -146,9 +146,8 @@ public class ManageSurveyOfTopicActivity extends AbsHomeIsBackActivity {
                     .setPositiveButton(R.string.yes, onClickInClearWholeSurveyConfirmationListener).setNegativeButton(R.string.no, null);
             builder.show();
             return true;
-        } else {
-            return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

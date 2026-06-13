@@ -388,9 +388,8 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         if (itemId == R.id.action_reload_forum_showforum) {
             reloadAllForum(false);
             return true;
-        } else {
-            return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
     public interface NewTopicWantRead {

@@ -222,23 +222,25 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             PrefsManager.applyChanges();
             updatePostTypeNotice();
             return true;
-        } else if (itemId == R.id.delete_message_sendmessage_action) {
+        }
+        if (itemId == R.id.delete_message_sendmessage_action) {
             AlertDialog.Builder builder = new AlertDialog.Builder(ShowTopicActivity.this);
             builder.setTitle(R.string.deleteMessage).setMessage(R.string.deleteCurrentWritedMessageWarning)
                     .setPositiveButton(R.string.yes, onClickInDeleteCurrentWritedMessageConfirmationListener).setNegativeButton(R.string.no, null);
             builder.show();
             return true;
-        } else if (itemId == R.id.past_last_message_sended_sendmessage_action) {
+        }
+        if (itemId == R.id.past_last_message_sended_sendmessage_action) {
             if (topicStatus.lockReason == null) {
                 messageSendEdit.setText(lastMessageSended);
             }
             return true;
-        } else if (itemId == R.id.cancel_edit_sendmessage_action) {
+        }
+        if (itemId == R.id.cancel_edit_sendmessage_action) {
             cancelEditAndHideKeyboardAndCursor();
             return true;
-        } else {
-            return false;
         }
+        return false;
     };
 
     private final View.OnLongClickListener showSendmessageActionListener = buttonView -> {
@@ -647,7 +649,8 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             newShowForumIntent.putExtra(ShowForumActivity.EXTRA_IS_FIRST_ACTIVITY, false);
             startActivity(newShowForumIntent);
             return true;
-        } else if (itemId == R.id.action_change_topic_fav_value_showtopic) {
+        }
+        if (itemId == R.id.action_change_topic_fav_value_showtopic) {
             if (topicStatus.isInFavs != null) {
                 if (currentTaskForFavs == null) {
                     currentTaskForFavs = new AddOrRemoveThingToFavs(!topicStatus.isInFavs, this);
@@ -659,7 +662,8 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 Toast.makeText(ShowTopicActivity.this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
             }
             return true;
-        } else if (itemId == R.id.action_change_topic_sub_value_showtopic) {
+        }
+        if (itemId == R.id.action_change_topic_sub_value_showtopic) {
             if (topicStatus.subId != null) {
                 if (currentTaskForSubs == null) {
                     currentTaskForSubs = new AddOrRemoveTopicToSubs(topicStatus.subId.isEmpty(), this);
@@ -671,7 +675,8 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 Toast.makeText(ShowTopicActivity.this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
             }
             return true;
-        } else if (itemId == R.id.action_change_lock_topic_value_showtopic) {
+        }
+        if (itemId == R.id.action_change_lock_topic_value_showtopic) {
             if (topicStatus.lockReason == null) {
                 Intent newLockTopicIntent = new Intent(ShowTopicActivity.this, LockTopicActivity.class);
                 newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_ID_FORUM, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()));
@@ -683,15 +688,16 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 actionsForTopic.startUnlockThisTopic(topicStatus.ajaxInfos, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), topicStatus.topicId, currentAccount.cookie);
             }
             return true;
-        } else if (itemId == R.id.action_change_pin_topic_value_showtopic) {
+        }
+        if (itemId == R.id.action_change_pin_topic_value_showtopic) {
             actionsForTopic.startPinOrUnpinTopic(!topicStatus.topicIsPinned, topicStatus.ajaxInfos, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), topicStatus.topicId, currentAccount.cookie);
             return true;
-        } else if (itemId == R.id.action_open_in_browser_showtopic) {
+        }
+        if (itemId == R.id.action_open_in_browser_showtopic) {
             Utils.openCorrespondingBrowser(linkTypeForInternalBrowser, pageNavigation.getCurrentPageLink(), this);
             return true;
-        } else {
-            return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -748,7 +754,8 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 actionsForTopic.startQuoteThisMessage(fromThisMessage);
             }
             return true;
-        } else if (itemId == R.id.menu_edit_message) {
+        }
+        if (itemId == R.id.menu_edit_message) {
             if (topicStatus.lockReason == null) {
                 if (senderForMessages.getIsInEdit()) {
                     cancelEditAndHideKeyboardAndCursor();
@@ -760,13 +767,16 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             }
 
             return true;
-        } else if (itemId == R.id.menu_delete_message) {
+        }
+        if (itemId == R.id.menu_delete_message) {
             actionsForTopic.startDeleteThisMessage(topicStatus.ajaxInfos, fromThisMessage, currentAccount.cookie);
             return true;
-        } else if (itemId == R.id.menu_restore_message) {
+        }
+        if (itemId == R.id.menu_restore_message) {
             actionsForTopic.startRestoreThisMessage(topicStatus.ajaxInfos, fromThisMessage, currentAccount.cookie);
             return true;
-        } else if (itemId == R.id.menu_kick_author_message) {
+        }
+        if (itemId == R.id.menu_kick_author_message) {
             Intent newKickPseudoIntent = new Intent(ShowTopicActivity.this, KickPseudoActivity.class);
             newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_PSEUDO, fromThisMessage.pseudo);
             newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_ID_ALIAS, fromThisMessage.idAlias);
@@ -776,12 +786,12 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
             newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_COOKIES, currentAccount.cookie);
             startActivity(newKickPseudoIntent);
             return true;
-        } else if (itemId == R.id.menu_dekick_author_message) {
+        }
+        if (itemId == R.id.menu_dekick_author_message) {
             actionsForTopic.startDekickThisPseudo(fromThisMessage.pseudo, topicStatus.ajaxInfos, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), fromThisMessage.idAlias, currentAccount.cookie);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     @Override

@@ -72,13 +72,14 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
     private static String getSearchTypeInTextForSearchTypeId(int searchTypeId) {
         if (searchTypeId == R.id.topicmode_radio_searchtopic) {
             return "titre_topic";
-        } else if (searchTypeId == R.id.authormode_radio_searchtopic) {
-            return "auteur_topic";
-        } else if (searchTypeId == R.id.messagemode_radio_searchtopic) {
-            return "texte_message";
-        } else {
-            return "";
         }
+        if (searchTypeId == R.id.authormode_radio_searchtopic) {
+            return "auteur_topic";
+        }
+        if (searchTypeId == R.id.messagemode_radio_searchtopic) {
+            return "texte_message";
+        }
+        return "";
     }
 
     private static int getSearchTypeIdForSearchTypeInText(String searchTypeText) {
@@ -289,9 +290,8 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
         if (itemId == R.id.action_share_searchforum) {
             Utils.shareThisLink(pageNavigation.getCurrentPageLink(), this);
             return true;
-        } else {
-            return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

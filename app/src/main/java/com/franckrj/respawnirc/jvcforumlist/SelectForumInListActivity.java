@@ -341,9 +341,8 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
                 chooseLinkDialogFragment.show(getSupportFragmentManager(), "ChooseTopicOrForumLinkDialogFragment");
             }
             return true;
-        } else {
-            return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -231,13 +231,13 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
         if (itemId == R.id.action_reload_topic_showtopicforum) {
             reloadAllTopic();
             return true;
-        } else if (itemId == R.id.action_switch_to_IRC_mode_showtopicforum) {
+        }
+        if (itemId == R.id.action_switch_to_IRC_mode_showtopicforum) {
             if (listenerForNewModeNeeded != null) {
                 listenerForNewModeNeeded.newModeRequested(MODE_IRC);
             }
-            return super.onOptionsItemSelected(item);
-        } else {
-            return super.onOptionsItemSelected(item);
+            // pas de return : on retombe volontairement sur le super ci-dessous
         }
+        return super.onOptionsItemSelected(item);
     }
 }

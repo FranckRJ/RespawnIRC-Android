@@ -177,9 +177,8 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
                 helpDialogFragment.show(getSupportFragmentManager(), "HelpConnectDialogFragment");
             }
             return true;
-        } else {
-            return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

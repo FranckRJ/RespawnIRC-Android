@@ -319,16 +319,19 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
             }
 
             return true;
-        } else if (itemId == R.id.action_search_topic_showforum) {
+        }
+        if (itemId == R.id.action_search_topic_showforum) {
             Intent newSearchTopicIntent = new Intent(this, SearchTopicInForumActivity.class);
             newSearchTopicIntent.putExtra(SearchTopicInForumActivity.EXTRA_FORUM_LINK, pageNavigation.getFirstPageLink());
             newSearchTopicIntent.putExtra(SearchTopicInForumActivity.EXTRA_FORUM_NAME, forumStatus.forumName);
             startActivity(newSearchTopicIntent);
             return true;
-        } else if (itemId == R.id.action_open_in_browser_showforum) {
+        }
+        if (itemId == R.id.action_open_in_browser_showforum) {
             Utils.openCorrespondingBrowser(linkTypeForInternalBrowser, pageNavigation.getCurrentPageLink(), this);
             return true;
-        } else if (itemId == R.id.action_send_topic_showforum) {
+        }
+        if (itemId == R.id.action_send_topic_showforum) {
             Intent newSendTopicIntent = new Intent(this, SendTopicToForumActivity.class);
             newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_FORUM_NAME, forumStatus.forumName);
             newSendTopicIntent.putExtra(SendTopicToForumActivity.EXTRA_FORUM_LINK, pageNavigation.getFirstPageLink());
@@ -339,12 +342,12 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
             startActivityForResult(newSendTopicIntent, SEND_TOPIC_REQUEST_CODE);
             refreshNeededOnNextResume = true;
             return true;
-        } else if (itemId == R.id.action_share_showforum) {
+        }
+        if (itemId == R.id.action_share_showforum) {
             Utils.shareThisLink(pageNavigation.getCurrentPageLink(), this);
             return true;
-        } else {
-            return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

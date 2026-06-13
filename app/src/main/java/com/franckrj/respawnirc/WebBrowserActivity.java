@@ -203,22 +203,25 @@ public class WebBrowserActivity extends AbsToolbarActivity {
         if (itemId == android.R.id.home) {
             finish();
             return true;
-        } else if (itemId == R.id.action_open_in_external_browser_webbrowser) {
+        }
+        if (itemId == R.id.action_open_in_external_browser_webbrowser) {
             Utils.openLinkInExternalBrowser(currentUrl, this);
             return true;
-        } else if (itemId == R.id.action_copy_url_webbrowser) {
+        }
+        if (itemId == R.id.action_copy_url_webbrowser) {
             Utils.putStringInClipboard(currentUrl, this);
             Toast.makeText(this, R.string.copyDone, Toast.LENGTH_SHORT).show();
             return true;
-        } else if (itemId == R.id.action_reload_page_webbrowser) {
+        }
+        if (itemId == R.id.action_reload_page_webbrowser) {
             browserWebView.reload();
             return true;
-        } else if (itemId == R.id.action_share_url_webbrowser) {
+        }
+        if (itemId == R.id.action_share_url_webbrowser) {
             Utils.shareThisLink(currentUrl, this);
             return true;
-        } else {
-            return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

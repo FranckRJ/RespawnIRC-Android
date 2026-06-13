@@ -64,34 +64,38 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
             adapterForTopic.updateThisItem(fromThisMessage, false);
             adapterForTopic.notifyDataSetChanged();
             return true;
-        } else if (itemId == R.id.menu_hide_spoil_message) {
+        }
+        if (itemId == R.id.menu_hide_spoil_message) {
             fromThisMessage.listOfSpoilIdToShow.clear();
             adapterForTopic.updateThisItem(fromThisMessage, false);
             adapterForTopic.notifyDataSetChanged();
             return true;
-        } else if (itemId == R.id.menu_show_quote_message) {
+        }
+        if (itemId == R.id.menu_show_quote_message) {
             fromThisMessage.showOverlyQuote = true;
             adapterForTopic.updateThisItem(fromThisMessage, false);
             adapterForTopic.notifyDataSetChanged();
             return true;
-        } else if (itemId == R.id.menu_hide_quote_message) {
+        }
+        if (itemId == R.id.menu_hide_quote_message) {
             fromThisMessage.showOverlyQuote = false;
             adapterForTopic.updateThisItem(fromThisMessage, false);
             adapterForTopic.notifyDataSetChanged();
             return true;
-        } else if (itemId == R.id.menu_show_ugly_images_message) {
+        }
+        if (itemId == R.id.menu_show_ugly_images_message) {
             fromThisMessage.showUglyImages = true;
             adapterForTopic.updateThisItem(fromThisMessage, false);
             adapterForTopic.notifyDataSetChanged();
             return true;
-        } else if (itemId == R.id.menu_hide_ugly_images_message) {
+        }
+        if (itemId == R.id.menu_hide_ugly_images_message) {
             fromThisMessage.showUglyImages = false;
             adapterForTopic.updateThisItem(fromThisMessage, false);
             adapterForTopic.notifyDataSetChanged();
             return true;
-        } else {
-            return false;
         }
+        return false;
     };
 
     private final ImageDownloader.DownloadFinished listenerForDownloadFinished = numberOfDownloadRemaining -> {
@@ -420,9 +424,8 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
             newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_OPENED_FROM_FORUM, false);
             startActivity(newShowTopicIntent);
             return true;
-        } else {
-            return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
