@@ -214,30 +214,30 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     };
 
     private final PopupMenu.OnMenuItemClickListener onSendmessageActionClickedListener = item -> {
-        switch (item.getItemId()) {
-            case R.id.enable_postasmodo_sendmessage_action:
-                /* La valeur de isChecked est inversée car le changement d'état ne se fait pas automatiquement
-                 * donc c'est la valeur avant d'avoir cliqué qui est retournée. */
-                PrefsManager.putBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE, !item.isChecked());
-                PrefsManager.applyChanges();
-                updatePostTypeNotice();
-                return true;
-            case R.id.delete_message_sendmessage_action:
-                AlertDialog.Builder builder = new AlertDialog.Builder(ShowTopicActivity.this);
-                builder.setTitle(R.string.deleteMessage).setMessage(R.string.deleteCurrentWritedMessageWarning)
-                        .setPositiveButton(R.string.yes, onClickInDeleteCurrentWritedMessageConfirmationListener).setNegativeButton(R.string.no, null);
-                builder.show();
-                return true;
-            case R.id.past_last_message_sended_sendmessage_action:
-                if (topicStatus.lockReason == null) {
-                    messageSendEdit.setText(lastMessageSended);
-                }
-                return true;
-            case R.id.cancel_edit_sendmessage_action:
-                cancelEditAndHideKeyboardAndCursor();
-                return true;
-            default:
-                return false;
+        int itemId = item.getItemId();
+        if (itemId == R.id.enable_postasmodo_sendmessage_action) {
+            /* La valeur de isChecked est inversée car le changement d'état ne se fait pas automatiquement
+             * donc c'est la valeur avant d'avoir cliqué qui est retournée. */
+            PrefsManager.putBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE, !item.isChecked());
+            PrefsManager.applyChanges();
+            updatePostTypeNotice();
+            return true;
+        } else if (itemId == R.id.delete_message_sendmessage_action) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(ShowTopicActivity.this);
+            builder.setTitle(R.string.deleteMessage).setMessage(R.string.deleteCurrentWritedMessageWarning)
+                    .setPositiveButton(R.string.yes, onClickInDeleteCurrentWritedMessageConfirmationListener).setNegativeButton(R.string.no, null);
+            builder.show();
+            return true;
+        } else if (itemId == R.id.past_last_message_sended_sendmessage_action) {
+            if (topicStatus.lockReason == null) {
+                messageSendEdit.setText(lastMessageSended);
+            }
+            return true;
+        } else if (itemId == R.id.cancel_edit_sendmessage_action) {
+            cancelEditAndHideKeyboardAndCursor();
+            return true;
+        } else {
+            return false;
         }
     };
 
@@ -639,58 +639,58 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_go_to_forum_of_topic_showtopic:
-                Intent newShowForumIntent = new Intent(this, ShowForumActivity.class);
-                newShowForumIntent.putExtra(ShowForumActivity.EXTRA_NEW_LINK, JVCParser.getForumForTopicLink(pageNavigation.getCurrentPageLink()));
-                newShowForumIntent.putExtra(ShowForumActivity.EXTRA_FORUM_NAME, topicStatus.names.forum);
-                newShowForumIntent.putExtra(ShowForumActivity.EXTRA_IS_FIRST_ACTIVITY, false);
-                startActivity(newShowForumIntent);
-                return true;
-            case R.id.action_change_topic_fav_value_showtopic:
-                if (topicStatus.isInFavs != null) {
-                    if (currentTaskForFavs == null) {
-                        currentTaskForFavs = new AddOrRemoveThingToFavs(!topicStatus.isInFavs, this);
-                        currentTaskForFavs.execute(JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), topicStatus.topicId, topicStatus.ajaxInfos.prefRaw, currentAccount.cookie);
-                    } else {
-                        Toast.makeText(ShowTopicActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
-                    }
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_go_to_forum_of_topic_showtopic) {
+            Intent newShowForumIntent = new Intent(this, ShowForumActivity.class);
+            newShowForumIntent.putExtra(ShowForumActivity.EXTRA_NEW_LINK, JVCParser.getForumForTopicLink(pageNavigation.getCurrentPageLink()));
+            newShowForumIntent.putExtra(ShowForumActivity.EXTRA_FORUM_NAME, topicStatus.names.forum);
+            newShowForumIntent.putExtra(ShowForumActivity.EXTRA_IS_FIRST_ACTIVITY, false);
+            startActivity(newShowForumIntent);
+            return true;
+        } else if (itemId == R.id.action_change_topic_fav_value_showtopic) {
+            if (topicStatus.isInFavs != null) {
+                if (currentTaskForFavs == null) {
+                    currentTaskForFavs = new AddOrRemoveThingToFavs(!topicStatus.isInFavs, this);
+                    currentTaskForFavs.execute(JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), topicStatus.topicId, topicStatus.ajaxInfos.prefRaw, currentAccount.cookie);
                 } else {
-                    Toast.makeText(ShowTopicActivity.this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ShowTopicActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
                 }
-                return true;
-            case R.id.action_change_topic_sub_value_showtopic:
-                if (topicStatus.subId != null) {
-                    if (currentTaskForSubs == null) {
-                        currentTaskForSubs = new AddOrRemoveTopicToSubs(topicStatus.subId.isEmpty(), this);
-                        currentTaskForSubs.execute(topicStatus.topicId, topicStatus.subId, topicStatus.ajaxInfos.sub, currentAccount.cookie);
-                    } else {
-                        Toast.makeText(ShowTopicActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
-                    }
+            } else {
+                Toast.makeText(ShowTopicActivity.this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
+            }
+            return true;
+        } else if (itemId == R.id.action_change_topic_sub_value_showtopic) {
+            if (topicStatus.subId != null) {
+                if (currentTaskForSubs == null) {
+                    currentTaskForSubs = new AddOrRemoveTopicToSubs(topicStatus.subId.isEmpty(), this);
+                    currentTaskForSubs.execute(topicStatus.topicId, topicStatus.subId, topicStatus.ajaxInfos.sub, currentAccount.cookie);
                 } else {
-                    Toast.makeText(ShowTopicActivity.this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ShowTopicActivity.this, R.string.errorActionAlreadyRunning, Toast.LENGTH_SHORT).show();
                 }
-                return true;
-            case R.id.action_change_lock_topic_value_showtopic:
-                if (topicStatus.lockReason == null) {
-                    Intent newLockTopicIntent = new Intent(ShowTopicActivity.this, LockTopicActivity.class);
-                    newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_ID_FORUM, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()));
-                    newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_ID_TOPIC, topicStatus.topicId);
-                    newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_AJAX_MOD, topicStatus.ajaxInfos.mod);
-                    newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_COOKIES, currentAccount.cookie);
-                    startActivityForResult(newLockTopicIntent, LOCK_TOPIC_REQUEST_CODE);
-                } else {
-                    actionsForTopic.startUnlockThisTopic(topicStatus.ajaxInfos, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), topicStatus.topicId, currentAccount.cookie);
-                }
-                return true;
-            case R.id.action_change_pin_topic_value_showtopic:
-                actionsForTopic.startPinOrUnpinTopic(!topicStatus.topicIsPinned, topicStatus.ajaxInfos, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), topicStatus.topicId, currentAccount.cookie);
-                return true;
-            case R.id.action_open_in_browser_showtopic:
-                Utils.openCorrespondingBrowser(linkTypeForInternalBrowser, pageNavigation.getCurrentPageLink(), this);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            } else {
+                Toast.makeText(ShowTopicActivity.this, R.string.errorInfosMissings, Toast.LENGTH_SHORT).show();
+            }
+            return true;
+        } else if (itemId == R.id.action_change_lock_topic_value_showtopic) {
+            if (topicStatus.lockReason == null) {
+                Intent newLockTopicIntent = new Intent(ShowTopicActivity.this, LockTopicActivity.class);
+                newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_ID_FORUM, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()));
+                newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_ID_TOPIC, topicStatus.topicId);
+                newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_AJAX_MOD, topicStatus.ajaxInfos.mod);
+                newLockTopicIntent.putExtra(LockTopicActivity.EXTRA_COOKIES, currentAccount.cookie);
+                startActivityForResult(newLockTopicIntent, LOCK_TOPIC_REQUEST_CODE);
+            } else {
+                actionsForTopic.startUnlockThisTopic(topicStatus.ajaxInfos, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), topicStatus.topicId, currentAccount.cookie);
+            }
+            return true;
+        } else if (itemId == R.id.action_change_pin_topic_value_showtopic) {
+            actionsForTopic.startPinOrUnpinTopic(!topicStatus.topicIsPinned, topicStatus.ajaxInfos, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), topicStatus.topicId, currentAccount.cookie);
+            return true;
+        } else if (itemId == R.id.action_open_in_browser_showtopic) {
+            Utils.openCorrespondingBrowser(linkTypeForInternalBrowser, pageNavigation.getCurrentPageLink(), this);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
@@ -738,49 +738,49 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
     @Override
     public boolean onMenuItemClickedInMessage(MenuItem item, JVCParser.MessageInfos fromThisMessage) {
-        switch (item.getItemId()) {
-            case R.id.menu_quote_message:
-                if (currentAccount.pseudo.isEmpty()) {
-                    Toast.makeText(this, R.string.errorConnectNeeded, Toast.LENGTH_SHORT).show();
-                } else if (topicStatus.lockReason != null) {
-                    Toast.makeText(this, R.string.errorTopicIsLocked, Toast.LENGTH_SHORT).show();
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_quote_message) {
+            if (currentAccount.pseudo.isEmpty()) {
+                Toast.makeText(this, R.string.errorConnectNeeded, Toast.LENGTH_SHORT).show();
+            } else if (topicStatus.lockReason != null) {
+                Toast.makeText(this, R.string.errorTopicIsLocked, Toast.LENGTH_SHORT).show();
+            } else {
+                actionsForTopic.startQuoteThisMessage(fromThisMessage);
+            }
+            return true;
+        } else if (itemId == R.id.menu_edit_message) {
+            if (topicStatus.lockReason == null) {
+                if (senderForMessages.getIsInEdit()) {
+                    cancelEditAndHideKeyboardAndCursor();
                 } else {
-                    actionsForTopic.startQuoteThisMessage(fromThisMessage);
+                    startEditThisMessage(Long.toString(fromThisMessage.id), true, fromThisMessage.editUrl);
                 }
-                return true;
-            case R.id.menu_edit_message:
-                if (topicStatus.lockReason == null) {
-                    if (senderForMessages.getIsInEdit()) {
-                        cancelEditAndHideKeyboardAndCursor();
-                    } else {
-                        startEditThisMessage(Long.toString(fromThisMessage.id), true, fromThisMessage.editUrl);
-                    }
-                } else {
-                    Toast.makeText(this, R.string.errorTopicIsLocked, Toast.LENGTH_SHORT).show();
-                }
+            } else {
+                Toast.makeText(this, R.string.errorTopicIsLocked, Toast.LENGTH_SHORT).show();
+            }
 
-                return true;
-            case R.id.menu_delete_message:
-                actionsForTopic.startDeleteThisMessage(topicStatus.ajaxInfos, fromThisMessage, currentAccount.cookie);
-                return true;
-            case R.id.menu_restore_message:
-                actionsForTopic.startRestoreThisMessage(topicStatus.ajaxInfos, fromThisMessage, currentAccount.cookie);
-                return true;
-            case R.id.menu_kick_author_message:
-                Intent newKickPseudoIntent = new Intent(ShowTopicActivity.this, KickPseudoActivity.class);
-                newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_PSEUDO, fromThisMessage.pseudo);
-                newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_ID_ALIAS, fromThisMessage.idAlias);
-                newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_ID_FORUM, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()));
-                newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_ID_MESSAGE, String.valueOf(fromThisMessage.id));
-                newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_AJAX_MOD, topicStatus.ajaxInfos.mod);
-                newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_COOKIES, currentAccount.cookie);
-                startActivity(newKickPseudoIntent);
-                return true;
-            case R.id.menu_dekick_author_message:
-                actionsForTopic.startDekickThisPseudo(fromThisMessage.pseudo, topicStatus.ajaxInfos, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), fromThisMessage.idAlias, currentAccount.cookie);
-                return true;
-            default:
-                return false;
+            return true;
+        } else if (itemId == R.id.menu_delete_message) {
+            actionsForTopic.startDeleteThisMessage(topicStatus.ajaxInfos, fromThisMessage, currentAccount.cookie);
+            return true;
+        } else if (itemId == R.id.menu_restore_message) {
+            actionsForTopic.startRestoreThisMessage(topicStatus.ajaxInfos, fromThisMessage, currentAccount.cookie);
+            return true;
+        } else if (itemId == R.id.menu_kick_author_message) {
+            Intent newKickPseudoIntent = new Intent(ShowTopicActivity.this, KickPseudoActivity.class);
+            newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_PSEUDO, fromThisMessage.pseudo);
+            newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_ID_ALIAS, fromThisMessage.idAlias);
+            newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_ID_FORUM, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()));
+            newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_ID_MESSAGE, String.valueOf(fromThisMessage.id));
+            newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_AJAX_MOD, topicStatus.ajaxInfos.mod);
+            newKickPseudoIntent.putExtra(KickPseudoActivity.EXTRA_COOKIES, currentAccount.cookie);
+            startActivity(newKickPseudoIntent);
+            return true;
+        } else if (itemId == R.id.menu_dekick_author_message) {
+            actionsForTopic.startDekickThisPseudo(fromThisMessage.pseudo, topicStatus.ajaxInfos, JVCParser.getForumIdOfThisTopic(pageNavigation.getCurrentPageLink()), fromThisMessage.idAlias, currentAccount.cookie);
+            return true;
+        } else {
+            return false;
         }
     }
 

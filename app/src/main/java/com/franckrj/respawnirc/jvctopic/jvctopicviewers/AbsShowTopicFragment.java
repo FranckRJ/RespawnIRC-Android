@@ -106,49 +106,49 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     };
 
     protected final JVCTopicAdapter.MenuItemClickedInMessage menuItemClickedInMessageListener = (item, fromThisMessage) -> {
-        switch (item.getItemId()) {
-            case R.id.menu_show_spoil_message:
-                fromThisMessage.listOfSpoilIdToShow.add(-1);
-                adapterForTopic.updateThisItem(fromThisMessage, false);
-                adapterForTopic.notifyDataSetChanged();
-                return true;
-            case R.id.menu_hide_spoil_message:
-                fromThisMessage.listOfSpoilIdToShow.clear();
-                adapterForTopic.updateThisItem(fromThisMessage, false);
-                adapterForTopic.notifyDataSetChanged();
-                return true;
-            case R.id.menu_show_quote_message:
-                fromThisMessage.showOverlyQuote = true;
-                adapterForTopic.updateThisItem(fromThisMessage, false);
-                adapterForTopic.notifyDataSetChanged();
-                return true;
-            case R.id.menu_hide_quote_message:
-                fromThisMessage.showOverlyQuote = false;
-                adapterForTopic.updateThisItem(fromThisMessage, false);
-                adapterForTopic.notifyDataSetChanged();
-                return true;
-            case R.id.menu_show_ugly_images_message:
-                fromThisMessage.showUglyImages = true;
-                adapterForTopic.updateThisItem(fromThisMessage, false);
-                adapterForTopic.notifyDataSetChanged();
-                return true;
-            case R.id.menu_hide_ugly_images_message:
-                fromThisMessage.showUglyImages = false;
-                adapterForTopic.updateThisItem(fromThisMessage, false);
-                adapterForTopic.notifyDataSetChanged();
-                return true;
-            case R.id.menu_show_blacklisted_message:
-                fromThisMessage.pseudoIsBlacklisted = false;
-                adapterForTopic.updateThisItem(fromThisMessage, false);
-                adapterForTopic.notifyDataSetChanged();
-                return true;
-            default:
-                //noinspection SimplifiableIfStatement
-                if (getActivity() instanceof JVCTopicAdapter.MenuItemClickedInMessage) {
-                    return ((JVCTopicAdapter.MenuItemClickedInMessage) getActivity()).onMenuItemClickedInMessage(item, fromThisMessage);
-                } else {
-                    return false;
-                }
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_show_spoil_message) {
+            fromThisMessage.listOfSpoilIdToShow.add(-1);
+            adapterForTopic.updateThisItem(fromThisMessage, false);
+            adapterForTopic.notifyDataSetChanged();
+            return true;
+        } else if (itemId == R.id.menu_hide_spoil_message) {
+            fromThisMessage.listOfSpoilIdToShow.clear();
+            adapterForTopic.updateThisItem(fromThisMessage, false);
+            adapterForTopic.notifyDataSetChanged();
+            return true;
+        } else if (itemId == R.id.menu_show_quote_message) {
+            fromThisMessage.showOverlyQuote = true;
+            adapterForTopic.updateThisItem(fromThisMessage, false);
+            adapterForTopic.notifyDataSetChanged();
+            return true;
+        } else if (itemId == R.id.menu_hide_quote_message) {
+            fromThisMessage.showOverlyQuote = false;
+            adapterForTopic.updateThisItem(fromThisMessage, false);
+            adapterForTopic.notifyDataSetChanged();
+            return true;
+        } else if (itemId == R.id.menu_show_ugly_images_message) {
+            fromThisMessage.showUglyImages = true;
+            adapterForTopic.updateThisItem(fromThisMessage, false);
+            adapterForTopic.notifyDataSetChanged();
+            return true;
+        } else if (itemId == R.id.menu_hide_ugly_images_message) {
+            fromThisMessage.showUglyImages = false;
+            adapterForTopic.updateThisItem(fromThisMessage, false);
+            adapterForTopic.notifyDataSetChanged();
+            return true;
+        } else if (itemId == R.id.menu_show_blacklisted_message) {
+            fromThisMessage.pseudoIsBlacklisted = false;
+            adapterForTopic.updateThisItem(fromThisMessage, false);
+            adapterForTopic.notifyDataSetChanged();
+            return true;
+        } else {
+            //noinspection SimplifiableIfStatement
+            if (getActivity() instanceof JVCTopicAdapter.MenuItemClickedInMessage) {
+                return ((JVCTopicAdapter.MenuItemClickedInMessage) getActivity()).onMenuItemClickedInMessage(item, fromThisMessage);
+            } else {
+                return false;
+            }
         }
     };
 
@@ -460,12 +460,12 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_share_showtopicboth:
-                Utils.shareThisLink(absGetterForTopic.getUrlForTopicPage(), requireActivity());
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_share_showtopicboth) {
+            Utils.shareThisLink(absGetterForTopic.getUrlForTopicPage(), requireActivity());
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

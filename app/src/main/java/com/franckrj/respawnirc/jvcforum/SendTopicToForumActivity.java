@@ -307,32 +307,32 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_send_topic_sendtopic:
-                sendNewTopic();
-                return true;
-            case R.id.enable_postasmodo_sendtopic:
-                /* La valeur de isChecked est inversée car le changement d'état ne se fait pas automatiquement
-                 * donc c'est la valeur avant d'avoir cliqué qui est retournée. */
-                PrefsManager.putBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE, !item.isChecked());
-                PrefsManager.applyChanges();
-                updatePostTypeTextAndVisibility();
-                return true;
-            case R.id.action_clear_whole_topic_and_survey_sendtopic:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(R.string.deleteTopic).setMessage(R.string.deleteWholeTopicWarning)
-                        .setPositiveButton(R.string.yes, onClickInClearWholeTopicConfirmationListener).setNegativeButton(R.string.no, null);
-                builder.show();
-                return true;
-            case R.id.action_past_last_topic_sended_sendtopic:
-                topicTitleEdit.setText(lastTopicTitleSended);
-                topicContentEdit.setText(lastTopicContentSended);
-                currentInfos.surveyTitle = lastSurveyTitleSended;
-                currentInfos.surveyReplysList = surveyReplyStringToList(lastSurveyReplySendedInAString);
-                updateManageSurveyButtonText();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_send_topic_sendtopic) {
+            sendNewTopic();
+            return true;
+        } else if (itemId == R.id.enable_postasmodo_sendtopic) {
+            /* La valeur de isChecked est inversée car le changement d'état ne se fait pas automatiquement
+             * donc c'est la valeur avant d'avoir cliqué qui est retournée. */
+            PrefsManager.putBool(PrefsManager.BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE, !item.isChecked());
+            PrefsManager.applyChanges();
+            updatePostTypeTextAndVisibility();
+            return true;
+        } else if (itemId == R.id.action_clear_whole_topic_and_survey_sendtopic) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.deleteTopic).setMessage(R.string.deleteWholeTopicWarning)
+                    .setPositiveButton(R.string.yes, onClickInClearWholeTopicConfirmationListener).setNegativeButton(R.string.no, null);
+            builder.show();
+            return true;
+        } else if (itemId == R.id.action_past_last_topic_sended_sendtopic) {
+            topicTitleEdit.setText(lastTopicTitleSended);
+            topicContentEdit.setText(lastTopicContentSended);
+            currentInfos.surveyTitle = lastSurveyTitleSended;
+            currentInfos.surveyReplysList = surveyReplyStringToList(lastSurveyReplySendedInAString);
+            updateManageSurveyButtonText();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

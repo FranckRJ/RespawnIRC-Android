@@ -70,15 +70,14 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
     };
 
     private static String getSearchTypeInTextForSearchTypeId(int searchTypeId) {
-        switch (searchTypeId) {
-            case R.id.topicmode_radio_searchtopic:
-                return "titre_topic";
-            case R.id.authormode_radio_searchtopic:
-                return "auteur_topic";
-            case R.id.messagemode_radio_searchtopic:
-                return "texte_message";
-            default:
-                return "";
+        if (searchTypeId == R.id.topicmode_radio_searchtopic) {
+            return "titre_topic";
+        } else if (searchTypeId == R.id.authormode_radio_searchtopic) {
+            return "auteur_topic";
+        } else if (searchTypeId == R.id.messagemode_radio_searchtopic) {
+            return "texte_message";
+        } else {
+            return "";
         }
     }
 
@@ -286,12 +285,12 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_share_searchforum:
-                Utils.shareThisLink(pageNavigation.getCurrentPageLink(), this);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_share_searchforum) {
+            Utils.shareThisLink(pageNavigation.getCurrentPageLink(), this);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

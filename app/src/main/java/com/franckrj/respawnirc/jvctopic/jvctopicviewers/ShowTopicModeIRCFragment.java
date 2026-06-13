@@ -227,16 +227,17 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_load_from_old_topic_info_showtopicirc:
-                loadFromOldTopicInfos();
-                return true;
-            case R.id.action_switch_to_forum_mode_showtopicirc:
-                if (listenerForNewModeNeeded != null) {
-                    listenerForNewModeNeeded.newModeRequested(MODE_FORUM);
-                }
-            default:
-                return super.onOptionsItemSelected(item);
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_load_from_old_topic_info_showtopicirc) {
+            loadFromOldTopicInfos();
+            return true;
+        } else if (itemId == R.id.action_switch_to_forum_mode_showtopicirc) {
+            if (listenerForNewModeNeeded != null) {
+                listenerForNewModeNeeded.newModeRequested(MODE_FORUM);
+            }
+            return super.onOptionsItemSelected(item);
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 }

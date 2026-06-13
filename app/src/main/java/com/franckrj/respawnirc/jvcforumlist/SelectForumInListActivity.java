@@ -334,15 +334,15 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_select_topic_or_forum_selectforum:
-                if (!getSupportFragmentManager().isStateSaved()) {
-                    ChooseTopicOrForumLinkDialogFragment chooseLinkDialogFragment = new ChooseTopicOrForumLinkDialogFragment();
-                    chooseLinkDialogFragment.show(getSupportFragmentManager(), "ChooseTopicOrForumLinkDialogFragment");
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_select_topic_or_forum_selectforum) {
+            if (!getSupportFragmentManager().isStateSaved()) {
+                ChooseTopicOrForumLinkDialogFragment chooseLinkDialogFragment = new ChooseTopicOrForumLinkDialogFragment();
+                chooseLinkDialogFragment.show(getSupportFragmentManager(), "ChooseTopicOrForumLinkDialogFragment");
+            }
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

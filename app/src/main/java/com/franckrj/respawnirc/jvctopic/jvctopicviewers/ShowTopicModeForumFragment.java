@@ -227,16 +227,17 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_reload_topic_showtopicforum:
-                reloadAllTopic();
-                return true;
-            case R.id.action_switch_to_IRC_mode_showtopicforum:
-                if (listenerForNewModeNeeded != null) {
-                    listenerForNewModeNeeded.newModeRequested(MODE_IRC);
-                }
-            default:
-                return super.onOptionsItemSelected(item);
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_reload_topic_showtopicforum) {
+            reloadAllTopic();
+            return true;
+        } else if (itemId == R.id.action_switch_to_IRC_mode_showtopicforum) {
+            if (listenerForNewModeNeeded != null) {
+                listenerForNewModeNeeded.newModeRequested(MODE_IRC);
+            }
+            return super.onOptionsItemSelected(item);
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 }
