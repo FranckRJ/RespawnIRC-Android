@@ -1,13 +1,11 @@
 buildscript {
-    ext.kotlin_version = '2.2.21'
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:9.2.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.devtools.ksp:symbol-processing-gradle-plugin:2.2.21-2.0.5'
+        classpath 'com.google.devtools.ksp:symbol-processing-gradle-plugin:2.3.9'
     }
 }
 
