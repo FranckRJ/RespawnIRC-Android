@@ -453,7 +453,6 @@ class InsertStuffDialogFragment : DialogFragment() {
         val builder = AlertDialog.Builder(requireActivity())
 
         bindings = DialogInsertstuffBinding.inflate(requireActivity().layoutInflater)
-        bindings.dialog = this
 
         listOfCategoryButtons.add(bindings.smileyButtonInsertstuff)
         listOfCategoryButtons.add(bindings.textformatButtonInsertstuff)
