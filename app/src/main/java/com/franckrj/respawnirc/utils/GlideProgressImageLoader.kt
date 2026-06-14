@@ -6,6 +6,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
@@ -99,7 +100,7 @@ class GlideProgressImageLoader(
             }
         })
 
-        GlideApp.with(fragment)
+        Glide.with(fragment)
             .load(url)
             .listener(imageLoaderRequestListener)
             .apply(options)
