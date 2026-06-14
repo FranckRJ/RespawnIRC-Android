@@ -384,31 +384,22 @@ public class ThemeManager {
     @ColorInt
     public static int getColorInt(@AttrRes int thisAttrColor, Context fromThisContext) {
         if (themeUsed == ThemeName.LIGHT_THEME) {
-            switch (thisAttrColor) {
-                case R.attr.themedPseudoUserColor:
-                    if (realPseudoUserColorUsedForLightTheme != 0) {
-                        return realPseudoUserColorUsedForLightTheme;
-                    } else {
-                        break;
-                    }
-                case R.attr.themedAltBackgroundColor:
-                    if (realAltColorUsedForLightTheme != 0) {
-                        return realAltColorUsedForLightTheme;
-                    } else {
-                        break;
-                    }
-                case R.attr.themedSurveyMessageBackgroundColor:
-                    if (realSurveyColorUsedForLightTheme != 0) {
-                        return realSurveyColorUsedForLightTheme;
-                    } else {
-                        break;
-                    }
-                case R.attr.themedDeletedMessageBackgroundColor:
-                    if (realDeletedColorUsedForLightTheme != 0) {
-                        return realDeletedColorUsedForLightTheme;
-                    } else {
-                        break;
-                    }
+            if (thisAttrColor == R.attr.themedPseudoUserColor) {
+                if (realPseudoUserColorUsedForLightTheme != 0) {
+                    return realPseudoUserColorUsedForLightTheme;
+                }
+            } else if (thisAttrColor == R.attr.themedAltBackgroundColor) {
+                if (realAltColorUsedForLightTheme != 0) {
+                    return realAltColorUsedForLightTheme;
+                }
+            } else if (thisAttrColor == R.attr.themedSurveyMessageBackgroundColor) {
+                if (realSurveyColorUsedForLightTheme != 0) {
+                    return realSurveyColorUsedForLightTheme;
+                }
+            } else if (thisAttrColor == R.attr.themedDeletedMessageBackgroundColor) {
+                if (realDeletedColorUsedForLightTheme != 0) {
+                    return realDeletedColorUsedForLightTheme;
+                }
             }
         }
 

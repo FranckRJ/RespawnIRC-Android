@@ -139,16 +139,15 @@ public class ManageSurveyOfTopicActivity extends AbsHomeIsBackActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_clear_whole_survey_managesurvey:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(R.string.deleteSurvey).setMessage(R.string.deleteWholeSurveyWarning)
-                        .setPositiveButton(R.string.yes, onClickInClearWholeSurveyConfirmationListener).setNegativeButton(R.string.no, null);
-                builder.show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_clear_whole_survey_managesurvey) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.deleteSurvey).setMessage(R.string.deleteWholeSurveyWarning)
+                    .setPositiveButton(R.string.yes, onClickInClearWholeSurveyConfirmationListener).setNegativeButton(R.string.no, null);
+            builder.show();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

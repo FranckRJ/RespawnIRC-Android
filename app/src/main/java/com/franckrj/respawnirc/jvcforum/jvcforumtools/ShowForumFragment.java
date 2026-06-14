@@ -384,13 +384,12 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_reload_forum_showforum:
-                reloadAllForum(false);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_reload_forum_showforum) {
+            reloadAllForum(false);
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     public interface NewTopicWantRead {

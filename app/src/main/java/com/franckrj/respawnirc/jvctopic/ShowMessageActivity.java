@@ -58,40 +58,44 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
     private MessageShowedStatusInfos messageShowedStatus = new MessageShowedStatusInfos();
 
     private final JVCTopicAdapter.MenuItemClickedInMessage menuItemClickedInMessageListener = (item, fromThisMessage) -> {
-        switch (item.getItemId()) {
-            case R.id.menu_show_spoil_message:
-                fromThisMessage.listOfSpoilIdToShow.add(-1);
-                adapterForTopic.updateThisItem(fromThisMessage, false);
-                adapterForTopic.notifyDataSetChanged();
-                return true;
-            case R.id.menu_hide_spoil_message:
-                fromThisMessage.listOfSpoilIdToShow.clear();
-                adapterForTopic.updateThisItem(fromThisMessage, false);
-                adapterForTopic.notifyDataSetChanged();
-                return true;
-            case R.id.menu_show_quote_message:
-                fromThisMessage.showOverlyQuote = true;
-                adapterForTopic.updateThisItem(fromThisMessage, false);
-                adapterForTopic.notifyDataSetChanged();
-                return true;
-            case R.id.menu_hide_quote_message:
-                fromThisMessage.showOverlyQuote = false;
-                adapterForTopic.updateThisItem(fromThisMessage, false);
-                adapterForTopic.notifyDataSetChanged();
-                return true;
-            case R.id.menu_show_ugly_images_message:
-                fromThisMessage.showUglyImages = true;
-                adapterForTopic.updateThisItem(fromThisMessage, false);
-                adapterForTopic.notifyDataSetChanged();
-                return true;
-            case R.id.menu_hide_ugly_images_message:
-                fromThisMessage.showUglyImages = false;
-                adapterForTopic.updateThisItem(fromThisMessage, false);
-                adapterForTopic.notifyDataSetChanged();
-                return true;
-            default:
-                return false;
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_show_spoil_message) {
+            fromThisMessage.listOfSpoilIdToShow.add(-1);
+            adapterForTopic.updateThisItem(fromThisMessage, false);
+            adapterForTopic.notifyDataSetChanged();
+            return true;
         }
+        if (itemId == R.id.menu_hide_spoil_message) {
+            fromThisMessage.listOfSpoilIdToShow.clear();
+            adapterForTopic.updateThisItem(fromThisMessage, false);
+            adapterForTopic.notifyDataSetChanged();
+            return true;
+        }
+        if (itemId == R.id.menu_show_quote_message) {
+            fromThisMessage.showOverlyQuote = true;
+            adapterForTopic.updateThisItem(fromThisMessage, false);
+            adapterForTopic.notifyDataSetChanged();
+            return true;
+        }
+        if (itemId == R.id.menu_hide_quote_message) {
+            fromThisMessage.showOverlyQuote = false;
+            adapterForTopic.updateThisItem(fromThisMessage, false);
+            adapterForTopic.notifyDataSetChanged();
+            return true;
+        }
+        if (itemId == R.id.menu_show_ugly_images_message) {
+            fromThisMessage.showUglyImages = true;
+            adapterForTopic.updateThisItem(fromThisMessage, false);
+            adapterForTopic.notifyDataSetChanged();
+            return true;
+        }
+        if (itemId == R.id.menu_hide_ugly_images_message) {
+            fromThisMessage.showUglyImages = false;
+            adapterForTopic.updateThisItem(fromThisMessage, false);
+            adapterForTopic.notifyDataSetChanged();
+            return true;
+        }
+        return false;
     };
 
     private final ImageDownloader.DownloadFinished listenerForDownloadFinished = numberOfDownloadRemaining -> {
@@ -413,16 +417,15 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_go_to_topic_showmessage:
-                Intent newShowTopicIntent = new Intent(ShowMessageActivity.this, ShowTopicActivity.class);
-                newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_LINK, JVCParser.formatThisUrlToClassicJvcUrl(messageShowedStatus.topicLink));
-                newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_OPENED_FROM_FORUM, false);
-                startActivity(newShowTopicIntent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_go_to_topic_showmessage) {
+            Intent newShowTopicIntent = new Intent(ShowMessageActivity.this, ShowTopicActivity.class);
+            newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_TOPIC_LINK, JVCParser.formatThisUrlToClassicJvcUrl(messageShowedStatus.topicLink));
+            newShowTopicIntent.putExtra(ShowTopicActivity.EXTRA_OPENED_FROM_FORUM, false);
+            startActivity(newShowTopicIntent);
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
