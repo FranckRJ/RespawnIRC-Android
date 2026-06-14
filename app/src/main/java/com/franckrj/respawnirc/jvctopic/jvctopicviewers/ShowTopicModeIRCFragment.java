@@ -236,7 +236,7 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
             if (listenerForNewModeNeeded != null) {
                 listenerForNewModeNeeded.newModeRequested(MODE_FORUM);
             }
-            // pas de return : on retombe volontairement sur le super ci-dessous
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
