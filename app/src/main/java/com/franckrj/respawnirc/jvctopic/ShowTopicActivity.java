@@ -18,6 +18,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.franckrj.respawnirc.DraftUtils;
 import com.franckrj.respawnirc.MainActivity;
@@ -441,6 +443,15 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         messageSendEdit = findViewById(R.id.sendmessage_text_showtopic);
         messageSendButton = findViewById(R.id.sendmessage_button_showtopic);
         insertStuffButton = findViewById(R.id.insertstuff_button_showtopic);
+
+        /* Edge-to-edge : la barre d'envoi reste au-dessus de la barre de navigation et du clavier
+           (son fond déborde sous la barre de navigation transparente). */
+        ViewCompat.setOnApplyWindowInsetsListener(messageSendLayout, (view, windowInsets) -> {
+            int navBottom = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom;
+            int imeBottom = windowInsets.getInsets(WindowInsetsCompat.Type.ime()).bottom;
+            view.setPadding(view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(), Math.max(navBottom, imeBottom));
+            return windowInsets;
+        });
 
         pageNavigation.initializeLayoutForAllNavigationButtons(findViewById(R.id.header_layout_showtopic), findViewById(R.id.shadow_header_showtopic));
         pageNavigation.initializePagerView(findViewById(R.id.pager_showtopic));

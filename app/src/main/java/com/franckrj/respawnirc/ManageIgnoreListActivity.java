@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
 import com.franckrj.respawnirc.utils.IgnoreListManager;
+import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,6 +46,7 @@ public class ManageIgnoreListActivity extends AbsHomeIsBackActivity {
 
         adapterForIgnoreList = new RemovableItemListAdapter(this);
         RecyclerView ignoreListView = findViewById(R.id.ignore_list_manageignorelist);
+        Utils.addBottomNavInsetPadding(ignoreListView);
         emptyListMessageText = findViewById(R.id.text_emptylist_manageignorelist);
 
         generateListOfIgnoredPseudos();

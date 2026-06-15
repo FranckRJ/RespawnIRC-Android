@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.ColorInt;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.ThemeManager;
@@ -33,6 +35,12 @@ public abstract class AbsThemedActivity extends AbsBaseActivity {
         lastTopicNameAndAccentColorUsed = ThemeManager.getTopicNameAndAccentColorIdUsedForThemeLight();
 
         super.onCreate(savedInstanceState);
+
+        /* Edge-to-edge : la bande de barre d'état prend la couleur colorPrimary du toolbar. On met
+           ses icônes en sombre uniquement pour le thème clair à couleur primaire claire (toolbar à
+           texte inversé), blanches sinon, pour qu'elles restent lisibles. */
+        WindowInsetsControllerCompat windowInsetsController = WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+        windowInsetsController.setAppearanceLightStatusBars(lastThemeUsed == ThemeManager.ThemeName.LIGHT_THEME && toolbarTextColorIsInverted);
 
         if (generalTaskDesc == null || colorUsedForGenerateTaskDesc != ThemeManager.getColorInt(R.attr.colorPrimary, this)) {
             Bitmap appIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_rirc);

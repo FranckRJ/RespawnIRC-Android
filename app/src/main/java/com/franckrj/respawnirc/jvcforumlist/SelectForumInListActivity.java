@@ -191,6 +191,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         swipeRefresh = findViewById(R.id.swiperefresh_selectforum);
         noResultFoundTextView = findViewById(R.id.text_noresultfound_selectforum);
         baseForumListLayout = findViewById(R.id.base_forumlist_layout_selectforum);
+        Utils.addBottomNavInsetPadding(baseForumListLayout);
         swipeRefresh.setEnabled(false);
         swipeRefresh.setColorSchemeResources(R.color.colorControlHighlightThemeLight);
         noResultFoundTextView.setVisibility(View.GONE);
@@ -208,6 +209,7 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
                                                             R.id.forumlist_content_2_hobbies_selectforum, R.id.forumlist_arrow_hobbies_selectforum);
 
         ListView forumListView = findViewById(R.id.forum_list_selectforum);
+        Utils.addBottomNavInsetPadding(forumListView);
         adapterForForumList = new JVCForumListAdapter(this);
         forumListView.setAdapter(adapterForForumList);
         forumListView.setOnItemClickListener(forumClickedInListView);
