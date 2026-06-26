@@ -597,6 +597,10 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
            insets et réserve une marge en bas du contenu) pour que la status bar soit peinte par la
            toolbar comme sur les autres écrans et que le contenu passe sous la barre de navigation. */
         ViewCompat.setOnApplyWindowInsetsListener(layoutForDrawer, (v, insets) -> insets);
+        /* Edge-to-edge : garde le dernier élément du menu latéral au-dessus de la barre de
+           navigation. Le ScrimInsetsFrameLayout consomme les insets, on padde donc le panneau
+           (parent de la liste) plutôt que la liste elle-même. */
+        Utils.addBottomNavInsetPadding((View) navigationMenuList.getParent());
         updateNavigationMenu();
 
         if (ThemeManager.getThemeUsed() == ThemeManager.ThemeName.LIGHT_THEME && ThemeManager.getHeaderColorUsedForThemeLight() != Undeprecator.resourcesGetColor(getResources(), R.color.defaultHeaderColorThemeLight)) {
