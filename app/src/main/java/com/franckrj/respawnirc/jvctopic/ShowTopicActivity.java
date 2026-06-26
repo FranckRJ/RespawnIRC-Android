@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -90,6 +92,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
     private boolean goToLastPageAfterLoading = false;
     private boolean goToBottomOnLoadIsEnabled = true;
     private DraftUtils utilsForDraft = new DraftUtils(PrefsManager.SaveDraftType.ALWAYS, PrefsManager.BoolPref.Names.USE_LAST_MESSAGE_DRAFT_SAVED);
+    private OnBackPressedCallback leaveWithDraftCallback = null;
     private boolean topicHasBeenOpenedFromAForum = true;
 
     private final JVCMessageToTopicSender.NewMessageWantEditListener listenerForNewMessageWantEdit = new JVCMessageToTopicSender.NewMessageWantEditListener() {
@@ -359,6 +362,14 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         }
     }
 
+    private void refreshLeaveWithDraftCallbackState() {
+        if (leaveWithDraftCallback != null) {
+            leaveWithDraftCallback.setEnabled(topicStatus.lockReason == null
+                    && !messageSendEdit.getText().toString().isEmpty()
+                    && utilsForDraft.needsConfirmationBeforeLeaving());
+        }
+    }
+
     private void lockReasonHasBeenUpdated() {
         int newXPaddingForMessageSend;
         int yPaddingForMessageSend = getResources().getDimensionPixelSize(R.dimen.yPaddingSendMessageEditTextNormal);
@@ -388,6 +399,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         }
 
         messageSendEdit.setPadding(newXPaddingForMessageSend, yPaddingForMessageSend, newXPaddingForMessageSend, yPaddingForMessageSend);
+        refreshLeaveWithDraftCallbackState();
     }
 
     private void startEditThisMessage(String messageID, boolean useMessageToEdit, String editUrl) {
@@ -445,14 +457,30 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         messageSendButton = findViewById(R.id.sendmessage_button_showtopic);
         insertStuffButton = findViewById(R.id.insertstuff_button_showtopic);
 
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+        /* Le callback n'est actif que lorsqu'il doit interrompre le retour, c'est-à-dire en mode
+           ASK_BEFORE avec un brouillon en cours. Dans les autres cas il reste désactivé pour que le
+           système termine l'activité avec l'animation de retour prédictif ; le brouillon est de toute
+           façon sauvegardé dans onPause() et le toast éventuel est affiché dans onStop(). */
+        leaveWithDraftCallback = new OnBackPressedCallback(false) {
             @Override
             public void handleOnBackPressed() {
-                if (topicStatus.lockReason == null && !messageSendEdit.getText().toString().isEmpty()) {
-                    utilsForDraft.whenUserTryToLeaveWithDraft(R.string.messageDraftSaved, R.string.saveMessageDraftExplained, ShowTopicActivity.this);
-                } else {
-                    finish();
-                }
+                utilsForDraft.whenUserTryToLeaveWithDraft(R.string.messageDraftSaved, R.string.saveMessageDraftExplained, ShowTopicActivity.this);
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, leaveWithDraftCallback);
+
+        messageSendEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                refreshLeaveWithDraftCallbackState();
             }
         });
 
@@ -486,6 +514,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
 
         updateShowNavigationButtons();
         initializeSettings();
+        refreshLeaveWithDraftCallbackState();
         if (savedInstanceState == null) {
             if (getIntent() != null) {
                 String possibleLinkToUse = getIntent().getStringExtra(EXTRA_TOPIC_LINK);
@@ -592,6 +621,17 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
          * Donc dans tous les cas il y a des changements de préférences à appliquer.*/
         PrefsManager.applyChanges();
         super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        /* En mode ALWAYS le retour est laissé au système (pour conserver l'animation de retour
+           prédictif) : le toast de confirmation est donc affiché ici lorsqu'on quitte réellement
+           l'activité avec un brouillon. Le brouillon lui-même a déjà été sauvegardé dans onPause(). */
+        if (isFinishing() && topicStatus.lockReason == null && !messageSendEdit.getText().toString().isEmpty()) {
+            utilsForDraft.notifyDraftSavedIfAlwaysMode(R.string.messageDraftSaved, this);
+        }
+        super.onStop();
     }
 
     @Override
