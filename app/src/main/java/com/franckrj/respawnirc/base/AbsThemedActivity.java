@@ -34,9 +34,9 @@ public abstract class AbsThemedActivity extends AbsBaseActivity {
 
         super.onCreate(savedInstanceState);
 
-        if (generalTaskDesc == null || colorUsedForGenerateTaskDesc != ThemeManager.getColorInt(R.attr.colorPrimary, this)) {
+        if (generalTaskDesc == null || colorUsedForGenerateTaskDesc != ThemeManager.getColorInt(androidx.appcompat.R.attr.colorPrimary, this)) {
             Bitmap appIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_rirc);
-            colorUsedForGenerateTaskDesc = ThemeManager.getColorInt(R.attr.colorPrimary, this);
+            colorUsedForGenerateTaskDesc = ThemeManager.getColorInt(androidx.appcompat.R.attr.colorPrimary, this);
             generalTaskDesc = new ActivityManager.TaskDescription(getString(R.string.app_name), appIcon, colorUsedForGenerateTaskDesc);
         }
         setTaskDescription(generalTaskDesc);
