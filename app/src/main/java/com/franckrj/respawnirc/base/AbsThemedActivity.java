@@ -3,7 +3,6 @@ package com.franckrj.respawnirc.base;
 import android.app.ActivityManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.ColorInt;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,7 +20,6 @@ public abstract class AbsThemedActivity extends AbsBaseActivity {
     protected @ColorInt int lastHeaderColorUsed = 0;
     protected int lastPrimaryColorUsed = -1;
     protected int lastTopicNameAndAccentColorUsed = -1;
-    protected boolean statusBarNeedToBeTransparent = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,11 +46,6 @@ public abstract class AbsThemedActivity extends AbsBaseActivity {
             generalTaskDesc = new ActivityManager.TaskDescription(getString(R.string.app_name), appIcon, colorUsedForGenerateTaskDesc);
         }
         setTaskDescription(generalTaskDesc);
-
-        /* Pour corriger un bug de la SL 27.1.0. */
-        if (statusBarNeedToBeTransparent) {
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
-        }
     }
 
     @Override

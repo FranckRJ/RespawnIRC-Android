@@ -177,11 +177,6 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         }
     };
 
-    /* Voir AbsThemedActivity pour plus d'infos. */
-    public AbsNavigationViewActivity() {
-        statusBarNeedToBeTransparent = true;
-    }
-
     private void initializeListsOfMenuItem() {
         if (listOfMenuItemInfoForHome == null || listOfMenuItemInfoForForum == null || listOfMenuItemInfoForConnect == null) {
             listOfMenuItemInfoForHome = new ArrayList<>();
