@@ -5,8 +5,8 @@ android {
     defaultConfig {
         applicationId "com.franckrj.respawnirc"
         minSdkVersion 23
-        targetSdkVersion 36
-        compileSdk 36
+        targetSdkVersion 37
+        compileSdk 37
         versionCode 2_001_2_019
         versionName "2.1.19"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
