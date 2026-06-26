@@ -16,6 +16,7 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.ViewCompat;
@@ -444,6 +445,17 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         messageSendButton = findViewById(R.id.sendmessage_button_showtopic);
         insertStuffButton = findViewById(R.id.insertstuff_button_showtopic);
 
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (topicStatus.lockReason == null && !messageSendEdit.getText().toString().isEmpty()) {
+                    utilsForDraft.whenUserTryToLeaveWithDraft(R.string.messageDraftSaved, R.string.saveMessageDraftExplained, ShowTopicActivity.this);
+                } else {
+                    finish();
+                }
+            }
+        });
+
         /* Edge-to-edge : la barre d'envoi reste au-dessus de la barre de navigation et du clavier
            (son fond déborde sous la barre de navigation transparente). */
         ViewCompat.setOnApplyWindowInsetsListener(messageSendLayout, (view, windowInsets) -> {
@@ -711,14 +723,6 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
-        if (topicStatus.lockReason == null && !messageSendEdit.getText().toString().isEmpty()) {
-            utilsForDraft.whenUserTryToLeaveWithDraft(R.string.messageDraftSaved, R.string.saveMessageDraftExplained, this);
-        } else {
-            super.onBackPressed();
-        }
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

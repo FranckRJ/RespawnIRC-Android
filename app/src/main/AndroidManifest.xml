@@ -9,7 +9,7 @@
 
     <application
         android:name=".MainApplication"
-        android:enableOnBackInvokedCallback="false"
+        android:enableOnBackInvokedCallback="true"
         android:supportsRtl="true"
         android:allowBackup="true"
         android:fullBackupContent="@xml/my_backup_rules"

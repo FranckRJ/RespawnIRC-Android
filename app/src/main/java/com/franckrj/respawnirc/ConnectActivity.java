@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
@@ -86,6 +87,22 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
 
         helpDialogFragment = new HelpConnectDialogFragment();
         saveCookieButton.setOnClickListener(saveCookieClickedListener);
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                long currentTimeInMs = System.currentTimeMillis();
+
+                if (currentTimeInMs - lastTimeUserTryToLeaveInMs < MAX_TIME_USER_HAVE_TO_LEAVE_IN_MS) {
+                    Toast.makeText(ConnectActivity.this, getString(R.string.warningNotConnected), Toast.LENGTH_LONG).show();
+                    finish();
+                } else {
+                    Toast.makeText(ConnectActivity.this, getString(R.string.pressBackTwoTimesToLeaveConnect), Toast.LENGTH_LONG).show();
+                }
+
+                lastTimeUserTryToLeaveInMs = currentTimeInMs;
+            }
+        });
 
         /* On efface tous les cookies de la WebView pour se déconnecter.   */
         /* On perd les cookies CloudFlare de la WebView mais pas le choix. */
@@ -179,20 +196,6 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        long currentTimeInMs = System.currentTimeMillis();
-
-        if (currentTimeInMs - lastTimeUserTryToLeaveInMs < MAX_TIME_USER_HAVE_TO_LEAVE_IN_MS) {
-            Toast.makeText(this, getString(R.string.warningNotConnected), Toast.LENGTH_LONG).show();
-            super.onBackPressed();
-        } else {
-            Toast.makeText(this, getString(R.string.pressBackTwoTimesToLeaveConnect), Toast.LENGTH_LONG).show();
-        }
-
-        lastTimeUserTryToLeaveInMs = currentTimeInMs;
     }
 
     public static class HelpConnectDialogFragment extends DialogFragment {
