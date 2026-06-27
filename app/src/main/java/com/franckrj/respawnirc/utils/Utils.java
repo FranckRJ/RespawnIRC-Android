@@ -18,7 +18,6 @@ import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
-import android.os.Build;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.view.View;
@@ -29,9 +28,7 @@ import android.widget.EditText;
 
 import androidx.annotation.ColorInt;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.emoji.text.EmojiCompat;
 
 import com.franckrj.respawnirc.MainActivity;
@@ -89,21 +86,16 @@ public class Utils {
     }
 
     public static void showSoftKeyboard(Activity forThisActivity) {
-        View focusedView = forThisActivity.getCurrentFocus();
-        if (focusedView == null) {
-            focusedView = forThisActivity.getWindow().getDecorView();
-        }
-        // WindowInsetsController affiche le clavier de façon fiable sur Android 11+ (R), mais son show()
-        // ne fait rien sur les versions antérieures ; showSoftInput d'InputMethodManager fait l'inverse, d'où le choix selon l'API.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(forThisActivity.getWindow(), focusedView);
-            controller.show(WindowInsetsCompat.Type.ime());
-        } else {
+        // showSoftInput n'agit qu'une fois l'EditText connecté à l'IME, ce qui n'est pas encore le cas
+        // à l'ouverture d'une SearchView : on diffère donc l'affichage d'une frame, le temps que le focus
+        // soit établi. C'est aussi ce que fait SearchView dans AndroidX (showSoftInput différé).
+        forThisActivity.getWindow().getDecorView().post(() -> {
+            View focusedView = forThisActivity.getCurrentFocus();
             InputMethodManager inputManager = (InputMethodManager) forThisActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (inputManager != null) {
+            if (focusedView != null && inputManager != null) {
                 inputManager.showSoftInput(focusedView, 0);
             }
-        }
+        });
     }
 
     public static void hideSoftKeyboard(Activity fromThisActivity) {
