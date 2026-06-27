@@ -1,6 +1,5 @@
 package com.franckrj.respawnirc;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -11,7 +10,6 @@ public class NavigationMenuListView extends ListView {
     private int listViewPadding = 0;
 
     @SuppressWarnings("unused")
-    @TargetApi(21)
     public NavigationMenuListView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initializeNavigationMenuList(context);
