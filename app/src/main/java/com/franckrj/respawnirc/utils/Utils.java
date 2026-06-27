@@ -18,6 +18,7 @@ import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
+import android.os.Build;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.view.View;
@@ -28,7 +29,9 @@ import android.widget.EditText;
 
 import androidx.annotation.ColorInt;
 import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.emoji.text.EmojiCompat;
 
 import com.franckrj.respawnirc.MainActivity;
@@ -86,9 +89,20 @@ public class Utils {
     }
 
     public static void showSoftKeyboard(Activity forThisActivity) {
-        InputMethodManager inputManager = (InputMethodManager) forThisActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (inputManager != null) {
-            inputManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+        View focusedView = forThisActivity.getCurrentFocus();
+        if (focusedView == null) {
+            focusedView = forThisActivity.getWindow().getDecorView();
+        }
+        // WindowInsetsController affiche le clavier de façon fiable sur Android 11+ (R), mais son show()
+        // ne fait rien sur les versions antérieures ; showSoftInput d'InputMethodManager fait l'inverse, d'où le choix selon l'API.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(forThisActivity.getWindow(), focusedView);
+            controller.show(WindowInsetsCompat.Type.ime());
+        } else {
+            InputMethodManager inputManager = (InputMethodManager) forThisActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (inputManager != null) {
+                inputManager.showSoftInput(focusedView, 0);
+            }
         }
     }
 
@@ -96,7 +110,7 @@ public class Utils {
         InputMethodManager inputManager = (InputMethodManager) fromThisActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         View focusedView = fromThisActivity.getCurrentFocus();
         if (inputManager != null && focusedView != null) {
-            inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
         }
     }
 
