@@ -2,7 +2,7 @@ package com.franckrj.respawnirc.utils;
 
 import static com.franckrj.respawnirc.utils.WebManager.userAgentString;
 
-import android.os.AsyncTask;
+import com.franckrj.respawnirc.base.AbsAsyncTask;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -12,7 +12,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class ImageGetterAsyncTask extends AsyncTask<Void, Long, String> {
+public class ImageGetterAsyncTask extends AbsAsyncTask<Void, Long, String> {
     private final DrawableWrapper wrapperForDrawable;
     private final String fileDownloadPath;
     private final String fileLocalPath;

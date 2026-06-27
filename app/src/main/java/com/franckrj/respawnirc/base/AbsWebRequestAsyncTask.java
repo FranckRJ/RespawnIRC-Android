@@ -1,12 +1,10 @@
 package com.franckrj.respawnirc.base;
 
-import android.os.AsyncTask;
-
 import com.franckrj.respawnirc.utils.WebManager;
 
 import java.util.concurrent.Callable;
 
-public abstract class AbsWebRequestAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
+public abstract class AbsWebRequestAsyncTask<Params, Progress, Result> extends AbsAsyncTask<Params, Progress, Result> {
     private RequestIsFinished<Result> requestIsFinishedListener = null;
     private RequestIsStarted requestIsStartedListener = null;
 
@@ -21,7 +19,7 @@ public abstract class AbsWebRequestAsyncTask<Params, Progress, Result> extends A
     public void clearListenersAndCancel() {
         requestIsStartedListener = null;
         requestIsFinishedListener = null;
-        cancel(false);
+        cancel();
     }
 
     protected WebManager.WebInfos initWebInfos(String newCookiesInAString, boolean newFollowRedirects) {
