@@ -1,6 +1,5 @@
 package com.franckrj.respawnirc.utils;
 
-import android.content.res.Resources;
 import android.graphics.BlendMode;
 import android.graphics.BlendModeColorFilter;
 import android.graphics.PorterDuff;
@@ -13,22 +12,11 @@ import android.text.Spanned;
 import android.webkit.WebSettings;
 
 import androidx.annotation.ColorInt;
-import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 
 import java.security.InvalidParameterException;
 
 public class Undeprecator {
-    @ColorInt
-    public static int resourcesGetColor(Resources resources, @ColorRes int colorId) {
-        if (Build.VERSION.SDK_INT >= 23) {
-            return resources.getColor(colorId, null);
-        } else {
-            //noinspection deprecation
-            return resources.getColor(colorId);
-        }
-    }
-
     public static void drawableSetColorFilter(Drawable drawable, @ColorInt int color, @NonNull PorterDuff.Mode mode) {
         if (mode != PorterDuff.Mode.SRC_ATOP && mode != PorterDuff.Mode.SRC_IN && mode != PorterDuff.Mode.OVERLAY) {
             throw new InvalidParameterException();

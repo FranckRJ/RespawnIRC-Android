@@ -118,7 +118,7 @@ public class PrefsManager {
         addBoolPref(BoolPref.Names.BRIGHTEN_ALT_COLOR, currentContext.getString(R.string.settingsBrightenAltColor), false);
         addBoolPref(BoolPref.Names.ENABLE_NIVEAU_MODE_FORUM, currentContext.getString(R.string.settingsEnableNiveauModeForum), true);
 
-        addIntPref(IntPref.Names.HEADER_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsHeaderColorOfLightTheme), Undeprecator.resourcesGetColor(currentContext.getResources(), R.color.defaultHeaderColorThemeLight));
+        addIntPref(IntPref.Names.HEADER_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsHeaderColorOfLightTheme), currentContext.getResources().getColor(R.color.defaultHeaderColorThemeLight, null));
         addIntPref(IntPref.Names.PRIMARY_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsPrimaryColorOfLightTheme), 0);
         addIntPref(IntPref.Names.TOPIC_NAME_AND_ACCENT_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsTopicNameAndAccentColorOfLightTheme), 0);
         addIntPref(IntPref.Names.ALT_COLOR_OF_LIGHT_THEME, currentContext.getString(R.string.settingsAltColorOfLightTheme), 0);

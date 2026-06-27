@@ -328,7 +328,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         }
 
         if (currentAccount.isModo && !currentAccount.pseudo.isEmpty()) {
-            pseudoTextNavigation.setTextColor(Undeprecator.resourcesGetColor(getResources(), R.color.colorPseudoModoThemeDark));
+            pseudoTextNavigation.setTextColor(getResources().getColor(R.color.colorPseudoModoThemeDark, null));
         } else {
             pseudoTextNavigation.setTextColor(Color.WHITE);
         }
@@ -594,7 +594,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         layoutForDrawer.setDrawerShadow(ThemeManager.getDrawable(R.attr.themedShadowDrawer, this), GravityCompat.START);
         updateNavigationMenu();
 
-        if (ThemeManager.getThemeUsed() == ThemeManager.ThemeName.LIGHT_THEME && ThemeManager.getHeaderColorUsedForThemeLight() != Undeprecator.resourcesGetColor(getResources(), R.color.defaultHeaderColorThemeLight)) {
+        if (ThemeManager.getThemeUsed() == ThemeManager.ThemeName.LIGHT_THEME && ThemeManager.getHeaderColorUsedForThemeLight() != getResources().getColor(R.color.defaultHeaderColorThemeLight, null)) {
             Drawable newHeaderBackground = getDrawable(R.drawable.navigation_header_background_base);
             Undeprecator.drawableSetColorFilter(newHeaderBackground, ThemeManager.getHeaderColorUsedForThemeLight(), PorterDuff.Mode.OVERLAY);
             navigationHeader.setBackground(newHeaderBackground);
