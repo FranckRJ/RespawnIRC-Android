@@ -115,7 +115,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 editTextPref.setText(String.valueOf(prefValue));
             }
         } else if (key.equals(getString(R.string.settingsThemeUsed))) {
-            ThemeManager.updateThemeUsed();
+            ThemeManager.updateThemeUsed(getResources());
 
             if (getActivity() != null) {
                 getActivity().recreate();
