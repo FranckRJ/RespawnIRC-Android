@@ -2,6 +2,7 @@ package com.franckrj.respawnirc.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -69,7 +70,7 @@ public class ThemeManager {
         }
     }
 
-    public static void updateThemeUsed() {
+    public static void updateThemeUsed(Resources res) {
         String themeStringId = PrefsManager.getString(PrefsManager.StringPref.Names.THEME_USED);
 
         switch (themeStringId) {
@@ -85,10 +86,18 @@ public class ThemeManager {
             case "3":
                 themeUsed = ThemeName.BLACK_THEME;
                 break;
+            case "4":
+                themeUsed = systemThemeUsesDarkMode(res) ? ThemeName.BLACK_THEME : ThemeName.LIGHT_THEME;
+                break;
             default:
                 themeUsed = ThemeName.LIGHT_THEME;
                 break;
         }
+    }
+
+    private static boolean systemThemeUsesDarkMode(Resources res) {
+        int nightModeFlags = res.getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        return nightModeFlags == Configuration.UI_MODE_NIGHT_YES;
     }
 
     public static void updateToolbarTextColor() {

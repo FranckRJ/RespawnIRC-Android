@@ -139,6 +139,7 @@
     <string name="dark">Sombre</string>
     <string name="style">Style</string>
     <string name="black">Noir</string>
+    <string name="systemTheme">Système (Clair ou Noir)</string>
     <string name="messages">Messages</string>
     <string name="message">Message</string>
     <string name="settingsModeForumTitle">Mode forum</string>
@@ -371,6 +372,14 @@
         <item>@string/grey</item>
         <item>@string/dark</item>
         <item>@string/black</item>
+        <item>@string/systemTheme</item>
+    </string-array>
+    <string-array name="choicesForThemesValue">
+        <item>"0"</item>
+        <item>"1"</item>
+        <item>"2"</item>
+        <item>"3"</item>
+        <item>"4"</item>
     </string-array>
     <string-array name="choicesForLinkTypeForInternalBrowser">
         <item>@string/allLinks</item>
@@ -392,12 +401,6 @@
         <item>"0"</item>
         <item>"1"</item>
         <item>"2"</item>
-    </string-array>
-    <string-array name="fourChoicesValue">
-        <item>"0"</item>
-        <item>"1"</item>
-        <item>"2"</item>
-        <item>"3"</item>
     </string-array>
     <string-array name="fontSizeChoicesValue">
         <item>"10"</item>

@@ -29,7 +29,7 @@ public class MainApplication extends Application {
         super.onCreate();
 
         PrefsManager.initializeSharedPrefs(getApplicationContext());
-        ThemeManager.updateThemeUsed();
+        ThemeManager.updateThemeUsed(getResources());
         ThemeManager.updateToolbarTextColor();
         ThemeManager.updateColorsUsed(getResources());
         AccountManager.loadListOfAccounts();
