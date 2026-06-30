@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.franckrj.respawnirc.base.AbsHomeIsBackActivity;
 import com.franckrj.respawnirc.utils.AccountManager;
+import com.franckrj.respawnirc.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -42,6 +43,7 @@ public class ManageAccountListActivity extends AbsHomeIsBackActivity {
 
         adapterForAccountList = new RemovableItemListAdapter(this);
         RecyclerView accountListView = findViewById(R.id.account_list_manageaccountlist);
+        Utils.addBottomNavInsetPadding(accountListView);
         emptyListMessageText = findViewById(R.id.text_emptylist_manageaccountlist);
 
         generateListOfAccounts();

@@ -194,6 +194,7 @@ public class ShowForumInfosActivity extends AbsHomeIsBackActivity {
         backgroundErrorText = findViewById(R.id.text_errorbackgroundmessage_showforuminfos);
         swipeRefresh = findViewById(R.id.swiperefresh_showforuminfos);
         mainScrollView = findViewById(R.id.scrollview_showforuminfos);
+        Utils.addBottomNavInsetPadding(mainScrollView);
         mainLayout = findViewById(R.id.main_layout_showforuminfos);
         forumNameText = findViewById(R.id.foruminfos_title_showforuminfos);
         numberOfConnectedView = findViewById(R.id.text_numberofconnected_showforuminfos);

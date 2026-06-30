@@ -320,6 +320,7 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
         backgroundErrorText = findViewById(R.id.text_errorbackgroundmessage_showmessage);
         swipeRefresh = findViewById(R.id.swiperefresh_showmessage);
         jvcMsgList = findViewById(R.id.jvcmessage_view_showmessage);
+        Utils.addBottomNavInsetPadding(jvcMsgList);
 
         initializeSettingsAndList();
         adapterForTopic.setActionWhenItemMenuClicked(menuItemClickedInMessageListener);

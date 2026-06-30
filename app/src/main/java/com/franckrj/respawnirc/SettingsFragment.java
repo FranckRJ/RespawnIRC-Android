@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.collection.SimpleArrayMap;
@@ -77,6 +78,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         getPreferenceManager().setSharedPreferencesName(getString(R.string.preference_file_key));
         setPreferencesFromResource(idOfFileToLoad, rootKey);
         initPrefsInfos(getPreferenceScreen());
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        /* Edge-to-edge : garde le dernier élément de la liste des préférences au-dessus de la barre de navigation. */
+        Utils.addBottomNavInsetPadding(getListView());
     }
 
     @Override

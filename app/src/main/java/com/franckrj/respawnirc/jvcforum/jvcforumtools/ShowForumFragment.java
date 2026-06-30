@@ -265,6 +265,7 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         View mainView = inflater.inflate(R.layout.fragment_showforum, container, false);
 
         jvcTopicList = mainView.findViewById(R.id.jvctopic_view_showforumfrag);
+        Utils.addBottomNavInsetPadding(jvcTopicList);
         swipeRefresh = mainView.findViewById(R.id.swiperefresh_showforumfrag);
         errorBackgroundMessage = mainView.findViewById(R.id.text_errorbackgroundmessage_showforumfrag);
 

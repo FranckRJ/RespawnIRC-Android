@@ -21,11 +21,14 @@ import android.net.Uri;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
 import android.widget.EditText;
 
 import androidx.annotation.ColorInt;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.emoji.text.EmojiCompat;
 
 import com.franckrj.respawnirc.MainActivity;
@@ -539,6 +542,20 @@ public class Utils {
             /* À ce qu'il parait ça peut crash "when the user is locked", je sais pas ce que ça
              * veut dire donc dans le doute je mets ça là. */
         }
+    }
+
+    /* Edge-to-edge : laisse le contenu défiler sous la barre de navigation tout en gardant le
+       dernier élément accessible (padding bas = inset de barre de navigation + clipToPadding false). */
+    public static void addBottomNavInsetPadding(final View scrollView) {
+        if (scrollView instanceof ViewGroup) {
+            ((ViewGroup) scrollView).setClipToPadding(false);
+        }
+        final int basePadding = scrollView.getPaddingBottom();
+        ViewCompat.setOnApplyWindowInsetsListener(scrollView, (v, windowInsets) -> {
+            int navBottom = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom;
+            v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), basePadding + navBottom);
+            return windowInsets;
+        });
     }
 
     public interface StringModifier {
