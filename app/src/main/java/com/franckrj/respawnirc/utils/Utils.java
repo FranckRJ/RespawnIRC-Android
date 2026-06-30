@@ -553,7 +553,8 @@ public class Utils {
         final int basePadding = scrollView.getPaddingBottom();
         ViewCompat.setOnApplyWindowInsetsListener(scrollView, (v, windowInsets) -> {
             int navBottom = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom;
-            v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), basePadding + navBottom);
+            int imeBottom = windowInsets.getInsets(WindowInsetsCompat.Type.ime()).bottom;
+            v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), basePadding + Math.max(navBottom, imeBottom));
             return windowInsets;
         });
     }

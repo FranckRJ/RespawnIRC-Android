@@ -600,8 +600,9 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         navigationMenuList.setClipToPadding(false);
         ViewCompat.setOnApplyWindowInsetsListener((View) navigationMenuList.getParent(), (panel, insets) -> {
             int navBottom = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom;
+            int imeBottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom;
             navigationMenuList.setPadding(navigationMenuList.getPaddingLeft(), navigationMenuList.getPaddingTop(),
-                    navigationMenuList.getPaddingRight(), navBottom);
+                    navigationMenuList.getPaddingRight(), Math.max(navBottom, imeBottom));
             return insets;
         });
         updateNavigationMenu();
