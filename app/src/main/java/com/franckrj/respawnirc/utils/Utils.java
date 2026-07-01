@@ -86,17 +86,23 @@ public class Utils {
     }
 
     public static void showSoftKeyboard(Activity forThisActivity) {
-        InputMethodManager inputManager = (InputMethodManager) forThisActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (inputManager != null) {
-            inputManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
-        }
+        // showSoftInput n'agit qu'une fois l'EditText connecté à l'IME, ce qui n'est pas encore le cas
+        // à l'ouverture d'une SearchView : on diffère donc l'affichage d'une frame, le temps que le focus
+        // soit établi. C'est aussi ce que fait SearchView dans AndroidX (showSoftInput différé).
+        forThisActivity.getWindow().getDecorView().post(() -> {
+            View focusedView = forThisActivity.getCurrentFocus();
+            InputMethodManager inputManager = (InputMethodManager) forThisActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (focusedView != null && inputManager != null) {
+                inputManager.showSoftInput(focusedView, 0);
+            }
+        });
     }
 
     public static void hideSoftKeyboard(Activity fromThisActivity) {
         InputMethodManager inputManager = (InputMethodManager) fromThisActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         View focusedView = fromThisActivity.getCurrentFocus();
         if (inputManager != null && focusedView != null) {
-            inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
         }
     }
 
