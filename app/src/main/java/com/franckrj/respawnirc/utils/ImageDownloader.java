@@ -6,9 +6,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.InsetDrawable;
-import android.os.AsyncTask;
 
 import androidx.collection.SimpleArrayMap;
+
+import com.franckrj.respawnirc.base.AbsAsyncTask;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -153,7 +154,7 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
         listOfPendingsTasksInfos.clear();
         for (ImageGetterAsyncTask taskIterator : listOfCurrentsTasks) {
             taskIterator.setRequestStatusChangedListener(null);
-            taskIterator.cancel(false);
+            taskIterator.cancel();
         }
         listOfCurrentsTasks.clear();
     }
@@ -181,7 +182,7 @@ public class ImageDownloader implements ImageGetterAsyncTask.RequestStatusChange
                                                                         infosForDownload.scaleToSize, infosForDownload.setToDefaultAspectRatio);
         getterForImage.setRequestStatusChangedListener(this);
         listOfCurrentsTasks.add(getterForImage);
-        getterForImage.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        getterForImage.executeOnExecutor(AbsAsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void downloadOfAFileEnded(ImageGetterAsyncTask taskEnded) {

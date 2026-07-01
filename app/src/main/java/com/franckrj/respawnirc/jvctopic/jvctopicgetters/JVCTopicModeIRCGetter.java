@@ -1,9 +1,9 @@
 package com.franckrj.respawnirc.jvctopic.jvctopicgetters;
 
 import android.app.Activity;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.franckrj.respawnirc.base.AbsAsyncTask;
 import com.franckrj.respawnirc.base.AbsWebRequestAsyncTask;
 import com.franckrj.respawnirc.utils.JVCParser;
 import com.franckrj.respawnirc.utils.ParcelableLongSparseStringArray;
@@ -160,7 +160,7 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
     @Override
     public boolean reloadTopic(boolean useBiggerTimeoutTime) {
         if (currentAsyncTaskForGetMessage != null) {
-            if (!currentAsyncTaskForGetMessage.getStatus().equals(AsyncTask.Status.RUNNING)) {
+            if (!currentAsyncTaskForGetMessage.getStatus().equals(AbsAsyncTask.Status.RUNNING)) {
                 timerForFetchUrl.cancel();
                 timerForFetchUrl = new Timer();
                 stopAllCurrentTask();
@@ -200,7 +200,7 @@ public class JVCTopicModeIRCGetter extends AbsJVCTopicGetter {
                 @Override
                 public void run() {
                     if (currentAsyncTaskForGetMessage != null) {
-                        if (currentAsyncTaskForGetMessage.getStatus().equals(AsyncTask.Status.PENDING)) {
+                        if (currentAsyncTaskForGetMessage.getStatus().equals(AbsAsyncTask.Status.PENDING)) {
                             currentAsyncTaskForGetMessage.setRequestIsStartedListener(getMessagesIsStartedListener);
                             currentAsyncTaskForGetMessage.setRequestIsFinishedListener(getMessagesIsFinishedListener);
                             currentAsyncTaskForGetMessage.execute(urlForTopicPage, cookieListInAString);
