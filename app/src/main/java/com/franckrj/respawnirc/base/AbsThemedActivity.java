@@ -34,17 +34,13 @@ public abstract class AbsThemedActivity extends AbsBaseActivity {
 
         super.onCreate(savedInstanceState);
 
-<<<<<<< build-cleanup-nontransitive-rclass
-        if (generalTaskDesc == null || colorUsedForGenerateTaskDesc != ThemeManager.getColorInt(androidx.appcompat.R.attr.colorPrimary, this)) {
-=======
         /* Edge-to-edge : la bande de barre d'état prend la couleur colorPrimary du toolbar. On met
            ses icônes en sombre uniquement pour le thème clair à couleur primaire claire (toolbar à
            texte inversé), blanches sinon, pour qu'elles restent lisibles. */
         WindowInsetsControllerCompat windowInsetsController = WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
         windowInsetsController.setAppearanceLightStatusBars(lastThemeUsed == ThemeManager.ThemeName.LIGHT_THEME && toolbarTextColorIsInverted);
 
-        if (generalTaskDesc == null || colorUsedForGenerateTaskDesc != ThemeManager.getColorInt(R.attr.colorPrimary, this)) {
->>>>>>> master
+        if (generalTaskDesc == null || colorUsedForGenerateTaskDesc != ThemeManager.getColorInt(androidx.appcompat.R.attr.colorPrimary, this)) {
             Bitmap appIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_rirc);
             colorUsedForGenerateTaskDesc = ThemeManager.getColorInt(androidx.appcompat.R.attr.colorPrimary, this);
             generalTaskDesc = new ActivityManager.TaskDescription(getString(R.string.app_name), appIcon, colorUsedForGenerateTaskDesc);
