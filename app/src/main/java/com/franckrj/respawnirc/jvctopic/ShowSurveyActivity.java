@@ -199,6 +199,7 @@ public class ShowSurveyActivity extends AbsHomeIsBackActivity implements VoteInS
         ActionBar myActionBar = getSupportActionBar();
 
         mainScrollView = findViewById(R.id.scrollview_showsurvey);
+        Utils.addBottomNavInsetPadding(mainScrollView);
         contentText = findViewById(R.id.content_showsurvey);
         voteButton = findViewById(R.id.button_vote_showsurvey);
         showResultButton = findViewById(R.id.button_showresult_showsurvey);

@@ -86,6 +86,7 @@ public class ManageSurveyOfTopicActivity extends AbsHomeIsBackActivity {
         Button validateButton = findViewById(R.id.validate_button_managesurvey);
         Button addReplyButton = findViewById(R.id.addreply_button_managesurvey);
         listOfReplys = findViewById(R.id.reply_list_managesurvey);
+        Utils.addBottomNavInsetPadding(listOfReplys);
         titleEdit = findViewById(R.id.title_edit_managesurvey);
 
         adapterForReplys = new SurveyReplysAdapter(this);

@@ -3,10 +3,11 @@ package com.franckrj.respawnirc.base;
 import android.app.ActivityManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.ColorInt;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.franckrj.respawnirc.R;
 import com.franckrj.respawnirc.utils.ThemeManager;
@@ -19,7 +20,6 @@ public abstract class AbsThemedActivity extends AbsBaseActivity {
     protected @ColorInt int lastHeaderColorUsed = 0;
     protected int lastPrimaryColorUsed = -1;
     protected int lastTopicNameAndAccentColorUsed = -1;
-    protected boolean statusBarNeedToBeTransparent = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,17 +34,22 @@ public abstract class AbsThemedActivity extends AbsBaseActivity {
 
         super.onCreate(savedInstanceState);
 
+<<<<<<< build-cleanup-nontransitive-rclass
         if (generalTaskDesc == null || colorUsedForGenerateTaskDesc != ThemeManager.getColorInt(androidx.appcompat.R.attr.colorPrimary, this)) {
+=======
+        /* Edge-to-edge : la bande de barre d'état prend la couleur colorPrimary du toolbar. On met
+           ses icônes en sombre uniquement pour le thème clair à couleur primaire claire (toolbar à
+           texte inversé), blanches sinon, pour qu'elles restent lisibles. */
+        WindowInsetsControllerCompat windowInsetsController = WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+        windowInsetsController.setAppearanceLightStatusBars(lastThemeUsed == ThemeManager.ThemeName.LIGHT_THEME && toolbarTextColorIsInverted);
+
+        if (generalTaskDesc == null || colorUsedForGenerateTaskDesc != ThemeManager.getColorInt(R.attr.colorPrimary, this)) {
+>>>>>>> master
             Bitmap appIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_rirc);
             colorUsedForGenerateTaskDesc = ThemeManager.getColorInt(androidx.appcompat.R.attr.colorPrimary, this);
             generalTaskDesc = new ActivityManager.TaskDescription(getString(R.string.app_name), appIcon, colorUsedForGenerateTaskDesc);
         }
         setTaskDescription(generalTaskDesc);
-
-        /* Pour corriger un bug de la SL 27.1.0. */
-        if (statusBarNeedToBeTransparent) {
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
-        }
     }
 
     @Override

@@ -19,6 +19,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.franckrj.respawnirc.ConnectActivity;
@@ -174,11 +176,6 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
             layoutForDrawer.closeDrawer(GravityCompat.START);
         }
     };
-
-    /* Voir AbsThemedActivity pour plus d'infos. */
-    public AbsNavigationViewActivity() {
-        statusBarNeedToBeTransparent = true;
-    }
 
     private void initializeListsOfMenuItem() {
         if (listOfMenuItemInfoForHome == null || listOfMenuItemInfoForForum == null || listOfMenuItemInfoForConnect == null) {
@@ -592,6 +589,22 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         navigationHeader.setOnClickListener(headerClickedListener);
         layoutForDrawer.addDrawerListener(toggleForDrawer);
         layoutForDrawer.setDrawerShadow(ThemeManager.getDrawable(R.attr.themedShadowDrawer, this), GravityCompat.START);
+        /* Edge-to-edge : on neutralise la gestion d'insets du DrawerLayout (qui sinon consomme les
+           insets et réserve une marge en bas du contenu) pour que la status bar soit peinte par la
+           toolbar comme sur les autres écrans et que le contenu passe sous la barre de navigation. */
+        ViewCompat.setOnApplyWindowInsetsListener(layoutForDrawer, (v, insets) -> insets);
+        /* Edge-to-edge : garde le dernier élément du menu latéral au-dessus de la barre de
+           navigation tout en laissant le contenu défiler dessous (barre transparente, comme sur
+           les autres écrans). Le ScrimInsetsFrameLayout consomme les insets : on pose le listener
+           sur le panneau (parent) mais on applique clipToPadding + padding sur la liste. */
+        navigationMenuList.setClipToPadding(false);
+        ViewCompat.setOnApplyWindowInsetsListener((View) navigationMenuList.getParent(), (panel, insets) -> {
+            int navBottom = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom;
+            int imeBottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom;
+            navigationMenuList.setPadding(navigationMenuList.getPaddingLeft(), navigationMenuList.getPaddingTop(),
+                    navigationMenuList.getPaddingRight(), Math.max(navBottom, imeBottom));
+            return insets;
+        });
         updateNavigationMenu();
 
         if (ThemeManager.getThemeUsed() == ThemeManager.ThemeName.LIGHT_THEME && ThemeManager.getHeaderColorUsedForThemeLight() != Undeprecator.resourcesGetColor(getResources(), R.color.defaultHeaderColorThemeLight)) {
