@@ -13,6 +13,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.ActionBar;
 
 import com.franckrj.respawnirc.base.AbsToolbarActivity;
@@ -35,6 +36,7 @@ public class WebBrowserActivity extends AbsToolbarActivity {
     private String currentTitle = "";
     private boolean isCfConfirmation = false;
     private String cookiesWebView = "";
+    private OnBackPressedCallback goBackInWebViewCallback = null;
 
     private void updateTitleAndSubtitle() {
         ActionBar myActionBar = getSupportActionBar();
@@ -92,6 +94,13 @@ public class WebBrowserActivity extends AbsToolbarActivity {
                     browserWebView.evaluateJavascript("Didomi.setUserAgreeToAll();", null);
                 }
             }
+
+            @Override
+            public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
+                if (goBackInWebViewCallback != null) {
+                    goBackInWebViewCallback.setEnabled(browserWebView.canGoBack());
+                }
+            }
         });
         browserWebView.setWebChromeClient(new WebChromeClient() {
             @Override
@@ -108,6 +117,14 @@ public class WebBrowserActivity extends AbsToolbarActivity {
         browserWebView.getSettings().setDomStorageEnabled(true);
         Undeprecator.webSettingsSetSaveFormData(browserWebView.getSettings(), false);
         Undeprecator.webSettingsSetSavePassword(browserWebView.getSettings(), false);
+
+        goBackInWebViewCallback = new OnBackPressedCallback(false) {
+            @Override
+            public void handleOnBackPressed() {
+                browserWebView.goBack();
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, goBackInWebViewCallback);
 
         currentTitle = getString(R.string.app_name);
         if (getIntent() != null && savedInstanceState == null) {
@@ -222,14 +239,5 @@ public class WebBrowserActivity extends AbsToolbarActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (browserWebView.canGoBack()) {
-            browserWebView.goBack();
-        } else {
-            super.onBackPressed();
-        }
     }
 }

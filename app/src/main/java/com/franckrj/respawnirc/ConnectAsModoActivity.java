@@ -1,6 +1,7 @@
 package com.franckrj.respawnirc;
 
 import android.os.Bundle;
+import androidx.activity.OnBackPressedCallback;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
 import android.view.View;
@@ -132,6 +133,14 @@ public class ConnectAsModoActivity extends AbsHomeIsBackActivity {
         modoPasswordText.setOnEditorActionListener(actionInPasswordEditTextListener);
         validateButton.setOnClickListener(validateButtonClickedListener);
 
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Toast.makeText(ConnectAsModoActivity.this, getString(R.string.warningNotConnected), Toast.LENGTH_LONG).show();
+                finish();
+            }
+        });
+
         currentCookieList = AccountManager.getCurrentAccount().cookie;
 
         if (savedInstanceState != null) {
@@ -161,12 +170,6 @@ public class ConnectAsModoActivity extends AbsHomeIsBackActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(SAVE_LIST_OF_INPUT, latestListOfInputInAString);
-    }
-
-    @Override
-    public void onBackPressed() {
-        Toast.makeText(this, getString(R.string.warningNotConnected), Toast.LENGTH_LONG).show();
-        super.onBackPressed();
     }
 
     private static class ConnectAsModoTask extends AbsWebRequestAsyncTask<String, Void, String> {

@@ -44,6 +44,21 @@ public class DraftUtils {
         dontOverrideUserChoiceOfUseSavedDraft = false;
     }
 
+    /* Seul le mode ASK_BEFORE doit intercepter le retour (pour afficher la boîte de dialogue de
+       confirmation). Les modes ALWAYS et NEVER ne font que finir l'activité : on laisse le système
+       gérer le retour pour conserver l'animation de retour prédictif. */
+    public boolean needsConfirmationBeforeLeaving() {
+        return saveDraftInfo.type == PrefsManager.SaveDraftType.ASK_BEFORE;
+    }
+
+    /* Affiche le toast confirmant la sauvegarde du brouillon, uniquement en mode ALWAYS. Le brouillon
+       lui-même est sauvegardé par l'activité appelante, pas ici. */
+    public void notifyDraftSavedIfAlwaysMode(@StringRes int idOfMessageShowedAfterDraftSaved, Activity parentActivity) {
+        if (saveDraftInfo.type == PrefsManager.SaveDraftType.ALWAYS) {
+            Toast.makeText(parentActivity, parentActivity.getString(idOfMessageShowedAfterDraftSaved), Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public void whenUserTryToLeaveWithDraft(@StringRes final int idOfMessageShowedAfterDraftSaved, @StringRes final int idOfSaveDraftExplained, final Activity parentActivity) {
         switch (saveDraftInfo.type) {
             case PrefsManager.SaveDraftType.ALWAYS:

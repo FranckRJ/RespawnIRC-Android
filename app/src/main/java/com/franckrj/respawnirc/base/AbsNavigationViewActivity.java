@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
@@ -89,6 +90,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     protected ArrayList<NavigationMenuAdapter.MenuItemInfo> currentListOfMenuItem = null;
     protected boolean backIsOpenDrawer = false;
     protected boolean drawerIsDisabled = false;
+    private OnBackPressedCallback drawerBackCallback = null;
     protected boolean mpAndNotifNumberIsHidden = false;
 
     protected final AdapterView.OnItemClickListener itemInNavigationClickedListener = (parent, view, position, id) -> {
@@ -494,6 +496,14 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         layoutForDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         toggleForDrawer.setDrawerIndicatorEnabled(false);
         drawerIsDisabled = true;
+        refreshDrawerBackCallbackState();
+    }
+
+    private void refreshDrawerBackCallbackState() {
+        if (drawerBackCallback != null) {
+            drawerBackCallback.setEnabled(!drawerIsDisabled &&
+                    (layoutForDrawer.isDrawerOpen(GravityCompat.START) || backIsOpenDrawer));
+        }
     }
 
     @Override
@@ -588,6 +598,28 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         navigationMenuList.setOnItemLongClickListener(itemInNavigationLongClickedListener);
         navigationHeader.setOnClickListener(headerClickedListener);
         layoutForDrawer.addDrawerListener(toggleForDrawer);
+        drawerBackCallback = new OnBackPressedCallback(false) {
+            @Override
+            public void handleOnBackPressed() {
+                if (layoutForDrawer.isDrawerOpen(GravityCompat.START)) {
+                    layoutForDrawer.closeDrawer(GravityCompat.START);
+                } else {
+                    layoutForDrawer.openDrawer(GravityCompat.START);
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, drawerBackCallback);
+        layoutForDrawer.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                refreshDrawerBackCallbackState();
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                refreshDrawerBackCallbackState();
+            }
+        });
         layoutForDrawer.setDrawerShadow(ThemeManager.getDrawable(R.attr.themedShadowDrawer, this), GravityCompat.START);
         /* Edge-to-edge : on neutralise la gestion d'insets du DrawerLayout (qui sinon consomme les
            insets et réserve une marge en bas du contenu) pour que la status bar soit peinte par la
@@ -625,6 +657,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
         super.onResume();
         AccountManager.AccountInfos tmpAccount = AccountManager.getCurrentAccount();
         backIsOpenDrawer = PrefsManager.getBool(PrefsManager.BoolPref.Names.BACK_IS_OPEN_DRAWER);
+        refreshDrawerBackCallbackState();
 
         if (!currentAccount.equals(tmpAccount)) {
             currentAccount = tmpAccount;
@@ -639,17 +672,6 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     }
 
     @Override
-    public void onBackPressed() {
-        if (layoutForDrawer.isDrawerOpen(GravityCompat.START) && !drawerIsDisabled) {
-            layoutForDrawer.closeDrawer(GravityCompat.START);
-        } else if (backIsOpenDrawer && !drawerIsDisabled) {
-            layoutForDrawer.openDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         toggleForDrawer.onConfigurationChanged(newConfig);
@@ -659,7 +681,7 @@ public abstract class AbsNavigationViewActivity extends AbsToolbarActivity imple
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (drawerIsDisabled) {
             if (item.getItemId() == android.R.id.home) {
-                super.onBackPressed();
+                getOnBackPressedDispatcher().onBackPressed();
                 return true;
             }
         } else {

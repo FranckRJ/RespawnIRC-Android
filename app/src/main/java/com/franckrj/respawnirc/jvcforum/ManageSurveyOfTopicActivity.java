@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -97,6 +98,21 @@ public class ManageSurveyOfTopicActivity extends AbsHomeIsBackActivity {
         listOfReplys.setLayoutManager(new LinearLayoutManager(this));
         listOfReplys.setAdapter(adapterForReplys);
 
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                long currentTimeInMs = System.currentTimeMillis();
+
+                if (currentTimeInMs - lastTimeUserTryToLeaveInMs < MAX_TIME_USER_HAVE_TO_LEAVE_IN_MS) {
+                    finish();
+                } else {
+                    Toast.makeText(ManageSurveyOfTopicActivity.this, getString(R.string.pressBackTwoTimesToLeaveSurvey), Toast.LENGTH_LONG).show();
+                }
+
+                lastTimeUserTryToLeaveInMs = currentTimeInMs;
+            }
+        });
+
         if (getIntent() != null && savedInstanceState == null) {
             String title = getIntent().getStringExtra(EXTRA_SURVEY_TITLE);
             ArrayList<String> replysList = getIntent().getStringArrayListExtra(EXTRA_SURVEY_REPLYS_LIST);
@@ -151,16 +167,4 @@ public class ManageSurveyOfTopicActivity extends AbsHomeIsBackActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
-        long currentTimeInMs = System.currentTimeMillis();
-
-        if (currentTimeInMs - lastTimeUserTryToLeaveInMs < MAX_TIME_USER_HAVE_TO_LEAVE_IN_MS) {
-            super.onBackPressed();
-        } else {
-            Toast.makeText(this, getString(R.string.pressBackTwoTimesToLeaveSurvey), Toast.LENGTH_LONG).show();
-        }
-
-        lastTimeUserTryToLeaveInMs = currentTimeInMs;
-    }
 }

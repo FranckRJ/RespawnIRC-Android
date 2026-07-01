@@ -258,7 +258,7 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
         searchExpandableItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                onBackPressed();
+                getOnBackPressedDispatcher().onBackPressed();
                 return false;
             }
 

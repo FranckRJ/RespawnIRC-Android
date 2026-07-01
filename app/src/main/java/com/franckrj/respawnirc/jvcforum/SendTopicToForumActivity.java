@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 
@@ -212,6 +213,18 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
         insertStuffButton.setOnClickListener(insertStuffButtonClicked);
         manageSurveyButton.setOnClickListener(manageSurveyButtonClicked);
 
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (!topicTitleEdit.getText().toString().isEmpty() || !topicContentEdit.getText().toString().isEmpty() ||
+                        !currentInfos.surveyTitle.isEmpty() || !currentInfos.surveyReplysList.isEmpty()) {
+                    utilsForDraft.whenUserTryToLeaveWithDraft(R.string.topicDraftSaved, R.string.saveTopicDraftExplained, SendTopicToForumActivity.this);
+                } else {
+                    finish();
+                }
+            }
+        });
+
         if (getIntent() != null) {
             if (getIntent().getStringExtra(EXTRA_FORUM_NAME) != null && myActionBar != null) {
                 myActionBar.setSubtitle(getIntent().getStringExtra(EXTRA_FORUM_NAME));
@@ -338,15 +351,6 @@ public class SendTopicToForumActivity extends AbsHomeIsBackActivity implements I
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
-        if (!topicTitleEdit.getText().toString().isEmpty() || !topicContentEdit.getText().toString().isEmpty() ||
-                !currentInfos.surveyTitle.isEmpty() || !currentInfos.surveyReplysList.isEmpty()) {
-            utilsForDraft.whenUserTryToLeaveWithDraft(R.string.topicDraftSaved, R.string.saveTopicDraftExplained, this);
-        } else {
-            super.onBackPressed();
-        }
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
