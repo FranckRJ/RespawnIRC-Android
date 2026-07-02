@@ -23,6 +23,7 @@ public abstract class AbsThemedActivity extends AbsBaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        ThemeManager.updateThemeUsed(getResources());
         ThemeManager.changeActivityTheme(this);
         ThemeManager.changeActivityToolbarTextColor(this);
         ThemeManager.changeActivityThemedColorsIfNeeded(this);
@@ -52,6 +53,7 @@ public abstract class AbsThemedActivity extends AbsBaseActivity {
     public void onResume() {
         super.onResume();
 
+        ThemeManager.updateThemeUsed(getResources());
         if ((lastThemeUsed != ThemeManager.getThemeUsed()) || (lastHeaderColorUsed != ThemeManager.getHeaderColorUsedForThemeLight()) ||
                 (lastPrimaryColorUsed != ThemeManager.getPrimaryColorIdUsedForThemeLight()) ||
                 (lastTopicNameAndAccentColorUsed != ThemeManager.getTopicNameAndAccentColorIdUsedForThemeLight()) ||
