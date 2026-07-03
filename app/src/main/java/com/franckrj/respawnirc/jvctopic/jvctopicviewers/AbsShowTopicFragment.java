@@ -337,8 +337,8 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         topicViewModel = new ViewModelProvider(this).get(ShowTopicViewModel.class);
         adapterForTopic = new JVCTopicAdapter(requireActivity(), currentSettings);

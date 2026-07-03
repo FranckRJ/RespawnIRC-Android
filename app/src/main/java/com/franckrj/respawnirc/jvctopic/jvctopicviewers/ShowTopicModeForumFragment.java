@@ -9,6 +9,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.franckrj.respawnirc.utils.IgnoreListManager;
 import com.franckrj.respawnirc.NetworkBroadcastReceiver;
@@ -193,8 +194,8 @@ public class ShowTopicModeForumFragment extends AbsShowTopicFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         swipeRefresh.setOnRefreshListener(listenerForRefresh);
 
