@@ -139,7 +139,7 @@
     <string name="dark">Sombre</string>
     <string name="style">Style</string>
     <string name="black">Noir</string>
-    <string name="systemTheme">Système (Clair ou Noir)</string>
+    <string name="systemTheme">Système (Clair ou Sombre préféré)</string>
     <string name="messages">Messages</string>
     <string name="message">Message</string>
     <string name="settingsModeForumTitle">Mode forum</string>
@@ -239,6 +239,7 @@
     <string name="lightThemeColors">Couleurs du thème clair</string>
     <string name="primaryColor">Couleur principale</string>
     <string name="theme">Thème</string>
+    <string name="preferedDarkTheme">Thème sombre préféré (pour thème système)</string>
     <string name="altColorOfMessages">Couleur alternative des messages</string>
     <string name="surveyMessageColor">Couleur du message des sondages</string>
     <string name="deletedMessageColor">Couleur des messages supprimés</string>
@@ -380,6 +381,11 @@
         <item>"2"</item>
         <item>"3"</item>
         <item>"4"</item>
+    </string-array>
+    <string-array name="choicesForDarkThemesReadable">
+        <item>@string/grey</item>
+        <item>@string/dark</item>
+        <item>@string/black</item>
     </string-array>
     <string-array name="choicesForLinkTypeForInternalBrowser">
         <item>@string/allLinks</item>

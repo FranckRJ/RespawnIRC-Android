@@ -11,6 +11,12 @@
             android:summary="%s"
             android:entries="@array/choicesForThemesReadable"
             android:entryValues="@array/choicesForThemesValue"/>
+        <ListPreference
+            android:key="@string/settingsPreferedDarkTheme"
+            android:title="@string/preferedDarkTheme"
+            android:summary="%s"
+            android:entries="@array/choicesForDarkThemesReadable"
+            android:entryValues="@array/threeChoicesValue"/>
     </PreferenceCategory>
 
     <PreferenceCategory

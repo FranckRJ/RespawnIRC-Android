@@ -72,6 +72,7 @@ public class ThemeManager {
 
     public static void updateThemeUsed(Resources res) {
         String themeStringId = PrefsManager.getString(PrefsManager.StringPref.Names.THEME_USED);
+        String preferedDarkThemeStringId = PrefsManager.getString(PrefsManager.StringPref.Names.PREFERED_DARK_THEME);
 
         switch (themeStringId) {
             case "0":
@@ -87,7 +88,25 @@ public class ThemeManager {
                 themeUsed = ThemeName.BLACK_THEME;
                 break;
             case "4":
-                themeUsed = systemThemeUsesDarkMode(res) ? ThemeName.BLACK_THEME : ThemeName.LIGHT_THEME;
+                if (systemThemeUsesDarkMode(res)) {
+                    switch (preferedDarkThemeStringId) {
+                        case "0":
+                            themeUsed = ThemeName.GREY_THEME;
+                            break;
+                        case "1":
+                            themeUsed = ThemeName.DARK_THEME;
+                            break;
+                        case "2":
+                            themeUsed = ThemeName.BLACK_THEME;
+                            break;
+                        default:
+                            themeUsed = ThemeName.DARK_THEME;
+                            break;
+                    }
+                }
+                else {
+                    themeUsed = ThemeName.LIGHT_THEME;
+                }
                 break;
             default:
                 themeUsed = ThemeName.LIGHT_THEME;
