@@ -54,7 +54,7 @@ public final class JVCParser {
     private static final Pattern pageSearchTopicLinkNumberPattern = Pattern.compile("^(https?://www\\.jeuxvideo\\.com/recherche/forums/(0-[0-9]*-[0-9]*-[0-9]*-[0-9]*-))([0-9]*)(-[0-9]*-[^./]*\\.htm)([#?]?.*)");
     private static final Pattern messageAnchorInTopicLinkPattern = Pattern.compile("#post_([0-9]*)");
     private static final Pattern jvCarePattern = Pattern.compile("<span class=\"JvCare [^\"]*\">([^<]*)</span>");
-    private static final Pattern topicLinkInPermalinkPagePattern = Pattern.compile("<span class=\"JvCare (?<link>[0-9A-F]+) backTo\">");
+    private static final Pattern topicLinkInPermalinkPagePattern = Pattern.compile("<span class=\"JvCare ([0-9A-F]+) backTo\">");
     private static final Pattern allArianeStringPattern = Pattern.compile("<nav role=\"navigation\" class=\"breadcrumb\">.*?</nav>", Pattern.DOTALL);
     private static final Pattern forumNameInArianeStringPattern = Pattern.compile("<a class=\"breadcrumb__item\" href=\"(/forums/0-[^\"]*)\">([^<]*)</a>");
     private static final Pattern topicNameInArianeStringPattern = Pattern.compile("<a class=\"breadcrumb__item\" href=\"/forums/(42|1)-[^\"]*\">([^<]*)</a>");
@@ -1612,7 +1612,7 @@ public final class JVCParser {
             return "";
         }
 
-        String topicLink = deobfuscateJvcareLink(topicLinkMatcher.group("link"));
+        String topicLink = deobfuscateJvcareLink(topicLinkMatcher.group(1));
 
         if (topicLink.startsWith("/")) {
             topicLink = "https://www.jeuxvideo.com" + topicLink;
