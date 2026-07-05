@@ -17,7 +17,7 @@
         android:icon="@mipmap/ic_rirc"
         android:label="@string/app_name"
         android:theme="@style/SplashTheme"
-        tools:targetApi="33">
+        tools:targetApi="37">
 
         <activity
             android:name=".MainActivity"
