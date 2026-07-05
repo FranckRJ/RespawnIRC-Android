@@ -108,7 +108,7 @@ public class PrefsManager {
         addBoolPref(BoolPref.Names.POST_AS_MODO_WHEN_POSSIBLE, currentContext.getString(R.string.settingsPostAsModoWhenPossible), true);
         addBoolPref(BoolPref.Names.IGNORE_TOPIC_TOO, currentContext.getString(R.string.settingsIgnoreTopicToo), true);
         addBoolPref(BoolPref.Names.HIDE_TOTALLY_MESSAGES_OF_IGNORED_PSEUDOS, currentContext.getString(R.string.settingsHideTotallyMessagesOfIgnoredPseudos), true);
-        addBoolPref(BoolPref.Names.ENABLE_FAST_REFRESH_OF_IMAGES, currentContext.getString(R.string.settingsEnableFastRefreshOfImages), false);
+        addBoolPref(BoolPref.Names.ENABLE_FAST_REFRESH_OF_IMAGES, currentContext.getString(R.string.settingsEnableFastRefreshOfImages), true);
         addBoolPref(BoolPref.Names.ENABLE_COLOR_DELETED_MESSAGES, currentContext.getString(R.string.settingsEnableColorDeletedMessages), true);
         addBoolPref(BoolPref.Names.BACK_IS_OPEN_DRAWER, currentContext.getString(R.string.settingsBackIsOpenDrawer), false);
         addBoolPref(BoolPref.Names.SAVE_LAST_ROW_USED_INSERTSTUFF, currentContext.getString(R.string.settingsSaveLastRowUsedInsertstuff), true);
