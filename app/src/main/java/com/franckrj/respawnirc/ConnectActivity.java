@@ -129,7 +129,7 @@ public class ConnectActivity extends AbsHomeIsBackActivity {
         // Disables dark mode as a side effect, however.
         WebStorage.getInstance().deleteAllData();
 
-        jvcWebView.loadUrl("https://www.jeuxvideo.com/login");
+        jvcWebView.loadUrl("https://www.jeuxvideo.com/sso/login");
 
         PrefsManager.putInt(PrefsManager.IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED,
                 PrefsManager.getInt(PrefsManager.IntPref.Names.NUMBER_OF_WEBVIEW_OPEN_SINCE_CACHE_CLEARED) + 1);
