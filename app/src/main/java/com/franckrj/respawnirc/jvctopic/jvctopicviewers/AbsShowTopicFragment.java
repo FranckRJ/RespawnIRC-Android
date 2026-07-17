@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.franckrj.respawnirc.NetworkBroadcastReceiver;
@@ -34,13 +35,13 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     public static final int MODE_IRC = 0;
     public static final int MODE_FORUM = 1;
 
-    protected static final String SAVE_ALL_MESSAGES_SHOWED = "saveAllCurrentMessagesShowed";
     protected static final String SAVE_GO_TO_BOTTOM_PAGE_LOADING = "saveGoToBottomPageLoading";
     protected static final String SAVE_ANCHOR_FOR_NEXT_LOAD = "saveAnchorForNextLoad";
     protected static final String SAVE_SETTINGS_PSEUDO_OF_AUTHOR = "saveSettingsPseudoOfAuthor";
     protected static final String SAVE_MESSAGES_ARE_FROM_IGNORED_PSEUDOS = "saveMessagesAreFromIgnoredPseudos";
 
     protected AbsJVCTopicGetter absGetterForTopic = null;
+    protected ShowTopicViewModel topicViewModel = null;
     protected TextView errorBackgroundMessage = null;
     protected ListView jvcMsgList = null;
     protected JVCTopicAdapter adapterForTopic = null;
@@ -339,6 +340,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        topicViewModel = new ViewModelProvider(this).get(ShowTopicViewModel.class);
         adapterForTopic = new JVCTopicAdapter(requireActivity(), currentSettings);
         initializeGetterForMessages();
         initializeAdapter();
@@ -379,7 +381,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         jvcMsgList.setAdapter(adapterForTopic);
 
         if (savedInstanceState != null) {
-            ArrayList<JVCParser.MessageInfos> allCurrentMessagesShowed = savedInstanceState.getParcelableArrayList(SAVE_ALL_MESSAGES_SHOWED);
+            ArrayList<JVCParser.MessageInfos> allCurrentMessagesShowed = topicViewModel.listOfMessagesShowed;
             goToBottomAtPageLoading = savedInstanceState.getBoolean(SAVE_GO_TO_BOTTOM_PAGE_LOADING, false);
             anchorForNextLoad = savedInstanceState.getString(SAVE_ANCHOR_FOR_NEXT_LOAD, null);
             currentSettings.pseudoOfAuthor = savedInstanceState.getString(SAVE_SETTINGS_PSEUDO_OF_AUTHOR, "");
@@ -446,16 +448,7 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        long totalLengthOfMessages = 0;
-
-        for (JVCParser.MessageInfos currentMessage : adapterForTopic.getAllItems()) {
-            totalLengthOfMessages += currentMessage.messageRaw.length();
-        }
-
-        //todo fix temporaire
-        if (totalLengthOfMessages < 150_000) {
-            outState.putParcelableArrayList(SAVE_ALL_MESSAGES_SHOWED, adapterForTopic.getAllItems());
-        }
+        topicViewModel.listOfMessagesShowed = adapterForTopic.getAllItems();
         outState.putBoolean(SAVE_GO_TO_BOTTOM_PAGE_LOADING, goToBottomAtPageLoading);
         outState.putString(SAVE_ANCHOR_FOR_NEXT_LOAD, anchorForNextLoad);
         outState.putString(SAVE_SETTINGS_PSEUDO_OF_AUTHOR, currentSettings.pseudoOfAuthor);
