@@ -908,7 +908,9 @@ public final class JVCParser {
 
     public static String buildMessageQuoted(MessageInfos thisMessageInfo) {
         return "> Le " + thisMessageInfo.wholeDate + " " + thisMessageInfo.pseudo + " a écrit :\n>"
-                + thisMessageInfo.messageRaw.replaceAll("\n", "\n>");
+                + thisMessageInfo.messageRaw.replaceAll("(?m)^> *> *> *>.*\n", "")
+                .replaceAll("\n", "\n>")
+                ;
     }
 
     public static String parsingAjaxMessages(String ajaxMessage) {
