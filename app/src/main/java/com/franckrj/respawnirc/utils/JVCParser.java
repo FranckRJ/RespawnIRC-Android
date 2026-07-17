@@ -907,9 +907,10 @@ public final class JVCParser {
     }
 
     public static String buildMessageQuoted(MessageInfos thisMessageInfo) {
-        return "> Le " + thisMessageInfo.wholeDate + " " + thisMessageInfo.pseudo + " a écrit :\n>"
-                + thisMessageInfo.messageRaw.replaceAll("(?m)^> *> *> *>.*\n", "")
-                .replaceAll("\n", "\n>")
+        return "> Le " + thisMessageInfo.wholeDate + " " + thisMessageInfo.pseudo + " a écrit :\n> "
+                + thisMessageInfo.messageRaw.replaceAll("(?m)^> ?> ?> ?> ?>.*\n", "\f[%<unique_tag_i_guess>%]\f")
+                .replaceAll("(\f\\[%<unique_tag_i_guess>%]\f)+", "> > > > ''[citation imbriquée tronquée]''\n")
+                .replace("\n", "\n> ")
                 ;
     }
 
