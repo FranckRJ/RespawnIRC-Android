@@ -7,8 +7,8 @@ android {
         minSdkVersion 23
         targetSdkVersion 37
         compileSdk 37
-        versionCode 2_001_2_019
-        versionName "2.1.19"
+        versionCode 2_002_2_000
+        versionName "2.2.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         resourceConfigurations = ['fr']
     }
