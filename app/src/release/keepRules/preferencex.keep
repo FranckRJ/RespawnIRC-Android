@@ -1,0 +1,14 @@
+# La lib preferencex remplace par réflexion (Field.set) le mPreferenceManager de
+# PreferenceFragmentCompat par son PreferenceManagerFix, qui ajoute notamment
+# "com.takisoft.preferencex" aux packages par défaut du PreferenceInflater. R8 ne voit
+# pas cette écriture : il suppose que le champ contient toujours un PreferenceManager
+# de base, inline inflateFromResource() et le Fix ne s'exécute jamais, d'où un
+# ClassNotFoundException sur ColorPickerPreference en release. Épingler les champs
+# accédés par réflexion (recherchés par type par la lib, d'où le joker sur le nom)
+# désactive cette optimisation.
+-keepclassmembers class androidx.preference.PreferenceFragmentCompat {
+    androidx.preference.PreferenceManager *;
+}
+-keepclassmembers class androidx.preference.PreferenceManager {
+    android.content.SharedPreferences$Editor *;
+}
