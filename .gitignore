@@ -1,5 +1,6 @@
 *.iml
 .gradle
+.kotlin
 /local.properties
 /.idea/caches
 /.idea/gradle.xml
@@ -10,6 +11,16 @@
 /.idea/assetWizardSettings.xml
 /.idea/vcs.xml
 /.idea/.name
+/.idea/AndroidProjectSystem.xml
+/.idea/androidTestResultsUserPreferences.xml
+/.idea/compiler.xml
+/.idea/deploymentTargetSelector.xml
+/.idea/deviceManager.xml
+/.idea/jarRepositories.xml
+/.idea/kotlinc.xml
+/.idea/markdown.xml
+/.idea/migrations.xml
+/.idea/misc.xml
 .DS_Store
 /build
 /captures
