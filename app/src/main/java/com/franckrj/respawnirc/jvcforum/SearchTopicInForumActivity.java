@@ -131,6 +131,7 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
         pageNavigation.updateAdapterForPagerView();
 
         searchModeRadioGroup = findViewById(R.id.radiogroup_layout_searchtopic);
+        Utils.addSymmetricSideInsetPadding(searchModeRadioGroup);
         searchModeRadioGroup.setOnCheckedChangeListener(searchTypeChangedListener);
 
         if (getIntent() != null && savedInstanceState == null) {
