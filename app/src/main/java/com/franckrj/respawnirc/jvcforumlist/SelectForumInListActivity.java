@@ -18,6 +18,9 @@ import android.widget.TextView;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.transition.TransitionManager;
 
@@ -216,6 +219,20 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         adapterForForumList = new JVCForumListAdapter(this);
         forumListView.setAdapter(adapterForForumList);
         forumListView.setOnItemClickListener(forumClickedInListView);
+
+        /* Edge-to-edge : les lignes de résultats de recherche occupent toute la largeur, on décale donc
+           seulement leur contenu en gardant leur fond pleine largeur. On capture les insets latéraux sur le
+           parent de la liste (le SwipeRefreshLayout) pour ne pas monopoliser le listener de la ListView (qui
+           gère déjà son inset du bas) et on les renvoie non consommés. On prend le max des deux côtés pour un
+           décalage symétrique, transmis à l'adapter qui l'applique en padding sur chaque ligne. */
+        ViewCompat.setOnApplyWindowInsetsListener(swipeRefresh, (v, windowInsets) -> {
+            Insets bars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+            if (adapterForForumList != null) {
+                adapterForForumList.setSideInset(Math.max(bars.left, bars.right));
+            }
+            return windowInsets;
+        });
+        ViewCompat.requestApplyInsets(swipeRefresh);
 
         if (savedInstanceState != null) {
             lastSearchedText = savedInstanceState.getString(SAVE_SEARCH_FORUM_CONTENT, null);

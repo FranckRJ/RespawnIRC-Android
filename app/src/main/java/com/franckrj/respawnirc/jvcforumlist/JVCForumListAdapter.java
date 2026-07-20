@@ -21,6 +21,7 @@ public class JVCForumListAdapter extends BaseAdapter {
     private ArrayList<JVCParser.NameAndLink> currentListOfForums = new ArrayList<>();
     private LayoutInflater serviceInflater;
     private Activity parentActivity;
+    private int sideInset = 0;
 
     public JVCForumListAdapter(Activity newParentActivity) {
         parentActivity = newParentActivity;
@@ -35,6 +36,17 @@ public class JVCForumListAdapter extends BaseAdapter {
         }
 
         notifyDataSetChanged();
+    }
+
+    /* Edge-to-edge : inset latéral (barre de navigation et découpe du capteur) appliqué en padding sur
+       chaque ligne. Le fond de la ligne reste pleine largeur (passe sous le capteur en paysage) mais son
+       contenu est décalé pour ne pas passer dessous. On applique la même valeur des deux côtés pour garder
+       un décalage symétrique quel que soit le côté du capteur. */
+    public void setSideInset(int newInset) {
+        if (sideInset != newInset) {
+            sideInset = newInset;
+            notifyDataSetChanged();
+        }
     }
 
     public String getForumLinkAtThisPos(int position) {
@@ -77,6 +89,8 @@ public class JVCForumListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             convertView = serviceInflater.inflate(R.layout.jvcforums_row, parent, false);
             holder.forumTitle = convertView.findViewById(R.id.title_forum_jvcforums_text_row);
+            holder.basePaddingLeft = convertView.getPaddingLeft();
+            holder.basePaddingRight = convertView.getPaddingRight();
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -85,10 +99,15 @@ public class JVCForumListAdapter extends BaseAdapter {
         convertView.setBackgroundColor(ThemeManager.getColorInt(R.attr.themedDefaultBackgroundColor, parentActivity));
         holder.forumTitle.setText(currentListOfForums.get(position).name);
 
+        convertView.setPadding(holder.basePaddingLeft + sideInset, convertView.getPaddingTop(),
+                holder.basePaddingRight + sideInset, convertView.getPaddingBottom());
+
         return convertView;
     }
 
     private class ViewHolder {
         public TextView forumTitle;
+        public int basePaddingLeft;
+        public int basePaddingRight;
     }
 }
