@@ -192,6 +192,9 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         noResultFoundTextView = findViewById(R.id.text_noresultfound_selectforum);
         baseForumListLayout = findViewById(R.id.base_forumlist_layout_selectforum);
         Utils.addBottomNavInsetPadding(baseForumListLayout);
+        /* Edge-to-edge : les cartes de catégories flottent, on les décale donc via une marge (padding
+           latéral symétrique sur leur conteneur) pour qu'elles ne passent pas sous le capteur en paysage. */
+        Utils.addSymmetricSideInsetPadding(findViewById(R.id.forumlist_cards_layout_selectforum));
         swipeRefresh.setEnabled(false);
         swipeRefresh.setColorSchemeResources(R.color.colorControlHighlightThemeLight);
         noResultFoundTextView.setVisibility(View.GONE);
