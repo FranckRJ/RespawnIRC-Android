@@ -127,6 +127,7 @@ public class SearchTopicInForumActivity extends AbsHomeIsBackActivity implements
         pageNavigation.initializePagerView(findViewById(R.id.pager_searchtopic));
         pageNavigation.initializeNavigationButtons(findViewById(R.id.firstpage_button_searchtopic), findViewById(R.id.previouspage_button_searchtopic),
                 findViewById(R.id.currentpage_button_searchtopic), findViewById(R.id.nextpage_button_searchtopic), null);
+        Utils.addSymmetricSideInsetPadding(findViewById(R.id.navigation_layout_searchtopic));
         pageNavigation.updateAdapterForPagerView();
 
         searchModeRadioGroup = findViewById(R.id.radiogroup_layout_searchtopic);

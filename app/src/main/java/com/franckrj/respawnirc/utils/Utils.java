@@ -27,6 +27,7 @@ import android.webkit.CookieManager;
 import android.widget.EditText;
 
 import androidx.annotation.ColorInt;
+import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.emoji.text.EmojiCompat;
@@ -561,6 +562,20 @@ public class Utils {
             int navBottom = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom;
             int imeBottom = windowInsets.getInsets(WindowInsetsCompat.Type.ime()).bottom;
             v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), basePadding + Math.max(navBottom, imeBottom));
+            return windowInsets;
+        });
+    }
+
+    /* Edge-to-edge : ajoute un padding latéral symétrique (le max des insets gauche/droite de barre de
+       navigation et découpe du capteur) pour que le contenu reste centré sans passer sous le capteur en
+       paysage. Le fond de la vue reste pleine largeur. */
+    public static void addSymmetricSideInsetPadding(final View view) {
+        final int basePaddingLeft = view.getPaddingLeft();
+        final int basePaddingRight = view.getPaddingRight();
+        ViewCompat.setOnApplyWindowInsetsListener(view, (v, windowInsets) -> {
+            Insets bars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+            int side = Math.max(bars.left, bars.right);
+            v.setPadding(basePaddingLeft + side, v.getPaddingTop(), basePaddingRight + side, v.getPaddingBottom());
             return windowInsets;
         });
     }

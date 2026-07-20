@@ -494,6 +494,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         });
 
         pageNavigation.initializeLayoutForAllNavigationButtons(findViewById(R.id.header_layout_showtopic), findViewById(R.id.shadow_header_showtopic));
+        Utils.addSymmetricSideInsetPadding(findViewById(R.id.header_layout_showtopic));
         pageNavigation.initializePagerView(findViewById(R.id.pager_showtopic));
         pageNavigation.initializeNavigationButtons(findViewById(R.id.firstpage_button_showtopic), findViewById(R.id.previouspage_button_showtopic),
                 findViewById(R.id.currentpage_button_showtopic), findViewById(R.id.nextpage_button_showtopic), findViewById(R.id.lastpage_button_showtopic));

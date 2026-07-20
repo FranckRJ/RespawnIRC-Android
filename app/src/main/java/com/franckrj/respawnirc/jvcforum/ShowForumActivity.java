@@ -183,6 +183,7 @@ public class ShowForumActivity extends AbsNavigationViewActivity implements Show
         pageNavigation.initializePagerView(findViewById(R.id.pager_showforum));
         pageNavigation.initializeNavigationButtons(findViewById(R.id.firstpage_button_showforum), findViewById(R.id.previouspage_button_showforum),
                 findViewById(R.id.currentpage_button_showforum), findViewById(R.id.nextpage_button_showforum), null);
+        Utils.addSymmetricSideInsetPadding(findViewById(R.id.header_layout_showforum));
         pageNavigation.updateAdapterForPagerView();
 
         if (savedInstanceState == null) {
