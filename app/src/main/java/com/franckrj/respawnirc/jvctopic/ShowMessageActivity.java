@@ -3,6 +3,7 @@ package com.franckrj.respawnirc.jvctopic;
 import static com.franckrj.respawnirc.utils.WebManager.errorStringId;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -132,7 +133,7 @@ public class ShowMessageActivity extends AbsHomeIsBackActivity {
                 Intent newShowMessageIntent = new Intent(ShowMessageActivity.this, ShowMessageActivity.class);
                 newShowMessageIntent.putExtra(ShowMessageActivity.EXTRA_MESSAGE_PERMALINK, possibleNewLink);
                 startActivity(newShowMessageIntent);
-            } else if (showOverviewOnImageClick && JVCParser.checkIfItsNoelshackLink(link)) {
+            } else if (showOverviewOnImageClick && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && JVCParser.checkIfItsNoelshackLink(link)) {
                 if (!getSupportFragmentManager().isStateSaved()) {
                     Bundle argForFrag = new Bundle();
                     ShowImageDialogFragment showImageDialogFragment = new ShowImageDialogFragment();
