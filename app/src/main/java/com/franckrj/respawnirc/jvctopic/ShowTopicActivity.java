@@ -21,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
@@ -485,11 +486,15 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         });
 
         /* Edge-to-edge : la barre d'envoi reste au-dessus de la barre de navigation et du clavier
-           (son fond déborde sous la barre de navigation transparente). */
+           (son fond déborde sous la barre de navigation transparente). Son fond garde donc l'apparence
+           de la pleine largeur, mais on décale son contenu (bouton +, zone de texte, bouton d'envoi) en
+           padding latéral symétrique pour qu'il ne passe pas sous le capteur en paysage. */
         ViewCompat.setOnApplyWindowInsetsListener(messageSendLayout, (view, windowInsets) -> {
+            Insets bars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
             int navBottom = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom;
             int imeBottom = windowInsets.getInsets(WindowInsetsCompat.Type.ime()).bottom;
-            view.setPadding(view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(), Math.max(navBottom, imeBottom));
+            int side = Math.max(bars.left, bars.right);
+            view.setPadding(side, view.getPaddingTop(), side, Math.max(navBottom, imeBottom));
             return windowInsets;
         });
 
