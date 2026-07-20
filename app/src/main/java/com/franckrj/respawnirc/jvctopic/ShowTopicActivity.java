@@ -21,7 +21,6 @@ import androidx.annotation.NonNull;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
@@ -490,10 +489,9 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
            de la pleine largeur, mais on décale son contenu (bouton +, zone de texte, bouton d'envoi) en
            padding latéral symétrique pour qu'il ne passe pas sous le capteur en paysage. */
         ViewCompat.setOnApplyWindowInsetsListener(messageSendLayout, (view, windowInsets) -> {
-            Insets bars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
             int navBottom = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom;
             int imeBottom = windowInsets.getInsets(WindowInsetsCompat.Type.ime()).bottom;
-            int side = Math.max(bars.left, bars.right);
+            int side = Utils.getSymmetricSideInset(windowInsets);
             view.setPadding(side, view.getPaddingTop(), side, Math.max(navBottom, imeBottom));
             return windowInsets;
         });

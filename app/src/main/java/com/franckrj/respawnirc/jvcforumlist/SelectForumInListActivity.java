@@ -18,9 +18,6 @@ import android.widget.TextView;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.transition.TransitionManager;
 
@@ -220,19 +217,10 @@ public class SelectForumInListActivity extends AbsNavigationViewActivity impleme
         forumListView.setAdapter(adapterForForumList);
         forumListView.setOnItemClickListener(forumClickedInListView);
 
-        /* Edge-to-edge : les lignes de résultats de recherche occupent toute la largeur, on décale donc
-           seulement leur contenu en gardant leur fond pleine largeur. On capture les insets latéraux sur le
-           parent de la liste (le SwipeRefreshLayout) pour ne pas monopoliser le listener de la ListView (qui
-           gère déjà son inset du bas) et on les renvoie non consommés. On prend le max des deux côtés pour un
-           décalage symétrique, transmis à l'adapter qui l'applique en padding sur chaque ligne. */
-        ViewCompat.setOnApplyWindowInsetsListener(swipeRefresh, (v, windowInsets) -> {
-            Insets bars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
-            if (adapterForForumList != null) {
-                adapterForForumList.setSideInset(Math.max(bars.left, bars.right));
-            }
-            return windowInsets;
-        });
-        ViewCompat.requestApplyInsets(swipeRefresh);
+        /* Edge-to-edge : les lignes de résultats de recherche occupent toute la largeur, on capture donc
+           l'inset latéral sur le parent de la liste (le listener du bas est déjà posé sur la ListView) et on
+           le transmet à l'adapter qui décale le contenu de chaque ligne, fond gardé pleine largeur. */
+        Utils.forwardSymmetricSideInset(swipeRefresh, adapterForForumList::setSideInset);
 
         if (savedInstanceState != null) {
             lastSearchedText = savedInstanceState.getString(SAVE_SEARCH_FORUM_CONTENT, null);

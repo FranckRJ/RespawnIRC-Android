@@ -3,9 +3,10 @@ package com.franckrj.respawnirc.base;
 import androidx.annotation.IdRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.franckrj.respawnirc.utils.Utils;
 
 public abstract class AbsToolbarActivity extends AbsThemedActivity {
     protected Toolbar initToolbar(@IdRes int idOfToolbar) {
@@ -24,9 +25,9 @@ public abstract class AbsToolbarActivity extends AbsThemedActivity {
            Le latéral est symétrique (max des insets gauche/droite de barre de navigation et découpe du
            capteur) pour que le contenu reste centré quel que soit le côté du capteur en paysage. */
         ViewCompat.setOnApplyWindowInsetsListener(myToolbar, (view, windowInsets) -> {
-            Insets bars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
-            int side = Math.max(bars.left, bars.right);
-            view.setPadding(side, bars.top, side, 0);
+            int topInset = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout()).top;
+            int side = Utils.getSymmetricSideInset(windowInsets);
+            view.setPadding(side, topInset, side, 0);
             return windowInsets;
         });
 

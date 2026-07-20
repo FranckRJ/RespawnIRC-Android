@@ -14,9 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -338,16 +335,6 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         jvcMsgList = mainView.findViewById(R.id.jvcmessage_view_showtopicfrag);
         swipeRefresh = mainView.findViewById(R.id.swiperefresh_showtopicfrag);
 
-        /* Edge-to-edge : on capture les insets latéraux (barre de navigation et découpe du capteur) sur
-           le parent de la liste (le SwipeRefreshLayout) plutôt que sur la ListView, pour laisser à cette
-           dernière la liberté de son propre listener, et on les renvoie non consommés pour qu'elle reçoive
-           quand même les siens. On prend le max des deux côtés pour un décalage symétrique. */
-        ViewCompat.setOnApplyWindowInsetsListener(swipeRefresh, (v, windowInsets) -> {
-            Insets bars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
-            applySideInsetToMessagesList(Math.max(bars.left, bars.right));
-            return windowInsets;
-        });
-
         return mainView;
     }
 
@@ -397,7 +384,9 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         baseMsgListPaddingLeft = jvcMsgList.getPaddingLeft();
         baseMsgListPaddingRight = jvcMsgList.getPaddingRight();
         jvcMsgList.setAdapter(adapterForTopic);
-        ViewCompat.requestApplyInsets(swipeRefresh);
+        /* Edge-to-edge : on capture l'inset latéral sur le parent de la liste (le SwipeRefreshLayout) et on
+           l'aiguille selon le mode d'affichage (cf. applySideInsetToMessagesList). */
+        Utils.forwardSymmetricSideInset(swipeRefresh, this::applySideInsetToMessagesList);
 
         if (savedInstanceState != null) {
             ArrayList<JVCParser.MessageInfos> allCurrentMessagesShowed = topicViewModel.listOfMessagesShowed;

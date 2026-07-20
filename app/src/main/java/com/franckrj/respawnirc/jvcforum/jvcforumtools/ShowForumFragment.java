@@ -3,9 +3,6 @@ package com.franckrj.respawnirc.jvcforum.jvcforumtools;
 import android.os.Bundle;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -274,19 +271,6 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
 
         swipeRefresh.setOnRefreshListener(listenerForRefresh);
 
-        /* Edge-to-edge : on capture les insets latéraux (barre de navigation et découpe du capteur)
-           sur le parent de la liste, car le listener du bas est déjà posé sur la ListView. On prend le
-           max des deux côtés pour un décalage symétrique, et on le transmet à l'adapter qui l'applique
-           en padding sur chaque ligne (le fond reste pleine largeur, seul le contenu est décalé). Les
-           insets sont renvoyés non consommés pour que la ListView reçoive quand même les siens. */
-        ViewCompat.setOnApplyWindowInsetsListener(swipeRefresh, (v, windowInsets) -> {
-            Insets bars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
-            if (adapterForForum != null) {
-                adapterForForum.setSideInset(Math.max(bars.left, bars.right));
-            }
-            return windowInsets;
-        });
-
         return mainView;
     }
 
@@ -315,7 +299,9 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         errorBackgroundMessage.setVisibility(View.GONE);
         swipeRefresh.setColorSchemeResources(R.color.colorControlHighlightThemeLight);
         jvcTopicList.setAdapter(adapterForForum);
-        ViewCompat.requestApplyInsets(swipeRefresh);
+        /* Edge-to-edge : on capture l'inset latéral sur le parent de la liste (le listener du bas est déjà
+           posé sur la ListView) et on le transmet à l'adapter qui décale le contenu de chaque ligne. */
+        Utils.forwardSymmetricSideInset(swipeRefresh, adapterForForum::setSideInset);
 
         if (savedInstanceState != null) {
             ArrayList<JVCParser.TopicInfos> allCurrentTopicsShowed = savedInstanceState.getParcelableArrayList(SAVE_ALL_TOPICS_SHOWED);
