@@ -83,6 +83,7 @@ public class JVCTopicAdapter extends BaseAdapter {
     private @ColorInt int deletedMessageBackgroundColor = 0;
     private @ColorInt int defaultMessageBackgroundColor = 0;
     private @ColorInt int altMessageBackgroundColor = 0;
+    private int sideInset = 0;
 
     private final PopupMenu.OnMenuItemClickListener menuItemInPopupMenuClickedListener = new PopupMenu.OnMenuItemClickListener() {
         @Override
@@ -308,6 +309,18 @@ public class JVCTopicAdapter extends BaseAdapter {
 
     public void setAltMessageBackgroundColor(@ColorInt int newColor) {
         altMessageBackgroundColor = newColor;
+    }
+
+    /* Edge-to-edge : inset latéral (barre de navigation et découpe du capteur) appliqué en padding sur
+       chaque ligne. Le fond de la ligne reste pleine largeur (passe sous le capteur en paysage) mais son
+       contenu est décalé pour ne pas passer dessous. On applique la même valeur des deux côtés pour garder
+       un décalage symétrique quel que soit le côté du capteur. Le mode carte, lui, décale les cartes via une
+       marge (padding de la liste) et n'utilise pas cet inset. */
+    public void setSideInset(int newInset) {
+        if (sideInset != newInset) {
+            sideInset = newInset;
+            notifyDataSetChanged();
+        }
     }
 
     public void enableSurvey(String newSurveyTitle) {
@@ -619,6 +632,9 @@ public class JVCTopicAdapter extends BaseAdapter {
             }
         }
 
+        convertView.setPadding(viewHolder.basePaddingLeft + sideInset, convertView.getPaddingTop(),
+                viewHolder.basePaddingRight + sideInset, convertView.getPaddingBottom());
+
         return convertView;
     }
 
@@ -672,6 +688,8 @@ public class JVCTopicAdapter extends BaseAdapter {
         public final TextView signatureLine;
         public final View separator;
         public final ImageButton showMenuButton;
+        public final int basePaddingLeft;
+        public final int basePaddingRight;
 
         public CustomViewHolder(View itemView) {
             infoLine = itemView.findViewById(R.id.infos_text_jvcmessages_row);
@@ -680,6 +698,8 @@ public class JVCTopicAdapter extends BaseAdapter {
             signatureLine = itemView.findViewById(R.id.signature_text_jvcmessages_row);
             separator = itemView.findViewById(R.id.separator_view_jvcmessages_row);
             showMenuButton = itemView.findViewById(R.id.menuoverflow_image_jvcmessages_row);
+            basePaddingLeft = itemView.getPaddingLeft();
+            basePaddingRight = itemView.getPaddingRight();
 
             infoLine.setSpannableFactory(spannableFactory);
             messageLine.setSpannableFactory(spannableFactory);
