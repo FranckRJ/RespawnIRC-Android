@@ -50,4 +50,9 @@
     <attr name="themedButtonOrangeStyle" format="reference"/>
     <attr name="themedButtonGreenStyle" format="reference"/>
     <attr name="themedButtonPurpleStyle" format="reference"/>
+
+    <declare-styleable name="ColorPickerPreference">
+        <attr name="colorChoices" format="reference"/>
+        <attr name="defaultColor" format="color"/>
+    </declare-styleable>
 </resources>

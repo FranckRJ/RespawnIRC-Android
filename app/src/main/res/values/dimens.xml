@@ -14,4 +14,5 @@
     <dimen name="xPaddingSendMessageEditTextTopicLock">10dp</dimen>
     <dimen name="xPaddingSendMessageEditTextNormal">5dp</dimen>
     <dimen name="yPaddingSendMessageEditTextNormal">4dp</dimen>
+    <dimen name="sizeOfColorPickerCell">56dp</dimen>
 </resources>
