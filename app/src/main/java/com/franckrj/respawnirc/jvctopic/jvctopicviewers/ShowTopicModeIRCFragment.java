@@ -152,11 +152,8 @@ public class ShowTopicModeIRCFragment extends AbsShowTopicFragment {
                 allMessagesShowedAreFromIgnoredPseudos = false;
 
                 if (scrolledAtTheEnd) {
-                    if (smoothScrollIsEnabled && needASmoothScroll) { //s'il y avait des messages affichés avant et qu'on était en bas de page, smoothscroll
-                        jvcMsgList.smoothScrollToPosition(adapterForTopic.getCount() - 1);
-                    } else {
-                        jvcMsgList.setSelection(adapterForTopic.getCount() - 1);
-                    }
+                    //s'il y avait des messages affichés avant et qu'on était en bas de page, smoothscroll
+                    scrollJvcMsgListToBottom(smoothScrollIsEnabled && needASmoothScroll);
                 }
             }
         } else if (itsReallyEmpty) {
