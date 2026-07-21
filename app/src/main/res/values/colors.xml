@@ -194,6 +194,7 @@
     <color name="defaultSurveyMessageColorThemeLight">#FFF0DB</color>
     <color name="defaultDeletedMessageColorThemeLight">#CFF3FE</color>
     <color name="defaultColorPseudoUserThemeLight">#3399ff</color>
+    <color name="colorPickerCheckmarkBackground">#33000000</color>
 
     <integer-array name="choicesForHeaderColor">
         <item>@color/colorPrimaryDarkerRealRed</item>

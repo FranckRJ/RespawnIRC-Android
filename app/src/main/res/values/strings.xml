@@ -246,6 +246,8 @@
     <string name="megaByteNumber">%1$.2f Mo</string>
     <string name="kiloByteNumber">%1$.2f Ko</string>
     <string name="topicNameAndAccentColorTitle">Couleur secondaire</string>
+    <string name="colorNumber">Couleur %1$d</string>
+    <string name="colorNumberSelected">Couleur %1$d sélectionnée</string>
     <string name="createSurvey">Créer un sondage</string>
     <string name="saveMessagesAndTopicsAsDraftTypeTitle">Sauvegarder les messages en cours d\'écriture</string>
     <string name="messageDraftSaved">Brouillon du message sauvegardé.</string>

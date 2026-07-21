@@ -21,56 +21,56 @@
 
     <PreferenceCategory
         android:title="@string/lightThemeColors">
-        <ColorPickerPreference
+        <com.franckrj.respawnirc.ColorPickerPreference
             android:key="@string/settingsHeaderColorOfLightTheme"
             android:title="@string/headerColor"
-            app:pref_currentColor="@color/defaultHeaderColorThemeLight"
-            app:pref_colors="@array/choicesForHeaderColor"/>
+            app:defaultColor="@color/defaultHeaderColorThemeLight"
+            app:colorChoices="@array/choicesForHeaderColor"/>
 
-        <ColorPickerPreference
+        <com.franckrj.respawnirc.ColorPickerPreference
             android:key="@string/settingsPrimaryColorOfLightTheme"
             android:title="@string/primaryColor"
-            app:pref_currentColor="@color/colorPrimaryIndigo"
-            app:pref_colors="@array/choicesForPrimaryColor"/>
+            app:defaultColor="@color/colorPrimaryIndigo"
+            app:colorChoices="@array/choicesForPrimaryColor"/>
 
         <CheckBoxPreference
             android:key="@string/settingsInvertToolbarTextColor"
             android:title="@string/invertToolbarTextColorTitle"/>
 
-        <ColorPickerPreference
+        <com.franckrj.respawnirc.ColorPickerPreference
             android:key="@string/settingsTopicNameAndAccentColorOfLightTheme"
             android:title="@string/topicNameAndAccentColorTitle"
             android:summary="@string/topicNameAndAccentColorSummary"
-            app:pref_currentColor="@color/defaultTopicNameAndAccentColorThemeLight"
-            app:pref_colors="@array/choicesForTopicNameAndAccentColor"/>
+            app:defaultColor="@color/defaultTopicNameAndAccentColorThemeLight"
+            app:colorChoices="@array/choicesForTopicNameAndAccentColor"/>
 
-        <ColorPickerPreference
+        <com.franckrj.respawnirc.ColorPickerPreference
             android:key="@string/settingsPseudoUserColorOfLightTheme"
             android:title="@string/pseudoUserColorTitle"
-            app:pref_currentColor="@color/defaultColorPseudoUserThemeLight"
-            app:pref_colors="@array/choicesForPseudoUserColor"/>
+            app:defaultColor="@color/defaultColorPseudoUserThemeLight"
+            app:colorChoices="@array/choicesForPseudoUserColor"/>
 
-        <ColorPickerPreference
+        <com.franckrj.respawnirc.ColorPickerPreference
             android:key="@string/settingsAltColorOfLightTheme"
             android:title="@string/altColorOfMessages"
-            app:pref_currentColor="@color/defaultColorAltThemeLight"
-            app:pref_colors="@array/choicesForAltColor"/>
+            app:defaultColor="@color/defaultColorAltThemeLight"
+            app:colorChoices="@array/choicesForAltColor"/>
 
         <CheckBoxPreference
             android:key="@string/settingsBrightenAltColor"
             android:title="@string/brightenAltColorTitle"/>
 
-        <ColorPickerPreference
+        <com.franckrj.respawnirc.ColorPickerPreference
             android:key="@string/settingsSurveyColorOfLightTheme"
             android:title="@string/surveyMessageColor"
-            app:pref_currentColor="@color/defaultSurveyMessageColorThemeLight"
-            app:pref_colors="@array/choicesForSurveyColor"/>
+            app:defaultColor="@color/defaultSurveyMessageColorThemeLight"
+            app:colorChoices="@array/choicesForSurveyColor"/>
 
-        <ColorPickerPreference
+        <com.franckrj.respawnirc.ColorPickerPreference
             android:key="@string/settingsDeletedColorOfLightTheme"
             android:title="@string/deletedMessageColor"
-            app:pref_currentColor="@color/defaultDeletedMessageColorThemeLight"
-            app:pref_colors="@array/choicesForDeleteColor"/>
+            app:defaultColor="@color/defaultDeletedMessageColorThemeLight"
+            app:colorChoices="@array/choicesForDeleteColor"/>
     </PreferenceCategory>
 
     <PreferenceCategory

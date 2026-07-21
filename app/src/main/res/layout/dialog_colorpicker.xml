@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/grid_colors_dialog_colorpicker"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:columnWidth="@dimen/sizeOfColorPickerCell"
+    android:numColumns="auto_fit"
+    android:padding="14dp"
+    android:stretchMode="spacingWidthUniform"/>
