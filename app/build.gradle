@@ -7,7 +7,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 37
         compileSdk 37
-        versionCode 2_002_2_001
+        versionCode 2_002_2_001 // Troisième nombre : 1 = bêta, 2 = stable
         versionName "2.2.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         resourceConfigurations = ['fr']
