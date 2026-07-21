@@ -5,25 +5,29 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
+import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.collection.SimpleArrayMap;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.CheckBoxPreference;
+import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceGroup;
 import androidx.preference.SwitchPreferenceCompat;
 
 import com.franckrj.respawnirc.utils.PrefsManager;
 import com.franckrj.respawnirc.utils.ThemeManager;
 import com.franckrj.respawnirc.utils.Utils;
-import com.takisoft.preferencex.EditTextPreference;
-import com.takisoft.preferencex.PreferenceFragmentCompat;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
     public static final String ARG_FILE_TO_LOAD = "com.franckrj.respawnirc.settingsfragment.ARG_FILE_TO_LOAD";
+
+    private static final String TAG_PREFERENCE_DIALOG = "androidx.preference.PreferenceFragment.DIALOG";
 
     private SimpleArrayMap<String, MinMaxInfos> listOfMinMaxInfos = new SimpleArrayMap<>();
 
@@ -68,7 +72,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     };
 
     @Override
-    public void onCreatePreferencesFix(Bundle savedInstanceState, String rootKey) {
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         int idOfFileToLoad = R.xml.main_settings;
 
         if (getArguments() != null) {
@@ -85,6 +89,24 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         super.onViewCreated(view, savedInstanceState);
         /* Edge-to-edge : garde le dernier élément de la liste des préférences au-dessus de la barre de navigation. */
         Utils.addBottomNavInsetPadding(getListView());
+    }
+
+    /* PreferenceDialogFragmentCompat.onCreate retrouve sa préférence via son fragment cible et échoue
+     * sans lui. androidx.fragment a déprécié setTargetFragment en 1.3.0, mais androidx.preference, figée
+     * depuis sa 1.2.1, ne l'a jamais suivi : elle l'appelle elle-même dans onDisplayPreferenceDialog. */
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onDisplayPreferenceDialog(@NonNull Preference preference) {
+        if (preference instanceof ColorPickerPreference) {
+            if (getParentFragmentManager().findFragmentByTag(TAG_PREFERENCE_DIALOG) == null) {
+                DialogFragment colorPickerDialogFragment = ColorPickerPreference.ColorPickerDialogFragment.newInstance(preference.getKey());
+
+                colorPickerDialogFragment.setTargetFragment(this, 0);
+                colorPickerDialogFragment.show(getParentFragmentManager(), TAG_PREFERENCE_DIALOG);
+            }
+        } else {
+            super.onDisplayPreferenceDialog(preference);
+        }
     }
 
     @Override
@@ -176,6 +198,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             PrefsManager.StringPref currentPrefsInfos = PrefsManager.getStringInfos(pref.getKey());
             if (currentPrefsInfos.isInt) {
                 listOfMinMaxInfos.put(pref.getKey(), new MinMaxInfos(currentPrefsInfos.minVal, currentPrefsInfos.maxVal));
+                ((EditTextPreference) pref).setOnBindEditTextListener(editText -> {
+                    editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    editText.setSelection(editText.getText().length());
+                });
             }
         }
     }
