@@ -35,6 +35,8 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     public static final int MODE_IRC = 0;
     public static final int MODE_FORUM = 1;
 
+    private static final int DURATION_OF_SMOOTH_SCROLL_IN_MS = 200;
+
     protected static final String SAVE_GO_TO_BOTTOM_PAGE_LOADING = "saveGoToBottomPageLoading";
     protected static final String SAVE_ANCHOR_FOR_NEXT_LOAD = "saveAnchorForNextLoad";
     protected static final String SAVE_SETTINGS_PSEUDO_OF_AUTHOR = "saveSettingsPseudoOfAuthor";
@@ -245,6 +247,37 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
                     (jvcMsgList.getChildAt(jvcMsgList.getChildCount() - 1).getBottom() <= jvcMsgList.getHeight());
         }
         return true;
+    }
+
+    protected void scrollJvcMsgListToBottom(boolean useSmoothScroll) {
+        if (useSmoothScroll) {
+            /* Le scroll doit être fait après le layout provoqué par la mise à jour des messages, sinon la position
+             * des vues sur laquelle il se base est celle d'avant la mise à jour. */
+            jvcMsgList.post(this::smoothScrollJvcMsgListToBottom);
+        } else {
+            /* Le mode transcript aligne le bas du dernier message sur le bas de la liste, contrairement à
+             * setSelection qui aligne son haut sur le haut de la liste. */
+            jvcMsgList.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+        }
+    }
+
+    private void smoothScrollJvcMsgListToBottom() {
+        int lastPosition = jvcMsgList.getCount() - 1;
+
+        if (lastPosition < 0) {
+            return;
+        }
+
+        if (jvcMsgList.getLastVisiblePosition() < lastPosition) {
+            jvcMsgList.smoothScrollToPosition(lastPosition);
+        } else if (jvcMsgList.getChildCount() > 0) {
+            View lastMessageView = jvcMsgList.getChildAt(jvcMsgList.getChildCount() - 1);
+            int distanceToBottom = lastMessageView.getBottom() - (jvcMsgList.getHeight() - jvcMsgList.getPaddingBottom());
+
+            if (distanceToBottom > 0) {
+                jvcMsgList.smoothScrollBy(distanceToBottom, DURATION_OF_SMOOTH_SCROLL_IN_MS);
+            }
+        }
     }
 
     protected void setErrorBackgroundMessageDependingOnLastError() {
