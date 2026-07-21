@@ -56,6 +56,8 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
     protected boolean smoothScrollIsEnabled = true;
     protected boolean hideTotallyMessagesOfIgnoredPseudos = true;
     protected boolean fastRefreshOfImages = false;
+    private int baseMsgListPaddingLeft = 0;
+    private int baseMsgListPaddingRight = 0;
 
     protected final AbsJVCTopicGetter.NewGetterStateListener listenerForNewGetterState = newState -> {
         if (showNoelshackImageType.type == PrefsManager.ShowImageType.WIFI_ONLY && newState == AbsJVCTopicGetter.STATE_LOADING) {
@@ -378,7 +380,13 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
             jvcMsgList.setPadding(0, 0, 0, 3); //pour corriger un bug de smoothscroll
         }
         jvcMsgList.setClipToPadding(false);
+        /* Edge-to-edge : padding latéral de base de la liste, sur lequel on ajoutera l'inset du capteur. */
+        baseMsgListPaddingLeft = jvcMsgList.getPaddingLeft();
+        baseMsgListPaddingRight = jvcMsgList.getPaddingRight();
         jvcMsgList.setAdapter(adapterForTopic);
+        /* Edge-to-edge : on capture l'inset latéral sur le parent de la liste (le SwipeRefreshLayout) et on
+           l'aiguille selon le mode d'affichage (cf. applySideInsetToMessagesList). */
+        Utils.forwardSymmetricSideInset(swipeRefresh, this::applySideInsetToMessagesList);
 
         if (savedInstanceState != null) {
             ArrayList<JVCParser.MessageInfos> allCurrentMessagesShowed = topicViewModel.listOfMessagesShowed;
@@ -418,6 +426,20 @@ public abstract class AbsShowTopicFragment extends AbsShowSomethingFragment {
         if (dontLoadOnFirstTime) {
             absGetterForTopic.stopAllCurrentTask();
             dontLoadOnFirstTime = false;
+        }
+    }
+
+    /* Edge-to-edge : décale le contenu de la liste des messages pour éviter la découpe du capteur en
+       paysage, la même valeur des deux côtés pour rester symétrique. En mode carte, les cartes flottent :
+       on ajoute l'inset en marge autour d'elles (padding latéral de la liste) pour décaler la carte
+       entière. Sinon les lignes occupent toute la largeur : leur fond reste pleine largeur et seul leur
+       contenu est décalé, via un padding posé sur chaque ligne par l'adapter. */
+    private void applySideInsetToMessagesList(int sideInset) {
+        if (cardDesignIsEnabled) {
+            jvcMsgList.setPadding(baseMsgListPaddingLeft + sideInset, jvcMsgList.getPaddingTop(),
+                    baseMsgListPaddingRight + sideInset, jvcMsgList.getPaddingBottom());
+        } else if (adapterForTopic != null) {
+            adapterForTopic.setSideInset(sideInset);
         }
     }
 

@@ -27,6 +27,7 @@ import android.webkit.CookieManager;
 import android.widget.EditText;
 
 import androidx.annotation.ColorInt;
+import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.emoji.text.EmojiCompat;
@@ -565,7 +566,41 @@ public class Utils {
         });
     }
 
+    /* Edge-to-edge : inset latéral symétrique à appliquer — le max des insets gauche/droite de barre de
+       navigation et découpe du capteur — pour un décalage identique quel que soit le côté du capteur. */
+    public static int getSymmetricSideInset(WindowInsetsCompat windowInsets) {
+        Insets bars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+        return Math.max(bars.left, bars.right);
+    }
+
+    /* Edge-to-edge : ajoute un padding latéral symétrique (cf. getSymmetricSideInset) pour que le contenu
+       reste centré sans passer sous le capteur en paysage. Le fond de la vue reste pleine largeur. */
+    public static void addSymmetricSideInsetPadding(final View view) {
+        final int basePaddingLeft = view.getPaddingLeft();
+        final int basePaddingRight = view.getPaddingRight();
+        ViewCompat.setOnApplyWindowInsetsListener(view, (v, windowInsets) -> {
+            int side = getSymmetricSideInset(windowInsets);
+            v.setPadding(basePaddingLeft + side, v.getPaddingTop(), basePaddingRight + side, v.getPaddingBottom());
+            return windowInsets;
+        });
+    }
+
+    /* Edge-to-edge : capture l'inset latéral symétrique sur une vue parent (typiquement le SwipeRefreshLayout
+       d'une liste, dont les lignes gèrent elles-mêmes leur décalage) et le transmet à la cible sans consommer
+       les insets, pour que les enfants reçoivent quand même les leurs. Applique aussi la valeur courante. */
+    public static void forwardSymmetricSideInset(final View parent, final SideInsetTarget target) {
+        ViewCompat.setOnApplyWindowInsetsListener(parent, (v, windowInsets) -> {
+            target.onSideInset(getSymmetricSideInset(windowInsets));
+            return windowInsets;
+        });
+        ViewCompat.requestApplyInsets(parent);
+    }
+
     public interface StringModifier {
         String changeString(String baseString);
+    }
+
+    public interface SideInsetTarget {
+        void onSideInset(int sideInset);
     }
 }

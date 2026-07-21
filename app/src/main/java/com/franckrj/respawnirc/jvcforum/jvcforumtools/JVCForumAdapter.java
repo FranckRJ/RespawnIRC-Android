@@ -36,6 +36,7 @@ public class JVCForumAdapter extends BaseAdapter {
     private @ColorInt int defaultBackgroundColor = 0;
     private int topicTitleSizeInSp = 14;
     private int topicInfosSizeInSp = 14;
+    private int sideInset = 0;
     private Drawable iconMarqueOn;
     private Drawable iconMarqueOff;
     private Drawable iconDossier2;
@@ -111,6 +112,17 @@ public class JVCForumAdapter extends BaseAdapter {
 
     public void setDefaultBackgroundColor(@ColorInt int newColor) {
         defaultBackgroundColor = newColor;
+    }
+
+    /* Edge-to-edge : inset latéral (barre de navigation et découpe du capteur) appliqué en padding sur
+       chaque ligne. Le fond de la ligne reste pleine largeur (passe sous le capteur en paysage) mais
+       son contenu est décalé pour ne pas passer dessous. On applique la même valeur des deux côtés
+       pour garder un décalage symétrique quel que soit le côté du capteur. */
+    public void setSideInset(int newInset) {
+        if (sideInset != newInset) {
+            sideInset = newInset;
+            notifyDataSetChanged();
+        }
     }
 
     public void removeAllItems() {
@@ -197,6 +209,8 @@ public class JVCForumAdapter extends BaseAdapter {
             holder.titleLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, topicTitleSizeInSp);
             holder.authorLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, topicInfosSizeInSp);
             holder.dateLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, topicInfosSizeInSp);
+            holder.basePaddingLeft = convertView.getPaddingLeft();
+            holder.basePaddingRight = convertView.getPaddingRight();
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -241,6 +255,9 @@ public class JVCForumAdapter extends BaseAdapter {
             convertView.setBackgroundColor(defaultBackgroundColor);
         }
 
+        convertView.setPadding(holder.basePaddingLeft + sideInset, convertView.getPaddingTop(),
+                holder.basePaddingRight + sideInset, convertView.getPaddingBottom());
+
         holder.titleLine.invalidate();
         holder.titleLine.requestLayout();
         convertView.invalidate();
@@ -253,6 +270,8 @@ public class JVCForumAdapter extends BaseAdapter {
         public TextView authorLine;
         public TextView dateLine;
         public ImageView topicIcon;
+        public int basePaddingLeft;
+        public int basePaddingRight;
     }
 
     private class ContentHolder {

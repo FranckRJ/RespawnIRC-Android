@@ -299,6 +299,9 @@ public class ShowForumFragment extends AbsShowSomethingFragment {
         errorBackgroundMessage.setVisibility(View.GONE);
         swipeRefresh.setColorSchemeResources(R.color.colorControlHighlightThemeLight);
         jvcTopicList.setAdapter(adapterForForum);
+        /* Edge-to-edge : on capture l'inset latéral sur le parent de la liste (le listener du bas est déjà
+           posé sur la ListView) et on le transmet à l'adapter qui décale le contenu de chaque ligne. */
+        Utils.forwardSymmetricSideInset(swipeRefresh, adapterForForum::setSideInset);
 
         if (savedInstanceState != null) {
             ArrayList<JVCParser.TopicInfos> allCurrentTopicsShowed = savedInstanceState.getParcelableArrayList(SAVE_ALL_TOPICS_SHOWED);

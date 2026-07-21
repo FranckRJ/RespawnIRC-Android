@@ -485,15 +485,19 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
         });
 
         /* Edge-to-edge : la barre d'envoi reste au-dessus de la barre de navigation et du clavier
-           (son fond déborde sous la barre de navigation transparente). */
+           (son fond déborde sous la barre de navigation transparente). Son fond garde donc l'apparence
+           de la pleine largeur, mais on décale son contenu (bouton +, zone de texte, bouton d'envoi) en
+           padding latéral symétrique pour qu'il ne passe pas sous le capteur en paysage. */
         ViewCompat.setOnApplyWindowInsetsListener(messageSendLayout, (view, windowInsets) -> {
             int navBottom = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom;
             int imeBottom = windowInsets.getInsets(WindowInsetsCompat.Type.ime()).bottom;
-            view.setPadding(view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(), Math.max(navBottom, imeBottom));
+            int side = Utils.getSymmetricSideInset(windowInsets);
+            view.setPadding(side, view.getPaddingTop(), side, Math.max(navBottom, imeBottom));
             return windowInsets;
         });
 
         pageNavigation.initializeLayoutForAllNavigationButtons(findViewById(R.id.header_layout_showtopic), findViewById(R.id.shadow_header_showtopic));
+        Utils.addSymmetricSideInsetPadding(findViewById(R.id.header_layout_showtopic));
         pageNavigation.initializePagerView(findViewById(R.id.pager_showtopic));
         pageNavigation.initializeNavigationButtons(findViewById(R.id.firstpage_button_showtopic), findViewById(R.id.previouspage_button_showtopic),
                 findViewById(R.id.currentpage_button_showtopic), findViewById(R.id.nextpage_button_showtopic), findViewById(R.id.lastpage_button_showtopic));
