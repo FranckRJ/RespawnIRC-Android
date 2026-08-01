@@ -6,8 +6,7 @@
         android:title="@string/general">
         <EditTextPreference
             android:key="@string/settingsMaxNumberOfOverlyQuote"
-            android:title="@string/maxNumberOfOverlyQuoteTitle"
-            android:inputType="number"/>
+            android:title="@string/maxNumberOfOverlyQuoteTitle"/>
 
         <CheckBoxPreference
             android:key="@string/settingsDefaultShowSpoilVal"

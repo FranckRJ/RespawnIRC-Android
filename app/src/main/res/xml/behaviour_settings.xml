@@ -36,8 +36,7 @@
         android:title="@string/settingsModeIRCTitle">
         <EditTextPreference
             android:key="@string/settingsRefreshTopicTime"
-            android:title="@string/refreshTopicTimeTitle"
-            android:inputType="number"/>
+            android:title="@string/refreshTopicTimeTitle"/>
 
         <CheckBoxPreference
             android:key="@string/settingsShowRefreshWhenMessagesShowedModeIRC"
@@ -45,13 +44,11 @@
 
         <EditTextPreference
             android:key="@string/settingsMaxNumberOfMessages"
-            android:title="@string/maxNumberOfMessagesTitle"
-            android:inputType="number"/>
+            android:title="@string/maxNumberOfMessagesTitle"/>
 
         <EditTextPreference
             android:key="@string/settingsInitialNumberOfMessages"
-            android:title="@string/initialNumberOfMessagesTitle"
-            android:inputType="number"/>
+            android:title="@string/initialNumberOfMessagesTitle"/>
     </PreferenceCategory>
 
 </PreferenceScreen>
