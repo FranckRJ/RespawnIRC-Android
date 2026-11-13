@@ -1,21 +1,27 @@
 package com.franckrj.respawnirc.utils
 
+import android.graphics.ImageDecoder
+import android.graphics.drawable.AnimatedImageDrawable
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.annotation.DrawableRes
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.Target
+import androidx.lifecycle.lifecycleScope
 import com.franckrj.respawnirc.R
-import com.franckrj.respawnirc.utils.CustomAppGlideModule.UIonProgressListener
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.IOException
+import java.nio.ByteBuffer
+import kotlin.math.max
 
-/* Basé sur https://medium.com/@mr.johnnyne/how-to-use-glide-v4-load-image-with-progress-update-eb02671dac18. */
+@RequiresApi(Build.VERSION_CODES.P) // ImageDecoder, qui sait lire les GIF animés, n'existe pas avant.
 class ProgressImageLoader(
     private val fragment: Fragment,
     private val viewForImage: ImageView,
@@ -23,32 +29,7 @@ class ProgressImageLoader(
     private val determinateProgressBar: ProgressBar? = null,
     private val textForSizeOfImage: TextView? = null
 ) {
-    private var currentUrl: String? = null
-
-    private val imageLoaderRequestListener = object : RequestListener<Drawable> {
-        override fun onLoadFailed(
-            e: GlideException?,
-            model: Any?,
-            target: Target<Drawable>,
-            isFirstResource: Boolean
-        ): Boolean {
-            clearCurrentUrl()
-            onFinish()
-            return false
-        }
-
-        override fun onResourceReady(
-            resource: Drawable,
-            model: Any,
-            target: Target<Drawable>?,
-            dataSource: DataSource,
-            isFirstResource: Boolean
-        ): Boolean {
-            clearCurrentUrl()
-            onFinish()
-            return false
-        }
-    }
+    private var currentLoad: Job? = null
 
     private fun onStart() {
         determinateProgressBar?.visibility = View.GONE
@@ -64,27 +45,41 @@ class ProgressImageLoader(
         viewForImage.visibility = View.VISIBLE
     }
 
-    fun clearCurrentUrl() {
-        currentUrl?.let { CustomAppGlideModule.forget(it) }
-        currentUrl = null
+    fun cancelCurrentLoad() {
+        currentLoad?.cancel()
+        currentLoad = null
     }
 
-    fun startNewLoad(url: String, options: RequestOptions) {
-        clearCurrentUrl()
-        currentUrl = url
+    fun startNewLoad(url: String, @DrawableRes imageForError: Int) {
+        cancelCurrentLoad()
         onStart()
 
-        CustomAppGlideModule.expect(url, object : UIonProgressListener {
-            override fun onProgress(bytesRead: Long, expectedLength: Long) {
-                this@ProgressImageLoader.onProgress(bytesRead, expectedLength)
-            }
-        })
+        currentLoad = fragment.lifecycleScope.launch {
+            val image: Drawable? = try {
+                val downloadedImage: ByteArray = ProgressDownloader.download(url) { bytesRead, expectedLength ->
+                    if (expectedLength != null) {
+                        withContext(Dispatchers.Main) { onProgress(bytesRead, expectedLength) }
+                    }
+                }
 
-        Glide.with(fragment)
-            .load(url)
-            .listener(imageLoaderRequestListener)
-            .apply(options)
-            .into(viewForImage)
+                decodeImage(downloadedImage)
+            } catch (e: IOException) {
+                null
+            }
+
+            if (image == null) {
+                viewForImage.setImageResource(imageForError)
+            } else {
+                viewForImage.setImageDrawable(image)
+
+                if (image is AnimatedImageDrawable) {
+                    image.repeatCount = AnimatedImageDrawable.REPEAT_INFINITE // Comme Glide, quel que soit le fichier.
+                    image.start()
+                }
+            }
+
+            onFinish()
+        }
     }
 
     private fun onProgress(bytesRead: Long, expectedLength: Long) {
@@ -108,6 +103,21 @@ class ProgressImageLoader(
             }
 
             determinateProgressBar?.progress = (100 * bytesRead / expectedLength).toInt()
+        }
+    }
+
+    /* L'image est affichée en fitCenter donc elle peut être sous-échantillonnée jusqu'à la taille de l'écran sans perte. */
+    private suspend fun decodeImage(downloadedImage: ByteArray): Drawable = withContext(Dispatchers.Default) {
+        ImageDecoder.decodeDrawable(ImageDecoder.createSource(ByteBuffer.wrap(downloadedImage))) { decoder, info, _ ->
+            val metrics = viewForImage.resources.displayMetrics
+            val sampleSize: Int = max(
+                info.size.width / max(metrics.widthPixels, 1),
+                info.size.height / max(metrics.heightPixels, 1)
+            )
+
+            if (sampleSize > 1) {
+                decoder.setTargetSampleSize(sampleSize)
+            }
         }
     }
 }

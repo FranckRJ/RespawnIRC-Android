@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,12 +13,13 @@ import android.view.Window
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
-import com.bumptech.glide.request.RequestOptions
 import com.franckrj.respawnirc.R
 import com.franckrj.respawnirc.utils.ProgressImageLoader
 import com.franckrj.respawnirc.utils.Undeprecator
 
+@RequiresApi(Build.VERSION_CODES.P)
 class ShowImageDialogFragment : DialogFragment() {
     companion object {
         const val ARG_IMAGE_LINK = "com.franckrj.respawnirc.showimagedialogfragment.ARG_IMAGE_LINK"
@@ -72,13 +74,9 @@ class ShowImageDialogFragment : DialogFragment() {
             val linkOfImage: String = currentArgs.getString(ARG_IMAGE_LINK, "")
 
             if (linkOfImage.isNotEmpty()) {
-                val optionsOfImageLoader = RequestOptions()
-                    .error(R.drawable.image_deleted_dark)
-                    .fitCenter()
-
                 linkIsValid = true
 
-                imageLoader.startNewLoad(linkOfImage, optionsOfImageLoader)
+                imageLoader.startNewLoad(linkOfImage, R.drawable.image_deleted_dark)
             }
         }
 
@@ -104,7 +102,7 @@ class ShowImageDialogFragment : DialogFragment() {
     }
 
     override fun onPause() {
-        imageLoader.clearCurrentUrl()
+        imageLoader.cancelCurrentLoad()
         dismiss()
         super.onPause()
     }
