@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -970,7 +971,7 @@ public class ShowTopicActivity extends AbsHomeIsBackActivity implements AbsShowT
                 Intent newShowMessageIntent = new Intent(this, ShowMessageActivity.class);
                 newShowMessageIntent.putExtra(ShowMessageActivity.EXTRA_MESSAGE_PERMALINK, possibleNewLink);
                 startActivity(newShowMessageIntent);
-            } else if (showOverviewOnImageClick && JVCParser.checkIfItsNoelshackLink(link)) {
+            } else if (showOverviewOnImageClick && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && JVCParser.checkIfItsNoelshackLink(link)) {
                 if (!getSupportFragmentManager().isStateSaved()) {
                     Bundle argForFrag = new Bundle();
                     ShowImageDialogFragment showImageDialogFragment = new ShowImageDialogFragment();
