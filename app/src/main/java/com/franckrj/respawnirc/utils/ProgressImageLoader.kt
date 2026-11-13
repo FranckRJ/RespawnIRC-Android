@@ -4,6 +4,7 @@ import android.graphics.ImageDecoder
 import android.graphics.drawable.AnimatedImageDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.util.LruCache
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -29,6 +30,16 @@ class ProgressImageLoader(
     private val determinateProgressBar: ProgressBar? = null,
     private val textForSizeOfImage: TextView? = null
 ) {
+    companion object {
+        private val maxSizeOfDownloadedImages: Int = (Runtime.getRuntime().maxMemory() / 32).toInt()
+
+        /* Ce sont les données téléchargées qui sont gardées, pas l'image décodée : un GIF animé ne peut pas être
+         * partagé entre deux vues, et redécoder une image est rapide comparé à la retélécharger. */
+        private val downloadedImages = object : LruCache<String, ByteArray>(maxSizeOfDownloadedImages) {
+            override fun sizeOf(url: String, downloadedImage: ByteArray): Int = downloadedImage.size
+        }
+    }
+
     private var currentLoad: Job? = null
 
     private fun onStart() {
@@ -56,11 +67,13 @@ class ProgressImageLoader(
 
         currentLoad = fragment.lifecycleScope.launch {
             val image: Drawable? = try {
-                val downloadedImage: ByteArray = ProgressDownloader.download(url) { bytesRead, expectedLength ->
+                val cachedImage: ByteArray? = downloadedImages.get(url)
+                val downloadedImage = cachedImage ?: ProgressDownloader.download(url) { bytesRead, expectedLength ->
                     if (expectedLength != null) {
                         withContext(Dispatchers.Main) { onProgress(bytesRead, expectedLength) }
                     }
                 }
+                downloadedImages.put(url, downloadedImage)
 
                 decodeImage(downloadedImage)
             } catch (e: IOException) {
