@@ -15,7 +15,7 @@ import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.request.RequestOptions
 import com.franckrj.respawnirc.R
-import com.franckrj.respawnirc.utils.GlideProgressImageLoader
+import com.franckrj.respawnirc.utils.ProgressImageLoader
 import com.franckrj.respawnirc.utils.Undeprecator
 
 class ShowImageDialogFragment : DialogFragment() {
@@ -23,7 +23,7 @@ class ShowImageDialogFragment : DialogFragment() {
         const val ARG_IMAGE_LINK = "com.franckrj.respawnirc.showimagedialogfragment.ARG_IMAGE_LINK"
     }
 
-    private lateinit var imageLoader: GlideProgressImageLoader
+    private lateinit var imageLoader: ProgressImageLoader
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog: Dialog = super.onCreateDialog(savedInstanceState)
@@ -60,7 +60,7 @@ class ShowImageDialogFragment : DialogFragment() {
             PorterDuff.Mode.SRC_IN
         )
 
-        imageLoader = GlideProgressImageLoader(
+        imageLoader = ProgressImageLoader(
             this,
             viewForImage,
             indeterminateProgressBar,

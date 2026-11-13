@@ -16,7 +16,7 @@ import com.franckrj.respawnirc.R
 import com.franckrj.respawnirc.utils.CustomAppGlideModule.UIonProgressListener
 
 /* Basé sur https://medium.com/@mr.johnnyne/how-to-use-glide-v4-load-image-with-progress-update-eb02671dac18. */
-class GlideProgressImageLoader(
+class ProgressImageLoader(
     private val fragment: Fragment,
     private val viewForImage: ImageView,
     private val indeterminateProgressBar: ProgressBar? = null,
