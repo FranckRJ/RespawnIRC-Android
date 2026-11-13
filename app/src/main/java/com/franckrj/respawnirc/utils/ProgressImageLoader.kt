@@ -76,27 +76,7 @@ class ProgressImageLoader(
 
         CustomAppGlideModule.expect(url, object : UIonProgressListener {
             override fun onProgress(bytesRead: Long, expectedLength: Long) {
-                if (expectedLength > 0) {
-                    if (determinateProgressBar?.visibility == View.GONE) {
-                        determinateProgressBar.visibility = View.VISIBLE
-                    }
-                    if (indeterminateProgressBar?.visibility == View.VISIBLE) {
-                        indeterminateProgressBar.visibility = View.GONE
-                    }
-                    if (textForSizeOfImage?.visibility == View.GONE) {
-                        var formattedSizeOfFile = expectedLength / 1024.0
-
-                        textForSizeOfImage.text = if (formattedSizeOfFile >= 1000) {
-                            formattedSizeOfFile /= 1024.0
-                            textForSizeOfImage.context.getString(R.string.megaByteNumber, formattedSizeOfFile)
-                        } else {
-                            textForSizeOfImage.context.getString(R.string.kiloByteNumber, formattedSizeOfFile)
-                        }
-                        textForSizeOfImage.visibility = View.VISIBLE
-                    }
-
-                    determinateProgressBar?.progress = (100 * bytesRead / expectedLength).toInt()
-                }
+                this@ProgressImageLoader.onProgress(bytesRead, expectedLength)
             }
         })
 
@@ -105,5 +85,29 @@ class ProgressImageLoader(
             .listener(imageLoaderRequestListener)
             .apply(options)
             .into(viewForImage)
+    }
+
+    private fun onProgress(bytesRead: Long, expectedLength: Long) {
+        if (expectedLength > 0) {
+            if (determinateProgressBar?.visibility == View.GONE) {
+                determinateProgressBar.visibility = View.VISIBLE
+            }
+            if (indeterminateProgressBar?.visibility == View.VISIBLE) {
+                indeterminateProgressBar.visibility = View.GONE
+            }
+            if (textForSizeOfImage?.visibility == View.GONE) {
+                var formattedSizeOfFile = expectedLength / 1024.0
+
+                textForSizeOfImage.text = if (formattedSizeOfFile >= 1000) {
+                    formattedSizeOfFile /= 1024.0
+                    textForSizeOfImage.context.getString(R.string.megaByteNumber, formattedSizeOfFile)
+                } else {
+                    textForSizeOfImage.context.getString(R.string.kiloByteNumber, formattedSizeOfFile)
+                }
+                textForSizeOfImage.visibility = View.VISIBLE
+            }
+
+            determinateProgressBar?.progress = (100 * bytesRead / expectedLength).toInt()
+        }
     }
 }
