@@ -69,8 +69,8 @@ public final class JVCParser {
     private static final Pattern isInSubInTopicPagePattern = Pattern.compile("<span class=\"breadcrumb-icon icon-bell-([^ ]*) js-subscribe-topic\" title=\"[^\"]*\" data-action=\"[^\"]*\"([^>]*)>");
     private static final Pattern subIdInSubButtonPattern = Pattern.compile("data-id-abonnement=\"([^\"]*)\"");
     private static final Pattern lockReasonPattern = Pattern.compile("<div class=\"lockInfo__reason\">[^<]*<strong>([^<]*)</strong></div>");
-    private static final Pattern numberOfMpJVCPattern = Pattern.compile("<div class=\".*?headerAccount--pm.*?\">[^<]*<span[^c]*class=\"headerAccount__pm[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
-    private static final Pattern numberOfNotifJVCPattern = Pattern.compile("<div class=\".*?headerAccount--notif.*?\">[^<]*<span[^c]*class=\"headerAccount__notif[^\"]*\".*?data-val=\"([^\"]*)\"", Pattern.DOTALL);
+    private static final Pattern numberOfMpJVCPattern = Pattern.compile("<button[^>]*id=\"header-account-tab-pm\"[^>]*data-val=\"([^\"]*)\"");
+    private static final Pattern numberOfNotifJVCPattern = Pattern.compile("<button[^>]*id=\"header-account-tab-notif\"[^>]*data-val=\"([^\"]*)\"");
     private static final Pattern numberOfConnectedPattern = Pattern.compile("<span class=\"userCount__number\">([^<]*)</span>");
     private static final Pattern listOfModeratorsPattern = Pattern.compile("<span class=\"liste-modo-fofo\">(.*?)</span>", Pattern.DOTALL);
     private static final Pattern overlyJVCQuotePattern = Pattern.compile("(<(/)?blockquote>)");
